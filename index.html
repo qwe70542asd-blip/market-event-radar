@@ -4,16 +4,17 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#07111f" />
-  <meta name="description" content="整合美國、日本、韓國、歐洲與台灣主要市場報價，以及財報、央行利率、經濟數據、科技發表會與重大市場事件。" />
+  <meta name="description" content="整合全球市場代理行情、跨市場觀察指標，以及財報、央行利率、經濟數據、科技發表會與重大市場事件。" />
   <title>全球市場即時雷達｜Global Market Radar</title>
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="assets/styles.css?v=4" />
+  <link rel="stylesheet" href="assets/styles.css" />
+  <script type="module" src="https://widgets.tradingview-widget.com/w/en/tv-ticker-tape.js"></script>
 </head>
 <body>
   <div class="noise" aria-hidden="true"></div>
   <header class="topbar">
-    <a class="brand" href="#top" aria-label="市場事件雷達首頁">
+    <a class="brand" href="#top" aria-label="全球市場即時雷達首頁">
       <span class="brand-mark" aria-hidden="true">
         <svg viewBox="0 0 48 48" role="img"><path d="M7 34 16 24l7 6 10-16 8 6"/><path d="M7 40h34"/></svg>
       </span>
@@ -23,95 +24,119 @@
       </span>
     </a>
     <div class="top-actions">
-      <span class="live-dot"><i></i> 行情＋事件更新</span>
-      <button id="refreshBtn" class="icon-btn" type="button" title="重新載入資料" aria-label="重新載入資料">
+      <span class="live-dot"><i></i> 行情代理＋事件更新</span>
+      <button id="refreshBtn" class="icon-btn" type="button" title="重新載入事件資料" aria-label="重新載入事件資料">
         <svg viewBox="0 0 24 24"><path d="M20 6v5h-5"/><path d="M4 18v-5h5"/><path d="M6.1 9A7 7 0 0 1 18.3 6.3L20 11M4 13l1.7 4.7A7 7 0 0 0 17.9 15"/></svg>
       </button>
     </div>
   </header>
 
-  <div class="ticker-shell" aria-label="全球主要市場即時或延遲報價">
-    <div id="tickerWidget" class="ticker-widget">
-      <span class="ticker-placeholder">行情跑馬燈將於頁面載入後顯示</span>
-    </div>
+  <div class="ticker-shell" aria-label="全球主要市場代理行情">
+    <tv-ticker-tape
+      symbols="AMEX:SPY,NASDAQ:QQQ,NASDAQ:SOXX,AMEX:EWT,AMEX:EWJ,AMEX:EWY,AMEX:FEZ,FX:USDJPY,TVC:US10Y,CBOE:VIX"
+      item-size="compact"
+      theme="dark"
+      locale="zh_TW"
+      transparent-background
+    ></tv-ticker-tape>
   </div>
 
   <main id="top" class="shell">
     <section class="hero">
       <div>
-        <p class="eyebrow">LIVE MARKETS · Asia/Taipei 台灣時間</p>
-        <h1>即時看市場，也先知道下一個震盪點。</h1>
-        <p class="hero-copy">整合美國、日本、韓國、歐洲與台灣主要指數及重要個股報價，並把當月財報、央行利率決策、經濟數據、科技發表會與重大市場事件排成同一張時間表。</p>
+        <p class="eyebrow">DECISION DASHBOARD · Asia/Taipei 台灣時間</p>
+        <h1>先看市場狀態，再看下一個震盪點。</h1>
+        <p class="hero-copy">首頁不再堆滿容易失效的跨國個股元件，改以可公開顯示的 ETF、ADR、匯率與風險指標作為市場代理，再把本月財報、央行、經濟數據及科技活動排成可執行的事件時間軸。</p>
         <nav class="quick-nav" aria-label="頁面快速導覽">
-          <a href="#markets">主要市場報價</a>
-          <a href="#agendaSection">重大事件</a>
+          <a href="#decision">決策儀表板</a>
+          <a href="#focusEvents">本週催化</a>
+          <a href="#agendaSection">事件時間軸</a>
           <a href="#sources">資料來源</a>
         </nav>
       </div>
       <div class="hero-clock" aria-label="現在時間">
         <span id="todayLabel">—</span>
         <strong id="clockLabel">—</strong>
-        <small>資料更新：<span id="updatedAt">讀取中</span></small>
+        <small>事件資料：<span id="updatedAt">讀取中</span></small>
       </div>
     </section>
 
-    <section id="markets" class="quotes-section" aria-label="全球主要市場報價">
-      <div class="section-heading quotes-heading">
+    <section id="decision" class="decision-section">
+      <div class="section-heading decision-heading">
         <div>
-          <p class="eyebrow">GLOBAL MARKET PRICES</p>
-          <h2>全球主要市場報價</h2>
-          <p class="section-copy">可切換台灣、美國、日本、韓國與歐洲。為避免交易所禁止外部嵌入，此公開版使用美國上市 ETF 與 ADR 代表各市場走勢。</p>
+          <p class="eyebrow">MARKET DECISION COCKPIT</p>
+          <h2>市場決策儀表板</h2>
+          <p class="section-copy">用代理標的判斷風險偏好、科技動能、利率壓力與亞洲資金方向；實際成交仍以券商報價為準。</p>
         </div>
-        <span class="quote-badge"><i></i> ETF／ADR 市場代理報價</span>
+        <span class="proxy-badge">代理行情，不等同本地指數</span>
       </div>
-      <div class="market-tabs" role="tablist" aria-label="市場切換">
-        <button class="market-tab active" type="button" data-market="TW" role="tab" aria-selected="true">台灣</button>
-        <button class="market-tab" type="button" data-market="US" role="tab" aria-selected="false">美國</button>
-        <button class="market-tab" type="button" data-market="JP" role="tab" aria-selected="false">日本</button>
-        <button class="market-tab" type="button" data-market="KR" role="tab" aria-selected="false">韓國</button>
-        <button class="market-tab" type="button" data-market="EU" role="tab" aria-selected="false">歐洲</button>
+
+      <div id="marketSessions" class="session-grid" aria-label="主要市場一般交易時段狀態"></div>
+      <p class="session-note">開盤狀態依一般交易時段推估，未納入各國假日、臨時休市與盤前盤後交易。</p>
+
+      <div class="decision-grid">
+        <article class="decision-card next-card">
+          <div class="decision-label">下一個高影響事件</div>
+          <strong id="nextCountdown" class="decision-number countdown">—</strong>
+          <h3 id="nextTitle">讀取中</h3>
+          <div id="nextAssets" class="decision-tags"></div>
+          <a class="decision-link" href="#agendaSection">查看事件內容 ↓</a>
+        </article>
+
+        <article class="decision-card">
+          <div class="decision-label">今日事件</div>
+          <strong id="todayCount" class="decision-number">0</strong>
+          <p id="todayRisk">尚無高風險事件</p>
+          <span class="decision-foot">今天需注意的公告與數據</span>
+        </article>
+
+        <article class="decision-card">
+          <div class="decision-label">未來 30 天高影響</div>
+          <strong id="highCount" class="decision-number">0</strong>
+          <p><span id="weekCount">0</span> 筆事件集中在未來 7 天</p>
+          <span class="decision-foot">高影響事件應優先排入交易計畫</span>
+        </article>
+
+        <article class="decision-card heat-card">
+          <div class="decision-label">未來 7 天事件熱度</div>
+          <div id="weekHeat" class="week-heat" aria-label="未來七天事件熱度"></div>
+          <span class="decision-foot">柱高綜合事件數量與影響程度</span>
+        </article>
       </div>
-      <div class="quote-widget-card fast-quotes">
-        <div id="marketQuoteWidget" class="market-quote-widget" aria-live="polite">
-          <div class="quote-loading">
-            <i></i>
-            <strong>準備載入台灣行情</strong>
-            <span>只載入目前選取的市場，減少等待時間。</span>
-          </div>
-        </div>
-        <div id="quoteFallback" class="quote-fallback" hidden>
-          <strong>行情元件目前沒有回應</strong>
-          <span>可能是 TradingView 暫時無法連線、瀏覽器阻擋第三方內容，或該商品不開放外部嵌入。</span>
-          <button id="retryQuotes" type="button">重新載入行情</button>
-        </div>
-      </div>
-      <div class="quote-notice">
-        <strong>為什麼改用市場代理？</strong>
-        <span>台灣、日本、韓國與部分歐洲本地指數及股票被交易所限制外部嵌入，TradingView 會直接顯示 Permission denied。此區改用 EWT、EWJ、EWY、FEZ 等 ETF 與 TSM、TM、ASML 等 ADR，反映市場方向但不等同本地指數價格。</span>
+
+      <div class="signal-grid" aria-label="跨市場觀察矩陣">
+        <article class="signal-card">
+          <div class="signal-head"><span class="signal-icon">TW</span><div><strong>台股與 AI 供應鏈</strong><small>台灣風險偏好</small></div></div>
+          <p>以 EWT、台積電 ADR、SOXX 與美元兌日圓交叉判讀。半導體走強但日圓急升時，亞洲風險仍可能放大。</p>
+          <div class="signal-symbols"><a href="https://www.tradingview.com/symbols/AMEX-EWT/" target="_blank" rel="noreferrer">EWT ↗</a><a href="https://www.tradingview.com/symbols/NYSE-TSM/" target="_blank" rel="noreferrer">TSM ↗</a><a href="https://www.tradingview.com/symbols/NASDAQ-SOXX/" target="_blank" rel="noreferrer">SOXX ↗</a></div>
+        </article>
+        <article class="signal-card">
+          <div class="signal-head"><span class="signal-icon">US</span><div><strong>美股科技動能</strong><small>成長股風險</small></div></div>
+          <p>QQQ 與 SOXX 同步上漲較健康；若美國十年債殖利率或 VIX 同時急升，科技股上漲的持續性要打折。</p>
+          <div class="signal-symbols"><a href="https://www.tradingview.com/symbols/NASDAQ-QQQ/" target="_blank" rel="noreferrer">QQQ ↗</a><a href="https://www.tradingview.com/symbols/TVC-US10Y/" target="_blank" rel="noreferrer">US10Y ↗</a><a href="https://www.tradingview.com/symbols/CBOE-VIX/" target="_blank" rel="noreferrer">VIX ↗</a></div>
+        </article>
+        <article class="signal-card">
+          <div class="signal-head"><span class="signal-icon">AS</span><div><strong>亞洲資金方向</strong><small>日本、韓國與匯率</small></div></div>
+          <p>EWJ、EWY 與美元兌日圓可快速觀察亞洲資金風格。日圓快速升值時，套利交易平倉風險通常值得提高警戒。</p>
+          <div class="signal-symbols"><a href="https://www.tradingview.com/symbols/AMEX-EWJ/" target="_blank" rel="noreferrer">EWJ ↗</a><a href="https://www.tradingview.com/symbols/AMEX-EWY/" target="_blank" rel="noreferrer">EWY ↗</a><a href="https://www.tradingview.com/symbols/USDJPY/" target="_blank" rel="noreferrer">USDJPY ↗</a></div>
+        </article>
+        <article class="signal-card">
+          <div class="signal-head"><span class="signal-icon">EU</span><div><strong>歐洲景氣與政策</strong><small>風險資產背景</small></div></div>
+          <p>FEZ 與歐元可作為歐洲景氣代理；歐洲央行事件通常透過匯率、全球殖利率與大型科技估值影響其他市場。</p>
+          <div class="signal-symbols"><a href="https://www.tradingview.com/symbols/AMEX-FEZ/" target="_blank" rel="noreferrer">FEZ ↗</a><a href="https://www.tradingview.com/symbols/EURUSD/" target="_blank" rel="noreferrer">EURUSD ↗</a></div>
+        </article>
       </div>
     </section>
 
-    <section class="stats-grid" aria-label="市場事件摘要">
-      <article class="stat-card primary">
-        <span>今日事件</span>
-        <strong id="todayCount">0</strong>
-        <small id="todayRisk">尚無高風險事件</small>
-      </article>
-      <article class="stat-card">
-        <span>未來 7 天</span>
-        <strong id="weekCount">0</strong>
-        <small>含財報與總經發布</small>
-      </article>
-      <article class="stat-card">
-        <span>高影響事件</span>
-        <strong id="highCount">0</strong>
-        <small>未來 30 天</small>
-      </article>
-      <article class="stat-card">
-        <span>下一個關鍵事件</span>
-        <strong id="nextCountdown" class="countdown">—</strong>
-        <small id="nextTitle">讀取中</small>
-      </article>
+    <section id="focusEvents" class="focus-section">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">WEEKLY CATALYSTS</p>
+          <h2>本週最值得先排進交易計畫的事件</h2>
+        </div>
+        <span>依影響程度與時間排序</span>
+      </div>
+      <div id="focusEventList" class="focus-event-grid"></div>
     </section>
 
     <section class="control-panel" aria-label="事件篩選器">
@@ -194,13 +219,13 @@
       <div>
         <p class="eyebrow">DATA PIPELINE</p>
         <h2>資料來源與更新狀態</h2>
-        <p>重大事件以官方發布行事曆優先；市場行情使用 TradingView 可公開嵌入的 ETF／ADR。事件來源暫時失效時，會保留上一次成功資料。</p>
+        <p>重大事件以官方發布行事曆優先；頁首行情僅使用可公開嵌入的代理標的。事件來源暫時失效時，會保留上一次成功資料。</p>
       </div>
       <div id="sourceStatus" class="source-status"></div>
     </section>
 
     <footer>
-      <p>本頁整合市場行情與事件資訊，不構成投資建議。行情可能為延遲資料，事件時間也可能臨時調整；交易前請以交易所、券商與官方公告為準。</p>
+      <p>本頁整理市場代理行情與事件資訊，不構成投資建議。代理 ETF、ADR 與匯率不等同本地指數；交易前請以交易所、券商與官方公告為準。</p>
       <p>© <span id="yearLabel"></span> Market Event Radar</p>
     </footer>
   </main>
@@ -238,6 +263,6 @@
   </template>
 
   <script src="data/seed.js"></script>
-  <script src="assets/app.js?v=4" defer></script>
+  <script src="assets/app.js" defer></script>
 </body>
 </html>

@@ -1,9 +1,9 @@
-const CACHE = "global-market-radar-v4";
+const CACHE = "global-market-radar-v5";
 const STATIC = [
   "./",
   "./index.html",
-  "./assets/styles.css?v=4",
-  "./assets/app.js?v=4",
+  "./assets/styles.css",
+  "./assets/app.js",
   "./assets/favicon.svg",
   "./data/seed.js",
   "./data/events.json",
@@ -16,46 +16,30 @@ self.addEventListener("install", (event) => {
 });
 
 self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    caches.keys().then((keys) => Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key))))
-  );
+  event.waitUntil(caches.keys().then((keys) => Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key)))));
   self.clients.claim();
 });
 
-async function networkFirst(request) {
-  try {
-    const response = await fetch(request, { cache: "no-store" });
-    if (response && response.ok) {
-      const copy = response.clone();
-      caches.open(CACHE).then((cache) => cache.put(request, copy));
-    }
-    return response;
-  } catch (error) {
-    return (await caches.match(request)) || (await caches.match("./index.html"));
-  }
-}
-
 self.addEventListener("fetch", (event) => {
-  if (event.request.method !== "GET") return;
   const url = new URL(event.request.url);
-
-  // Never intercept third-party widgets.
   if (url.origin !== self.location.origin) return;
 
-  if (
-    event.request.mode === "navigate" ||
-    url.pathname.endsWith("/index.html") ||
-    url.pathname.endsWith("/assets/app.js") ||
-    url.pathname.endsWith("/assets/styles.css") ||
-    url.pathname.endsWith("/data/events.json")
-  ) {
-    event.respondWith(networkFirst(event.request));
+  if (url.pathname.endsWith("/data/events.json")) {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(CACHE).then((cache) => cache.put(event.request, copy));
+          return response;
+        })
+        .catch(() => caches.match(event.request))
+    );
     return;
   }
 
   event.respondWith(
     caches.match(event.request).then((cached) => cached || fetch(event.request).then((response) => {
-      if (response && response.ok) {
+      if (response.ok && event.request.method === "GET") {
         const copy = response.clone();
         caches.open(CACHE).then((cache) => cache.put(event.request, copy));
       }

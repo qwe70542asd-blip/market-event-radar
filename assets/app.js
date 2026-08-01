@@ -20,6 +20,10 @@
     highCount: document.querySelector("#highCount"),
     nextCountdown: document.querySelector("#nextCountdown"),
     nextTitle: document.querySelector("#nextTitle"),
+    nextAssets: document.querySelector("#nextAssets"),
+    weekHeat: document.querySelector("#weekHeat"),
+    marketSessions: document.querySelector("#marketSessions"),
+    focusEventList: document.querySelector("#focusEventList"),
     searchInput: document.querySelector("#searchInput"),
     rangeFilter: document.querySelector("#rangeFilter"),
     regionFilter: document.querySelector("#regionFilter"),
@@ -42,11 +46,6 @@
     eventDialog: document.querySelector("#eventDialog"),
     dialogContent: document.querySelector("#dialogContent"),
     yearLabel: document.querySelector("#yearLabel"),
-    tickerWidget: document.querySelector("#tickerWidget"),
-    marketQuoteWidget: document.querySelector("#marketQuoteWidget"),
-    quoteFallback: document.querySelector("#quoteFallback"),
-    retryQuotes: document.querySelector("#retryQuotes"),
-    marketTabs: [...document.querySelectorAll(".market-tab")],
   };
 
   const impactMap = {
@@ -67,184 +66,54 @@
   const regionMap = { TW: "台灣", US: "美國", JP: "日本", KR: "韓國", EU: "歐洲", GLOBAL: "全球" };
   const weekday = ["週日", "週一", "週二", "週三", "週四", "週五", "週六"];
 
+  const marketSessions = [
+    { key: "TW", name: "台灣", zone: "Asia/Taipei", hours: [[540, 810]], label: "09:00–13:30" },
+    { key: "JP", name: "日本", zone: "Asia/Tokyo", hours: [[540, 690], [750, 930]], label: "09:00–15:30" },
+    { key: "KR", name: "韓國", zone: "Asia/Seoul", hours: [[540, 930]], label: "09:00–15:30" },
+    { key: "EU", name: "歐洲", zone: "Europe/Berlin", hours: [[540, 1050]], label: "09:00–17:30" },
+    { key: "US", name: "美國", zone: "America/New_York", hours: [[570, 960]], label: "09:30–16:00" },
+  ];
 
-  const marketGroups = {
-    TW: {
-      name: "台灣市場代理",
-      symbols: [
-        { name: "AMEX:EWT", displayName: "台灣市場 ETF（EWT）" },
-        { name: "NYSE:TSM", displayName: "台積電 ADR（TSM）" },
-        { name: "NYSE:UMC", displayName: "聯電 ADR（UMC）" },
-      ],
-    },
-    US: {
-      name: "美國",
-      symbols: [
-        { name: "AMEX:SPY", displayName: "S&P 500 ETF（SPY）" },
-        { name: "NASDAQ:QQQ", displayName: "NASDAQ 100 ETF（QQQ）" },
-        { name: "AMEX:DIA", displayName: "道瓊 ETF（DIA）" },
-        { name: "NASDAQ:SOXX", displayName: "半導體 ETF（SOXX）" },
-        { name: "NASDAQ:NVDA", displayName: "NVIDIA" },
-        { name: "NASDAQ:MSFT", displayName: "Microsoft" },
-      ],
-    },
-    JP: {
-      name: "日本市場代理",
-      symbols: [
-        { name: "AMEX:EWJ", displayName: "日本市場 ETF（EWJ）" },
-        { name: "NYSE:TM", displayName: "Toyota ADR（TM）" },
-        { name: "NYSE:SONY", displayName: "Sony ADR（SONY）" },
-      ],
-    },
-    KR: {
-      name: "韓國市場代理",
-      symbols: [
-        { name: "AMEX:EWY", displayName: "韓國市場 ETF（EWY）" },
-        { name: "NYSE:SKM", displayName: "SK Telecom ADR（SKM）" },
-        { name: "NYSE:PKX", displayName: "POSCO ADR（PKX）" },
-        { name: "NYSE:KB", displayName: "KB Financial ADR（KB）" },
-      ],
-    },
-    EU: {
-      name: "歐洲市場代理",
-      symbols: [
-        { name: "AMEX:FEZ", displayName: "歐元區 ETF（FEZ）" },
-        { name: "AMEX:EWG", displayName: "德國 ETF（EWG）" },
-        { name: "AMEX:EWU", displayName: "英國 ETF（EWU）" },
-        { name: "NASDAQ:ASML", displayName: "ASML ADR" },
-        { name: "NYSE:SAP", displayName: "SAP ADR" },
-      ],
-    },
-  };
-
-  let activeMarket = "TW";
-  let quoteLoadToken = 0;
-
-  function appendTradingViewScript(container, src, config) {
-    const script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src = src;
-    script.async = true;
-    script.textContent = JSON.stringify(config);
-    container.appendChild(script);
-    return script;
+  function partsInZone(date, timeZone) {
+    const parts = new Intl.DateTimeFormat("en-US", {
+      timeZone,
+      weekday: "short",
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23",
+    }).formatToParts(date);
+    return Object.fromEntries(parts.map((part) => [part.type, part.value]));
   }
 
-  function loadTickerTape() {
-    if (!els.tickerWidget || els.tickerWidget.dataset.loaded === "true") return;
-    els.tickerWidget.dataset.loaded = "true";
-    els.tickerWidget.innerHTML = '<div class="tradingview-widget-container__widget"></div>';
-    appendTradingViewScript(
-      els.tickerWidget,
-      "https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js",
-      {
-        symbols: [
-          { proName: "AMEX:EWT", title: "台灣 EWT" },
-          { proName: "AMEX:SPY", title: "美國 SPY" },
-          { proName: "AMEX:EWJ", title: "日本 EWJ" },
-          { proName: "AMEX:EWY", title: "韓國 EWY" },
-          { proName: "AMEX:FEZ", title: "歐洲 FEZ" },
-        ],
-        showSymbolLogo: true,
-        isTransparent: true,
-        displayMode: "adaptive",
-        colorTheme: "dark",
-        locale: "zh_TW",
-      },
-    );
+  function marketSessionState(session, now = new Date()) {
+    const parts = partsInZone(now, session.zone);
+    const weekend = parts.weekday === "Sat" || parts.weekday === "Sun";
+    const minutes = Number(parts.hour) * 60 + Number(parts.minute);
+    const open = session.hours.some(([start, end]) => minutes >= start && minutes < end);
+    const beforeOpen = minutes < session.hours[0][0];
+    if (weekend) return { label: "休市", color: "#6f8496", className: "closed" };
+    if (open) return { label: "交易中", color: "#72f6bd", className: "open" };
+    if (beforeOpen) return { label: "開盤前", color: "#68a8ff", className: "pre" };
+    return { label: "已收盤", color: "#91a6b9", className: "closed" };
   }
 
-  function renderQuoteLoading(marketKey) {
-    const name = marketGroups[marketKey]?.name || "市場";
-    els.marketQuoteWidget.innerHTML = `
-      <div class="quote-loading">
-        <i></i>
-        <strong>正在載入${name}行情</strong>
-        <span>僅載入目前頁籤，避免一次下載所有市場資料。</span>
-      </div>`;
-    els.quoteFallback.hidden = true;
-  }
-
-  function loadMarketQuotes(marketKey = activeMarket) {
-    if (!els.marketQuoteWidget || !marketGroups[marketKey]) return;
-    activeMarket = marketKey;
-    const token = ++quoteLoadToken;
-    renderQuoteLoading(marketKey);
-
-    const mount = document.createElement("div");
-    mount.className = "tradingview-widget-container market-quotes-mount";
-    mount.innerHTML = '<div class="tradingview-widget-container__widget"></div>';
-    els.marketQuoteWidget.appendChild(mount);
-
-    appendTradingViewScript(
-      mount,
-      "https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js",
-      {
-        width: "100%",
-        height: 460,
-        symbolsGroups: [
-          {
-            name: marketGroups[marketKey].name,
-            originalName: marketGroups[marketKey].name,
-            symbols: marketGroups[marketKey].symbols,
-          },
-        ],
-        showSymbolLogo: true,
-        isTransparent: true,
-        colorTheme: "dark",
-        locale: "zh_TW",
-        backgroundColor: "#07111f",
-      },
-    );
-
-    const observer = new MutationObserver(() => {
-      if (token !== quoteLoadToken) return observer.disconnect();
-      const iframe = mount.querySelector("iframe");
-      if (iframe) {
-        els.marketQuoteWidget.querySelector(".quote-loading")?.remove();
-        els.quoteFallback.hidden = true;
-        observer.disconnect();
-      }
-    });
-    observer.observe(mount, { childList: true, subtree: true });
-
-    window.setTimeout(() => {
-      if (token !== quoteLoadToken) return;
-      if (!mount.querySelector("iframe")) {
-        observer.disconnect();
-        els.marketQuoteWidget.innerHTML = "";
-        els.quoteFallback.hidden = false;
-      }
-    }, 9000);
-  }
-
-  function initMarketQuotes() {
-    if (!els.marketQuoteWidget) return;
-    els.marketTabs.forEach((button) => {
-      button.addEventListener("click", () => {
-        const market = button.dataset.market;
-        els.marketTabs.forEach((tab) => {
-          const selected = tab === button;
-          tab.classList.toggle("active", selected);
-          tab.setAttribute("aria-selected", String(selected));
-        });
-        loadMarketQuotes(market);
-      });
-    });
-    els.retryQuotes?.addEventListener("click", () => loadMarketQuotes(activeMarket));
-
-    const start = () => loadMarketQuotes(activeMarket);
-    const marketSection = document.querySelector("#markets");
-    if ("IntersectionObserver" in window && marketSection) {
-      const observer = new IntersectionObserver((entries) => {
-        if (entries.some((entry) => entry.isIntersecting)) {
-          observer.disconnect();
-          start();
-        }
-      }, { rootMargin: "240px" });
-      observer.observe(marketSection);
-    } else {
-      window.setTimeout(start, 300);
+  function renderMarketSessions(now = new Date()) {
+    if (!els.marketSessions) return;
+    els.marketSessions.innerHTML = "";
+    for (const session of marketSessions) {
+      const parts = partsInZone(now, session.zone);
+      const sessionState = marketSessionState(session, now);
+      const card = document.createElement("article");
+      card.className = `session-card ${sessionState.className}`;
+      card.style.setProperty("--session-color", sessionState.color);
+      card.innerHTML = `
+        <div class="session-top">
+          <strong>${session.name}</strong>
+          <span class="session-status"><i></i>${sessionState.label}</span>
+        </div>
+        <span class="session-time">${parts.hour}:${parts.minute}</span>
+        <span class="session-meta">一般時段 ${session.label}</span>`;
+      els.marketSessions.appendChild(card);
     }
   }
 
@@ -388,35 +257,106 @@
       weekday: "long",
     }).format(now);
     els.clockLabel.textContent = `${p.hour}:${p.minute}:${p.second}`;
+    renderMarketSessions(now);
     updateCountdowns();
   }
 
   function updateStats() {
     const now = new Date();
     const today = dateKey(now);
-    const inDays = (e, days) => {
-      const diff = new Date(e.start) - now;
+    const inDays = (event, days) => {
+      const diff = new Date(event.start) - now;
       return diff >= -3600000 && diff <= days * 86400000;
     };
-    const todayEvents = state.events.filter((e) => eventDateKey(e) === today);
-    const weekEvents = state.events.filter((e) => inDays(e, 7));
-    const monthEvents = state.events.filter((e) => inDays(e, 30));
-    const highEvents = monthEvents.filter((e) => e.impact === "high");
+    const todayEvents = state.events.filter((event) => eventDateKey(event) === today);
+    const weekEvents = state.events.filter((event) => inDays(event, 7));
+    const monthEvents = state.events.filter((event) => inDays(event, 30));
+    const highEvents = monthEvents.filter((event) => event.impact === "high");
 
     els.todayCount.textContent = todayEvents.length;
-    const todayHigh = todayEvents.filter((e) => e.impact === "high").length;
+    const todayHigh = todayEvents.filter((event) => event.impact === "high").length;
     els.todayRisk.textContent = todayHigh ? `${todayHigh} 個高影響事件` : "尚無高風險事件";
     els.weekCount.textContent = weekEvents.length;
     els.highCount.textContent = highEvents.length;
 
-    const upcoming = state.events.filter((e) => new Date(e.start) >= now);
-    const next = upcoming.find((e) => e.impact === "high") || upcoming[0];
+    const upcoming = state.events.filter((event) => new Date(event.start) >= now);
+    const next = upcoming.find((event) => event.impact === "high") || upcoming[0];
     if (next) {
       els.nextCountdown.textContent = countdownLabel(next, now);
       els.nextTitle.textContent = next.title;
+      if (els.nextAssets) {
+        els.nextAssets.innerHTML = (next.assets || []).slice(0, 5).map((asset) => `<span>${safeText(asset)}</span>`).join("");
+      }
     } else {
       els.nextCountdown.textContent = "—";
       els.nextTitle.textContent = "目前沒有未來事件";
+      if (els.nextAssets) els.nextAssets.innerHTML = "";
+    }
+  }
+
+  function renderWeekHeat() {
+    if (!els.weekHeat) return;
+    const today = taipeiMidnight();
+    const days = [];
+    for (let index = 0; index < 7; index += 1) {
+      const day = new Date(today.getTime() + index * 86400000);
+      const key = dateKey(day);
+      const events = state.events.filter((event) => eventDateKey(event) === key);
+      const score = events.reduce((sum, event) => sum + (impactMap[event.impact]?.weight || 1), 0);
+      const maxWeight = events.reduce((max, event) => Math.max(max, impactMap[event.impact]?.weight || 1), 0);
+      days.push({ day, events, score, maxWeight });
+    }
+    const maxScore = Math.max(1, ...days.map((item) => item.score));
+    els.weekHeat.innerHTML = "";
+    for (const item of days) {
+      const height = item.score ? Math.max(12, Math.round((item.score / maxScore) * 90)) : 5;
+      const color = item.maxWeight >= 3 ? "#ff6d7a" : item.maxWeight === 2 ? "#ffc866" : item.maxWeight === 1 ? "#68a8ff" : "#385169";
+      const wrapper = document.createElement("div");
+      wrapper.className = "heat-day";
+      wrapper.title = `${formatDateTime(item.day, { dateOnly: true })}：${item.events.length} 筆事件`;
+      wrapper.innerHTML = `<strong>${item.events.length}</strong><div class="heat-bar" style="height:${height}px;--heat-color:${color}"></div><small>${new Intl.DateTimeFormat("zh-TW", { timeZone: TZ, weekday: "short" }).format(item.day)}</small>`;
+      els.weekHeat.appendChild(wrapper);
+    }
+  }
+
+  function renderFocusEvents() {
+    if (!els.focusEventList) return;
+    const now = new Date();
+    const candidates = state.events
+      .filter((event) => new Date(event.start) >= now)
+      .sort((a, b) => {
+        const aSoon = daysFromToday(a) <= 7 ? 0 : 1;
+        const bSoon = daysFromToday(b) <= 7 ? 0 : 1;
+        if (aSoon !== bSoon) return aSoon - bSoon;
+        const weightDiff = (impactMap[b.impact]?.weight || 1) - (impactMap[a.impact]?.weight || 1);
+        if (weightDiff) return weightDiff;
+        return new Date(a.start) - new Date(b.start);
+      })
+      .slice(0, 3);
+
+    els.focusEventList.innerHTML = "";
+    if (!candidates.length) {
+      els.focusEventList.innerHTML = '<div class="empty-state"><h3>目前沒有未來事件</h3><p>等待下一次資料更新。</p></div>';
+      return;
+    }
+
+    for (const event of candidates) {
+      const impact = impactMap[event.impact] || impactMap.low;
+      const card = document.createElement("article");
+      card.className = "focus-event";
+      card.style.setProperty("--impact-color", impact.color);
+      card.tabIndex = 0;
+      card.innerHTML = `
+        <div class="focus-event-top"><span>${impact.label}</span><span>${safeText(formatDateTime(event.start, { weekday: true }))}</span></div>
+        <h3>${safeText(event.title)}</h3>
+        <p>${safeText(event.market_effect || event.description || "等待更多官方資訊。")}</p>
+        <div class="focus-assets">${(event.assets || []).slice(0, 5).map((asset) => `<span>${safeText(asset)}</span>`).join("")}</div>
+        <span class="focus-countdown">${safeText(countdownLabel(event))}</span>`;
+      card.addEventListener("click", () => openEvent(event));
+      card.addEventListener("keydown", (keyboardEvent) => {
+        if (keyboardEvent.key === "Enter" || keyboardEvent.key === " ") openEvent(event);
+      });
+      els.focusEventList.appendChild(card);
     }
   }
 
@@ -537,8 +477,8 @@
     const sources = state.payload.sources || [];
     els.sourceStatus.innerHTML = `
       <div class="source-item">
-        <div><strong>TradingView 市場代理行情</strong><small>使用可公開嵌入的 ETF 與 ADR，避免交易所權限錯誤</small></div>
-        <span class="source-state"><i></i>快速模式</span>
+        <div><strong>TradingView 代理行情帶</strong><small>ETF、ADR、匯率與風險指標；可能為延遲資料</small></div>
+        <span class="source-state"><i></i>公開嵌入</span>
       </div>`;
     if (!sources.length) return;
     for (const source of sources) {
@@ -588,6 +528,8 @@
     els.updatedAt.textContent = formatUpdated(state.payload.metadata?.updated_at);
     els.yearLabel.textContent = new Intl.DateTimeFormat("en", { timeZone: TZ, year: "numeric" }).format(new Date());
     updateStats();
+    renderWeekHeat();
+    renderFocusEvents();
     renderSources();
     applyFilters();
     updateClock();
@@ -627,8 +569,6 @@
     navigator.serviceWorker.register("service-worker.js").catch(() => {});
   }
 
-  initMarketQuotes();
-  window.addEventListener("load", () => window.setTimeout(loadTickerTape, 1200), { once: true });
   loadData();
   setInterval(updateClock, 1000);
 })();
