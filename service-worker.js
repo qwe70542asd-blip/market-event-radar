@@ -1,11 +1,11 @@
-const CACHE_NAME = "market-event-radar-v10-3-0";
+const CACHE_NAME = "market-event-radar-v10-4-0";
 const STATIC_ASSETS = [
   "./", "index.html", "event.html", "news.html", "portfolio.html", "asset.html", "manifest.webmanifest",
-  "assets/styles.css?v=10.3.0", "assets/app.js?v=10.3.0", "assets/event.js?v=10.3.0",
-  "assets/auth.js?v=10.3.0", "assets/firebase-config.js",
-  "assets/news-core.js?v=10.3.0", "assets/news-ui.js?v=10.3.0",
-  "assets/news-page.js?v=10.3.0", "assets/portfolio.js?v=10.3.0", "assets/asset-master.js?v=10.3.0", "assets/asset-detail.js?v=10.3.0", "assets/announcements.js?v=10.3.0",
-  "assets/sw-register.js?v=10.3.0", "assets/favicon.svg",
+  "assets/styles.css?v=10.4.0", "assets/app.js?v=10.4.0", "assets/event.js?v=10.4.0",
+  "assets/auth.js?v=10.4.0", "assets/firebase-config.js",
+  "assets/news-core.js?v=10.4.0", "assets/news-ui.js?v=10.4.0",
+  "assets/news-page.js?v=10.4.0", "assets/portfolio.js?v=10.4.0", "assets/asset-master.js?v=10.4.0", "assets/asset-detail.js?v=10.4.0", "assets/announcements.js?v=10.4.0",
+  "assets/sw-register.js?v=10.4.0", "assets/favicon.svg",
   "data/seed.js", "data/news-seed.js", "data/assets-seed.js", "data/announcements-seed.js"
 ];
 

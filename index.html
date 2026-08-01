@@ -8,7 +8,7 @@
   <title>全球市場即時雷達｜Global Market Radar</title>
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="assets/styles.css?v=10.3.0" />
+  <link rel="stylesheet" href="assets/styles.css?v=10.4.0" />
   <script type="module" src="https://widgets.tradingview-widget.com/w/en/tv-ticker-tape.js"></script>
 </head>
 <body>
@@ -18,7 +18,7 @@
       <span class="brand-mark" aria-hidden="true">
         <svg viewBox="0 0 48 48" role="img"><path d="M7 34 16 24l7 6 10-16 8 6"/><path d="M7 40h34"/></svg>
       </span>
-      <span><strong>全球市場即時雷達 <em class="version-badge">v10.3</em></strong><small>PERSONAL MARKET & EVENT RADAR</small></span>
+      <span><strong>全球市場即時雷達 <em class="version-badge">v10.4</em></strong><small>PERSONAL MARKET & EVENT RADAR</small></span>
     </a>
     <div class="top-actions">
       <span class="live-dot"><i></i> 自動更新</span>
@@ -169,7 +169,23 @@
         <div class="filters">
           <select id="rangeFilter" aria-label="日期範圍"><option value="30" selected>未來 30 天</option><option value="7">未來 7 天</option><option value="90">未來 90 天</option><option value="all">全部事件</option></select>
           <select id="regionFilter" aria-label="地區"><option value="all">全部地區</option><option value="TW">台灣</option><option value="US">美國</option><option value="JP">日本</option><option value="KR">韓國</option><option value="EU">歐洲</option><option value="GLOBAL">全球</option></select>
-          <select id="categoryFilter" aria-label="事件類型"><option value="all">全部類型</option><option value="central-bank">央行政策</option><option value="macro">總經數據</option><option value="earnings">企業財報</option><option value="tech">科技活動</option><option value="taiwan">台股公告</option><option value="policy">政策／地緣</option></select>
+          <select id="categoryFilter" aria-label="事件類型">
+            <option value="all">全部類型</option>
+            <optgroup label="大分類">
+              <option value="macro">總經／央行</option>
+              <option value="earnings">財報／營收</option>
+              <option value="dividend">股利／除權息</option>
+              <option value="corporate">法說／公司行動</option>
+            </optgroup>
+            <optgroup label="細項">
+              <option value="central-bank">央行政策</option><option value="policy">政策／地緣</option>
+              <option value="monthly-revenue">月營收</option><option value="report-deadline">財報期限</option>
+              <option value="ex-dividend">個股除權息</option><option value="etf-distribution">ETF／主動型 ETF 配息</option>
+              <option value="dividend-decision">股利方案</option><option value="dividend-payment">股利發放</option>
+              <option value="investor-conference">法人說明會</option><option value="shareholder-meeting">股東會</option>
+              <option value="corporate-action">股票分割／公司行動</option>
+            </optgroup>
+          </select>
           <label class="toggle"><input id="highOnly" type="checkbox" /><span></span>只看高影響</label>
         </div>
       </div>
@@ -187,8 +203,16 @@
 
     <section id="calendarSection" class="calendar-section month-primary">
       <div class="section-heading section-heading-tight">
-        <div><p class="eyebrow">MONTHLY RADAR</p><h2>本月事件月曆</h2><p class="section-copy">一天多個事件會並排顯示；滑到籤條可看簡短摘要，點擊會前往事件詳情頁。</p></div>
+        <div><p class="eyebrow">MONTHLY RADAR</p><h2>本月事件月曆</h2><p class="section-copy">完整整理總經、個股財報、月營收、法說會、股利方案、除權息、ETF 配息與公司行動；一天事件較多時點「更多」查看完整清單。</p></div>
         <div class="calendar-toolbar compact-toolbar"><button id="prevMonth" class="mini-btn" type="button">‹ 上月</button><h3 id="calendarTitle">—</h3><button id="todayMonth" class="mini-btn" type="button">本月</button><button id="nextMonth" class="mini-btn" type="button">下月 ›</button></div>
+      </div>
+      <div id="calendarDataState" class="calendar-data-state">正在讀取事件資料…</div>
+      <div id="monthEventSummary" class="month-event-summary" aria-label="本月事件分類統計"></div>
+      <div class="calendar-legend">
+        <span><i class="group-macro"></i>總經／央行</span>
+        <span><i class="group-earnings"></i>財報／營收</span>
+        <span><i class="group-dividend"></i>股利／除權息</span>
+        <span><i class="group-corporate"></i>法說／公司行動</span>
       </div>
       <div class="calendar-weekdays" aria-hidden="true"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>
       <div id="calendarGrid" class="calendar-grid compact-calendar"></div>
@@ -221,6 +245,7 @@
         <div><p class="eyebrow">DAY AGENDA</p><h2 id="dayEventsTitle">當日事件</h2></div>
         <button id="closeDayEventsBtn" class="dialog-x" type="button" aria-label="關閉">×</button>
       </div>
+      <div id="dayEventsCounts" class="day-events-counts" aria-label="當日事件分類"></div>
       <div id="dayEventsList" class="day-events-list"></div>
     </div>
   </dialog>
@@ -310,13 +335,13 @@
   <script src="data/assets-seed.js"></script>
   <script src="data/announcements-seed.js"></script>
   <script src="data/news-seed.js"></script>
-  <script type="module" src="assets/auth.js?v=10.3.0"></script>
-  <script src="assets/app.js?v=10.3.0" defer></script>
-  <script src="assets/asset-master.js?v=10.3.0" defer></script>
-  <script src="assets/announcements.js?v=10.3.0" defer></script>
-  <script src="assets/news-core.js?v=10.3.0" defer></script>
-  <script src="assets/news-ui.js?v=10.3.0" defer></script>
-  <script src="assets/portfolio.js?v=10.3.0" defer></script>
-  <script src="assets/sw-register.js?v=10.3.0" defer></script>
+  <script type="module" src="assets/auth.js?v=10.4.0"></script>
+  <script src="assets/app.js?v=10.4.0" defer></script>
+  <script src="assets/asset-master.js?v=10.4.0" defer></script>
+  <script src="assets/announcements.js?v=10.4.0" defer></script>
+  <script src="assets/news-core.js?v=10.4.0" defer></script>
+  <script src="assets/news-ui.js?v=10.4.0" defer></script>
+  <script src="assets/portfolio.js?v=10.4.0" defer></script>
+  <script src="assets/sw-register.js?v=10.4.0" defer></script>
 </body>
 </html>

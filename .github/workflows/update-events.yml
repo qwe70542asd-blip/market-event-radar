@@ -1,24 +1,36 @@
-name: Update market events
+name: Update v10.4 rich market calendar
 
 on:
+  push:
+    branches: ["main"]
+    paths:
+      - "scripts/update_events.py"
+      - "data/manual_events.json"
+      - "data/bootstrap_corporate_events.json"
+      - "data/assets.json"
+      - "requirements.txt"
+      - ".github/workflows/update-events.yml"
   schedule:
-    # 00:15 UTC = 08:15 Asia/Taipei
-    - cron: "15 0 * * *"
+    # Taiwan time 08:15, 13:15 and 18:15
+    - cron: "15 0,5,10 * * *"
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: market-radar-data-update
+  group: market-radar-calendar-update
   cancel-in-progress: false
 
 jobs:
   update:
     runs-on: ubuntu-latest
+    timeout-minutes: 22
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -29,12 +41,25 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Update events
+      - name: Build rich calendar
         env:
           NASDAQ_ENABLED: "1"
         run: python scripts/update_events.py
 
-      - name: Commit changed data
+      - name: Validate event output
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path("data/events.json").read_text(encoding="utf-8"))
+          events = data.get("events", [])
+          assert isinstance(events, list)
+          assert all(row.get("id") and row.get("title") and row.get("start") for row in events)
+          print("events:", len(events))
+          print("groups:", data.get("metadata", {}).get("group_counts"))
+          PY
+
+      - name: Commit calendar changes
         run: |
           if git diff --quiet -- data/events.json data/seed.js; then
             echo "No event changes."
@@ -43,6 +68,10 @@ jobs:
           git config user.name "market-event-radar-bot"
           git config user.email "actions@users.noreply.github.com"
           git add data/events.json data/seed.js
-          git commit -m "chore: update market events"
-          git pull --rebase
-          git push
+          git commit -m "chore: refresh rich market calendar v10.4"
+          for attempt in 1 2 3; do
+            git pull --rebase && git push && exit 0
+            echo "Push attempt $attempt failed; retrying..."
+            sleep $((attempt * 4))
+          done
+          exit 1
