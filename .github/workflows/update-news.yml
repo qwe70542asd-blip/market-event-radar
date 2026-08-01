@@ -1,9 +1,16 @@
 name: Update multi-source finance news
 
 on:
+  push:
+    branches: ["main"]
+    paths:
+      - "scripts/update_news.py"
+      - "requirements.txt"
+      - ".github/workflows/update-news.yml"
   schedule:
-    # Every 4 hours, offset from the top of the hour to reduce GitHub queue delays.
-    - cron: "17 */4 * * *"
+    # GitHub Actions cron cannot reliably update every minute.
+    # Refresh source data every 15 minutes; the website rotates headlines every 60 seconds.
+    - cron: "7,22,37,52 * * * *"
   workflow_dispatch:
 
 permissions:

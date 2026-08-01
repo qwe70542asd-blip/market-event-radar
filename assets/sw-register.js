@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const VERSION = "9.1";
+  const VERSION = "9.2";
   const key = "market-radar-version";
   const previous = localStorage.getItem(key);
   localStorage.setItem(key, VERSION);

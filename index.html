@@ -8,7 +8,7 @@
   <title>全球市場即時雷達｜Global Market Radar</title>
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="assets/styles.css?v=9.1" />
+  <link rel="stylesheet" href="assets/styles.css?v=9.2.2" />
   <script type="module" src="https://widgets.tradingview-widget.com/w/en/tv-ticker-tape.js"></script>
 </head>
 <body>
@@ -18,7 +18,7 @@
       <span class="brand-mark" aria-hidden="true">
         <svg viewBox="0 0 48 48" role="img"><path d="M7 34 16 24l7 6 10-16 8 6"/><path d="M7 40h34"/></svg>
       </span>
-      <span><strong>全球市場即時雷達 <em class="version-badge">v9</em></strong><small>TAIWAN INVESTOR EVENT RADAR</small></span>
+      <span><strong>全球市場即時雷達 <em class="version-badge">v9.2</em></strong><small>TAIWAN INVESTOR EVENT RADAR</small></span>
     </a>
     <div class="top-actions">
       <span class="live-dot"><i></i> 自動更新</span>
@@ -43,6 +43,21 @@
       transparent-background
     ></tv-ticker-tape>
   </div>
+
+  <section class="breaking-news-bar" aria-label="重要財經新聞跑馬燈">
+    <a class="breaking-label" href="news.html"><span></span>重要新聞</a>
+    <div class="breaking-viewport">
+      <a id="breakingNewsLink" href="news.html">
+        <strong id="breakingNewsSource">新聞雷達</strong>
+        <span id="breakingNewsTitle">等待首次新聞排程更新</span>
+      </a>
+    </div>
+    <div class="breaking-controls">
+      <button id="breakingPrev" type="button" aria-label="上一則新聞">‹</button>
+      <span id="breakingCounter">0/0</span>
+      <button id="breakingNext" type="button" aria-label="下一則新聞">›</button>
+    </div>
+  </section>
 
   <main class="shell shell-compact">
     <section class="command-center">
@@ -75,8 +90,8 @@
       <div class="command-tools">
         <button id="openWatchlistBtn" class="quick-action" type="button"><span>★</span><b>自選收藏</b><small>股票與事件</small></button>
         <button id="notificationBtn" class="quick-action" type="button"><span>◉</span><b>事件提醒</b><small>通知權限</small></button>
-        <button id="syncActionBtn" class="quick-action" type="button"><span>↻</span><b id="syncTitle">本機儲存</b><small id="syncDescription">登入後跨裝置同步</small></button>
-        <a class="quick-action" href="news.html"><span>▤</span><b>財經新聞</b><small>台灣與國際來源</small></a>
+        <button id="syncActionBtn" class="quick-action" type="button"><span>↻</span><b id="syncTitle">帳號同步</b><small id="syncDescription">登入 Google 跨裝置</small></button>
+        <a class="quick-action news-quick-action" href="news.html"><span>▤</span><b>財經新聞 <i>LIVE</i></b><small>台灣與國際焦點</small></a>
       </div>
 
       <div class="update-line">
@@ -207,9 +222,9 @@
 
   <script src="data/seed.js"></script>
   <script src="data/news-seed.js"></script>
-  <script type="module" src="assets/auth.js?v=9"></script>
-  <script src="assets/app.js?v=9.1" defer></script>
-  <script src="assets/news-ui.js?v=9" defer></script>
-  <script src="assets/sw-register.js?v=9.1" defer></script>
+  <script type="module" src="assets/auth.js?v=9.2"></script>
+  <script src="assets/app.js?v=9.2.2" defer></script>
+  <script src="assets/news-ui.js?v=9.2" defer></script>
+  <script src="assets/sw-register.js?v=9.2.2" defer></script>
 </body>
 </html>

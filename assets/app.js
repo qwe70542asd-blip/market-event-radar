@@ -344,8 +344,8 @@
       }
       if (status) status.textContent = "已登入 Google，個人資料會同步到其他裝置。";
       if (logout) logout.hidden = false;
-      if ($("#syncTitle")) $("#syncTitle").textContent = "Google 雲端同步";
-      if ($("#syncDescription")) $("#syncDescription").textContent = "自選清單、收藏、提醒與篩選偏好會跨裝置同步。";
+      if ($("#syncTitle")) $("#syncTitle").textContent = "已登入同步";
+      if ($("#syncDescription")) $("#syncDescription").textContent = "Google 跨裝置同步";
       if ($("#syncActionBtn")) $("#syncActionBtn").textContent = "帳號設定";
       if ($("#drawerSyncState")) $("#drawerSyncState").textContent = "已啟用 Google 跨裝置同步";
     } else {
@@ -353,8 +353,8 @@
       if (avatar) { avatar.textContent = "訪"; avatar.style.backgroundImage = ""; avatar.classList.remove("has-photo"); }
       if (status) status.textContent = enabled ? "可使用 Google 登入，或繼續使用訪客模式。" : "Google 登入尚未啟用：請先設定 Firebase。訪客模式仍可正常使用。";
       if (logout) logout.hidden = true;
-      if ($("#syncTitle")) $("#syncTitle").textContent = "本機儲存";
-      if ($("#syncDescription")) $("#syncDescription").textContent = "目前未登入，收藏與偏好只保存在這台裝置。";
+      if ($("#syncTitle")) $("#syncTitle").textContent = "帳號同步";
+      if ($("#syncDescription")) $("#syncDescription").textContent = "登入 Google 跨裝置";
       if ($("#syncActionBtn")) $("#syncActionBtn").textContent = "登入同步";
       if ($("#drawerSyncState")) $("#drawerSyncState").textContent = "訪客資料只保存在本機";
     }
