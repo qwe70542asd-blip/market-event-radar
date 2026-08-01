@@ -1,29 +1,27 @@
 {
   "metadata": {
-    "updated_at": "2026-08-01T18:58:09+08:00",
+    "updated_at": "2026-08-01T20:13:16+08:00",
     "timezone": "Asia/Taipei",
-    "item_count": 220,
-    "chinese_item_count": 298,
-    "healthy_sources": 26,
+    "item_count": 143,
+    "chinese_item_count": 143,
+    "healthy_sources": 4,
     "source_count": 55,
-    "rotation_bucket": 3,
+    "rotation_bucket": 0,
     "version": "v10.3",
     "industry_counts": {
-      "finance": 31,
-      "macro-policy": 12,
-      "other": 160,
-      "energy": 15,
-      "technology": 83,
+      "finance": 26,
+      "macro-policy": 4,
+      "other": 66,
+      "technology": 35,
       "healthcare": 2,
-      "telecom": 13,
-      "automotive": 2,
+      "telecom": 1,
+      "energy": 3,
+      "automotive": 1,
       "consumer": 3,
       "real-estate": 1,
-      "industrial": 4,
-      "agriculture": 12,
-      "crypto": 10
+      "industrial": 1
     },
-    "duplicate_titles_removed": 12,
+    "duplicate_titles_removed": 1,
     "note": "All-industry coverage prioritized. Headlines are classified into broad industry groups and deduplicated."
   },
   "source": {
@@ -70,227 +68,201 @@
     },
     {
       "name": "Yahoo 股市",
-      "status": "ok",
-      "count": 12,
-      "mode": "publisher-search",
-      "language": "zh-Hant",
-      "source_group": "tw-media"
-    },
-    {
-      "name": "鉅亨網",
-      "status": "ok",
-      "count": 12,
-      "mode": "publisher-search",
-      "language": "zh-Hant",
-      "source_group": "tw-media"
-    },
-    {
-      "name": "MoneyDJ",
-      "status": "ok",
-      "count": 12,
-      "mode": "publisher-search",
-      "language": "zh-Hant",
-      "source_group": "tw-media"
-    },
-    {
-      "name": "工商時報",
-      "status": "ok",
-      "count": 12,
-      "mode": "publisher-search",
-      "language": "zh-Hant",
-      "source_group": "tw-media"
-    },
-    {
-      "name": "科技新報／財經新報",
-      "status": "ok",
-      "count": 12,
-      "mode": "publisher-search",
-      "language": "zh-Hant",
-      "source_group": "tw-media"
-    },
-    {
-      "name": "自由財經",
-      "status": "ok",
-      "count": 12,
-      "mode": "publisher-search",
-      "language": "zh-Hant",
-      "source_group": "tw-media"
-    },
-    {
-      "name": "中央銀行",
-      "status": "ok",
-      "count": 12,
-      "mode": "publisher-search",
-      "language": "zh-Hant",
-      "source_group": "official-tw"
-    },
-    {
-      "name": "公開資訊觀測站",
-      "status": "ok",
-      "count": 1,
-      "mode": "publisher-search",
-      "language": "zh-Hant",
-      "source_group": "official-tw"
-    },
-    {
-      "name": "AASTOCKS",
-      "status": "ok",
-      "count": 12,
-      "mode": "publisher-search",
-      "language": "zh-Hant",
-      "source_group": "hk-media"
-    },
-    {
-      "name": "經濟通 ET Net",
-      "status": "ok",
-      "count": 12,
-      "mode": "publisher-search",
-      "language": "zh-Hant",
-      "source_group": "hk-media"
-    },
-    {
-      "name": "香港經濟日報",
-      "status": "ok",
-      "count": 12,
-      "mode": "publisher-search",
-      "language": "zh-Hant",
-      "source_group": "hk-media"
-    },
-    {
-      "name": "信報財經新聞",
-      "status": "ok",
-      "count": 12,
-      "mode": "publisher-search",
-      "language": "zh-Hant",
-      "source_group": "hk-media"
-    },
-    {
-      "name": "明報財經",
-      "status": "ok",
-      "count": 12,
-      "mode": "publisher-search",
-      "language": "zh-Hant",
-      "source_group": "hk-media"
-    },
-    {
-      "name": "香港01財經",
-      "status": "empty",
+      "status": "warning",
       "count": 0,
       "mode": "publisher-search",
       "language": "zh-Hant",
-      "source_group": "hk-media"
+      "source_group": "tw-media",
+      "message": "503 Server Error: Service Unavailable for url: https://news.google.com/rss/search?q=site%3Atw.stock.yahoo.com+%28%E5%8F%B0%E8%82%A1+OR+%E7%BE%8E%E8%82%A1+OR+%E8"
     },
     {
-      "name": "產業雷達・能源公用",
-      "status": "ok",
+      "name": "鉅亨網",
+      "status": "stale",
+      "count": 1,
+      "mode": "publisher-search",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "message": "503 Server Error: Service Unavailable for url: https://news.google.com/rss/search?q=site%3Acnyes.com+%28%E5%8F%B0%E8%82%A1+OR+%E7%BE%8E%E8%82%A1+OR+%E5%A4%AE%E8"
+    },
+    {
+      "name": "MoneyDJ",
+      "status": "stale",
       "count": 12,
       "mode": "publisher-search",
       "language": "zh-Hant",
-      "source_group": "sector-search"
+      "source_group": "tw-media",
+      "message": "503 Server Error: Service Unavailable for url: https://news.google.com/rss/search?q=site%3Amoneydj.com+%28%E5%8F%B0%E8%82%A1+OR+%E7%BE%8E%E8%82%A1+OR+%E5%8D%8A%"
     },
     {
-      "name": "產業雷達・電信媒體",
-      "status": "ok",
+      "name": "工商時報",
+      "status": "stale",
       "count": 12,
       "mode": "publisher-search",
       "language": "zh-Hant",
-      "source_group": "sector-search"
+      "source_group": "tw-media",
+      "message": "503 Server Error: Service Unavailable for url: https://news.google.com/rss/search?q=site%3Actee.com.tw+%28%E5%8F%B0%E8%82%A1+OR+%E7%94%A2%E6%A5%AD+OR+%E8%B2%A1%"
     },
     {
-      "name": "產業雷達・農業食品",
-      "status": "ok",
+      "name": "科技新報／財經新報",
+      "status": "warning",
+      "count": 0,
+      "mode": "publisher-search",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "message": "503 Server Error: Service Unavailable for url: https://news.google.com/rss/search?q=%28site%3Atechnews.tw+OR+site%3Afinance.technews.tw%29+%28%E5%8D%8A%E5%B0%8E"
+    },
+    {
+      "name": "自由財經",
+      "status": "stale",
       "count": 12,
       "mode": "publisher-search",
       "language": "zh-Hant",
-      "source_group": "sector-search"
+      "source_group": "tw-media",
+      "message": "503 Server Error: Service Unavailable for url: https://news.google.com/rss/search?q=site%3Aec.ltn.com.tw+%28%E5%8F%B0%E8%82%A1+OR+%E5%9C%8B%E9%9A%9B%E8%B2%A1%E7"
     },
     {
-      "name": "Cointelegraph",
-      "status": "ok",
-      "count": 12,
+      "name": "中央銀行",
+      "status": "stale",
+      "count": 1,
       "mode": "publisher-search",
-      "language": "en",
-      "source_group": "crypto-media"
+      "language": "zh-Hant",
+      "source_group": "official-tw",
+      "message": "503 Server Error: Service Unavailable for url: https://news.google.com/rss/search?q=site%3Acbc.gov.tw+%28%E6%96%B0%E8%81%9E%E7%A8%BF+OR+%E5%88%A9%E7%8E%87+OR+%E"
     },
     {
-      "name": "Reuters",
-      "status": "ok",
-      "count": 12,
+      "name": "公開資訊觀測站",
+      "status": "warning",
+      "count": 0,
       "mode": "publisher-search",
-      "language": "en",
-      "source_group": "international"
-    },
-    {
-      "name": "CNBC",
-      "status": "ok",
-      "count": 12,
-      "mode": "publisher-search",
-      "language": "en",
-      "source_group": "international"
-    },
-    {
-      "name": "Nikkei Asia",
-      "status": "ok",
-      "count": 12,
-      "mode": "publisher-search",
-      "language": "en",
-      "source_group": "international"
-    },
-    {
-      "name": "White House",
-      "status": "ok",
-      "count": 12,
-      "mode": "publisher-search",
-      "language": "en",
-      "source_group": "official-global"
-    },
-    {
-      "name": "PMI／ISM",
-      "status": "ok",
-      "count": 12,
-      "mode": "publisher-search",
-      "language": "en",
-      "source_group": "official-global"
+      "language": "zh-Hant",
+      "source_group": "official-tw",
+      "message": "503 Server Error: Service Unavailable for url: https://news.google.com/rss/search?q=site%3Amops.twse.com.tw+%28%E9%87%8D%E5%A4%A7%E8%A8%8A%E6%81%AF+OR+%E6%B3%95"
     },
     {
       "name": "今周刊",
-      "status": "rotating-cache",
-      "count": 12,
-      "mode": "rotation-0",
+      "status": "warning",
+      "count": 0,
+      "mode": "publisher-search",
       "language": "zh-Hant",
-      "source_group": "tw-media"
+      "source_group": "tw-media",
+      "message": "503 Server Error: Service Unavailable for url: https://news.google.com/rss/search?q=site%3Abusinesstoday.com.tw+%28%E6%8A%95%E8%B3%87%E7%90%86%E8%B2%A1+OR+%E8%B"
     },
     {
       "name": "商業周刊",
-      "status": "rotating-cache",
-      "count": 12,
-      "mode": "rotation-0",
+      "status": "warning",
+      "count": 0,
+      "mode": "publisher-search",
       "language": "zh-Hant",
-      "source_group": "tw-media"
+      "source_group": "tw-media",
+      "message": "503 Server Error: Service Unavailable for url: https://news.google.com/rss/search?q=site%3Abusinessweekly.com.tw+%28%E8%B2%A1%E7%B6%93+OR+%E6%8A%95%E8%B3%87+OR+"
     },
     {
       "name": "財訊",
-      "status": "rotating-cache",
-      "count": 10,
-      "mode": "rotation-0",
+      "status": "stale",
+      "count": 9,
+      "mode": "publisher-search",
       "language": "zh-Hant",
-      "source_group": "tw-media"
+      "source_group": "tw-media",
+      "message": "503 Server Error: Service Unavailable for url: https://news.google.com/rss/search?q=site%3Awealth.com.tw+%28%E6%8A%95%E8%B3%87+OR+%E5%8F%B0%E8%82%A1+OR+%E7%94%A"
     },
     {
       "name": "ETtoday 財經雲",
-      "status": "rotating-cache",
-      "count": 12,
-      "mode": "rotation-0",
+      "status": "stale",
+      "count": 3,
+      "mode": "publisher-search",
       "language": "zh-Hant",
-      "source_group": "tw-media"
+      "source_group": "tw-media",
+      "message": "503 Server Error: Service Unavailable for url: https://news.google.com/rss/search?q=site%3Afinance.ettoday.net+%28%E5%8F%B0%E8%82%A1+OR+%E8%B2%A1%E7%B6%93+OR+%E"
     },
     {
       "name": "證券櫃檯買賣中心",
-      "status": "rotating-cache",
+      "status": "stale",
       "count": 1,
-      "mode": "rotation-0",
+      "mode": "publisher-search",
       "language": "zh-Hant",
-      "source_group": "official-tw"
+      "source_group": "official-tw",
+      "message": "503 Server Error: Service Unavailable for url: https://news.google.com/rss/search?q=site%3Atpex.org.tw+%28%E6%96%B0%E8%81%9E%E7%A8%BF+OR+%E4%B8%8A%E6%AB%83+OR+%"
+    },
+    {
+      "name": "產業雷達・金融",
+      "status": "warning",
+      "count": 0,
+      "mode": "publisher-search",
+      "language": "zh-Hant",
+      "source_group": "sector-search",
+      "message": "503 Server Error: Service Unavailable for url: https://news.google.com/rss/search?q=%28%E9%8A%80%E8%A1%8C+OR+%E9%87%91%E6%8E%A7+OR+%E4%BF%9D%E9%9A%AA+OR+%E8%AD%"
+    },
+    {
+      "name": "產業雷達・航運運輸",
+      "status": "warning",
+      "count": 0,
+      "mode": "publisher-search",
+      "language": "zh-Hant",
+      "source_group": "sector-search",
+      "message": "503 Server Error: Service Unavailable for url: https://news.google.com/rss/search?q=%28%E8%B2%A8%E6%AB%83+OR+%E6%95%A3%E8%A3%9D+OR+%E8%88%AA%E9%81%8B+OR+%E6%B5%"
+    },
+    {
+      "name": "產業雷達・鋼鐵原物料",
+      "status": "warning",
+      "count": 0,
+      "mode": "publisher-search",
+      "language": "zh-Hant",
+      "source_group": "sector-search",
+      "message": "503 Server Error: Service Unavailable for url: https://news.google.com/rss/search?q=%28%E9%8B%BC%E9%90%B5+OR+%E6%B0%B4%E6%B3%A5+OR+%E5%A1%91%E5%8C%96+OR+%E5%8C%"
+    },
+    {
+      "name": "動區動趨 BlockTempo",
+      "status": "warning",
+      "count": 0,
+      "mode": "publisher-search",
+      "language": "zh-Hant",
+      "source_group": "crypto-media",
+      "message": "503 Server Error: Service Unavailable for url: https://news.google.com/rss/search?q=site%3Ablocktempo.com+%28%E6%AF%94%E7%89%B9%E5%B9%A3+OR+%E4%BB%A5%E5%A4%AA%E"
+    },
+    {
+      "name": "Reuters",
+      "status": "warning",
+      "count": 0,
+      "mode": "publisher-search",
+      "language": "en",
+      "source_group": "international",
+      "message": "503 Server Error: Service Unavailable for url: https://news.google.com/rss/search?q=site%3Areuters.com%2Fmarkets+%28markets+OR+economy+OR+earnings+OR+tariff%29&"
+    },
+    {
+      "name": "CNBC",
+      "status": "warning",
+      "count": 0,
+      "mode": "publisher-search",
+      "language": "en",
+      "source_group": "international",
+      "message": "503 Server Error: Service Unavailable for url: https://news.google.com/rss/search?q=site%3Acnbc.com+%28markets+OR+earnings+OR+economy+OR+Federal+Reserve%29&hl=e"
+    },
+    {
+      "name": "Nikkei Asia",
+      "status": "warning",
+      "count": 0,
+      "mode": "publisher-search",
+      "language": "en",
+      "source_group": "international",
+      "message": "503 Server Error: Service Unavailable for url: https://news.google.com/rss/search?q=site%3Aasia.nikkei.com+%28markets+OR+technology+OR+economy+OR+Japan%29&hl=en"
+    },
+    {
+      "name": "White House",
+      "status": "warning",
+      "count": 0,
+      "mode": "publisher-search",
+      "language": "en",
+      "source_group": "official-global",
+      "message": "503 Server Error: Service Unavailable for url: https://news.google.com/rss/search?q=site%3Awhitehouse.gov+%28tariff+OR+trade+OR+semiconductor+OR+executive+order"
+    },
+    {
+      "name": "PMI／ISM",
+      "status": "warning",
+      "count": 0,
+      "mode": "publisher-search",
+      "language": "en",
+      "source_group": "official-global",
+      "message": "503 Server Error: Service Unavailable for url: https://news.google.com/rss/search?q=%28ISM+manufacturing+PMI+OR+ISM+services+PMI+OR+S%26P+Global+PMI%29&hl=en-US"
     },
     {
       "name": "數位時代",
@@ -381,28 +353,52 @@
       "source_group": "official-tw"
     },
     {
-      "name": "產業雷達・金融",
+      "name": "AASTOCKS",
       "status": "scheduled",
       "count": 0,
-      "mode": "rotation-0",
+      "mode": "rotation-3",
       "language": "zh-Hant",
-      "source_group": "sector-search"
+      "source_group": "hk-media"
     },
     {
-      "name": "產業雷達・航運運輸",
+      "name": "經濟通 ET Net",
       "status": "scheduled",
       "count": 0,
-      "mode": "rotation-0",
+      "mode": "rotation-3",
       "language": "zh-Hant",
-      "source_group": "sector-search"
+      "source_group": "hk-media"
     },
     {
-      "name": "產業雷達・鋼鐵原物料",
+      "name": "香港經濟日報",
       "status": "scheduled",
       "count": 0,
-      "mode": "rotation-0",
+      "mode": "rotation-3",
       "language": "zh-Hant",
-      "source_group": "sector-search"
+      "source_group": "hk-media"
+    },
+    {
+      "name": "信報財經新聞",
+      "status": "scheduled",
+      "count": 0,
+      "mode": "rotation-3",
+      "language": "zh-Hant",
+      "source_group": "hk-media"
+    },
+    {
+      "name": "明報財經",
+      "status": "scheduled",
+      "count": 0,
+      "mode": "rotation-3",
+      "language": "zh-Hant",
+      "source_group": "hk-media"
+    },
+    {
+      "name": "香港01財經",
+      "status": "scheduled",
+      "count": 0,
+      "mode": "rotation-3",
+      "language": "zh-Hant",
+      "source_group": "hk-media"
     },
     {
       "name": "產業雷達・機械工業",
@@ -453,12 +449,28 @@
       "source_group": "sector-search"
     },
     {
-      "name": "動區動趨 BlockTempo",
+      "name": "產業雷達・能源公用",
       "status": "scheduled",
       "count": 0,
-      "mode": "rotation-0",
+      "mode": "rotation-3",
       "language": "zh-Hant",
-      "source_group": "crypto-media"
+      "source_group": "sector-search"
+    },
+    {
+      "name": "產業雷達・電信媒體",
+      "status": "scheduled",
+      "count": 0,
+      "mode": "rotation-3",
+      "language": "zh-Hant",
+      "source_group": "sector-search"
+    },
+    {
+      "name": "產業雷達・農業食品",
+      "status": "scheduled",
+      "count": 0,
+      "mode": "rotation-3",
+      "language": "zh-Hant",
+      "source_group": "sector-search"
     },
     {
       "name": "鏈新聞 ABMedia",
@@ -473,6 +485,14 @@
       "status": "scheduled",
       "count": 0,
       "mode": "rotation-2",
+      "language": "en",
+      "source_group": "crypto-media"
+    },
+    {
+      "name": "Cointelegraph",
+      "status": "scheduled",
+      "count": 0,
+      "mode": "rotation-3",
       "language": "en",
       "source_group": "crypto-media"
     }
@@ -500,7 +520,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": true,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -528,93 +548,9 @@
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": true,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社產經證券"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "7aac3d6c84907254",
-      "title": "市場不信Fed會再升息？美債曲線出現罕見警訊 - news.cnyes.com",
-      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9hVk5CQWhVUzd2WG43cEsxV250d3p5QTZ1M3dOa051TV9zd0FVTFp6MjE5c3FEUnVJeXc0eWszazJJdDRTZGR6TlZmMGNTSmc?oc=5",
-      "source": "news.cnyes.com",
-      "query_source": "鉅亨網",
-      "summary": "市場不信Fed會再升息？美債曲線出現罕見警訊 news.cnyes.com",
-      "published_at": "2026-07-31T23:00:07+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 86,
-      "is_breaking": true,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "news.cnyes.com"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "82b65f80655d27d2",
-      "title": "中油宣布 桶裝瓦斯等8月價格凍漲 - 東森新聞",
-      "link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE9JVzd1Rkt3dkJkU21kTksybDA0bkR4TFYtSVl1bmdycV85M245TldzdmdSd0lvMERvNkI4SE0zMkZhMmFLajZqeVVKN3l6clRUWWR6SQ?oc=5",
-      "source": "東森新聞",
-      "query_source": "產業雷達・能源公用",
-      "summary": "中油宣布 桶裝瓦斯等8月價格凍漲 東森新聞",
-      "published_at": "2026-08-01T16:28:00+08:00",
-      "region": "TW",
-      "topic": "industry",
-      "industries": [
-        "energy"
-      ],
-      "primary_industry": "energy",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "能源公用",
-      "language": "zh-Hant",
-      "source_group": "sector-search",
-      "origin": "publisher-search",
-      "quality_score": 74,
-      "is_breaking": true,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "東森新聞"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "c5de1f143d767502",
-      "title": "巴紐關閉我方駐處「天然氣進口占8％」外交部宣布停止採購 經濟部說話了",
-      "link": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE4tcms3UmlleWJrU2ZlYzBaTnh6Z1VKMksyZzY0QTlHRS1mOEdkSW1rcWhIdUkwb043N05lNFl2TW16d3B0bnZvYm81SENJNWZq0gFWQVVfeXFMUHY3QVRhTjAySTFrbG4xRDJhZ3EwMER4bmVydmJucm1qeVI1Z3RsYXh0YUU2QjRFc1NOcDhOT3hKVXlXOVR0Wlg5aEJRWDhyX3RqbjFxR3c?oc=5",
-      "source": "UDN",
-      "query_source": "產業雷達・能源公用",
-      "summary": "巴紐關閉我方駐處「天然氣進口占8％」外交部宣布停止採購 經濟部說話了 UDN",
-      "published_at": "2026-07-28T16:55:32+08:00",
-      "region": "TW",
-      "topic": "industry",
-      "industries": [
-        "energy"
-      ],
-      "primary_industry": "energy",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "能源公用",
-      "language": "zh-Hant",
-      "source_group": "sector-search",
-      "origin": "publisher-search",
-      "quality_score": 74,
-      "is_breaking": true,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "UDN"
       ],
       "duplicate_count": 0
     },
@@ -718,7 +654,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -772,7 +708,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -800,65 +736,9 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "17f0f5eaae2835b3",
-      "title": "中文版-最新消息-新聞稿-115年6月銀行衍生性金融商品交易量統計 - cbc.gov.tw",
-      "link": "https://news.google.com/rss/articles/CBMiYkFVX3lxTFBCRExDM21LdS04UlN4aWJ5aUdfMVg2d3duVml6RmFDMU0tRlo3NzdULTdQMnlyVDRUQzB0X3d3YUtwQkozUlVoc21pQms1ZGNycklRSHJjNDNBX1lxVTl2T0NB?oc=5",
-      "source": "cbc.gov.tw",
-      "query_source": "中央銀行",
-      "summary": "中文版-最新消息-新聞稿-115年6月銀行衍生性金融商品交易量統計 cbc.gov.tw",
-      "published_at": "2026-07-31T16:53:25+08:00",
-      "region": "TW",
-      "topic": "official",
-      "industries": [
-        "finance"
-      ],
-      "primary_industry": "finance",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "金融保險",
-      "language": "zh-Hant",
-      "source_group": "official-tw",
-      "origin": "publisher-search",
-      "quality_score": 100,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "cbc.gov.tw"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "96a07b36668729d2",
-      "title": "中文版-中文版首頁區塊-首頁資訊-本行發行存單-115年7月31日中央銀行公開市場操作資訊 - cbc.gov.tw",
-      "link": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE5oYUhZZnpGRnhBaG1jWm51Q2R2SXJhYlZiVVkwVTBDVTUzSnNGcHdOM2xfME1MRHNaNjFhYmRpMmVnTTlaZ2tOc2VSc3F3ODZiMWFfeExfLTJmdEpzbXBjN3N1MA?oc=5",
-      "source": "cbc.gov.tw",
-      "query_source": "中央銀行",
-      "summary": "中文版-中文版首頁區塊-首頁資訊-本行發行存單-115年7月31日中央銀行公開市場操作資訊 cbc.gov.tw",
-      "published_at": "2026-07-31T15:30:30+08:00",
-      "region": "TW",
-      "topic": "official",
-      "industries": [
-        "finance"
-      ],
-      "primary_industry": "finance",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "金融保險",
-      "language": "zh-Hant",
-      "source_group": "official-tw",
-      "origin": "publisher-search",
-      "quality_score": 100,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "cbc.gov.tw"
       ],
       "duplicate_count": 0
     },
@@ -884,7 +764,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -912,37 +792,9 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "cb3f355f240a32ba",
-      "title": "中文版-中文版首頁區塊-首頁資訊-本行發行存單-115年7月31日中央銀行存單申購發行資訊 - cbc.gov.tw",
-      "link": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE1wMFVMQ2ZYMU4wbEc1dFRWekVtQ2NEUU9Scmk5R3JQUnIxbWV1T0lXUVZob00xWVpPTTAtdmlOU1JENUF6N3VVejMtcTl6V3RwcUpqN1lGS2VicjE2N1ZiQXFLYw?oc=5",
-      "source": "cbc.gov.tw",
-      "query_source": "中央銀行",
-      "summary": "中文版-中文版首頁區塊-首頁資訊-本行發行存單-115年7月31日中央銀行存單申購發行資訊 cbc.gov.tw",
-      "published_at": "2026-07-31T08:50:10+08:00",
-      "region": "TW",
-      "topic": "official",
-      "industries": [
-        "finance"
-      ],
-      "primary_industry": "finance",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "金融保險",
-      "language": "zh-Hant",
-      "source_group": "official-tw",
-      "origin": "publisher-search",
-      "quality_score": 100,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "cbc.gov.tw"
       ],
       "duplicate_count": 0
     },
@@ -969,7 +821,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -997,7 +849,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -1027,7 +879,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -1055,37 +907,9 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "c7ae4baa92a904c7",
-      "title": "中文版-最新消息-新聞稿-第21屆理事會第6次理監事聯席會議貨幣政策議事錄摘要 - cbc.gov.tw",
-      "link": "https://news.google.com/rss/articles/CBMiYkFVX3lxTE1nN1RXTzVmZEpuX1c4TEtLRXhTSkcxNkpDWnNQTTFxem9rR3pMcU9UUlpyN0FmSEljUW5sclIwWXdxejBRSGJfY012b0JFSENzVXF3T3JZTDZlRWl3UWprM3dR?oc=5",
-      "source": "cbc.gov.tw",
-      "query_source": "中央銀行",
-      "summary": "中文版-最新消息-新聞稿-第21屆理事會第6次理監事聯席會議貨幣政策議事錄摘要 cbc.gov.tw",
-      "published_at": "2026-07-30T16:24:18+08:00",
-      "region": "TW",
-      "topic": "official",
-      "industries": [
-        "macro-policy"
-      ],
-      "primary_industry": "macro-policy",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "總經政策",
-      "language": "zh-Hant",
-      "source_group": "official-tw",
-      "origin": "publisher-search",
-      "quality_score": 100,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "cbc.gov.tw"
       ],
       "duplicate_count": 0
     },
@@ -1111,7 +935,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -1139,7 +963,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -1167,7 +991,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -1195,7 +1019,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -1223,7 +1047,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -1251,7 +1075,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -1279,7 +1103,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -1307,7 +1131,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -1335,7 +1159,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -1363,37 +1187,9 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "1c13cefb4994edf4",
-      "title": "中文版-最新消息-新聞稿-本行對「美國財政部匯率政策報告」之說明 - cbc.gov.tw",
-      "link": "https://news.google.com/rss/articles/CBMiYkFVX3lxTE5PRWtZcXhZbHZVMWc0bDA5cXdRWWNQRW1TTEJIUE5DVHdINzhHZFhWYXQxTDZDRlN6bkRYcW1VbkUyQ0k5U0pOUFhWcUl0Smdhc2c5ZVVqS2tBMEE4WDdLeWJB?oc=5",
-      "source": "cbc.gov.tw",
-      "query_source": "中央銀行",
-      "summary": "中文版-最新消息-新聞稿-本行對「美國財政部匯率政策報告」之說明 cbc.gov.tw",
-      "published_at": "2026-07-24T16:37:56+08:00",
-      "region": "TW",
-      "topic": "official",
-      "industries": [
-        "macro-policy"
-      ],
-      "primary_industry": "macro-policy",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "總經政策",
-      "language": "zh-Hant",
-      "source_group": "official-tw",
-      "origin": "publisher-search",
-      "quality_score": 100,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "cbc.gov.tw"
       ],
       "duplicate_count": 0
     },
@@ -1423,7 +1219,8 @@
       "duplicate_sources": [
         "中央銀行"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "7cfe4ebcf0f7fe93",
@@ -1447,7 +1244,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -1475,7 +1272,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -1505,7 +1302,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -1533,7 +1330,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -1561,7 +1358,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -1589,7 +1386,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -1617,7 +1414,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -1645,7 +1442,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -1673,7 +1470,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -1701,7 +1498,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -1729,7 +1526,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -1757,7 +1554,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -1785,7 +1582,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -1813,7 +1610,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -1841,7 +1638,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -1869,7 +1666,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -1898,7 +1695,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -1926,7 +1723,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -1954,7 +1751,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -1982,7 +1779,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -2010,7 +1807,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -2039,7 +1836,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -2067,7 +1864,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -2095,7 +1892,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -2123,7 +1920,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -2151,7 +1948,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -2179,7 +1976,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -2208,7 +2005,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -2236,7 +2033,7 @@
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
@@ -2264,7 +2061,7 @@
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
@@ -2292,7 +2089,7 @@
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
@@ -2320,7 +2117,7 @@
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
@@ -2349,7 +2146,7 @@
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
@@ -2377,7 +2174,7 @@
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
@@ -2405,7 +2202,7 @@
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
@@ -2433,7 +2230,7 @@
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
@@ -2461,7 +2258,7 @@
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
@@ -2490,7 +2287,7 @@
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
@@ -2518,7 +2315,7 @@
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
@@ -2547,7 +2344,7 @@
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
@@ -2575,7 +2372,7 @@
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
@@ -2604,7 +2401,7 @@
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
@@ -2632,7 +2429,7 @@
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
@@ -2660,7 +2457,7 @@
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
@@ -2688,7 +2485,7 @@
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
@@ -2716,7 +2513,7 @@
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
@@ -2744,7 +2541,7 @@
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
@@ -2772,7 +2569,7 @@
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
@@ -2801,7 +2598,7 @@
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
@@ -2829,7 +2626,7 @@
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
@@ -2858,7 +2655,7 @@
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
@@ -2887,7 +2684,7 @@
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
@@ -2915,7 +2712,7 @@
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
@@ -2943,7 +2740,7 @@
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
@@ -2971,7 +2768,7 @@
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
@@ -2999,7 +2796,7 @@
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
@@ -3027,7 +2824,7 @@
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
@@ -3055,7 +2852,7 @@
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
@@ -3084,7 +2881,7 @@
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
@@ -3113,7 +2910,7 @@
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
@@ -3141,7 +2938,7 @@
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
@@ -3169,7 +2966,7 @@
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
@@ -3197,7 +2994,7 @@
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
@@ -3225,7 +3022,7 @@
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
@@ -3253,7 +3050,7 @@
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
@@ -3282,7 +3079,7 @@
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
@@ -3310,7 +3107,7 @@
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
@@ -3338,7 +3135,7 @@
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
@@ -3366,7 +3163,7 @@
       "origin": "direct-rss",
       "quality_score": 92,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "經濟日報"
       ],
@@ -3394,7 +3191,7 @@
       "origin": "direct-rss",
       "quality_score": 92,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "經濟日報"
       ],
@@ -3422,599 +3219,9 @@
       "origin": "direct-rss",
       "quality_score": 92,
       "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
+      "fetched_at": "2026-08-01T20:13:16+08:00",
       "duplicate_sources": [
         "經濟日報"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "80eb3beb3315e2c4",
-      "title": "自由現金流拉警報！美四大 CSP 累計資本支出超過 1.1 兆美元，AI 豪賭終點在哪？ - TechNews 科技新報",
-      "link": "https://news.google.com/rss/articles/CBMihgFBVV95cUxQbjVWcGVPcUM5aW9SMGN5SHoxcjQ1ZUtFcm9RUHhKTzNuUEgwXzY0Tk1YUXBnMEg0TmM5S2JvNnF4V21wN2htenJoYlh0alJvZFVPN1dDaFRvSUxaUEdGVmx3dFVqQUpiS1h0UlNETzhjdnMtMFlaTHA4TGdXbGladF9yUloyZw?oc=5",
-      "source": "TechNews 科技新報",
-      "query_source": "科技新報／財經新報",
-      "summary": "自由現金流拉警報！美四大 CSP 累計資本支出超過 1.1 兆美元，AI 豪賭終點在哪？ TechNews 科技新報",
-      "published_at": "2026-08-01T17:29:32+08:00",
-      "region": "TW",
-      "topic": "tech",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 87,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "TechNews 科技新報"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "5b03c05526296a4f",
-      "title": "Meta 低調測試 AI 兒童故事 App StoryKit，三步驟客製化專屬繪本與配樂 - technews.tw",
-      "link": "https://news.google.com/rss/articles/CBMid0FVX3lxTE03ekFad2d4ZURnUWFGTjU1dmJTbGw5Q0htV1gwbUNnbnBDM3dpd3d3aXNabmxMcy03T2c5Z2xZOHE3U3lSRzk4bWZxSE9zWnh5c3daYzNhcUFZb1BSSmx5eWNyMEdxUFBZT0FCdE5keUp3ek52NUtr?oc=5",
-      "source": "technews.tw",
-      "query_source": "科技新報／財經新報",
-      "summary": "Meta 低調測試 AI 兒童故事 App StoryKit，三步驟客製化專屬繪本與配樂 technews.tw",
-      "published_at": "2026-08-01T14:31:25+08:00",
-      "region": "TW",
-      "topic": "tech",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 87,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "technews.tw"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "e15a84a0803c9583",
-      "title": "年輕人不說「Google 一下」，改口「search it up」背後的 AI 影響力 - technews.tw",
-      "link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBPczBpUmxyWEUyaHprQ1RqSGRnTFdRV08zOVdmLTZMRDFhbUpZbGpXNUxCUEEwSFZhRHlSejRadlRvdDJfTUVSRzlqbjZUemlMQ0VpcVczYUwwRHJ0VDFJ?oc=5",
-      "source": "technews.tw",
-      "query_source": "科技新報／財經新報",
-      "summary": "年輕人不說「Google 一下」，改口「search it up」背後的 AI 影響力 technews.tw",
-      "published_at": "2026-08-01T11:34:20+08:00",
-      "region": "TW",
-      "topic": "tech",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 87,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "technews.tw"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "fbd39732250910b0",
-      "title": "高通完成收購 Modular，加速生成式 AI、代理式 AI 邊緣到雲端布局 - technews.tw",
-      "link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTFBiV0VGYWFTaFdmNnFYc0p4bE5RWWc3UFFOZ0N5cmNyV3J1eDFuWmxQWU1oMWhlQWpFWGNmX05PbG5OYjJ6RkppRjhGVUpvMkxQc1hkZDgxS1Y5c0pI?oc=5",
-      "source": "technews.tw",
-      "query_source": "科技新報／財經新報",
-      "summary": "高通完成收購 Modular，加速生成式 AI、代理式 AI 邊緣到雲端布局 technews.tw",
-      "published_at": "2026-08-01T10:29:20+08:00",
-      "region": "TW",
-      "topic": "tech",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 87,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "technews.tw"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "38bc51e1f05991d2",
-      "title": "尋找外星生命恐反被 AI 誤導，研究揭「自信誤判」恐成 NASA 太空任務隱憂 - technews.tw",
-      "link": "https://news.google.com/rss/articles/CBMickFVX3lxTE1RbWFuVTk0WkRCb253X3RhTWhKYm9IUGppZ0l6aVJ6UVUzYklJdTlseWlzY29aa0RyZVota012c2hhY2xMZV9KR3FXTURraWI5OGwyNXgyVWU0UFhteGtoTTFYSW1teTQwSHdwUFVEYTJGUQ?oc=5",
-      "source": "technews.tw",
-      "query_source": "科技新報／財經新報",
-      "summary": "尋找外星生命恐反被 AI 誤導，研究揭「自信誤判」恐成 NASA 太空任務隱憂 technews.tw",
-      "published_at": "2026-08-01T08:34:14+08:00",
-      "region": "TW",
-      "topic": "tech",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 87,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "technews.tw"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "f5641af25755a9cf",
-      "title": "AI 帶旺投資消費，上半年經濟成長 13.72% 創 50 年最強 - TechNews 科技新報",
-      "link": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxOUFppWm5nT3pmd2FyemdIR3dVM3lFeEJfd2FDOUg2X05RVGxheVZEeEl3RmJ6YlZnQ0RlYlEtd1lPWHgzWEg4UWVEV2p4ZGJqcWZJUEowMDZzZ1psbjl4aTRXdXBVWXRpU05jWGhYOEFSMWVWR2I2VWxZX2FON0lycktqYjlsdHppOXpsenlaa1oyTEt6NGJKNmI3RlBIN2N5YjR0SU44c2xERF9CaGFUV1hZS1Z6VHJ2Y1NfQS0xSnB3UQ?oc=5",
-      "source": "TechNews 科技新報",
-      "query_source": "科技新報／財經新報",
-      "summary": "AI 帶旺投資消費，上半年經濟成長 13.72% 創 50 年最強 TechNews 科技新報",
-      "published_at": "2026-08-01T03:11:51+08:00",
-      "region": "TW",
-      "topic": "tech",
-      "industries": [
-        "technology",
-        "consumer"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 87,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "TechNews 科技新報"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "1bc73c551f2ffe31",
-      "title": "6 億觀看量能換成多少張電影票？人氣 YouTuber 攜手 AI 打造科幻長片進軍大銀幕 - technews.tw",
-      "link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxPMFBzQWtOemFPMks1c044ZGtvbjhvRGlsQ3p6bTBkUUFlR0Y0My1iMXhKcEVmcmdoUFNjTk5mZnJpeFN3dTItNktmckNkdTd6MDNEblg5Z3gxTlZJS2h0blZidFJZbG5ueTFidEoxMmtyNHFJNl9ETDBONFYtWkktRHNIWkVJOU0?oc=5",
-      "source": "technews.tw",
-      "query_source": "科技新報／財經新報",
-      "summary": "6 億觀看量能換成多少張電影票？人氣 YouTuber 攜手 AI 打造科幻長片進軍大銀幕 technews.tw",
-      "published_at": "2026-08-01T00:03:40+08:00",
-      "region": "TW",
-      "topic": "tech",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 87,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "technews.tw"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "8aa35bf1f09e1642",
-      "title": "以 Siri AI 為核心的 Apple 全新智慧家庭產品組合就緒，最快 10 月推出 - technews.tw",
-      "link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxORDRfM205Z3RRSU9QdjNWSHV2SXlGcm5yZlZiOFY5bENSazVaY1NjT3JNcmdfbHR5NzdjcXNKaGFJWmlRSXFzd3FyRGI0NFRjRFExSW95eU1QemFPRDAwRVZKakUtT1Q2Q2Rpa2JGZnlUX052b3l1enI2UjhFM0Rib0dxOHlEQ284UzB1NnZUUFlCRGJMOVM3STlTMHJidUVz?oc=5",
-      "source": "technews.tw",
-      "query_source": "科技新報／財經新報",
-      "summary": "以 Siri AI 為核心的 Apple 全新智慧家庭產品組合就緒，最快 10 月推出 technews.tw",
-      "published_at": "2026-08-01T00:03:40+08:00",
-      "region": "TW",
-      "topic": "tech",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 87,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "technews.tw"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "da470b94ec3dace7",
-      "title": "Meta 攜手貝萊德砸 140 億美元建德州 AI 資料中心，採合資模式加速算力佈局 - TechNews 科技新報",
-      "link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPelU0akFpb0NrTFRDNWVJV2t6cDRBbDRZWWJpSHo4OGVUTE9jbWJneVVLbTNsckN5bTBxU3pxUnV4Vlp0UkVncWxhT2pqNFRVVmpSOEJTLWdPUG51X0xWUWI5VlFQZmIyT01vZUJlN1h3RmF2ajJUNXJxSXRKTWpINnRwR3hKZ0JhTDU5c0laeF9VS0VtNW15YjhpeUNrbTNQcm1yblJqWHJTbWsxMG42bXBncw?oc=5",
-      "source": "TechNews 科技新報",
-      "query_source": "科技新報／財經新報",
-      "summary": "Meta 攜手貝萊德砸 140 億美元建德州 AI 資料中心，採合資模式加速算力佈局 TechNews 科技新報",
-      "published_at": "2026-07-31T18:07:15+08:00",
-      "region": "TW",
-      "topic": "tech",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 87,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "TechNews 科技新報"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "094a7233d5cceba4",
-      "title": "鴻海亞灣超算啟用全台最大規模 5MW NVIDIA HGX B300 AI 集群 - TechNews 科技新報",
-      "link": "https://news.google.com/rss/articles/CBMibEFVX3lxTE9ZZGtNZDVjaXUtQUp2T19RZDQ3c2swZkxqLU55WTFESThqc3hDZXE3NG50VmJuLVRubmRpNEhaOFIzMGdEUW5DQWhqUS1ubi1HYmxpQUF2bG1ZQVowNE83Yll4am5PVnQyZHZLNA?oc=5",
-      "source": "TechNews 科技新報",
-      "query_source": "科技新報／財經新報",
-      "summary": "鴻海亞灣超算啟用全台最大規模 5MW NVIDIA HGX B300 AI 集群 TechNews 科技新報",
-      "published_at": "2026-07-31T15:47:02+08:00",
-      "region": "TW",
-      "topic": "tech",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 87,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "TechNews 科技新報"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "7ffc3f44545ed867",
-      "title": "直取 CoWoS 測試核心！中探針攜半導體巨頭開發 MEMS 與清針紙 - TechNews 科技新報",
-      "link": "https://news.google.com/rss/articles/CBMiYEFVX3lxTFBkeTIwUEh6ejVyOExoMi1jVU50VnRIU3FQdUlBX1Rza0l0YUIwNGRuLVF5TW5BTTNhcV9TRmN5c2c2andUNURGU0VSUUZpMW13Z2tCU19YM29DWnl1dGpJZA?oc=5",
-      "source": "TechNews 科技新報",
-      "query_source": "科技新報／財經新報",
-      "summary": "直取 CoWoS 測試核心！中探針攜半導體巨頭開發 MEMS 與清針紙 TechNews 科技新報",
-      "published_at": "2026-07-31T15:06:57+08:00",
-      "region": "TW",
-      "topic": "tech",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 87,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "TechNews 科技新報"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "af1fa2404ed10e1e",
-      "title": "台股史詩級狂飆 3,186 點最大漲點！法人：後市續航力要看一個關鍵點 - TechNews 科技新報",
-      "link": "https://news.google.com/rss/articles/CBMia0FVX3lxTFBmWXdYNHVIMG14Y3BJQUZ1Qm5aZGFmaVVRRUtOU3UzRmNsNUNDMTJlemNHM0NGbnFQeFdSODlEQURmbnVIV0Z2WWZTeHVISDZ0bnV6ZlU0ckxCSk1kVUx5SEloQlhKY3hENHZJ?oc=5",
-      "source": "TechNews 科技新報",
-      "query_source": "科技新報／財經新報",
-      "summary": "台股史詩級狂飆 3,186 點最大漲點！法人：後市續航力要看一個關鍵點 TechNews 科技新報",
-      "published_at": "2026-07-31T14:31:55+08:00",
-      "region": "TW",
-      "topic": "tech",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 87,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "TechNews 科技新報"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "bc76ec8b6d4e56b0",
-      "title": "台股史上最狂反彈！一表看18檔主被動ETF齊亮紅燈 0050、00981A入列 - news.cnyes.com",
-      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE5tMmZqRS0tOWhKMjdqd0o1MnJZZW9yVW9wWHJRbTJYTmZGdmo2dzdZT3pxUU5zSzZFMmdsYWhYLUVFQlNhTXJZZTFKTlFOWHM?oc=5",
-      "source": "news.cnyes.com",
-      "query_source": "鉅亨網",
-      "summary": "台股史上最狂反彈！一表看18檔主被動ETF齊亮紅燈 0050、00981A入列 news.cnyes.com",
-      "published_at": "2026-08-01T15:06:34+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "fund",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 86,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "news.cnyes.com"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "1c6c6e33f8e70fc9",
-      "title": "AI科技股暴跌真相？25歲明星基金高槓桿踩雷、Citadel抄底後市場急反彈 - news.cnyes.com",
-      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBYSkRjRTZkU3FiMWdXQVJmVDhQZ1NkTV80RjY3T2g0M1NWbTE4OElwTGRKYzljQnZYanVmcFZhOUlmdC1yU3I1Yi1iUElEeFk?oc=5",
-      "source": "news.cnyes.com",
-      "query_source": "鉅亨網",
-      "summary": "AI科技股暴跌真相？25歲明星基金高槓桿踩雷、Citadel抄底後市場急反彈 news.cnyes.com",
-      "published_at": "2026-08-01T14:30:06+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "fund",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 86,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "news.cnyes.com"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "66d03545b418537c",
-      "title": "AI股神爆倉真相曝光 Citadel折價接手160億美元持股引爆市場反彈 - news.cnyes.com",
-      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE13YnJWR2VWeHhnSHVkWVdiZG9CbHd3dzgyLVN1dG9QUGJBUVZLcTRHaEpMSU13VG5JRWxPSERjWkJIZE43VXBGdXV2XzVKd1E?oc=5",
-      "source": "news.cnyes.com",
-      "query_source": "鉅亨網",
-      "summary": "AI股神爆倉真相曝光 Citadel折價接手160億美元持股引爆市場反彈 news.cnyes.com",
-      "published_at": "2026-08-01T13:20:03+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 86,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "news.cnyes.com"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "e74dc2014f6f7fbf",
-      "title": "美股狂歡別高興太早？華許引爆美債「熊市陡峭化」警訊 - news.cnyes.com",
-      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1BWTRRb0dmalQ2OUN5M2N1OWxydmlBUzU2WmdaaWxLY3Z6QkduaDhSX1p6a1dxWkNkVURnVk5CVFI0Z2kwdXVkNE13YVE4TXc?oc=5",
-      "source": "news.cnyes.com",
-      "query_source": "鉅亨網",
-      "summary": "美股狂歡別高興太早？華許引爆美債「熊市陡峭化」警訊 news.cnyes.com",
-      "published_at": "2026-08-01T13:10:02+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 86,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "news.cnyes.com"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "a51b6146986fb99a",
-      "title": "GoogleTPU，產量驚人 - hao.cnyes.com",
-      "link": "https://news.google.com/rss/articles/CBMiSEFVX3lxTFB1X0piaFc2TnJod3RzZThiVExUaHlJeUFrSFRmMm8xVjlldmpJck9ydEJQOWlGTlhZT0l3dllydTVzTUFrR250bw?oc=5",
-      "source": "hao.cnyes.com",
-      "query_source": "鉅亨網",
-      "summary": "GoogleTPU，產量驚人 hao.cnyes.com",
-      "published_at": "2026-08-01T12:15:42+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 86,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "hao.cnyes.com"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "293d0b1f432d993b",
-      "title": "台股史上最狂反彈、電子權值股法說周、台灣Q2 GDP上修至12.92% 本周大事回顧 - news.cnyes.com",
-      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9sbnl4TlhCLUFGN1pvcDJ6OXM5dzU1UlJsSTVjenZWYlVPbUQ0UHFJb3pFZ0w1dlpOWG9DQWpwLW41MDlqUVA5NU1VX0JCYWM?oc=5",
-      "source": "news.cnyes.com",
-      "query_source": "鉅亨網",
-      "summary": "台股史上最狂反彈、電子權值股法說周、台灣Q2 GDP上修至12.92% 本周大事回顧 news.cnyes.com",
-      "published_at": "2026-08-01T09:07:47+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "macro-policy",
-        "technology"
-      ],
-      "primary_industry": "macro-policy",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "總經政策",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 86,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "news.cnyes.com"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "13e369bb170e9fea",
-      "title": "華爾街不再閉眼買美股七雄！AI資金開始大搬家 - news.cnyes.com",
-      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBGWi1WelBaM0lRel83NzM3cG0tdHI5NkFFUU1CZ1ZiZlB0OU9XalhjWkVrQ1k5WHplaVpXQUk0enNENHZ0dTJma1BJR3JWYTA?oc=5",
-      "source": "news.cnyes.com",
-      "query_source": "鉅亨網",
-      "summary": "華爾街不再閉眼買美股七雄！AI資金開始大搬家 news.cnyes.com",
-      "published_at": "2026-08-01T01:00:02+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 86,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "news.cnyes.com"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "44e049b7f59ee949",
-      "title": "日元跌到美國準備出手！美日罕見聯手干預匯市 - news.cnyes.com",
-      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9lY3QxN1hYUElTbEQyS3pDV3NzN3MzR0JHUUlKN3pfNTUxYTctSmNYdGtsb1M0ZjR3RTJzdUlYMFZUcjNkMUhNcDlYTk82STg?oc=5",
-      "source": "news.cnyes.com",
-      "query_source": "鉅亨網",
-      "summary": "日元跌到美國準備出手！美日罕見聯手干預匯市 news.cnyes.com",
-      "published_at": "2026-07-31T23:36:53+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 86,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "news.cnyes.com"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "33d78c84535fb84e",
-      "title": "〈美股早盤〉亞馬遜與晶片股領漲 主要指數開高 - news.cnyes.com",
-      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1EbVMwRzRMX1pqMUQwNGhnSU8xa1QyS25vamVJNVk0d0ZEenBKYlBVOUVubWVvWTVKOThlS2s3emE4ZnZGMlBRNlRfZHJzeWs?oc=5",
-      "source": "news.cnyes.com",
-      "query_source": "鉅亨網",
-      "summary": "〈美股早盤〉亞馬遜與晶片股領漲 主要指數開高 news.cnyes.com",
-      "published_at": "2026-07-31T21:38:20+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 86,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "news.cnyes.com"
       ],
       "duplicate_count": 0
     },
@@ -4044,35 +3251,8 @@
       "duplicate_sources": [
         "鉅亨網"
       ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "3b033eaf9b4c9b4c",
-      "title": "台股飆近3000點創史上最大漲點 抄底大軍瘋搶這兩檔正2 ETF - news.cnyes.com",
-      "link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9vU3h6TDVtc3NkdEQyYS00bXdQa3Y4T2o2LW5Jd3oxZ1RvVVdHTE9MbXZuRWcwZkkyNzQ2ZDZPaEx0SW9ybExIMUozWWNmYU0?oc=5",
-      "source": "news.cnyes.com",
-      "query_source": "鉅亨網",
-      "summary": "台股飆近3000點創史上最大漲點 抄底大軍瘋搶這兩檔正2 ETF news.cnyes.com",
-      "published_at": "2026-07-31T11:26:00+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "fund",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 86,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "news.cnyes.com"
-      ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "f620eb08dc220a5f",
@@ -4100,7 +3280,8 @@
       "duplicate_sources": [
         "MoneyDJ"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "34b255ebc574918e",
@@ -4128,7 +3309,8 @@
       "duplicate_sources": [
         "MoneyDJ"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "93c89a25df21ded1",
@@ -4156,7 +3338,8 @@
       "duplicate_sources": [
         "MoneyDJ"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "179683f4fa356c1b",
@@ -4184,7 +3367,8 @@
       "duplicate_sources": [
         "MoneyDJ"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "c5731351a6cfcaf4",
@@ -4212,7 +3396,8 @@
       "duplicate_sources": [
         "MoneyDJ"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "752db7d8e5fc192a",
@@ -4240,7 +3425,8 @@
       "duplicate_sources": [
         "MoneyDJ"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "9b3ebf17456cb06f",
@@ -4268,7 +3454,8 @@
       "duplicate_sources": [
         "MoneyDJ"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "4b491a403b983960",
@@ -4296,7 +3483,8 @@
       "duplicate_sources": [
         "MoneyDJ"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "3dfea256db7e91d9",
@@ -4324,7 +3512,8 @@
       "duplicate_sources": [
         "MoneyDJ"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "e10aa7b325238371",
@@ -4352,7 +3541,8 @@
       "duplicate_sources": [
         "MoneyDJ"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "48dd914a58823aa6",
@@ -4380,7 +3570,8 @@
       "duplicate_sources": [
         "MoneyDJ"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "792c66d84e8b6512",
@@ -4408,7 +3599,8 @@
       "duplicate_sources": [
         "MoneyDJ"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "6a49c7839b8b82ea",
@@ -4436,7 +3628,8 @@
       "duplicate_sources": [
         "工商時報"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "dc4d7ac3eee4cbec",
@@ -4464,7 +3657,8 @@
       "duplicate_sources": [
         "工商時報"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "2a1a25820c00e60b",
@@ -4492,7 +3686,8 @@
       "duplicate_sources": [
         "工商時報"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "69d7f383a2fbe87d",
@@ -4520,7 +3715,8 @@
       "duplicate_sources": [
         "工商時報"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "7e791e273cce2a22",
@@ -4548,7 +3744,8 @@
       "duplicate_sources": [
         "工商時報"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "1ac526e05894c009",
@@ -4576,7 +3773,8 @@
       "duplicate_sources": [
         "工商時報"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "3f44332812ceeac6",
@@ -4604,7 +3802,8 @@
       "duplicate_sources": [
         "工商時報"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "a9e9375cfb87e629",
@@ -4632,7 +3831,8 @@
       "duplicate_sources": [
         "工商時報"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "5344cf98e1d3f663",
@@ -4660,7 +3860,8 @@
       "duplicate_sources": [
         "工商時報"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "fbf2c8d5e585ea7d",
@@ -4688,7 +3889,8 @@
       "duplicate_sources": [
         "工商時報"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "9f1fbbcfc71eafbd",
@@ -4716,7 +3918,8 @@
       "duplicate_sources": [
         "工商時報"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "09b7c4fefe31c1c0",
@@ -4744,343 +3947,8 @@
       "duplicate_sources": [
         "工商時報"
       ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "ed0dcfe8f35d3511",
-      "title": "歐洲股市受企業財報提振 上月實現漲幅",
-      "link": "https://news.google.com/rss/articles/CBMiqAJBVV95cUxPaXVOa2h0OXl2aGNydnZMLVZpNE9UdFpyeXYxYkFaams2SHQ4TTI4MmNEbUIzbE10RGVOc292R2d3eXNyX191UlFudmh2SENMc2J2cWtoY0lnNGJ6RzRZV3p1Q3NhN3p6MkNGLTB4SlRBR2tPekF4czhSMEp0cjl4REJFWmY3bG1vRGF1ZTZRYURGZUZmQ0JUaVNxZ0Q2Nll3UjhOUHZNdFU0SEVHcUt1NURtTDhhWXBwb3dDYjQtZkFQLV9lc1NXd2lBX2dIT2cya25mbkxhMXNGSUNMVEw2T3FHWm03Ylo1NEY1NXRackdwcVBUYkJPWG5KOHFtNk5qVHpGMWhsS3JzQ1dmWGdfNFFmX0NESldzeFg1NlZSbmdaODRHUmJRWg?oc=5",
-      "source": "Yahoo股市",
-      "query_source": "Yahoo 股市",
-      "summary": "歐洲股市受企業財報提振 上月實現漲幅 Yahoo股市",
-      "published_at": "2026-08-01T18:39:39+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 80,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "Yahoo股市"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "1af309c15e7e324b",
-      "title": "台股血崩又飆漲3186點！施昇輝認了「沒追買0050」親揭投資心法",
-      "link": "https://news.google.com/rss/articles/CBMi8gJBVV95cUxQbXY2R2Vlald0QmZObUJ2dEFEVGF1VDRkWTFRYWhUS2w2ZEFIWFNmMWlFcVdsc1NmZHRSSHp0RVlYYS1DTko0a3lQMWxmemUybXRPTXAzWXpmdGdJVm9jRUJFaTdLTEdhbUZ6RnBwMWdWTXFVdjlFRnViY1BWMjlHaHE1Wk1ZRlFuemNnMFdSNTF5dmg5bWpEQzQtSFRhQjRYSjkwS3ZVdF8zUHVZYVdIRnJwOHpKUWYtWWdfX1drVy1iOU9TT1lCSTJvVk93amc5WDhDS1J5TXRzN25STlRHVC13bG1GenExYWpxSzVQbVdkaDFGWXVMS2ZlMWVyTXFwQl9aSWRfdmNqX0pDM2xCeGxyZ2hjb3diUnNxRHNYbHdocDlkTDJiQUNpb1FIM3NzZEwtNy1iTTVQcmFva2xjQkF4MHpEenhqdlpsckRwdXdmMi1pc1F4TFFlUmxhUVltZVNPZ0xVRUtQa3VHRi1Tc19R?oc=5",
-      "source": "Yahoo股市",
-      "query_source": "Yahoo 股市",
-      "summary": "台股血崩又飆漲3186點！施昇輝認了「沒追買0050」親揭投資心法 Yahoo股市",
-      "published_at": "2026-08-01T17:25:00+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 80,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "Yahoo股市"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "5f1c2962abf1f12a",
-      "title": "台股最快10月重啟攻勢？杜金龍逆勢加碼2檔AI權值股 曝「危機布局」關鍵時機",
-      "link": "https://news.google.com/rss/articles/CBMiwwNBVV95cUxOdkZYWTM1UVZ4UHNqN1lNRTRTNUUxZFBNUnVMUS13Y2RpWElvMEZEXzFXcWREbVozLUdsVmhrek1mZjhEaGN5alRYUThDNUEtbFVlR245QlpGVUNBZDU2UzFoNDZPXzhDY3VLR1AwT0tpLU8yQVdkMEhSaWItYWQ3dFd4OGdVUlRSWHFjU2t4cXBXcWlhc1E5d084dFRIMDZjbDF5MHl3cVFLOW5aWllnWFhuS2gwODhjZDZIQ0c2S1phX2dQNnpJVm9SeWxVWHY5WGk0eXhfa09sbEFyakdpcV9ZQjF4RW5PY1lTblloUzFfRTZhUjRJMTlWQW8xQ1hlajdDTkJlWkFnMWNBY1Zscm9OVXpiY1hSajdlXzV3Q0VKYUN5UTVkX29nai13T0ZoVU94UUJyWm5ReDUzUXc3WjUxTXZta01GdndNMU8xX1pNWGRvM1BfU200TWM1NW9pUmZxV3luT1E1RmFtajl3SV9zRlZnR3ZobGltUG9MMmJXa0M2WExmOXVBMzFxaHNRcnVWejVkQy11dHU1c2lrdktnZ3NaNGV0ZmVGYVByUTBxWXJaa0JJc051aTg3RXFGVUdR?oc=5",
-      "source": "Yahoo股市",
-      "query_source": "Yahoo 股市",
-      "summary": "台股最快10月重啟攻勢？杜金龍逆勢加碼2檔AI權值股 曝「危機布局」關鍵時機 Yahoo股市",
-      "published_at": "2026-08-01T16:25:00+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 80,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "Yahoo股市"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "12960508bb4a3d1b",
-      "title": "1億押0050帳賺逾千萬！「哲哲」郭哲榮懸賞2億驗真偽 喊台股5年衝10萬點",
-      "link": "https://news.google.com/rss/articles/CBMilwNBVV95cUxQVDBabFlNWUU0QWRTT2xuSHV3by1qa1BaYlpwVEdVUjZ5WU9XamdUSlNJLTIycU1EbG44WUxxaUdKbkZDSkxvV011Y0pIYlp4a0F1WUxKWFZGQUlDdHkwOW9wd3pKM3Z2eFRmSlFGOXc3QmsyZXE0dFpucFNMRFJQNEhYQTJMMlVrTlNNMVlndUNvV0x6VFhVMWxXTWt2Mm5hRTN3dVMyWVJhR3FrSTYwZ1Ruc2hnLXJsUGtNaUdlX21Xa1hra21PMVRaRlFaQTI1NWtyNXJPMXg5N3FjbXdfWlhSdzlDeERIVl9iSGViZkVvVy1Ma2J4Qy16eWVVcG9UNERxNjJrclY0UWdGdF9HeERyUndtVUc4UmNWNmp6MGVBRElxR1RMTVJhR3c4Um9vZG9PYW90cXNNOWp4bWRRSUVZTUdGX1ZTMlYxTm5OODRNYi1VQkRWNGVOUmJNaWN6LVJEaW5DSmlWOUVQSTJ1NldZRmFXTy1iSlNDZFdDODlsVHdTNXlmSWhleHJnOWhaNzNpVHlSdw?oc=5",
-      "source": "Yahoo股市",
-      "query_source": "Yahoo 股市",
-      "summary": "1億押0050帳賺逾千萬！「哲哲」郭哲榮懸賞2億驗真偽 喊台股5年衝10萬點 Yahoo股市",
-      "published_at": "2026-08-01T14:18:33+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 80,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "Yahoo股市"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "5acf92311ead643a",
-      "title": "股民當心！台股下週一開盤恐變天 台指期夜盤狂瀉逾千點",
-      "link": "https://news.google.com/rss/articles/CBMi8wJBVV95cUxPemd2UWxpdENRbUVsczF6TUgzNWVBaVJDOUU3V1JRVVBOejhtbW1STVliMWdmTWNKOXNYQmxnX2hVNDdkWUUxUy1feEx6cnVCcmp6b1VQU2x2bU1lRkF3dDkzNWh0OTAyNWdZNDFBRTFZdFBGOE83c3ItTE5KWDlaeDRtWjF1a1d4UVIwRTBwY1Y5azZfOEJkRldGUm9memFrWXdta3BZeENvdUdEYmUzOHoyTEMwSXlMSWxnRE1ocXQ2N1FvYXZ0X3owNDRiVHpyVWVWSVJrV05wdm5Wb213UzdTR0FnRmZaeTdmenN5aWFTYTlfc01VNWVXd2Fzdi16bF8ySm9OMkVSZW16MzhsYWZ3ZU9NdzFXYnFzU05NN0c4cjk5UkszVDFSRjRMZWtnVkZQZGVFU1kyenFDUTU1YXRrUEtLMGk4ZTFmeEstRnlLWEhWZU91WG9MZE9EOHRBT3RnVTJqazhMU1VjbmNDeWJVVQ?oc=5",
-      "source": "Yahoo股市",
-      "query_source": "Yahoo 股市",
-      "summary": "股民當心！台股下週一開盤恐變天 台指期夜盤狂瀉逾千點 Yahoo股市",
-      "published_at": "2026-08-01T13:17:40+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 80,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "Yahoo股市"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "156e3dba0d9736c5",
-      "title": "美股全紅也沒用？ 台指期夜盤暴跌1077點 網驚問：人道走廊關了",
-      "link": "https://news.google.com/rss/articles/CBMihANBVV95cUxNVklGWFNVQnVJZHFaQ3hodVdRVE96OHAzQVBvci1hSVJkR1p3UG1hWnZrMFpnTXE2SWtmNE5SaHdlVllub0h2M1ROQ2dENFJxb1Bha080X21naWZXUW5EU0tUc0lxem5yZ0JTZlZWMXA0WTkwdmZmSEVRN2NsZTA4ZmFOV2pXUklrUUM5RHQ0NmZZTmQtMGFoUW1CN1JSZnROeWNYZ2VYa0U3azFGcWo0OTFuakpybFdZeko5MmRSRTNVX01wVzUzeDRLMWRld29BZDJieXRUbEt6RW1UYkN3R2NROEtvZ0VBTWdweDdmU3V2bklWWXhubkt3WmdBYWVNUWFNTDhHM1dac1QzYmtTdHduamhITW0tVWh6SWxwc2FwNEZvXy1Jcm5YVUt4RUttUWM0OFNRZ2Q3MlR4dF84RGlMT1JnYndTcVRaZ0E5bUhVLXVGRmg4WC1zWXF1bGtCN3hVaktUcmw2dXJoWDVFZ1QxVl92dm1sX3k2aUR1MXRONkw2?oc=5",
-      "source": "Yahoo股市",
-      "query_source": "Yahoo 股市",
-      "summary": "美股全紅也沒用？ 台指期夜盤暴跌1077點 網驚問：人道走廊關了 Yahoo股市",
-      "published_at": "2026-08-01T12:06:17+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 80,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "Yahoo股市"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "cf2f0fca738d2bb4",
-      "title": "台股飆史上最大漲點！郭哲榮大買0050獲利近千萬 點名「這些跌深個股」反彈漲幅50%起跳",
-      "link": "https://news.google.com/rss/articles/CBMi3ANBVV95cUxNWHpadlFKYUlzeEVmV0Jla3ZDOFRRNkduRmJjSDl1emdob1VxOWItekpBUmlnMHNTbVJDU3pENnc2ck9ub0RMUnhFUnRHUG1Qay15UlgzeFZQVGxXR3hBWU5PdVkxR3JFZlBRSnRSc0pteVpmem5HemVPUDR6czJ4Q0pJNXVNb1REeHlzV2Z5SkJQajM3aVJsZzNEQ0s0MERhNlRqcG8tWnZwdU5pUjhSanRQcV8xRlpNZ1ZoX0RfWVM3VjZoRGlRcE03bjdFajhtS2xKQjBxRmVNamNLNklXeTEzeTAwakZHTi1OVXZNZ1pJeG5tU0dWNzlKVnFma1h2SWtEeDI0Q2RuR1VCQWtTS1U1X1F6b0RkVTZjS0p0T0NOc05EclBlTlZNOGlOQ1NETWZLM0EyTkEzbzcxX1BkWWNfelVLUk1xNDc0cVAzNmw1bEt2S0xJblB1bHFxTUJ1NzZVRW5oMjgxWFNlZlhFaE81MjJld2dZOG13NEpvQkxvVTEwbjRYbXFpX2QwZm5lUUZuWXpVZlI3Zkw2eHpjOXpUcUxyeFk4MVNISkp0TzR5UEZZRDNOM1V5bEd2T2dEdE11Yll1MThMNjVZb1ZBNkpGODZzbkp3Rkh2bg?oc=5",
-      "source": "Yahoo股市",
-      "query_source": "Yahoo 股市",
-      "summary": "台股飆史上最大漲點！郭哲榮大買0050獲利近千萬 點名「這些跌深個股」反彈漲幅50%起跳 Yahoo股市",
-      "published_at": "2026-07-31T19:54:00+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 80,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "Yahoo股市"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "023246029b97aa57",
-      "title": "力積電突發重訊！董座黃崇仁逝世享壽76歲 一生打造半導體版圖",
-      "link": "https://news.google.com/rss/articles/CBMiowNBVV95cUxQc2RsdG41MXZjbjUxNlFNYmU3NWVLaEZZdnl3MnlhQ0dfSmZaanRPanh4N0p6VVFPQjJxcEUzUXVpbm45VjZBSFR3WllpYTViYkQzNEpFZ1AzZHR2c01JeGZPWmEzN0R0elRMbUlYQm8wS1h2N0l1UDU0ZGthT0Rvd3Y3b09rdXlWN3d0Z3lYbUU5d2VzLXNpTE92QzdsNnVVN2JycG10aWp6dC1vdWJnZTdWUkNDT2gyTk01Q2JFY1dZQlBNTzNTR1h5aTQ0MW1JLUlkSWIzLV92SzZ1SkVHRmdGMGtkd0pPeTB2Z255ZmFseUlfSXAzalM4SEY4MmUwQ1NCNHU0dWtUeDVXLXdyc3ZueXZQRkRhZWNlYmRQU0dlRGV1T1ZBTUM3VGNpMG81SmZTemk4MTJrZmJSSEZNYkhnWmx5TExiLVhCWTVxS3o4VnJocDVxd2Z4bjBBSUtmS1Zsb2c1Rkh3RnNyS0doa290cFVZTjRadW1qV3FuZW5BM3N0ZWJpb3VZd0hGdlk4ZG1VNmlkVmRvdFZTR0pkX3ZlZw?oc=5",
-      "source": "Yahoo股市",
-      "query_source": "Yahoo 股市",
-      "summary": "力積電突發重訊！董座黃崇仁逝世享壽76歲 一生打造半導體版圖 Yahoo股市",
-      "published_at": "2026-07-31T18:11:56+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 80,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "Yahoo股市"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "c4dab7d3a9f301c5",
-      "title": "【台股7月風雲榜】被動元件倒一片！國巨「腰斬」一張慘賠近64萬元 上市20大衰股出爐",
-      "link": "https://news.google.com/rss/articles/CBMikwRBVV95cUxOeWFUNFJ5NC1GRXZxem1ZcnJUbFVPR0NuRnlqdE5OakpUQ1l1UlVFc2dPMFZYZUs0R3V3dEZJb21DWFZrbnE4MkFnLTFLbWlIVEFCWDd5Nk80TmhDSzBJaG1FaXRkME9iYmxYOE10NGFRWm5FcGkzLXpxcGdCRWxZeHFsQ0JUMFlYWXBZVUJPaFhkNWpuUF9INkFqNnE2czExNmFab2VkVkZKb2FzOVpmY0tMaWZtSXlmU1N4ZFdIcHdaZGRBUEphZFdQTkQtaW9FelRyMGg3SWt4d21VSUJ5YTZ1OWxnMU9SVVZZZGIteEtlUDlMRUF2aW9XVGZ4X3ZoTlg1NldoRHp3LU9neWxIQ29fWVFEdEFBcUJEV1FSRVNGM19BQkhhZTVWYzFyMmNHT0lRNHg0RmVxcEZ3YVBYUmdTeFlhQVZwSmNJQ2RWLWk3UnpnekF2LTVKR2pmdFdycS1CZ0RLa0V3Q1lQNkVSV0NyY09rMFJNeU0yNzBjT2wzLWNTbjVmRHFVZEFlTVc5ZVZqd2xSenZTVmtUNlJoZ2RGeFY5VWlYZG1RZ3lUWnJBSkE2R2p3eUhSdjRFTGxveGVxRjhybFlYMHY3eDBBR0FZTDhHWDJYQ3UtQ285Y1NHTFczdWhLamlIeVVVR1MxYmtaWnh0dnk4azBZcHVkZzFMSVRsdkp2VFctOU5jMklxVkE?oc=5",
-      "source": "Yahoo股市",
-      "query_source": "Yahoo 股市",
-      "summary": "【台股7月風雲榜】被動元件倒一片！國巨「腰斬」一張慘賠近64萬元 上市20大衰股出爐 Yahoo股市",
-      "published_at": "2026-07-31T14:49:18+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 80,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "Yahoo股市"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "8be41e8d76a14f0f",
-      "title": "【台股7月風雲榜】華碩每張賺10萬元就上榜 玉山金、三商壽也成避風港 上市20大飆股一次看",
-      "link": "https://news.google.com/rss/articles/CBMirARBVV95cUxOYnBsN2ZZVkFIaWpzanhTSWw3MXRXeDJzU1F0SXhHS2FYQWV4ellvTG1XbzV4N21qNXVwUUNaWXdnV0xmVWM3X0RYdFU4M2FQcUo4VXpBMnpCX1lNVmRCbWxJeFp4QTIxR0N0RGJCUHR3WDJZeG9iZXN5VUhPaGc3N1ZGel9yU3JPU3U0QlFUZ1lkYVhUdlhNLXlqMl9TSTlTVHZvZi1EYmxjbURiTGpyLWRQcEpsRjVjeGM0amVsXzB4ZVIwMEptYkJ4S25zajFKVW8xRVpydXQycXllYXdfZzN5SUM4RWNsVl9FYnJXWXRua0xJSW5SOEtQaURZbEk2Ull0VnRWTE5JMjM0RDlYd2w4VU83OWx1RldvNzM0cUkzakJycTMzQjVxSDRBR3pGMjVKV0F2S2M4R1VmTjEwRkd3NVc5R2ZDRDVoXzRBR24wRFVocU9xdU1UYzFLenhaMEVva2RER0kzNHBkS1BmeHlCMElHMHFLTldnaG5nV2d5dXE3YUJkNVN5Y2hXNEphOGNhZkNjY3htQkZZRk1uMUtjaWpEZ1gyMjBVczVPckNRcDN0YWk1S1hJMHFTLVZlREQzdHBYanY4MFZDZWszVUFfTUJaa09ZZHZ1MUVwVkttTUFVNkpPbTc3X0I3WGE5c0NERW1zTVFPS2xSallTaW9PRDZmbUo4OUlWS1pRbDd3dVFvb00zbnNUM2h3R2otaXQ3OWhiUnV2dVA0?oc=5",
-      "source": "Yahoo股市",
-      "query_source": "Yahoo 股市",
-      "summary": "【台股7月風雲榜】華碩每張賺10萬元就上榜 玉山金、三商壽也成避風港 上市20大飆股一次看 Yahoo股市",
-      "published_at": "2026-07-31T14:44:44+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 80,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "Yahoo股市"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "7f10e7032b32a3c6",
-      "title": "台股漲3186點史上最大卻只有8千億元成交量！買不到還是沒錢買？ 分析師這麼看",
-      "link": "https://news.google.com/rss/articles/CBMi7wNBVV95cUxQWjNmUzNNVXBnLWdRU0J4dXNvY1pnMXFoSXFLU3o1UnZSMGY5RkZRQUdmUThkTXBoNXo5Znc1UWdCVXdpVXZQN2lPVkVkNVNOUHJiVVlhd0dXUFVmMnRxNG44b2JrZlB3cDNrSmlKdWxMRVppMHY0RjhjU3Q2bnhfZmo1TnpEeXoyYV9CM3RjemNPNE9rV2Y2NTFTMXpQdTdBdHBRalJRRVVyaTR0cVJSdGNKeWVWUFRMSXhTbWZnMzU5cXZKMUZmLUl3dXp4MHN2cXpZV01vdUktRl9oYWIzOFEyTVE0Y1RWdUl5dDNURFNUZGJ1UTBmelBrTE1iUmZ0VldnMTlTNkM3b2pLcnhWZUNycWQtcTBVZ0czSW94bEFTcVpWTzM4bHhrcVBlN3cxUUFQdndkNG1tNnNpcDA1bnFMMUV3VzdWUnQzVnVPY3d5em1fdk9UdWlPVTMtREdlZm1TWkFFWEtTNVRiWVpPWDB4cC1jajVWOGxhajl4ZVZ3NEJJeTd0YzZZbV9UbEU2UjFQa195akN2LS1uRnpMbV93NVI0VUpQZC1xdWRjc0l3aWFFaHlBNUlOUzRMbGM0LXBYUEZXVXFGVmU2VFVnWlVUOVNXOXBFVE5HMWFlNFZ4UU9NX1JsYVVvNDNwYTA?oc=5",
-      "source": "Yahoo股市",
-      "query_source": "Yahoo 股市",
-      "summary": "台股漲3186點史上最大卻只有8千億元成交量！買不到還是沒錢買？ 分析師這麼看 Yahoo股市",
-      "published_at": "2026-07-31T13:52:06+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 80,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "Yahoo股市"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "0b74da510ef142aa",
-      "title": "台股收盤漲3186點「史上最強」 市值1天暴增10兆元",
-      "link": "https://news.google.com/rss/articles/CBMiygJBVV95cUxON0FHYi1OcmV1eVp4eGNtZENXRXg0NlFJRV8xSjFWanBlcVliZjF2VHFJQ2FieFBtQVhlaF94NHMwWmxGd3llTkw0RkhpdlJGTUZKWl91QkY0QXpxQXNmNUkxNmh6a1lwR0dpOVZXNklQNndfM3lzcDlGSTM4bjAyYlNXZWNORXlfSFVsX2t6OTdxSWZPdGZhZXZLby00VTd4MVVBOS1qdXZNV0s5RERXQUdMbWpiNmpDTkc5NmhYR1RhQnI1ODhyejY0MnhfXzNOSnp0dy1acTEtVjZ1Rmt6UmdPOFFKbFlsMTJSWUpwRlh6T0pSbWdiVmJ6LXpGX2doYUZUZkpoN1o4WlkwUmlLTnJoOU5Sek1IRGFGLUZwZFQ5dDNrZlJzRlU2Y3l1ZmpER19Tb2pkNVFKbHprYmJFYWNkMkkyU3JUOXc?oc=5",
-      "source": "Yahoo股市",
-      "query_source": "Yahoo 股市",
-      "summary": "台股收盤漲3186點「史上最強」 市值1天暴增10兆元 Yahoo股市",
-      "published_at": "2026-07-31T13:36:19+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 80,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "Yahoo股市"
-      ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "0c1c929319ac1503",
@@ -5108,7 +3976,8 @@
       "duplicate_sources": [
         "自由財經"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "8c1e71d26acc27a0",
@@ -5136,7 +4005,8 @@
       "duplicate_sources": [
         "自由財經"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "0b00a7eadd4cfd34",
@@ -5164,7 +4034,8 @@
       "duplicate_sources": [
         "自由財經"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "d639fe8cc40d126f",
@@ -5192,7 +4063,8 @@
       "duplicate_sources": [
         "自由財經"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "2fe47de030ffd201",
@@ -5220,91 +4092,8 @@
       "duplicate_sources": [
         "自由財經"
       ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "6a69376900352c59",
-      "title": "少年AI股神爆倉 Citadel接貨基金7月輸67% 遭追孖展賤價賣股 - 信報網站",
-      "link": "https://news.google.com/rss/articles/CBMizwFBVV95cUxPU2xxeFM5TmJhYldJQ1lSbllxVTVPSTJ1Z0ZqdlU3N2NOUHZkYzM4eFpnQ0hqb3ptdXl2VHB5b3d6M19oZ1dvYUphX1BMZk1WUEZDSi1rUnFsMHlPT1ozUUFRRnN0OGc3S1hxeW5kOWt6UGYzSHlQRzMyRUJoT3BhNE84UHR5clVzdG5JdHZEalYwNWZmckpNQ0FVY2VkY3dqeVVjSjR5V01FY2pmTlRyRGlaQVlOQkdZZlhxbGw0b3piekl1WWd2VkVWUDNDQW8?oc=5",
-      "source": "信報網站",
-      "query_source": "信報財經新聞",
-      "summary": "少年AI股神爆倉 Citadel接貨基金7月輸67% 遭追孖展賤價賣股 信報網站",
-      "published_at": "2026-08-01T03:08:47+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "fund",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "信報網站"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "58f08ad92fb195d7",
-      "title": "另眼看小皇帝謀殺案 - 信報網站",
-      "link": "https://news.google.com/rss/articles/CBMiywFBVV95cUxQV0Rqc0czWXZzY0xQUlBPMzlBcWd5d0FyM0o3alc0bmhXcFZrUjlaVU5IY0daMUtpM0h3cy02RHNfZklSU2IzNS1aREZYWFIwMjNLNndLNlRTb25xYWc1R2p2Ny1iYUE4emhHY1VOeld4Tzl5Nmc5S3lmS216Y1hrTk9RanBwQ29xMlhZNXZ1OUdGd0pRemF5MW5RMnNYMnptLXJmREJJczlWZE5ydDdXMFc5UzBXSkdWLVBlVG9kU3JMSU9QT21YMTZVVQ?oc=5",
-      "source": "信報網站",
-      "query_source": "信報財經新聞",
-      "summary": "另眼看小皇帝謀殺案 信報網站",
-      "published_at": "2026-08-01T02:31:10+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "信報網站"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "8d88fe4a3d77ab4a",
-      "title": "月之暗面與阿里享算力協議 可使用2萬枚輝達晶片 - 信報網站",
-      "link": "https://news.google.com/rss/articles/CBMi4AJBVV95cUxPLTRFM2VXMTRqekxaQ3JVUkhGMFh6blJmVF9MeUtkZ2RZaVVEc3pKU2xkTHQyUy1EUXp6N1h6TVp4RVlvY1NPcE94MVQ1OW5uQllEeXBxNlBBTVdHMENFVnJqX0t3aFp0T2szZzdRcVQ5TVFtNXZ6QlhZR1dJTGJXdEY3YkNIS2UzWVRuNU5xZHVVX1JoQTZLQzliWHdkUjNNTEZGS0RtOER5LS1uSENVOWxlYWRobmUtNzRHVGpyS0x4Wkt2dDlfWllxLThjSTdvRzhTWUs0aW1oajNMdEE3T2hjZ0Nua3dMeEZNQnN0LTFZei1QZmt5YlhScDM4ZGMwTzNZdm5vR0JXQmhvaE5RVDV0R2RRckMzOXh4T1pJNWp4aXRUOGs3a0VKRjNDSkZsbUc1ZEViZjR3T0gwR0xxVFBYaTJzVGRWUlprSEw0U0dfTUVVaDhDNU10ajEzRU5w?oc=5",
-      "source": "信報網站",
-      "query_source": "信報財經新聞",
-      "summary": "月之暗面與阿里享算力協議 可使用2萬枚輝達晶片 信報網站",
-      "published_at": "2026-07-31T22:31:29+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "信報網站"
-      ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "43a5f6d85d4e1528",
@@ -5332,7 +4121,8 @@
       "duplicate_sources": [
         "自由財經"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "f809d5cc280c74d4",
@@ -5360,7 +4150,8 @@
       "duplicate_sources": [
         "自由財經"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "eb70a101e3bdfb02",
@@ -5388,7 +4179,8 @@
       "duplicate_sources": [
         "自由財經"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "bb63a9104cec768d",
@@ -5416,7 +4208,8 @@
       "duplicate_sources": [
         "自由財經"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "ef9eded1a8b33ab6",
@@ -5444,7 +4237,8 @@
       "duplicate_sources": [
         "自由財經"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "cffc29c4a7b93598",
@@ -5472,7 +4266,8 @@
       "duplicate_sources": [
         "自由財經"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "11bc9b762475b060",
@@ -5500,877 +4295,8 @@
       "duplicate_sources": [
         "自由財經"
       ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "2d094ebacc57acc8",
-      "title": "異動股丨美圖升近一成 料中期經調整多賺逾36% - 信報網站",
-      "link": "https://news.google.com/rss/articles/CBMi0gJBVV95cUxQamRWb3BXaGFFQ1BuQ0pCTHc0UjQxRHJQamk5YmNEWVhRUGtYNE92T1REZURYeW1DS3IwWkpTMGdyTi1yTy1yS3ItWGJvMHF1OVFKcmRvR1ZTZTRVQTVrdml2NXBENno2Z2VINDRIQnd4TUhMN2p5TjhWNG94b3lSTTkzSVhFN3lsWGtFMEk3blQ4VlFhdlFMcExQZWhzWDc3VERJd25wS2FkTmNOb2tQZ0tXR0hXdmdmMWczVjFqS1o5Q1NNaWU4MkNlQU92M3VXRU0yOElkZGdOTmFEbmZNSzlqS0doWmo4eW80bjFlTm03SlpFOHhXVlhwVkNUdXNubzhMTkQxMHZzSzI3S2FiUmxudEkxRU82c0ZSUlNWMWZPdEMzbWxFMVBOY19rWDdaejZUUzhpd0J2cVJQZUVDT2ZkY1JBcm5oblN6LUtrU1d6dw?oc=5",
-      "source": "信報網站",
-      "query_source": "信報財經新聞",
-      "summary": "異動股丨美圖升近一成 料中期經調整多賺逾36% 信報網站",
-      "published_at": "2026-07-31T13:20:28+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "信報網站"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "ffae73be51f124a3",
-      "title": "異動股丨普拉達績後炒高12% - 信報網站",
-      "link": "https://news.google.com/rss/articles/CBMi5wFBVV95cUxPM2I0MkFnRWxpT1BTTnp0T0ZUVzNlV1RwSkhnV3dyRWxTQV9NckdTcE1VQU5kM1R0VkNCOFNWclhnemx3WFV5Qy1LaDVTeHhKVVRhQjVsaVo0NGQ0NEZPa1RPdGVXVlpJQmNacnhsQUhtNjZRNkZvc2RCMU54MkdmekdrUnNXaXFfdUFYbV96TEJJQUxXUlljdk9XLUxNdFowdjJMMURjOTNuR1dlTGdPMUNRZ1FEWEJ4aHNQNV9TeXZPT0JrRDRXeFdBYWVoc3l3NTJPOV8zVWx2Smg5Y2VxNzNaYmRjcUk?oc=5",
-      "source": "信報網站",
-      "query_source": "信報財經新聞",
-      "summary": "異動股丨普拉達績後炒高12% 信報網站",
-      "published_at": "2026-07-31T11:46:16+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "信報網站"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "c1c289fa8a9fbe96",
-      "title": "中國經濟丨7月製造業PMI再陷收縮 降至49.2 - 信報網站",
-      "link": "https://news.google.com/rss/articles/CBMipgJBVV95cUxOMkhjNWlDaEY4Z000V2o2MkIyMTctekV2S0hsMURVLVEzTUE4V19PSzI5TVFJbS1hVy0yRGdpbEpZVG1yam1vMW42WlQwTDY4Wk9hcnRSdktDVklvLVdneXJGdWlOQ1ZIR0pSdzVrbXg4OTZ2NmQxUUM0QTdEM08wdzEycGF3b3pJd1FIblhveGpEZGU2b1VTTXBrU0xlVDVyNmdiaWxadkNTU3ROYXkxNVZBRzNnSlI3cXBnanJDTEw2emlsc2l0UG9GR04yWFJFZGwwVlBJUnNfNlc1TFl4TFZoVlNKcV9PWklwd1pjRDdVWS1lek1FbVduV0pzVF8yM0tCc3VGWXZHM2VRcmlRWlFvQVNLY0RSMkRPZ0E3d0phbUtPWXc?oc=5",
-      "source": "信報網站",
-      "query_source": "信報財經新聞",
-      "summary": "中國經濟丨7月製造業PMI再陷收縮 降至49.2 信報網站",
-      "published_at": "2026-07-31T09:57:27+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "industrial",
-        "macro-policy"
-      ],
-      "primary_industry": "industrial",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "機械工業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "信報網站"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "1e5154aef4d44674",
-      "title": "異動股丨新股中際旭創彈逾一成 - 信報網站",
-      "link": "https://news.google.com/rss/articles/CBMijgJBVV95cUxObmx3YXNxVnhnaV81SlBET2F3VFQxTzVVR2RiSHJVZU1EN3g3YlBSOHNLYm1VSjlFQ2xGbDByUkNEdEozMEtyMG1ZS3I1UEZCcWdRV3J5WWt4UzZwb3U1TWJ4QVlwdGQyRFJSOGkyTjJvTjJRX2dWQzE5bHF6UWdwbGRpMzgxVlZteXllVWs5MU9mTVlRSElrTE9pOTB3ZHl3bFZJWXR4ckFIWXhHRGg3UnhDSVM4dUxpX0ZhcHZPT0NjNTZ2cXBraWpfLXVkWEFvaUtwdUc1MU5Qa3VCd2FCNXZmVjRKcjhFM3pQMEExQnRSSTlLa1hqY2JrTWtHM2pUdFVSTUYtdXV2NTR0N2c?oc=5",
-      "source": "信報網站",
-      "query_source": "信報財經新聞",
-      "summary": "異動股丨新股中際旭創彈逾一成 信報網站",
-      "published_at": "2026-07-31T09:44:43+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "信報網站"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "2ae3d7213cb25dc5",
-      "title": "SpaceX據報要求供應商排除中國籍員工及設備 - 信報網站",
-      "link": "https://news.google.com/rss/articles/CBMixAJBVV95cUxOZnlQZE9wc0pGZHhSa1JVOWJaQkF1V3lXeWhWUG5yZ1FMZUpNVV9jaXl6dnB4RXRCUGhhZlVHUnoxcWlmSmpobXF0UUlEVTdSSHZQSXN0UGYxalZVdEdYMmI4anJZY0p4cXVNMWlJU3otWHpPZkNYRC03d1NlWTRUdkdhTUREUWNSVWg1RThVMFl6VW5PUExEOHVOa0hFb0J5SEs5eWhCUXl1VUpZQjlJNm9Ealo4Wnl3N3FBUEsxUzB1YUpTTHY4Rnh4eW9VWGo3T3B0bV9pbDE3bmM1aDZPQlFhQUtOUE03eXR4d000dkp0T0dVenlCREtFOVU5bVNveGZkYXVxTTNSQXRJdVlXNFBEM1dDcE8xQ3RLVG1GdWtuSF8zTTlHQ1M2R0k4Z3Rxa240TUVqZDg1M0hKcFctSmZCWFU?oc=5",
-      "source": "信報網站",
-      "query_source": "信報財經新聞",
-      "summary": "SpaceX據報要求供應商排除中國籍員工及設備 信報網站",
-      "published_at": "2026-07-30T15:35:34+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "industrial"
-      ],
-      "primary_industry": "industrial",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "機械工業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "信報網站"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "a0232ad9ad73c167",
-      "title": "字節跳動丨重組AI業務架構 涉豆包火山引擎等 - 信報網站",
-      "link": "https://news.google.com/rss/articles/CBMizgJBVV95cUxQSEVQQkplNHdPcHYwSHBBbGFiYVBQcnRJMGd5U3k2Q0hHZnd0SGNNR3lsOWR2SURZYVp0WE5pbFNyNmRsRTBvSHlnY005TmxPSGlpLUlodFJCdDNXbFFaNm9yei1XeGs2bVk5N3hQS2s3RVBxU2JFRnNSUUNVTmNUUm1BbUd2cC1ubTRseVdlZU5uTXBnaWRPal9acWZNbzROcUhYeGZBYmhxRjM5aHJyOE1sVmM3U256NWcwTUFPd2JOc1g5TllZVFp4Q2dCUXpVU3hxWXI2Zkkzd0dpVGx0OTd5TXljeU9RVGxsdmF2ay1FLUpfMzJyN0pqSVNsTzQ1MThqajJJNS1KUUtUOWJHdnFFUmRDRDJvSDhILV9DbmQzamx3MUlKTERIaW91Q3lkYjNpR3dnbFlKVkI4Y0NOQUhQcDd4U0Zsa1JrazVB?oc=5",
-      "source": "信報網站",
-      "query_source": "信報財經新聞",
-      "summary": "字節跳動丨重組AI業務架構 涉豆包火山引擎等 信報網站",
-      "published_at": "2026-07-30T13:24:41+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "信報網站"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "c5a72df9f1ff94c1",
-      "title": "恒指走勢丨港股高開13點 小米升逾2% - 信報網站",
-      "link": "https://news.google.com/rss/articles/CBMikAJBVV95cUxPT3R1dnZ2OXdDOS00Z0M5M3RKYlVEQTY0a3RjQjhvR3dIb2pybmo4ekVraTBvX0lESE9qTVRvRGJnZkMtRG5tamhNYktCNzJVQmN2YVhaNHNBRl8xa1FaUmFHRzd6RmVPcDd2ZG5VMmxMT2VPOWxuVWdIR3FnSTB4dERPRU1xV2dHeWRiNmZsbk5yT0hzaEZBN1NvTnJHQWgybFNtb3A4bW5vVnNjZUt2ejd2NElhMG5fa0hnYUhiN3Utd2lJTUE0RURqeWZnZWd0c1Q0X1lYOFVMc05nMlpPc05oNktGTnFwWUFJZlNSQy1scEV1bTUtdkFrbGlqTXpNeGh5RWNFQ2pBb1JDdTZzeg?oc=5",
-      "source": "信報網站",
-      "query_source": "信報財經新聞",
-      "summary": "恒指走勢丨港股高開13點 小米升逾2% 信報網站",
-      "published_at": "2026-07-17T15:00:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "信報網站"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "e13ea647471aaf32",
-      "title": "美股收盤 | 美股三大指數全線向上，納指收市升1% | 即時新聞 - 新聞 - etnet 經濟通",
-      "link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxNZGNITHppQlJPVUhCZkstNURGZm1fX1dMUjB0WU51TTJkNnpxYXl1SGJGWnIzR2FOblFPYXFHczFCSlFRZWE5T3hzU0t1elFQRFkzTUtTT09PbDJfS1V5WF9tOHRzRm5xVlFEQ2dCd2Q1Y2tjdU14UzNNSFQ4ejdGX05COS04REU4eFlVNVhVMUllOUVja0ptRUtubnZqdWNY?oc=5",
-      "source": "etnet 經濟通",
-      "query_source": "經濟通 ET Net",
-      "summary": "美股收盤 | 美股三大指數全線向上，納指收市升1% | 即時新聞 - 新聞 etnet 經濟通",
-      "published_at": "2026-08-01T04:11:40+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 78,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "etnet 經濟通"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "8cd7c4d7dbf5652d",
-      "title": "美股動向 | 蜆殼同意向匈牙利MOL出售賽普勒斯資產，涉資7.2億美元 | 全部 - 新聞 - 美股 - etnet 經濟通",
-      "link": "https://news.google.com/rss/articles/CBMitgNBVV95cUxQUnNBWDRyUW1lMjdzUUhUTXdwMnV1Y1lDZEhZRGlKdlc3T1dhOFl2Njl5eW1tV2pBODhkbVljREVjTjM3WWNJQmFnZkRUUmlyWElQRlR1TkdMSUdGUGRmR1lOUzRHWVpyNWRzdDA0TGR0VXc4OFVFaWMyd0xHWnVEU0xhdzBXRGVSMV9NVXQyOWlNY04yYmdUY1I0MGVpaTBPV0tZUTBmWEh3Xy1wa2J3WExUaVpfVEFQc19BejFNbGlCNE5sR09rWFVPYU5relNwUnpEWkhfdFhCN1EtRFNZeEZxMURWRDRyeU4wWWs5QnYtcTdqeFh1MktWSlNhXzNSSTZFRDdLQXdCRXdFOUMtdDg5OU1qWklmTXlZdFRRQ3hRZXBEeTljSGhJTjNlY0YxaE95X195c0YxUXQwUzdFeW5nbHF4Y1ExX29tMlNqNXlrcnU1dHN0UFR5T3ZyOUUyWWYyV3lNdTgzajhJd19uNTgwcm5wN0p6Y2owRzdNUUs1NEprWTJHb0hUTDI3dm9HM0tIMjYzYllNUVdEWjk4R3RWbUFyZm1lU3R1UnQ0LWE4WC1NQmc?oc=5",
-      "source": "etnet 經濟通",
-      "query_source": "經濟通 ET Net",
-      "summary": "美股動向 | 蜆殼同意向匈牙利MOL出售賽普勒斯資產，涉資7.2億美元 | 全部 - 新聞 - 美股 etnet 經濟通",
-      "published_at": "2026-08-01T02:00:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 78,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "etnet 經濟通"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "0d308acd3c701595",
-      "title": "AASTOCKS 財經新聞Financial News - secure.aastocks.com",
-      "link": "https://news.google.com/rss/articles/CBMilgFBVV95cUxOaGVPYk1VUTVaSzVUWm0xYlpndkdLLVBsd2hmTWVLMVppX2FpV2JfTkJDQVVmV2J0VnBaVFBqTkxiX0J3Q19WQWJsTXVJZDU1OWF1eGJfT21Ednp1QmRGUHRQNmtHXzJrcllPaDctSnZFMThfNnprRzVnbk5mSVVmOVdaZkVJM2tDVC1qR0ZnTlNxUk12cmc?oc=5",
-      "source": "secure.aastocks.com",
-      "query_source": "AASTOCKS",
-      "summary": "AASTOCKS 財經新聞Financial News secure.aastocks.com",
-      "published_at": "2026-07-31T18:57:57+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 78,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "secure.aastocks.com"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "25dc7efa452b3847",
-      "title": "亞洲資金輪動流向港股；基金買盤吸納中際旭創 | 即時新聞 - 新聞 - etnet 經濟通",
-      "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxOZnUzRWF1alRjNWlzMEJaS2kxVVZtNmhUR3Njc0x4QUhTYkNaMUx4cm8yVEdTcFJnODdndGRBdWd0eE9helRpYWNvY1A2alYxSzRuMzVFTURoNEdRZHJYbUhCTjlNclc4MUFIR09tZGlNN2JkZGZ6OWQ0WjdsVjBxeEg1RWkxOWM4czdQZ3hlZmVEZw?oc=5",
-      "source": "etnet 經濟通",
-      "query_source": "經濟通 ET Net",
-      "summary": "亞洲資金輪動流向港股；基金買盤吸納中際旭創 | 即時新聞 - 新聞 etnet 經濟通",
-      "published_at": "2026-07-31T09:01:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "fund",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 78,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "etnet 經濟通"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "53f13ef091506767",
-      "title": "淨流出85.71億元，買騰訊沽盈富基金 | 即時新聞 - 新聞 - etnet 經濟通",
-      "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxQYk1MSlNwWkhGWFE3di1kampQbE5yb3JSRFpfNFZMZldKb1RVODJzVTNXeUxaVkF1bkNSNWQtMHlhZmZnNU5PQUhERi1PYWhMelY1MGxMeTVpalBVZV9FRTlJTklaTnY5OFpwYUtabDBlbHZ5Sk9wV0J6SzlTUllaOC1qMVdZMFZXRllpMjZTV3A5dw?oc=5",
-      "source": "etnet 經濟通",
-      "query_source": "經濟通 ET Net",
-      "summary": "淨流出85.71億元，買騰訊沽盈富基金 | 即時新聞 - 新聞 etnet 經濟通",
-      "published_at": "2026-07-30T17:39:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "fund",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 78,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "etnet 經濟通"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "b9d89f4594a828c9",
-      "title": "金融時報：OpenAI原員工Aschenbrenner的對沖基金尋求新資金，因AI股大跌 | 即時新聞 - 新聞 - etnet 經濟通",
-      "link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxPRndGQ1lUVm95eHNjcmRRLVdDNk1SZE1fNVMzdVY0VXFpc3Mzb0dIaGtpX0doZlFaaE1fVDBBaFdVSFN0cTJZUUtpbTlkaUFuckhpbGZETDJlTWloc0tQTHo4NXN1MEhtcl95aWJOdHZQUUNmb19WVmUyOFhqVTZfTUljS1JxNzIzTmQ3VGR1dXBlZw?oc=5",
-      "source": "etnet 經濟通",
-      "query_source": "經濟通 ET Net",
-      "summary": "金融時報：OpenAI原員工Aschenbrenner的對沖基金尋求新資金，因AI股大跌 | 即時新聞 - 新聞 etnet 經濟通",
-      "published_at": "2026-07-30T13:41:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "finance",
-        "technology"
-      ],
-      "primary_industry": "finance",
-      "asset_class": "fund",
-      "crypto_categories": [],
-      "industry_label": "金融保險",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 78,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "etnet 經濟通"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "b7a3d6f162343ec7",
-      "title": "新聞 - AASTOCKS.com",
-      "link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxPbjh3cWo2WjVqQ1hpNnhqRGVJTkkweGV0aExFQWtJRWVWbERDaU9BSEhxXzk0UWhTNUVOaTkwdnhHU1FvUHN6ZU52RGlOdXFSelBKa3hHd2RDWWhfY1NSNi1GTUZKeEt3NVhfTnNRQmF6ZHlkWG5aYlIyWnB4cENrZXd2ZlkxcjZJMWw0QTVTZzlvbS1sZFg3REhlZHJiMzhHVGFtSWp6b3FvZjlRelkwSmtSdEF5OUZfbTZKM2M3QzZyQXFp?oc=5",
-      "source": "AASTOCKS.com",
-      "query_source": "AASTOCKS",
-      "summary": "新聞 AASTOCKS.com",
-      "published_at": "2026-07-29T06:33:39+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 78,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "AASTOCKS.com"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "96d63f73569e0e44",
-      "title": "美股動向｜AI憂慮加劇市場波動，關鍵周聚焦科技巨頭業績及聯儲局議息 | 專題透視 - 新聞 - etnet 經濟通",
-      "link": "https://news.google.com/rss/articles/CBMilwFBVV95cUxPWnkyWkpGUDJWT1U4MWhDVUZUT193WVRHdUJPc1JKSXlLUU1qWGN1ZXJTd0E5cmwzZXlQMS1PZ0ZwVWxwSmNrS0ExMUs5YjdRM282OExhUG96RTlpVXpINndSN2JseHhnUjg1SmhPbWJtSHBfZGdTZmo3MVBPWVdVS3RuNXdDTXFvNUlJTm1NVFJXMXpTcjhN?oc=5",
-      "source": "etnet 經濟通",
-      "query_source": "經濟通 ET Net",
-      "summary": "美股動向｜AI憂慮加劇市場波動，關鍵周聚焦科技巨頭業績及聯儲局議息 | 專題透視 - 新聞 etnet 經濟通",
-      "published_at": "2026-07-28T21:25:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 78,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "etnet 經濟通"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "b3cb89e266b5ae5a",
-      "title": "《北水新貴》智譜港股通（滬）成交急增，淨買入1.8億 - etnet 經濟通",
-      "link": "https://news.google.com/rss/articles/CBMivAFBVV95cUxOZGpWWTF3NzV4aTVFdGI5V21sSzFDaTF4QzZNYVlQRTU3ZFNIWDFMdm5xamJ6dldMa2ptY05qSllSbi1mSmw0VDBtbXJScXJmRDVkeDBsejl0MWtmRk5KV1poeUpqRmJZcWI2a3g1SWR6WmhqanludE54TVN1XzNBX2xLNnFHSFpiZ0FqQWw3YTJILU1sTWc1Q2RGV3pCQjJrWmNCb1dSZEdZWFNlYnpnQWdoZ1BER1pRa0NNRA?oc=5",
-      "source": "etnet 經濟通",
-      "query_source": "經濟通 ET Net",
-      "summary": "《北水新貴》智譜港股通（滬）成交急增，淨買入1.8億 etnet 經濟通",
-      "published_at": "2026-07-28T17:39:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 78,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "etnet 經濟通"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "650496348bf6f693",
-      "title": "《盤前攻略》中國生產光刻機震懾外圍晶片股，港股逍遙料試破區間 - etnet 經濟通",
-      "link": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxPWXV2a3ZPQTRSaWgySV9PeVpDaFpJREJqX0x6R1pqZkFFbFp1cmpuSzRnbzNYaHlYUjlYdVJNY1BtOFExenktbWZ5X05ERlBhMXNfbFMwWXpXNkZncjZpX3laeERuOUFqb0hpNV9qRnBURTZ4Y3pMVHREYy1yODlzX3lPdDBVZlRaMjlhcFl5NUlNRk1RaUNEVmliLXJwTkpTNGJxcnAxYnpoQQ?oc=5",
-      "source": "etnet 經濟通",
-      "query_source": "經濟通 ET Net",
-      "summary": "《盤前攻略》中國生產光刻機震懾外圍晶片股，港股逍遙料試破區間 etnet 經濟通",
-      "published_at": "2026-07-28T09:10:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 78,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "etnet 經濟通"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "b4d4c580baba7f5e",
-      "title": "美股動向｜Evercore報告：AI投資未現過度投機跡象 | 即時新聞 - 新聞 - etnet 經濟通",
-      "link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxPU244ejdxWGYzb09jcE9DTkdwMUM4Q0g5Znd1Q1BnS2g2X19OZk1wTklPaThEUnZ0UlNJY2xFRFByRElsaVFXOGQ3aHhOdnM1WnFLQkhodWRHOE04eDFGRTZEd2xRb3JFZHdwVzF5c0Z3VndyNWFJNVI3b2RnUXBrVzYxR1BnWWFYUkFMMEpSMGVOMUJ3N3RQMUNkX0RlX1VT?oc=5",
-      "source": "etnet 經濟通",
-      "query_source": "經濟通 ET Net",
-      "summary": "美股動向｜Evercore報告：AI投資未現過度投機跡象 | 即時新聞 - 新聞 etnet 經濟通",
-      "published_at": "2026-07-28T03:30:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 78,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "etnet 經濟通"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "5707a2a6cdfee2bd",
-      "title": "美股 | 晶片股反彈提振大市，美股結束三連跌，納斯達克100創三周最佳表現 | 專題透視 - 新聞 - etnet 經濟通",
-      "link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxPQVc5R0VyUERxUXJuaDZLZ21mQlc0VTdCVmxneVdjaDhYSWE5dDctM29nRXdNd0pubkFBZXZjZGdBdXdXUnRmU0dCTjNiLXJtbTFjRmtvWlZDS2gxZUREd3c5OFRmc2pKZXI3SXhXMThpcm14RGQ2ZkMwZ2xNTmtCNm9UdFdlMzJZSWZ6VHB0eC1aZWpIcUtiQi0tdTdJQ3dp?oc=5",
-      "source": "etnet 經濟通",
-      "query_source": "經濟通 ET Net",
-      "summary": "美股 | 晶片股反彈提振大市，美股結束三連跌，納斯達克100創三周最佳表現 | 專題透視 - 新聞 etnet 經濟通",
-      "published_at": "2026-07-22T08:42:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 78,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "etnet 經濟通"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "19fccee878aae986",
-      "title": "夜期成交資料——恒生科技指數|香港經濟日報 - 香港經濟日報HKET",
-      "link": "https://news.google.com/rss/articles/CBMi-gFBVV95cUxNenMtUTU2SExFRTlnNGRhTWlEQmNoWEJsNG1pWjlqaWpWSE1kVTk4MG93U3ZFOEdheHM2SXFiM0RSOS0zRzdKZnJlYVJuWko4dm1IWGFyY3kzaXhJUzdGd2RKbndVV1RxZ3VCZDFCclZReVBwcUpyYlNPQXlsdFdmS28tV0ZaYnNOVHZzMGM1VE9kOXplNmF2d1FVSGRqMlk4WEVyQjFPQzhYbnNSVHQwZGxpc21oLUl6SlBkVzl2UzlQUnItM3g5cFZrWUpzQ2F1TlFiQmJfZWxTMDRGcVRKRlBJc1JuTFN6WjJZb3FOUkY0VjlTbEttSG93?oc=5",
-      "source": "香港經濟日報HKET",
-      "query_source": "香港經濟日報",
-      "summary": "夜期成交資料——恒生科技指數|香港經濟日報 香港經濟日報HKET",
-      "published_at": "2026-08-01T04:32:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 77,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "香港經濟日報HKET"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "600f115eda615708",
-      "title": "韓擬設千億主權基金救市 專攻AI產業|香港經濟日報 - 香港經濟日報HKET",
-      "link": "https://news.google.com/rss/articles/CBMitwJBVV95cUxOLUlobFZ4TEFiRUVxQkR6bEJUemk0bGdtWDdiUm9rdDFXSnUyYWVReVB2T2UtRHhydHF6c0FENkdXQkhJOXRPUEV5ZHJVT3owSnJWdTF2SXBnR0huY2cxRkVJOEsxWUFkMmtpcnV5b1RKS1lvQ2RXREs0Vmw1SkhQaDNmMXY5cnBPWHZ0SnlTRTVDN2dZM3oyUHlnbEY3UFdZYWVfUS1QUmxOR1FFQkNUbkJybW0tV0ZuQTQtbUQtLVZtby1SVm1JREZhZjUwbHh2bEpVS2Jma3dPUXpGeldnWlJqSWN6ODlPeWVybVgzWGZNQW9vS28tb3FPZmZIYjN5Tk9XNWV4M045U0ZvMVBKbVJWdjdJWl9lTUFPXzJoQ0QzSndIcFRYUHc1bzJsb18xWm5iUjlXTQ?oc=5",
-      "source": "香港經濟日報HKET",
-      "query_source": "香港經濟日報",
-      "summary": "韓擬設千億主權基金救市 專攻AI產業|香港經濟日報 香港經濟日報HKET",
-      "published_at": "2026-08-01T00:29:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "fund",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 77,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "香港經濟日報HKET"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "e6674d9a605482e1",
-      "title": "有圖有勢｜半導體股帶領美股急彈 HSI夜期率先破26000關（持續更新）|香港經濟日報 - 香港經濟日報HKET",
-      "link": "https://news.google.com/rss/articles/CBMiiANBVV95cUxQNlpTN1NnLUx6bUlEal9WZHR6RGx6SFc2ZEQ4OUtnRWxPNGMyNzVLejRYblZxVjJpWmN5cGN1eDVpNzl3QUhNWjZEQWFYZEFTSVpnRUkwRHpVU21NbVB1OE5XajlpY29wLUo1dnZRMXNDeTNSZ0RNS3JmdXVVYzRHNnc1OU5YRTE2d1JORG9iZE9fd0Z5ODRPeUloa0lrMjVYZERZT1hyWVl0ZXJPR1JfMDQ1Y2V3LTliS2VMUUNDVlBteVJuMm5KRUFyV3BWaU9RVWNIaEF3dFpZYU00akJxVFFrcl8xMlMweUw5bmpPWWExRVF3S0JtYk9fZmN3cVVFZWt0Z2FyQUhoM3ExbG1oU0JDZ01IQ1c1LVRkM1hvQ1lfR2ZXMFdLaTBJOVg2cDNsZ0s0b2xSLUFRelpEY1V4YnlHRDVwejJEVUpJdHl6V2w5WEthVUcyZGdnMk5Ba3prdWI1MldSZ3VCT3RlTUlmOWNyV2xkTHkwczlMNE0wV2k0aEsyVDJWSQ?oc=5",
-      "source": "香港經濟日報HKET",
-      "query_source": "香港經濟日報",
-      "summary": "有圖有勢｜半導體股帶領美股急彈 HSI夜期率先破26000關（持續更新）|香港經濟日報 香港經濟日報HKET",
-      "published_at": "2026-07-31T23:33:11+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 77,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "香港經濟日報HKET"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "8f6113b6d1f92f38",
-      "title": "北水走向｜北水6日流走240億 單日逾61億沽8股|香港經濟日報 - 香港經濟日報HKET",
-      "link": "https://news.google.com/rss/articles/CBMirwJBVV95cUxOSjhZTzFKdFNUcEFvY1ZrclM3MmRSYWw5WkRhTzE2UkFhTmNkcFhKUGJvb1dEaEtGSER1dlNsdW1QNGNkRm1hNy1VdU13b09jN25ETjVuUWpGREVEd19iOEdZYzlNWFd6RHhwWWVvYlVmejZvVVpWU3YwcmszdmU3R2F5OHk1VDNLOEFfRm5DT1Z4RUs3QTluZXJ3VWw0T1lZTGFHMWFaekVuNV9zeXRWM0lqLWFzNFhfWnI4RzktSEZrUmVCdXZsRWhsRXFSTmJQY1JIREt0MXZYNTJQSXRJSzJmd0dyNzA3RnhkTGJTWXVDN0FNVDNadFE5Qk5MVE9WLUdyQllPYnpkSC1oWTR0ZHZuYUMwMUVTdW1Jb291NjBUY0ZxT0VGMENrbDFKZGM?oc=5",
-      "source": "香港經濟日報HKET",
-      "query_source": "香港經濟日報",
-      "summary": "北水走向｜北水6日流走240億 單日逾61億沽8股|香港經濟日報 香港經濟日報HKET",
-      "published_at": "2026-07-31T23:26:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 77,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "香港經濟日報HKET"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "d594bfa7092d9b4a",
-      "title": "Leopold槓桿爆倉 「笑到最後」的 為何總是巴菲特？ - 香港經濟日報HKET",
-      "link": "https://news.google.com/rss/articles/CBMizwJBVV95cUxQZElQSTIxcGJrcXlpQjdIWHRxWnNSZ3dUZno2clIwNkFfZllDMnFRM3VXQ0lmMzhYbUJpc3A4OGhYc0l5R0ZyMURRQ0gzSk5yYXk3UXluOFFrTWEwMUhVVmRQdGFQRVkzVG5Ub2taUUVqeUFLcFA4dWl1dnRvMUxRY1N2RVRvejZTYlZFMWk2UDNiYWJpc3o5Mm9XN3ZwVDRKaUsxaTZnZnBkanhoM1ZEdnFKMDBDYzR4ZjdTZWRzVTNmWUJvbkE1M1g3VWVyOW44ME5BeFplMnBDOTJJUTNTSGN4elFDSXlrX29JeEdySjU4QlBJS3ZnczdoUkprNkNybkYxZWJvQ252UHRyLWdGZVNqekRXdHczQnp2X2FheUdJVjk2U2s5N2NvdFI2RjA3SGhBc0daczZoX2M2YWoxeERMdUpGeHBHUGFxOTJhZw?oc=5",
-      "source": "香港經濟日報HKET",
-      "query_source": "香港經濟日報",
-      "summary": "Leopold槓桿爆倉 「笑到最後」的 為何總是巴菲特？ 香港經濟日報HKET",
-      "published_at": "2026-07-31T18:12:14+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 77,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "香港經濟日報HKET"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "6342640f4e33577e",
-      "title": "港股通｜智譜（02513）為港股通（滬）10大活躍成交股榜首|香港經濟日報 - 香港經濟日報HKET",
-      "link": "https://news.google.com/rss/articles/CBMi7wJBVV95cUxQbmZMalgySy1VTGdMaTBvXzdrXzJ1ZmlJVGlvcU8tMk82a3lDdHZQZ1ZUajdua3NlQUpHZ29mNDB3RHZxaFk3a0gyOUpld050emtHX2I4bE1yUFhrNEJKeHZjb1hSQ1BwRzJCSkJRXzQ2cUQ5dVJSY0x3VDR3cE5sSlFwaXVkUmpWWHl4cTRoUVl1T2NRLThVeWxwaTM3UjdfRTlGM0lwaDNHb2JzUjd6VzVuUXlqZzI3bEdCQXhzZjNBcTRpVFRfZFJuVWdScEhta25MNm1GOVVZSDZfSm82bFJpTnhJeFo0OTZ0WTN3alg5d0Z2ZDNMdWZpVF9kSUFnYkJTaVMtTWJ4QkZzVk9BaTdVcHlldEkta0JsQ090eTExQV95MUxCcTVmVHR2OG5BTHNMVzVtQjBvMUo5dUVPWkxfQUNlb2pzZ0hleWdSVFQ2d2d2LTNudTFmTkZyNkwybEdudUNRVHA4ajF4SThV?oc=5",
-      "source": "香港經濟日報HKET",
-      "query_source": "香港經濟日報",
-      "summary": "港股通｜智譜（02513）為港股通（滬）10大活躍成交股榜首|香港經濟日報 香港經濟日報HKET",
-      "published_at": "2026-07-31T17:33:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 77,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "香港經濟日報HKET"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "554143884f75f0b5",
-      "title": "企業盈喜｜好孩子國際（01086）料中期純利按年升最多1．84倍|香港經濟日報 - 香港經濟日報HKET",
-      "link": "https://news.google.com/rss/articles/CBMi_AJBVV95cUxOUVhjVHRzQzBSNTEzLU1oRHRVUkdOYnhic3FMVTliMkdra2twV0RNQ0tPWXV0R0NPZUtLb3RzTnJzcXRWaS1OV2cxbU1mV00wRUJOd3JOXy1LZDRjQVV6UjhmRTRtS3UxcDdQSTg2Y2dQMDNiZk8zTEp5eVNTeU1rbUZSbkxGZlJqV2tRT19KcHJ5NVNMT3NtamFyNWtmb3Rub1A4RmVPbXY2MjhxVmVJWHZPMkNNT1czU1BXN0tJTG9HVC1sZDcxaEd4d1lSeTN2b2I4ZFd2SGQ4UWdsaDFOd0VqTUlTNUFyd0FOcS1iazZ2Nlcta0h0UlVRakM5aTRLdHNJdTN0OVA3Rlh6U0E1M1ZKN2ZDUzctUUZSWEZaN29yejc5cnV2b01sdXhtbjRWYk9KNU80eXhjcXdpbjVxMDFYbUJlNlBCcFBWV0sxYWRxRnk3Qkx1TzVSa2lSYW9GTjVjdklMMUlZTXpuRUwybnhGWmhWYXhJSVhxRQ?oc=5",
-      "source": "香港經濟日報HKET",
-      "query_source": "香港經濟日報",
-      "summary": "企業盈喜｜好孩子國際（01086）料中期純利按年升最多1．84倍|香港經濟日報 香港經濟日報HKET",
-      "published_at": "2026-07-31T16:41:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 77,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "香港經濟日報HKET"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "aedef28f04147b5e",
-      "title": "少年AI股神慘遭清算！被嘲「撐不過黎明」 旗下對沖基金爆倉、老牌基金接手後急反彈 - 香港經濟日報HKET",
-      "link": "https://news.google.com/rss/articles/CBMimARBVV95cUxNLXhyNVBja0hpZ3Z3UWV0Tks0RE5fVVgxUXFleTRFd3BLRG1KVDVUZDVTbDd4ZG45UktOWG96RGVFcWVwUzlxd2hlOGlqNGFnMXRIMHM1ZmUydDYzdG1PMWdieUNoVVhzbldOTWlPbnZiWUZQNWk2SzI1Qk82eFBYbGRIbjU0Y3VKckF5QV85Yjh4LXFESU9GTHJDcGdmbC1kNTk3QTdOX3JvbzhGYlJBbl9UeHFjazRPb1ctNGhOelk0M2c1RVM5d3R2OFJaYWJLQTRmb0lGNFNGSVdYWU5nQ0VPNzcxekE4YWNydkJxakJnSW5YSjhubjVId1V5bXBBdnh0Q1VJNFQ5UlJ0a3IzV1R4MmFXUDNFdDMwUDBsV0FsM2NMT1k2aHBaR2tYdlJBUzFDRE1VbmE4d012M1p5MlFEQmZZSV91X0RnWkg4X1V0MkNQNk8xcVJmQ1d4OGgza2RwenctZW9MUmtVcWNldG9OOGdwWnJSTTF0anBFdG1iYnNIOTBZUFFWRFpSZkV1Q3hZelI2bzI4QjA2WWJIaFhBcDRyQXp6enU3b0ZxTlN2U3luQ1JJLWxlZFlqa09BQWd3MTFpal8ybi01WVVNWTMzWXJaVkJQTjZMem9mRjI0TDY3U2NHYzQ0cy1BZFhwZUJjTmlYSS1CdDNUaDBrRTJsWFExSWQ2eFZUR2tqejlnWGlVajFvVg?oc=5",
-      "source": "香港經濟日報HKET",
-      "query_source": "香港經濟日報",
-      "summary": "少年AI股神慘遭清算！被嘲「撐不過黎明」 旗下對沖基金爆倉、老牌基金接手後急反彈 香港經濟日報HKET",
-      "published_at": "2026-07-31T11:07:38+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "fund",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 77,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "香港經濟日報HKET"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "48880d00b71dae46",
-      "title": "港股評論｜恒指或面臨調整，高息領展可關注|香港經濟日報 - 香港經濟日報HKET",
-      "link": "https://news.google.com/rss/articles/CBMiwgJBVV95cUxOVVQxSnU2eGJraEl6MFEzZnloRlkzdVNsazBuallpakowOWxUd1hicEhtVDgxTldyTkVZa21DZkszbVJiR1REWFVKbE5faGsxVG1ZVExvZWZidDM1SGJDVTVPV1NBV1V2UEFsVk5JMmEweXZVZlFFdlRUcnRnbkFiTlJsUW5feEhKR2ViR3dXWFFzaFdsMzdWTWg1ekY4REMwUDY5M0RJQ09xdXZhOXBuSzRnNWdQN2luNXByekZHeU1Zbi12alVqTnh2SERsT3U0YmRVT20zSTFYdHp3c3VmQXlkZ1Y0akpMZHc1T3M4OEs1aE1LbHdaOE1EYXMzTFBzS0h2Zjd6ZkcxN280X3ByVXRqX3d4TkZLU0RGZlhxZ01OZXN2X3FROVN2dTJ2elhvUWtuX1RIWGtQdFlrS3lmRFN3?oc=5",
-      "source": "香港經濟日報HKET",
-      "query_source": "香港經濟日報",
-      "summary": "港股評論｜恒指或面臨調整，高息領展可關注|香港經濟日報 香港經濟日報HKET",
-      "published_at": "2026-07-31T09:45:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 77,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "香港經濟日報HKET"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "4fbe67b48fcecc8a",
-      "title": "劍橋科技（06166）：市盈率和市淨率顯著高於行業水平|香港經濟日報 - 香港經濟日報HKET",
-      "link": "https://news.google.com/rss/articles/CBMi4AJBVV95cUxPWlRKVkVjUk10LUtHdTJrNVNTN1U2bEdnTjVjV3JFQUtMMnZfa29WNHBSell1WWhycXI2aFR3c1BCX1BLTmpvQmNpZUEwSEIzWkJkYUt3TnZta2h2aklQWWZ4bzlSQ19ON2s2aFlqTWNsMk9GNWFhaGRfY0prRnVEbDdmX2NERnJkQTZjc081VzVpNV9YNUFJVWJMVmFvUlp0WFI2NnZNZ0wzOWNtTG5McUk1YmJzT0E4Q0pEMG44Y0RScFdkSGd3M0EwTDlOVm0wdV9SSTN4MjJEaGVZRXY3ckY1UmFPYVZNS0RCb1lZWFB3UnpGdFNtcEZHREttRmVEQzhXcG1FaUVMbFZ2Rm1ISUJRMWlHV1pWNm8tQWZsUjExbUtJeENfNy13WnJIay1mYVpxcGNBRGQtaWxlOWd5TjJzQjlBQ1JmOFdBVlRkNFY4b013RTQ0aXU3VndsemNv?oc=5",
-      "source": "香港經濟日報HKET",
-      "query_source": "香港經濟日報",
-      "summary": "劍橋科技（06166）：市盈率和市淨率顯著高於行業水平|香港經濟日報 香港經濟日報HKET",
-      "published_at": "2026-07-31T08:29:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 77,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "香港經濟日報HKET"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "6bd0812f96f6a29d",
-      "title": "赤子城科技（09911）今註銷266.4萬股|香港經濟日報 - 香港經濟日報HKET",
-      "link": "https://news.google.com/rss/articles/CBMi7wFBVV95cUxOcHVIaTVzXzlwSzFRa1draFFxN0phbHpXaDZSYTdZVWRPLXlQRk9Tc3VGZFVGUUhVRDdEX2J3blJKSWVfakQybWRYOUNiRUkycDNIajNGMm9PWHFtT1ZsWDRrd1p4Z2lMcTA5ZUpmUF9CS3ZMcllCMkZZdEExbVJlMnM0czdKbkZRME04OFlhQXhCalNoXzBlY08yRU51MWFlSTlQVjhabXpGUG8tSHBKRjctSGZRUW9yQVVsVGo0SFFIM0d3cnNCTmNuSXBsQzljWjQzeU9PUGxJckNEdGlJakx3Mzg3UlRTRFNEcnZhdw?oc=5",
-      "source": "香港經濟日報HKET",
-      "query_source": "香港經濟日報",
-      "summary": "赤子城科技（09911）今註銷266.4萬股|香港經濟日報 香港經濟日報HKET",
-      "published_at": "2026-07-30T16:46:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 77,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "香港經濟日報HKET"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "8a6bfe3fe15752e4",
-      "title": "銀行股發威 港股成交縮動力唔夠？韓股等「去槓桿」後重拾升勢？ - 香港經濟日報HKET",
-      "link": "https://news.google.com/rss/articles/CBMitgNBVV95cUxPcjhjYm5GSGdOMVNuV082ZVo3Mm5fUE9pZ3JwX3VFWGZtOHI4TWItNmVwX2RBeUdXZFJEZjZJN1JrUE5hMVl2bU8xUHBHQ0pBTEcxa19XUmw0dF80ZUhxb0NQTlRJXy14RTRwQlBTWnduSXFIUDU1Z2d3TUMtdWdKek85UVg5UUFIR05jY3JkZDZNZTNLSFhBYTY3eVZXUjVRdmJ5eUZVQm1KNjRNMEtMNXJRVHFRbzVWODZ4dF9aWWk2Z2hXZ010VWp3blBQcVRzd1AwT3dJMTNrclVzVjQ5SzBnUm5abHQtYk1vc1ZtVkx4NTJiMDQwVmhsMEx4N203S0FqclBKMVp1M2tjNUwzaHFKUklTdWwybE5VSXJDVWVpUXZRZ1hSYXRoZ1pENDZuVU9ONFlhQjg5bGtsNWVoaFdzNDlTdXVNSnhZcXdqNTA4ZmVUb1hqODB3alZtSmpOVmM3c2VMdjJrRWJkeXRkbjhDbUVSVmx5NEllSnpQZUR1a3pmTEd2X2VHVlMzWDM1Z1BEQmFFZHdxYXRBOGhWN2xPTnZIQ1JFZUI2b0pTV09qdU5sQWc?oc=5",
-      "source": "香港經濟日報HKET",
-      "query_source": "香港經濟日報",
-      "summary": "銀行股發威 港股成交縮動力唔夠？韓股等「去槓桿」後重拾升勢？ 香港經濟日報HKET",
-      "published_at": "2026-07-28T06:38:21+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "finance"
-      ],
-      "primary_industry": "finance",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "金融保險",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 77,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:58:09+08:00",
-      "duplicate_sources": [
-        "香港經濟日報HKET"
-      ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "stale": true
     },
     {
       "id": "df919cbf8b50fc65",
@@ -6604,32 +4530,6 @@
       ],
       "primary_industry": "energy",
       "industry_label": "能源公用",
-      "stale": true
-    },
-    {
-      "id": "577c5b84f26cbeda",
-      "title": "台股崩跌2953點不只看台積電 黃崇哲：晶片核心進化了，人腦的核心卻繳械了",
-      "link": "https://news.google.com/rss/articles/CBMie0FVX3lxTE9QV0s1WWRCNDNxX0Y3Z3ZXUkY2V3N1Mm5DVUdldHVuR2hzZmVwUzlSbUJJd3kzemZSNWw1NGVmSzd0ZWdIelJtWWVSbThJWGpEUE5yS3hnbkxyY0RxLVlUcV9CNkM1emRnTHU1QktGNDFRV3ZYQmVPdW5Qbw?oc=5",
-      "source": "財訊",
-      "summary": "台股崩跌2953點不只看台積電 黃崇哲：晶片核心進化了，人腦的核心卻繳械了 財訊",
-      "published_at": "2026-07-17T19:20:16+08:00",
-      "region": "TW",
-      "topic": "market",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 76,
-      "is_breaking": false,
-      "fetched_at": "2026-08-01T18:05:43+08:00",
-      "duplicate_sources": [
-        "財訊"
-      ],
-      "duplicate_count": 0,
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "industry_label": "科技電子",
       "stale": true
     }
   ]
