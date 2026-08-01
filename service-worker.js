@@ -1,12 +1,14 @@
-const CACHE = "global-market-radar-v5";
+const CACHE = "global-market-radar-v6";
 const STATIC = [
   "./",
   "./index.html",
-  "./assets/styles.css",
-  "./assets/app.js",
+  "./assets/styles.css?v=6",
+  "./assets/app.js?v=6",
   "./assets/favicon.svg",
   "./data/seed.js",
+  "./data/news-seed.js",
   "./data/events.json",
+  "./data/news.json",
   "./manifest.webmanifest"
 ];
 
@@ -20,30 +22,32 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
+async function networkFirst(request) {
+  try {
+    const response = await fetch(request, { cache: "no-store" });
+    if (response?.ok) {
+      const copy = response.clone();
+      caches.open(CACHE).then((cache) => cache.put(request, copy));
+    }
+    return response;
+  } catch (_) {
+    return (await caches.match(request)) || (await caches.match("./index.html"));
+  }
+}
+
 self.addEventListener("fetch", (event) => {
+  if (event.request.method !== "GET") return;
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
-
-  if (url.pathname.endsWith("/data/events.json")) {
-    event.respondWith(
-      fetch(event.request)
-        .then((response) => {
-          const copy = response.clone();
-          caches.open(CACHE).then((cache) => cache.put(event.request, copy));
-          return response;
-        })
-        .catch(() => caches.match(event.request))
-    );
+  if (event.request.mode === "navigate" || /\/(index\.html|assets\/(app\.js|styles\.css)|data\/(events|news)\.json)$/.test(url.pathname)) {
+    event.respondWith(networkFirst(event.request));
     return;
   }
-
-  event.respondWith(
-    caches.match(event.request).then((cached) => cached || fetch(event.request).then((response) => {
-      if (response.ok && event.request.method === "GET") {
-        const copy = response.clone();
-        caches.open(CACHE).then((cache) => cache.put(event.request, copy));
-      }
-      return response;
-    }))
-  );
+  event.respondWith(caches.match(event.request).then((cached) => cached || fetch(event.request).then((response) => {
+    if (response?.ok) {
+      const copy = response.clone();
+      caches.open(CACHE).then((cache) => cache.put(event.request, copy));
+    }
+    return response;
+  })));
 });

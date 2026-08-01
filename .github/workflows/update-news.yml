@@ -1,9 +1,9 @@
-name: Update market events
+name: Update related news
 
 on:
   schedule:
-    # 00:15 UTC = 08:15 Asia/Taipei
-    - cron: "15 0 * * *"
+    # Every 4 hours, offset from the top of the hour to reduce GitHub queue delays.
+    - cron: "17 */4 * * *"
   workflow_dispatch:
 
 permissions:
@@ -29,20 +29,20 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Update events
+      - name: Refresh related coverage
         env:
-          NASDAQ_ENABLED: "1"
-        run: python scripts/update_events.py
+          NEWS_MAX_EVENTS: "12"
+        run: python scripts/update_news.py
 
-      - name: Commit changed data
+      - name: Commit changed news
         run: |
-          if git diff --quiet -- data/events.json data/seed.js; then
-            echo "No event changes."
+          if git diff --quiet -- data/news.json data/news-seed.js; then
+            echo "No news changes."
             exit 0
           fi
           git config user.name "market-event-radar-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/events.json data/seed.js
-          git commit -m "chore: update market events"
+          git add data/news.json data/news-seed.js
+          git commit -m "chore: update related market coverage"
           git pull --rebase
           git push
