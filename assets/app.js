@@ -70,47 +70,47 @@
 
   const marketGroups = {
     TW: {
-      name: "台灣",
+      name: "台灣市場代理",
       symbols: [
-        { name: "INDEX:TAIEX", displayName: "台灣加權指數" },
-        { name: "AMEX:EWT", displayName: "台灣 ETF（EWT）" },
-        { name: "NYSE:TSM", displayName: "台積電 ADR" },
-        { name: "NYSE:UMC", displayName: "聯電 ADR" },
+        { name: "AMEX:EWT", displayName: "台灣市場 ETF（EWT）" },
+        { name: "NYSE:TSM", displayName: "台積電 ADR（TSM）" },
+        { name: "NYSE:UMC", displayName: "聯電 ADR（UMC）" },
       ],
     },
     US: {
       name: "美國",
       symbols: [
-        { name: "FOREXCOM:SPXUSD", displayName: "S&P 500" },
-        { name: "FOREXCOM:NSXUSD", displayName: "NASDAQ 100" },
-        { name: "FOREXCOM:DJI", displayName: "道瓊工業" },
-        { name: "NASDAQ:SOX", displayName: "費城半導體" },
+        { name: "AMEX:SPY", displayName: "S&P 500 ETF（SPY）" },
+        { name: "NASDAQ:QQQ", displayName: "NASDAQ 100 ETF（QQQ）" },
+        { name: "AMEX:DIA", displayName: "道瓊 ETF（DIA）" },
+        { name: "NASDAQ:SOXX", displayName: "半導體 ETF（SOXX）" },
         { name: "NASDAQ:NVDA", displayName: "NVIDIA" },
+        { name: "NASDAQ:MSFT", displayName: "Microsoft" },
       ],
     },
     JP: {
-      name: "日本",
+      name: "日本市場代理",
       symbols: [
-        { name: "TVC:NI225", displayName: "日經 225" },
-        { name: "AMEX:EWJ", displayName: "日本 ETF（EWJ）" },
-        { name: "NYSE:TM", displayName: "Toyota ADR" },
-        { name: "NYSE:SONY", displayName: "Sony ADR" },
+        { name: "AMEX:EWJ", displayName: "日本市場 ETF（EWJ）" },
+        { name: "NYSE:TM", displayName: "Toyota ADR（TM）" },
+        { name: "NYSE:SONY", displayName: "Sony ADR（SONY）" },
       ],
     },
     KR: {
-      name: "韓國",
+      name: "韓國市場代理",
       symbols: [
-        { name: "KRX:KOSPI", displayName: "KOSPI" },
-        { name: "AMEX:EWY", displayName: "韓國 ETF（EWY）" },
-        { name: "FX_IDC:USDKRW", displayName: "美元／韓元" },
+        { name: "AMEX:EWY", displayName: "韓國市場 ETF（EWY）" },
+        { name: "NYSE:SKM", displayName: "SK Telecom ADR（SKM）" },
+        { name: "NYSE:PKX", displayName: "POSCO ADR（PKX）" },
+        { name: "NYSE:KB", displayName: "KB Financial ADR（KB）" },
       ],
     },
     EU: {
-      name: "歐洲",
+      name: "歐洲市場代理",
       symbols: [
-        { name: "XETR:DAX", displayName: "德國 DAX" },
-        { name: "FTSE:UKX", displayName: "英國 FTSE 100" },
-        { name: "EURONEXT:PX1", displayName: "法國 CAC 40" },
+        { name: "AMEX:FEZ", displayName: "歐元區 ETF（FEZ）" },
+        { name: "AMEX:EWG", displayName: "德國 ETF（EWG）" },
+        { name: "AMEX:EWU", displayName: "英國 ETF（EWU）" },
         { name: "NASDAQ:ASML", displayName: "ASML ADR" },
         { name: "NYSE:SAP", displayName: "SAP ADR" },
       ],
@@ -139,11 +139,11 @@
       "https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js",
       {
         symbols: [
-          { proName: "INDEX:TAIEX", title: "台灣加權" },
-          { proName: "FOREXCOM:SPXUSD", title: "S&P 500" },
-          { proName: "TVC:NI225", title: "日經 225" },
-          { proName: "AMEX:EWY", title: "韓國 ETF" },
-          { proName: "XETR:DAX", title: "德國 DAX" },
+          { proName: "AMEX:EWT", title: "台灣 EWT" },
+          { proName: "AMEX:SPY", title: "美國 SPY" },
+          { proName: "AMEX:EWJ", title: "日本 EWJ" },
+          { proName: "AMEX:EWY", title: "韓國 EWY" },
+          { proName: "AMEX:FEZ", title: "歐洲 FEZ" },
         ],
         showSymbolLogo: true,
         isTransparent: true,
@@ -537,7 +537,7 @@
     const sources = state.payload.sources || [];
     els.sourceStatus.innerHTML = `
       <div class="source-item">
-        <div><strong>TradingView 市場行情</strong><small>採單一市場延遲載入，降低頁面負擔</small></div>
+        <div><strong>TradingView 市場代理行情</strong><small>使用可公開嵌入的 ETF 與 ADR，避免交易所權限錯誤</small></div>
         <span class="source-state"><i></i>快速模式</span>
       </div>`;
     if (!sources.length) return;

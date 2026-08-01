@@ -1,9 +1,9 @@
-const CACHE = "global-market-radar-v3";
+const CACHE = "global-market-radar-v4";
 const STATIC = [
   "./",
   "./index.html",
-  "./assets/styles.css?v=3",
-  "./assets/app.js?v=3",
+  "./assets/styles.css?v=4",
+  "./assets/app.js?v=4",
   "./assets/favicon.svg",
   "./data/seed.js",
   "./data/events.json",

@@ -8,7 +8,7 @@
   <title>全球市場即時雷達｜Global Market Radar</title>
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="assets/styles.css?v=3" />
+  <link rel="stylesheet" href="assets/styles.css?v=4" />
 </head>
 <body>
   <div class="noise" aria-hidden="true"></div>
@@ -60,9 +60,9 @@
         <div>
           <p class="eyebrow">GLOBAL MARKET PRICES</p>
           <h2>全球主要市場報價</h2>
-          <p class="section-copy">可切換台灣、美國、日本、韓國與歐洲，查看主要指數及代表性大型股的最新價格與走勢。</p>
+          <p class="section-copy">可切換台灣、美國、日本、韓國與歐洲。為避免交易所禁止外部嵌入，此公開版使用美國上市 ETF 與 ADR 代表各市場走勢。</p>
         </div>
-        <span class="quote-badge"><i></i> 即時或延遲報價</span>
+        <span class="quote-badge"><i></i> ETF／ADR 市場代理報價</span>
       </div>
       <div class="market-tabs" role="tablist" aria-label="市場切換">
         <button class="market-tab active" type="button" data-market="TW" role="tab" aria-selected="true">台灣</button>
@@ -86,8 +86,8 @@
         </div>
       </div>
       <div class="quote-notice">
-        <strong>報價說明</strong>
-        <span>各交易所授權不同，部分行情可能延遲數分鐘至更久；實際成交價請以交易所與券商為準。</span>
+        <strong>為什麼改用市場代理？</strong>
+        <span>台灣、日本、韓國與部分歐洲本地指數及股票被交易所限制外部嵌入，TradingView 會直接顯示 Permission denied。此區改用 EWT、EWJ、EWY、FEZ 等 ETF 與 TSM、TM、ASML 等 ADR，反映市場方向但不等同本地指數價格。</span>
       </div>
     </section>
 
@@ -194,7 +194,7 @@
       <div>
         <p class="eyebrow">DATA PIPELINE</p>
         <h2>資料來源與更新狀態</h2>
-        <p>重大事件以官方發布行事曆優先；市場行情由 TradingView 元件呈現。事件來源暫時失效時，會保留上一次成功資料。</p>
+        <p>重大事件以官方發布行事曆優先；市場行情使用 TradingView 可公開嵌入的 ETF／ADR。事件來源暫時失效時，會保留上一次成功資料。</p>
       </div>
       <div id="sourceStatus" class="source-status"></div>
     </section>
@@ -238,6 +238,6 @@
   </template>
 
   <script src="data/seed.js"></script>
-  <script src="assets/app.js?v=3" defer></script>
+  <script src="assets/app.js?v=4" defer></script>
 </body>
 </html>
