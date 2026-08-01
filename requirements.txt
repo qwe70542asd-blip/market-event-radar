@@ -1,0 +1,667 @@
+[
+  {
+    "id": "bea-us-trade-2026-08-04",
+    "title": "美國 6 月貿易收支",
+    "start": "2026-08-04T20:30:00+08:00",
+    "category": "macro",
+    "region": "US",
+    "impact": "medium",
+    "description": "BEA 公布美國 6 月國際商品與服務貿易數據，出口、進口與赤字變化可能影響美元及成長預期。",
+    "market_effect": "若赤字明顯偏離預期，可能帶動美元、美債殖利率與景氣循環股波動。",
+    "assets": [
+      "美元",
+      "美債",
+      "S&P 500",
+      "航運"
+    ],
+    "tags": [
+      "BEA",
+      "貿易收支",
+      "出口",
+      "進口"
+    ],
+    "source_name": "U.S. BEA",
+    "source_url": "https://www.bea.gov/news/schedule",
+    "all_day": false,
+    "is_estimated": false
+  },
+  {
+    "id": "bls-jolts-2026-08-04",
+    "title": "美國 JOLTS 職缺數",
+    "start": "2026-08-04T22:00:00+08:00",
+    "category": "macro",
+    "region": "US",
+    "impact": "medium",
+    "description": "JOLTS 反映職缺、離職與招募狀況，是聯準會判斷勞動市場緊俏程度的重要參考。",
+    "market_effect": "職缺高於預期通常提高利率維持高檔的疑慮；低於預期則可能增加寬鬆預期。",
+    "assets": [
+      "NASDAQ",
+      "美債",
+      "美元",
+      "黃金"
+    ],
+    "tags": [
+      "BLS",
+      "JOLTS",
+      "勞動市場"
+    ],
+    "source_name": "U.S. BLS",
+    "source_url": "https://www.bls.gov/schedule/2026/08_sched.htm",
+    "all_day": false,
+    "is_estimated": false
+  },
+  {
+    "id": "amd-q2-2026",
+    "title": "AMD 2026 Q2 財報",
+    "start": "2026-08-05T05:00:00+08:00",
+    "category": "earnings",
+    "region": "US",
+    "impact": "high",
+    "description": "AMD 於美股 8 月 4 日盤後公布第二季財報與展望，市場將聚焦資料中心、Instinct AI 加速器與毛利率。",
+    "market_effect": "財測與 AI 晶片出貨若偏離預期，可能擴散至費半、伺服器供應鏈與台灣 AI 概念股。",
+    "assets": [
+      "AMD",
+      "費半",
+      "台股 AI",
+      "伺服器",
+      "台積電"
+    ],
+    "tags": [
+      "AMD",
+      "財報",
+      "AI 晶片",
+      "資料中心"
+    ],
+    "source_name": "AMD Investor Relations",
+    "source_url": "https://ir.amd.com/news-events/press-releases/detail/1289/amd-to-report-fiscal-second-quarter-2026-financial-results",
+    "all_day": false,
+    "is_estimated": false
+  },
+  {
+    "id": "boj-minutes-2026-08-05",
+    "title": "日本銀行公布 6 月會議紀要",
+    "start": "2026-08-05T07:50:00+08:00",
+    "category": "central-bank",
+    "region": "JP",
+    "impact": "medium",
+    "description": "日銀公布 6 月 15–16 日貨幣政策會議紀要，市場將觀察升息、通膨與日圓看法。",
+    "market_effect": "偏鷹內容可能推升日圓與日本公債殖利率，並影響日股、亞洲資金流與套利交易。",
+    "assets": [
+      "日圓",
+      "日經 225",
+      "日本公債",
+      "台股"
+    ],
+    "tags": [
+      "BOJ",
+      "日銀",
+      "會議紀要",
+      "升息"
+    ],
+    "source_name": "Bank of Japan",
+    "source_url": "https://www.boj.or.jp/en/mopo/mpmsche_minu/index.htm",
+    "all_day": false,
+    "is_estimated": false
+  },
+  {
+    "id": "bls-productivity-2026-08-06",
+    "title": "美國 Q2 生產力與單位勞動成本初值",
+    "start": "2026-08-06T20:30:00+08:00",
+    "category": "macro",
+    "region": "US",
+    "impact": "medium",
+    "description": "生產力與單位勞動成本會影響市場對通膨黏性、企業利潤率與長期成長的判斷。",
+    "market_effect": "勞動成本升幅過高可能推升殖利率並壓抑高估值科技股。",
+    "assets": [
+      "美債",
+      "NASDAQ",
+      "美元",
+      "成長股"
+    ],
+    "tags": [
+      "BLS",
+      "生產力",
+      "勞動成本"
+    ],
+    "source_name": "U.S. BLS",
+    "source_url": "https://www.bls.gov/schedule/2026/08_sched.htm",
+    "all_day": false,
+    "is_estimated": false
+  },
+  {
+    "id": "bls-jobs-2026-08-07",
+    "title": "美國 7 月非農就業報告",
+    "start": "2026-08-07T20:30:00+08:00",
+    "category": "macro",
+    "region": "US",
+    "impact": "high",
+    "description": "非農新增就業、失業率與平均時薪同時公布，是本月最重要的利率定價事件之一。",
+    "market_effect": "數據過熱可能推升升息預期與殖利率；明顯轉弱則可能引發景氣疑慮，波動方向取決於市場原先定價。",
+    "assets": [
+      "S&P 500",
+      "NASDAQ",
+      "美債",
+      "美元",
+      "黃金",
+      "台股"
+    ],
+    "tags": [
+      "非農",
+      "失業率",
+      "薪資",
+      "Fed"
+    ],
+    "source_name": "U.S. BLS",
+    "source_url": "https://www.bls.gov/schedule/2026/08_sched.htm",
+    "all_day": false,
+    "is_estimated": false
+  },
+  {
+    "id": "boj-summary-2026-08-10",
+    "title": "日本銀行公布 7 月會議意見摘要",
+    "start": "2026-08-10T07:50:00+08:00",
+    "category": "central-bank",
+    "region": "JP",
+    "impact": "high",
+    "description": "日銀公布 7 月 30–31 日會議的意見摘要，可能揭露委員對後續升息路徑、日圓與物價的分歧。",
+    "market_effect": "偏鷹措辭可能強化日圓升值與套利交易平倉，對亞洲股市造成較大波動。",
+    "assets": [
+      "日圓",
+      "日經 225",
+      "日本公債",
+      "亞洲股市",
+      "台股"
+    ],
+    "tags": [
+      "BOJ",
+      "日銀",
+      "意見摘要",
+      "利率"
+    ],
+    "source_name": "Bank of Japan",
+    "source_url": "https://www.boj.or.jp/en/mopo/mpmsche_minu/index.htm",
+    "all_day": false,
+    "is_estimated": false
+  },
+  {
+    "id": "tsmc-revenue-2026-08-10",
+    "title": "台積電公布 7 月營收",
+    "start": "2026-08-10T13:30:00+08:00",
+    "category": "taiwan",
+    "region": "TW",
+    "impact": "high",
+    "description": "台積電公布 2026 年 7 月營收，市場將對照 AI/HPC、先進製程需求與季度財測進度。",
+    "market_effect": "台積電權重高，營收成長與財測達成度可能直接影響台股指數、半導體與 AI 供應鏈。",
+    "assets": [
+      "台積電",
+      "台灣加權",
+      "00631L",
+      "費半",
+      "半導體供應鏈"
+    ],
+    "tags": [
+      "TSMC",
+      "月營收",
+      "台股",
+      "AI"
+    ],
+    "source_name": "TSMC Investor Relations",
+    "source_url": "https://investor.tsmc.com/chinese/financial-calendar",
+    "all_day": false,
+    "is_estimated": false
+  },
+  {
+    "id": "bls-cpi-2026-08-12",
+    "title": "美國 7 月 CPI 通膨",
+    "start": "2026-08-12T20:30:00+08:00",
+    "category": "macro",
+    "region": "US",
+    "impact": "high",
+    "description": "美國公布整體與核心 CPI，市場將重新評估 9 月 FOMC 的升降息機率。",
+    "market_effect": "高於預期通常不利長天期債券與高估值科技股；低於預期則可能壓低殖利率並提振成長股。",
+    "assets": [
+      "NASDAQ",
+      "費半",
+      "美債",
+      "美元",
+      "黃金",
+      "台股"
+    ],
+    "tags": [
+      "CPI",
+      "通膨",
+      "Fed",
+      "利率"
+    ],
+    "source_name": "U.S. BLS",
+    "source_url": "https://www.bls.gov/schedule/2026/08_sched.htm",
+    "all_day": false,
+    "is_estimated": false
+  },
+  {
+    "id": "bls-ppi-2026-08-13",
+    "title": "美國 7 月 PPI 生產者物價",
+    "start": "2026-08-13T20:30:00+08:00",
+    "category": "macro",
+    "region": "US",
+    "impact": "medium",
+    "description": "PPI 反映企業端成本壓力，部分分項也會進入 PCE 通膨計算。",
+    "market_effect": "若服務或核心成本偏高，可能使市場下修降息預期並推升殖利率。",
+    "assets": [
+      "美債",
+      "美元",
+      "NASDAQ",
+      "原物料"
+    ],
+    "tags": [
+      "PPI",
+      "通膨",
+      "企業成本"
+    ],
+    "source_name": "U.S. BLS",
+    "source_url": "https://www.bls.gov/schedule/2026/08_sched.htm",
+    "all_day": false,
+    "is_estimated": false
+  },
+  {
+    "id": "tw-q2-deadline-2026-08-14",
+    "title": "多數本國上市櫃公司 Q2 財報申報截止",
+    "start": "2026-08-14T09:00:00+08:00",
+    "end": "2026-08-14T23:59:00+08:00",
+    "category": "taiwan",
+    "region": "TW",
+    "impact": "high",
+    "description": "第二季結束後 45 日內為多數本國上市櫃公司財報申報期限，截止日前通常是台股財報最密集時段；金融保險與部分公司適用不同期限。",
+    "market_effect": "獲利、毛利率與下半年展望可能造成個股跳空，並透過權值股影響主動式 ETF 與大盤。",
+    "assets": [
+      "台灣加權",
+      "台股個股",
+      "主動式 ETF",
+      "電子股",
+      "金融股"
+    ],
+    "tags": [
+      "台股",
+      "Q2 財報",
+      "申報截止",
+      "法說會"
+    ],
+    "source_name": "TWSE / FSC regulations",
+    "source_url": "https://twse-regulation.twse.com.tw/TW/law/DOC01_print.aspx?FLCODE=FL007009&FLNO=36",
+    "all_day": true,
+    "is_estimated": true
+  },
+  {
+    "id": "bls-import-export-prices-2026-08-18",
+    "title": "美國 7 月進出口物價",
+    "start": "2026-08-18T20:30:00+08:00",
+    "category": "macro",
+    "region": "US",
+    "impact": "low",
+    "description": "進出口物價可觀察美元、能源與關稅變化如何傳導至美國通膨。",
+    "market_effect": "通常影響較小，但在關稅或能源價格劇烈變動時可能提高通膨敏感度。",
+    "assets": [
+      "美元",
+      "美債",
+      "原物料"
+    ],
+    "tags": [
+      "進口物價",
+      "出口物價",
+      "通膨"
+    ],
+    "source_name": "U.S. BLS",
+    "source_url": "https://www.bls.gov/schedule/2026/08_sched.htm",
+    "all_day": false,
+    "is_estimated": false
+  },
+  {
+    "id": "fomc-minutes-2026-08-19",
+    "title": "FOMC 7 月會議紀要",
+    "start": "2026-08-20T02:00:00+08:00",
+    "category": "central-bank",
+    "region": "US",
+    "impact": "high",
+    "description": "聯準會公布 7 月 28–29 日會議紀要，市場將尋找委員對通膨、就業與 9 月政策的細節。",
+    "market_effect": "鷹派內容可能推升美元與殖利率並壓抑科技股；偏鴿內容則可能支持風險資產。",
+    "assets": [
+      "NASDAQ",
+      "S&P 500",
+      "美債",
+      "美元",
+      "黃金",
+      "台股"
+    ],
+    "tags": [
+      "FOMC",
+      "Fed",
+      "會議紀要",
+      "利率"
+    ],
+    "source_name": "Federal Reserve",
+    "source_url": "https://www.federalreserve.gov/monetarypolicy.htm",
+    "all_day": false,
+    "is_estimated": false
+  },
+  {
+    "id": "bea-gdp-pce-2026-08-26",
+    "title": "美國 Q2 GDP 修正值＋7 月 PCE",
+    "start": "2026-08-26T20:30:00+08:00",
+    "category": "macro",
+    "region": "US",
+    "impact": "high",
+    "description": "BEA 同時公布第二季 GDP 修正值、企業獲利與 7 月個人所得支出；PCE 是聯準會偏好的通膨指標。",
+    "market_effect": "成長與通膨同時偏高可能推升殖利率；成長弱、通膨低則提高寬鬆預期，但也可能引發景氣擔憂。",
+    "assets": [
+      "美債",
+      "美元",
+      "NASDAQ",
+      "S&P 500",
+      "台股"
+    ],
+    "tags": [
+      "GDP",
+      "PCE",
+      "企業獲利",
+      "Fed"
+    ],
+    "source_name": "U.S. BEA",
+    "source_url": "https://www.bea.gov/news/schedule",
+    "all_day": false,
+    "is_estimated": false
+  },
+  {
+    "id": "nvidia-q2-fy27-2026",
+    "title": "NVIDIA FY2027 Q2 財報",
+    "start": "2026-08-27T05:00:00+08:00",
+    "category": "earnings",
+    "region": "US",
+    "impact": "high",
+    "description": "NVIDIA 公布 FY2027 第二季財報，焦點包括資料中心營收、Blackwell/Rubin 供應、毛利率與資本支出需求。",
+    "market_effect": "NVIDIA 是 AI 交易核心，財測可能大幅影響費半、NASDAQ、台積電與台灣伺服器／散熱／PCB 供應鏈。",
+    "assets": [
+      "NVIDIA",
+      "費半",
+      "NASDAQ",
+      "台積電",
+      "台股 AI",
+      "伺服器供應鏈"
+    ],
+    "tags": [
+      "NVDA",
+      "財報",
+      "AI",
+      "GPU",
+      "資料中心"
+    ],
+    "source_name": "NVIDIA Investor Relations",
+    "source_url": "https://investor.nvidia.com/events-and-presentations/events-and-presentations/event-details/2026/NVIDIA-2nd-Quarter-FY27-Financial-Results/default.aspx",
+    "all_day": false,
+    "is_estimated": false
+  },
+  {
+    "id": "jackson-hole-2026",
+    "title": "Jackson Hole 全球央行年會",
+    "start": "2026-08-27T08:00:00+08:00",
+    "end": "2026-08-29T23:59:00+08:00",
+    "category": "central-bank",
+    "region": "GLOBAL",
+    "impact": "high",
+    "description": "2026 年 Jackson Hole 經濟政策研討會於 8 月 27–29 日舉行，主題為金融創新對支付與政策的影響。重要央行官員談話時間將另行公布。",
+    "market_effect": "央行領袖對通膨、利率與金融創新的表態，可能改變全球利率路徑預期並放大股債匯波動。",
+    "assets": [
+      "全球股市",
+      "美債",
+      "美元",
+      "黃金",
+      "日圓",
+      "台股"
+    ],
+    "tags": [
+      "Jackson Hole",
+      "全球央行",
+      "Fed",
+      "金融政策"
+    ],
+    "source_name": "Federal Reserve Bank of Kansas City",
+    "source_url": "https://www.kansascityfed.org/research/jackson-hole-economic-symposium/",
+    "all_day": true,
+    "is_estimated": false
+  },
+  {
+    "id": "tsmc-revenue-2026-09-10",
+    "title": "台積電公布 8 月營收",
+    "start": "2026-09-10T13:30:00+08:00",
+    "category": "taiwan",
+    "region": "TW",
+    "impact": "high",
+    "description": "台積電公布 2026 年 8 月營收，作為第三季營運與 AI 需求的重要即時指標。",
+    "market_effect": "可能直接影響台股權值、費半與 AI 供應鏈預期。",
+    "assets": [
+      "台積電",
+      "台灣加權",
+      "00631L",
+      "費半"
+    ],
+    "tags": [
+      "TSMC",
+      "月營收",
+      "台股"
+    ],
+    "source_name": "TSMC Investor Relations",
+    "source_url": "https://investor.tsmc.com/chinese/financial-calendar",
+    "all_day": false,
+    "is_estimated": false
+  },
+  {
+    "id": "ecb-rate-2026-09-10",
+    "title": "歐洲央行利率決策與記者會",
+    "start": "2026-09-10T20:15:00+08:00",
+    "category": "central-bank",
+    "region": "EU",
+    "impact": "high",
+    "description": "ECB 管理委員會結束兩日會議並公布利率決策，隨後舉行記者會；實際時間以官方當週公告為準。",
+    "market_effect": "政策與經濟展望可能影響歐元、歐債、全球美元流動性與風險偏好。",
+    "assets": [
+      "歐元",
+      "歐股",
+      "歐債",
+      "美元",
+      "全球股市"
+    ],
+    "tags": [
+      "ECB",
+      "歐洲央行",
+      "利率",
+      "記者會"
+    ],
+    "source_name": "European Central Bank",
+    "source_url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html",
+    "all_day": false,
+    "is_estimated": true
+  },
+  {
+    "id": "fomc-rate-2026-09-16",
+    "title": "FOMC 利率決策＋經濟預測",
+    "start": "2026-09-17T02:00:00+08:00",
+    "category": "central-bank",
+    "region": "US",
+    "impact": "high",
+    "description": "聯準會 9 月 15–16 日會議結束，公布利率決策、政策聲明與經濟預測，並召開記者會。",
+    "market_effect": "利率點陣圖與主席談話可能重新定價全球股債匯，通常是季度最重要事件之一。",
+    "assets": [
+      "NASDAQ",
+      "S&P 500",
+      "美債",
+      "美元",
+      "黃金",
+      "全球股市"
+    ],
+    "tags": [
+      "FOMC",
+      "Fed",
+      "點陣圖",
+      "利率決策"
+    ],
+    "source_name": "Federal Reserve",
+    "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+    "all_day": false,
+    "is_estimated": false
+  },
+  {
+    "id": "boj-rate-2026-09-18",
+    "title": "日本銀行 9 月利率決策",
+    "start": "2026-09-18T11:00:00+08:00",
+    "category": "central-bank",
+    "region": "JP",
+    "impact": "high",
+    "description": "日銀於 9 月 17–18 日舉行貨幣政策會議；決策公布時間不固定，通常在台灣時間上午至中午。",
+    "market_effect": "升息、縮減購債或偏鷹指引可能推升日圓並觸發全球套利交易調整。",
+    "assets": [
+      "日圓",
+      "日經 225",
+      "日本公債",
+      "亞洲股市",
+      "台股"
+    ],
+    "tags": [
+      "BOJ",
+      "日銀",
+      "利率決策",
+      "日圓"
+    ],
+    "source_name": "Bank of Japan",
+    "source_url": "https://www.boj.or.jp/en/mopo/mpmsche_minu/index.htm",
+    "all_day": false,
+    "is_estimated": true
+  },
+  {
+    "id": "tsmc-revenue-2026-10-08",
+    "title": "台積電公布 9 月營收",
+    "start": "2026-10-08T13:30:00+08:00",
+    "category": "taiwan",
+    "region": "TW",
+    "impact": "high",
+    "description": "台積電公布 2026 年 9 月營收，市場將據此估算第三季實績與第四季動能。",
+    "market_effect": "可能影響台股權值、半導體景氣與 AI 供應鏈評價。",
+    "assets": [
+      "台積電",
+      "台灣加權",
+      "00631L",
+      "費半"
+    ],
+    "tags": [
+      "TSMC",
+      "月營收",
+      "台股"
+    ],
+    "source_name": "TSMC Investor Relations",
+    "source_url": "https://investor.tsmc.com/chinese/financial-calendar",
+    "all_day": false,
+    "is_estimated": false
+  },
+  {
+    "id": "fomc-rate-2026-10-28",
+    "title": "FOMC 10 月利率決策",
+    "start": "2026-10-29T02:00:00+08:00",
+    "category": "central-bank",
+    "region": "US",
+    "impact": "high",
+    "description": "聯準會 10 月 27–28 日會議結束並公布政策決定，該次會議沒有固定季度經濟預測。",
+    "market_effect": "聲明與記者會仍可能改變年底利率預期與科技股估值。",
+    "assets": [
+      "NASDAQ",
+      "美債",
+      "美元",
+      "黃金",
+      "全球股市"
+    ],
+    "tags": [
+      "FOMC",
+      "Fed",
+      "利率決策"
+    ],
+    "source_name": "Federal Reserve",
+    "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+    "all_day": false,
+    "is_estimated": false
+  },
+  {
+    "id": "ecb-rate-2026-10-29",
+    "title": "歐洲央行 10 月利率決策",
+    "start": "2026-10-29T20:15:00+08:00",
+    "category": "central-bank",
+    "region": "EU",
+    "impact": "high",
+    "description": "ECB 於 10 月 28–29 日召開貨幣政策會議並舉行記者會；實際發布時間以官方公告為準。",
+    "market_effect": "可能影響歐元、歐債與全球資金風險偏好。",
+    "assets": [
+      "歐元",
+      "歐股",
+      "歐債",
+      "美元"
+    ],
+    "tags": [
+      "ECB",
+      "利率決策",
+      "歐洲央行"
+    ],
+    "source_name": "European Central Bank",
+    "source_url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html",
+    "all_day": false,
+    "is_estimated": true
+  },
+  {
+    "id": "boj-rate-2026-10-30",
+    "title": "日本銀行 10 月利率決策＋展望報告",
+    "start": "2026-10-30T11:00:00+08:00",
+    "category": "central-bank",
+    "region": "JP",
+    "impact": "high",
+    "description": "日銀 10 月 29–30 日會議結束並發布展望報告，決策時間不固定。",
+    "market_effect": "展望報告與政策正常化速度可能影響日圓、日債及亞洲風險資產。",
+    "assets": [
+      "日圓",
+      "日經 225",
+      "日本公債",
+      "亞洲股市"
+    ],
+    "tags": [
+      "BOJ",
+      "日銀",
+      "展望報告",
+      "利率決策"
+    ],
+    "source_name": "Bank of Japan",
+    "source_url": "https://www.boj.or.jp/en/mopo/mpmsche_minu/index.htm",
+    "all_day": false,
+    "is_estimated": true
+  },
+  {
+    "id": "bok-rate-2026-08-27",
+    "title": "韓國銀行利率決策",
+    "start": "2026-08-27T09:00:00+08:00",
+    "category": "central-bank",
+    "region": "KR",
+    "impact": "high",
+    "description": "韓國銀行貨幣政策委員會公布政策利率決定，市場將關注通膨、韓元與出口景氣展望。",
+    "market_effect": "意外升降息或政策措辭轉向，可能影響韓元、KOSPI、KOSDAQ、韓國公債及亞洲科技供應鏈。",
+    "assets": [
+      "韓元",
+      "KOSPI",
+      "KOSDAQ",
+      "三星電子",
+      "SK 海力士"
+    ],
+    "tags": [
+      "韓國銀行",
+      "BOK",
+      "利率決策",
+      "韓元"
+    ],
+    "source_name": "Bank of Korea",
+    "source_url": "https://www.bok.or.kr/portal/singl/mainEvent/listCldr.do?date=2026-08&menuNo=200035",
+    "all_day": false,
+    "is_estimated": false
+  }
+]
