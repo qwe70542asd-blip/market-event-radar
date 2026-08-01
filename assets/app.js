@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const PREF_KEY = "market-event-radar-v10-4";
+  const PREF_KEY = "market-event-radar-v10-4-1";
   const state = {
     payload: { metadata: {}, sources: [], events: [] },
     newsPayload: { metadata: {}, source: {}, items: [] },
@@ -24,15 +24,16 @@
     "ex-dividend":"除權息", "dividend-decision":"股利方案", "dividend-payment":"股利發放",
     "etf-distribution":"ETF 配息", "investor-conference":"法人說明會",
     "shareholder-meeting":"股東會", "corporate-action":"公司行動",
-    tech:"產業活動", taiwan:"台股公告"
+    breaking:"突發事件", tech:"產業活動", taiwan:"台股公告"
   };
   const IMPACT_MAP = { high: "高影響", medium: "中影響", low: "低影響" };
-  const GROUP_MAP = { all:"全部", macro:"總經／央行", earnings:"財報／營收", dividend:"股利／除權息", corporate:"法說／公司行動" };
+  const GROUP_MAP = { all:"全部", breaking:"突發事件", macro:"總經／央行", earnings:"財報／營收", dividend:"股利／除權息", corporate:"法說／公司行動" };
   const CATEGORY_GROUP = {
     "central-bank":"macro", macro:"macro", policy:"macro",
     earnings:"earnings", "monthly-revenue":"earnings", "report-deadline":"earnings",
     "ex-dividend":"dividend", "dividend-decision":"dividend", "dividend-payment":"dividend", "etf-distribution":"dividend",
-    "investor-conference":"corporate", "shareholder-meeting":"corporate", "corporate-action":"corporate", taiwan:"corporate", tech:"corporate"
+    "investor-conference":"corporate", "shareholder-meeting":"corporate", "corporate-action":"corporate", taiwan:"corporate", tech:"corporate",
+    breaking:"breaking"
   };
 
   function pad(num) { return String(num).padStart(2, "0"); }
@@ -87,6 +88,75 @@
     } catch {
       return fallback;
     }
+  }
+
+
+  const BREAKING_TERMS = [
+    "戰爭","戰火","空襲","飛彈","導彈","攻擊","衝突","停火","軍事","中東","伊朗","以色列",
+    "荷姆茲","紅海","制裁","關稅","封鎖","爆炸","政變","緊急狀態","市場暫停","交易中斷",
+    "地震","海嘯","颱風","洪水","斷電","供應中斷","war","airstrike","missile","attack",
+    "conflict","ceasefire","sanction","tariff","blockade","earthquake","tsunami","market halt"
+  ];
+  const HIGH_BREAKING_TERMS = [
+    "戰爭","戰火","空襲","飛彈","攻擊","中東","伊朗","以色列","荷姆茲","市場暫停","交易中斷",
+    "war","airstrike","missile","attack","market halt"
+  ];
+
+  function safeNewsHref(item) {
+    const value = item?.safe_link || item?.link || "";
+    try {
+      const url = new URL(value);
+      const googleRedirect = url.hostname === "news.google.com" && /\/(?:rss\/)?(?:articles|read)\//.test(url.pathname);
+      if (!googleRedirect && ["http:","https:"].includes(url.protocol)) return value;
+    } catch {}
+    const query = [`"${item?.title || ""}"`, item?.source || ""].filter(Boolean).join(" ");
+    return `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+  }
+
+  function breakingNewsToEvents(payload) {
+    const now = Date.now();
+    const seen = new Set();
+    return (payload?.items || [])
+      .filter(item => {
+        const published = new Date(item.published_at || 0).getTime();
+        if (!Number.isFinite(published) || now - published > 96 * 3600000 || published > now + 3600000) return false;
+        const hay = `${item.title || ""} ${item.summary || ""}`.toLowerCase();
+        const strong = BREAKING_TERMS.some(term => hay.includes(term.toLowerCase()));
+        return strong && (item.is_breaking || ["policy","macro","market"].includes(item.topic) || item.source_group === "official-global");
+      })
+      .filter(item => {
+        const key = String(item.title || "").normalize("NFKC").toLowerCase().replace(/[^\p{L}\p{N}]+/gu,"");
+        if (!key || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      })
+      .slice(0, 16)
+      .map(item => {
+        const hay = `${item.title || ""} ${item.summary || ""}`.toLowerCase();
+        const high = HIGH_BREAKING_TERMS.some(term => hay.includes(term.toLowerCase()));
+        const published = new Date(item.published_at);
+        return {
+          id: `breaking-${item.id || Math.abs([...String(item.title || "")].reduce((acc,ch)=>((acc<<5)-acc)+ch.charCodeAt(0),0))}`,
+          title: `突發｜${item.title}`,
+          start: published.toISOString(),
+          category: "policy",
+          event_group: "breaking",
+          event_type: "breaking-news",
+          region: item.region || "GLOBAL",
+          impact: high ? "high" : "medium",
+          description: item.summary || "突發市場消息，請開啟原始來源確認最新進展。",
+          market_effect: "突發地緣政治、政策或供應中斷消息可能快速影響原油、黃金、匯率、航運與全球股票風險偏好。",
+          source_name: item.source || "新聞來源",
+          source_url: safeNewsHref(item),
+          external_href: safeNewsHref(item),
+          origin: "breaking-news",
+          all_day: false,
+          is_breaking_news: true,
+          assets: item.industries || [],
+          tags: ["突發事件", item.topic || "market"],
+          published_at: item.published_at
+        };
+      });
   }
 
   function normalizeEvent(raw) {
@@ -176,7 +246,7 @@
     const owned = portfolioSymbols().has(String(event.symbol || "").toUpperCase()) ? 1000 : 0;
     const impact = { high:300, medium:160, low:40 }[event.impact] || 0;
     const type = {
-      earnings:180, "monthly-revenue":150, "report-deadline":150,
+      breaking:420, earnings:180, "monthly-revenue":150, "report-deadline":150,
       "etf-distribution":145, "ex-dividend":135, "dividend-decision":125,
       "investor-conference":110, "corporate-action":100, "dividend-payment":60
     }[event.category] || 80;
@@ -188,8 +258,9 @@
   }
 
   function eventTypeShort(event) {
+    if (eventGroup(event) === "breaking") return "突發";
     return {
-      macro:"數據", "central-bank":"央行", policy:"政策",
+      breaking:"突發", macro:"數據", "central-bank":"央行", policy:"政策",
       earnings:"財報", "monthly-revenue":"營收", "report-deadline":"期限",
       "ex-dividend":"除息", "etf-distribution":"ETF", "dividend-decision":"股利",
       "dividend-payment":"入帳", "investor-conference":"法說",
@@ -215,20 +286,19 @@
     const root = $("#monthEventSummary");
     if (!root) return;
     const rows = monthEvents();
-    const counts = {
-      all: rows.length,
-      macro: rows.filter(x => eventGroup(x) === "macro").length,
-      earnings: rows.filter(x => eventGroup(x) === "earnings").length,
-      dividend: rows.filter(x => eventGroup(x) === "dividend").length,
-      corporate: rows.filter(x => eventGroup(x) === "corporate").length
-    };
+    const groups = ["all","breaking","macro","earnings","dividend","corporate"];
+    const counts = Object.fromEntries(groups.map(group => [
+      group,
+      group === "all" ? rows.length : rows.filter(event => eventGroup(event) === group).length
+    ]));
     root.innerHTML = [
       ["all","本月全部",counts.all],
+      ["breaking","突發事件",counts.breaking],
       ["macro","總經／央行",counts.macro],
       ["earnings","財報／營收",counts.earnings],
       ["dividend","股利／除權息",counts.dividend],
       ["corporate","法說／公司行動",counts.corporate]
-    ].map(([group,label,count]) => `<button type="button" data-summary-group="${group}"><span>${label}</span><strong>${count}</strong></button>`).join("");
+    ].map(([group,label,count]) => `<button type="button" class="summary-${group}" data-summary-group="${group}"><span>${label}</span><strong>${count}</strong></button>`).join("");
     $$("[data-summary-group]", root).forEach(button => button.addEventListener("click", () => {
       const group = button.dataset.summaryGroup;
       const select = $("#categoryFilter");
@@ -322,9 +392,11 @@
       : state.dayDialogEvents.filter(event => eventGroup(event) === state.dayDialogGroup);
 
     if (counts) {
-      const groups = ["all","macro","earnings","dividend","corporate"];
+      const groups = ["all","breaking","macro","earnings","dividend","corporate"];
       counts.innerHTML = groups.map(group => {
-        const count = group === "all" ? state.dayDialogEvents.length : state.dayDialogEvents.filter(event => eventGroup(event) === group).length;
+        const count = group === "all"
+          ? state.dayDialogEvents.length
+          : state.dayDialogEvents.filter(event => eventGroup(event) === group).length;
         return `<button type="button" class="${state.dayDialogGroup === group ? "active" : ""}" data-day-group="${group}">${GROUP_MAP[group]} <b>${count}</b></button>`;
       }).join("");
       $$("[data-day-group]", counts).forEach(button => button.addEventListener("click", () => {
@@ -342,12 +414,14 @@
       .sort((a,b) => b.priority - a.priority || a.timestamp - b.timestamp)
       .map(event => {
         const amount = formatAmount(event);
+        const href = event.external_href || `event.html?id=${encodeURIComponent(event.id)}`;
+        const target = event.external_href ? ' target="_blank" rel="noreferrer noopener"' : "";
         return `
-          <a class="day-event-row impact-${event.impact} group-${eventGroup(event)}" href="event.html?id=${encodeURIComponent(event.id)}">
+          <a class="day-event-row impact-${event.impact} group-${eventGroup(event)}" href="${escapeHtml(href)}"${target}>
             <div class="day-event-time"><span>${event.all_day ? "全天" : `${pad(event.startDate.getHours())}:${pad(event.startDate.getMinutes())}`}</span><b>${eventTypeShort(event)}</b></div>
             <div>
               <strong>${escapeHtml(event.title)}</strong>
-              <small>${REGION_MAP[event.region] || event.region} · ${CATEGORY_MAP[event.category] || event.category}${amount ? ` · ${escapeHtml(amount)}` : ""}${event.is_active_etf ? " · 主動型 ETF" : ""}</small>
+              <small>${REGION_MAP[event.region] || event.region} · ${CATEGORY_MAP[event.category] || event.category}${amount ? ` · ${escapeHtml(amount)}` : ""}${event.is_active_etf ? " · 主動型 ETF" : ""}${event.source_name ? ` · ${escapeHtml(event.source_name)}` : ""}</small>
               <p>${escapeHtml(event.description || "")}</p>
             </div>
             <span>›</span>
@@ -382,58 +456,45 @@
     const days = getMonthMatrix(baseDate);
     const today = new Date();
     const todayKey = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
+    const groupOrder = ["breaking","macro","earnings","dividend","corporate"];
+    const shortLabels = { breaking:"突發", macro:"總經", earnings:"財報", dividend:"股利", corporate:"公司" };
 
     days.forEach(day => {
       const key = `${day.getFullYear()}-${pad(day.getMonth() + 1)}-${pad(day.getDate())}`;
       const cellEvents = (eventMap.get(key) || [])
         .map(event => ({ ...event, priority:eventPriority(event) }))
         .sort((a,b) => b.priority - a.priority || a.timestamp - b.timestamp);
+
       const cell = document.createElement("article");
-      cell.className = "calendar-day";
+      cell.className = "calendar-day compact-dot-day";
       if (day.getMonth() !== baseDate.getMonth()) cell.classList.add("muted");
       if (key === todayKey) cell.classList.add("today");
 
-      const groupCounts = ["macro","earnings","dividend","corporate"]
-        .map(group => [group, cellEvents.filter(event => eventGroup(event) === group).length])
-        .filter(([,count]) => count);
-      const miniCounts = groupCounts.map(([group,count]) => `<i class="mini-group group-${group}">${count}</i>`).join("");
-      const mobile = isMobileCalendar();
-      const visibleCount = mobile ? 0 : 4;
-      const extra = !mobile && cellEvents.length > visibleCount
-        ? `<button class="more-link" type="button" data-day="${key}">+${cellEvents.length - visibleCount} 更多</button>`
-        : "";
+      const groupRows = groupOrder.map(group => ({
+        group,
+        count: cellEvents.filter(event => eventGroup(event) === group).length
+      })).filter(row => row.count);
 
       cell.innerHTML = `
-        <div class="calendar-day-head"><strong>${day.getDate()}</strong><small>${cellEvents.length ? `${cellEvents.length} 件` : ""}</small></div>
-        <div class="calendar-type-counts">${miniCounts}</div>
-        <div class="calendar-events"></div>${extra}`;
-      const box = cell.querySelector(".calendar-events");
+        <button type="button" class="calendar-day-open" aria-label="${day.getMonth()+1}月${day.getDate()}日，${cellEvents.length}件事件">
+          <span class="calendar-date-number">${day.getDate()}</span>
+          <span class="calendar-total-count">${cellEvents.length ? `${cellEvents.length} 件` : ""}</span>
+        </button>
+        <div class="calendar-dot-summary">
+          ${groupRows.map(row => `
+            <button type="button" class="calendar-dot-row group-${row.group}" data-group="${row.group}">
+              <i></i><span>${shortLabels[row.group]}</span><b>${row.count}</b>
+            </button>`).join("")}
+        </div>`;
 
-      if (mobile) {
-        box.innerHTML = cellEvents.length
-          ? `<div class="mobile-event-dots">${cellEvents.slice(0,6).map(event => `<i class="group-${eventGroup(event)} impact-${event.impact}"></i>`).join("")}</div>`
-          : '<div class="calendar-empty-mini"></div>';
-        cell.classList.add("mobile-day-cell");
-        cell.tabIndex = 0;
-        cell.setAttribute("role","button");
-        cell.setAttribute("aria-label",`${day.getMonth()+1}月${day.getDate()}日，${cellEvents.length}件事件`);
-        cell.addEventListener("click", () => openDayEvents(day, cellEvents));
-        cell.addEventListener("keydown", event => {
-          if (event.key === "Enter" || event.key === " ") { event.preventDefault(); openDayEvents(day, cellEvents); }
-        });
-      } else {
-        cellEvents.slice(0,visibleCount).forEach(event => box.appendChild(eventChip(event)));
-        if (!cellEvents.length) box.innerHTML = '<div class="calendar-empty-mini"></div>';
-      }
+      cell.querySelector(".calendar-day-open")?.addEventListener("click", () => openDayEvents(day, cellEvents, "all"));
+      cell.querySelectorAll("[data-group]").forEach(button => button.addEventListener("click", event => {
+        event.stopPropagation();
+        openDayEvents(day, cellEvents, button.dataset.group);
+      }));
       grid.appendChild(cell);
     });
 
-    $$(".more-link").forEach(button => button.addEventListener("click", event => {
-      event.stopPropagation();
-      const [year,month,day] = button.dataset.day.split("-").map(Number);
-      const selectedDay = new Date(year, month - 1, day);
-      openDayEvents(selectedDay, eventMap.get(button.dataset.day) || []);
-    }));
     renderMonthSummary();
   }
 
@@ -444,7 +505,12 @@
     const owned = portfolioSymbols();
     const upcoming = state.filtered
       .map(event => ({ ...event, priority:eventPriority(event) }))
-      .filter(event => event.impact === "high" || owned.has(String(event.symbol || "").toUpperCase()) || ["earnings","dividend"].includes(eventGroup(event)))
+      .filter(event =>
+        eventGroup(event) === "breaking" ||
+        event.impact === "high" ||
+        owned.has(String(event.symbol || "").toUpperCase()) ||
+        ["earnings","dividend"].includes(eventGroup(event))
+      )
       .sort((a,b) => b.priority - a.priority || a.timestamp - b.timestamp)
       .slice(0,12);
 
@@ -453,12 +519,16 @@
     upcoming.forEach(event => {
       const amount = formatAmount(event);
       const node = document.createElement("a");
-      node.href = `event.html?id=${encodeURIComponent(event.id)}`;
+      node.href = event.external_href || `event.html?id=${encodeURIComponent(event.id)}`;
+      if (event.external_href) {
+        node.target = "_blank";
+        node.rel = "noreferrer noopener";
+      }
       node.className = `compact-event-card impact-${event.impact} group-${eventGroup(event)}`;
       node.innerHTML = `
         <div class="compact-event-head">
           <span>${formatDate(event.startDate)}</span>
-          <div><i>${eventTypeShort(event)}</i><b>${IMPACT_MAP[event.impact]}</b><button class="favorite-inline" type="button" data-favorite-id="${escapeHtml(event.id)}" aria-label="收藏事件">☆</button></div>
+          <div><i>${eventTypeShort(event)}</i><b>${IMPACT_MAP[event.impact]}</b>${event.is_breaking_news ? "" : `<button class="favorite-inline" type="button" data-favorite-id="${escapeHtml(event.id)}" aria-label="收藏事件">☆</button>`}</div>
         </div>
         <h3>${escapeHtml(event.title)}</h3>
         <p>${escapeHtml(event.description || event.market_effect || "")}</p>
@@ -467,6 +537,7 @@
           <span>${event.market || REGION_MAP[event.region] || event.region}</span>
           ${event.symbol ? `<span>${escapeHtml(event.symbol)}</span>` : ""}
           ${amount ? `<span>${escapeHtml(amount)}</span>` : ""}
+          ${event.source_name ? `<span>${escapeHtml(event.source_name)}</span>` : ""}
           <span>${event.all_day ? "全天" : `${pad(event.startDate.getHours())}:${pad(event.startDate.getMinutes())}`}</span>
         </div>`;
       list.appendChild(node);
@@ -691,6 +762,23 @@
     setTimeout(() => { updateAuthUI({ enabled: window.MarketAuth?.firebaseEnabled, user: window.MarketAuth?.getUser?.() }); renderWatchlist(); }, 250);
   }
 
+
+  function renderBreakingStrip(rawEvents) {
+    const root = $("#breakingEventStrip");
+    const list = $("#breakingEventItems");
+    const count = $("#breakingEventCount");
+    if (!root || !list) return;
+    const events = (rawEvents || []).slice(0,4);
+    root.hidden = events.length === 0;
+    if (count) count.textContent = `${events.length} 件`;
+    list.innerHTML = events.map(event => `
+      <a href="${escapeHtml(event.external_href || "#")}" target="_blank" rel="noreferrer noopener">
+        <span>${formatDateTime(event.start)}</span>
+        <strong>${escapeHtml(event.title.replace(/^突發｜/,""))}</strong>
+        <small>${escapeHtml(event.source_name || "新聞來源")}</small>
+      </a>`).join("");
+  }
+
   async function bootstrap() {
     const [payload, newsPayload] = await Promise.all([
       loadJson("data/events.json", window.__MARKET_EVENT_SEED__ || { events: [], metadata: {}, sources: [] }),
@@ -698,7 +786,15 @@
     ]);
     state.payload = payload;
     state.newsPayload = newsPayload;
-    state.events = (payload.events || []).map(normalizeEvent).sort((a, b) => a.timestamp - b.timestamp);
+    const suddenEvents = breakingNewsToEvents(newsPayload);
+    state.payload.metadata = {
+      ...(state.payload.metadata || {}),
+      breaking_event_count: suddenEvents.length
+    };
+    state.events = [...(payload.events || []), ...suddenEvents]
+      .map(normalizeEvent)
+      .sort((a, b) => a.timestamp - b.timestamp);
+    renderBreakingStrip(suddenEvents);
     restorePrefs();
     renderSources();
     bind();

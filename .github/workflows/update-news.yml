@@ -1,4 +1,4 @@
-name: Update v10.3 categorized finance news
+name: Update v10.4.1 safe-link breaking news
 
 on:
   push:
@@ -60,7 +60,7 @@ jobs:
           git config user.name "market-event-radar-bot"
           git config user.email "actions@users.noreply.github.com"
           git add data/news.json data/news-seed.js
-          git commit -m "chore: refresh categorized finance news v10.3"
+          git commit -m "chore: refresh safe-link finance news v10.4.1"
           for attempt in 1 2 3; do
             git pull --rebase && git push && exit 0
             echo "Push attempt $attempt failed; retrying..."

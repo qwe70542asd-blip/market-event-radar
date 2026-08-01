@@ -1,8 +1,9 @@
 window.__MARKET_ANNOUNCEMENT_SEED__ = {
   "metadata": {
-    "version": "v10.3",
+    "version": "v10.4.1",
     "updated_at": null,
-    "status": "waiting"
+    "status": "waiting",
+    "link_note": "Google News redirect links will be replaced by stable searches after the first workflow run."
   },
   "institutional": {
     "date": null,
@@ -18,7 +19,7 @@ window.__MARKET_ANNOUNCEMENT_SEED__ = {
       "dealer": null,
       "total": null
     },
-    "note": "等待官方盤後資料更新"
+    "note": "等待官方排程；週末與休市日會自動抓最近交易日。"
   },
   "items": [
     {

@@ -55,13 +55,52 @@
   };
 
   function normalizePayload(payload) {
-    const items = Array.isArray(payload?.items) ? payload.items.filter(x => x?.title && x?.link) : [];
+    const items = Array.isArray(payload?.items) ? payload.items.filter(x => x?.title).map(normalizeItem) : [];
     return {
       metadata: payload?.metadata || {},
       source: payload?.source || {},
       sources: Array.isArray(payload?.sources) ? payload.sources : [],
       items
     };
+  }
+
+  function isHttpUrl(value) {
+    try {
+      const url = new URL(String(value || ""));
+      return url.protocol === "https:" || url.protocol === "http:";
+    } catch {
+      return false;
+    }
+  }
+
+  function isGoogleNewsRedirect(value) {
+    if (!isHttpUrl(value)) return false;
+    const url = new URL(value);
+    return url.hostname === "news.google.com" && (
+      url.pathname.includes("/rss/articles/") ||
+      url.pathname.includes("/articles/") ||
+      url.pathname.includes("/read/")
+    );
+  }
+
+  function searchUrl(item) {
+    const query = [`"${String(item?.title || "").trim()}"`, String(item?.source || "").trim()]
+      .filter(Boolean).join(" ");
+    return `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+  }
+
+  function safeLink(item) {
+    const preferred = item?.safe_link || item?.direct_link || item?.publisher_link || item?.link;
+    if (isHttpUrl(preferred) && !isGoogleNewsRedirect(preferred)) return preferred;
+    if (item?.title) return searchUrl(item);
+    return "news.html";
+  }
+
+  function normalizeItem(raw) {
+    const item = { ...raw };
+    item.original_link = item.original_link || item.link || "";
+    item.link = safeLink(item);
+    return item;
   }
 
   const SOURCE_SUFFIXES = [
@@ -171,6 +210,9 @@
       items: state.payload.items,
       status: state.status,
       error: state.error,
+      safeLink,
+      searchUrl,
+      isGoogleNewsRedirect,
       reload: load
     };
     window.dispatchEvent(new CustomEvent("market-news-loaded", {
@@ -220,6 +262,6 @@
     return state.payload;
   }
 
-  window.MarketNewsLoader = { load, state };
+  window.MarketNewsLoader = { load, state, safeLink, searchUrl, isGoogleNewsRedirect };
   load();
 })();

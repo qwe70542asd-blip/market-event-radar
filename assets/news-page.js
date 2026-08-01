@@ -40,7 +40,7 @@
         && (group === "all" || item.source_group === group);
     });
     $("#newsPageGrid").innerHTML = items.map(item => `
-      <a class="news-page-card" href="${item.link}" target="_blank" rel="noreferrer noopener">
+      <a class="news-page-card" href="${window.MarketNews?.safeLink?.(item) || item.link}" target="_blank" rel="noreferrer noopener">
         <div class="news-card-top"><span>${escapeHtml(item.source || "財經新聞")}</span><small>${fmt(item.published_at)}</small></div>
         <h2>${escapeHtml(item.title)}</h2>
         <p>${escapeHtml(item.summary || item.event_title || "點擊前往原始來源")}</p>

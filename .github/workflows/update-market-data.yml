@@ -1,4 +1,4 @@
-name: Update v10.3 market data
+name: Update v10.4.1 official market data
 
 on:
   push:
@@ -6,17 +6,19 @@ on:
     paths:
       - "scripts/update_assets.py"
       - "scripts/update_announcements.py"
-      - "scripts/update_news.py"
+      - "data/announcements.json"
+      - "data/announcements-seed.js"
+      - "requirements.txt"
       - ".github/workflows/update-market-data.yml"
   schedule:
-    - cron: "18 */6 * * *"
+    - cron: "18 */4 * * *"
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: market-radar-v10-3-data
+  group: market-radar-official-data
   cancel-in-progress: false
 
 jobs:
@@ -24,32 +26,56 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
-      - uses: actions/setup-python@v5
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: pip
-      - run: pip install -r requirements.txt
-      - name: Update assets and official data
-        run: |
-          python scripts/update_assets.py
-          python scripts/update_announcements.py
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Prepare optional folders
+        run: mkdir -p data/asset-details
+
+      - name: Update official announcements and institutional flow
+        run: python scripts/update_announcements.py
+
+      - name: Update asset master
+        continue-on-error: true
+        run: python scripts/update_assets.py
+
       - name: Validate JSON
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
           for name in ["assets.json","announcements.json"]:
-              data=json.loads((Path("data")/name).read_text(encoding="utf-8"))
-              print(name, len(data.get("assets",data.get("items",[]))))
+              path = Path("data") / name
+              data = json.loads(path.read_text(encoding="utf-8"))
+              print(name, len(data.get("assets", data.get("items", []))))
+          announcements = json.loads(Path("data/announcements.json").read_text(encoding="utf-8"))
+          print("institutional date:", announcements.get("institutional", {}).get("date"))
           PY
-      - name: Commit
+
+      - name: Commit changed official data
         run: |
-          git add data/assets.json data/assets-seed.js data/asset-details data/announcements.json data/announcements-seed.js
-          if git diff --cached --quiet; then exit 0; fi
           git config user.name "market-event-radar-bot"
           git config user.email "actions@users.noreply.github.com"
-          git commit -m "chore: refresh v10.3 assets announcements and news"
-          git pull --rebase
-          git push
+          git add -A data/assets.json data/assets-seed.js data/asset-details data/announcements.json data/announcements-seed.js
+          if git diff --cached --quiet; then
+            echo "No market-data changes."
+            exit 0
+          fi
+          git commit -m "chore: refresh v10.4.1 official market data"
+          for attempt in 1 2 3; do
+            git pull --rebase && git push && exit 0
+            echo "Push attempt $attempt failed; retrying..."
+            sleep $((attempt * 4))
+          done
+          exit 1

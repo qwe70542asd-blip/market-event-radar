@@ -8,7 +8,7 @@
   <title>全球市場即時雷達｜Global Market Radar</title>
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="assets/styles.css?v=10.4.0" />
+  <link rel="stylesheet" href="assets/styles.css?v=10.4.1" />
   <script type="module" src="https://widgets.tradingview-widget.com/w/en/tv-ticker-tape.js"></script>
 </head>
 <body>
@@ -18,7 +18,7 @@
       <span class="brand-mark" aria-hidden="true">
         <svg viewBox="0 0 48 48" role="img"><path d="M7 34 16 24l7 6 10-16 8 6"/><path d="M7 40h34"/></svg>
       </span>
-      <span><strong>全球市場即時雷達 <em class="version-badge">v10.4</em></strong><small>PERSONAL MARKET & EVENT RADAR</small></span>
+      <span><strong>全球市場即時雷達 <em class="version-badge">v10.4.1</em></strong><small>PERSONAL MARKET & EVENT RADAR</small></span>
     </a>
     <div class="top-actions">
       <span class="live-dot"><i></i> 自動更新</span>
@@ -172,6 +172,7 @@
           <select id="categoryFilter" aria-label="事件類型">
             <option value="all">全部類型</option>
             <optgroup label="大分類">
+              <option value="breaking">突發事件</option>
               <option value="macro">總經／央行</option>
               <option value="earnings">財報／營收</option>
               <option value="dividend">股利／除權息</option>
@@ -201,6 +202,15 @@
       </div>
     </section>
 
+    <section id="breakingEventStrip" class="breaking-event-strip" hidden>
+      <div class="breaking-event-head">
+        <div><p class="eyebrow">BREAKING MARKET EVENTS</p><h2>突發市場事件</h2></div>
+        <span id="breakingEventCount">0 件</span>
+      </div>
+      <div id="breakingEventItems" class="breaking-event-items"></div>
+      <p>依最近 96 小時新聞自動辨識戰爭、制裁、關稅、災害、交易中斷與供應風險；點擊後開啟安全搜尋結果。</p>
+    </section>
+
     <section id="calendarSection" class="calendar-section month-primary">
       <div class="section-heading section-heading-tight">
         <div><p class="eyebrow">MONTHLY RADAR</p><h2>本月事件月曆</h2><p class="section-copy">完整整理總經、個股財報、月營收、法說會、股利方案、除權息、ETF 配息與公司行動；一天事件較多時點「更多」查看完整清單。</p></div>
@@ -209,6 +219,7 @@
       <div id="calendarDataState" class="calendar-data-state">正在讀取事件資料…</div>
       <div id="monthEventSummary" class="month-event-summary" aria-label="本月事件分類統計"></div>
       <div class="calendar-legend">
+        <span><i class="group-breaking"></i>突發事件</span>
         <span><i class="group-macro"></i>總經／央行</span>
         <span><i class="group-earnings"></i>財報／營收</span>
         <span><i class="group-dividend"></i>股利／除權息</span>
@@ -335,13 +346,13 @@
   <script src="data/assets-seed.js"></script>
   <script src="data/announcements-seed.js"></script>
   <script src="data/news-seed.js"></script>
-  <script type="module" src="assets/auth.js?v=10.4.0"></script>
-  <script src="assets/app.js?v=10.4.0" defer></script>
-  <script src="assets/asset-master.js?v=10.4.0" defer></script>
-  <script src="assets/announcements.js?v=10.4.0" defer></script>
-  <script src="assets/news-core.js?v=10.4.0" defer></script>
-  <script src="assets/news-ui.js?v=10.4.0" defer></script>
-  <script src="assets/portfolio.js?v=10.4.0" defer></script>
-  <script src="assets/sw-register.js?v=10.4.0" defer></script>
+  <script type="module" src="assets/auth.js?v=10.4.1"></script>
+  <script src="assets/app.js?v=10.4.1" defer></script>
+  <script src="assets/asset-master.js?v=10.4.1" defer></script>
+  <script src="assets/announcements.js?v=10.4.1" defer></script>
+  <script src="assets/news-core.js?v=10.4.1" defer></script>
+  <script src="assets/news-ui.js?v=10.4.1" defer></script>
+  <script src="assets/portfolio.js?v=10.4.1" defer></script>
+  <script src="assets/sw-register.js?v=10.4.1" defer></script>
 </body>
 </html>

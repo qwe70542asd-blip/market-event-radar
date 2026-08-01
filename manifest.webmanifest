@@ -1,11 +1,11 @@
 {
-  "name": "全球市場即時雷達 v10.4",
+  "name": "全球市場即時雷達 v10.4.1",
   "short_name": "市場雷達",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#07111f",
   "theme_color": "#07111f",
-  "description": "整合總經、個股財報、月營收、法說會、股利方案、除權息、ETF 配息與公司行動的個人化市場日曆。",
+  "description": "點點數字月曆、突發市場事件、最新交易日法人資料與安全新聞連結。",
   "icons": [],
   "shortcuts": [
     {

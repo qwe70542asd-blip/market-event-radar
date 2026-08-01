@@ -896,3 +896,91 @@ select option:checked { color:#07111f !important; background:#79f0b7 !important;
   .mobile-event-dots i.group-corporate { background:#d2a3ff; }
   .day-event-row { grid-template-columns:53px minmax(0,1fr) 10px; }
 }
+
+
+/* v10.4.1 compact dot calendar + breaking events */
+.breaking-event-strip {
+  margin-top:10px; padding:13px 14px; border:1px solid rgba(255,145,72,.2);
+  border-radius:16px; background:linear-gradient(135deg,rgba(255,121,64,.075),rgba(12,27,45,.88));
+  box-shadow:var(--shadow);
+}
+.breaking-event-head { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.breaking-event-head h2 { margin:0; font-size:19px; }
+.breaking-event-head > span {
+  padding:4px 8px; border-radius:999px; background:rgba(255,145,72,.11); color:#ffb07a; font-size:9px;
+}
+.breaking-event-items { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; margin-top:9px; }
+.breaking-event-items a {
+  display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; gap:8px;
+  min-width:0; padding:9px 10px; border:1px solid rgba(255,145,72,.13); border-radius:11px;
+  background:rgba(255,255,255,.018); text-decoration:none;
+}
+.breaking-event-items a:hover { border-color:rgba(255,145,72,.3); background:rgba(255,145,72,.055); }
+.breaking-event-items span,.breaking-event-items small { color:var(--muted); font-size:8px; white-space:nowrap; }
+.breaking-event-items strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:11px; }
+.breaking-event-strip > p { margin:8px 0 0; color:#8ea4b5; font-size:9px; }
+
+.month-event-summary { grid-template-columns:repeat(6,minmax(0,1fr)); }
+.month-event-summary .summary-breaking { border-color:rgba(255,145,72,.13); }
+.month-event-summary .summary-breaking strong { color:#ffad74; }
+
+.calendar-legend .group-breaking,.mini-group.group-breaking { background:#ff9148; }
+.group-breaking { --group-color:#ff9148; }
+
+.calendar-grid.compact-calendar { align-items:stretch; }
+.calendar-day.compact-dot-day {
+  min-height:126px !important; height:126px; padding:9px 9px 7px;
+  overflow:hidden;
+}
+.calendar-day-open {
+  display:flex; width:100%; align-items:center; justify-content:space-between; gap:8px;
+  margin:0; padding:0 1px 5px; border:0; background:transparent; color:var(--text); cursor:pointer;
+}
+.calendar-day-open:hover .calendar-date-number { color:var(--green); }
+.calendar-date-number { font-size:16px; font-weight:800; }
+.calendar-total-count { color:#9eb0bd; font-size:8px; }
+.calendar-dot-summary { display:grid; gap:3px; }
+.calendar-dot-row {
+  display:grid; grid-template-columns:8px minmax(0,1fr) auto; align-items:center; gap:6px;
+  min-height:18px; width:100%; padding:1px 5px; border:1px solid transparent; border-radius:6px;
+  background:transparent; color:#aebfcb; cursor:pointer; text-align:left;
+}
+.calendar-dot-row:hover {
+  border-color:color-mix(in srgb,var(--group-color,var(--blue)) 25%,transparent);
+  background:color-mix(in srgb,var(--group-color,var(--blue)) 7%,transparent);
+}
+.calendar-dot-row i {
+  width:7px; height:7px; border-radius:50%; background:var(--group-color,var(--blue));
+  box-shadow:0 0 0 2px color-mix(in srgb,var(--group-color,var(--blue)) 16%,transparent);
+}
+.calendar-dot-row span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:8px; }
+.calendar-dot-row b { color:var(--group-color,var(--blue)); font-size:10px; }
+.calendar-day .calendar-events,.calendar-day .calendar-type-counts,.calendar-day .more-link { display:none !important; }
+
+.day-event-row.group-breaking,.compact-event-card.group-breaking { --group-color:#ff9148; }
+.day-event-row.group-breaking { background:rgba(255,145,72,.025); }
+
+.institutional-card { color:inherit; text-decoration:none; }
+.institutional-card:hover { border-color:rgba(121,240,183,.2); background:rgba(121,240,183,.035); }
+
+@media(max-width:1000px) {
+  .month-event-summary { grid-template-columns:repeat(3,minmax(0,1fr)); }
+}
+@media(max-width:700px) {
+  .breaking-event-items { grid-template-columns:1fr; }
+  .calendar-day.compact-dot-day { min-height:94px !important; height:94px; padding:7px; }
+  .calendar-date-number { font-size:14px; }
+  .calendar-dot-row { min-height:15px; padding:0 3px; gap:4px; }
+  .calendar-dot-row i { width:6px; height:6px; }
+  .calendar-dot-row span { font-size:7px; }
+  .calendar-dot-row b { font-size:8px; }
+  .calendar-dot-summary { gap:1px; }
+}
+
+.institutional-cards .institutional-card {
+  display:block; padding:10px 11px; border:1px solid rgba(255,255,255,.055);
+  border-radius:12px; background:rgba(255,255,255,.02);
+}
+.institutional-cards .institutional-card span,
+.institutional-cards .institutional-card small { display:block; color:var(--muted); font-size:9px; }
+.institutional-cards .institutional-card strong { display:block; margin:5px 0; font-size:18px; }

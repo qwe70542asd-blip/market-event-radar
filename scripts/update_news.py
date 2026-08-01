@@ -38,7 +38,7 @@ TAIPEI = ZoneInfo("Asia/Taipei")
 NOW = datetime.now(TAIPEI)
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/10.3; +https://github.com/qwe70542asd-blip/market-event-radar)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/10.4.1; +https://github.com/qwe70542asd-blip/market-event-radar)",
     "Accept-Language": "zh-TW,zh;q=0.95,en-US;q=0.75,en;q=0.65",
 }
 
@@ -142,6 +142,23 @@ CRYPTO_SEARCH_SOURCES = [
     {"rotation_group":3,"name":"Cointelegraph","query":"site:cointelegraph.com (bitcoin OR ethereum OR stablecoin OR defi OR regulation OR exchange)","region":"GLOBAL","topic":"crypto","industry_hint":"crypto","language":"en","source_group":"crypto-media","quality_score":80,"hl":"en-US","gl":"US","ceid":"US:en"},
 ]
 
+
+BREAKING_SEARCH_SOURCES = [
+    {
+        "name": "全球突發市場",
+        "query": "(Middle East OR Iran OR Israel OR Strait of Hormuz OR war OR missile OR airstrike OR ceasefire OR sanctions OR market halt OR earthquake)",
+        "region": "GLOBAL", "topic": "policy", "language": "en",
+        "source_group": "breaking-search", "quality_score": 90,
+        "hl": "en-US", "gl": "US", "ceid": "US:en",
+    },
+    {
+        "name": "中文國際突發",
+        "query": "(中東 OR 伊朗 OR 以色列 OR 荷姆茲海峽 OR 戰火 OR 空襲 OR 飛彈 OR 制裁 OR 關稅 OR 地震 OR 交易中斷)",
+        "region": "GLOBAL", "topic": "policy", "language": "zh-Hant",
+        "source_group": "breaking-search", "quality_score": 88,
+    },
+]
+
 ENGLISH_SEARCH_SOURCES = [
     {"name":"Reuters","query":"site:reuters.com/markets (markets OR economy OR earnings OR tariff)","region":"GLOBAL","topic":"market","language":"en","source_group":"international","quality_score":90,"hl":"en-US","gl":"US","ceid":"US:en"},
     {"name":"CNBC","query":"site:cnbc.com (markets OR earnings OR economy OR Federal Reserve)","region":"US","topic":"market","language":"en","source_group":"international","quality_score":82,"hl":"en-US","gl":"US","ceid":"US:en"},
@@ -152,15 +169,30 @@ ENGLISH_SEARCH_SOURCES = [
 
 BREAKING_TERMS = [
     "breaking","速報","快訊","宣布","關稅","tariff","制裁","sanction","降息","升息",
-    "rate cut","rate hike","出口管制","executive order","緊急","unexpected","重大訊息"
+    "rate cut","rate hike","出口管制","executive order","緊急","unexpected","重大訊息",
+    "war", "middle east", "iran", "israel", "strait of hormuz", "missile", "airstrike", "ceasefire", "market halt", "earthquake", "戰火", "中東", "伊朗", "以色列", "荷姆茲海峽", "空襲", "飛彈", "停火", "地震", "交易中斷", "熔斷"
 ]
 
 SOURCE_META = {}
-for source in DIRECT_RSS + CORE_SEARCH_SOURCES + ROTATING_SEARCH_SOURCES + SECTOR_SEARCH_SOURCES + CRYPTO_SEARCH_SOURCES + ENGLISH_SEARCH_SOURCES:
+for source in DIRECT_RSS + CORE_SEARCH_SOURCES + ROTATING_SEARCH_SOURCES + SECTOR_SEARCH_SOURCES + CRYPTO_SEARCH_SOURCES + BREAKING_SEARCH_SOURCES + ENGLISH_SEARCH_SOURCES:
     SOURCE_META[source["name"]] = source
 
 def clean(value):
     return re.sub(r"\s+", " ", html.unescape(value or "")).strip()
+
+def is_google_news_url(value):
+    return bool(re.match(r"^https?://news\.google\.com/(?:rss/)?(?:articles|read)/", clean(value), re.I))
+
+def safe_search_url(title, source=""):
+    query = " ".join(part for part in [f'"{clean(title)}"', clean(source)] if part)
+    return "https://www.google.com/search?q=" + quote_plus(query)
+
+def safe_article_url(link, title, source=""):
+    value = clean(link)
+    if value and not is_google_news_url(value):
+        return value
+    return safe_search_url(title, source)
+
 
 KNOWN_SOURCE_SUFFIXES = [
     "Yahoo股市", "Yahoo 股市", "中央社", "經濟日報", "鉅亨網", "Anue鉅亨",
@@ -456,7 +488,8 @@ def parse_feed(content, source, origin):
             rows.append({
                 "id": stable_id(display_source, link),
                 "title": title,
-                "link": link,
+                "link": safe_article_url(link, title, display_source),
+                "original_link": link,
                 "source": display_source,
                 "query_source": source["name"],
                 "summary": summary[:320],
@@ -480,6 +513,9 @@ def parse_feed(content, source, origin):
 def enrich_previous(item):
     row = dict(item)
     meta = SOURCE_META.get(row.get("source"), {})
+    original_link = row.get("original_link") or row.get("link") or ""
+    row["original_link"] = original_link
+    row["link"] = safe_article_url(row.get("safe_link") or row.get("link"), row.get("title"), row.get("source"))
     row.setdefault("language", meta.get("language", "zh-Hant"))
     row.setdefault("source_group", meta.get("source_group", "tw-media"))
     row.setdefault("quality_score", meta.get("quality_score", 65))
@@ -539,7 +575,7 @@ def active_search_sources():
     rotating = [x for x in ROTATING_SEARCH_SOURCES if x["rotation_group"] == bucket]
     sectors = [x for x in SECTOR_SEARCH_SOURCES if x["rotation_group"] == bucket]
     crypto = [x for x in CRYPTO_SEARCH_SOURCES if x["rotation_group"] == bucket]
-    return CORE_SEARCH_SOURCES + rotating + sectors + crypto + ENGLISH_SEARCH_SOURCES, bucket
+    return CORE_SEARCH_SOURCES + rotating + sectors + crypto + BREAKING_SEARCH_SOURCES + ENGLISH_SEARCH_SOURCES, bucket
 
 def event_queries(events):
     rows = []
@@ -679,10 +715,10 @@ def main():
             "healthy_sources": source_ok,
             "source_count": len(statuses),
             "rotation_bucket": bucket,
-            "version": "v10.3",
+            "version": "v10.4.1",
             "industry_counts": industry_counts,
             "duplicate_titles_removed": duplicate_title_count,
-            "note": "All-industry coverage prioritized. Headlines are classified into broad industry groups and deduplicated.",
+            "note": "All-industry coverage prioritized. Google News redirect links are replaced with stable title searches to prevent 404 pages.",
         },
         "source": {
             "name": "多來源財經新聞",

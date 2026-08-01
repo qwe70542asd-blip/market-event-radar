@@ -1,11 +1,11 @@
-const CACHE_NAME = "market-event-radar-v10-4-0";
+const CACHE_NAME = "market-event-radar-v10-4-1";
 const STATIC_ASSETS = [
-  "./", "index.html", "event.html", "news.html", "portfolio.html", "asset.html", "manifest.webmanifest",
-  "assets/styles.css?v=10.4.0", "assets/app.js?v=10.4.0", "assets/event.js?v=10.4.0",
-  "assets/auth.js?v=10.4.0", "assets/firebase-config.js",
-  "assets/news-core.js?v=10.4.0", "assets/news-ui.js?v=10.4.0",
-  "assets/news-page.js?v=10.4.0", "assets/portfolio.js?v=10.4.0", "assets/asset-master.js?v=10.4.0", "assets/asset-detail.js?v=10.4.0", "assets/announcements.js?v=10.4.0",
-  "assets/sw-register.js?v=10.4.0", "assets/favicon.svg",
+  "./", "index.html", "404.html", "event.html", "news.html", "portfolio.html", "asset.html", "manifest.webmanifest",
+  "assets/styles.css?v=10.4.1", "assets/app.js?v=10.4.1", "assets/event.js?v=10.4.1",
+  "assets/auth.js?v=10.4.1", "assets/firebase-config.js",
+  "assets/news-core.js?v=10.4.1", "assets/news-ui.js?v=10.4.1",
+  "assets/news-page.js?v=10.4.1", "assets/portfolio.js?v=10.4.1", "assets/asset-master.js?v=10.4.1", "assets/asset-detail.js?v=10.4.1", "assets/announcements.js?v=10.4.1",
+  "assets/sw-register.js?v=10.4.1", "assets/favicon.svg",
   "data/seed.js", "data/news-seed.js", "data/assets-seed.js", "data/announcements-seed.js"
 ];
 
@@ -34,7 +34,9 @@ async function networkFirst(request, fallbackPath) {
       const url = new URL(request.url);
       const stableKey = new Request(url.origin + url.pathname);
       cache.put(stableKey, response.clone()).catch(() => {});
+      return response;
     }
+    if (fallbackPath) return (await caches.match(fallbackPath)) || response;
     return response;
   } catch (error) {
     const url = new URL(request.url);
