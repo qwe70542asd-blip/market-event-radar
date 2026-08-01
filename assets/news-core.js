@@ -64,16 +64,105 @@
     };
   }
 
-  function mergeItems(primary, secondary) {
-    const seen = new Set();
-    const merged = [];
-    [...primary, ...secondary].forEach(item => {
-      const key = String(item.link || item.title || "").trim().toLowerCase();
-      if (!key || seen.has(key)) return;
-      seen.add(key);
-      merged.push(item);
+  const SOURCE_SUFFIXES = [
+    "Yahoo股市","Yahoo 股市","中央社","經濟日報","鉅亨網","Anue鉅亨",
+    "MoneyDJ理財網","MoneyDJ","工商時報","中時新聞網","科技新報","財經新報",
+    "自由財經","今周刊","商業周刊","財訊","ETtoday財經雲","ETtoday",
+    "數位時代","iThome","INSIDE","風傳媒","信傳媒","聯合新聞網","udn",
+    "AASTOCKS","經濟通","香港經濟日報","信報財經新聞","明報財經","香港01",
+    "Reuters","CNBC","Nikkei Asia"
+  ];
+
+  function stripPublisherSuffix(title) {
+    let value = String(title || "").trim();
+    for (const source of SOURCE_SUFFIXES.sort((a,b) => b.length - a.length)) {
+      const escaped = source.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      value = value.replace(new RegExp(`\\s*(?:-|–|—|｜|\\|)\\s*${escaped}\\s*$`, "i"), "");
+    }
+    return value.replace(/\s*[（(](?:圖|影音|更新|全文)[）)]\s*$/u, "").trim();
+  }
+
+  function canonicalTitle(title) {
+    return stripPublisherSuffix(title)
+      .normalize("NFKC")
+      .toLowerCase()
+      .replace(/^(?:快訊|速報|即時|獨家)\s*[：:｜|／/\- ]*/u, "")
+      .replace(/[\s\u3000]+/gu, "")
+      .replace(/[^\p{L}\p{N}]+/gu, "");
+  }
+
+  function ngrams(value, size = 3) {
+    const result = new Set();
+    if (!value) return result;
+    if (value.length <= size) {
+      result.add(value);
+      return result;
+    }
+    for (let i = 0; i <= value.length - size; i += 1) result.add(value.slice(i, i + size));
+    return result;
+  }
+
+  function titleSimilarity(left, right) {
+    const a = canonicalTitle(left);
+    const b = canonicalTitle(right);
+    if (!a || !b) return 0;
+    if (a === b) return 1;
+    const short = a.length <= b.length ? a : b;
+    const long = a.length > b.length ? a : b;
+    if (short.length >= 14 && long.includes(short) && short.length / long.length >= 0.72) return 0.96;
+    const ga = ngrams(a), gb = ngrams(b);
+    let intersection = 0;
+    ga.forEach(x => { if (gb.has(x)) intersection += 1; });
+    const union = new Set([...ga, ...gb]).size;
+    return union ? intersection / union : 0;
+  }
+
+  function itemRank(item) {
+    const groupScore = ({ "official-tw":5, "official-global":5, "tw-media":3, "international":3, "hk-media":2 })[item.source_group] || 0;
+    const originScore = ({ official:5, "direct-rss":4, "direct-page":3, "publisher-search":2, "event-search":1 })[item.origin] || 0;
+    return groupScore * 1e9 + originScore * 1e8 + Number(item.quality_score || 0) * 1e5 + String(item.summary || "").length;
+  }
+
+  function mergeDuplicate(keeper, duplicate) {
+    const sources = new Set([...(keeper.duplicate_sources || []), keeper.source, duplicate.source].filter(Boolean));
+    keeper.duplicate_sources = [...sources];
+    keeper.duplicate_count = Math.max(0, sources.size - 1);
+    keeper.is_breaking = Boolean(keeper.is_breaking || duplicate.is_breaking);
+    if (!keeper.summary && duplicate.summary) keeper.summary = duplicate.summary;
+    return keeper;
+  }
+
+  function dedupeItems(input) {
+    const byLink = new Map();
+    input.forEach(raw => {
+      if (!raw?.title || !raw?.link) return;
+      const item = { ...raw, title: stripPublisherSuffix(raw.title) };
+      const key = String(item.link).trim().toLowerCase();
+      const current = byLink.get(key);
+      if (!current || itemRank(item) > itemRank(current)) byLink.set(key, item);
     });
-    return merged;
+
+    const clusters = [];
+    [...byLink.values()].sort((a,b) => itemRank(b) - itemRank(a)).forEach(item => {
+      const match = clusters.findIndex(keeper => {
+        const exact = canonicalTitle(keeper.title) === canonicalTitle(item.title);
+        return exact || titleSimilarity(keeper.title, item.title) >= 0.86;
+      });
+      if (match < 0) {
+        item.duplicate_sources = item.duplicate_sources || (item.source ? [item.source] : []);
+        item.duplicate_count = item.duplicate_count || 0;
+        clusters.push(item);
+      } else if (itemRank(item) > itemRank(clusters[match])) {
+        clusters[match] = mergeDuplicate(item, clusters[match]);
+      } else {
+        clusters[match] = mergeDuplicate(clusters[match], item);
+      }
+    });
+    return clusters;
+  }
+
+  function mergeItems(primary, secondary) {
+    return dedupeItems([...primary, ...secondary]);
   }
 
   function emit() {

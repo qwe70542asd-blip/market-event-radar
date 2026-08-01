@@ -22,25 +22,29 @@
     const region = $("#newsRegionFilter").value;
     const topic = $("#newsTopicFilter").value;
     const source = $("#newsSourceFilter").value;
+    const language = $("#newsLanguageFilter")?.value || "all";
+    const group = $("#newsGroupFilter")?.value || "all";
     const items = (payload.items || []).filter(item => {
       const blob = `${item.title||""} ${item.summary||""} ${item.source||""}`.toLowerCase();
       return (!q || blob.includes(q))
         && (region === "all" || item.region === region)
         && (topic === "all" || item.topic === topic)
-        && (source === "all" || item.source === source);
+        && (source === "all" || item.source === source)
+        && (language === "all" || (item.language || "zh-Hant") === language)
+        && (group === "all" || item.source_group === group);
     });
     $("#newsPageGrid").innerHTML = items.map(item => `
       <a class="news-page-card" href="${item.link}" target="_blank" rel="noreferrer noopener">
         <div class="news-card-top"><span>${escapeHtml(item.source || "財經新聞")}</span><small>${fmt(item.published_at)}</small></div>
         <h2>${escapeHtml(item.title)}</h2>
         <p>${escapeHtml(item.summary || item.event_title || "點擊前往原始來源")}</p>
-        <div class="news-card-tags"><span>${escapeHtml(item.region || "GLOBAL")}</span><span>${escapeHtml(item.topic || "market")}</span>${item.origin === "fallback" ? "<span>備援入口</span>" : ""}</div>
+        <div class="news-card-tags"><span>${escapeHtml(item.region || "GLOBAL")}</span><span>${escapeHtml(item.topic || "market")}</span><span>${escapeHtml(item.source_group === "official-tw" ? "官方" : item.source_group === "hk-media" ? "香港中文" : item.language === "zh-Hant" ? "中文" : "英文")}</span>${item.duplicate_count ? `<span>另有 ${item.duplicate_count} 個來源</span>` : ""}${item.origin === "fallback" ? "<span>備援入口</span>" : ""}</div>
       </a>`).join("");
     $("#newsPageEmpty").hidden = items.length > 0;
     $("#newsPageCount").textContent = `${items.length} 則`;
   }
 
-  ["#newsSearchInput","#newsRegionFilter","#newsTopicFilter","#newsSourceFilter"].forEach(s => {
+  ["#newsSearchInput","#newsLanguageFilter","#newsGroupFilter","#newsRegionFilter","#newsTopicFilter","#newsSourceFilter"].forEach(s => {
     $(s)?.addEventListener(s.includes("Input") ? "input" : "change", render);
   });
 

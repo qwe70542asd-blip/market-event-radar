@@ -1,11 +1,11 @@
-const CACHE_NAME = "market-event-radar-v10-0-0";
+const CACHE_NAME = "market-event-radar-v10-1-1";
 const STATIC_ASSETS = [
   "./", "index.html", "event.html", "news.html", "portfolio.html", "manifest.webmanifest",
-  "assets/styles.css?v=10.0.0", "assets/app.js?v=10.0.0", "assets/event.js?v=10.0.0",
-  "assets/auth.js?v=10.0.0", "assets/firebase-config.js",
-  "assets/news-core.js?v=10.0.0", "assets/news-ui.js?v=10.0.0",
-  "assets/news-page.js?v=10.0.0", "assets/portfolio.js?v=10.0.0",
-  "assets/sw-register.js?v=10.0.0", "assets/favicon.svg",
+  "assets/styles.css?v=10.1.1", "assets/app.js?v=10.1.1", "assets/event.js?v=10.1.1",
+  "assets/auth.js?v=10.1.1", "assets/firebase-config.js",
+  "assets/news-core.js?v=10.1.1", "assets/news-ui.js?v=10.1.1",
+  "assets/news-page.js?v=10.1.1", "assets/portfolio.js?v=10.1.1",
+  "assets/sw-register.js?v=10.1.1", "assets/favicon.svg",
   "data/seed.js", "data/news-seed.js"
 ];
 

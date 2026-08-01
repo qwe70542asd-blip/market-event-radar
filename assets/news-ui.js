@@ -17,6 +17,8 @@
 
   function score(item) {
     let value = Number(item.quality_score || 0);
+    if (item.language === "zh-Hant") value += 18;
+    if (item.source_group === "official-tw") value += 10;
     if (item.is_breaking) value += 40;
     if (item.origin === "direct-rss" || item.origin === "official") value += 15;
     const age = item.published_at ? Date.now() - new Date(item.published_at).getTime() : Infinity;
@@ -50,7 +52,7 @@
     const visible = items.slice(0, 3);
     rail.innerHTML = visible.map(item => `
       <a class="headline-card" href="${item.link}" target="_blank" rel="noreferrer noopener">
-        <div><span>${escapeHtml(item.source || "財經新聞")}</span><small>${escapeHtml(item.region || "GLOBAL")}</small></div>
+        <div><span>${escapeHtml(item.source || "財經新聞")}${item.duplicate_count ? ` · 另 ${item.duplicate_count} 來源` : ""}</span><small>${escapeHtml(item.region || "GLOBAL")}</small></div>
         <h3>${escapeHtml(item.title)}</h3>
         <p>${escapeHtml(item.summary || item.event_title || "點擊前往原始來源")}</p>
       </a>`).join("");
