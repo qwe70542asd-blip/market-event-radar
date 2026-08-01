@@ -1,0 +1,10 @@
+{
+  "name": "全球市場即時雷達",
+  "short_name": "全球市場雷達",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#07111f",
+  "theme_color": "#07111f",
+  "description": "整合全球主要市場報價，以及財報、央行利率、經濟數據、科技發表會與重大事件。",
+  "icons": []
+}
