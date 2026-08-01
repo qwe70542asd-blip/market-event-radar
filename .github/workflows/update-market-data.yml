@@ -1,0 +1,55 @@
+name: Update v10.3 market data
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "scripts/update_assets.py"
+      - "scripts/update_announcements.py"
+      - "scripts/update_news.py"
+      - ".github/workflows/update-market-data.yml"
+  schedule:
+    - cron: "18 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: market-radar-v10-3-data
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Update assets and official data
+        run: |
+          python scripts/update_assets.py
+          python scripts/update_announcements.py
+      - name: Validate JSON
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          for name in ["assets.json","announcements.json"]:
+              data=json.loads((Path("data")/name).read_text(encoding="utf-8"))
+              print(name, len(data.get("assets",data.get("items",[]))))
+          PY
+      - name: Commit
+        run: |
+          git add data/assets.json data/assets-seed.js data/asset-details data/announcements.json data/announcements-seed.js
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name "market-event-radar-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git commit -m "chore: refresh v10.3 assets announcements and news"
+          git pull --rebase
+          git push

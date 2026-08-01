@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Market Event Radar v10.1 multi-source finance-news updater.
+"""Market Event Radar v10.3 multi-source finance-news updater.
 
 v10.1 priorities:
 - Traditional-Chinese financial coverage first.
@@ -38,7 +38,7 @@ TAIPEI = ZoneInfo("Asia/Taipei")
 NOW = datetime.now(TAIPEI)
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/10.1; +https://github.com/qwe70542asd-blip/market-event-radar)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/10.3; +https://github.com/qwe70542asd-blip/market-event-radar)",
     "Accept-Language": "zh-TW,zh;q=0.95,en-US;q=0.75,en;q=0.65",
 }
 
@@ -115,6 +115,33 @@ ROTATING_SEARCH_SOURCES = [
     {"rotation_group":3,"name":"香港01財經","query":"site:hk01.com/財經快訊 (港股 OR 財經 OR 國際市場 OR 科技)","region":"HK","topic":"market","language":"zh-Hant","source_group":"hk-media","quality_score":68},
 ]
 
+
+# Broad-industry queries rotate with the same 15-minute schedule.
+# The feed parser reads the original publisher from each Google News item,
+# so these labels do not appear as fake publishers on the website.
+SECTOR_SEARCH_SOURCES = [
+    {"rotation_group":0,"name":"產業雷達・金融","query":"(銀行 OR 金控 OR 保險 OR 證券 OR 金融股 OR 淨利差 OR 金管會)","region":"TW","topic":"industry","industry_hint":"finance","language":"zh-Hant","source_group":"sector-search","quality_score":74},
+    {"rotation_group":0,"name":"產業雷達・航運運輸","query":"(貨櫃 OR 散裝 OR 航運 OR 海運 OR 航空 OR 物流 OR 運價 OR SCFI)","region":"TW","topic":"industry","industry_hint":"shipping","language":"zh-Hant","source_group":"sector-search","quality_score":74},
+    {"rotation_group":0,"name":"產業雷達・鋼鐵原物料","query":"(鋼鐵 OR 水泥 OR 塑化 OR 化工 OR 紙業 OR 原物料 OR 銅價 OR 鋼價)","region":"TW","topic":"industry","industry_hint":"materials","language":"zh-Hant","source_group":"sector-search","quality_score":73},
+    {"rotation_group":1,"name":"產業雷達・機械工業","query":"(工具機 OR 機械 OR 工業電腦 OR 自動化 OR 重電 OR 電機 OR 製造業)","region":"TW","topic":"industry","industry_hint":"industrial","language":"zh-Hant","source_group":"sector-search","quality_score":74},
+    {"rotation_group":1,"name":"產業雷達・汽車零組件","query":"(汽車 OR 電動車 OR 汽車零組件 OR 輪胎 OR 車用電子 OR 新車銷售)","region":"TW","topic":"industry","industry_hint":"automotive","language":"zh-Hant","source_group":"sector-search","quality_score":73},
+    {"rotation_group":1,"name":"產業雷達・營建房市","query":"(營建 OR 建材 OR 房市 OR 房貸 OR 不動產 OR 商用地產 OR REIT)","region":"TW","topic":"industry","industry_hint":"real-estate","language":"zh-Hant","source_group":"sector-search","quality_score":73},
+    {"rotation_group":2,"name":"產業雷達・消費零售","query":"(零售 OR 百貨 OR 電商 OR 餐飲 OR 食品 OR 飲料 OR 消費股 OR 通路)","region":"TW","topic":"industry","industry_hint":"consumer","language":"zh-Hant","source_group":"sector-search","quality_score":73},
+    {"rotation_group":2,"name":"產業雷達・生技醫療","query":"(生技 OR 製藥 OR 醫療 OR 新藥 OR 臨床試驗 OR FDA OR 健保)","region":"TW","topic":"industry","industry_hint":"healthcare","language":"zh-Hant","source_group":"sector-search","quality_score":75},
+    {"rotation_group":2,"name":"產業雷達・觀光休閒","query":"(觀光 OR 飯店 OR 旅行社 OR 餐飲 OR 航空客運 OR 娛樂 OR 遊戲)","region":"TW","topic":"industry","industry_hint":"tourism","language":"zh-Hant","source_group":"sector-search","quality_score":71},
+    {"rotation_group":3,"name":"產業雷達・能源公用","query":"(電力 OR 綠能 OR 太陽能 OR 風電 OR 天然氣 OR 石油 OR 儲能 OR 公用事業)","region":"TW","topic":"industry","industry_hint":"energy","language":"zh-Hant","source_group":"sector-search","quality_score":74},
+    {"rotation_group":3,"name":"產業雷達・電信媒體","query":"(電信 OR 5G OR 寬頻 OR 有線電視 OR 媒體 OR 廣告 OR 電信股)","region":"TW","topic":"industry","industry_hint":"telecom","language":"zh-Hant","source_group":"sector-search","quality_score":72},
+    {"rotation_group":3,"name":"產業雷達・農業食品","query":"(農業 OR 農產品 OR 食品加工 OR 飼料 OR 黃豆 OR 玉米 OR 小麥 OR 漁業)","region":"TW","topic":"industry","industry_hint":"agriculture","language":"zh-Hant","source_group":"sector-search","quality_score":72},
+]
+
+
+CRYPTO_SEARCH_SOURCES = [
+    {"rotation_group":0,"name":"動區動趨 BlockTempo","query":"site:blocktempo.com (比特幣 OR 以太坊 OR 穩定幣 OR DeFi OR 加密貨幣 OR 區塊鏈)","region":"GLOBAL","topic":"crypto","industry_hint":"crypto","language":"zh-Hant","source_group":"crypto-media","quality_score":82},
+    {"rotation_group":1,"name":"鏈新聞 ABMedia","query":"site:abmedia.io (比特幣 OR 以太坊 OR 穩定幣 OR DeFi OR 加密貨幣 OR 交易所)","region":"GLOBAL","topic":"crypto","industry_hint":"crypto","language":"zh-Hant","source_group":"crypto-media","quality_score":82},
+    {"rotation_group":2,"name":"CoinDesk","query":"site:coindesk.com (bitcoin OR ethereum OR stablecoin OR defi OR crypto regulation OR exchange)","region":"GLOBAL","topic":"crypto","industry_hint":"crypto","language":"en","source_group":"crypto-media","quality_score":86,"hl":"en-US","gl":"US","ceid":"US:en"},
+    {"rotation_group":3,"name":"Cointelegraph","query":"site:cointelegraph.com (bitcoin OR ethereum OR stablecoin OR defi OR regulation OR exchange)","region":"GLOBAL","topic":"crypto","industry_hint":"crypto","language":"en","source_group":"crypto-media","quality_score":80,"hl":"en-US","gl":"US","ceid":"US:en"},
+]
+
 ENGLISH_SEARCH_SOURCES = [
     {"name":"Reuters","query":"site:reuters.com/markets (markets OR economy OR earnings OR tariff)","region":"GLOBAL","topic":"market","language":"en","source_group":"international","quality_score":90,"hl":"en-US","gl":"US","ceid":"US:en"},
     {"name":"CNBC","query":"site:cnbc.com (markets OR earnings OR economy OR Federal Reserve)","region":"US","topic":"market","language":"en","source_group":"international","quality_score":82,"hl":"en-US","gl":"US","ceid":"US:en"},
@@ -129,7 +156,7 @@ BREAKING_TERMS = [
 ]
 
 SOURCE_META = {}
-for source in DIRECT_RSS + CORE_SEARCH_SOURCES + ROTATING_SEARCH_SOURCES + ENGLISH_SEARCH_SOURCES:
+for source in DIRECT_RSS + CORE_SEARCH_SOURCES + ROTATING_SEARCH_SOURCES + SECTOR_SEARCH_SOURCES + CRYPTO_SEARCH_SOURCES + ENGLISH_SEARCH_SOURCES:
     SOURCE_META[source["name"]] = source
 
 def clean(value):
@@ -322,6 +349,89 @@ def text_from(node, names):
             return clean(found.text)
     return ""
 
+
+INDUSTRY_KEYWORDS = {
+    "finance": ["金控","銀行","保險","證券","金融","利差","放款","存款","壽險","產險","信用卡","FinTech"],
+    "shipping": ["航運","海運","貨櫃","散裝","運價","SCFI","航空","物流","快遞","港口","造船"],
+    "industrial": ["機械","工具機","自動化","重電","電機","工業電腦","製造業","設備","工程"],
+    "materials": ["鋼鐵","水泥","塑化","化工","紙業","原物料","銅","鋁","礦業","玻璃","紡織"],
+    "real-estate": ["營建","建材","房市","房貸","不動產","商用地產","住宅","土地","REIT"],
+    "consumer": ["零售","百貨","電商","餐飲","食品","飲料","通路","消費","服飾","家庭用品"],
+    "healthcare": ["生技","製藥","醫療","新藥","臨床","FDA","醫材","醫院","健保"],
+    "energy": ["能源","石油","原油","天然氣","綠能","太陽能","風電","儲能","電力","公用事業"],
+    "telecom": ["電信","5G","寬頻","有線電視","媒體","廣告","通訊服務"],
+    "tourism": ["觀光","飯店","旅行社","旅遊","休閒","航空客運","娛樂","遊戲"],
+    "automotive": ["汽車","電動車","車用","輪胎","汽車零組件","新車","機車"],
+    "agriculture": ["農業","農產品","飼料","黃豆","玉米","小麥","漁業","畜牧"],
+    "technology": ["科技","半導體","晶片","AI","人工智慧","伺服器","軟體","雲端","電子","面板","PCB","記憶體"],
+    "macro-policy": ["央行","利率","通膨","CPI","PPI","GDP","PMI","非農","匯率","關稅","政策","選舉"],
+}
+
+INDUSTRY_LABELS = {
+    "finance": "金融保險",
+    "shipping": "航運運輸",
+    "industrial": "機械工業",
+    "materials": "原物料傳產",
+    "real-estate": "營建房市",
+    "consumer": "消費零售",
+    "healthcare": "生技醫療",
+    "energy": "能源公用",
+    "telecom": "電信媒體",
+    "tourism": "觀光休閒",
+    "automotive": "汽車零組件",
+    "agriculture": "農業食品",
+    "technology": "科技電子",
+    "macro-policy": "總經政策",
+    "other": "其他產業",
+}
+
+def classify_industries(title, summary="", hint=None):
+    text = f"{title} {summary}".lower()
+    scores = {}
+    for industry, keywords in INDUSTRY_KEYWORDS.items():
+        score = sum(1 for keyword in keywords if keyword.lower() in text)
+        if score:
+            scores[industry] = score
+    if hint:
+        scores[hint] = scores.get(hint, 0) + 2
+    if not scores:
+        return ["other"]
+    return [key for key, _ in sorted(scores.items(), key=lambda row: (-row[1], row[0]))[:3]]
+
+
+
+CRYPTO_CATEGORY_KEYWORDS = {
+    "bitcoin": ["bitcoin","btc","比特幣"],
+    "ethereum": ["ethereum","ether","eth","以太坊"],
+    "stablecoin": ["stablecoin","usdt","usdc","穩定幣","泰達幣"],
+    "defi": ["defi","去中心化金融","uniswap","aave","流動性挖礦"],
+    "exchange": ["交易所","binance","coinbase","kraken","幣安"],
+    "regulation": ["監管","法規","sec","cftc","立法","牌照","稅務"],
+    "layer1": ["solana","cardano","avalanche","layer 1","公鏈","sol","ada","avax"],
+    "meme": ["meme","迷因幣","dogecoin","shib","狗狗幣"],
+    "nft-gaming": ["nft","gamefi","鏈遊","元宇宙"],
+    "mining": ["礦工","挖礦","算力","mining","hashrate"],
+}
+
+FUND_KEYWORDS = ["基金","ETF","受益憑證","淨值","配息","投信","資產配置","共同基金","bond fund","mutual fund"]
+CRYPTO_KEYWORDS = ["加密貨幣","虛擬貨幣","區塊鏈","比特幣","以太坊","穩定幣","DeFi","bitcoin","ethereum","crypto","stablecoin","blockchain"]
+
+def classify_asset_class(title, summary, topic):
+    text = f"{title} {summary}".lower()
+    if topic == "crypto" or any(word.lower() in text for word in CRYPTO_KEYWORDS):
+        return "crypto"
+    if topic == "fund" or any(word.lower() in text for word in FUND_KEYWORDS):
+        return "fund"
+    return "stock"
+
+def classify_crypto_categories(title, summary):
+    text = f"{title} {summary}".lower()
+    rows = []
+    for category, keywords in CRYPTO_CATEGORY_KEYWORDS.items():
+        if any(keyword.lower() in text for keyword in keywords):
+            rows.append(category)
+    return rows or ["market"]
+
 def parse_feed(content, source, origin):
     root = ET.fromstring(content)
     nodes = root.findall(".//item")
@@ -340,15 +450,24 @@ def parse_feed(content, source, origin):
         pub = text_from(node, ["pubDate", "published", "updated", "{http://www.w3.org/2005/Atom}published", "{http://www.w3.org/2005/Atom}updated"])
         if title and link:
             lowered = title.lower()
+            feed_publisher = text_from(node, ["source", "{http://www.w3.org/2005/Atom}source"])
+            display_source = feed_publisher if origin in {"publisher-search", "event-search"} and feed_publisher else source["name"]
+            industries = classify_industries(title, summary, source.get("industry_hint"))
             rows.append({
-                "id": stable_id(source["name"], link),
+                "id": stable_id(display_source, link),
                 "title": title,
                 "link": link,
-                "source": source["name"],
+                "source": display_source,
+                "query_source": source["name"],
                 "summary": summary[:320],
                 "published_at": parse_date(pub),
                 "region": source["region"],
                 "topic": source["topic"],
+                "industries": industries,
+                "primary_industry": industries[0],
+                "asset_class": classify_asset_class(title, summary, source["topic"]),
+                "crypto_categories": classify_crypto_categories(title, summary) if classify_asset_class(title, summary, source["topic"]) == "crypto" else [],
+                "industry_label": INDUSTRY_LABELS.get(industries[0], "其他產業"),
                 "language": source.get("language", "zh-Hant"),
                 "source_group": source.get("source_group", "tw-media"),
                 "origin": origin,
@@ -364,6 +483,10 @@ def enrich_previous(item):
     row.setdefault("language", meta.get("language", "zh-Hant"))
     row.setdefault("source_group", meta.get("source_group", "tw-media"))
     row.setdefault("quality_score", meta.get("quality_score", 65))
+    industries = row.get("industries") or classify_industries(row.get("title"), row.get("summary"), meta.get("industry_hint"))
+    row["industries"] = industries
+    row["primary_industry"] = row.get("primary_industry") or industries[0]
+    row["industry_label"] = row.get("industry_label") or INDUSTRY_LABELS.get(row["primary_industry"], "其他產業")
     return row
 
 def get_with_retry(session, url, attempts=3, timeout=22):
@@ -414,7 +537,9 @@ def preserve_previous(source_name, previous_map, items, days=12):
 def active_search_sources():
     bucket = (NOW.minute // 15) % 4
     rotating = [x for x in ROTATING_SEARCH_SOURCES if x["rotation_group"] == bucket]
-    return CORE_SEARCH_SOURCES + rotating + ENGLISH_SEARCH_SOURCES, bucket
+    sectors = [x for x in SECTOR_SEARCH_SOURCES if x["rotation_group"] == bucket]
+    crypto = [x for x in CRYPTO_SEARCH_SOURCES if x["rotation_group"] == bucket]
+    return CORE_SEARCH_SOURCES + rotating + sectors + crypto + ENGLISH_SEARCH_SOURCES, bucket
 
 def event_queries(events):
     rows = []
@@ -486,7 +611,7 @@ def main():
 
     # Preserve non-active rotating sources so the combined feed remains broad.
     active_names = {x["name"] for x in DIRECT_RSS + sources}
-    for source in ROTATING_SEARCH_SOURCES:
+    for source in ROTATING_SEARCH_SOURCES + SECTOR_SEARCH_SOURCES + CRYPTO_SEARCH_SOURCES:
         if source["name"] in active_names:
             continue
         stale = preserve_previous(source["name"], previous_map, items, days=20)
@@ -541,6 +666,10 @@ def main():
 
     source_ok = sum(1 for x in statuses if x["status"] == "ok")
     chinese_items = sum(1 for x in final if x.get("language") == "zh-Hant")
+    industry_counts = {}
+    for item in final:
+        key = item.get("primary_industry", "other")
+        industry_counts[key] = industry_counts.get(key, 0) + 1
     payload = {
         "metadata": {
             "updated_at": iso(NOW),
@@ -550,9 +679,10 @@ def main():
             "healthy_sources": source_ok,
             "source_count": len(statuses),
             "rotation_bucket": bucket,
-            "version": "v10.1.1",
+            "version": "v10.3",
+            "industry_counts": industry_counts,
             "duplicate_titles_removed": duplicate_title_count,
-            "note": "Traditional-Chinese sources prioritized. Duplicate and near-duplicate headlines are clustered.",
+            "note": "All-industry coverage prioritized. Headlines are classified into broad industry groups and deduplicated.",
         },
         "source": {
             "name": "多來源財經新聞",

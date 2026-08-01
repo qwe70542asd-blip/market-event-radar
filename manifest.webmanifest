@@ -19,6 +19,12 @@
       "short_name": "投資組合",
       "url": "./portfolio.html",
       "icons": []
+    },
+    {
+      "name": "股票／資產搜尋",
+      "short_name": "資產",
+      "url": "./portfolio.html",
+      "icons": []
     }
   ]
 }

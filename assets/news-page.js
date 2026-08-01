@@ -21,6 +21,9 @@
     const q = $("#newsSearchInput").value.trim().toLowerCase();
     const region = $("#newsRegionFilter").value;
     const topic = $("#newsTopicFilter").value;
+    const industry = $("#newsIndustryFilter")?.value || "all";
+    const assetClass = $("#newsAssetClassFilter")?.value || "all";
+    const cryptoCategory = $("#cryptoCategoryFilter")?.value || "all";
     const source = $("#newsSourceFilter").value;
     const language = $("#newsLanguageFilter")?.value || "all";
     const group = $("#newsGroupFilter")?.value || "all";
@@ -29,6 +32,9 @@
       return (!q || blob.includes(q))
         && (region === "all" || item.region === region)
         && (topic === "all" || item.topic === topic)
+        && (industry === "all" || (item.industries || [item.primary_industry]).includes(industry))
+        && (assetClass === "all" || (item.asset_class || "stock") === assetClass)
+        && (cryptoCategory === "all" || (item.crypto_categories || []).includes(cryptoCategory))
         && (source === "all" || item.source === source)
         && (language === "all" || (item.language || "zh-Hant") === language)
         && (group === "all" || item.source_group === group);
@@ -38,16 +44,25 @@
         <div class="news-card-top"><span>${escapeHtml(item.source || "財經新聞")}</span><small>${fmt(item.published_at)}</small></div>
         <h2>${escapeHtml(item.title)}</h2>
         <p>${escapeHtml(item.summary || item.event_title || "點擊前往原始來源")}</p>
-        <div class="news-card-tags"><span>${escapeHtml(item.region || "GLOBAL")}</span><span>${escapeHtml(item.topic || "market")}</span><span>${escapeHtml(item.source_group === "official-tw" ? "官方" : item.source_group === "hk-media" ? "香港中文" : item.language === "zh-Hant" ? "中文" : "英文")}</span>${item.duplicate_count ? `<span>另有 ${item.duplicate_count} 個來源</span>` : ""}${item.origin === "fallback" ? "<span>備援入口</span>" : ""}</div>
+        <div class="news-card-tags"><span class="asset-class-badge ${escapeHtml(item.asset_class || "stock")}">${item.asset_class==="crypto"?"虛擬貨幣":item.asset_class==="fund"?"基金":"股票"}</span><span>${escapeHtml(item.region || "GLOBAL")}</span><span>${escapeHtml(item.industry_label || "其他產業")}</span><span>${escapeHtml(item.topic || "market")}</span><span>${escapeHtml(item.source_group === "official-tw" ? "官方" : item.source_group === "hk-media" ? "香港中文" : item.language === "zh-Hant" ? "中文" : "英文")}</span>${item.duplicate_count ? `<span>另有 ${item.duplicate_count} 個來源</span>` : ""}${item.origin === "fallback" ? "<span>備援入口</span>" : ""}</div>
       </a>`).join("");
     $("#newsPageEmpty").hidden = items.length > 0;
     $("#newsPageCount").textContent = `${items.length} 則`;
   }
 
-  ["#newsSearchInput","#newsLanguageFilter","#newsGroupFilter","#newsRegionFilter","#newsTopicFilter","#newsSourceFilter"].forEach(s => {
-    $(s)?.addEventListener(s.includes("Input") ? "input" : "change", render);
+  function syncAssetFilters(){ const crypto=$("#cryptoCategoryWrap"); if(crypto) crypto.hidden = $("#newsAssetClassFilter")?.value !== "crypto"; }
+  ["#newsSearchInput","#newsAssetClassFilter","#cryptoCategoryFilter","#newsLanguageFilter","#newsGroupFilter","#newsRegionFilter","#newsIndustryFilter","#newsTopicFilter","#newsSourceFilter"].forEach(s => {
+    $(s)?.addEventListener(s.includes("Input") ? "input" : "change", () => { syncAssetFilters(); render(); });
   });
 
+  document.querySelectorAll("[data-news-class]").forEach(button => button.addEventListener("click", () => {
+    document.querySelectorAll("[data-news-class]").forEach(x => x.classList.toggle("active", x === button));
+    const select = $("#newsAssetClassFilter");
+    if (select) select.value = button.dataset.newsClass;
+    syncAssetFilters();
+    render();
+  }));
+  syncAssetFilters();
   window.addEventListener("market-news-loaded", event => {
     payload = event.detail.payload;
     $("#newsPageUpdatedAt").textContent = fmt(payload.metadata?.updated_at);

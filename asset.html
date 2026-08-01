@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#07111f">
+  <title>標的詳情｜市場雷達</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/styles.css?v=10.3.0">
+</head>
+<body>
+<div class="noise" aria-hidden="true"></div>
+<header class="topbar">
+  <a class="brand" href="index.html"><span class="brand-mark"><svg viewBox="0 0 48 48"><path d="M7 34 16 24l7 6 10-16 8 6"/><path d="M7 40h34"/></svg></span>
+  <span><strong>標的分析 <em class="version-badge">v10.3</em></strong><small>FINANCIAL QUALITY & INDUSTRY MODEL</small></span></a>
+  <div class="top-actions"><a class="mini-btn nav-link" href="portfolio.html">投資組合</a><a class="mini-btn nav-link" href="news.html">新聞</a></div>
+</header>
+<main class="shell asset-detail-shell">
+  <section class="asset-detail-hero">
+    <div><span id="assetTypeBadge" class="asset-class-badge stock">股票</span><h1><span id="assetName">讀取中</span> <small id="assetSymbol"></small></h1><p id="assetMeta">—</p></div>
+    <div class="stability-score"><span>資料型穩健度</span><strong id="stabilityScore">—</strong><small id="dataCoverage">資料覆蓋 —</small></div>
+  </section>
+  <section id="assetMetricGrid" class="asset-metric-grid"></section>
+  <section class="asset-analysis-grid">
+    <article class="analysis-card"><div class="section-heading section-heading-tight"><div><p class="eyebrow">MODEL</p><h2>穩健度模型</h2></div></div><div id="stabilityRadar"></div><p id="modelNotice" class="model-notice"></p></article>
+    <article class="analysis-card"><div class="section-heading section-heading-tight"><div><p class="eyebrow">INDUSTRY</p><h2>行業排名</h2></div></div><div id="rankingGrid" class="ranking-grid"></div></article>
+  </section>
+  <section class="analysis-card"><div class="section-heading section-heading-tight"><div><p class="eyebrow">KEY METRICS</p><h2>重要指標與產業比較</h2></div></div><div id="comparisonBars" class="comparison-bars"></div></section>
+  <section class="analysis-card"><div class="section-heading section-heading-tight"><div><p class="eyebrow">FINANCIALS</p><h2>個股財報</h2></div></div>
+    <div class="table-scroll"><table class="financial-table"><thead><tr><th>期間</th><th>營收</th><th>營業利益</th><th>淨利</th><th>EPS</th></tr></thead><tbody id="financialTable"></tbody></table></div>
+  </section>
+  <section class="analysis-card"><div class="section-heading section-heading-tight"><div><p class="eyebrow">OFFICIAL</p><h2>官方資料</h2></div></div><div id="officialLinks" class="official-links"></div></section>
+</main>
+<script src="data/assets-seed.js"></script>
+<script src="assets/asset-master.js?v=10.3.0" defer></script>
+<script src="assets/asset-detail.js?v=10.3.0" defer></script>
+<script src="assets/sw-register.js?v=10.3.0" defer></script>
+</body></html>

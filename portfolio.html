@@ -7,14 +7,14 @@
   <title>我的投資組合｜全球市場即時雷達</title>
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="assets/styles.css?v=10.1.1" />
+  <link rel="stylesheet" href="assets/styles.css?v=10.3.0" />
 </head>
 <body>
   <div class="noise" aria-hidden="true"></div>
   <header class="topbar">
     <a class="brand" href="index.html">
       <span class="brand-mark"><svg viewBox="0 0 48 48"><path d="M7 34 16 24l7 6 10-16 8 6"/><path d="M7 40h34"/></svg></span>
-      <span><strong>我的投資組合 <em class="version-badge">v10.1.1</em></strong><small>PERSONALIZED MARKET FEED</small></span>
+      <span><strong>我的投資組合 <em class="version-badge">v10.3</em></strong><small>PERSONALIZED MARKET FEED</small></span>
     </a>
     <div class="top-actions">
       <a class="mini-btn nav-link" href="index.html">事件首頁</a>
@@ -27,7 +27,7 @@
       <div>
         <p class="eyebrow">MY ASSETS</p>
         <h1>讓首頁以你的持股為主</h1>
-        <p>股票、ETF 與基金會使用不同的關聯方式。基金會依投資區域、產業、利率與匯率主題配對新聞。</p>
+        <p>分為股票、基金與虛擬貨幣。股票與幣種會由主檔解析成正式名稱與代號，基金可使用代碼或完整名稱。</p>
       </div>
       <div id="portfolioPageStats" class="portfolio-page-stats"></div>
     </section>
@@ -37,22 +37,12 @@
         <div class="section-heading section-heading-tight">
           <div><p class="eyebrow">ADD ASSET</p><h2>加入標的</h2></div>
         </div>
-        <form id="portfolioPageAddForm" class="portfolio-add-form portfolio-add-form-page">
-          <select name="type"><option value="stock">股票</option><option value="etf">ETF</option><option value="fund">基金</option></select>
-          <select name="market"><option value="TW">台灣</option><option value="US">美國</option><option value="JP">日本</option><option value="KR">韓國</option><option value="GLOBAL">全球／基金</option></select>
-          <input name="symbol" placeholder="代碼（基金可不填）" />
-          <input name="name" placeholder="股票、ETF 或基金名稱" />
-          <label class="fund-theme-field" hidden><span>基金主要主題</span>
-            <select name="theme">
-              <option value="global-equity">全球股票</option><option value="us-tech">美國科技</option>
-              <option value="tw-equity">台灣股票</option><option value="jp-equity">日本股票</option>
-              <option value="kr-equity">韓國股票</option><option value="bond">投資級債券</option>
-              <option value="high-yield">高收益債</option><option value="emerging">新興市場</option>
-              <option value="energy">能源</option><option value="gold">黃金</option>
-            </select>
-          </label>
-          <button type="submit">加入投資組合</button>
-          <span class="portfolio-form-status"></span>
+        <form id="portfolioPageAddForm" class="portfolio-add-form portfolio-add-form-page asset-resolver-form">
+          <select name="asset_class"><option value="stock">股票／ETF</option><option value="fund">基金</option><option value="crypto">虛擬貨幣</option></select>
+          <label class="market-field"><select name="market"><option value="TW">台灣</option><option value="US">美國</option><option value="GLOBAL">全球／基金</option></select></label>
+          <div class="asset-query-field"><input name="query" autocomplete="off" placeholder="搜尋正式代碼或名稱" /><div class="asset-search-results" hidden></div></div>
+          <div class="manual-fund-fields" hidden><input name="manual_code" placeholder="基金代碼／ISIN（可選）" /><input name="manual_name" placeholder="基金完整名稱" /></div>
+          <button type="submit">加入投資組合</button><span class="portfolio-form-status"></span>
         </form>
         <div id="portfolioPageEntries" class="portfolio-entry-list"></div>
       </aside>
@@ -75,9 +65,11 @@
   </nav>
 
   <script src="data/seed.js"></script>
+  <script src="data/assets-seed.js"></script>
   <script src="data/news-seed.js"></script>
-  <script src="assets/news-core.js?v=10.1.1" defer></script>
-  <script src="assets/portfolio.js?v=10.1.1" defer></script>
-  <script src="assets/sw-register.js?v=10.1.1" defer></script>
+  <script src="assets/news-core.js?v=10.3.0" defer></script>
+  <script src="assets/asset-master.js?v=10.3.0" defer></script>
+  <script src="assets/portfolio.js?v=10.3.0" defer></script>
+  <script src="assets/sw-register.js?v=10.3.0" defer></script>
 </body>
 </html>
