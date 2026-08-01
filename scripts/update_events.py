@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Build data/events.json for the Market Event Radar static site.
 
+Event policy: never merge distinct official publications merely because they share a date/time.
+Preserve release stages such as decision, press conference, outlook full text, opinions and minutes.
+
 The script is designed for GitHub Actions. It prioritizes official calendars,
 keeps the last successful data when a source fails, and merges curated events
 from data/manual_events.json.
@@ -191,8 +194,9 @@ def fetch_bea(session: requests.Session) -> SourceResult:
         if dt < NOW - timedelta(days=7) or dt > NOW + timedelta(days=370):
             continue
         title, impact, assets = translated
-        if "GDP" in raw_title and "Personal Income" in raw_title:
-            title = "美國 GDP＋PCE／個人所得與支出"
+        # Keep each official BEA release as its own event. Releases that share
+        # the same timestamp must not be merged because investors interpret
+        # GDP revisions and PCE inflation through different channels.
         events.append({
             "id": stable_id("bea", raw_title, dt.isoformat()),
             "title": title,

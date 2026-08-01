@@ -1,20 +1,28 @@
 (() => {
   "use strict";
-  const VERSION = "9.2";
-  const key = "market-radar-version";
-  const previous = localStorage.getItem(key);
-  localStorage.setItem(key, VERSION);
+  const VERSION = "10.0.0";
+  const VERSION_KEY = "market-radar-version";
   if (!("serviceWorker" in navigator)) return;
+
   window.addEventListener("load", async () => {
     try {
-      const reg = await navigator.serviceWorker.register(`./service-worker.js?v=${VERSION}`, { updateViaCache: "none" });
-      await reg.update();
-      if (previous && previous !== VERSION) {
-        const old = await caches.keys();
-        await Promise.all(old.filter(name => !name.includes(`v${VERSION}`)).map(name => caches.delete(name)));
-      }
+      const previous = localStorage.getItem(VERSION_KEY);
+      localStorage.setItem(VERSION_KEY, VERSION);
+      const registration = await navigator.serviceWorker.register(`./service-worker.js?v=${VERSION}`, {
+        updateViaCache: "none"
+      });
+      await registration.update();
+
+      if (registration.waiting) registration.waiting.postMessage({ type: "SKIP_WAITING" });
+
+      let reloaded = false;
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        if (reloaded) return;
+        reloaded = true;
+        if (previous && previous !== VERSION) location.reload();
+      });
     } catch (error) {
-      console.warn("Service worker registration failed", error);
+      console.warn("Service worker registration failed:", error);
     }
   });
 })();

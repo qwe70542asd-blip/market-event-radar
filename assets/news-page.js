@@ -2,18 +2,21 @@
   "use strict";
   const $ = s => document.querySelector(s);
   const escapeHtml = v => String(v || "").replace(/[&<>\"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
-  let payload = { metadata: {}, items: [] };
+  let payload = { metadata: {}, sources: [], items: [] };
 
   function fmt(value) {
     if (!value) return "—";
     const d = new Date(value);
+    if (Number.isNaN(d.getTime())) return "—";
     return `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;
   }
+
   function renderSources() {
     const select = $("#newsSourceFilter");
     const sources = [...new Set((payload.items || []).map(x => x.source).filter(Boolean))].sort();
     select.innerHTML = '<option value="all">全部來源</option>' + sources.map(x => `<option>${escapeHtml(x)}</option>`).join("");
   }
+
   function render() {
     const q = $("#newsSearchInput").value.trim().toLowerCase();
     const region = $("#newsRegionFilter").value;
@@ -30,40 +33,24 @@
       <a class="news-page-card" href="${item.link}" target="_blank" rel="noreferrer noopener">
         <div class="news-card-top"><span>${escapeHtml(item.source || "財經新聞")}</span><small>${fmt(item.published_at)}</small></div>
         <h2>${escapeHtml(item.title)}</h2>
-        <p>${escapeHtml(item.summary || item.event_title || "")}</p>
-        <div class="news-card-tags"><span>${escapeHtml(item.region || "GLOBAL")}</span><span>${escapeHtml(item.topic || "market")}</span></div>
+        <p>${escapeHtml(item.summary || item.event_title || "點擊前往原始來源")}</p>
+        <div class="news-card-tags"><span>${escapeHtml(item.region || "GLOBAL")}</span><span>${escapeHtml(item.topic || "market")}</span>${item.origin === "fallback" ? "<span>備援入口</span>" : ""}</div>
       </a>`).join("");
     $("#newsPageEmpty").hidden = items.length > 0;
     $("#newsPageCount").textContent = `${items.length} 則`;
   }
-  async function load() {
-    payload = window.__MARKET_NEWS_SEED__ || { metadata: {}, items: [] };
-    try {
-      const res = await fetch("data/news.json", { cache: "no-store" });
-      if (res.ok) payload = await res.json();
-    } catch {}
-    $("#newsPageUpdatedAt").textContent = fmt(payload.metadata?.updated_at);
-    renderSources(); render();
-  }
+
   ["#newsSearchInput","#newsRegionFilter","#newsTopicFilter","#newsSourceFilter"].forEach(s => {
-    $(s).addEventListener(s.includes("Input") ? "input" : "change", render);
+    $(s)?.addEventListener(s.includes("Input") ? "input" : "change", render);
   });
 
-  const account = $("#accountBtn"), dialog = $("#accountDialog");
-  account?.addEventListener("click", () => dialog.showModal());
-  $("#guestModeBtn")?.addEventListener("click", () => dialog.close());
-  $("#googleLoginBtn")?.addEventListener("click", async () => {
-    try { await window.MarketAuth.signInGoogle(); }
-    catch (e) { $("#authStatus").textContent = e.message; }
+  window.addEventListener("market-news-loaded", event => {
+    payload = event.detail.payload;
+    $("#newsPageUpdatedAt").textContent = fmt(payload.metadata?.updated_at);
+    const state = $("#newsPageState");
+    const label = { live:"即時資料", cached:"上次成功資料", fallback:"備援來源" }[event.detail.status] || "同步中";
+    if (state) state.textContent = label;
+    renderSources();
+    render();
   });
-  $("#logoutBtn")?.addEventListener("click", async () => { await window.MarketAuth.signOut(); dialog.close(); });
-  window.addEventListener("market-auth-changed", ev => {
-    const { user, enabled } = ev.detail;
-    $("#accountLabel").textContent = user ? (user.displayName || user.email || "已登入") : "登入／訪客";
-    $("#accountAvatar").textContent = user ? (user.displayName || user.email || "G").slice(0,1) : "訪";
-    $("#authStatus").textContent = user ? "已登入 Google。" : enabled ? "可使用 Google 登入。" : "尚未設定 Firebase，訪客模式可正常使用。";
-    $("#googleLoginBtn").disabled = !enabled;
-    $("#logoutBtn").hidden = !user;
-  });
-  load();
 })();

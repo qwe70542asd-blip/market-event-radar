@@ -7,29 +7,32 @@
   const breakingCounter = document.getElementById("breakingCounter");
   const prev = document.getElementById("breakingPrev");
   const next = document.getElementById("breakingNext");
+  const health = document.getElementById("newsLoadState");
+  const retry = document.getElementById("newsRetryBtn");
   const escapeHtml = (v) => String(v || "").replace(/[&<>\"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
 
   let items = [];
   let current = 0;
   let timer = null;
 
-  function fallbackItems() {
-    return [
-      { source: "中央社產經", title: "查看中央社最新產經證券消息", link: "https://www.cna.com.tw/list/aie.aspx", region: "TW" },
-      { source: "經濟日報", title: "查看台股、產業與國際財經焦點", link: "https://money.udn.com/", region: "TW" },
-      { source: "鉅亨網", title: "查看全球市場與即時財經快訊", link: "https://www.cnyes.com/", region: "TW" },
-      { source: "Reuters", title: "查看全球市場最新消息", link: "https://www.reuters.com/markets/", region: "GLOBAL" }
-    ];
+  function score(item) {
+    let value = Number(item.quality_score || 0);
+    if (item.is_breaking) value += 40;
+    if (item.origin === "direct-rss" || item.origin === "official") value += 15;
+    const age = item.published_at ? Date.now() - new Date(item.published_at).getTime() : Infinity;
+    if (age < 6 * 3600e3) value += 25;
+    else if (age < 24 * 3600e3) value += 12;
+    return value;
   }
 
-  function showBreaking(index) {
+  function show(index) {
     if (!items.length || !breakingTitle) return;
     current = (index + items.length) % items.length;
     const item = items[current];
     breakingSource.textContent = item.source || "財經新聞";
     breakingTitle.textContent = item.title || "查看最新財經新聞";
     breakingLink.href = item.link || "news.html";
-    breakingLink.target = (item.link || "").startsWith("http") ? "_blank" : "_self";
+    breakingLink.target = /^https?:/.test(item.link || "") ? "_blank" : "_self";
     breakingLink.rel = "noreferrer noopener";
     breakingCounter.textContent = `${current + 1}/${items.length}`;
     breakingTitle.classList.remove("ticker-swap");
@@ -38,36 +41,50 @@
   }
 
   function resetTimer() {
-    if (timer) clearInterval(timer);
-    // 每 60 秒自動換下一則；新聞資料本身由 GitHub Actions 定時抓取。
-    timer = setInterval(() => showBreaking(current + 1), 60000);
+    clearInterval(timer);
+    timer = setInterval(() => show(current + 1), 60000);
   }
 
   function renderRail() {
     if (!rail) return;
     const visible = items.slice(0, 3);
     rail.innerHTML = visible.map(item => `
-      <a class="headline-card" href="${item.link || "news.html"}" target="${(item.link || "").startsWith("http") ? "_blank" : "_self"}" rel="noreferrer noopener">
+      <a class="headline-card" href="${item.link}" target="_blank" rel="noreferrer noopener">
         <div><span>${escapeHtml(item.source || "財經新聞")}</span><small>${escapeHtml(item.region || "GLOBAL")}</small></div>
         <h3>${escapeHtml(item.title)}</h3>
-        <p>${escapeHtml(item.summary || item.event_title || "點擊前往原始新聞來源")}</p>
+        <p>${escapeHtml(item.summary || item.event_title || "點擊前往原始來源")}</p>
       </a>`).join("");
   }
 
-  async function load() {
-    let payload = window.__MARKET_NEWS_SEED__ || { items: [] };
-    try {
-      const res = await fetch(`data/news.json?t=${Date.now()}`, { cache: "no-store" });
-      if (res.ok) payload = await res.json();
-    } catch {}
-    items = (payload.items || []).filter(item => item.title && item.link);
-    if (!items.length) items = fallbackItems();
-    renderRail();
-    showBreaking(0);
-    resetTimer();
+  function updateState(detail) {
+    if (!health) return;
+    const map = {
+      live: "即時資料",
+      cached: "上次成功資料",
+      fallback: "備援來源",
+      loading: "同步中"
+    };
+    health.textContent = map[detail.status] || "資料狀態";
+    health.dataset.state = detail.status;
   }
 
-  prev?.addEventListener("click", () => { showBreaking(current - 1); resetTimer(); });
-  next?.addEventListener("click", () => { showBreaking(current + 1); resetTimer(); });
-  load();
+  window.addEventListener("market-news-loaded", (event) => {
+    const detail = event.detail;
+    items = [...(detail.items || [])].sort((a, b) => score(b) - score(a));
+    renderRail();
+    show(0);
+    resetTimer();
+    updateState(detail);
+  });
+
+  prev?.addEventListener("click", () => { show(current - 1); resetTimer(); });
+  next?.addEventListener("click", () => { show(current + 1); resetTimer(); });
+  retry?.addEventListener("click", async () => {
+    health.textContent = "重新同步中";
+    await window.MarketNewsLoader?.load();
+  });
+
+  if (window.MarketNews) {
+    window.dispatchEvent(new CustomEvent("market-news-loaded", { detail: window.MarketNews }));
+  }
 })();

@@ -1,21 +1,27 @@
 #!/usr/bin/env python3
-"""Aggregate event-related and general financial news from multiple sources.
+"""Market Event Radar v10 multi-source news updater.
 
-Sources:
-- Direct RSS: CNA finance/technology and Economic Daily RSS (best effort)
-- Direct public pages: MoneyDJ latest news (headline links only)
-- Google News RSS searches constrained to named publishers as fallback
-
-Only title, short summary, source and original link are stored.
+Design goals:
+- Keep working when one publisher blocks requests or returns zero rows.
+- Use language/region settings that match each source.
+- Preserve the previous successful rows per source.
+- Mark empty and stale sources honestly instead of reporting zero rows as OK.
+- Store only headline metadata and original links.
 """
 from __future__ import annotations
-import argparse, hashlib, html, json, os, re, sys, time
+
+import hashlib
+import html
+import json
+import re
+import time
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
 from email.utils import parsedate_to_datetime
 from pathlib import Path
 from urllib.parse import quote_plus, urljoin
 from zoneinfo import ZoneInfo
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -26,24 +32,34 @@ NEWS_PATH = DATA / "news.json"
 SEED_PATH = DATA / "news-seed.js"
 TAIPEI = ZoneInfo("Asia/Taipei")
 NOW = datetime.now(TAIPEI)
+
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/2.0; +https://github.com/qwe70542asd-blip/market-event-radar)",
-    "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.7",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/10.0; +https://github.com/qwe70542asd-blip/market-event-radar)",
+    "Accept-Language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
 }
 
 DIRECT_RSS = [
-    ("中央社產經證券", "https://feeds.feedburner.com/rsscna/finance", "TW", "market"),
-    ("中央社科技", "https://feeds.feedburner.com/rsscna/technology", "TW", "tech"),
-    ("經濟日報", "https://money.udn.com/rssfeed/news/1001/5588/5601", "TW", "market"),
+    {"name":"中央社產經證券","url":"https://feeds.feedburner.com/rsscna/finance","region":"TW","topic":"market"},
+    {"name":"中央社科技","url":"https://feeds.feedburner.com/rsscna/technology","region":"TW","topic":"tech"},
+    {"name":"經濟日報","url":"https://money.udn.com/rssfeed/news/1001/5588/5601","region":"TW","topic":"market"},
 ]
-PUBLISHER_QUERIES = [
-    ("Yahoo 股市", "site:tw.stock.yahoo.com 台股 OR 美股 OR 財報", "TW", "market"),
-    ("鉅亨網", "site:cnyes.com 台股 OR 美股 OR 央行", "TW", "market"),
-    ("MoneyDJ", "site:moneydj.com 台股 OR 美股 OR 半導體", "TW", "tech"),
-    ("工商時報", "site:ctee.com.tw 台股 OR 產業 OR 財報", "TW", "market"),
-    ("Reuters", "site:reuters.com markets economy earnings", "GLOBAL", "market"),
-    ("CNBC", "site:cnbc.com markets earnings economy", "US", "market"),
-    ("Nikkei Asia", "site:asia.nikkei.com markets technology economy", "ASIA", "market"),
+
+SEARCH_SOURCES = [
+    {"name":"Yahoo 股市","query":"site:tw.stock.yahoo.com (台股 OR 美股 OR 財報 OR ETF)","region":"TW","topic":"market","hl":"zh-TW","gl":"TW","ceid":"TW:zh-Hant"},
+    {"name":"鉅亨網","query":"site:cnyes.com (台股 OR 美股 OR 央行 OR PMI OR 基金)","region":"TW","topic":"market","hl":"zh-TW","gl":"TW","ceid":"TW:zh-Hant"},
+    {"name":"MoneyDJ","query":"site:moneydj.com (台股 OR 美股 OR 半導體 OR 基金)","region":"TW","topic":"tech","hl":"zh-TW","gl":"TW","ceid":"TW:zh-Hant"},
+    {"name":"工商時報","query":"site:ctee.com.tw (台股 OR 產業 OR 財報 OR 基金)","region":"TW","topic":"market","hl":"zh-TW","gl":"TW","ceid":"TW:zh-Hant"},
+    {"name":"Reuters","query":"site:reuters.com/markets (markets OR economy OR earnings OR tariff)","region":"GLOBAL","topic":"market","hl":"en-US","gl":"US","ceid":"US:en"},
+    {"name":"CNBC","query":"site:cnbc.com (markets OR earnings OR economy OR Federal Reserve)","region":"US","topic":"market","hl":"en-US","gl":"US","ceid":"US:en"},
+    {"name":"Nikkei Asia","query":"site:asia.nikkei.com (markets OR technology OR economy OR Japan)","region":"ASIA","topic":"market","hl":"en-US","gl":"US","ceid":"US:en"},
+    {"name":"White House","query":"site:whitehouse.gov (tariff OR trade OR semiconductor OR executive order OR economy)","region":"US","topic":"policy","hl":"en-US","gl":"US","ceid":"US:en"},
+    {"name":"PMI／ISM","query":"(ISM manufacturing PMI OR ISM services PMI OR S&P Global PMI)","region":"US","topic":"macro","hl":"en-US","gl":"US","ceid":"US:en"},
+    {"name":"基金與 ETF","query":"(基金 OR ETF OR 淨值 OR 債券基金 OR 科技基金)","region":"TW","topic":"fund","hl":"zh-TW","gl":"TW","ceid":"TW:zh-Hant"},
+]
+
+BREAKING_TERMS = [
+    "breaking","速報","快訊","宣布","關稅","tariff","制裁","sanction","降息","升息",
+    "rate cut","rate hike","出口管制","executive order","緊急","unexpected"
 ]
 
 def clean(value):
@@ -60,17 +76,23 @@ def parse_date(value):
         return None
     try:
         dt = parsedate_to_datetime(value)
-        if dt.tzinfo is None: dt = dt.replace(tzinfo=TAIPEI)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=TAIPEI)
         return iso(dt)
     except Exception:
         try:
-            return iso(datetime.fromisoformat(value))
+            dt = datetime.fromisoformat(value)
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=TAIPEI)
+            return iso(dt)
         except Exception:
             return None
 
 def read_json(path, default):
-    try: return json.loads(path.read_text(encoding="utf-8"))
-    except Exception: return default
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return default
 
 def text_from(node, names):
     for name in names:
@@ -79,146 +101,185 @@ def text_from(node, names):
             return clean(found.text)
     return ""
 
-def parse_feed(content, source, region, topic):
+def parse_feed(content, source, region, topic, origin, quality_score):
     root = ET.fromstring(content)
     nodes = root.findall(".//item")
     if not nodes:
         nodes = root.findall(".//{http://www.w3.org/2005/Atom}entry")
     rows = []
-    for node in nodes[:30]:
+    for node in nodes[:50]:
         title = text_from(node, ["title", "{http://www.w3.org/2005/Atom}title"])
         link = text_from(node, ["link"])
         if not link:
             link_node = node.find("{http://www.w3.org/2005/Atom}link")
-            if link_node is not None: link = clean(link_node.attrib.get("href"))
+            if link_node is not None:
+                link = clean(link_node.attrib.get("href"))
         summary = text_from(node, ["description", "summary", "{http://www.w3.org/2005/Atom}summary"])
         summary = clean(BeautifulSoup(summary, "html.parser").get_text(" "))
         pub = text_from(node, ["pubDate", "published", "updated", "{http://www.w3.org/2005/Atom}published", "{http://www.w3.org/2005/Atom}updated"])
         if title and link:
+            lowered = title.lower()
             rows.append({
                 "id": stable_id(source, link),
-                "title": title, "link": link, "source": source,
-                "summary": summary[:260], "published_at": parse_date(pub),
-                "region": region, "topic": topic, "origin": "direct-rss"
+                "title": title,
+                "link": link,
+                "source": source,
+                "summary": summary[:320],
+                "published_at": parse_date(pub),
+                "region": region,
+                "topic": topic,
+                "origin": origin,
+                "quality_score": quality_score,
+                "is_breaking": any(term.lower() in lowered for term in BREAKING_TERMS),
+                "fetched_at": iso(NOW)
             })
     return rows
 
-def fetch_direct_rss(session):
-    items, statuses = [], []
-    for source, url, region, topic in DIRECT_RSS:
+def get_with_retry(session, url, attempts=3, timeout=22):
+    error = None
+    for index in range(attempts):
         try:
-            r = session.get(url, headers=HEADERS, timeout=20)
-            r.raise_for_status()
-            rows = parse_feed(r.content, source, region, topic)
-            items.extend(rows)
-            statuses.append({"name": source, "status": "ok", "count": len(rows), "url": url})
+            response = session.get(url, headers=HEADERS, timeout=timeout)
+            response.raise_for_status()
+            return response
         except Exception as exc:
-            statuses.append({"name": source, "status": "warning", "count": 0, "url": url, "message": str(exc)[:120]})
-    return items, statuses
+            error = exc
+            if index + 1 < attempts:
+                time.sleep(1.2 * (index + 1))
+    raise error
 
-def fetch_google_query(session, source, query, region, topic):
-    url = f"https://news.google.com/rss/search?q={quote_plus(query)}&hl=zh-TW&gl=TW&ceid=TW:zh-Hant"
-    r = session.get(url, headers=HEADERS, timeout=20)
-    r.raise_for_status()
-    rows = parse_feed(r.content, source, region, topic)
-    for row in rows:
-        row["origin"] = "publisher-search"
-    return rows
+def google_url(source):
+    return (
+        "https://news.google.com/rss/search?"
+        f"q={quote_plus(source['query'])}&hl={source['hl']}&gl={source['gl']}&ceid={source['ceid']}"
+    )
 
-def fetch_moneydj(session):
-    url = "https://www.moneydj.com/KMDJ/News/NewsRealList.aspx"
-    rows = []
+def previous_by_source(previous):
+    result = {}
+    for item in previous.get("items", []):
+        result.setdefault(item.get("source") or "未知來源", []).append(item)
+    return result
+
+def still_recent(item, days=8):
+    value = item.get("published_at")
+    if not value:
+        return True
     try:
-        r = session.get(url, headers=HEADERS, timeout=20)
-        r.raise_for_status()
-        soup = BeautifulSoup(r.text, "html.parser")
-        for a in soup.select("a[href]"):
-            title = clean(a.get_text(" "))
-            href = a.get("href", "")
-            if len(title) < 12 or "news" not in href.lower():
-                continue
-            link = urljoin(url, href)
-            rows.append({
-                "id": stable_id("MoneyDJ", link), "title": title, "link": link,
-                "source": "MoneyDJ", "summary": "", "published_at": None,
-                "region": "TW", "topic": "market", "origin": "direct-page"
-            })
-            if len(rows) >= 18: break
+        return datetime.fromisoformat(value).astimezone(TAIPEI) >= NOW - timedelta(days=days)
     except Exception:
-        pass
-    return rows
+        return True
 
 def event_queries(events):
-    now = NOW - timedelta(hours=12)
-    cutoff = NOW + timedelta(days=30)
-    queries = []
+    rows = []
+    cutoff = NOW + timedelta(days=21)
     for event in events:
-        try: start = datetime.fromisoformat(event["start"]).astimezone(TAIPEI)
-        except Exception: continue
-        if now <= start <= cutoff and event.get("impact") in {"high", "medium"}:
-            assets = " ".join(event.get("assets", [])[:2])
-            queries.append((event, clean(f'{event.get("title","")} {assets} 市場')))
-    return queries[:10]
+        try:
+            start = datetime.fromisoformat(event["start"]).astimezone(TAIPEI)
+        except Exception:
+            continue
+        if NOW - timedelta(hours=12) <= start <= cutoff and event.get("impact") in {"high","medium"}:
+            assets = " ".join(event.get("assets", [])[:3])
+            rows.append((event, clean(f'{event.get("title","")} {assets} market')))
+    return rows[:12]
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--offline", action="store_true")
-    args = parser.parse_args()
     previous = read_json(NEWS_PATH, {"items": [], "sources": []})
-    if args.offline:
-        print(f"Offline: kept {len(previous.get('items', []))} items")
-        return 0
-
+    previous_map = previous_by_source(previous)
     session = requests.Session()
-    items, statuses = fetch_direct_rss(session)
-    items.extend(fetch_moneydj(session))
+    items = []
+    statuses = []
 
-    for source, query, region, topic in PUBLISHER_QUERIES:
+    for source in DIRECT_RSS:
         try:
-            rows = fetch_google_query(session, source, query, region, topic)
-            items.extend(rows[:10])
-            statuses.append({"name": source, "status": "ok", "count": len(rows[:10]), "mode": "publisher-search"})
+            response = get_with_retry(session, source["url"])
+            rows = parse_feed(response.content, source["name"], source["region"], source["topic"], "direct-rss", 95)
+            items.extend(rows)
+            statuses.append({"name":source["name"],"status":"ok" if rows else "empty","count":len(rows),"mode":"direct-rss","url":source["url"]})
         except Exception as exc:
-            statuses.append({"name": source, "status": "warning", "count": 0, "message": str(exc)[:120]})
-        time.sleep(.2)
+            stale = [x for x in previous_map.get(source["name"], []) if still_recent(x)]
+            for row in stale:
+                row = dict(row)
+                row["stale"] = True
+                items.append(row)
+            statuses.append({"name":source["name"],"status":"stale" if stale else "warning","count":len(stale),"mode":"direct-rss","message":str(exc)[:160]})
 
-    events = read_json(EVENTS_PATH, {"events": []}).get("events", [])
+    for source in SEARCH_SOURCES:
+        try:
+            response = get_with_retry(session, google_url(source))
+            rows = parse_feed(response.content, source["name"], source["region"], source["topic"], "publisher-search", 75)
+            rows = rows[:14]
+            if not rows:
+                stale = [x for x in previous_map.get(source["name"], []) if still_recent(x)]
+                for row in stale:
+                    row = dict(row)
+                    row["stale"] = True
+                    items.append(row)
+                statuses.append({"name":source["name"],"status":"stale" if stale else "empty","count":len(stale),"mode":"publisher-search"})
+            else:
+                items.extend(rows)
+                statuses.append({"name":source["name"],"status":"ok","count":len(rows),"mode":"publisher-search"})
+        except Exception as exc:
+            stale = [x for x in previous_map.get(source["name"], []) if still_recent(x)]
+            for row in stale:
+                row = dict(row)
+                row["stale"] = True
+                items.append(row)
+            statuses.append({"name":source["name"],"status":"stale" if stale else "warning","count":len(stale),"mode":"publisher-search","message":str(exc)[:160]})
+        time.sleep(.15)
+
+    events = read_json(EVENTS_PATH, {"events":[]}).get("events", [])
+    event_source = {"hl":"zh-TW","gl":"TW","ceid":"TW:zh-Hant"}
     for event, query in event_queries(events):
         try:
-            rows = fetch_google_query(session, "事件相關報導", query, event.get("region","GLOBAL"), "earnings" if event.get("category")=="earnings" else "macro")
+            source = {**event_source, "query": query}
+            response = get_with_retry(session, google_url(source), attempts=2)
+            rows = parse_feed(response.content, "事件相關報導", event.get("region","GLOBAL"),
+                              "earnings" if event.get("category")=="earnings" else "macro",
+                              "event-search", 68)
             for row in rows[:3]:
                 row["event_id"] = event.get("id")
                 row["event_title"] = event.get("title")
-            items.extend(rows[:3])
+                items.append(row)
         except Exception:
             pass
-        time.sleep(.15)
 
     dedup = {}
     for item in items:
         key = clean(item.get("link")) or clean(item.get("title")).lower()
         if key and key not in dedup:
             dedup[key] = item
-    final = list(dedup.values())
-    final.sort(key=lambda x: x.get("published_at") or "", reverse=True)
+    final = [x for x in dedup.values() if still_recent(x, days=10)]
+    final.sort(key=lambda x: (
+        bool(x.get("is_breaking")),
+        int(x.get("quality_score") or 0),
+        x.get("published_at") or ""
+    ), reverse=True)
 
     if not final:
-        final = previous.get("items", [])
+        final = [x for x in previous.get("items", []) if still_recent(x, days=14)]
+
+    source_ok = sum(1 for x in statuses if x["status"] == "ok")
     payload = {
         "metadata": {
             "updated_at": iso(NOW),
             "timezone": "Asia/Taipei",
-            "item_count": len(final),
-            "note": "Multi-source finance headlines. Titles and links remain property of original publishers."
+            "item_count": len(final[:180]),
+            "healthy_sources": source_ok,
+            "source_count": len(statuses),
+            "version": "v10",
+            "note": "Headlines, short summaries and original links only."
         },
-        "source": {"name": "多來源財經新聞", "status": "ok" if final else "warning", "message": ""},
+        "source": {
+            "name": "多來源財經新聞",
+            "status": "ok" if final else "warning",
+            "message": "" if final else "No new or cached headlines were available."
+        },
         "sources": statuses,
-        "items": final[:120]
+        "items": final[:180]
     }
     NEWS_PATH.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     SEED_PATH.write_text("window.__MARKET_NEWS_SEED__ = " + json.dumps(payload, ensure_ascii=False, indent=2) + ";\n", encoding="utf-8")
-    print(f"Wrote {len(payload['items'])} items from {len(statuses)} sources")
-    return 0
+    print(f"Wrote {len(payload['items'])} items; healthy sources {source_ok}/{len(statuses)}")
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    main()

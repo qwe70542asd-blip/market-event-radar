@@ -1,4 +1,4 @@
-name: Update multi-source finance news
+name: Update v10 finance news
 
 on:
   push:
@@ -8,8 +8,6 @@ on:
       - "requirements.txt"
       - ".github/workflows/update-news.yml"
   schedule:
-    # GitHub Actions cron cannot reliably update every minute.
-    # Refresh source data every 15 minutes; the website rotates headlines every 60 seconds.
     - cron: "7,22,37,52 * * * *"
   workflow_dispatch:
 
@@ -23,9 +21,12 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
+    timeout-minutes: 12
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -36,10 +37,19 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Refresh multi-source finance coverage
-        env:
-          NEWS_MAX_EVENTS: "12"
+      - name: Refresh finance news
         run: python scripts/update_news.py
+
+      - name: Validate generated JSON
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path("data/news.json").read_text(encoding="utf-8"))
+          assert isinstance(data.get("items"), list)
+          print("items:", len(data["items"]))
+          print("sources:", len(data.get("sources", [])))
+          PY
 
       - name: Commit changed news
         run: |
@@ -50,6 +60,10 @@ jobs:
           git config user.name "market-event-radar-bot"
           git config user.email "actions@users.noreply.github.com"
           git add data/news.json data/news-seed.js
-          git commit -m "chore: update related market coverage"
-          git pull --rebase
-          git push
+          git commit -m "chore: refresh v10 finance news"
+          for attempt in 1 2 3; do
+            git pull --rebase && git push && exit 0
+            echo "Push attempt $attempt failed; retrying..."
+            sleep $((attempt * 3))
+          done
+          exit 1

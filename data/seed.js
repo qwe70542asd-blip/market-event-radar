@@ -1,10 +1,20 @@
 window.__MARKET_EVENT_SEED__ = {
   "metadata": {
-    "updated_at": "2026-08-01T11:27:26+08:00",
+    "updated_at": "2026-08-01T16:46:00+08:00",
     "timezone": "Asia/Taipei",
     "generation_mode": "offline",
-    "event_count": 25,
-    "note": "Official-source-first pipeline with last-known-good fallback."
+    "event_count": 42,
+    "note": "Official-source-first pipeline with last-known-good fallback.",
+    "audit_version": "v9.3-detailed",
+    "audit_method": "Official-source first; each policy event split by release stage.",
+    "detail_fields": [
+      "release_stage",
+      "verification_status",
+      "time_status",
+      "watch_items",
+      "scenarios",
+      "related_event_ids"
+    ]
   },
   "sources": [
     {
@@ -61,57 +71,145 @@ window.__MARKET_EVENT_SEED__ = {
   ],
   "events": [
     {
-      "id": "bea-us-trade-2026-08-04",
-      "title": "美國 6 月貿易收支",
+      "id": "boj-outlook-full-2026-08-03",
+      "title": "日本銀行 7 月《經濟活動與物價展望》全文",
+      "start": "2026-08-03T13:00:00+08:00",
+      "category": "central-bank",
+      "region": "JP",
+      "impact": "high",
+      "description": "日銀於日本時間 14:00 公布 7 月展望報告全文；這不是 8 月 5 日的舊會議紀要。",
+      "market_effect": "全文包含經濟、通膨、風險評估與未來政策方向，可能影響日圓、日債與亞洲套利交易。",
+      "assets": [
+        "日圓",
+        "日經 225",
+        "日本公債",
+        "亞洲股市",
+        "台股"
+      ],
+      "tags": [
+        "BOJ",
+        "展望報告",
+        "全文",
+        "7 月會議"
+      ],
+      "source_name": "Bank of Japan",
+      "source_url": "https://www.boj.or.jp/en/about/calendar/index.htm",
+      "all_day": false,
+      "is_estimated": false,
+      "release_stage": "展望報告全文",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [
+        "GDP 與核心 CPI 預測",
+        "風險平衡",
+        "工資與服務價格",
+        "未來升息路徑"
+      ],
+      "scenarios": [
+        {
+          "label": "上修通膨／偏鷹",
+          "effect": "日圓與日債殖利率可能上升，套利交易收縮。"
+        },
+        {
+          "label": "下修成長／偏鴿",
+          "effect": "日圓可能走弱，日本股市短線受益，但景氣疑慮升高。"
+        }
+      ],
+      "related_event_ids": [
+        "boj-minutes-june-2026-08-05",
+        "boj-summary-july-2026-08-10"
+      ]
+    },
+    {
+      "id": "bea-trade-2026-08-04",
+      "title": "美國 6 月國際貿易收支",
       "start": "2026-08-04T20:30:00+08:00",
       "category": "macro",
       "region": "US",
       "impact": "medium",
-      "description": "BEA 公布美國 6 月國際商品與服務貿易數據，出口、進口與赤字變化可能影響美元及成長預期。",
-      "market_effect": "若赤字明顯偏離預期，可能帶動美元、美債殖利率與景氣循環股波動。",
+      "description": "美國經濟分析局公布 6 月商品與服務進出口、貿易逆差及各主要品項變化。",
+      "market_effect": "逆差變化會影響 GDP 淨出口估算、美元與航運需求判讀；單次數據通常不如 CPI 或非農劇烈。",
       "assets": [
         "美元",
         "美債",
-        "S&P 500",
-        "航運"
+        "航運",
+        "原物料"
       ],
       "tags": [
         "BEA",
         "貿易收支",
-        "出口",
-        "進口"
+        "進出口"
       ],
       "source_name": "U.S. BEA",
       "source_url": "https://www.bea.gov/news/schedule",
       "all_day": false,
       "is_estimated": false,
-      "origin": "manual"
+      "release_stage": "正式數據發布",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [
+        "總逆差是否擴大",
+        "進出口月增率",
+        "資本財與消費品進口",
+        "對 Q2 GDP 修正方向"
+      ],
+      "scenarios": [
+        {
+          "label": "逆差明顯擴大",
+          "effect": "可能下修 GDP 淨出口貢獻，美元反應通常有限。"
+        },
+        {
+          "label": "出口強、逆差縮小",
+          "effect": "有利成長評價與部分工業／航運類股。"
+        }
+      ],
+      "related_event_ids": []
     },
     {
       "id": "bls-jolts-2026-08-04",
-      "title": "美國 JOLTS 職缺數",
+      "title": "美國 6 月 JOLTS 職缺與離職率",
       "start": "2026-08-04T22:00:00+08:00",
       "category": "macro",
       "region": "US",
       "impact": "medium",
-      "description": "JOLTS 反映職缺、離職與招募狀況，是聯準會判斷勞動市場緊俏程度的重要參考。",
-      "market_effect": "職缺高於預期通常提高利率維持高檔的疑慮；低於預期則可能增加寬鬆預期。",
+      "description": "BLS 公布職缺數、招募、離職與裁員資料，用來觀察勞動需求是否降溫。",
+      "market_effect": "職缺與失業人口比、主動離職率會影響市場對工資壓力與聯準會政策的判斷。",
       "assets": [
-        "NASDAQ",
         "美債",
         "美元",
+        "NASDAQ",
         "黃金"
       ],
       "tags": [
         "BLS",
         "JOLTS",
-        "勞動市場"
+        "職缺",
+        "離職率"
       ],
       "source_name": "U.S. BLS",
-      "source_url": "https://www.bls.gov/schedule/2026/08_sched.htm",
+      "source_url": "https://www.bls.gov/schedule/2026/08_sched_list.htm",
       "all_day": false,
       "is_estimated": false,
-      "origin": "manual"
+      "release_stage": "正式數據發布",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [
+        "職缺總數",
+        "職缺／失業人口比",
+        "主動離職率",
+        "裁員與解僱"
+      ],
+      "scenarios": [
+        {
+          "label": "職缺高於預期",
+          "effect": "勞動市場偏緊，殖利率與美元可能上行。"
+        },
+        {
+          "label": "職缺明顯下降",
+          "effect": "降息預期可能升溫，但需判斷是否轉為衰退擔憂。"
+        }
+      ],
+      "related_event_ids": []
     },
     {
       "id": "amd-q2-2026",
@@ -139,117 +237,280 @@ window.__MARKET_EVENT_SEED__ = {
       "source_url": "https://ir.amd.com/news-events/press-releases/detail/1289/amd-to-report-fiscal-second-quarter-2026-financial-results",
       "all_day": false,
       "is_estimated": false,
-      "origin": "manual"
+      "origin": "manual",
+      "release_stage": "財報發布＋電話會議",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [],
+      "scenarios": []
     },
     {
-      "id": "boj-minutes-2026-08-05",
-      "title": "日本銀行公布 6 月會議紀要",
+      "id": "boj-minutes-june-2026-08-05",
+      "title": "日本銀行 6 月 15–16 日會議紀要",
       "start": "2026-08-05T07:50:00+08:00",
       "category": "central-bank",
       "region": "JP",
       "impact": "medium",
-      "description": "日銀公布 6 月 15–16 日貨幣政策會議紀要，市場將觀察升息、通膨與日圓看法。",
-      "market_effect": "偏鷹內容可能推升日圓與日本公債殖利率，並影響日股、亞洲資金流與套利交易。",
+      "description": "日銀公布 6 月會議經正式核准的完整紀要，內容反映較早一期政策討論。",
+      "market_effect": "因資料時點落後，市場影響通常低於最新展望報告與 7 月會議意見摘要。",
       "assets": [
         "日圓",
         "日經 225",
-        "日本公債",
-        "台股"
+        "日本公債"
       ],
       "tags": [
         "BOJ",
-        "日銀",
         "會議紀要",
-        "升息"
+        "6 月會議"
       ],
       "source_name": "Bank of Japan",
       "source_url": "https://www.boj.or.jp/en/mopo/mpmsche_minu/index.htm",
       "all_day": false,
       "is_estimated": false,
-      "origin": "manual"
+      "release_stage": "完整會議紀要",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [
+        "委員對升息條件的討論",
+        "購債政策",
+        "通膨風險分歧"
+      ],
+      "scenarios": [],
+      "related_event_ids": [
+        "boj-outlook-full-2026-08-03"
+      ],
+      "previous_event": "2026-06-15/16 MPM"
     },
     {
       "id": "bls-productivity-2026-08-06",
-      "title": "美國 Q2 生產力與單位勞動成本初值",
+      "title": "美國 Q2 非農生產力初值",
       "start": "2026-08-06T20:30:00+08:00",
       "category": "macro",
       "region": "US",
       "impact": "medium",
-      "description": "生產力與單位勞動成本會影響市場對通膨黏性、企業利潤率與長期成長的判斷。",
-      "market_effect": "勞動成本升幅過高可能推升殖利率並壓抑高估值科技股。",
+      "description": "BLS 公布第二季非農企業部門生產力初值，衡量每工時產出的變化。",
+      "market_effect": "生產力提高可緩和單位成本與通膨壓力，對科技投資與軟著陸敘事較有利。",
       "assets": [
         "美債",
-        "NASDAQ",
         "美元",
-        "成長股"
+        "NASDAQ",
+        "工業股"
       ],
       "tags": [
         "BLS",
         "生產力",
-        "勞動成本"
+        "Q2"
       ],
       "source_name": "U.S. BLS",
-      "source_url": "https://www.bls.gov/schedule/2026/08_sched.htm",
+      "source_url": "https://www.bls.gov/schedule/2026/08_sched_list.htm",
       "all_day": false,
       "is_estimated": false,
-      "origin": "manual"
+      "release_stage": "初值",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [
+        "每工時產出",
+        "工時",
+        "產出增速",
+        "後續修正風險"
+      ],
+      "scenarios": [],
+      "related_event_ids": []
     },
     {
-      "id": "bls-jobs-2026-08-07",
-      "title": "美國 7 月非農就業報告",
+      "id": "bls-unit-labor-cost-2026-08-06",
+      "title": "美國 Q2 單位勞動成本初值",
+      "start": "2026-08-06T20:30:00+08:00",
+      "category": "macro",
+      "region": "US",
+      "impact": "medium",
+      "description": "與生產力同時發布，衡量每單位產出所需的勞動成本。",
+      "market_effect": "成本高於預期可能強化服務通膨黏著性，推升殖利率並壓抑高估值科技股。",
+      "assets": [
+        "美債",
+        "美元",
+        "NASDAQ",
+        "服務業"
+      ],
+      "tags": [
+        "BLS",
+        "單位勞動成本",
+        "工資"
+      ],
+      "source_name": "U.S. BLS",
+      "source_url": "https://www.bls.gov/schedule/2026/08_sched_list.htm",
+      "all_day": false,
+      "is_estimated": false,
+      "release_stage": "初值",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [
+        "單位勞動成本季增年率",
+        "薪酬增速",
+        "生產力抵銷程度"
+      ],
+      "scenarios": [],
+      "related_event_ids": []
+    },
+    {
+      "id": "bls-nfp-2026-08-07",
+      "title": "美國 7 月非農就業人數",
       "start": "2026-08-07T20:30:00+08:00",
       "category": "macro",
       "region": "US",
       "impact": "high",
-      "description": "非農新增就業、失業率與平均時薪同時公布，是本月最重要的利率定價事件之一。",
-      "market_effect": "數據過熱可能推升升息預期與殖利率；明顯轉弱則可能引發景氣疑慮，波動方向取決於市場原先定價。",
+      "description": "就業情勢報告中的核心項目，顯示非農部門新增或減少的就業人數。",
+      "market_effect": "大幅偏離預期通常會立即影響美債、美元、NASDAQ、黃金及隔日台股。",
       "assets": [
-        "S&P 500",
         "NASDAQ",
+        "S&P 500",
         "美債",
         "美元",
         "黃金",
         "台股"
       ],
       "tags": [
+        "BLS",
         "非農",
-        "失業率",
-        "薪資",
-        "Fed"
+        "就業"
       ],
       "source_name": "U.S. BLS",
-      "source_url": "https://www.bls.gov/schedule/2026/08_sched.htm",
+      "source_url": "https://www.bls.gov/schedule/2026/08_sched_list.htm",
       "all_day": false,
       "is_estimated": false,
-      "origin": "manual"
+      "release_stage": "正式數據發布",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [
+        "新增就業",
+        "前兩月修正",
+        "私人部門就業",
+        "產業分布"
+      ],
+      "scenarios": [
+        {
+          "label": "就業強且薪資高",
+          "effect": "降息預期降溫，殖利率上升，科技股承壓。"
+        },
+        {
+          "label": "溫和降溫",
+          "effect": "有利軟著陸與降息預期。"
+        },
+        {
+          "label": "明顯轉弱",
+          "effect": "初期利多降息，但可能轉為衰退交易。"
+        }
+      ],
+      "related_event_ids": [
+        "bls-unemployment-2026-08-07",
+        "bls-wages-2026-08-07"
+      ]
     },
     {
-      "id": "boj-summary-2026-08-10",
-      "title": "日本銀行公布 7 月會議意見摘要",
+      "id": "bls-unemployment-2026-08-07",
+      "title": "美國 7 月失業率與勞參率",
+      "start": "2026-08-07T20:30:00+08:00",
+      "category": "macro",
+      "region": "US",
+      "impact": "high",
+      "description": "家庭調查公布失業率、勞動參與率與就業人口，與非農企業調查可能出現差異。",
+      "market_effect": "失業率上升若伴隨勞參率改善，與單純就業惡化的意義不同，需搭配非農與薪資判讀。",
+      "assets": [
+        "美債",
+        "美元",
+        "美股",
+        "黃金"
+      ],
+      "tags": [
+        "失業率",
+        "勞參率",
+        "家庭調查"
+      ],
+      "source_name": "U.S. BLS",
+      "source_url": "https://www.bls.gov/schedule/2026/08_sched_list.htm",
+      "all_day": false,
+      "is_estimated": false,
+      "release_stage": "正式數據發布",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [
+        "失業率",
+        "勞動參與率",
+        "U-6 廣義失業率",
+        "家庭就業"
+      ],
+      "scenarios": [],
+      "related_event_ids": []
+    },
+    {
+      "id": "bls-wages-2026-08-07",
+      "title": "美國 7 月平均時薪與工時",
+      "start": "2026-08-07T20:30:00+08:00",
+      "category": "macro",
+      "region": "US",
+      "impact": "high",
+      "description": "就業報告同時公布平均時薪月增、年增與平均每週工時。",
+      "market_effect": "薪資增速直接關聯服務通膨，常比單一新增就業數更影響利率定價。",
+      "assets": [
+        "美債",
+        "美元",
+        "NASDAQ",
+        "消費股"
+      ],
+      "tags": [
+        "平均時薪",
+        "工資",
+        "工時"
+      ],
+      "source_name": "U.S. BLS",
+      "source_url": "https://www.bls.gov/schedule/2026/08_sched_list.htm",
+      "all_day": false,
+      "is_estimated": false,
+      "release_stage": "正式數據發布",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [
+        "平均時薪月增",
+        "年增率",
+        "平均每週工時"
+      ],
+      "scenarios": [],
+      "related_event_ids": []
+    },
+    {
+      "id": "boj-summary-july-2026-08-10",
+      "title": "日本銀行 7 月 30–31 日會議「主要意見摘要」",
       "start": "2026-08-10T07:50:00+08:00",
       "category": "central-bank",
       "region": "JP",
       "impact": "high",
-      "description": "日銀公布 7 月 30–31 日會議的意見摘要，可能揭露委員對後續升息路徑、日圓與物價的分歧。",
-      "market_effect": "偏鷹措辭可能強化日圓升值與套利交易平倉，對亞洲股市造成較大波動。",
+      "description": "彙整每位政策委員在最新 7 月會議提出的主要意見，並非逐字稿或完整紀要。",
+      "market_effect": "可觀察委員對升息時點、通膨風險與購債政策的分歧，通常比舊會議紀要更具即時性。",
       "assets": [
         "日圓",
         "日經 225",
         "日本公債",
-        "亞洲股市",
-        "台股"
+        "亞洲股市"
       ],
       "tags": [
         "BOJ",
-        "日銀",
-        "意見摘要",
-        "利率"
+        "主要意見摘要",
+        "7 月會議"
       ],
       "source_name": "Bank of Japan",
-      "source_url": "https://www.boj.or.jp/en/mopo/mpmsche_minu/index.htm",
+      "source_url": "https://www.boj.or.jp/en/about/calendar/index.htm",
       "all_day": false,
       "is_estimated": false,
-      "origin": "manual"
+      "release_stage": "主要意見摘要",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [
+        "支持升息的委員數量",
+        "通膨上行風險",
+        "政策正常化速度"
+      ],
+      "scenarios": [],
+      "related_event_ids": []
     },
     {
       "id": "tsmc-revenue-2026-08-10",
@@ -277,20 +538,24 @@ window.__MARKET_EVENT_SEED__ = {
       "source_url": "https://investor.tsmc.com/chinese/financial-calendar",
       "all_day": false,
       "is_estimated": false,
-      "origin": "manual"
+      "origin": "manual",
+      "release_stage": "月營收發布",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [],
+      "scenarios": []
     },
     {
-      "id": "bls-cpi-2026-08-12",
-      "title": "美國 7 月 CPI 通膨",
+      "id": "bls-cpi-headline-2026-08-12",
+      "title": "美國 7 月 CPI：整體通膨",
       "start": "2026-08-12T20:30:00+08:00",
       "category": "macro",
       "region": "US",
       "impact": "high",
-      "description": "美國公布整體與核心 CPI，市場將重新評估 9 月 FOMC 的升降息機率。",
-      "market_effect": "高於預期通常不利長天期債券與高估值科技股；低於預期則可能壓低殖利率並提振成長股。",
+      "description": "公布整體 CPI 月增與年增，受能源、食品與商品價格影響較大。",
+      "market_effect": "高於預期可能推升美債殖利率、美元並壓抑高估值科技股。",
       "assets": [
         "NASDAQ",
-        "費半",
         "美債",
         "美元",
         "黃金",
@@ -298,41 +563,129 @@ window.__MARKET_EVENT_SEED__ = {
       ],
       "tags": [
         "CPI",
-        "通膨",
-        "Fed",
-        "利率"
+        "整體通膨"
       ],
       "source_name": "U.S. BLS",
-      "source_url": "https://www.bls.gov/schedule/2026/08_sched.htm",
+      "source_url": "https://www.bls.gov/schedule/2026/08_sched_list.htm",
       "all_day": false,
       "is_estimated": false,
-      "origin": "manual"
+      "release_stage": "正式數據發布",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [
+        "月增率",
+        "年增率",
+        "能源與食品分項"
+      ],
+      "scenarios": [],
+      "related_event_ids": [
+        "bls-cpi-core-2026-08-12",
+        "bls-real-earnings-2026-08-12"
+      ]
     },
     {
-      "id": "bls-ppi-2026-08-13",
-      "title": "美國 7 月 PPI 生產者物價",
+      "id": "bls-cpi-core-2026-08-12",
+      "title": "美國 7 月核心 CPI 與住房服務",
+      "start": "2026-08-12T20:30:00+08:00",
+      "category": "macro",
+      "region": "US",
+      "impact": "high",
+      "description": "排除食品與能源的核心 CPI，市場將特別關注住房、核心服務與商品通膨。",
+      "market_effect": "核心服務若仍黏著，可能延後降息；住房通膨降溫則有利通膨回落敘事。",
+      "assets": [
+        "NASDAQ",
+        "美債",
+        "美元",
+        "REITs",
+        "台股"
+      ],
+      "tags": [
+        "核心 CPI",
+        "住房通膨",
+        "超級核心"
+      ],
+      "source_name": "U.S. BLS",
+      "source_url": "https://www.bls.gov/schedule/2026/08_sched_list.htm",
+      "all_day": false,
+      "is_estimated": false,
+      "release_stage": "正式數據發布",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [
+        "核心月增",
+        "住房服務",
+        "核心服務扣住房",
+        "二手車與醫療"
+      ],
+      "scenarios": [],
+      "related_event_ids": []
+    },
+    {
+      "id": "bls-real-earnings-2026-08-12",
+      "title": "美國 7 月實質薪資",
+      "start": "2026-08-12T20:30:00+08:00",
+      "category": "macro",
+      "region": "US",
+      "impact": "low",
+      "description": "BLS 同時公布經通膨調整後的平均時薪與週薪。",
+      "market_effect": "用於判斷居民購買力，但即時市場影響通常低於 CPI 本身。",
+      "assets": [
+        "消費股",
+        "零售股",
+        "美元"
+      ],
+      "tags": [
+        "實質薪資",
+        "購買力"
+      ],
+      "source_name": "U.S. BLS",
+      "source_url": "https://www.bls.gov/schedule/2026/08_sched_list.htm",
+      "all_day": false,
+      "is_estimated": false,
+      "release_stage": "正式數據發布",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [
+        "實質時薪",
+        "實質週薪"
+      ],
+      "scenarios": [],
+      "related_event_ids": []
+    },
+    {
+      "id": "bls-ppi-final-2026-08-13",
+      "title": "美國 7 月 PPI：最終需求",
       "start": "2026-08-13T20:30:00+08:00",
       "category": "macro",
       "region": "US",
       "impact": "medium",
-      "description": "PPI 反映企業端成本壓力，部分分項也會進入 PCE 通膨計算。",
-      "market_effect": "若服務或核心成本偏高，可能使市場下修降息預期並推升殖利率。",
+      "description": "公布生產者最終需求價格，包括商品與服務價格。",
+      "market_effect": "可用來判讀企業成本與部分 PCE 分項，但與 CPI 的市場權重不同。",
       "assets": [
         "美債",
         "美元",
         "NASDAQ",
-        "原物料"
+        "工業股"
       ],
       "tags": [
         "PPI",
-        "通膨",
-        "企業成本"
+        "最終需求"
       ],
       "source_name": "U.S. BLS",
-      "source_url": "https://www.bls.gov/schedule/2026/08_sched.htm",
+      "source_url": "https://www.bls.gov/schedule/2026/08_sched_list.htm",
       "all_day": false,
       "is_estimated": false,
-      "origin": "manual"
+      "release_stage": "正式數據發布",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [
+        "整體 PPI",
+        "核心 PPI",
+        "服務分項",
+        "貿易服務利潤率"
+      ],
+      "scenarios": [],
+      "related_event_ids": []
     },
     {
       "id": "tw-q2-deadline-2026-08-14",
@@ -361,17 +714,22 @@ window.__MARKET_EVENT_SEED__ = {
       "source_url": "https://twse-regulation.twse.com.tw/TW/law/DOC01_print.aspx?FLCODE=FL007009&FLNO=36",
       "all_day": true,
       "is_estimated": true,
-      "origin": "manual"
+      "origin": "manual",
+      "release_stage": "法定申報期限／財報密集期",
+      "verification_status": "confirmed",
+      "time_status": "time-window",
+      "watch_items": [],
+      "scenarios": []
     },
     {
-      "id": "bls-import-export-prices-2026-08-18",
-      "title": "美國 7 月進出口物價",
+      "id": "bls-import-prices-2026-08-18",
+      "title": "美國 7 月進口物價",
       "start": "2026-08-18T20:30:00+08:00",
       "category": "macro",
       "region": "US",
       "impact": "low",
-      "description": "進出口物價可觀察美元、能源與關稅變化如何傳導至美國通膨。",
-      "market_effect": "通常影響較小，但在關稅或能源價格劇烈變動時可能提高通膨敏感度。",
+      "description": "衡量進口商品價格變動，可觀察美元、能源與關稅的通膨傳導。",
+      "market_effect": "平時影響較小；若能源、美元或關稅變化劇烈，市場敏感度會提高。",
       "assets": [
         "美元",
         "美債",
@@ -379,24 +737,64 @@ window.__MARKET_EVENT_SEED__ = {
       ],
       "tags": [
         "進口物價",
-        "出口物價",
-        "通膨"
+        "關稅",
+        "能源"
       ],
       "source_name": "U.S. BLS",
-      "source_url": "https://www.bls.gov/schedule/2026/08_sched.htm",
+      "source_url": "https://www.bls.gov/schedule/2026/08_sched_list.htm",
       "all_day": false,
       "is_estimated": false,
-      "origin": "manual"
+      "release_stage": "正式數據發布",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [
+        "燃料進口價格",
+        "非燃料進口價格"
+      ],
+      "scenarios": [],
+      "related_event_ids": []
     },
     {
-      "id": "fomc-minutes-2026-08-19",
-      "title": "FOMC 7 月會議紀要",
+      "id": "bls-export-prices-2026-08-18",
+      "title": "美國 7 月出口物價",
+      "start": "2026-08-18T20:30:00+08:00",
+      "category": "macro",
+      "region": "US",
+      "impact": "low",
+      "description": "衡量美國出口商品價格，反映農產品、工業品與全球需求變化。",
+      "market_effect": "對美元與原物料判讀有輔助價值，市場即時反應通常有限。",
+      "assets": [
+        "美元",
+        "農產品",
+        "工業原料"
+      ],
+      "tags": [
+        "出口物價",
+        "全球需求"
+      ],
+      "source_name": "U.S. BLS",
+      "source_url": "https://www.bls.gov/schedule/2026/08_sched_list.htm",
+      "all_day": false,
+      "is_estimated": false,
+      "release_stage": "正式數據發布",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [
+        "農產品出口價格",
+        "非農產品出口價格"
+      ],
+      "scenarios": [],
+      "related_event_ids": []
+    },
+    {
+      "id": "fomc-minutes-july-2026-08-19",
+      "title": "FOMC 7 月 28–29 日會議紀要",
       "start": "2026-08-20T02:00:00+08:00",
       "category": "central-bank",
       "region": "US",
       "impact": "high",
-      "description": "聯準會公布 7 月 28–29 日會議紀要，市場將尋找委員對通膨、就業與 9 月政策的細節。",
-      "market_effect": "鷹派內容可能推升美元與殖利率並壓抑科技股；偏鴿內容則可能支持風險資產。",
+      "description": "聯準會於美東時間 8 月 19 日 14:00 公布 7 月會議紀要，台灣時間為 8 月 20 日 02:00。",
+      "market_effect": "紀要反映委員對通膨、就業與後續政策的討論，但時效低於會後聲明與最新數據。",
       "assets": [
         "NASDAQ",
         "S&P 500",
@@ -407,43 +805,103 @@ window.__MARKET_EVENT_SEED__ = {
       ],
       "tags": [
         "FOMC",
-        "Fed",
         "會議紀要",
-        "利率"
+        "7 月會議"
       ],
       "source_name": "Federal Reserve",
       "source_url": "https://www.federalreserve.gov/monetarypolicy.htm",
       "all_day": false,
       "is_estimated": false,
-      "origin": "manual"
+      "release_stage": "完整會議紀要",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [
+        "降息或升息門檻",
+        "資產負債表",
+        "委員分歧"
+      ],
+      "scenarios": [],
+      "related_event_ids": []
     },
     {
-      "id": "bea-gdp-pce-2026-08-26",
-      "title": "美國 Q2 GDP 修正值＋7 月 PCE",
+      "id": "bea-gdp-second-2026-08-26",
+      "title": "美國 Q2 GDP 第二次估值",
       "start": "2026-08-26T20:30:00+08:00",
       "category": "macro",
       "region": "US",
       "impact": "high",
-      "description": "BEA 同時公布第二季 GDP 修正值、企業獲利與 7 月個人所得支出；PCE 是聯準會偏好的通膨指標。",
-      "market_effect": "成長與通膨同時偏高可能推升殖利率；成長弱、通膨低則提高寬鬆預期，但也可能引發景氣擔憂。",
+      "description": "BEA 修正第二季實質 GDP、消費、投資、政府支出與淨出口。",
+      "market_effect": "重點是修正幅度與成長結構，不應與同時發布的 PCE 個人所得支出混為單一事件。",
       "assets": [
+        "S&P 500",
         "美債",
         "美元",
-        "NASDAQ",
-        "S&P 500",
+        "工業股",
         "台股"
       ],
       "tags": [
         "GDP",
-        "PCE",
-        "企業獲利",
-        "Fed"
+        "第二次估值",
+        "企業獲利"
       ],
       "source_name": "U.S. BEA",
-      "source_url": "https://www.bea.gov/news/schedule",
+      "source_url": "https://www.bea.gov/news/schedule/full",
       "all_day": false,
       "is_estimated": false,
-      "origin": "manual"
+      "release_stage": "第二次估值",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [
+        "實質 GDP 年化季增",
+        "個人消費",
+        "設備投資",
+        "淨出口",
+        "企業獲利初值"
+      ],
+      "scenarios": [],
+      "related_event_ids": [
+        "bea-pce-2026-08-26"
+      ]
+    },
+    {
+      "id": "bea-pce-2026-08-26",
+      "title": "美國 7 月 PCE 物價與個人所得支出",
+      "start": "2026-08-26T20:30:00+08:00",
+      "category": "macro",
+      "region": "US",
+      "impact": "high",
+      "description": "BEA 公布個人所得、個人支出、整體與核心 PCE 物價指數。",
+      "market_effect": "核心 PCE 是聯準會重要通膨指標；同日雖與 GDP 一起發布，但必須分開判讀。",
+      "assets": [
+        "NASDAQ",
+        "美債",
+        "美元",
+        "黃金",
+        "消費股"
+      ],
+      "tags": [
+        "PCE",
+        "核心 PCE",
+        "個人支出"
+      ],
+      "source_name": "U.S. BEA",
+      "source_url": "https://www.bea.gov/news/schedule/full",
+      "all_day": false,
+      "is_estimated": false,
+      "release_stage": "正式月度數據",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [
+        "核心 PCE 月增與年增",
+        "整體 PCE",
+        "實質消費",
+        "儲蓄率",
+        "個人所得"
+      ],
+      "scenarios": [],
+      "related_event_ids": [
+        "bea-gdp-second-2026-08-26"
+      ]
     },
     {
       "id": "nvidia-q2-fy27-2026",
@@ -473,7 +931,12 @@ window.__MARKET_EVENT_SEED__ = {
       "source_url": "https://investor.nvidia.com/events-and-presentations/events-and-presentations/event-details/2026/NVIDIA-2nd-Quarter-FY27-Financial-Results/default.aspx",
       "all_day": false,
       "is_estimated": false,
-      "origin": "manual"
+      "origin": "manual",
+      "release_stage": "財報發布＋電話會議",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [],
+      "scenarios": []
     },
     {
       "id": "jackson-hole-2026",
@@ -503,7 +966,12 @@ window.__MARKET_EVENT_SEED__ = {
       "source_url": "https://www.kansascityfed.org/research/jackson-hole-economic-symposium/",
       "all_day": true,
       "is_estimated": false,
-      "origin": "manual"
+      "origin": "manual",
+      "release_stage": "三日研討會（個別演講時程待公布）",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [],
+      "scenarios": []
     },
     {
       "id": "bok-rate-2026-08-27",
@@ -531,7 +999,12 @@ window.__MARKET_EVENT_SEED__ = {
       "source_url": "https://www.bok.or.kr/portal/singl/mainEvent/listCldr.do?date=2026-08&menuNo=200035",
       "all_day": false,
       "is_estimated": false,
-      "origin": "manual"
+      "origin": "manual",
+      "release_stage": "政策決定",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [],
+      "scenarios": []
     },
     {
       "id": "tsmc-revenue-2026-09-10",
@@ -557,45 +1030,89 @@ window.__MARKET_EVENT_SEED__ = {
       "source_url": "https://investor.tsmc.com/chinese/financial-calendar",
       "all_day": false,
       "is_estimated": false,
-      "origin": "manual"
+      "origin": "manual",
+      "release_stage": "月營收發布",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [],
+      "scenarios": []
     },
     {
-      "id": "ecb-rate-2026-09-10",
-      "title": "歐洲央行利率決策與記者會",
+      "id": "ecb-sep-decision-2026-09-10",
+      "title": "歐洲央行 9 月利率決策與政策聲明",
       "start": "2026-09-10T20:15:00+08:00",
       "category": "central-bank",
       "region": "EU",
       "impact": "high",
-      "description": "ECB 管理委員會結束兩日會議並公布利率決策，隨後舉行記者會；實際時間以官方當週公告為準。",
-      "market_effect": "政策與經濟展望可能影響歐元、歐債、全球美元流動性與風險偏好。",
+      "description": "ECB 管理委員會 9 月 9–10 日會議結束，公布三大政策利率與聲明。",
+      "market_effect": "9 月仍為歐洲夏令時間，台灣時間通常為 20:15。",
       "assets": [
         "歐元",
         "歐股",
         "歐債",
-        "美元",
-        "全球股市"
+        "美元"
       ],
       "tags": [
         "ECB",
-        "歐洲央行",
-        "利率",
+        "利率決策",
+        "政策聲明"
+      ],
+      "source_name": "European Central Bank",
+      "source_url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html",
+      "all_day": false,
+      "is_estimated": false,
+      "release_stage": "政策決定／聲明",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [
+        "存款機制利率",
+        "成長與通膨措辭",
+        "量化緊縮"
+      ],
+      "scenarios": [],
+      "related_event_ids": []
+    },
+    {
+      "id": "ecb-sep-presser-2026-09-10",
+      "title": "歐洲央行 9 月會後記者會",
+      "start": "2026-09-10T20:45:00+08:00",
+      "category": "central-bank",
+      "region": "EU",
+      "impact": "high",
+      "description": "ECB 總裁於政策決定後舉行記者會並回答媒體提問。",
+      "market_effect": "經濟預測與記者會措辭可能影響歐元、歐債及全球風險偏好。",
+      "assets": [
+        "歐元",
+        "歐股",
+        "歐債",
+        "美元"
+      ],
+      "tags": [
+        "ECB",
         "記者會"
       ],
       "source_name": "European Central Bank",
       "source_url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html",
       "all_day": false,
-      "is_estimated": true,
-      "origin": "manual"
+      "is_estimated": false,
+      "release_stage": "會後記者會",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [],
+      "scenarios": [],
+      "related_event_ids": [
+        "ecb-sep-decision-2026-09-10"
+      ]
     },
     {
-      "id": "fomc-rate-2026-09-16",
-      "title": "FOMC 利率決策＋經濟預測",
+      "id": "fomc-sep-decision-2026-09-16",
+      "title": "FOMC 9 月利率決策與政策聲明",
       "start": "2026-09-17T02:00:00+08:00",
       "category": "central-bank",
       "region": "US",
       "impact": "high",
-      "description": "聯準會 9 月 15–16 日會議結束，公布利率決策、政策聲明與經濟預測，並召開記者會。",
-      "market_effect": "利率點陣圖與主席談話可能重新定價全球股債匯，通常是季度最重要事件之一。",
+      "description": "FOMC 9 月 15–16 日會議結束，公布利率決策、政策聲明與實施說明。",
+      "market_effect": "這是季度預測會議，與 02:30 的主席記者會、SEP 預測材料應分開呈現。",
       "assets": [
         "NASDAQ",
         "S&P 500",
@@ -606,43 +1123,199 @@ window.__MARKET_EVENT_SEED__ = {
       ],
       "tags": [
         "FOMC",
-        "Fed",
-        "點陣圖",
-        "利率決策"
+        "利率決策",
+        "政策聲明"
       ],
       "source_name": "Federal Reserve",
       "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
       "all_day": false,
       "is_estimated": false,
-      "origin": "manual"
+      "release_stage": "政策決定／聲明",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [
+        "政策利率區間",
+        "聲明措辭",
+        "反對票",
+        "資產負債表"
+      ],
+      "scenarios": [],
+      "related_event_ids": []
     },
     {
-      "id": "boj-rate-2026-09-18",
-      "title": "日本銀行 9 月利率決策",
+      "id": "fomc-sep-projections-2026-09-16",
+      "title": "聯準會 9 月經濟預測與利率點陣圖",
+      "start": "2026-09-17T02:00:00+08:00",
+      "category": "central-bank",
+      "region": "US",
+      "impact": "high",
+      "description": "同時發布 GDP、失業率、PCE 與核心 PCE 預測，以及政策利率點陣圖。",
+      "market_effect": "點陣圖中位數與分布可能直接改變市場對年底及明年利率路徑的定價。",
+      "assets": [
+        "美債",
+        "美元",
+        "NASDAQ",
+        "黃金"
+      ],
+      "tags": [
+        "SEP",
+        "點陣圖",
+        "經濟預測"
+      ],
+      "source_name": "Federal Reserve",
+      "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "all_day": false,
+      "is_estimated": false,
+      "release_stage": "季度預測材料",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [
+        "年底利率中位數",
+        "明年降息次數",
+        "GDP／失業率／PCE 預測"
+      ],
+      "scenarios": [],
+      "related_event_ids": [
+        "fomc-sep-decision-2026-09-16",
+        "fomc-sep-presser-2026-09-16"
+      ]
+    },
+    {
+      "id": "fomc-sep-presser-2026-09-16",
+      "title": "聯準會主席 9 月會後記者會",
+      "start": "2026-09-17T02:30:00+08:00",
+      "category": "central-bank",
+      "region": "US",
+      "impact": "high",
+      "description": "主席於決策公布 30 分鐘後解釋政策、風險平衡與經濟預測。",
+      "market_effect": "記者問答可能推翻市場對聲明的第一反應，波動通常在記者會期間再度放大。",
+      "assets": [
+        "NASDAQ",
+        "美債",
+        "美元",
+        "黃金",
+        "台股夜盤"
+      ],
+      "tags": [
+        "Fed",
+        "主席記者會"
+      ],
+      "source_name": "Federal Reserve",
+      "source_url": "https://www.federalreserve.gov/newsevents/2026-september.htm",
+      "all_day": false,
+      "is_estimated": false,
+      "release_stage": "會後記者會",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [
+        "通膨信心",
+        "就業下行風險",
+        "政策是否逐次會議決定"
+      ],
+      "scenarios": [],
+      "related_event_ids": [
+        "fomc-sep-decision-2026-09-16"
+      ]
+    },
+    {
+      "id": "boj-sep-decision-2026-09-18",
+      "title": "日本銀行 9 月利率決策與政策聲明",
       "start": "2026-09-18T11:00:00+08:00",
       "category": "central-bank",
       "region": "JP",
       "impact": "high",
-      "description": "日銀於 9 月 17–18 日舉行貨幣政策會議；決策公布時間不固定，通常在台灣時間上午至中午。",
-      "market_effect": "升息、縮減購債或偏鷹指引可能推升日圓並觸發全球套利交易調整。",
+      "description": "日銀 9 月 17–18 日會議結束後公布政策決定；官方未固定精確發布時間。",
+      "market_effect": "此次沒有季度展望報告，重點是政策聲明、購債安排與總裁記者會。",
       "assets": [
         "日圓",
         "日經 225",
         "日本公債",
-        "亞洲股市",
-        "台股"
+        "亞洲股市"
       ],
       "tags": [
         "BOJ",
-        "日銀",
         "利率決策",
-        "日圓"
+        "政策聲明"
       ],
       "source_name": "Bank of Japan",
       "source_url": "https://www.boj.or.jp/en/mopo/mpmsche_minu/index.htm",
       "all_day": false,
       "is_estimated": true,
-      "origin": "manual"
+      "release_stage": "政策決定／聲明",
+      "verification_status": "confirmed",
+      "time_status": "time-window",
+      "watch_items": [
+        "政策利率",
+        "國債購買",
+        "通膨措辭",
+        "反對票"
+      ],
+      "scenarios": [],
+      "related_event_ids": [],
+      "verification_note": "決策時間不固定，11:00 為台灣時間預估顯示。"
+    },
+    {
+      "id": "boj-sep-presser-2026-09-18",
+      "title": "日本銀行總裁 9 月會後記者會",
+      "start": "2026-09-18T14:30:00+08:00",
+      "category": "central-bank",
+      "region": "JP",
+      "impact": "high",
+      "description": "日銀總裁於日本時間 15:30 舉行記者會，說明政策決定與經濟判斷。",
+      "market_effect": "記者會措辭常比聲明更能影響日圓與日本公債。",
+      "assets": [
+        "日圓",
+        "日經 225",
+        "日本公債"
+      ],
+      "tags": [
+        "BOJ",
+        "總裁記者會"
+      ],
+      "source_name": "Bank of Japan",
+      "source_url": "https://www.boj.or.jp/about/calendar/index.htm",
+      "all_day": false,
+      "is_estimated": false,
+      "release_stage": "會後記者會",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [
+        "下一次升息條件",
+        "匯率評論",
+        "工資與通膨判斷"
+      ],
+      "scenarios": [],
+      "related_event_ids": [
+        "boj-sep-decision-2026-09-18"
+      ]
+    },
+    {
+      "id": "boj-sep-summary-2026-10-01",
+      "title": "日本銀行 9 月會議主要意見摘要",
+      "start": "2026-10-01T07:50:00+08:00",
+      "category": "central-bank",
+      "region": "JP",
+      "impact": "medium",
+      "description": "公布 9 月 17–18 日會議的主要意見摘要。",
+      "market_effect": "補充委員分歧與政策路徑，但市場通常已先消化會議決定與記者會。",
+      "assets": [
+        "日圓",
+        "日本公債"
+      ],
+      "tags": [
+        "BOJ",
+        "主要意見摘要"
+      ],
+      "source_name": "Bank of Japan",
+      "source_url": "https://www.boj.or.jp/en/mopo/mpmsche_minu/index.htm",
+      "all_day": false,
+      "is_estimated": false,
+      "release_stage": "主要意見摘要",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [],
+      "scenarios": [],
+      "related_event_ids": []
     },
     {
       "id": "tsmc-revenue-2026-10-08",
@@ -668,17 +1341,22 @@ window.__MARKET_EVENT_SEED__ = {
       "source_url": "https://investor.tsmc.com/chinese/financial-calendar",
       "all_day": false,
       "is_estimated": false,
-      "origin": "manual"
+      "origin": "manual",
+      "release_stage": "月營收發布",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [],
+      "scenarios": []
     },
     {
-      "id": "fomc-rate-2026-10-28",
-      "title": "FOMC 10 月利率決策",
+      "id": "fomc-oct-decision-2026-10-28",
+      "title": "FOMC 10 月利率決策與政策聲明",
       "start": "2026-10-29T02:00:00+08:00",
       "category": "central-bank",
       "region": "US",
       "impact": "high",
-      "description": "聯準會 10 月 27–28 日會議結束並公布政策決定，該次會議沒有固定季度經濟預測。",
-      "market_effect": "聲明與記者會仍可能改變年底利率預期與科技股估值。",
+      "description": "FOMC 10 月 27–28 日會議結束，公布利率決策與政策聲明。",
+      "market_effect": "此會議沒有季度 SEP，但聲明與主席記者會仍可改變年底政策預期。",
       "assets": [
         "NASDAQ",
         "美債",
@@ -688,24 +1366,64 @@ window.__MARKET_EVENT_SEED__ = {
       ],
       "tags": [
         "FOMC",
-        "Fed",
         "利率決策"
       ],
       "source_name": "Federal Reserve",
       "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
       "all_day": false,
       "is_estimated": false,
-      "origin": "manual"
+      "release_stage": "政策決定／聲明",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [
+        "政策利率",
+        "聲明措辭",
+        "反對票"
+      ],
+      "scenarios": [],
+      "related_event_ids": []
     },
     {
-      "id": "ecb-rate-2026-10-29",
-      "title": "歐洲央行 10 月利率決策",
-      "start": "2026-10-29T20:15:00+08:00",
+      "id": "fomc-oct-presser-2026-10-28",
+      "title": "聯準會主席 10 月會後記者會",
+      "start": "2026-10-29T02:30:00+08:00",
+      "category": "central-bank",
+      "region": "US",
+      "impact": "high",
+      "description": "主席於決策後舉行記者會，解釋最新政策與數據依賴。",
+      "market_effect": "市場可能在問答階段重新定價年底及 2027 年利率路徑。",
+      "assets": [
+        "NASDAQ",
+        "美債",
+        "美元",
+        "黃金"
+      ],
+      "tags": [
+        "Fed",
+        "主席記者會"
+      ],
+      "source_name": "Federal Reserve",
+      "source_url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "all_day": false,
+      "is_estimated": false,
+      "release_stage": "會後記者會",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [],
+      "scenarios": [],
+      "related_event_ids": [
+        "fomc-oct-decision-2026-10-28"
+      ]
+    },
+    {
+      "id": "ecb-oct-decision-2026-10-29",
+      "title": "歐洲央行 10 月利率決策與政策聲明",
+      "start": "2026-10-29T21:15:00+08:00",
       "category": "central-bank",
       "region": "EU",
       "impact": "high",
-      "description": "ECB 於 10 月 28–29 日召開貨幣政策會議並舉行記者會；實際發布時間以官方公告為準。",
-      "market_effect": "可能影響歐元、歐債與全球資金風險偏好。",
+      "description": "ECB 管理委員會 10 月 28–29 日會議結束並公布政策決定。",
+      "market_effect": "歐洲已結束夏令時間，因此台灣時間為 21:15，而不是 20:15。",
       "assets": [
         "歐元",
         "歐股",
@@ -715,23 +1433,63 @@ window.__MARKET_EVENT_SEED__ = {
       "tags": [
         "ECB",
         "利率決策",
-        "歐洲央行"
+        "冬令時間"
       ],
       "source_name": "European Central Bank",
       "source_url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html",
       "all_day": false,
-      "is_estimated": true,
-      "origin": "manual"
+      "is_estimated": false,
+      "release_stage": "政策決定／聲明",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [
+        "存款機制利率",
+        "政策指引",
+        "資產負債表"
+      ],
+      "scenarios": [],
+      "related_event_ids": []
     },
     {
-      "id": "boj-rate-2026-10-30",
-      "title": "日本銀行 10 月利率決策＋展望報告",
+      "id": "ecb-oct-presser-2026-10-29",
+      "title": "歐洲央行 10 月會後記者會",
+      "start": "2026-10-29T21:45:00+08:00",
+      "category": "central-bank",
+      "region": "EU",
+      "impact": "high",
+      "description": "ECB 總裁在政策發布後 30 分鐘舉行記者會。",
+      "market_effect": "問答可能改變市場對政策聲明的第一解讀。",
+      "assets": [
+        "歐元",
+        "歐股",
+        "歐債"
+      ],
+      "tags": [
+        "ECB",
+        "記者會"
+      ],
+      "source_name": "European Central Bank",
+      "source_url": "https://www.ecb.europa.eu/press/calendars/mgcgc/html/index.en.html",
+      "all_day": false,
+      "is_estimated": false,
+      "release_stage": "會後記者會",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [],
+      "scenarios": [],
+      "related_event_ids": [
+        "ecb-oct-decision-2026-10-29"
+      ]
+    },
+    {
+      "id": "boj-oct-decision-2026-10-30",
+      "title": "日本銀行 10 月利率決策與政策聲明",
       "start": "2026-10-30T11:00:00+08:00",
       "category": "central-bank",
       "region": "JP",
       "impact": "high",
-      "description": "日銀 10 月 29–30 日會議結束並發布展望報告，決策時間不固定。",
-      "market_effect": "展望報告與政策正常化速度可能影響日圓、日債及亞洲風險資產。",
+      "description": "日銀 10 月 29–30 日會議結束後公布政策決定與展望報告的「基本見解」。",
+      "market_effect": "這是決策時點，不等於下一個工作日公布的展望報告全文。",
       "assets": [
         "日圓",
         "日經 225",
@@ -740,15 +1498,112 @@ window.__MARKET_EVENT_SEED__ = {
       ],
       "tags": [
         "BOJ",
-        "日銀",
-        "展望報告",
-        "利率決策"
+        "利率決策",
+        "基本見解"
       ],
       "source_name": "Bank of Japan",
       "source_url": "https://www.boj.or.jp/en/mopo/mpmsche_minu/index.htm",
       "all_day": false,
       "is_estimated": true,
-      "origin": "manual"
+      "release_stage": "政策決定＋展望基本見解",
+      "verification_status": "confirmed",
+      "time_status": "time-window",
+      "watch_items": [
+        "政策利率",
+        "GDP／CPI 中位預測",
+        "國債購買",
+        "政策前瞻"
+      ],
+      "scenarios": [],
+      "related_event_ids": [],
+      "verification_note": "決策時間不固定，11:00 為台灣時間預估顯示。"
+    },
+    {
+      "id": "boj-oct-presser-2026-10-30",
+      "title": "日本銀行總裁 10 月會後記者會",
+      "start": "2026-10-30T14:30:00+08:00",
+      "category": "central-bank",
+      "region": "JP",
+      "impact": "high",
+      "description": "日銀總裁於日本時間 15:30 說明政策決策與展望。",
+      "market_effect": "市場會從措辭判斷下一次政策正常化時點。",
+      "assets": [
+        "日圓",
+        "日經 225",
+        "日本公債"
+      ],
+      "tags": [
+        "BOJ",
+        "總裁記者會"
+      ],
+      "source_name": "Bank of Japan",
+      "source_url": "https://www.boj.or.jp/about/calendar/index.htm",
+      "all_day": false,
+      "is_estimated": false,
+      "release_stage": "會後記者會",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [],
+      "scenarios": [],
+      "related_event_ids": [
+        "boj-oct-decision-2026-10-30"
+      ]
+    },
+    {
+      "id": "boj-oct-outlook-full-2026-11-02",
+      "title": "日本銀行 10 月《經濟活動與物價展望》全文",
+      "start": "2026-11-02T13:00:00+08:00",
+      "category": "central-bank",
+      "region": "JP",
+      "impact": "high",
+      "description": "日銀在會後下一個工作日日本時間 14:00 公布季度展望報告全文。",
+      "market_effect": "全文提供預測假設、風險評估與政策路徑，比會議當日的基本見解更完整。",
+      "assets": [
+        "日圓",
+        "日本公債",
+        "日經 225",
+        "亞洲股市"
+      ],
+      "tags": [
+        "BOJ",
+        "展望報告",
+        "全文"
+      ],
+      "source_name": "Bank of Japan",
+      "source_url": "https://www.boj.or.jp/en/mopo/mpmsche_minu/index.htm",
+      "all_day": false,
+      "is_estimated": false,
+      "release_stage": "展望報告全文",
+      "verification_status": "confirmed",
+      "time_status": "confirmed",
+      "watch_items": [
+        "風險章節",
+        "通膨持續性",
+        "工資與企業定價",
+        "海外景氣"
+      ],
+      "scenarios": [],
+      "related_event_ids": []
     }
-  ]
+  ],
+  "audit_summary": {
+    "major_changes": [
+      "BOJ 8/3 outlook full text added and separated from 8/5 June minutes.",
+      "BEA 8/26 GDP and PCE split into separate events.",
+      "BLS releases split into headline/core/subcomponents where investor interpretation differs.",
+      "FOMC decisions, SEP projections and press conferences split.",
+      "ECB decisions and press conferences split; October Taiwan time corrected for end of European DST.",
+      "BOJ decision, press conference, outlook full text, summary of opinions and minutes treated as different release stages."
+    ],
+    "official_sources": [
+      "U.S. BLS",
+      "U.S. BEA",
+      "Federal Reserve",
+      "Bank of Japan",
+      "European Central Bank",
+      "TSMC Investor Relations",
+      "AMD Investor Relations",
+      "Kansas City Fed"
+    ]
+  }
 };
