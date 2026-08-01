@@ -42,6 +42,11 @@
     eventDialog: document.querySelector("#eventDialog"),
     dialogContent: document.querySelector("#dialogContent"),
     yearLabel: document.querySelector("#yearLabel"),
+    tickerWidget: document.querySelector("#tickerWidget"),
+    marketQuoteWidget: document.querySelector("#marketQuoteWidget"),
+    quoteFallback: document.querySelector("#quoteFallback"),
+    retryQuotes: document.querySelector("#retryQuotes"),
+    marketTabs: [...document.querySelectorAll(".market-tab")],
   };
 
   const impactMap = {
@@ -61,6 +66,187 @@
 
   const regionMap = { TW: "台灣", US: "美國", JP: "日本", KR: "韓國", EU: "歐洲", GLOBAL: "全球" };
   const weekday = ["週日", "週一", "週二", "週三", "週四", "週五", "週六"];
+
+
+  const marketGroups = {
+    TW: {
+      name: "台灣",
+      symbols: [
+        { name: "INDEX:TAIEX", displayName: "台灣加權指數" },
+        { name: "AMEX:EWT", displayName: "台灣 ETF（EWT）" },
+        { name: "NYSE:TSM", displayName: "台積電 ADR" },
+        { name: "NYSE:UMC", displayName: "聯電 ADR" },
+      ],
+    },
+    US: {
+      name: "美國",
+      symbols: [
+        { name: "FOREXCOM:SPXUSD", displayName: "S&P 500" },
+        { name: "FOREXCOM:NSXUSD", displayName: "NASDAQ 100" },
+        { name: "FOREXCOM:DJI", displayName: "道瓊工業" },
+        { name: "NASDAQ:SOX", displayName: "費城半導體" },
+        { name: "NASDAQ:NVDA", displayName: "NVIDIA" },
+      ],
+    },
+    JP: {
+      name: "日本",
+      symbols: [
+        { name: "TVC:NI225", displayName: "日經 225" },
+        { name: "AMEX:EWJ", displayName: "日本 ETF（EWJ）" },
+        { name: "NYSE:TM", displayName: "Toyota ADR" },
+        { name: "NYSE:SONY", displayName: "Sony ADR" },
+      ],
+    },
+    KR: {
+      name: "韓國",
+      symbols: [
+        { name: "KRX:KOSPI", displayName: "KOSPI" },
+        { name: "AMEX:EWY", displayName: "韓國 ETF（EWY）" },
+        { name: "FX_IDC:USDKRW", displayName: "美元／韓元" },
+      ],
+    },
+    EU: {
+      name: "歐洲",
+      symbols: [
+        { name: "XETR:DAX", displayName: "德國 DAX" },
+        { name: "FTSE:UKX", displayName: "英國 FTSE 100" },
+        { name: "EURONEXT:PX1", displayName: "法國 CAC 40" },
+        { name: "NASDAQ:ASML", displayName: "ASML ADR" },
+        { name: "NYSE:SAP", displayName: "SAP ADR" },
+      ],
+    },
+  };
+
+  let activeMarket = "TW";
+  let quoteLoadToken = 0;
+
+  function appendTradingViewScript(container, src, config) {
+    const script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = src;
+    script.async = true;
+    script.textContent = JSON.stringify(config);
+    container.appendChild(script);
+    return script;
+  }
+
+  function loadTickerTape() {
+    if (!els.tickerWidget || els.tickerWidget.dataset.loaded === "true") return;
+    els.tickerWidget.dataset.loaded = "true";
+    els.tickerWidget.innerHTML = '<div class="tradingview-widget-container__widget"></div>';
+    appendTradingViewScript(
+      els.tickerWidget,
+      "https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js",
+      {
+        symbols: [
+          { proName: "INDEX:TAIEX", title: "台灣加權" },
+          { proName: "FOREXCOM:SPXUSD", title: "S&P 500" },
+          { proName: "TVC:NI225", title: "日經 225" },
+          { proName: "AMEX:EWY", title: "韓國 ETF" },
+          { proName: "XETR:DAX", title: "德國 DAX" },
+        ],
+        showSymbolLogo: true,
+        isTransparent: true,
+        displayMode: "adaptive",
+        colorTheme: "dark",
+        locale: "zh_TW",
+      },
+    );
+  }
+
+  function renderQuoteLoading(marketKey) {
+    const name = marketGroups[marketKey]?.name || "市場";
+    els.marketQuoteWidget.innerHTML = `
+      <div class="quote-loading">
+        <i></i>
+        <strong>正在載入${name}行情</strong>
+        <span>僅載入目前頁籤，避免一次下載所有市場資料。</span>
+      </div>`;
+    els.quoteFallback.hidden = true;
+  }
+
+  function loadMarketQuotes(marketKey = activeMarket) {
+    if (!els.marketQuoteWidget || !marketGroups[marketKey]) return;
+    activeMarket = marketKey;
+    const token = ++quoteLoadToken;
+    renderQuoteLoading(marketKey);
+
+    const mount = document.createElement("div");
+    mount.className = "tradingview-widget-container market-quotes-mount";
+    mount.innerHTML = '<div class="tradingview-widget-container__widget"></div>';
+    els.marketQuoteWidget.appendChild(mount);
+
+    appendTradingViewScript(
+      mount,
+      "https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js",
+      {
+        width: "100%",
+        height: 460,
+        symbolsGroups: [
+          {
+            name: marketGroups[marketKey].name,
+            originalName: marketGroups[marketKey].name,
+            symbols: marketGroups[marketKey].symbols,
+          },
+        ],
+        showSymbolLogo: true,
+        isTransparent: true,
+        colorTheme: "dark",
+        locale: "zh_TW",
+        backgroundColor: "#07111f",
+      },
+    );
+
+    const observer = new MutationObserver(() => {
+      if (token !== quoteLoadToken) return observer.disconnect();
+      const iframe = mount.querySelector("iframe");
+      if (iframe) {
+        els.marketQuoteWidget.querySelector(".quote-loading")?.remove();
+        els.quoteFallback.hidden = true;
+        observer.disconnect();
+      }
+    });
+    observer.observe(mount, { childList: true, subtree: true });
+
+    window.setTimeout(() => {
+      if (token !== quoteLoadToken) return;
+      if (!mount.querySelector("iframe")) {
+        observer.disconnect();
+        els.marketQuoteWidget.innerHTML = "";
+        els.quoteFallback.hidden = false;
+      }
+    }, 9000);
+  }
+
+  function initMarketQuotes() {
+    if (!els.marketQuoteWidget) return;
+    els.marketTabs.forEach((button) => {
+      button.addEventListener("click", () => {
+        const market = button.dataset.market;
+        els.marketTabs.forEach((tab) => {
+          const selected = tab === button;
+          tab.classList.toggle("active", selected);
+          tab.setAttribute("aria-selected", String(selected));
+        });
+        loadMarketQuotes(market);
+      });
+    });
+    els.retryQuotes?.addEventListener("click", () => loadMarketQuotes(activeMarket));
+
+    const start = () => loadMarketQuotes(activeMarket);
+    const marketSection = document.querySelector("#markets");
+    if ("IntersectionObserver" in window && marketSection) {
+      const observer = new IntersectionObserver((entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          observer.disconnect();
+          start();
+        }
+      }, { rootMargin: "240px" });
+      observer.observe(marketSection);
+    } else {
+      window.setTimeout(start, 300);
+    }
+  }
 
   function dateParts(date = new Date()) {
     const parts = new Intl.DateTimeFormat("en-CA", {
@@ -351,8 +537,8 @@
     const sources = state.payload.sources || [];
     els.sourceStatus.innerHTML = `
       <div class="source-item">
-        <div><strong>TradingView 市場行情</strong><small>依交易所授權提供即時或延遲資料</small></div>
-        <span class="source-state"><i></i>嵌入行情</span>
+        <div><strong>TradingView 市場行情</strong><small>採單一市場延遲載入，降低頁面負擔</small></div>
+        <span class="source-state"><i></i>快速模式</span>
       </div>`;
     if (!sources.length) return;
     for (const source of sources) {
@@ -441,6 +627,8 @@
     navigator.serviceWorker.register("service-worker.js").catch(() => {});
   }
 
+  initMarketQuotes();
+  window.addEventListener("load", () => window.setTimeout(loadTickerTape, 1200), { once: true });
   loadData();
   setInterval(updateClock, 1000);
 })();

@@ -8,9 +8,7 @@
   <title>全球市場即時雷達｜Global Market Radar</title>
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="assets/styles.css" />
-  <script type="module" src="https://widgets.tradingview-widget.com/w/en/tv-ticker-tape.js"></script>
-  <script type="module" src="https://widgets.tradingview-widget.com/w/en/tv-market-overview.js"></script>
+  <link rel="stylesheet" href="assets/styles.css?v=3" />
 </head>
 <body>
   <div class="noise" aria-hidden="true"></div>
@@ -33,13 +31,9 @@
   </header>
 
   <div class="ticker-shell" aria-label="全球主要市場即時或延遲報價">
-    <tv-ticker-tape
-      symbols="INDEX:TAIEX,FOREXCOM:SPXUSD,FOREXCOM:NSXUSD,FOREXCOM:DJI,NASDAQ:SOX,TVC:NI225,KRX:KOSPI,XETR:DAX,FTSE:UKX,EURONEXT:PX1"
-      item-size="compact"
-      theme="dark"
-      locale="zh_TW"
-      transparent-background
-    ></tv-ticker-tape>
+    <div id="tickerWidget" class="ticker-widget">
+      <span class="ticker-placeholder">行情跑馬燈將於頁面載入後顯示</span>
+    </div>
   </div>
 
   <main id="top" class="shell">
@@ -70,13 +64,26 @@
         </div>
         <span class="quote-badge"><i></i> 即時或延遲報價</span>
       </div>
-      <div class="quote-widget-card">
-        <tv-market-overview
-          theme="dark"
-          locale="zh_TW"
-          transparent-background
-          symbol-sectors='[{"sectionName":"台灣","symbols":["INDEX:TAIEX","TWSE:2330","TWSE:2317","TWSE:2454","TWSE:2308"]},{"sectionName":"美國","symbols":["FOREXCOM:SPXUSD","FOREXCOM:NSXUSD","FOREXCOM:DJI","NASDAQ:SOX","NASDAQ:NVDA","NASDAQ:MSFT"]},{"sectionName":"日本","symbols":["TVC:NI225","TSE:TOPIX","TSE:7203","TSE:9984","TSE:8035"]},{"sectionName":"韓國","symbols":["KRX:KOSPI","KRX:KOSDAQ","KRX:005930","KRX:000660"]},{"sectionName":"歐洲","symbols":["XETR:DAX","FTSE:UKX","EURONEXT:PX1","XETR:SAP","EURONEXT:ASML"]}]'
-        ></tv-market-overview>
+      <div class="market-tabs" role="tablist" aria-label="市場切換">
+        <button class="market-tab active" type="button" data-market="TW" role="tab" aria-selected="true">台灣</button>
+        <button class="market-tab" type="button" data-market="US" role="tab" aria-selected="false">美國</button>
+        <button class="market-tab" type="button" data-market="JP" role="tab" aria-selected="false">日本</button>
+        <button class="market-tab" type="button" data-market="KR" role="tab" aria-selected="false">韓國</button>
+        <button class="market-tab" type="button" data-market="EU" role="tab" aria-selected="false">歐洲</button>
+      </div>
+      <div class="quote-widget-card fast-quotes">
+        <div id="marketQuoteWidget" class="market-quote-widget" aria-live="polite">
+          <div class="quote-loading">
+            <i></i>
+            <strong>準備載入台灣行情</strong>
+            <span>只載入目前選取的市場，減少等待時間。</span>
+          </div>
+        </div>
+        <div id="quoteFallback" class="quote-fallback" hidden>
+          <strong>行情元件目前沒有回應</strong>
+          <span>可能是 TradingView 暫時無法連線、瀏覽器阻擋第三方內容，或該商品不開放外部嵌入。</span>
+          <button id="retryQuotes" type="button">重新載入行情</button>
+        </div>
       </div>
       <div class="quote-notice">
         <strong>報價說明</strong>
@@ -231,6 +238,6 @@
   </template>
 
   <script src="data/seed.js"></script>
-  <script src="assets/app.js" defer></script>
+  <script src="assets/app.js?v=3" defer></script>
 </body>
 </html>
