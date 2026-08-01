@@ -1,4 +1,4 @@
-name: Update related news
+name: Update multi-source finance news
 
 on:
   schedule:
@@ -29,7 +29,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Refresh related coverage
+      - name: Refresh multi-source finance coverage
         env:
           NEWS_MAX_EVENTS: "12"
         run: python scripts/update_news.py

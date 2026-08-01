@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const PREF_KEY = "market-event-radar-v7";
+  const PREF_KEY = "market-event-radar-v9";
   const state = {
     payload: { metadata: {}, sources: [], events: [] },
     newsPayload: { metadata: {}, source: {}, items: [] },
@@ -127,6 +127,8 @@
     $("#weekCount").textContent = String(weekEvents.length);
     $("#highCount").textContent = String(highEvents.length);
     $("#nextTitle").textContent = nextHigh ? nextHigh.title : "近期沒有高影響事件";
+    const nextLink = $("#nextEventLink");
+    if (nextLink) nextLink.href = nextHigh ? `event.html?id=${encodeURIComponent(nextHigh.id)}` : "#calendarSection";
     $("#nextCountdown").textContent = nextHigh ? formatRelative(nextHigh.timestamp - now.getTime()) : "—";
     let hintTitle = "穩定";
     let hintText = "本週事件壓力偏低";
@@ -163,6 +165,29 @@
     return days;
   }
 
+  function isMobileCalendar() {
+    return window.matchMedia("(max-width: 820px)").matches;
+  }
+
+  function openDayEvents(day, events) {
+    const dialog = $("#dayEventsDialog");
+    const title = $("#dayEventsTitle");
+    const list = $("#dayEventsList");
+    if (!dialog || !title || !list) return;
+    title.textContent = `${day.getMonth() + 1} 月 ${day.getDate()} 日（週${DAY_NAMES[day.getDay()]}）`;
+    if (!events.length) {
+      list.innerHTML = '<div class="day-events-empty">這一天沒有市場事件。</div>';
+    } else {
+      list.innerHTML = events.map((event) => `
+        <a class="day-event-row impact-${event.impact}" href="event.html?id=${encodeURIComponent(event.id)}">
+          <div class="day-event-time">${event.all_day ? "全天" : `${pad(event.startDate.getHours())}:${pad(event.startDate.getMinutes())}`}</div>
+          <div><strong>${escapeHtml(event.title)}</strong><small>${REGION_MAP[event.region] || event.region} · ${CATEGORY_MAP[event.category] || event.category} · ${IMPACT_MAP[event.impact]}</small></div>
+          <span>›</span>
+        </a>`).join("");
+    }
+    if (!dialog.open) dialog.showModal();
+  }
+
   function renderCalendar() {
     const grid = $("#calendarGrid");
     grid.innerHTML = "";
@@ -184,11 +209,26 @@
       cell.className = "calendar-day";
       if (day.getMonth() !== baseDate.getMonth()) cell.classList.add("muted");
       if (key === todayKey) cell.classList.add("today");
-      const extra = cellEvents.length > 3 ? `<button class="more-link" data-day="${key}">+${cellEvents.length - 3} 更多</button>` : "";
+      const mobile = isMobileCalendar();
+      const extra = !mobile && cellEvents.length > 3 ? `<button class="more-link" data-day="${key}">+${cellEvents.length - 3} 更多</button>` : "";
       cell.innerHTML = `<div class="calendar-day-head"><strong>${day.getDate()}</strong><small>${cellEvents.length ? `${cellEvents.length} 件` : ""}</small></div><div class="calendar-events"></div>${extra}`;
       const box = cell.querySelector(".calendar-events");
-      cellEvents.slice(0, 3).forEach((event) => box.appendChild(eventChip(event)));
-      if (!cellEvents.length) box.innerHTML = '<div class="calendar-empty-mini"></div>';
+      if (mobile) {
+        box.innerHTML = cellEvents.length
+          ? `<div class="mobile-event-dots">${cellEvents.slice(0, 4).map((event) => `<i class="impact-${event.impact}"></i>`).join("")}</div>`
+          : '<div class="calendar-empty-mini"></div>';
+        cell.classList.add("mobile-day-cell");
+        cell.tabIndex = 0;
+        cell.setAttribute("role", "button");
+        cell.setAttribute("aria-label", `${day.getMonth()+1}月${day.getDate()}日，${cellEvents.length}件事件`);
+        cell.addEventListener("click", () => openDayEvents(day, cellEvents));
+        cell.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") { event.preventDefault(); openDayEvents(day, cellEvents); }
+        });
+      } else {
+        cellEvents.slice(0, 3).forEach((event) => box.appendChild(eventChip(event)));
+        if (!cellEvents.length) box.innerHTML = '<div class="calendar-empty-mini"></div>';
+      }
       grid.appendChild(cell);
     });
     $$(".more-link").forEach((button) => button.addEventListener("click", () => {
@@ -261,6 +301,10 @@
 
   function bind() {
     $("#refreshBtn").addEventListener("click", () => window.location.reload());
+    $("#closeDayEventsBtn")?.addEventListener("click", () => $("#dayEventsDialog")?.close());
+    $("#dayEventsDialog")?.addEventListener("click", (event) => {
+      if (event.target === $("#dayEventsDialog")) $("#dayEventsDialog").close();
+    });
     $("#prevMonth").addEventListener("click", () => { state.calendarDate = new Date(state.calendarDate.getFullYear(), state.calendarDate.getMonth() - 1, 1); renderCalendar(); savePrefs(); });
     $("#nextMonth").addEventListener("click", () => { state.calendarDate = new Date(state.calendarDate.getFullYear(), state.calendarDate.getMonth() + 1, 1); renderCalendar(); savePrefs(); });
     $("#todayMonth").addEventListener("click", () => { const now = new Date(); state.calendarDate = new Date(now.getFullYear(), now.getMonth(), 1); renderCalendar(); savePrefs(); });
@@ -305,7 +349,7 @@
       if ($("#syncActionBtn")) $("#syncActionBtn").textContent = "帳號設定";
       if ($("#drawerSyncState")) $("#drawerSyncState").textContent = "已啟用 Google 跨裝置同步";
     } else {
-      if (label) label.textContent = "訪客模式";
+      if (label) label.textContent = "登入／訪客";
       if (avatar) { avatar.textContent = "訪"; avatar.style.backgroundImage = ""; avatar.classList.remove("has-photo"); }
       if (status) status.textContent = enabled ? "可使用 Google 登入，或繼續使用訪客模式。" : "Google 登入尚未啟用：請先設定 Firebase。訪客模式仍可正常使用。";
       if (logout) logout.hidden = true;
@@ -438,6 +482,11 @@
     applyFilters();
     updateClock();
     setInterval(updateClock, 1000);
+    let resizeTimer;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(renderCalendar, 120);
+    });
     $("#yearLabel").textContent = String(new Date().getFullYear());
   }
 

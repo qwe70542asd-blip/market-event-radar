@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#07111f" />
+  <meta name="description" content="台灣與國際財經新聞整合頁，涵蓋台股、科技、總經、央行與全球市場。" />
+  <title>財經新聞｜全球市場即時雷達</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="assets/styles.css?v=9" />
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="brand" href="index.html">
+      <span class="brand-mark"><svg viewBox="0 0 48 48"><path d="M7 34 16 24l7 6 10-16 8 6"/><path d="M7 40h34"/></svg></span>
+      <span><strong>財經新聞雷達 <em class="version-badge">v9</em></strong><small>MULTI-SOURCE MARKET NEWS</small></span>
+    </a>
+    <div class="top-actions">
+      <a class="mini-btn nav-link" href="index.html">事件月曆</a>
+      <button id="accountBtn" class="account-btn" type="button">
+        <span id="accountAvatar" class="account-avatar">訪</span><span id="accountLabel">登入／訪客</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="shell news-shell">
+    <section class="news-hero-compact">
+      <div>
+        <p class="eyebrow">MULTI-SOURCE COVERAGE</p>
+        <h1>台灣與國際財經新聞</h1>
+        <p>整合中央社、經濟日報及多家台灣與國際財經來源。本站只顯示標題、來源與摘要，點擊後前往原始媒體閱讀。</p>
+      </div>
+      <div class="news-update-box"><span>最後更新</span><strong id="newsPageUpdatedAt">讀取中</strong><small id="newsPageCount">0 則</small></div>
+    </section>
+
+    <section class="news-source-directory">
+      <div class="section-heading section-heading-tight">
+        <div><p class="eyebrow">DIRECT SOURCES</p><h2>常用財經媒體</h2></div>
+        <span>外部連結</span>
+      </div>
+      <div class="source-link-grid">
+        <a href="https://money.udn.com/" target="_blank" rel="noreferrer noopener"><b>經濟日報</b><small>台股、產業、國際財經</small></a>
+        <a href="https://www.cnyes.com/" target="_blank" rel="noreferrer noopener"><b>鉅亨網</b><small>市場快訊與全球行情</small></a>
+        <a href="https://www.moneydj.com/" target="_blank" rel="noreferrer noopener"><b>MoneyDJ</b><small>台股、美股與產業研究</small></a>
+        <a href="https://ctee.com.tw/" target="_blank" rel="noreferrer noopener"><b>工商時報</b><small>產業與企業新聞</small></a>
+        <a href="https://tw.stock.yahoo.com/" target="_blank" rel="noreferrer noopener"><b>Yahoo 股市</b><small>台股新聞與自選行情</small></a>
+        <a href="https://www.cna.com.tw/list/aie.aspx" target="_blank" rel="noreferrer noopener"><b>中央社產經</b><small>產經證券與科技</small></a>
+        <a href="https://www.reuters.com/markets/" target="_blank" rel="noreferrer noopener"><b>Reuters Markets</b><small>全球市場與總經</small></a>
+        <a href="https://www.cnbc.com/markets/" target="_blank" rel="noreferrer noopener"><b>CNBC Markets</b><small>美股與企業財報</small></a>
+      </div>
+    </section>
+
+    <section class="news-filter-bar">
+      <input id="newsSearchInput" type="search" placeholder="搜尋新聞、公司、產業…" />
+      <select id="newsRegionFilter">
+        <option value="all">全部地區</option><option value="TW">台灣</option><option value="US">美國</option>
+        <option value="ASIA">亞洲</option><option value="GLOBAL">全球</option>
+      </select>
+      <select id="newsTopicFilter">
+        <option value="all">全部主題</option><option value="market">市場</option><option value="tech">科技／AI</option>
+        <option value="macro">總經／央行</option><option value="earnings">財報</option>
+      </select>
+      <select id="newsSourceFilter"><option value="all">全部來源</option></select>
+    </section>
+
+    <section>
+      <div id="newsPageGrid" class="news-page-grid"></div>
+      <div id="newsPageEmpty" class="empty-state" hidden><h3>目前沒有符合條件的新聞</h3><p>更換篩選條件，或稍後等待排程更新。</p></div>
+    </section>
+  </main>
+
+  <dialog id="accountDialog" class="account-dialog">
+    <form method="dialog" class="account-panel">
+      <button class="dialog-x" value="cancel">×</button>
+      <p class="eyebrow">ACCOUNT & SYNC</p><h2>帳號與同步</h2>
+      <p class="dialog-intro">不登入也能使用；登入 Google 後，自選與偏好可跨裝置同步。</p>
+      <div class="login-options">
+        <button id="guestModeBtn" class="login-option" type="button"><span class="login-icon">訪</span><span><strong>訪客模式</strong><small>資料只存在目前裝置</small></span></button>
+        <button id="googleLoginBtn" class="login-option google-option" type="button"><span class="google-g">G</span><span><strong>Google 登入</strong><small>跨裝置同步</small></span></button>
+      </div>
+      <div id="authStatus" class="auth-status"></div>
+      <button id="logoutBtn" class="text-btn danger" type="button" hidden>登出目前帳號</button>
+    </form>
+  </dialog>
+
+  <script src="data/news-seed.js"></script>
+  <script type="module" src="assets/auth.js?v=9"></script>
+  <script src="assets/news-page.js?v=9" defer></script>
+  <script src="assets/sw-register.js?v=9" defer></script>
+</body>
+</html>

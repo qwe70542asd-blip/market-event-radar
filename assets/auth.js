@@ -1,6 +1,6 @@
 import { firebaseConfig, firebaseEnabled } from "./firebase-config.js";
 
-const LOCAL_KEY = "market-radar-user-data-v8";
+const LOCAL_KEY = "market-radar-user-data-v9";
 const AUTH_EVENT = "market-auth-changed";
 const DATA_EVENT = "market-user-data-changed";
 

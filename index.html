@@ -8,7 +8,7 @@
   <title>全球市場即時雷達｜Global Market Radar</title>
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="assets/styles.css?v=8" />
+  <link rel="stylesheet" href="assets/styles.css?v=9.1" />
   <script type="module" src="https://widgets.tradingview-widget.com/w/en/tv-ticker-tape.js"></script>
 </head>
 <body>
@@ -18,14 +18,15 @@
       <span class="brand-mark" aria-hidden="true">
         <svg viewBox="0 0 48 48" role="img"><path d="M7 34 16 24l7 6 10-16 8 6"/><path d="M7 40h34"/></svg>
       </span>
-      <span><strong>全球市場即時雷達</strong><small>MARKET EVENT RADAR</small></span>
+      <span><strong>全球市場即時雷達 <em class="version-badge">v9</em></strong><small>TAIWAN INVESTOR EVENT RADAR</small></span>
     </a>
     <div class="top-actions">
       <span class="live-dot"><i></i> 自動更新</span>
-      <button id="watchlistBtn" class="mini-btn top-mini" type="button">自選清單 <span id="watchlistCount">0</span></button>
+      <a class="mini-btn top-mini nav-link" href="news.html">財經新聞</a>
+      <button id="watchlistBtn" class="mini-btn top-mini" type="button">自選 <span id="watchlistCount">0</span></button>
       <button id="accountBtn" class="account-btn" type="button" aria-label="帳號與同步">
         <span id="accountAvatar" class="account-avatar">訪</span>
-        <span id="accountLabel">訪客模式</span>
+        <span id="accountLabel">登入／訪客</span>
       </button>
       <button id="refreshBtn" class="icon-btn" type="button" title="重新載入資料" aria-label="重新載入資料">
         <svg viewBox="0 0 24 24"><path d="M20 6v5h-5"/><path d="M4 18v-5h5"/><path d="M6.1 9A7 7 0 0 1 18.3 6.3L20 11M4 13l1.7 4.7A7 7 0 0 0 17.9 15"/></svg>
@@ -44,49 +45,50 @@
   </div>
 
   <main class="shell shell-compact">
-    <section class="hero-compact">
-      <div class="hero-copy-block">
-        <p class="eyebrow">INVESTOR WORKSPACE · Asia/Taipei</p>
-        <h1>市場溫度 + 事件月曆，快速抓到下一個關鍵波動。</h1>
-        <p>首頁只保留真正需要每天看的東西：市場代理行情、下一個高影響事件、月曆排程與資料健康。每個事件點進去再看完整說明與相關報導。</p>
-        <div class="hero-inline-meta">
-          <span>事件更新：<strong id="updatedAt">讀取中</strong></span>
-          <span>報導更新：<strong id="newsUpdatedAt">讀取中</strong></span>
+    <section class="command-center">
+      <div class="command-main">
+        <div class="command-title-row">
+          <div>
+            <p class="eyebrow">TAIWAN INVESTOR COCKPIT · Asia/Taipei</p>
+            <h1>下一個市場震盪點</h1>
+          </div>
+          <div class="clock-compact">
+            <span id="todayLabel">—</span>
+            <strong id="clockLabel">—</strong>
+          </div>
+        </div>
+        <div class="next-event-strip">
+          <span>下一個高影響事件</span>
+          <strong id="nextTitle">讀取中</strong>
+          <b id="nextCountdown">—</b>
+          <a id="nextEventLink" class="mini-btn" href="#calendarSection">查看月曆</a>
         </div>
       </div>
-      <div class="hero-side-card">
-        <div class="clock-line"><span id="todayLabel">—</span><strong id="clockLabel">—</strong></div>
-        <div class="next-inline"><label>下一個高影響事件</label><strong id="nextTitle">讀取中</strong><span id="nextCountdown">—</span></div>
+
+      <div class="command-stats">
+        <article><span>今日</span><strong id="todayCount">0</strong><small id="todayRisk">讀取中</small></article>
+        <article><span>7 天事件</span><strong id="weekCount">0</strong><small>財報／央行／總經</small></article>
+        <article><span>30 天高影響</span><strong id="highCount">0</strong><small>交易計畫重點</small></article>
+        <article><span>風險溫度</span><strong id="marketHintValue">觀察中</strong><small id="marketHintText">等待整理</small></article>
       </div>
-    </section>
 
-    <section class="stats-grid compact-stats" aria-label="市場事件摘要">
-      <article class="stat-card primary"><span>今日事件</span><strong id="todayCount">0</strong><small id="todayRisk">讀取中</small></article>
-      <article class="stat-card"><span>未來 7 天</span><strong id="weekCount">0</strong><small>財報、央行與總經數據</small></article>
-      <article class="stat-card"><span>未來 30 天高影響</span><strong id="highCount">0</strong><small>先排入交易計畫</small></article>
-      <article class="stat-card"><span>今日市場提示</span><strong id="marketHintValue">觀察中</strong><small id="marketHintText">等待事件整理</small></article>
-    </section>
+      <div class="command-tools">
+        <button id="openWatchlistBtn" class="quick-action" type="button"><span>★</span><b>自選收藏</b><small>股票與事件</small></button>
+        <button id="notificationBtn" class="quick-action" type="button"><span>◉</span><b>事件提醒</b><small>通知權限</small></button>
+        <button id="syncActionBtn" class="quick-action" type="button"><span>↻</span><b id="syncTitle">本機儲存</b><small id="syncDescription">登入後跨裝置同步</small></button>
+        <a class="quick-action" href="news.html"><span>▤</span><b>財經新聞</b><small>台灣與國際來源</small></a>
+      </div>
 
-
-    <section class="personal-tools" aria-label="個人化投資工具">
-      <article class="tool-card">
-        <div><p class="eyebrow">WATCHLIST</p><h2>自選事件與股票</h2><p>收藏事件、加入觀察標的，登入後可在電腦與手機同步。</p></div>
-        <button id="openWatchlistBtn" class="mini-btn" type="button">管理自選</button>
-      </article>
-      <article class="tool-card">
-        <div><p class="eyebrow">REMINDERS</p><h2>重大事件提醒</h2><p>設定事件前 1 小時或 1 天提醒；訪客模式儲存在目前裝置。</p></div>
-        <button id="notificationBtn" class="mini-btn" type="button">開啟通知</button>
-      </article>
-      <article class="tool-card">
-        <div><p class="eyebrow">SYNC</p><h2 id="syncTitle">本機儲存</h2><p id="syncDescription">目前未登入，收藏與偏好只保存在這台裝置。</p></div>
-        <button id="syncActionBtn" class="mini-btn" type="button">登入同步</button>
-      </article>
+      <div class="update-line">
+        <span>事件更新 <strong id="updatedAt">讀取中</strong></span>
+        <span>新聞更新 <strong id="newsUpdatedAt">讀取中</strong></span>
+      </div>
     </section>
 
     <section class="workspace-card" aria-label="事件篩選器">
       <div class="workspace-head compact-head">
-        <div><p class="eyebrow">FOCUS FILTER</p><h2>焦點篩選</h2></div>
-        <span>快速切到台股、利率、科技財報或亞洲主題</span>
+        <div><p class="eyebrow">FILTER</p><h2>篩選事件</h2></div>
+        <span>搜尋、地區、類型與焦點模式</span>
       </div>
       <div id="focusChips" class="focus-chips" role="group" aria-label="投資焦點">
         <button type="button" class="focus-chip active" data-focus="all">全部</button>
@@ -106,6 +108,16 @@
           <select id="categoryFilter" aria-label="事件類型"><option value="all">全部類型</option><option value="central-bank">央行政策</option><option value="macro">總經數據</option><option value="earnings">企業財報</option><option value="tech">科技活動</option><option value="taiwan">台股公告</option><option value="policy">政策／地緣</option></select>
           <label class="toggle"><input id="highOnly" type="checkbox" /><span></span>只看高影響</label>
         </div>
+      </div>
+    </section>
+
+    <section class="headline-rail">
+      <div class="rail-head">
+        <div><p class="eyebrow">MARKET HEADLINES</p><h2>最新財經焦點</h2></div>
+        <a href="news.html">查看全部新聞 →</a>
+      </div>
+      <div id="headlineRail" class="headline-grid">
+        <div class="headline-skeleton"></div><div class="headline-skeleton"></div><div class="headline-skeleton"></div>
       </div>
     </section>
 
@@ -138,6 +150,17 @@
   <div id="eventPreview" class="event-preview" role="tooltip" hidden></div>
 
 
+
+  <dialog id="dayEventsDialog" class="day-events-dialog">
+    <div class="day-events-panel">
+      <div class="day-events-head">
+        <div><p class="eyebrow">DAY AGENDA</p><h2 id="dayEventsTitle">當日事件</h2></div>
+        <button id="closeDayEventsBtn" class="dialog-x" type="button" aria-label="關閉">×</button>
+      </div>
+      <div id="dayEventsList" class="day-events-list"></div>
+    </div>
+  </dialog>
+
   <dialog id="accountDialog" class="account-dialog">
     <form method="dialog" class="account-panel">
       <button class="dialog-x" value="cancel" aria-label="關閉">×</button>
@@ -154,7 +177,7 @@
           <span><strong>使用 Google 帳號登入</strong><small>在電腦與手機同步個人資料</small></span>
         </button>
       </div>
-      <div id="authStatus" class="auth-status">尚未設定 Firebase 時，Google 登入按鈕會保持停用。</div>
+      <div id="authStatus" class="auth-status">Google 登入需先設定 Firebase；未設定前仍可完整使用訪客模式。</div>
       <button id="logoutBtn" class="text-btn danger" type="button" hidden>登出目前帳號</button>
     </form>
   </dialog>
@@ -184,7 +207,9 @@
 
   <script src="data/seed.js"></script>
   <script src="data/news-seed.js"></script>
-  <script type="module" src="assets/auth.js?v=8"></script>
-  <script src="assets/app.js?v=8" defer></script>
+  <script type="module" src="assets/auth.js?v=9"></script>
+  <script src="assets/app.js?v=9.1" defer></script>
+  <script src="assets/news-ui.js?v=9" defer></script>
+  <script src="assets/sw-register.js?v=9.1" defer></script>
 </body>
 </html>

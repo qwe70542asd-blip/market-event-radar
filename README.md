@@ -87,3 +87,12 @@ http://localhost:8000
 - Firebase Authentication + Cloud Firestore 跨裝置同步骨架。
 - 自選股票、收藏事件、通知權限、離線本機資料。
 - 需依 `Firebase設定說明-v8.txt` 填入 Firebase 專案設定後，Google 登入才會啟用。
+
+
+## v9 緊湊版與多來源新聞
+
+- 首頁改為單一緊湊投資工作台。
+- 登入／訪客入口固定於右上角，並顯示 v9 版本標籤。
+- 新增獨立 `news.html` 多來源財經新聞頁。
+- 新聞更新程式支援中央社、經濟日報、MoneyDJ 與多家台灣／國際媒體來源。
+- 首頁僅保留三則新聞焦點，避免資訊過度分散。
