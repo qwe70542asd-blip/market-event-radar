@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#07111f" />
+  <meta name="description" content="市場事件詳情、影響資產、官方來源與相關報導。" />
+  <title>事件詳情｜全球市場即時雷達</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="assets/styles.css?v=8" />
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="回到首頁">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 48 48" role="img"><path d="M7 34 16 24l7 6 10-16 8 6"/><path d="M7 40h34"/></svg>
+      </span>
+      <span><strong>事件詳情</strong><small>MARKET EVENT DETAIL</small></span>
+    </a>
+    <div class="top-actions"><button id="accountBtn" class="account-btn" type="button"><span id="accountAvatar" class="account-avatar">訪</span><span id="accountLabel">訪客模式</span></button><a class="mini-btn ghost-link" href="index.html">← 返回首頁</a></div>
+  </header>
+
+  <main class="shell shell-detail">
+    <div id="detailRoot" class="detail-root">
+      <div class="loading-card">讀取事件資料中…</div>
+    </div>
+  </main>
+
+  <dialog id="accountDialog" class="account-dialog">
+    <form method="dialog" class="account-panel">
+      <button class="dialog-x" value="cancel" aria-label="關閉">×</button>
+      <p class="eyebrow">ACCOUNT & SYNC</p><h2>帳號與同步</h2>
+      <p class="dialog-intro">登入 Google 後，可同步收藏事件、自選清單與提醒設定。</p>
+      <div class="login-options">
+        <button id="guestModeBtn" class="login-option" type="button"><span class="login-icon">訪</span><span><strong>訪客模式</strong><small>只保存在目前裝置</small></span></button>
+        <button id="googleLoginBtn" class="login-option google-option" type="button"><span class="google-g">G</span><span><strong>Google 登入</strong><small>跨裝置同步</small></span></button>
+      </div>
+      <div id="authStatus" class="auth-status"></div>
+      <button id="logoutBtn" class="text-btn danger" type="button" hidden>登出目前帳號</button>
+    </form>
+  </dialog>
+  <script src="data/seed.js"></script>
+  <script src="data/news-seed.js"></script>
+  <script type="module" src="assets/auth.js?v=8"></script>
+  <script src="assets/event.js?v=8" defer></script>
+</body>
+</html>
