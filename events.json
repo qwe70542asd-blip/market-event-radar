@@ -1,19 +1,10 @@
 {
   "metadata": {
-    "updated_at": "2026-08-01T19:20:47+08:00",
+    "version": "v11.1.0",
+    "updated_at": "2026-08-03T07:57:21+08:00",
     "timezone": "Asia/Taipei",
-    "generation_mode": "offline",
-    "event_count": 144,
-    "group_counts": {
-      "earnings": 17,
-      "dividend": 87,
-      "macro": 36,
-      "corporate": 4
-    },
-    "calendar_version": "v10.4-rich-calendar",
-    "coverage_note": "Company events include low-impact rows; use calendar filters and portfolio priority.",
-    "sources_healthy": 2,
-    "source_count": 16
+    "event_count": 140,
+    "note": "Verified previous archive plus manual official-source events; no guessed dates."
   },
   "sources": [
     {
@@ -145,64 +136,6 @@
     }
   ],
   "events": [
-    {
-      "id": "tw-年度-deadline-2026-03-31",
-      "title": "台灣多數上市櫃公司 年度財務報告申報期限",
-      "start": "2026-03-31T23:00:00+08:00",
-      "category": "report-deadline",
-      "event_type": "financial-report-deadline",
-      "event_group": "earnings",
-      "region": "TW",
-      "impact": "high",
-      "description": "此為多數一般公司的法定申報截止日；金融、保險、特殊產業及個別公司期限可能不同。",
-      "market_effect": "截止日前後通常是台股財報密集期，個股可能因 EPS、毛利率與展望落差出現較大波動。",
-      "assets": [
-        "台股",
-        "上市櫃公司"
-      ],
-      "tags": [
-        "財報",
-        "申報期限",
-        "年度"
-      ],
-      "source_name": "MOPS 財務報告申報制度",
-      "source_url": "https://mops.twse.com.tw/",
-      "origin": "rule-deadline",
-      "all_day": true,
-      "is_estimated": true,
-      "verification_status": "rule-based",
-      "time_status": "deadline-window",
-      "fiscal_period": "年度"
-    },
-    {
-      "id": "tw-q1-deadline-2026-05-15",
-      "title": "台灣多數上市櫃公司 第一季財務報告申報期限",
-      "start": "2026-05-15T23:00:00+08:00",
-      "category": "report-deadline",
-      "event_type": "financial-report-deadline",
-      "event_group": "earnings",
-      "region": "TW",
-      "impact": "medium",
-      "description": "此為多數一般公司的法定申報截止日；金融、保險、特殊產業及個別公司期限可能不同。",
-      "market_effect": "截止日前後通常是台股財報密集期，個股可能因 EPS、毛利率與展望落差出現較大波動。",
-      "assets": [
-        "台股",
-        "上市櫃公司"
-      ],
-      "tags": [
-        "財報",
-        "申報期限",
-        "Q1"
-      ],
-      "source_name": "MOPS 財務報告申報制度",
-      "source_url": "https://mops.twse.com.tw/",
-      "origin": "rule-deadline",
-      "all_day": true,
-      "is_estimated": true,
-      "verification_status": "rule-based",
-      "time_status": "deadline-window",
-      "fiscal_period": "Q1"
-    },
     {
       "id": "tw-monthly-revenue-deadline-2026-07",
       "title": "台灣上市櫃公司 2026 年 6 月營收公告期限",
@@ -5524,64 +5457,6 @@
       "verification_status": "rule-based",
       "time_status": "deadline-window",
       "fiscal_period": "Q1"
-    },
-    {
-      "id": "tw-q2-deadline-2027-08-16",
-      "title": "台灣多數上市櫃公司 第二季財務報告申報期限",
-      "start": "2027-08-16T23:00:00+08:00",
-      "category": "report-deadline",
-      "event_type": "financial-report-deadline",
-      "event_group": "earnings",
-      "region": "TW",
-      "impact": "high",
-      "description": "此為多數一般公司的法定申報截止日；金融、保險、特殊產業及個別公司期限可能不同。",
-      "market_effect": "截止日前後通常是台股財報密集期，個股可能因 EPS、毛利率與展望落差出現較大波動。",
-      "assets": [
-        "台股",
-        "上市櫃公司"
-      ],
-      "tags": [
-        "財報",
-        "申報期限",
-        "Q2"
-      ],
-      "source_name": "MOPS 財務報告申報制度",
-      "source_url": "https://mops.twse.com.tw/",
-      "origin": "rule-deadline",
-      "all_day": true,
-      "is_estimated": true,
-      "verification_status": "rule-based",
-      "time_status": "deadline-window",
-      "fiscal_period": "Q2"
-    },
-    {
-      "id": "tw-q3-deadline-2027-11-15",
-      "title": "台灣多數上市櫃公司 第三季財務報告申報期限",
-      "start": "2027-11-15T23:00:00+08:00",
-      "category": "report-deadline",
-      "event_type": "financial-report-deadline",
-      "event_group": "earnings",
-      "region": "TW",
-      "impact": "medium",
-      "description": "此為多數一般公司的法定申報截止日；金融、保險、特殊產業及個別公司期限可能不同。",
-      "market_effect": "截止日前後通常是台股財報密集期，個股可能因 EPS、毛利率與展望落差出現較大波動。",
-      "assets": [
-        "台股",
-        "上市櫃公司"
-      ],
-      "tags": [
-        "財報",
-        "申報期限",
-        "Q3"
-      ],
-      "source_name": "MOPS 財務報告申報制度",
-      "source_url": "https://mops.twse.com.tw/",
-      "origin": "rule-deadline",
-      "all_day": true,
-      "is_estimated": true,
-      "verification_status": "rule-based",
-      "time_status": "deadline-window",
-      "fiscal_period": "Q3"
     }
   ]
 }
