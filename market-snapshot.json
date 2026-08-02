@@ -2,7 +2,7 @@
   "metadata": {
     "updated_at": "2026-08-02T17:16:54+08:00",
     "timezone": "Asia/Taipei",
-    "version": "v10.8.2",
+    "version": "v10.8.4",
     "item_count": 33,
     "healthy_count": 32,
     "status": "ok",
@@ -110,7 +110,7 @@
       "delay": "等待更新",
       "status": "pending",
       "note": "TPEx 與 Yahoo 皆暫時不可用",
-      "updated_at": "2026-08-02T17:16:54+08:00"
+      "updated_at": "2026-08-03T05:14:20+08:00"
     },
     {
       "id": "SP500",

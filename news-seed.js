@@ -1,22 +1,22 @@
 window.__MARKET_NEWS_SEED__ = {
   "metadata": {
-    "updated_at": "2026-08-03T02:13:18+08:00",
+    "updated_at": "2026-08-03T05:14:23+08:00",
     "timezone": "Asia/Taipei",
     "item_count": 297,
-    "chinese_item_count": 287,
+    "chinese_item_count": 290,
     "healthy_sources": 34,
     "source_count": 69,
     "rotation_bucket": 2,
     "version": "v10.8.4",
     "retention_days": 20,
-    "retention_cutoff": "2026-07-14T02:13:18+08:00",
+    "retention_cutoff": "2026-07-14T05:14:23+08:00",
     "full_refresh": false,
     "industry_counts": {
       "other": 136,
-      "finance": 32,
       "technology": 79,
+      "finance": 33,
       "macro-policy": 17,
-      "healthcare": 6,
+      "healthcare": 5,
       "telecom": 3,
       "consumer": 6,
       "energy": 7,
@@ -26,10 +26,10 @@ window.__MARKET_NEWS_SEED__ = {
       "automotive": 3,
       "tourism": 2
     },
-    "duplicate_titles_removed": 119,
+    "duplicate_titles_removed": 118,
     "direct_link_count": 297,
-    "resolved_google_link_count": 17,
-    "unresolved_link_count": 416,
+    "resolved_google_link_count": 12,
+    "unresolved_link_count": 423,
     "link_resolution_attempts": 90,
     "note": "Only verified publisher article URLs are published. Unresolved links are withheld instead of using Google Search or a source homepage."
   },
@@ -218,7 +218,7 @@ window.__MARKET_NEWS_SEED__ = {
     {
       "name": "主計總處",
       "status": "ok",
-      "count": 5,
+      "count": 6,
       "mode": "publisher-search",
       "language": "zh-Hant",
       "source_group": "official-tw"
@@ -529,8 +529,8 @@ window.__MARKET_NEWS_SEED__ = {
     },
     {
       "name": "產業雷達・機械工業",
-      "status": "rotating-cache",
-      "count": 1,
+      "status": "scheduled",
+      "count": 0,
       "mode": "rotation-1",
       "language": "zh-Hant",
       "source_group": "sector-search"
@@ -545,8 +545,8 @@ window.__MARKET_NEWS_SEED__ = {
     },
     {
       "name": "產業雷達・營建房市",
-      "status": "rotating-cache",
-      "count": 1,
+      "status": "scheduled",
+      "count": 0,
       "mode": "rotation-1",
       "language": "zh-Hant",
       "source_group": "sector-search"
@@ -602,6 +602,182 @@ window.__MARKET_NEWS_SEED__ = {
   ],
   "items": [
     {
+      "id": "a4808486273827d8",
+      "title": "破除ETF高息迷思！證交所指引「5大秘訣」 搞錯「他」恐淪爲韭菜",
+      "link": "https://tw.news.yahoo.com/%E7%A0%B4%E9%99%A4etf%E9%AB%98%E6%81%AF%E8%BF%B7%E6%80%9D-%E8%AD%89%E4%BA%A4%E6%89%80%E6%8C%87%E5%BC%95-5%E5%A4%A7%E7%A7%98%E8%A8%A3-%E6%90%9E%E9%8C%AF-%E4%BB%96-210500295.html",
+      "original_link": "https://tw.news.yahoo.com/%E7%A0%B4%E9%99%A4etf%E9%AB%98%E6%81%AF%E8%BF%B7%E6%80%9D-%E8%AD%89%E4%BA%A4%E6%89%80%E6%8C%87%E5%BC%95-5%E5%A4%A7%E7%A7%98%E8%A8%A3-%E6%90%9E%E9%8C%AF-%E4%BB%96-210500295.html",
+      "direct_link": "https://tw.news.yahoo.com/%E7%A0%B4%E9%99%A4etf%E9%AB%98%E6%81%AF%E8%BF%B7%E6%80%9D-%E8%AD%89%E4%BA%A4%E6%89%80%E6%8C%87%E5%BC%95-5%E5%A4%A7%E7%A7%98%E8%A8%A3-%E6%90%9E%E9%8C%AF-%E4%BB%96-210500295.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/funds-news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市基金動態",
+      "summary": "台股ETF市場熱潮持續，證交所日前發布官方指引，提醒投資人切勿陷入高息迷思。平準金是配息調節機制而非額外獲利，部分ETF採用的掩護性買權策略，雖能增添權利金收益，卻可能在大漲時限縮獲利空間。專家強調配",
+      "published_at": "2026-08-03T05:05:00+08:00",
+      "region": "TW",
+      "topic": "fund",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "fund",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 82,
+      "is_breaking": false,
+      "fetched_at": "2026-08-03T05:14:23+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "",
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
+    },
+    {
+      "id": "d109c648127ff87a",
+      "title": "免大學學歷！黃仁勳曝未來330萬年薪族將湧現 這4種職業最缺人",
+      "link": "https://tw.news.yahoo.com/%E5%85%8D%E5%A4%A7%E5%AD%B8%E5%AD%B8%E6%AD%B7-%E9%BB%83%E4%BB%81%E5%8B%B3%E6%9B%9D%E6%9C%AA%E4%BE%86330%E8%90%AC%E5%B9%B4%E8%96%AA%E6%97%8F%E5%B0%87%E6%B9%A7%E7%8F%BE-%E9%80%994%E7%A8%AE%E8%81%B7%E6%A5%AD%E6%9C%80%E7%BC%BA%E4%BA%BA-201300512.html",
+      "original_link": "https://tw.news.yahoo.com/%E5%85%8D%E5%A4%A7%E5%AD%B8%E5%AD%B8%E6%AD%B7-%E9%BB%83%E4%BB%81%E5%8B%B3%E6%9B%9D%E6%9C%AA%E4%BE%86330%E8%90%AC%E5%B9%B4%E8%96%AA%E6%97%8F%E5%B0%87%E6%B9%A7%E7%8F%BE-%E9%80%994%E7%A8%AE%E8%81%B7%E6%A5%AD%E6%9C%80%E7%BC%BA%E4%BA%BA-201300512.html",
+      "direct_link": "https://tw.news.yahoo.com/%E5%85%8D%E5%A4%A7%E5%AD%B8%E5%AD%B8%E6%AD%B7-%E9%BB%83%E4%BB%81%E5%8B%B3%E6%9B%9D%E6%9C%AA%E4%BE%86330%E8%90%AC%E5%B9%B4%E8%96%AA%E6%97%8F%E5%B0%87%E6%B9%A7%E7%8F%BE-%E9%80%994%E7%A8%AE%E8%81%B7%E6%A5%AD%E6%9C%80%E7%BC%BA%E4%BA%BA-201300512.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/intl-markets/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市國際財經",
+      "summary": "輝達執行長黃仁勳預告AI基礎建設將引爆龐大商機，預計2030年前全球相關支出將達7兆美元，這波浪潮將徹底顛覆傳統就業市場。黃仁勳指出，未來十年內將湧現大量年薪達330萬台幣的高薪族，且不需大學學歷，水",
+      "published_at": "2026-08-03T04:13:00+08:00",
+      "region": "GLOBAL",
+      "topic": "market",
+      "industries": [
+        "technology"
+      ],
+      "primary_industry": "technology",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "科技電子",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 83,
+      "is_breaking": false,
+      "fetched_at": "2026-08-03T05:14:23+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "",
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
+    },
+    {
+      "id": "9334f2456d7902c3",
+      "title": "存股爽領退休金？千萬拚「這類」美股竟一夕歸零 專家揭2致命理財陷阱",
+      "link": "https://tw.news.yahoo.com/%E5%AD%98%E8%82%A1%E7%88%BD%E9%A0%98%E9%80%80%E4%BC%91%E9%87%91-%E5%8D%83%E8%90%AC%E6%8B%9A-%E9%80%99%E9%A1%9E-%E7%BE%8E%E8%82%A1%E7%AB%9F-%E5%A4%95%E6%AD%B8%E9%9B%B6-190700306.html",
+      "original_link": "https://tw.news.yahoo.com/%E5%AD%98%E8%82%A1%E7%88%BD%E9%A0%98%E9%80%80%E4%BC%91%E9%87%91-%E5%8D%83%E8%90%AC%E6%8B%9A-%E9%80%99%E9%A1%9E-%E7%BE%8E%E8%82%A1%E7%AB%9F-%E5%A4%95%E6%AD%B8%E9%9B%B6-190700306.html",
+      "direct_link": "https://tw.news.yahoo.com/%E5%AD%98%E8%82%A1%E7%88%BD%E9%A0%98%E9%80%80%E4%BC%91%E9%87%91-%E5%8D%83%E8%90%AC%E6%8B%9A-%E9%80%99%E9%A1%9E-%E7%BE%8E%E8%82%A1%E7%AB%9F-%E5%A4%95%E6%AD%B8%E9%9B%B6-190700306.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/intl-markets/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市國際財經",
+      "summary": "五十多歲的上班族T先生為補足退休金，鎖定美國高股息股並利用新制NISA投資，不料因美股公司分拆，導致股票被強制轉入一般帳戶，多年累積的免稅額度一夕歸零。專家指出，新制NISA與舊制規則不同，若發生公司",
+      "published_at": "2026-08-03T03:07:00+08:00",
+      "region": "GLOBAL",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 83,
+      "is_breaking": false,
+      "fetched_at": "2026-08-03T05:14:23+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "",
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
+    },
+    {
+      "id": "c922bf9f9173150f",
+      "title": "兆豐銀力挺在地觀光 台灣Pay最高回饋衝20%",
+      "link": "https://tw.news.yahoo.com/%E5%85%86%E8%B1%90%E9%8A%80%E5%8A%9B%E6%8C%BA%E5%9C%A8%E5%9C%B0%E8%A7%80%E5%85%89-%E5%8F%B0%E7%81%A3pay%E6%9C%80%E9%AB%98%E5%9B%9E%E9%A5%8B%E8%A1%9D20-184015000.html",
+      "original_link": "https://tw.news.yahoo.com/%E5%85%86%E8%B1%90%E9%8A%80%E5%8A%9B%E6%8C%BA%E5%9C%A8%E5%9C%B0%E8%A7%80%E5%85%89-%E5%8F%B0%E7%81%A3pay%E6%9C%80%E9%AB%98%E5%9B%9E%E9%A5%8B%E8%A1%9D20-184015000.html",
+      "direct_link": "https://tw.news.yahoo.com/%E5%85%86%E8%B1%90%E9%8A%80%E5%8A%9B%E6%8C%BA%E5%9C%A8%E5%9C%B0%E8%A7%80%E5%85%89-%E5%8F%B0%E7%81%A3pay%E6%9C%80%E9%AB%98%E5%9B%9E%E9%A5%8B%E8%A1%9D20-184015000.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "於員山鄉、仁愛鄉以台灣Pay綁兆豐金融卡交易最高送20%(圖/兆豐銀行 提供)",
+      "published_at": "2026-08-03T02:40:15+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "finance",
+        "tourism"
+      ],
+      "primary_industry": "finance",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "金融保險",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-03T05:14:23+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "",
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
+    },
+    {
+      "id": "b4226050a402c462",
+      "title": "台股週報》期貨夜盤還在跌 融資減少助反攻",
+      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E9%80%B1%E5%A0%B1-%E6%9C%9F%E8%B2%A8%E5%A4%9C%E7%9B%A4%E9%82%84%E5%9C%A8%E8%B7%8C-%E8%9E%8D%E8%B3%87%E6%B8%9B%E5%B0%91%E5%8A%A9%E5%8F%8D%E6%94%BB-184000857.html",
+      "original_link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E9%80%B1%E5%A0%B1-%E6%9C%9F%E8%B2%A8%E5%A4%9C%E7%9B%A4%E9%82%84%E5%9C%A8%E8%B7%8C-%E8%9E%8D%E8%B3%87%E6%B8%9B%E5%B0%91%E5%8A%A9%E5%8F%8D%E6%94%BB-184000857.html",
+      "direct_link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E9%80%B1%E5%A0%B1-%E6%9C%9F%E8%B2%A8%E5%A4%9C%E7%9B%A4%E9%82%84%E5%9C%A8%E8%B7%8C-%E8%9E%8D%E8%B3%87%E6%B8%9B%E5%B0%91%E5%8A%A9%E5%8F%8D%E6%94%BB-184000857.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "(圖/卡優新聞網)",
+      "published_at": "2026-08-03T02:40:00+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-03T05:14:23+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "",
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
+    },
+    {
       "id": "d246f92afd80dc62",
       "title": "不光0050！它也聚焦50大權值股 3成權重上限成法人新選",
       "link": "https://tw.news.yahoo.com/%E4%B8%8D%E5%85%890050-%E5%AE%83%E4%B9%9F%E8%81%9A%E7%84%A650%E5%A4%A7%E6%AC%8A%E5%80%BC%E8%82%A1-3%E6%88%90%E6%AC%8A%E9%87%8D%E4%B8%8A%E9%99%90%E6%88%90%E6%B3%95%E4%BA%BA%E6%96%B0%E9%81%B8-174500207.html",
@@ -634,7 +810,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "b6748810f2e4f6f9",
@@ -669,7 +845,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "567b8a366e821331",
@@ -704,7 +880,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "c4e9827beed3f98a",
@@ -739,7 +915,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "f8721b078d9fd9de",
@@ -774,7 +950,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "86ef1a4c5b899582",
@@ -810,7 +986,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "2eb89699c4eed075",
@@ -846,7 +1022,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "58a096207a29b3d5",
@@ -881,7 +1057,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "03a054435c390b53",
@@ -916,42 +1092,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
-    },
-    {
-      "id": "2a7377edd15e2f3d",
-      "title": "Iran denies seeking halt to US attacks, agreement to reopen Strait of Hormuz - Anadolu Ajansı",
-      "link": "http://www.w3.org/2000/",
-      "original_link": "https://news.google.com/rss/articles/CBMivAFBVV95cUxOaWw4Y2kxekpaZUhpd0lQQzBzU1FOZk1qLXFoS2pLdC11cGw2dUthb0dvTjM5eHh3MUhBaXl4ZVlxMHlKT0pmUVJsQy0zRnN1eGI0YnNEVUxHd1lSRlJwdTBTeG9YSGcxNUx0M2p0emJsUERYMDBaY0MxcmZpV25kRkN4UVRSb3NCLUp1YVBNVnV6SE93U3A0alFWR1l1dUwwdmctX1liLUZiM19PMWZZVEJKMkYzeVV6N1Z1SA?oc=5",
-      "direct_link": "http://www.w3.org/2000/",
-      "link_status": "direct",
-      "link_type": "resolved-page",
-      "source_home": "",
-      "source": "全球突發市場",
-      "query_source": "全球突發市場",
-      "summary": "Iran denies seeking halt to US attacks, agreement to reopen Strait of Hormuz Anadolu Ajansı",
-      "published_at": "2026-08-02T23:02:11+08:00",
-      "region": "GLOBAL",
-      "topic": "policy",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "en",
-      "source_group": "breaking-search",
-      "origin": "publisher-search",
-      "quality_score": 90,
-      "is_breaking": true,
-      "fetched_at": "2026-08-03T02:13:18+08:00",
-      "duplicate_sources": [
-        "全球突發市場"
-      ],
-      "duplicate_count": 0,
-      "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "4a272de991614a23",
@@ -986,42 +1127,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
-    },
-    {
-      "id": "6104ea26f7955697",
-      "title": "Trump says he will halt Iran strikes after parameters reached on deal to end war - Scripps News",
-      "link": "http://www.w3.org/2000/",
-      "original_link": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxQbUd1MWJMd1J4TWZmQmdCT0h4S21la0tNSUc1ZjRkUXVPSjJ4NWZVeERkc1R4d3hEUEJDeVRkWWZwd3Y1a3pGeWE5MnY0bHFOODh1dXdpM3ZtZkFKSUVqejJENWRKVmtKanVpMWdwVHRhQ1FCX1hiR2VQczFYWS1mNHplSzNjbzFhYk9OOWpmaWZjR3NFb2h5bDFOODFPSUt1MkZiTVF0aDNyZDcySU1NNERPMGpKTmhjU29hbHRjcENDbE5WWjhScEhkdFVjcFFl?oc=5",
-      "direct_link": "http://www.w3.org/2000/",
-      "link_status": "direct",
-      "link_type": "resolved-page",
-      "source_home": "",
-      "source": "全球突發市場",
-      "query_source": "全球突發市場",
-      "summary": "Trump says he will halt Iran strikes after parameters reached on deal to end war Scripps News",
-      "published_at": "2026-08-02T22:45:11+08:00",
-      "region": "GLOBAL",
-      "topic": "policy",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "en",
-      "source_group": "breaking-search",
-      "origin": "publisher-search",
-      "quality_score": 90,
-      "is_breaking": true,
-      "fetched_at": "2026-08-03T02:13:18+08:00",
-      "duplicate_sources": [
-        "全球突發市場"
-      ],
-      "duplicate_count": 0,
-      "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "440de9ebbefc545c",
@@ -1053,11 +1159,12 @@ window.__MARKET_NEWS_SEED__ = {
       "is_breaking": false,
       "fetched_at": "2026-08-02T22:48:45+08:00",
       "duplicate_sources": [
-        "Yahoo 股市"
+        "Yahoo 股市",
+        "產業雷達・生技醫療"
       ],
-      "duplicate_count": 0,
+      "duplicate_count": 1,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "5db6d3ed8c4c0370",
@@ -1093,7 +1200,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "98843ac499f36088",
@@ -1129,7 +1236,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "ca9a12b9fb3eb3c5",
@@ -1164,7 +1271,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "42360e9259b46cce",
@@ -1200,7 +1307,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 1,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "353fcbed11169c62",
@@ -1235,7 +1342,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "4fbd3d6714dd1d1a",
@@ -1270,7 +1377,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "f1038df327f02ebf",
@@ -1305,7 +1412,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "6b32e10899ffcb39",
@@ -1341,7 +1448,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 1,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "c7d9dececba1873e",
@@ -1376,7 +1483,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "e04e6b14f2c0fc98",
@@ -1411,7 +1518,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "af08efe7c7f11a5d",
@@ -1446,7 +1553,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "19c4df6d788f3f00",
@@ -1481,7 +1588,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "58e03a7838869b87",
@@ -1517,7 +1624,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 1,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "c5976a870c1f728c",
@@ -1552,7 +1659,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "fe8cd99cbfdeb266",
@@ -1589,7 +1696,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 1,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "179ba67f074cd84e",
@@ -1624,7 +1731,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "6234d40ed30a7225",
@@ -1659,7 +1766,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "4ee791182cc905fc",
@@ -1694,7 +1801,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "333ce652525afa8d",
@@ -1729,7 +1836,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "91a9b5d416edd420",
@@ -1764,7 +1871,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "a20b1bc711ebde1e",
@@ -1800,7 +1907,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "d0d19a2378ec3d1b",
@@ -1835,7 +1942,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "1910861f5c091b3c",
@@ -1870,7 +1977,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "ccb25521aae8f39b",
@@ -1905,7 +2012,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "e51062bd39689ed1",
@@ -1940,42 +2047,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
-    },
-    {
-      "id": "72e8342ef8b586a0",
-      "title": "The Week Ahead: US July Non-Farm Payrolls in Focus; PLTR, SanDisk, AMD, and SpaceX Earnings Ahead - TradingKey",
-      "link": "http://www.w3.org/2000/",
-      "original_link": "https://news.google.com/rss/articles/CBMigwJBVV95cUxPVWdEMTBpNlo2NXRSVi1sQjljSzl4all1cENUU2k2RTlPVDlSWUxSS2FMZVVWOG5iWEVuNENDVGNrY0FONnhtbE13SDJIMXRWMG8xMDM4OGdvZDdvLUN6a1Ayc3R5VFl5NEctbU93ZkJjcTVtWG93ZnBZajZ6Mmhwd0JhUVVTa0stMTBGQmxHOTNzcnZ3NjlSelBNWDNtWjA0aXBMWW9UMDlHSEpOVk1kS0dUeUxCQloyQk5ZRE0wVlpSTzRINTY0dTh3QVZjRUZ6QW44Zm5lbmdIUl9keWh6UlltZlEtWVUyQkxlYV9FaVRjRlhVbnpnLUlLSXIyNHNkMU5V?oc=5",
-      "direct_link": "http://www.w3.org/2000/",
-      "link_status": "direct",
-      "link_type": "resolved-page",
-      "source_home": "",
-      "source": "PMI／ISM",
-      "query_source": "PMI／ISM",
-      "summary": "The Week Ahead: US July Non-Farm Payrolls in Focus; PLTR, SanDisk, AMD, and SpaceX Earnings Ahead TradingKey",
-      "published_at": "2026-08-02T20:06:39+08:00",
-      "region": "US",
-      "topic": "macro",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "en",
-      "source_group": "official-global",
-      "origin": "publisher-search",
-      "quality_score": 92,
-      "is_breaking": false,
-      "fetched_at": "2026-08-03T02:13:18+08:00",
-      "duplicate_sources": [
-        "PMI／ISM"
-      ],
-      "duplicate_count": 0,
-      "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "1e4fccc3293c6523",
@@ -2010,7 +2082,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "96cdb0b66df3aa7b",
@@ -2045,7 +2117,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "db9ddd0b1145520a",
@@ -2081,7 +2153,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "2f0aab7324993ed4",
@@ -2117,7 +2189,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 1,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "bdca9aff7ab4d175",
@@ -2153,7 +2225,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "64bfb7c782cbbedb",
@@ -2188,7 +2260,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "94408ed794f3d021",
@@ -2223,7 +2295,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "635ea08fad19a238",
@@ -2258,42 +2330,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
-    },
-    {
-      "id": "864255aa41f00332",
-      "title": "榮耀號航行中發生醫療狀況 醫療團隊啟動空中後送 - 公視新聞網PNN",
-      "link": "http://www.w3.org/2000/",
-      "original_link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9leGRFemRkLUtkcENLbGNGa28ybk1HWENJQWttSnJHcW5weG5VWmliYVJzaUxwdnJqMjJNdzFWdUsyZ1JOMmc4cXEtcTZkazg?oc=5",
-      "direct_link": "http://www.w3.org/2000/",
-      "link_status": "direct",
-      "link_type": "resolved-page",
-      "source_home": "",
-      "source": "產業雷達・生技醫療",
-      "query_source": "產業雷達・生技醫療",
-      "summary": "榮耀號航行中發生醫療狀況 醫療團隊啟動空中後送 公視新聞網PNN",
-      "published_at": "2026-08-02T19:15:29+08:00",
-      "region": "TW",
-      "topic": "industry",
-      "industries": [
-        "healthcare"
-      ],
-      "primary_industry": "healthcare",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "生技醫療",
-      "language": "zh-Hant",
-      "source_group": "sector-search",
-      "origin": "publisher-search",
-      "quality_score": 75,
-      "is_breaking": false,
-      "fetched_at": "2026-08-03T02:13:18+08:00",
-      "duplicate_sources": [
-        "產業雷達・生技醫療"
-      ],
-      "duplicate_count": 0,
-      "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "2fb098ec84efaf22",
@@ -2328,7 +2365,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "56db0aa0be11b87e",
@@ -2364,7 +2401,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "864252f34ee4cba2",
@@ -2400,7 +2437,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "1c0888307b5ad77c",
@@ -2435,7 +2472,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "5d7b8c9bc9ae4a65",
@@ -2470,42 +2507,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
-    },
-    {
-      "id": "a50d17ceca6fe64b",
-      "title": "Trump says he will order halt to Iran strikes after outlines of deal to end war reached - WWNY",
-      "link": "http://www.w3.org/2000/",
-      "original_link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPeEJMcnd2a0s3d2RVZkl6T1pOU0FIZkc5ajlOcVBsdGptWmMxS0pSRk1tamxJWkNhQlBETDlvNVd3d2tXV1d5b3hsR0lNOFdJcC1xa2ZxYks5ekd1QU1mVmZjdFBsakJtNjdFc3pJWG9kcTF3dllvWW9sZ1c3Q21ubC00QWF2elRDcDFWel9qb0psdXdWU3hWSlZpYkc0TW9aS3JfakloWG9mMFVBNmJGLUpZbw?oc=5",
-      "direct_link": "http://www.w3.org/2000/",
-      "link_status": "direct",
-      "link_type": "resolved-page",
-      "source_home": "",
-      "source": "全球突發市場",
-      "query_source": "全球突發市場",
-      "summary": "Trump says he will order halt to Iran strikes after outlines of deal to end war reached WWNY",
-      "published_at": "2026-08-02T18:31:00+08:00",
-      "region": "GLOBAL",
-      "topic": "policy",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "en",
-      "source_group": "breaking-search",
-      "origin": "publisher-search",
-      "quality_score": 90,
-      "is_breaking": true,
-      "fetched_at": "2026-08-03T02:13:18+08:00",
-      "duplicate_sources": [
-        "全球突發市場"
-      ],
-      "duplicate_count": 0,
-      "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "4b9e48f249e4271b",
@@ -2540,7 +2542,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "17f54795ccffb3cf",
@@ -2575,7 +2577,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "7d6ca06edc8e8396",
@@ -2610,7 +2612,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "a81ccd3a9f539fd1",
@@ -2645,7 +2647,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "ebf5bcb4ab926066",
@@ -2681,7 +2683,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "6b480abc8364573e",
@@ -2710,13 +2712,13 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 90,
       "is_breaking": true,
-      "fetched_at": "2026-08-03T02:13:18+08:00",
+      "fetched_at": "2026-08-03T05:14:23+08:00",
       "duplicate_sources": [
         "全球突發市場"
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "5387e3f46f823284",
@@ -2752,7 +2754,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 1,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "261b4cd02b71a716",
@@ -2787,7 +2789,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "260e1a036473ce2d",
@@ -2822,7 +2824,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "3abc3ef18df24356",
@@ -2857,7 +2859,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "f1d3f07498b5032e",
@@ -2892,7 +2894,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "ffdd3ce6a614ec76",
@@ -2927,7 +2929,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "e882672ab786f85d",
@@ -2962,7 +2964,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "43542d702115d1c9",
@@ -2997,7 +2999,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "b9cf5881672eab58",
@@ -3032,7 +3034,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "7812fa59ac1d7150",
@@ -3067,7 +3069,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "4e4c4a87750952ed",
@@ -3102,7 +3104,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "f82f3e012a98431b",
@@ -3137,7 +3139,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "50f8d784fb0ce34b",
@@ -3174,7 +3176,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "d1b38f0f567163ea",
@@ -3209,7 +3211,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "21dc2eab9d7c2b53",
@@ -3244,7 +3246,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "3b0c0202996ca7f5",
@@ -3279,7 +3281,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "33dad773974e0220",
@@ -3314,7 +3316,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "ff277ae42923f2d9",
@@ -3349,7 +3351,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "396e79abf1cac3eb",
@@ -3384,7 +3386,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "682d7c6062676078",
@@ -3419,7 +3421,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "4cb10c1c4a687909",
@@ -3454,7 +3456,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "956b32cf714dafe7",
@@ -3489,7 +3491,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "04a32d4abdc28a15",
@@ -3524,7 +3526,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "b32c11167ce48d47",
@@ -3560,7 +3562,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "b3f3d19d49ba96e1",
@@ -3595,7 +3597,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "927f4f28d406b8c1",
@@ -3631,7 +3633,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "99939b0e7735fac5",
@@ -3667,7 +3669,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 1,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "02e75e99d0bc17bd",
@@ -3702,7 +3704,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "c3f57e8efd984422",
@@ -3738,7 +3740,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 1,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "f7850901197f2160",
@@ -3773,7 +3775,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "7c478efb07a1b49a",
@@ -3808,7 +3810,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "25c374118d3679ca",
@@ -3843,7 +3845,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "bd5768631cd562ed",
@@ -3878,7 +3880,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "5f47a47a9bc79ae0",
@@ -3915,7 +3917,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "ad56d7dc581a9edc",
@@ -3950,7 +3952,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "d04bea72a61640ae",
@@ -3987,7 +3989,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "df646f0d1915079b",
@@ -4022,7 +4024,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "11232fbcbd7c1cf4",
@@ -4057,7 +4059,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "3b9ee42bb4b57ead",
@@ -4092,7 +4094,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "569fc550c05c5ca2",
@@ -4127,7 +4129,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "0b82a0e4e1d7f391",
@@ -4162,7 +4164,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "42e972331c49e381",
@@ -4197,7 +4199,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "5fc4983a5d5c1c95",
@@ -4233,7 +4235,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "aec5bb1604c1171d",
@@ -4269,7 +4271,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 1,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "9f041af045f2b7db",
@@ -4304,7 +4306,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "b7eb59e1b8a61a5d",
@@ -4339,7 +4341,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "0a4ab17f79a681da",
@@ -4374,7 +4376,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "6d64e3281d6d888a",
@@ -4409,7 +4411,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "4e54e6014534da94",
@@ -4446,7 +4448,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 2,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "09c25e0ea6c37e8c",
@@ -4481,7 +4483,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "f914497e6bed07e2",
@@ -4516,7 +4518,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "b8da660a72e5e51b",
@@ -4551,7 +4553,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "7a477f231aa1106c",
@@ -4586,7 +4588,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "9f2d807b2cde96ef",
@@ -4622,7 +4624,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "e1190c10fd64ebc1",
@@ -4657,7 +4659,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "ff199ec2721fa5fa",
@@ -4692,7 +4694,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "7ae0326ea28ba2eb",
@@ -4727,7 +4729,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "620dbc973fb5edb5",
@@ -4764,7 +4766,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 1,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "627f16f0bee270d5",
@@ -4799,7 +4801,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "79e611970c41b801",
@@ -4834,7 +4836,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "7c13de7580296724",
@@ -4869,7 +4871,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "d27dc1e23c60942f",
@@ -4904,7 +4906,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "d5f4caf02c949621",
@@ -4940,7 +4942,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "7aef82278a908ced",
@@ -4975,7 +4977,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "1939d3ac672efdc5",
@@ -5010,7 +5012,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "d74fc85a7058ef81",
@@ -5045,7 +5047,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "a765e15648a8e121",
@@ -5080,7 +5082,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "b5f95591b68b8418",
@@ -5115,7 +5117,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "5e422174592d0c05",
@@ -5150,7 +5152,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "b06b7160ca64ced7",
@@ -5185,7 +5187,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "aa479f8e4f5f3e56",
@@ -5220,7 +5222,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "ec6f5e9d3428c51b",
@@ -5255,7 +5257,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "e552544fdcc5670f",
@@ -5290,7 +5292,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "8c25f9f68cc51673",
@@ -5325,7 +5327,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "e7a15d67b9bd40c6",
@@ -5360,7 +5362,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "d5676f19b21d353e",
@@ -5395,7 +5397,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "babc97b0da0aedaf",
@@ -5431,7 +5433,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 1,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "2de5ea3775b0a2c2",
@@ -5467,7 +5469,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 1,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "5c93c3ec246106ae",
@@ -5502,42 +5504,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
-    },
-    {
-      "id": "1b319958b62cfc47",
-      "title": "Trump says he will order halt to Iran strikes after parameters reached for deal to end war - AP News",
-      "link": "http://www.w3.org/2000/",
-      "original_link": "https://news.google.com/rss/articles/CBMipwFBVV95cUxNdjdiZU1CVmhFWmRaYWtqRW82NnNUMEZjRzNlR293WTljQW1McXpnY3BiLXdWbVdobmRIdUJDVmVuWngwUHRVSUtyMkJjejRkQTl4WU0xc2xfcFpwaHBKamZGdUNqd1RIblhERllZY01hYjlmVUdOblVIVGxjTjVqVndGSURnTGJ5M2U5Vkp6dDVIRHZPZW8wTmRYaXl4WmQtejR6SzFBaw?oc=5",
-      "direct_link": "http://www.w3.org/2000/",
-      "link_status": "direct",
-      "link_type": "resolved-page",
-      "source_home": "",
-      "source": "全球突發市場",
-      "query_source": "全球突發市場",
-      "summary": "Trump says he will order halt to Iran strikes after parameters reached for deal to end war AP News",
-      "published_at": "2026-08-02T10:58:00+08:00",
-      "region": "GLOBAL",
-      "topic": "policy",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "en",
-      "source_group": "breaking-search",
-      "origin": "publisher-search",
-      "quality_score": 90,
-      "is_breaking": true,
-      "fetched_at": "2026-08-03T02:13:18+08:00",
-      "duplicate_sources": [
-        "全球突發市場"
-      ],
-      "duplicate_count": 0,
-      "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "2e6a2f11f37cac9d",
@@ -5572,7 +5539,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "aa7c41214dc4c574",
@@ -5607,7 +5574,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "9812d228a01cb56d",
@@ -5643,7 +5610,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "1205b33d9d0657ec",
@@ -5678,7 +5645,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "7812f501985a468b",
@@ -5713,7 +5680,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "c47d9e525faf4922",
@@ -5749,7 +5716,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 1,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "3aedc91ac15f41a3",
@@ -5784,7 +5751,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "1d6048d1477e2d6b",
@@ -5819,11 +5786,11 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "2971afbd77132742",
-      "title": "這檔「主動式」年化配息率飆11%超香！4檔ETF本周除息 00946連12配0.058元再遭百人蛋雕 - ftnn.com.tw",
+      "title": "這檔「主動式」年化配息率飆11%超香！4檔ETF本周除息 00946連12配0.058元再遭百人蛋雕 - FTNN 新聞網",
       "link": "http://www.w3.org/2000/",
       "original_link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE4ybGNnQVlfQURmbnUyTU5GX21nLURaQk96Z1RPeTN0bDRGd1FWWkZha3M4bzdjeEYtUVF0ajhnUEUzNlQyVkpSMTlYcw?oc=5",
       "direct_link": "http://www.w3.org/2000/",
@@ -5832,7 +5799,7 @@ window.__MARKET_NEWS_SEED__ = {
       "source_home": "",
       "source": "事件相關報導",
       "query_source": "事件相關報導",
-      "summary": "這檔「主動式」年化配息率飆11%超香！4檔ETF本周除息 00946連12配0.058元再遭百人蛋雕 ftnn.com.tw",
+      "summary": "這檔「主動式」年化配息率飆11%超香！4檔ETF本周除息 00946連12配0.058元再遭百人蛋雕 FTNN 新聞網",
       "published_at": "2026-08-02T10:15:00+08:00",
       "region": "TW",
       "topic": "macro",
@@ -5848,7 +5815,7 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "event-search",
       "quality_score": 68,
       "is_breaking": false,
-      "fetched_at": "2026-08-03T02:13:18+08:00",
+      "fetched_at": "2026-08-03T05:14:23+08:00",
       "event_id": "tw-exdiv-da3445f4b287119",
       "event_title": "00400A 主動國泰動能高息 除息（0.12 元）",
       "duplicate_sources": [
@@ -5856,7 +5823,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "63b7acc2f9b18a00",
@@ -5891,7 +5858,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "37102e4192b00999",
@@ -5928,7 +5895,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 1,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "1b49b2e78f5cebfe",
@@ -5963,7 +5930,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "6556a096073a57ba",
@@ -5998,7 +5965,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "3750d701ee8dd1e5",
@@ -6033,7 +6000,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "26b2a86d51e6b683",
@@ -6068,7 +6035,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "250effc457d46fc5",
@@ -6103,7 +6070,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "42db692d9decbf83",
@@ -6138,7 +6105,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "6bc18ee374b146d2",
@@ -6173,7 +6140,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "c512a1e16887ae18",
@@ -6208,7 +6175,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "92ad66d1407cbc37",
@@ -6243,7 +6210,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "dfd9435f5cc1e712",
@@ -6278,7 +6245,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "4e78629cd5a2ebb3",
@@ -6315,7 +6282,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "7997435f7df548fb",
@@ -6350,7 +6317,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "f11a36a3adc17c43",
@@ -6385,7 +6352,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "022252e5548a2624",
@@ -6420,7 +6387,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "00c23c36b4b0fb5a",
@@ -6456,7 +6423,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "d67231c39e713757",
@@ -6494,7 +6461,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 1,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "e6a54faf3ea6e854",
@@ -6530,7 +6497,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "a15a9ec5b7443ead",
@@ -6565,7 +6532,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "9344c72a45cb32f8",
@@ -6601,7 +6568,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "1e5cd52f84aecb74",
@@ -6630,13 +6597,13 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 90,
       "is_breaking": true,
-      "fetched_at": "2026-08-03T02:13:18+08:00",
+      "fetched_at": "2026-08-03T05:14:23+08:00",
       "duplicate_sources": [
         "全球突發市場"
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "9693f49a1ad249e3",
@@ -6671,7 +6638,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "83e39b535bb9eba0",
@@ -6706,7 +6673,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "b6a55d6faf135f06",
@@ -6741,7 +6708,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "29145a2167a76da6",
@@ -6776,7 +6743,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "946c06e52c174c69",
@@ -6811,7 +6778,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "49874b73f98086a5",
@@ -6846,7 +6813,42 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
+    },
+    {
+      "id": "5560b96e60e64224",
+      "title": "USD/JPY, Nasdaq Forecast: Focus Shifts from Fed to BOJ - FOREX.com",
+      "link": "http://www.w3.org/2000/",
+      "original_link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxOeFNiLW0wcEM5TmlRWVJIUXdETmtVeno5c0loY0RQaEI0X2hubm82QUVST1JWTWVodm5LaFp4THN6QXlsUnc2RXFkc2w3OW5jSUQtYWxBRHlGMkVBY00zT3JrZjlNYVZzd1ppX2pVcEdFb0pzdWktWDg5MXBENEI1M2FPNXJ4NTlnc2V4ZjdvLXJWWWNfWGk1bktDcGotZmdf?oc=5",
+      "direct_link": "http://www.w3.org/2000/",
+      "link_status": "direct",
+      "link_type": "resolved-page",
+      "source_home": "",
+      "source": "PMI／ISM",
+      "query_source": "PMI／ISM",
+      "summary": "USD/JPY, Nasdaq Forecast: Focus Shifts from Fed to BOJ FOREX.com",
+      "published_at": "2026-08-02T06:00:00+08:00",
+      "region": "US",
+      "topic": "macro",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "en",
+      "source_group": "official-global",
+      "origin": "publisher-search",
+      "quality_score": 92,
+      "is_breaking": false,
+      "fetched_at": "2026-08-03T05:14:23+08:00",
+      "duplicate_sources": [
+        "PMI／ISM"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "",
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "95e6d5c2e29123a6",
@@ -6881,7 +6883,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "03e55c855518fe13",
@@ -6916,7 +6918,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "57199f2ba137c7ab",
@@ -6952,7 +6954,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "f3632ef92cf78fcf",
@@ -6981,13 +6983,13 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 92,
       "is_breaking": false,
-      "fetched_at": "2026-08-03T02:13:18+08:00",
+      "fetched_at": "2026-08-03T05:14:23+08:00",
       "duplicate_sources": [
         "PMI／ISM"
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "4c9979e47ce59aa0",
@@ -7016,48 +7018,13 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 73,
       "is_breaking": false,
-      "fetched_at": "2026-08-03T02:13:18+08:00",
+      "fetched_at": "2026-08-03T05:14:23+08:00",
       "duplicate_sources": [
         "產業雷達・消費零售"
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
-    },
-    {
-      "id": "3a876811a5db3fc8",
-      "title": "USD/JPY outlook: BOJ holds steady as intervention risk builds - FOREX.com",
-      "link": "http://www.w3.org/2000/",
-      "original_link": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxQcl9tMEdqZ2dGZTJIZUthblhCYm8tM2Z2VEc0U2JRN1RrRk04bUYzOF9tMXJoUzBsLWduQnUwQldCcnh3cTFCcWdJUEtob2EyUzlObklPYUViaF9fbFV5SlFXaklmbGtjaVlnU21SNWV2ODFyLTZ5Q2Q1TkxvTFpJUFlxaFVpWC11MjFRaGEyOEtuYmJSczA1cmQzdTFwTEhmVnFhLVRBdFhGWVU?oc=5",
-      "direct_link": "http://www.w3.org/2000/",
-      "link_status": "direct",
-      "link_type": "resolved-page",
-      "source_home": "",
-      "source": "PMI／ISM",
-      "query_source": "PMI／ISM",
-      "summary": "USD/JPY outlook: BOJ holds steady as intervention risk builds FOREX.com",
-      "published_at": "2026-08-02T01:00:00+08:00",
-      "region": "US",
-      "topic": "macro",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "en",
-      "source_group": "official-global",
-      "origin": "publisher-search",
-      "quality_score": 92,
-      "is_breaking": false,
-      "fetched_at": "2026-08-03T02:13:18+08:00",
-      "duplicate_sources": [
-        "PMI／ISM"
-      ],
-      "duplicate_count": 0,
-      "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "c3b53a12938e6ef3",
@@ -7092,42 +7059,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
-    },
-    {
-      "id": "17c93d394906673f",
-      "title": "上膛待發！川普揚言狠打伊朗逼投降 伊朗：已有因應計畫",
-      "link": "http://www.w3.org/2000/",
-      "original_link": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE5SWmJiN3k3ZmJVc3M2bGY0aFpYYTh3bnJhOHJxd0JEX3lRWU5DRzBmaXM4SE9xNWVjWXRtSXcySlVSSWJhUW4yOTEybVk5bHA0U3Br0gFYQVVfeXFMUEJWNEdwZjEwbHVveEtIMTFyQ08wOWtDTUY0LUJmNEI1QWdwUGZmai1hOUxnRlU5RlNPcDFQYnZxNnJ3RENIaGVXX1lnR2NadW45ekRvaHIycg?oc=5",
-      "direct_link": "http://www.w3.org/2000/",
-      "link_status": "direct",
-      "link_type": "resolved-page",
-      "source_home": "",
-      "source": "中文國際突發",
-      "query_source": "中文國際突發",
-      "summary": "上膛待發！川普揚言狠打伊朗逼投降 伊朗：已有因應計畫 UDN",
-      "published_at": "2026-08-02T00:00:00+08:00",
-      "region": "GLOBAL",
-      "topic": "policy",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "breaking-search",
-      "origin": "publisher-search",
-      "quality_score": 88,
-      "is_breaking": true,
-      "fetched_at": "2026-08-03T02:13:18+08:00",
-      "duplicate_sources": [
-        "中文國際突發"
-      ],
-      "duplicate_count": 0,
-      "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "e1a6bb095e322675",
@@ -7162,7 +7094,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "84f83b7986f54080",
@@ -7198,7 +7130,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 1,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "a7d20d6d14b2cc6f",
@@ -7233,7 +7165,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "ea41b8b2cd49fe9b",
@@ -7268,7 +7200,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "5b456241fa2bdd7e",
@@ -7303,7 +7235,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "3153a812327e2c8f",
@@ -7338,7 +7270,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "4426493b34f5266d",
@@ -7373,7 +7305,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "e324f9bcdaeb48d2",
@@ -7408,7 +7340,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "725890ec513f6125",
@@ -7437,13 +7369,13 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 92,
       "is_breaking": false,
-      "fetched_at": "2026-08-03T02:13:18+08:00",
+      "fetched_at": "2026-08-03T05:14:23+08:00",
       "duplicate_sources": [
         "PMI／ISM"
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "4fc3e3a2ee3c53e1",
@@ -7478,7 +7410,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "925034910b40ec4b",
@@ -7513,7 +7445,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "36061bcdb8b27c80",
@@ -7548,7 +7480,42 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
+    },
+    {
+      "id": "e61732752c545ca8",
+      "title": "Trump says he will order halt to Iran strikes after parameters reached for deal to end war - Audacy",
+      "link": "http://www.w3.org/2000/",
+      "original_link": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxQbmhkY0gxZUlyX0Z6T0IzbEt0SzNBaFFjYkJuNTRWeGxmQXUxWUtOQlJ3NFBGR2FaLS1qbTA0ZzFBUkpvYW15WWliN1laRUQ1RUU1dThCa0l4MjhOSEVnRG82bWVUOXN2eEk3Y1Y5Tm9TLWdGSFpuX0tXR24xcGVjZE9MTHU0S2JwQnNkd3g5TGJaSTJqWWp0MDdhTFd6YVIxb1ZIS3ludnJtWkJvSkFnR0JPbVdvTG1uV000?oc=5",
+      "direct_link": "http://www.w3.org/2000/",
+      "link_status": "direct",
+      "link_type": "resolved-page",
+      "source_home": "",
+      "source": "全球突發市場",
+      "query_source": "全球突發市場",
+      "summary": "Trump says he will order halt to Iran strikes after parameters reached for deal to end war Audacy",
+      "published_at": "2026-08-01T18:10:00+08:00",
+      "region": "GLOBAL",
+      "topic": "policy",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "en",
+      "source_group": "breaking-search",
+      "origin": "publisher-search",
+      "quality_score": 90,
+      "is_breaking": true,
+      "fetched_at": "2026-08-03T05:14:23+08:00",
+      "duplicate_sources": [
+        "全球突發市場"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "",
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "d895a57f5da8f7a4",
@@ -7583,7 +7550,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "ae66d6789ae30473",
@@ -7618,7 +7585,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "521b814ec30f6e85",
@@ -7653,7 +7620,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "4cbad302bf9014f4",
@@ -7688,7 +7655,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "0957ecb960022357",
@@ -7723,7 +7690,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "4bb41ac212c947ec",
@@ -7758,7 +7725,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "b16bca62eb8f9755",
@@ -7793,11 +7760,11 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "0004d42102e2e830",
-      "title": "不用對身分證！「免費喝手搖飲、全品項5折」CoCo/珍煮丹/UG也買一送一，8 月飲料優惠懶人包 - storm.mg",
+      "title": "不用對身分證！「免費喝手搖飲、全品項5折」CoCo/珍煮丹/UG也買一送一，8 月飲料優惠懶人包",
       "link": "http://www.w3.org/2000/",
       "original_link": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE9zdnlxNUhWZmMzRktucjlrcjdsdWFzc0R0OTlQeTlxUWo1akxTbU5XcDFNLW4taThGN2RvcVpNM2xVRlQwLWtCTlNQMEJGdmpw?oc=5",
       "direct_link": "http://www.w3.org/2000/",
@@ -7806,7 +7773,7 @@ window.__MARKET_NEWS_SEED__ = {
       "source_home": "",
       "source": "產業雷達・消費零售",
       "query_source": "產業雷達・消費零售",
-      "summary": "不用對身分證！「免費喝手搖飲、全品項5折」CoCo/珍煮丹/UG也買一送一，8 月飲料優惠懶人包 storm.mg",
+      "summary": "不用對身分證！「免費喝手搖飲、全品項5折」CoCo/珍煮丹/UG也買一送一，8 月飲料優惠懶人包 風傳媒",
       "published_at": "2026-08-01T16:36:57+08:00",
       "region": "TW",
       "topic": "industry",
@@ -7822,13 +7789,13 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 73,
       "is_breaking": false,
-      "fetched_at": "2026-08-03T02:13:18+08:00",
+      "fetched_at": "2026-08-03T05:14:23+08:00",
       "duplicate_sources": [
         "產業雷達・消費零售"
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "abfd8294f292277e",
@@ -7863,7 +7830,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "cbedc4a59723f4f5",
@@ -7899,7 +7866,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "c813b1f03dcd9dca",
@@ -7934,7 +7901,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "ac7aa0940fd51dac",
@@ -7969,7 +7936,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "4e6a148ead07c2e5",
@@ -8004,7 +7971,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "856f7275bfebdadd",
@@ -8039,7 +8006,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "54cde87592c95fcc",
@@ -8075,7 +8042,42 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 1,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
+    },
+    {
+      "id": "28e255effa7ed51d",
+      "title": "Crude Oil Weekly Outlook: Tight Inventories Keep Bulls in Control - FOREX.com",
+      "link": "http://www.w3.org/2000/",
+      "original_link": "https://news.google.com/rss/articles/CBMirAFBVV95cUxOTzZMMDBDeGdsazVvdzFWSGtIUGJFMFdST1lTekp0eFdPdmVsTzlaV1BKWlFjMVVnRjJzbjNkSXV2WXJ0QldJSGV5VXBudERWOV9QS05kM3QwTllmSk9Zc3FQNU04VGtfSVFhLW5uOUNDT3pUVW5EWWhzMzVUYVFBUVFDVGl6a2l2S0RiZGpGbzhuSzJGUDItM3BUWjBmMGNzVEdCNTVFYmNFV0N5?oc=5",
+      "direct_link": "http://www.w3.org/2000/",
+      "link_status": "direct",
+      "link_type": "resolved-page",
+      "source_home": "",
+      "source": "PMI／ISM",
+      "query_source": "PMI／ISM",
+      "summary": "Crude Oil Weekly Outlook: Tight Inventories Keep Bulls in Control FOREX.com",
+      "published_at": "2026-08-01T15:00:00+08:00",
+      "region": "US",
+      "topic": "macro",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "en",
+      "source_group": "official-global",
+      "origin": "publisher-search",
+      "quality_score": 92,
+      "is_breaking": false,
+      "fetched_at": "2026-08-03T05:14:23+08:00",
+      "duplicate_sources": [
+        "PMI／ISM"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "",
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "de37bd680398b725",
@@ -8110,7 +8112,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "c80523beede2b743",
@@ -8146,7 +8148,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 1,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "befe240d3d5a1495",
@@ -8181,11 +8183,11 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "6d6b6a459fb0a7a6",
-      "title": "跟團旅遊注意！「台灣知名旅行社」遭勒令停業、財務困難，21 家廢照解散名單一次看 - storm.mg",
+      "title": "跟團旅遊注意！「台灣知名旅行社」遭勒令停業、財務困難，21 家廢照解散名單一次看",
       "link": "http://www.w3.org/2000/",
       "original_link": "https://news.google.com/rss/articles/CBMiUEFVX3lxTFAwWkhReXlzNlBiSlRvQnpkVkdvWU1iZEw0RUlwUjBYLWFRNUZZcGNKbV9iN2t2UGdXSGM4ZDBGYjJENElxV0VQWHBBWEJvU2ti?oc=5",
       "direct_link": "http://www.w3.org/2000/",
@@ -8194,7 +8196,7 @@ window.__MARKET_NEWS_SEED__ = {
       "source_home": "",
       "source": "產業雷達・觀光休閒",
       "query_source": "產業雷達・觀光休閒",
-      "summary": "跟團旅遊注意！「台灣知名旅行社」遭勒令停業、財務困難，21 家廢照解散名單一次看 storm.mg",
+      "summary": "跟團旅遊注意！「台灣知名旅行社」遭勒令停業、財務困難，21 家廢照解散名單一次看 風傳媒",
       "published_at": "2026-08-01T13:33:23+08:00",
       "region": "TW",
       "topic": "industry",
@@ -8210,13 +8212,13 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 71,
       "is_breaking": false,
-      "fetched_at": "2026-08-03T02:13:18+08:00",
+      "fetched_at": "2026-08-03T05:14:23+08:00",
       "duplicate_sources": [
         "產業雷達・觀光休閒"
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "bb49c13c90f79325",
@@ -8251,7 +8253,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "619bc448cf8e073a",
@@ -8286,7 +8288,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "5784ce5a4d729b38",
@@ -8322,7 +8324,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "4dda6b0d3c092ae6",
@@ -8357,7 +8359,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "539049a4507a387a",
@@ -8392,7 +8394,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "00e15edccf264554",
@@ -8427,7 +8429,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "54ca1d58b6fc81d9",
@@ -8463,7 +8465,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 1,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "2749afeb3d7e6eaf",
@@ -8498,7 +8500,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "33e2362b167ae15f",
@@ -8533,7 +8535,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "4b8bc82d14064a1e",
@@ -8568,7 +8570,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "75df08dc2e7eadfc",
@@ -8603,7 +8605,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "a78b1008df67f1bb",
@@ -8639,7 +8641,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "105bf8bd72bd1f62",
@@ -8674,7 +8676,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "fe9353da9e0ffaff",
@@ -8710,7 +8712,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "89b76d5b0ae6c395",
@@ -8745,7 +8747,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "013b0cdeb87152ac",
@@ -8780,7 +8782,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "c489cd549dcdf059",
@@ -8815,7 +8817,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "11c4809f58f5fc52",
@@ -8850,7 +8852,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "b6acaacfcadf862c",
@@ -8885,7 +8887,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "0a10d55ae37eb276",
@@ -8920,7 +8922,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "d431bfd1f92f6ac7",
@@ -8955,7 +8957,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "7ebfe50e1d78c4b7",
@@ -8991,7 +8993,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "a7526f4384ea8956",
@@ -9026,7 +9028,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "f40b8bbefe05019b",
@@ -9063,7 +9065,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "fa8fc9887a9adf37",
@@ -9098,7 +9100,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "972d5261c666f4ab",
@@ -9133,7 +9135,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "873948f73b15f8de",
@@ -9168,7 +9170,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "63814d1d90f9b64c",
@@ -9203,7 +9205,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "c026b6bec797dc76",
@@ -9239,7 +9241,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "14903c614cf1b838",
@@ -9275,7 +9277,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "5125ac05dbd49616",
@@ -9310,7 +9312,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "817bf6ca3f7f52b8",
@@ -9345,7 +9347,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "675634f450e4a631",
@@ -9380,7 +9382,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "9eff1a5446bc8bba",
@@ -9415,7 +9417,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "547b64262eab9ef9",
@@ -9450,7 +9452,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "a624df238d62801c",
@@ -9485,7 +9487,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "ddc4b094a062c8b9",
@@ -9520,7 +9522,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "b02359e39ab23926",
@@ -9556,7 +9558,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "f35861737ab2deca",
@@ -9591,7 +9593,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "bbf651b221cb5eb4",
@@ -9626,7 +9628,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "cc2ed48703f3b0e7",
@@ -9661,7 +9663,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "126749cffd40f4aa",
@@ -9696,7 +9698,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "f20264ce16c4f272",
@@ -9731,7 +9733,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "6ec58a3881afd710",
@@ -9766,7 +9768,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "68146c4b740586a7",
@@ -9801,7 +9803,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "f58ed903826a9de9",
@@ -9836,7 +9838,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "c4ff9e680f659110",
@@ -9871,7 +9873,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "a7e2b38862cc9436",
@@ -9906,7 +9908,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "55e5a7c013be4eaf",
@@ -9941,7 +9943,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "7cfe4ebcf0f7fe93",
@@ -9976,7 +9978,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "47d1af35731cc387",
@@ -10011,7 +10013,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "6a38d33a578a2b41",
@@ -10048,7 +10050,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "e572e627ad193bee",
@@ -10083,7 +10085,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "bc454a0b65372d19",
@@ -10118,7 +10120,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "1f026f94cc66bc58",
@@ -10153,7 +10155,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "d7286411c37cba48",
@@ -10188,7 +10190,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "ed7e7ce6cf13e75f",
@@ -10223,7 +10225,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "d739aa2ece9b14ec",
@@ -10258,7 +10260,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "386f0d9b4e9c225e",
@@ -10293,7 +10295,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "8742691b36380f4f",
@@ -10328,7 +10330,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "1c26818215834e72",
@@ -10363,7 +10365,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "2c34e5be354ad17d",
@@ -10398,7 +10400,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "fa51b3f40a66ea2c",
@@ -10433,7 +10435,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "ee2315b776bf14b9",
@@ -10468,7 +10470,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "f710c96df429ecf3",
@@ -10503,7 +10505,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "52ba75bab1bcdedb",
@@ -10538,7 +10540,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "5d30243bdfee393e",
@@ -10573,7 +10575,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "8c803ccfb3804dd1",
@@ -10609,7 +10611,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "a811295896644e23",
@@ -10644,7 +10646,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "8070ab2aa60da33b",
@@ -10679,7 +10681,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "465b8d802c045159",
@@ -10714,7 +10716,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "7538919b11003b99",
@@ -10749,7 +10751,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "db18d3e2e0e9c33f",
@@ -10785,7 +10787,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "bca0e1b4fc7a3c7c",
@@ -10820,7 +10822,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "02c40278eac1a786",
@@ -10855,7 +10857,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "5002e1d1bd3305ec",
@@ -10890,7 +10892,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "6a19a9d010ea83fa",
@@ -10925,7 +10927,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "5da36451bd40aa46",
@@ -10960,7 +10962,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "e3a4c0d33df9e42f",
@@ -10995,7 +10997,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "3259561e8b0cbc67",
@@ -11031,7 +11033,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     },
     {
       "id": "7471bd49772fa021",
@@ -11066,7 +11068,7 @@ window.__MARKET_NEWS_SEED__ = {
       ],
       "duplicate_count": 0,
       "fallback_link": "",
-      "link_checked_at": "2026-08-03T02:13:18+08:00"
+      "link_checked_at": "2026-08-03T05:14:23+08:00"
     }
   ]
 };
