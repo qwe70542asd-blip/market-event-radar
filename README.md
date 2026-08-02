@@ -226,7 +226,7 @@ http://localhost:8000
 - Portfolio management stays on `portfolio.html`.
 
 
-## v10.5.1 分類行情區
+## v10.5.2 分類行情區
 
 - 首列分為台股指數、美股四大指數、日韓指數三個區塊。
 - 台股 ETF 依 TWSE ETF e添富「今日成交值」排序，最多顯示 15 檔。

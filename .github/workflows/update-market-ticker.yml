@@ -1,4 +1,4 @@
-name: Update v10.5.1 grouped indices and ETF rails
+name: Update v10.5.2 grouped indices and ETF rails
 
 on:
   push:
@@ -64,7 +64,7 @@ jobs:
           git config user.name "market-event-radar-bot"
           git config user.email "actions@users.noreply.github.com"
           git add data/market-snapshot.json data/market-snapshot-seed.js
-          git commit -m "chore: refresh grouped indices and ETF rails v10.5.1"
+          git commit -m "chore: refresh grouped indices and ETF rails v10.5.2"
           for attempt in 1 2 3; do
             git pull --rebase && git push && exit 0
             sleep $((attempt * 4))

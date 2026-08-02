@@ -86,7 +86,7 @@
   function searchUrl(item) {
     const query = [`"${String(item?.title || "").trim()}"`, String(item?.source || "").trim()]
       .filter(Boolean).join(" ");
-    return `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+    return `news.html?q=${encodeURIComponent(query)}`;
   }
 
   function isGoogleSearch(value) {
@@ -99,13 +99,12 @@
   }
 
   function safeLink(item) {
-    const direct = item?.direct_link || item?.publisher_link || item?.safe_link;
-    if (isHttpUrl(direct) && !isGoogleNewsRedirect(direct) && !isGoogleSearch(direct)) return direct;
-    const current = item?.link;
-    if (isHttpUrl(current) && !isGoogleNewsRedirect(current)) return current;
-    if (item?.fallback_link && isHttpUrl(item.fallback_link)) return item.fallback_link;
-    if (item?.title) return searchUrl(item);
-    return "news.html";
+    const candidates = [item?.direct_link, item?.publisher_link, item?.safe_link, item?.link];
+    for (const value of candidates) {
+      if (isHttpUrl(value) && !isGoogleNewsRedirect(value) && !isGoogleSearch(value)) return value;
+    }
+    const home = sourceHome(item);
+    return home || "news.html";
   }
 
   function sourceHome(item) {
@@ -116,12 +115,12 @@
   function linkMode(item) {
     const value = safeLink(item);
     if (item?.link_status === "direct" || (item?.direct_link && !isGoogleSearch(item.direct_link))) return "direct";
-    if (isGoogleSearch(value) || item?.link_status === "fallback") return "fallback";
-    return "direct";
+    if (value && value !== "news.html" && !isGoogleSearch(value) && !isGoogleNewsRedirect(value)) return "source";
+    return "unavailable";
   }
 
   function linkLabel(item) {
-    return linkMode(item) === "direct" ? "閱讀原文" : "搜尋原文";
+    return linkMode(item) === "direct" ? "閱讀原文" : linkMode(item) === "source" ? "來源首頁" : "站內查看";
   }
 
   function normalizeItem(raw) {

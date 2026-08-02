@@ -1,48 +1,27 @@
 (() => {
   "use strict";
-  const VERSION = "10.5.1";
-  const VERSION_KEY = "market-radar-version";
-  if (!("serviceWorker" in navigator)) return;
-
-  window.addEventListener("load", async () => {
+  const CLEAN_KEY = "market-radar-cleanup-10.5.2";
+  async function cleanup() {
     try {
-      const previous = localStorage.getItem(VERSION_KEY);
-      const registration = await navigator.serviceWorker.register(`./service-worker.js?v=${VERSION}`, {
-        updateViaCache: "none"
-      });
-
-      await registration.update();
-      localStorage.setItem(VERSION_KEY, VERSION);
-
-      let reloaded = false;
-      navigator.serviceWorker.addEventListener("controllerchange", () => {
-        if (reloaded) return;
-        reloaded = true;
-        location.reload();
-      });
-
-      if (registration.waiting) {
-        registration.waiting.postMessage({ type: "SKIP_WAITING" });
+      if ("serviceWorker" in navigator) {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(registrations.map(registration => registration.unregister()));
       }
-
-      // When a new worker is still installing, activate it as soon as it is ready.
-      registration.addEventListener("updatefound", () => {
-        const worker = registration.installing;
-        worker?.addEventListener("statechange", () => {
-          if (worker.state === "installed" && navigator.serviceWorker.controller) {
-            worker.postMessage({ type: "SKIP_WAITING" });
-          }
-        });
-      });
-
-      // Clear leftovers from builds that reused the same cache version.
-      if (previous !== VERSION && "caches" in window) {
-        const keep = "market-event-radar-v10-5-1-clean";
+      if ("caches" in window) {
         const keys = await caches.keys();
-        await Promise.all(keys.filter(key => key.startsWith("market-event-radar-") && key !== keep).map(key => caches.delete(key)));
+        await Promise.all(keys.filter(key => /market-event-radar|market-radar/i.test(key)).map(key => caches.delete(key)));
+      }
+      if (!sessionStorage.getItem(CLEAN_KEY)) {
+        sessionStorage.setItem(CLEAN_KEY,"1");
+        const url = new URL(location.href);
+        if (!url.searchParams.has("clean")) {
+          url.searchParams.set("clean", "1052");
+          location.replace(url.href);
+        }
       }
     } catch (error) {
-      console.warn("Service worker registration failed:", error);
+      console.warn("Cache cleanup skipped", error);
     }
-  });
+  }
+  window.addEventListener("load", cleanup, {once:true});
 })();

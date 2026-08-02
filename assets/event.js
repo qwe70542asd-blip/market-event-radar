@@ -27,7 +27,7 @@
     const m = min % 60;
     return [d ? `${d}天` : "", h ? `${h}小時` : "", !d && m ? `${m}分` : ""].filter(Boolean).join(" ") || "即將公布";
   }
-  function querySearchURL(query) { return `https://news.google.com/search?q=${encodeURIComponent(query)}&hl=zh-TW&gl=TW&ceid=TW:zh-Hant`; }
+  function querySearchURL(query) { return `news.html?q=${encodeURIComponent(query)}`; }
   async function loadJson(path, fallback) {
     try {
       const response = await fetch(path, { cache: "no-store" });

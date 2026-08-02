@@ -77,7 +77,7 @@
       search: $("#searchInput")?.value || "",
       month: state.calendarDate.toISOString(),
     };
-    localStorage.setItem(PREF_KEY, JSON.stringify(prefs));
+    try { localStorage.setItem(PREF_KEY, JSON.stringify(prefs)); } catch {}
   }
 
   async function loadJson(path, fallback) {
@@ -103,14 +103,15 @@
   ];
 
   function safeNewsHref(item) {
-    const value = item?.safe_link || item?.link || "";
-    try {
-      const url = new URL(value);
-      const googleRedirect = url.hostname === "news.google.com" && /\/(?:rss\/)?(?:articles|read)\//.test(url.pathname);
-      if (!googleRedirect && ["http:","https:"].includes(url.protocol)) return value;
-    } catch {}
-    const query = [`"${item?.title || ""}"`, item?.source || ""].filter(Boolean).join(" ");
-    return `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+    const candidates = [item?.direct_link, item?.publisher_link, item?.safe_link, item?.link, item?.source_home];
+    for (const value of candidates) {
+      try {
+        const url = new URL(value, location.href);
+        const google = /(^|\.)google\./i.test(url.hostname) || url.hostname === "news.google.com";
+        if (!google && ["http:","https:"].includes(url.protocol)) return url.href;
+      } catch {}
+    }
+    return "news.html";
   }
 
   function breakingNewsToEvents(payload) {
@@ -501,60 +502,40 @@
   function renderAgenda() {
     const list = $("#eventList");
     if (!list) return;
-    list.innerHTML = "";
     const owned = portfolioSymbols();
     const upcoming = state.filtered
       .map(event => ({ ...event, priority:eventPriority(event) }))
-      .filter(event =>
-        eventGroup(event) === "breaking" ||
-        event.impact === "high" ||
-        owned.has(String(event.symbol || "").toUpperCase()) ||
-        ["earnings","dividend"].includes(eventGroup(event))
-      )
+      .filter(event => eventGroup(event) === "breaking" || event.impact === "high" || owned.has(String(event.symbol || "").toUpperCase()))
       .sort((a,b) => b.priority - a.priority || a.timestamp - b.timestamp)
-      .slice(0,12);
+      .slice(0,4);
 
-    $("#resultCount").textContent = `${upcoming.length} 筆重點`;
+    $("#resultCount").textContent = `${upcoming.length} 筆`;
     $("#emptyState").hidden = !!upcoming.length;
-    upcoming.forEach(event => {
-      const amount = formatAmount(event);
-      const node = document.createElement("a");
-      node.href = event.external_href || `event.html?id=${encodeURIComponent(event.id)}`;
-      if (event.external_href) {
-        node.target = "_blank";
-        node.rel = "noreferrer noopener";
-      }
-      node.className = `compact-event-card impact-${event.impact} group-${eventGroup(event)}`;
-      node.innerHTML = `
-        <div class="compact-event-head">
-          <span>${formatDate(event.startDate)}</span>
-          <div><i>${eventTypeShort(event)}</i><b>${IMPACT_MAP[event.impact]}</b>${event.is_breaking_news ? "" : `<button class="favorite-inline" type="button" data-favorite-id="${escapeHtml(event.id)}" aria-label="收藏事件">☆</button>`}</div>
-        </div>
-        <h3>${escapeHtml(event.title)}</h3>
-        <p>${escapeHtml(event.description || event.market_effect || "")}</p>
-        <div class="compact-event-meta">
-          <span>${CATEGORY_MAP[event.category] || event.category}</span>
-          <span>${event.market || REGION_MAP[event.region] || event.region}</span>
-          ${event.symbol ? `<span>${escapeHtml(event.symbol)}</span>` : ""}
-          ${amount ? `<span>${escapeHtml(amount)}</span>` : ""}
-          ${event.source_name ? `<span>${escapeHtml(event.source_name)}</span>` : ""}
-          <span>${event.all_day ? "全天" : `${pad(event.startDate.getHours())}:${pad(event.startDate.getMinutes())}`}</span>
-        </div>`;
-      list.appendChild(node);
-    });
+    list.innerHTML = upcoming.map(event => {
+      const href = event.external_href || `event.html?id=${encodeURIComponent(event.id)}`;
+      const target = event.external_href ? ' target="_blank" rel="noreferrer noopener"' : "";
+      return `<a class="agenda-mini-row impact-${event.impact} group-${eventGroup(event)}" href="${escapeHtml(href)}"${target}>
+        <time>${event.startDate.getMonth()+1}/${event.startDate.getDate()}<small>${event.all_day ? "全天" : `${pad(event.startDate.getHours())}:${pad(event.startDate.getMinutes())}`}</small></time>
+        <div><strong>${escapeHtml(event.title)}</strong><small>${REGION_MAP[event.region] || event.region} · ${eventTypeShort(event)}${event.source_name ? ` · ${escapeHtml(event.source_name)}` : ""}</small></div>
+        <b>${event.impact === "high" ? "高" : "中"}</b>
+      </a>`;
+    }).join("");
   }
 
   function renderSources() {
-    const sources = [{ name: "TradingView 市場代理跑馬燈", status: "ok", message: "ETF / ADR / 匯率 / 風險指標" }, ...(state.payload.sources || []), state.newsPayload.source?.name ? { ...state.newsPayload.source, last_success: state.newsPayload.metadata.updated_at } : null].filter(Boolean);
-    $("#sourceCount").textContent = `${sources.length} 個來源`;
+    const sources = [...(state.payload.sources || []), state.newsPayload.source?.name ? { ...state.newsPayload.source, last_success: state.newsPayload.metadata.updated_at } : null].filter(Boolean);
+    const ok = sources.filter(source => source.status === "ok" || source.status === "live").length;
+    const warning = sources.length - ok;
+    const count = $("#sourceCount");
+    if (count) count.textContent = `${ok}/${sources.length}`;
+    const summary = $("#sourceHealthSummary");
+    if (summary) summary.textContent = warning ? `${ok} 正常 · ${warning} 備援／待更新` : `${ok} 個來源正常`;
     const wrapper = $("#sourceStatus");
-    wrapper.innerHTML = "";
-    sources.forEach((source) => {
-      const row = document.createElement("div");
-      row.className = "source-row";
-      row.innerHTML = `<div><strong>${escapeHtml(source.name)}</strong><small>${escapeHtml(source.message || (source.last_success ? formatDateTime(source.last_success) : "—"))}</small></div><span class="source-pill ${source.status || 'warning'}">${source.status === 'ok' ? '正常' : '備援中'}</span>`;
-      wrapper.appendChild(row);
-    });
+    if (!wrapper) return;
+    wrapper.innerHTML = sources.map(source => `<div class="source-row">
+      <div><strong>${escapeHtml(source.name || "資料來源")}</strong><small>${escapeHtml(source.message || (source.last_success ? formatDateTime(source.last_success) : "等待第一次同步"))}</small></div>
+      <span class="source-pill ${source.status === "ok" || source.status === "live" ? "ok" : "warning"}">${source.status === "ok" || source.status === "live" ? "正常" : "備援"}</span>
+    </div>`).join("");
   }
 
   function showPreview(target, event) {
