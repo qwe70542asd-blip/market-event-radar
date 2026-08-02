@@ -1,4 +1,4 @@
-const CACHE_NAME = "market-event-radar-v10-5-clean";
+const CACHE_NAME = "market-event-radar-v10-5-1-clean";
 const STATIC_ASSETS = [
   "./", "index.html", "404.html", "event.html", "news.html", "portfolio.html", "asset.html", "institutional.html", "manifest.webmanifest",
   "assets/styles.css?v=10.5.0", "assets/app.js?v=10.5.0",

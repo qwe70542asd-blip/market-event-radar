@@ -4,90 +4,163 @@
   const root = document.querySelector("#marketTicker");
   if (!root) return;
 
-  const seed = window.__MARKET_SNAPSHOT_SEED__ || {metadata:{},items:[]};
+  const seed = window.__MARKET_SNAPSHOT_SEED__ || { metadata:{}, items:[], taiwan_etfs:[], us_etfs:[] };
+  const INDEX_GROUPS = [
+    { id:"tw", label:"台股指數", note:"集中市場／櫃買", ids:["TAIEX","TPEX"] },
+    { id:"us", label:"美股四大指數", note:"S&P／NASDAQ／道瓊／費半", ids:["SP500","NASDAQ","DJIA","SOX"] },
+    { id:"asia", label:"日韓指數", note:"日本／韓國", ids:["NIKKEI","KOSPI"] }
+  ];
 
   const escapeHtml = value => String(value ?? "").replace(/[&<>"']/g, char => ({
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
   }[char]));
 
-  function number(value, item) {
+  function formatNumber(value, item = {}) {
     if (value === null || value === undefined || !Number.isFinite(Number(value))) return "—";
     const num = Number(value);
-    if (item.kind === "crypto" && num >= 1000) return num.toLocaleString("en-US",{maximumFractionDigits:0});
-    if (item.kind === "yield") return num.toFixed(2);
-    if (item.kind === "fx") return num.toFixed(num >= 100 ? 2 : 4);
-    if (num >= 10000) return num.toLocaleString("en-US",{maximumFractionDigits:0});
-    return num.toLocaleString("en-US",{minimumFractionDigits:num < 100 ? 2 : 0,maximumFractionDigits:2});
+    if (item.currency === "TWD" && item.kind === "etf") return num.toFixed(num < 100 ? 2 : 1);
+    if (num >= 10000) return num.toLocaleString("en-US", { maximumFractionDigits:0 });
+    return num.toLocaleString("en-US", { minimumFractionDigits:num < 100 ? 2 : 0, maximumFractionDigits:2 });
   }
 
-  function dateText(value) {
+  function formatTime(value) {
     if (!value) return "";
     const parsed = new Date(value);
     if (Number.isNaN(parsed.getTime())) return String(value).slice(0,10);
-    return parsed.toLocaleString("zh-TW",{
-      month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit",hour12:false
-    });
+    return parsed.toLocaleString("zh-TW", { month:"numeric", day:"numeric", hour:"2-digit", minute:"2-digit", hour12:false });
   }
 
-  function card(item) {
-    const pct = Number(item.change_percent);
-    const hasPct = Number.isFinite(pct);
-    const direction = hasPct ? (pct > 0 ? "up" : pct < 0 ? "down" : "flat") : "flat";
-    const sign = pct > 0 ? "+" : "";
+  function direction(item) {
+    const pct = Number(item?.change_percent);
+    if (!Number.isFinite(pct) || pct === 0) return "flat";
+    return pct > 0 ? "up" : "down";
+  }
+
+  function pctText(item) {
+    const pct = Number(item?.change_percent);
+    if (!Number.isFinite(pct)) return "待更新";
+    return `${pct > 0 ? "+" : ""}${pct.toFixed(2)}%`;
+  }
+
+  function indexRow(item) {
+    if (!item) return `<div class="market-index-row pending"><span>—</span><strong>等待更新</strong><b>—</b><em>—</em></div>`;
+    const stale = ["stale","fallback"].includes(item.status) ? " stale" : "";
+    return `<a class="market-index-row ${direction(item)}${stale}" href="${escapeHtml(item.link || item.source_url || '#')}" target="_blank" rel="noreferrer noopener"
+      title="${escapeHtml(`${item.source || "等待來源"}｜${item.delay || ""}｜${formatTime(item.as_of)}`)}">
+      <span>${escapeHtml(item.region || "市場")}</span>
+      <strong>${escapeHtml(item.name || item.id)}</strong>
+      <b>${formatNumber(item.value,item)}</b>
+      <em>${pctText(item)}</em>
+    </a>`;
+  }
+
+  function indexGroup(group, map) {
+    return `<article class="market-index-group market-index-${group.id}">
+      <header><div><strong>${group.label}</strong><small>${group.note}</small></div><span>${group.ids.length} 項</span></header>
+      <div>${group.ids.map(id => indexRow(map.get(id))).join("")}</div>
+    </article>`;
+  }
+
+  function etfRow(item, index) {
+    const rank = Number(item.rank) || index + 1;
     const href = item.link || item.source_url || "#";
-    const stale = ["stale","fallback"].includes(item.status);
-    return `
-      <a class="market-ticker-item ${direction} ${stale ? "stale" : ""}" href="${escapeHtml(href)}" target="_blank" rel="noreferrer noopener"
-         title="${escapeHtml(`${item.name}｜${item.source || "等待來源"}｜${item.delay || ""}｜${dateText(item.as_of)}`)}">
-        <span class="market-ticker-region">${escapeHtml(item.region || "市場")}</span>
-        <div>
-          <strong>${escapeHtml(item.name)}</strong>
-          <small>${escapeHtml(item.delay || "延遲資料")}</small>
+    return `<a class="market-etf-row ${direction(item)}" href="${escapeHtml(href)}" target="_blank" rel="noreferrer noopener"
+      title="${escapeHtml(`${item.source || "行情來源"}｜${item.delay || ""}｜${formatTime(item.as_of)}`)}">
+      <span class="market-etf-rank">${rank}</span>
+      <div><strong>${escapeHtml(item.symbol || item.id)}</strong><small>${escapeHtml(item.name || "ETF")}</small></div>
+      <b>${formatNumber(item.value,item)}</b>
+      <em>${pctText(item)}</em>
+    </a>`;
+  }
+
+  function etfPanel(id, label, note, rows, countLabel) {
+    const safeRows = Array.isArray(rows) ? rows.filter(row => row && row.symbol) : [];
+    return `<article class="market-etf-panel">
+      <header>
+        <div><strong>${label}</strong><small>${note}</small></div>
+        <span>${countLabel}</span>
+      </header>
+      <div class="market-etf-viewport" id="${id}" data-visible="5">
+        <div class="market-etf-track">
+          ${safeRows.length ? safeRows.map(etfRow).join("") : '<div class="market-etf-empty">ETF 行情等待第一次排程</div>'}
         </div>
-        <b>${number(item.value,item)}${item.kind === "yield" ? "%" : ""}</b>
-        <em>${hasPct ? `${sign}${pct.toFixed(2)}%` : "待更新"}</em>
-      </a>`;
+      </div>
+    </article>`;
+  }
+
+  function startVerticalRail(viewport) {
+    const track = viewport?.querySelector(".market-etf-track");
+    if (!track) return;
+    const original = [...track.querySelectorAll(".market-etf-row")];
+    const visible = Math.min(Number(viewport.dataset.visible || 5), original.length);
+    if (original.length <= visible || !visible) return;
+
+    original.slice(0, visible).forEach(row => track.appendChild(row.cloneNode(true)));
+    let index = 0;
+    let paused = false;
+    let timer;
+
+    const step = () => {
+      if (paused) return;
+      const first = track.querySelector(".market-etf-row");
+      if (!first) return;
+      const rowHeight = first.getBoundingClientRect().height;
+      index += 1;
+      track.style.transition = "transform .46s cubic-bezier(.22,.7,.2,1)";
+      track.style.transform = `translateY(${-index * rowHeight}px)`;
+      if (index >= original.length) {
+        window.setTimeout(() => {
+          track.style.transition = "none";
+          index = 0;
+          track.style.transform = "translateY(0)";
+          void track.offsetHeight;
+        }, 500);
+      }
+    };
+
+    const play = () => { clearInterval(timer); timer = setInterval(step, 2800); };
+    viewport.addEventListener("mouseenter", () => { paused = true; });
+    viewport.addEventListener("mouseleave", () => { paused = false; });
+    viewport.addEventListener("focusin", () => { paused = true; });
+    viewport.addEventListener("focusout", () => { paused = false; });
+    document.addEventListener("visibilitychange", () => document.hidden ? clearInterval(timer) : play());
+    play();
   }
 
   function render(payload) {
     const metadata = payload?.metadata || {};
-    const valid = (payload?.items || []).filter(item =>
-      item && item.value !== null && item.value !== undefined && item.status !== "pending"
-    );
+    const items = Array.isArray(payload?.items) ? payload.items : [];
+    const map = new Map(items.map(item => [item.id, item]));
+    const twEtfs = payload?.taiwan_etfs || [];
+    const usEtfs = payload?.us_etfs || [];
 
     const status = document.querySelector("#marketTickerStatus");
+    const healthy = [...items, ...twEtfs, ...usEtfs].filter(item => item?.value !== null && item?.value !== undefined).length;
     if (status) {
-      const updated = dateText(metadata.updated_at);
-      status.textContent = valid.length
-        ? `${valid.length} 項｜${updated || "最近更新"}｜延遲／收盤資料`
-        : "市場資料等待第一次排程";
-      status.classList.toggle("warning", valid.length < 6);
+      status.textContent = healthy
+        ? `${healthy} 項｜${formatTime(metadata.updated_at) || "最近更新"}｜延遲／收盤資料`
+        : "行情等待第一次排程";
+      status.classList.toggle("warning", healthy < 8);
     }
 
-    if (!valid.length) {
-      root.innerHTML = `
-        <div class="market-ticker-empty">
-          <strong>市場指數同步中</strong>
-          <span>執行 GitHub Actions 的 Update v10.4.5 multi-source market ticker 後顯示。</span>
-        </div>`;
-      return;
-    }
-
-    const markup = valid.map(card).join("");
     root.innerHTML = `
-      <div class="market-ticker-track">
-        <div class="market-ticker-set">${markup}</div>
-        <div class="market-ticker-set" aria-hidden="true">${markup}</div>
+      <div class="market-index-groups">${INDEX_GROUPS.map(group => indexGroup(group,map)).join("")}</div>
+      <div class="market-etf-groups">
+        ${etfPanel("twEtfRail","台股主流 ETF","依證交所成交值排行，最多 15 檔",twEtfs,"前 15")}
+        ${etfPanel("usEtfRail","美股 ETF","核心指數、產業與債券代表 ETF",usEtfs,`${usEtfs.length || 10} 檔`)}
       </div>`;
+
+    startVerticalRail(document.querySelector("#twEtfRail"));
+    startVerticalRail(document.querySelector("#usEtfRail"));
   }
 
   async function load() {
     let payload = seed;
     try {
-      const response = await fetch(`data/market-snapshot.json?t=${Date.now()}`,{cache:"no-store"});
+      const response = await fetch(`data/market-snapshot.json?t=${Date.now()}`, { cache:"no-store" });
       if (response.ok) {
         const live = await response.json();
-        if ((live.items || []).some(item => item?.value !== null && item?.value !== undefined)) payload = live;
+        if ((live.items || []).length || (live.taiwan_etfs || []).length) payload = live;
       }
     } catch {}
     render(payload);

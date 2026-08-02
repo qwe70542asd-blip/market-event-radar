@@ -224,3 +224,12 @@ http://localhost:8000
 - Compact portfolio live/last-close quote cards with mini sparklines.
 - Each quote exposes freshness mode, market timestamp and source.
 - Portfolio management stays on `portfolio.html`.
+
+
+## v10.5.1 分類行情區
+
+- 首列分為台股指數、美股四大指數、日韓指數三個區塊。
+- 台股 ETF 依 TWSE ETF e添富「今日成交值」排序，最多顯示 15 檔。
+- 美股 ETF 顯示核心指數、半導體、科技與長債代表 ETF。
+- ETF 區每次顯示 5 檔並向上輪播，滑鼠移入會暫停。
+- 行情使用延遲／最近成交或盤後公開資料，個別來源失敗時保留前次成功值。
