@@ -1906,7 +1906,7 @@ input, select, button { font-size: 15px; }
   .decision-radar-card em { grid-column:2; }
 }
 
-/* v10.8.0 unified version, Taiwan-time status and final readability pass */
+/* v10.8.1 unified version, Taiwan-time status and final readability pass */
 html { font-size:17px; }
 body { font-size:17px; }
 .version-badge { padding:3px 7px; font-size:11px; }
@@ -1938,7 +1938,7 @@ body { font-size:17px; }
   .market-board-head small { font-size:12px; }
 }
 
-/* v10.8.0 approved desktop/mobile homepage layout */
+/* v10.8.1 approved desktop/mobile homepage layout */
 html { scroll-behavior:smooth; }
 #calendarSection,#marketSection,#homeFeatureStrip,#todayNewsSection { scroll-margin-top:86px; }
 
@@ -1997,14 +1997,40 @@ html { scroll-behavior:smooth; }
 .home-market-board .market-index-row,
 .home-market-board .market-index-tw .market-index-row,
 .home-market-board .market-index-asia .market-index-row {
-  grid-template-columns:31px minmax(78px,1fr) 73px 62px;
-  gap:6px;
+  grid-template-columns:26px minmax(38px,1fr) 46px 40px;
+  gap:4px;
   min-height:50px;
   padding:7px 8px;
+}
+.home-market-board .market-index-row>span { min-width:26px; font-size:9px; }
+.home-market-board .market-index-row>strong { min-width:0; font-size:12px; }
+.home-market-board .market-index-row>b {
+  display:block;
+  min-width:0;
+  overflow:visible;
+  font-size:11px;
+  letter-spacing:-.2px;
+}
+.home-market-board .market-index-row>em {
+  grid-column:auto;
+  min-width:0;
+  font-size:9px;
+  letter-spacing:-.15px;
+  white-space:nowrap;
 }
 .home-market-board .market-etf-groups { grid-template-columns:1fr; gap:8px; margin-top:8px; }
 .home-market-board .market-etf-viewport { height:156px; }
 .home-market-board .market-etf-empty { min-height:156px; }
+.home-market-board .market-etf-row {
+  grid-template-columns:26px 65px minmax(54px,1fr) 50px 46px;
+  gap:5px;
+  padding:6px 8px;
+}
+.home-market-board .market-etf-rank { font-size:10px; }
+.home-market-board .market-etf-symbol { font-size:12px; }
+.home-market-board .market-etf-name { min-width:0; font-size:11px; }
+.home-market-board .market-etf-row>b { display:block; font-size:11px; white-space:nowrap; }
+.home-market-board .market-etf-row>em { grid-column:auto; min-width:0; font-size:9px; white-space:nowrap; }
 
 .home-feature-strip {
   display:grid;
@@ -2130,8 +2156,20 @@ html { scroll-behavior:smooth; }
   .home-market-board .market-index-row,
   .home-market-board .market-index-tw .market-index-row,
   .home-market-board .market-index-asia .market-index-row {
-    grid-template-columns:31px minmax(90px,1fr) 76px 64px;
+    grid-template-columns:28px minmax(82px,1fr) 64px 54px;
+    gap:5px;
   }
+  .home-market-board .market-index-row>strong { font-size:14px; }
+  .home-market-board .market-index-row>b { font-size:13px; }
+  .home-market-board .market-index-row>em { font-size:11px; }
+  .home-market-board .market-etf-row {
+    grid-template-columns:26px 62px minmax(78px,1fr) 58px 52px;
+    gap:5px;
+  }
+  .home-market-board .market-etf-symbol { font-size:13px; }
+  .home-market-board .market-etf-name { font-size:12px; }
+  .home-market-board .market-etf-row>b { font-size:12px; }
+  .home-market-board .market-etf-row>em { font-size:10px; }
   .home-market-board .market-etf-viewport { height:208px; }
   .home-market-board .market-etf-empty { min-height:208px; }
 
@@ -2157,7 +2195,15 @@ html { scroll-behavior:smooth; }
   .home-market-board .market-index-row,
   .home-market-board .market-index-tw .market-index-row,
   .home-market-board .market-index-asia .market-index-row {
-    grid-template-columns:28px minmax(78px,1fr) 66px 58px;
+    grid-template-columns:26px minmax(70px,1fr) 58px 50px;
     gap:5px;
+  }
+  .home-market-board .market-index-row>strong { font-size:13px; }
+  .home-market-board .market-index-row>b { font-size:12px; }
+  .home-market-board .market-index-row>em { font-size:10px; }
+  .home-market-board .market-etf-row {
+    grid-template-columns:24px 58px minmax(66px,1fr) 52px 48px;
+    gap:4px;
+    padding-inline:7px;
   }
 }
