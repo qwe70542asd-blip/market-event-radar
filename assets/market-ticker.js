@@ -5,6 +5,9 @@
   if (!root) return;
 
   const seed = window.__MARKET_SNAPSHOT_SEED__ || { metadata:{}, items:[], taiwan_etfs:[], us_etfs:[] };
+  const REFRESH_MS = 30_000;
+  let refreshTimer = null;
+  let lastFingerprint = "";
   const INDEX_GROUPS = [
     { id:"tw", label:"台股指數", note:"集中市場／櫃買", ids:["TAIEX","TPEX"] },
     { id:"us", label:"美股四大指數", note:"S&P／NASDAQ／道瓊／費半", ids:["SP500","NASDAQ","DJIA","SOX"] },
@@ -27,7 +30,7 @@
     if (!value) return "";
     const parsed = new Date(value);
     if (Number.isNaN(parsed.getTime())) return String(value).slice(0,10);
-    return parsed.toLocaleString("zh-TW", { month:"numeric", day:"numeric", hour:"2-digit", minute:"2-digit", hour12:false });
+    return parsed.toLocaleString("zh-TW", { timeZone:"Asia/Taipei", month:"numeric", day:"numeric", hour:"2-digit", minute:"2-digit", hour12:false });
   }
 
   function direction(item) {
@@ -130,21 +133,27 @@
     play();
   }
 
-  function render(payload) {
+  function updateStatus(payload) {
     const metadata = payload?.metadata || {};
     const items = Array.isArray(payload?.items) ? payload.items : [];
-    const map = new Map(items.map(item => [item.id, item]));
     const twEtfs = payload?.taiwan_etfs || [];
     const usEtfs = payload?.us_etfs || [];
-
     const status = document.querySelector("#marketTickerStatus");
     const healthy = [...items, ...twEtfs, ...usEtfs].filter(item => item?.value !== null && item?.value !== undefined).length;
     if (status) {
       status.textContent = healthy
-        ? `${healthy} 項｜${formatTime(metadata.updated_at) || "最近更新"}｜延遲／收盤資料`
+        ? `${healthy} 項｜資料 ${formatTime(metadata.updated_at) || "等待更新"}（台灣）｜每 30 秒檢查`
         : "行情等待第一次排程";
       status.classList.toggle("warning", healthy < 8);
     }
+  }
+
+  function render(payload) {
+    const items = Array.isArray(payload?.items) ? payload.items : [];
+    const map = new Map(items.map(item => [item.id, item]));
+    const twEtfs = payload?.taiwan_etfs || [];
+    const usEtfs = payload?.us_etfs || [];
+    updateStatus(payload);
 
     root.innerHTML = `
       <div class="market-index-groups">${INDEX_GROUPS.map(group => indexGroup(group,map)).join("")}</div>
@@ -191,8 +200,21 @@
         : seed;
       payload = mergePayload(seed, live);
     } catch {}
-    render(payload);
+    const fingerprint=JSON.stringify({
+      updated:payload?.metadata?.updated_at||"",
+      values:[...(payload?.items||[]),...(payload?.taiwan_etfs||[]),...(payload?.us_etfs||[])].map(row=>[row?.id||row?.symbol,row?.value,row?.change_percent])
+    });
+    if (fingerprint!==lastFingerprint) {
+      lastFingerprint=fingerprint;
+      render(payload);
+    } else updateStatus(payload);
   }
 
   load();
+  refreshTimer=setInterval(load,REFRESH_MS);
+  window.addEventListener("online",load);
+  document.addEventListener("visibilitychange",()=>{
+    if (document.hidden) clearInterval(refreshTimer);
+    else { load(); refreshTimer=setInterval(load,REFRESH_MS); }
+  });
 })();

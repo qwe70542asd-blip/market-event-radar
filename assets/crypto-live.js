@@ -29,6 +29,7 @@
     binance: new Map(),
     volumeSamples: new Map(),
     burstReady: false,
+    lastUiRender: 0,
     source: "CoinGecko",
   };
 
@@ -234,7 +235,7 @@
       const globalData = global?.data || {};
       capNode.textContent = globalData.total_market_cap?.usd ? `$${formatCompact(globalData.total_market_cap.usd)}` : "—";
       dominanceNode.textContent = finite(globalData.market_cap_percentage?.btc) !== null ? `${Number(globalData.market_cap_percentage.btc).toFixed(1)}%` : "—";
-      timeNode.textContent = `更新 ${new Date().toLocaleTimeString("zh-TW",{hour:"2-digit",minute:"2-digit",hour12:false})}`;
+      timeNode.textContent = `台灣時間 ${new Date().toLocaleTimeString("zh-TW",{timeZone:"Asia/Taipei",hour:"2-digit",minute:"2-digit",hour12:false})}`;
       statusNode.textContent = state.socket?.readyState === WebSocket.OPEN ? "即時連線" : "近即時";
       statusNode.dataset.state = state.socket?.readyState === WebSocket.OPEN ? "live" : "fallback";
       render();
@@ -281,7 +282,10 @@
           state.volumeSamples.set(symbol,samples);
         });
         trimSamples();
-        if (now % 3000 < 1100) render();
+        if (now-state.lastUiRender>=1500) {
+          state.lastUiRender=now;
+          render();
+        }
       });
       socket.addEventListener("close", () => {
         statusNode.textContent = "重新連線";
@@ -310,5 +314,5 @@
   connectBinance();
   refreshRankings();
   restartRotation();
-  state.refreshTimer=setInterval(refreshRankings,120_000);
+  state.refreshTimer=setInterval(refreshRankings,60_000);
 })();

@@ -1905,3 +1905,35 @@ input, select, button { font-size: 15px; }
   .decision-radar-card { grid-template-columns:38px minmax(0,1fr); }
   .decision-radar-card em { grid-column:2; }
 }
+
+/* v10.7.1 unified version, Taiwan-time status and final readability pass */
+html { font-size:17px; }
+body { font-size:17px; }
+.version-badge { padding:3px 7px; font-size:11px; }
+.market-board-head { font-size:14px; }
+.market-board-head > span { font-size:15px; }
+.market-board-head small { font-size:13px; }
+.market-index-group header strong,.market-etf-panel header strong { font-size:17px; }
+.market-index-group header small,.market-etf-panel header small,
+.market-index-group header > span,.market-etf-panel header > span { font-size:13px; }
+.market-index-row > strong { font-size:16px; }
+.market-index-row > b,.market-index-row > em { font-size:15px; }
+.market-etf-rank,.market-etf-symbol,.market-etf-row > b,.market-etf-row > em { font-size:14px; }
+.market-etf-name { font-size:15px; }
+.crypto-rank-symbol,.crypto-rank-row strong,.crypto-rank-row > b { font-size:15px; }
+.crypto-rank-row small,.crypto-rank-row > em,.crypto-global-line { font-size:13px; }
+.today-news-row strong { font-size:17px; }
+.today-news-row time,.today-news-badge,.today-news-row em { font-size:14px; }
+.news-update-box { min-width:220px; padding:14px 16px; }
+.news-update-box span,.news-update-box small { font-size:12px; }
+.news-update-box strong { font-size:20px; }
+.news-update-box .news-refresh-note { margin-top:7px; color:#8fa5b3; font-size:11px; line-height:1.4; }
+.news-page-card h2 { font-size:23px; }
+.news-page-card p { font-size:17px; }
+.news-card-top,.news-card-tags,.news-card-actions { font-size:14px; }
+
+@media (max-width:760px) {
+  html,body { font-size:17px; }
+  .news-update-box { width:100%; min-width:0; }
+  .market-board-head small { font-size:12px; }
+}

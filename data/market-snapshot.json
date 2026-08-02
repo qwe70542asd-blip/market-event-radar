@@ -2,13 +2,13 @@
   "metadata": {
     "updated_at": "2026-08-02T10:19:00+08:00",
     "timezone": "Asia/Taipei",
-    "version": "v10.6.0",
+    "version": "v10.7.1",
     "item_count": 33,
     "healthy_count": 1,
     "status": "seed",
     "display_policy": "delayed-or-last-close",
     "tw_etf_ranking": "daily-trading-value",
-    "note": "Clean v10.6.0 seed. Run the market ticker workflow to fill grouped index and ETF data."
+    "note": "Clean v10.7.1 seed. Run the market ticker workflow to fill grouped index and ETF data."
   },
   "sources": [],
   "items": [

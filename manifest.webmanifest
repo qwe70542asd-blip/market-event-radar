@@ -1,6 +1,6 @@
 {
-  "name": "全球市場即時雷達 v10.6.0",
-  "short_name": "市場雷達 10.5",
+  "name": "全球市場即時雷達",
+  "short_name": "市場雷達",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#07111f",

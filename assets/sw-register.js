@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const VERSION = "10.6.2";
+  const VERSION = "10.7.1";
   const VERSION_KEY = "market-radar-version";
   if (!("serviceWorker" in navigator)) return;
 
@@ -37,7 +37,7 @@
 
       // Clear leftovers from builds that reused the same cache version.
       if (previous !== VERSION && "caches" in window) {
-        const keep = "market-event-radar-v10-6-0-clean";
+        const keep = "market-event-radar-v10-7-1-integrated";
         const keys = await caches.keys();
         await Promise.all(keys.filter(key => key.startsWith("market-event-radar-") && key !== keep).map(key => caches.delete(key)));
       }

@@ -13,10 +13,14 @@
 
   const state={items:[],breaking:[],breakingIndex:0,breakingTimer:null,filter:"all",newsOffset:0,newsTimer:null};
 
-  function fmt(value) {
-    const date=new Date(value || 0);
+  function fmt(value, precision="minute") {
+    if (!value) return "—";
+    const date=new Date(value);
     if (Number.isNaN(date.getTime())) return "—";
-    return date.toLocaleString("zh-TW",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit",hour12:false});
+    const options=precision==="date"
+      ? {timeZone:"Asia/Taipei",month:"numeric",day:"numeric"}
+      : {timeZone:"Asia/Taipei",month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit",hour12:false};
+    return date.toLocaleString("zh-TW",options);
   }
 
   function category(item) {
@@ -66,7 +70,7 @@
     const selected=Array.from({length:count},(_,index)=>rows[(state.newsOffset+index)%rows.length]);
     todayList.innerHTML=selected.map(item=>`
       <a class="today-news-row type-${category(item)}" href="${escapeHtml(directLink(item))}" target="_blank" rel="noreferrer noopener">
-        <time>${escapeHtml(fmt(item.published_at))}</time>
+        <time>${escapeHtml(fmt(item.published_at,item.published_precision))}</time>
         <span class="today-news-badge">${escapeHtml(categoryLabel(item))}</span>
         <strong>${escapeHtml(item.title)}</strong>
         <em>${escapeHtml(item.source || "新聞來源")}</em>

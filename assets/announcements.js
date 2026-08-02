@@ -7,7 +7,7 @@
   function fmt(value) {
     if (!value) return "等待更新";
     const date=new Date(value);
-    return Number.isNaN(date.getTime())?String(value):date.toLocaleString("zh-TW",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit",hour12:false});
+    return Number.isNaN(date.getTime())?String(value):date.toLocaleString("zh-TW",{timeZone:"Asia/Taipei",month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit",hour12:false});
   }
 
   function formatTradingDate(value) {
@@ -114,5 +114,5 @@
   ticker?.addEventListener("mouseenter",()=>{state.paused=true;restartTimer();});
   ticker?.addEventListener("mouseleave",()=>{state.paused=false;restartTimer();});
   load();
-  setInterval(load,5*60_000);
+  setInterval(load,60_000);
 })();

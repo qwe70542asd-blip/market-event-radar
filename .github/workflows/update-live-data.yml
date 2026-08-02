@@ -1,6 +1,13 @@
-name: Update v10.6.0 integrated live data
+name: Update v10.7.1 integrated live data
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/update-live-data.yml"
+      - "scripts/**"
+      - "requirements.txt"
+      - "data/manual_events.json"
   schedule:
     - cron: "*/5 * * * *"
     - cron: "25 10 * * 1-5"
@@ -48,10 +55,14 @@ jobs:
         run: |
           MODE="${{ inputs.mode }}"
           if [ -z "$MODE" ]; then
-            case "${{ github.event.schedule }}" in
-              "*/5 * * * *") MODE="fast" ;;
-              *) MODE="daily" ;;
-            esac
+            if [ "${{ github.event_name }}" = "push" ]; then
+              MODE="all"
+            else
+              case "${{ github.event.schedule }}" in
+                "*/5 * * * *") MODE="fast" ;;
+                *) MODE="daily" ;;
+              esac
+            fi
           fi
           echo "mode=$MODE" >> "$GITHUB_OUTPUT"
           echo "Mode: $MODE"
@@ -178,5 +189,5 @@ jobs:
             echo "No live data changes."
             exit 0
           fi
-          git commit -m "chore: refresh integrated live data v10.6.0"
+          git commit -m "chore: refresh integrated live data v10.7.1"
           git push origin "HEAD:$LIVE_BRANCH"

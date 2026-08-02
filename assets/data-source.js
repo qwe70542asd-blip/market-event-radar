@@ -11,7 +11,7 @@
     return REMOTE_BASE + String(path || "").replace(/^\.\//,"");
   }
 
-  async function fetchJsonUrl(url,timeout=9000) {
+  async function fetchJsonUrl(url,timeout=6000) {
     const controller=new AbortController();
     const timer=setTimeout(()=>controller.abort(),timeout);
     try {
@@ -21,20 +21,32 @@
     } finally { clearTimeout(timer); }
   }
 
+  function dataScore(payload) {
+    const arrays=[payload?.items,payload?.events,payload?.announcements,payload?.taiwan_etfs,payload?.us_etfs];
+    return arrays.reduce((total,rows)=>total+(Array.isArray(rows)?rows.length:0),0);
+  }
+
+  function updatedTime(payload) {
+    const parsed=Date.parse(payload?.metadata?.updated_at||payload?.updated_at||"");
+    return Number.isFinite(parsed)?parsed:0;
+  }
+
   async function loadJson(path,fallback={}) {
-    try {
-      const payload=await fetchJsonUrl(remotePath(path));
-      return {...payload,__data_source:"live-data"};
-    } catch {}
-    try {
-      const payload=await fetchJsonUrl(MAIN_BASE + String(path || "").replace(/^\.\//,""));
-      return {...payload,__data_source:"main"};
-    } catch {}
-    try {
-      const payload=await fetchJsonUrl(path);
-      return {...payload,__data_source:"local"};
-    } catch {}
-    return fallback;
+    const cleanPath=String(path||"").replace(/^\.\//,"");
+    const requests=[
+      ["live-data",remotePath(cleanPath)],
+      ["local",cleanPath],
+      ["main",MAIN_BASE+cleanPath],
+    ];
+    const settled=await Promise.allSettled(requests.map(([,url])=>fetchJsonUrl(url)));
+    const candidates=settled.flatMap((result,index)=>result.status==="fulfilled"
+      ? [{...result.value,__data_source:requests[index][0],__priority:3-index}]
+      : []);
+    if (!candidates.length) return fallback;
+    candidates.sort((a,b)=>dataScore(b)-dataScore(a)||updatedTime(b)-updatedTime(a)||(b.__priority||0)-(a.__priority||0));
+    const selected={...candidates[0]};
+    delete selected.__priority;
+    return selected;
   }
 
   window.MarketDataSource={REMOTE_BASE,MAIN_BASE,remotePath,fetchJsonUrl,loadJson};

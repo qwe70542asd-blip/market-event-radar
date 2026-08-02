@@ -160,5 +160,7 @@
   window.MarketNewsLoader={load,state,isDirectArticle:item=>Boolean(directCandidate(item))};
   load();
   clearInterval(state.timer);
-  state.timer=setInterval(load,60_000);
+  state.timer=setInterval(load,30_000);
+  window.addEventListener("online",load);
+  document.addEventListener("visibilitychange",()=>{ if (!document.hidden) load(); });
 })();

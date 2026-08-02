@@ -99,7 +99,7 @@
     $('#institutionalSubtitle').textContent = state.flow === 'dealer'
       ? '自營商為「自行買賣＋避險」合計；頁面也保留拆分資訊。'
       : '證交所官方 BFI82U 市場總額，搭配 T86 個股買賣超排行。';
-    $('#institutionalUpdatedAt').textContent = metadata.updated_at ? `更新 ${new Date(metadata.updated_at).toLocaleString('zh-TW',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false})}` : '安裝包初始資料';
+    $('#institutionalUpdatedAt').textContent = metadata.updated_at ? `更新 ${new Date(metadata.updated_at).toLocaleString('zh-TW',{timeZone:'Asia/Taipei',month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false})}` : '安裝包初始資料';
     $('#institutionalSourceLabel').textContent = metadata.mode === 'live' ? 'TWSE 官方盤後資料' : '試作版種子資料；執行 Action 補齊';
     $('#institutionalStatusDot').className = metadata.mode === 'live' ? 'ok' : 'warning';
     $$('[data-flow]').forEach(button => button.classList.toggle('active', button.dataset.flow === state.flow));
@@ -238,7 +238,7 @@
   }
 
   function rankMarkup(items,kind) {
-    if (!items?.length) return '<div class="ranking-empty">第一次執行「Update v10.6.0 integrated live data」後，會由 TWSE T86 補上官方個股排行。</div>';
+    if (!items?.length) return '<div class="ranking-empty">第一次執行「Update v10.7.1 integrated live data」後，會由 TWSE T86 補上官方個股排行。</div>';
     const max = Math.max(...items.map(item => Math.abs(num(item.net))),1);
     return items.slice(0,10).map((item,index) => `<a href="asset.html?id=TW:${encodeURIComponent(item.symbol)}" class="flow-rank-row"><b>${index+1}</b><div><strong>${escapeHtml(item.symbol)} ${escapeHtml(item.name)}</strong><small>買 ${shares(item.buy)}｜賣 ${shares(item.sell)}</small></div><span class="rank-bar"><i style="width:${Math.abs(num(item.net))/max*100}%"></i></span><em class="${kind==='buy'?'positive':'negative'}">${item.net>=0?'+':''}${shares(item.net)}</em></a>`).join('');
   }
