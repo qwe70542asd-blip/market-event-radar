@@ -8,6 +8,7 @@
   const REFRESH_MS = 30_000;
   let refreshTimer = null;
   let lastFingerprint = "";
+  let mobilePanelIndex = 0;
   const INDEX_GROUPS = [
     { id:"tw", label:"台股指數", note:"集中市場／櫃買", ids:["TAIEX","TPEX"] },
     { id:"us", label:"美股四大指數", note:"S&P／NASDAQ／道瓊／費半", ids:["SP500","NASDAQ","DJIA","SOX"] },
@@ -133,6 +134,62 @@
     play();
   }
 
+  function marketPanels() {
+    return [...root.querySelectorAll(".market-index-group,.market-etf-panel")];
+  }
+
+  function updateMobileCounter() {
+    const panels = marketPanels();
+    const counter = document.querySelector("#marketPanelCounter");
+    if (!panels.length) {
+      if (counter) counter.textContent = "0/0";
+      return;
+    }
+    mobilePanelIndex = Math.max(0, Math.min(mobilePanelIndex, panels.length - 1));
+    if (counter) counter.textContent = `${mobilePanelIndex + 1}/${panels.length}`;
+  }
+
+  function scrollToMarketPanel(index) {
+    const panels = marketPanels();
+    if (!panels.length) return;
+    mobilePanelIndex = (index + panels.length) % panels.length;
+    const panel = panels[mobilePanelIndex];
+    const target = panel.getBoundingClientRect().left - root.getBoundingClientRect().left + root.scrollLeft;
+    root.scrollTo({ left:target, behavior:"smooth" });
+    updateMobileCounter();
+  }
+
+  function bindMobileMarketControls() {
+    const prev = document.querySelector("#marketPrev");
+    const next = document.querySelector("#marketNext");
+    if (prev && !prev.dataset.bound) {
+      prev.dataset.bound = "true";
+      prev.addEventListener("click", () => scrollToMarketPanel(mobilePanelIndex - 1));
+    }
+    if (next && !next.dataset.bound) {
+      next.dataset.bound = "true";
+      next.addEventListener("click", () => scrollToMarketPanel(mobilePanelIndex + 1));
+    }
+    if (!root.dataset.mobileScrollBound) {
+      root.dataset.mobileScrollBound = "true";
+      let scrollTimer;
+      root.addEventListener("scroll", () => {
+        clearTimeout(scrollTimer);
+        scrollTimer = window.setTimeout(() => {
+          const panels = marketPanels();
+          if (!panels.length) return;
+          const rootLeft = root.getBoundingClientRect().left;
+          mobilePanelIndex = panels.reduce((best, panel, index) => {
+            const distance = Math.abs(panel.getBoundingClientRect().left - rootLeft);
+            return distance < best.distance ? { index, distance } : best;
+          }, { index:0, distance:Number.POSITIVE_INFINITY }).index;
+          updateMobileCounter();
+        }, 90);
+      }, { passive:true });
+    }
+    updateMobileCounter();
+  }
+
   function updateStatus(payload) {
     const metadata = payload?.metadata || {};
     const items = Array.isArray(payload?.items) ? payload.items : [];
@@ -164,6 +221,7 @@
 
     startVerticalRail(document.querySelector("#twEtfRail"));
     startVerticalRail(document.querySelector("#usEtfRail"));
+    bindMobileMarketControls();
   }
 
   function mergeRows(seedRows = [], liveRows = []) {

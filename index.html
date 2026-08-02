@@ -9,7 +9,7 @@
 <title>全球市場即時雷達｜整合版</title>
 <link href="manifest.webmanifest" rel="manifest"/>
 <link href="assets/favicon.svg" rel="icon" type="image/svg+xml"/>
-<link href="assets/styles.css?v=10.7.1" rel="stylesheet"/>
+<link href="assets/styles.css?v=10.8.0" rel="stylesheet"/>
 </head>
 <body>
 <div aria-hidden="true" class="noise"></div>
@@ -18,7 +18,7 @@
 <span aria-hidden="true" class="brand-mark">
 <svg role="img" viewbox="0 0 48 48"><path d="M7 34 16 24l7 6 10-16 8 6"></path><path d="M7 40h34"></path></svg>
 </span>
-<span><strong>全球市場即時雷達 <em class="version-badge">v10.7.1</em></strong><small>PERSONAL MARKET &amp; EVENT RADAR</small></span>
+<span><strong>全球市場即時雷達 <em class="version-badge">v10.8.0</em></strong><small>PERSONAL MARKET &amp; EVENT RADAR</small></span>
 </a>
 <div class="top-actions">
 <span class="live-dot"><i></i> 自動更新</span>
@@ -34,15 +34,6 @@
 </button>
 </div>
 </header>
-<section aria-label="全球市場分類行情" class="market-board-shell">
-<div class="market-board-head">
-<span><i></i>全球市場分類行情</span>
-<small id="marketTickerStatus">讀取市場資料中…</small>
-</div>
-<div aria-live="polite" class="market-board" id="marketTicker">
-<div class="market-ticker-empty"><strong>市場行情同步中</strong></div>
-</div>
-</section>
 <section aria-label="重要財經新聞跑馬燈" class="breaking-news-bar">
 <a class="breaking-label" href="news.html"><span></span>重要新聞</a>
 <div class="breaking-viewport">
@@ -57,9 +48,8 @@
 <button aria-label="下一則新聞" id="breakingNext" type="button">›</button>
 </div>
 </section>
-<main class="shell shell-compact">
-<section aria-label="個人投資與虛擬貨幣即時資訊" class="personal-market-grid">
-<section aria-label="我的投資組合即時漲幅" class="portfolio-live-section">
+<main class="shell shell-compact" id="homeTop">
+<section aria-label="我的投資組合即時漲幅" class="portfolio-live-section portfolio-live-compact" id="portfolioSummary">
 <div class="portfolio-live-head">
 <div>
 <p class="eyebrow">MY PORTFOLIO LIVE</p>
@@ -79,46 +69,7 @@
 <div aria-live="polite" class="portfolio-quote-grid" id="portfolioQuoteGrid"></div>
 </div>
 </section>
-<section aria-label="虛擬貨幣即時排行" class="crypto-live-section">
-<div class="crypto-live-head">
-<div><p class="eyebrow">CRYPTO LIVE</p><h2>虛擬貨幣即時排行</h2></div>
-<span class="crypto-live-status" id="cryptoLiveStatus">連線中</span>
-</div>
-<div class="crypto-group-head">
-<div><strong id="cryptoGroupTitle">市值前 5 大</strong><small id="cryptoGroupNote">排除穩定幣與包裝資產</small></div>
-<div class="crypto-controls"><button aria-label="上一組" id="cryptoPrev" type="button">‹</button><span id="cryptoGroupCounter">1/5</span><button aria-label="暫停輪播" id="cryptoPause" type="button">Ⅱ</button><button aria-label="下一組" id="cryptoNext" type="button">›</button></div>
-</div>
-<div class="crypto-live-viewport" id="cryptoLiveViewport">
-<div class="crypto-live-list" id="cryptoLiveList"><div class="crypto-loading">正在抓取即時幣價與排名…</div></div>
-</div>
-<div class="crypto-global-line"><span>總市值 <b id="cryptoGlobalCap">—</b></span><span>BTC 市占 <b id="cryptoBtcDominance">—</b></span><small id="cryptoDataTime">等待資料</small></div>
-</section>
-</section>
-<section aria-label="投資決策重點" class="decision-radar-section">
-<div class="decision-radar-head"><div><p class="eyebrow">DECISION RADAR</p><h2>投資決策重點</h2></div><span>全產業景氣・財務體質・重大消息</span></div>
-<div class="decision-radar-grid">
-<button class="decision-radar-card" data-radar-focus="rates" type="button"><b>01</b><span><strong>全產業景氣與市場指標</strong><small>製造／服務、科技、金融、營建、航運、能源、汽車、消費與生技等股市關聯資料</small></span><em>查看事件 →</em></button>
-<a class="decision-radar-card" href="asset.html?id=TW%3A2330"><b>02</b><span><strong>個股財務體質</strong><small>穩健度、產業比較、指標模型與雷達圖</small></span><em>查看模型 →</em></a>
-<a class="decision-radar-card" href="news.html"><b>03</b><span><strong>市場重大消息</strong><small>重要新聞、官方公告與突發事件集中查看</small></span><em>查看消息 →</em></a>
-</div>
-</section>
-<section class="important-announcement-section announcement-compact-section">
-<div class="announcement-compact-head">
-<div><p class="eyebrow">OFFICIAL &amp; INSTITUTIONAL</p><h2>法人資金與重要公告</h2></div>
-<span>更新 <strong id="announcementUpdatedAt">等待中</strong></span>
-</div>
-<div class="institutional-cards" id="institutionalCards"></div>
-<div aria-label="官方重要公告跑馬燈" class="announcement-ticker">
-<span class="announcement-ticker-label">官方公告</span>
-<a href="#" id="announcementTickerLink" rel="noreferrer noopener" target="_blank">
-<b id="announcementTickerRegion">—</b><strong id="announcementTickerTitle">公告資料同步中…</strong><small id="announcementTickerSource">—</small>
-</a>
-<div class="announcement-ticker-controls"><button id="announcementPrev" type="button">‹</button><span id="announcementCounter">0/0</span><button id="announcementNext" type="button">›</button></div>
-</div>
-<div hidden="" id="importantAnnouncementList"></div>
-<p class="announcement-note">法人卡片可進入日、週、月圖表；公告只顯示官方原文或官方來源首頁，不導向 Google 搜尋。</p>
-</section>
-<section class="calendar-layout">
+<section class="calendar-layout home-primary-layout">
 <section class="calendar-section month-primary" id="calendarSection">
 <div class="section-heading section-heading-tight">
 <div><p class="eyebrow">MONTHLY RADAR</p><h2>本月事件月曆</h2><p class="section-copy">首頁主體：總經、財報、營收、法說、股利、除權息與突發事件。</p></div>
@@ -152,14 +103,80 @@
 <div aria-hidden="true" class="calendar-weekdays"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>
 <div class="calendar-grid compact-calendar" id="calendarGrid"></div>
 </section>
-<aside class="calendar-side-rail">
+<aside class="calendar-side-rail home-market-rail">
+<section aria-label="全球市場分類行情" class="market-board-shell home-market-board" id="marketSection">
+<div class="market-board-head">
+<span><i></i>全球市場分類行情</span>
+<div class="market-board-head-meta">
+<small id="marketTickerStatus">讀取市場資料中…</small>
+<div aria-label="手機行情分組切換" class="market-mobile-controls">
+<button aria-label="上一組行情" id="marketPrev" type="button">‹</button>
+<span id="marketPanelCounter">1/5</span>
+<button aria-label="下一組行情" id="marketNext" type="button">›</button>
+</div>
+</div>
+</div>
+<div aria-live="polite" class="market-board" id="marketTicker">
+<div class="market-ticker-empty"><strong>市場行情同步中</strong></div>
+</div>
+</section>
 <section class="events-section compact-agenda ultra-compact-agenda" id="agendaSection">
 <div class="section-heading section-heading-tight"><div><p class="eyebrow">UPCOMING</p><h2>近期高影響事件</h2></div><span id="resultCount">0 筆</span></div>
 <div aria-live="polite" class="event-list compact-list" id="eventList"></div>
 <div class="empty-state" hidden="" id="emptyState"><p>這個條件下沒有事件。</p></div>
 </section>
 </aside>
-</section><section aria-label="今日財經快訊" class="today-news-section">
+</section>
+<section aria-label="投資決策重點" class="home-feature-strip" id="homeFeatureStrip">
+<button class="home-feature-card feature-industry" data-radar-focus="rates" type="button">
+<b>01</b><span><strong>產業景氣</strong><small>製造、服務、科技、金融、航運與消費等市場指標</small></span><em>查看事件 →</em>
+</button>
+<a class="home-feature-card feature-fundamental" href="portfolio.html">
+<b>02</b><span><strong>個股基本面與同業比較</strong><small>先從投資組合選擇標的，再查看財務體質與產業比較</small></span><em>選擇標的 →</em>
+</a>
+<a class="home-feature-card feature-institutional" href="institutional.html">
+<b>03</b><span><strong>法人資金</strong><small>上市、上櫃三大法人與個股買賣超走勢</small></span><em>查看籌碼 →</em>
+</a>
+<a class="home-feature-card feature-major-news" href="news.html">
+<b>04</b><span><strong>市場重大消息</strong><small>官方公告、政策變化與可能影響市場的突發事件</small></span><em>查看消息 →</em>
+</a>
+<a class="home-feature-card feature-today-news" href="#todayNewsSection">
+<b>05</b><span><strong>今日財經快訊</strong><small>台股、美股、國際、券商與官方即時資訊</small></span><em>查看快訊 ↓</em>
+</a>
+</section>
+<section aria-label="次要即時資訊" class="home-secondary-grid">
+<section class="important-announcement-section announcement-compact-section">
+<div class="announcement-compact-head">
+<div><p class="eyebrow">OFFICIAL &amp; INSTITUTIONAL</p><h2>法人資金與重要公告</h2></div>
+<span>更新 <strong id="announcementUpdatedAt">等待中</strong></span>
+</div>
+<div class="institutional-cards" id="institutionalCards"></div>
+<div aria-label="官方重要公告跑馬燈" class="announcement-ticker">
+<span class="announcement-ticker-label">官方公告</span>
+<a href="#" id="announcementTickerLink" rel="noreferrer noopener" target="_blank">
+<b id="announcementTickerRegion">—</b><strong id="announcementTickerTitle">公告資料同步中…</strong><small id="announcementTickerSource">—</small>
+</a>
+<div class="announcement-ticker-controls"><button aria-label="上一則官方公告" id="announcementPrev" type="button">‹</button><span id="announcementCounter">0/0</span><button aria-label="下一則官方公告" id="announcementNext" type="button">›</button></div>
+</div>
+<div hidden="" id="importantAnnouncementList"></div>
+<p class="announcement-note">法人卡片可進入日、週、月圖表；公告只顯示官方原文或官方來源首頁。</p>
+</section>
+<section aria-label="虛擬貨幣即時排行" class="crypto-live-section">
+<div class="crypto-live-head">
+<div><p class="eyebrow">CRYPTO LIVE</p><h2>虛擬貨幣即時排行</h2></div>
+<span class="crypto-live-status" id="cryptoLiveStatus">連線中</span>
+</div>
+<div class="crypto-group-head">
+<div><strong id="cryptoGroupTitle">市值前 5 大</strong><small id="cryptoGroupNote">排除穩定幣與包裝資產</small></div>
+<div class="crypto-controls"><button aria-label="上一組" id="cryptoPrev" type="button">‹</button><span id="cryptoGroupCounter">1/5</span><button aria-label="暫停輪播" id="cryptoPause" type="button">Ⅱ</button><button aria-label="下一組" id="cryptoNext" type="button">›</button></div>
+</div>
+<div class="crypto-live-viewport" id="cryptoLiveViewport">
+<div class="crypto-live-list" id="cryptoLiveList"><div class="crypto-loading">正在抓取即時幣價與排名…</div></div>
+</div>
+<div class="crypto-global-line"><span>總市值 <b id="cryptoGlobalCap">—</b></span><span>BTC 市占 <b id="cryptoBtcDominance">—</b></span><small id="cryptoDataTime">等待資料</small></div>
+</section>
+</section>
+<section aria-label="今日財經快訊" class="today-news-section" id="todayNewsSection">
 <div class="today-news-head">
 <div><p class="eyebrow">TODAY MARKET NEWS</p><h2>今日財經快訊</h2><p>彙整媒體、券商公開內容、官方新聞稿與突發快訊；只顯示可直接開啟的原始文章。</p></div>
 <div class="today-news-head-actions"><span class="news-load-state" id="newsLoadState">同步中</span><a href="news.html">查看全部新聞 →</a></div>
@@ -174,7 +191,8 @@
 <button data-news-filter="breaking" type="button">突發</button>
 </div>
 <div aria-live="polite" class="today-news-list" id="todayNewsList"><div class="today-news-empty">正在同步今日財經新聞…</div></div>
-</section><details class="source-panel compact-source-panel health-details" id="sources">
+</section>
+<details class="source-panel compact-source-panel health-details" id="sources">
 <summary><span><p class="eyebrow">DATA HEALTH</p><strong>資料健康</strong><small id="sourceHealthSummary">讀取中</small></span><b id="sourceCount">—</b></summary>
 <div class="source-status compact-source-list" id="sourceStatus"></div>
 <p class="source-footnote">來源失效時保留上次成功資料；點此查看明細。</p>
@@ -264,24 +282,24 @@
 </aside>
 <div class="drawer-backdrop" hidden="" id="drawerBackdrop"></div>
 <nav aria-label="手機主要導覽" class="mobile-bottom-nav">
-<a class="active" href="index.html"><span>⌂</span><b>首頁</b></a>
+<a class="active" href="#homeTop"><span>⌂</span><b>首頁</b></a>
 <a href="#calendarSection"><span>▦</span><b>日曆</b></a>
-<a href="news.html"><span>▤</span><b>快訊</b></a>
-<a href="portfolio.html"><span>★</span><b>投資組合</b></a>
+<a href="#marketSection"><span>↗</span><b>行情</b></a>
+<a href="#homeFeatureStrip"><span>•••</span><b>更多</b></a>
 </nav>
-<script src="data/seed.js?v=10.7.1"></script>
-<script src="data/assets-seed.js?v=10.7.1"></script>
-<script src="data/announcements-seed.js?v=10.7.1"></script>
-<script src="data/news-seed.js?v=10.7.1"></script>
-<script src="data/market-snapshot-seed.js?v=10.7.1"></script>
-<script defer="" src="assets/data-source.js?v=10.7.1"></script><script src="assets/auth.js?v=10.7.1" type="module"></script>
-<script defer="" src="assets/market-ticker.js?v=10.7.1"></script>
-<script defer="" src="assets/crypto-live.js?v=10.7.1"></script><script defer="" src="assets/app.js?v=10.7.1"></script>
-<script defer="" src="assets/asset-master.js?v=10.7.1"></script>
-<script defer="" src="assets/announcements.js?v=10.7.1"></script>
-<script defer="" src="assets/news-core.js?v=10.7.1"></script>
-<script defer="" src="assets/news-ui.js?v=10.7.1"></script>
-<script defer="" src="assets/portfolio.js?v=10.7.1"></script>
-<script defer="" src="assets/sw-register.js?v=10.7.1"></script>
+<script src="data/seed.js?v=10.8.0"></script>
+<script src="data/assets-seed.js?v=10.8.0"></script>
+<script src="data/announcements-seed.js?v=10.8.0"></script>
+<script src="data/news-seed.js?v=10.8.0"></script>
+<script src="data/market-snapshot-seed.js?v=10.8.0"></script>
+<script defer="" src="assets/data-source.js?v=10.8.0"></script><script src="assets/auth.js?v=10.8.0" type="module"></script>
+<script defer="" src="assets/market-ticker.js?v=10.8.0"></script>
+<script defer="" src="assets/crypto-live.js?v=10.8.0"></script><script defer="" src="assets/app.js?v=10.8.0"></script>
+<script defer="" src="assets/asset-master.js?v=10.8.0"></script>
+<script defer="" src="assets/announcements.js?v=10.8.0"></script>
+<script defer="" src="assets/news-core.js?v=10.8.0"></script>
+<script defer="" src="assets/news-ui.js?v=10.8.0"></script>
+<script defer="" src="assets/portfolio.js?v=10.8.0"></script>
+<script defer="" src="assets/sw-register.js?v=10.8.0"></script>
 </body>
 </html>

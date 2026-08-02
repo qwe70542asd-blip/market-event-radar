@@ -2,7 +2,7 @@
 
 ## 唯一修改來源
 
-只使用資料夾：`market-event-radar-current-v10.7.1-baseline`
+只使用資料夾：`market-event-radar-current-v10.8.0-baseline`
 
 以下舊檔不再使用：
 
@@ -44,7 +44,7 @@
 整理基準第一次提交可使用：
 
 ```text
-v10.7.1 baseline：統一最新需求與逐項測試基準
+v10.8.0 baseline：統一最新需求與逐項測試基準
 ```
 
 後續每次只提交一個問題，例如：

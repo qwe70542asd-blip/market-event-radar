@@ -7,7 +7,7 @@
 | 編號 | 問題 | 目前證據 | 狀態 |
 |---|---|---|---|
 | P01 | 自動更新未證明成功 | 線上曾沒有 `live-data` 分支；本機 Workflow 雖有建立分支邏輯，但尚未取得最新 Actions 成功紀錄 | 已定位 |
-| P02 | 線上版本混亂 | 線上畫面曾顯示 `10.6.1`；目前基準頁面與快取多數為 `10.7.1`，但仍有內部舊版文字 | 已定位 |
+| P02 | 線上版本混亂 | 線上畫面曾顯示 `10.6.1`；目前基準頁面與快取多數為 `10.8.0`，但仍有內部舊版文字 | 已定位 |
 | P03 | 新聞資料為空 | `data/news.json` 的 `items` 為 0，`updated_at` 為 `null` | 失敗 |
 | P04 | 新聞時間曾是假時間 | 舊版 5 則備援曾寫死 `8/2 12:00`；新流程仍需線上驗證 | 已定位 |
 | P05 | 行情沒有完整有效資料 | 基準 `market-snapshot.json` 標記 `status: seed`，畫面不能把 seed 當即時資料 | 失敗 |
@@ -29,7 +29,7 @@
 |---|---|
 | `data/events.json` | 144 筆事件；離線生成資料 |
 | `data/news.json` | 0 筆，尚未完成第一次多來源新聞更新 |
-| `data/market-snapshot.json` | `v10.7.1` seed；不能視為完整即時行情 |
+| `data/market-snapshot.json` | `v10.8.0` seed；不能視為完整即時行情 |
 | `data/institutional-history.json` | 3 個交易日 seed |
 | `data/announcements.json` | 6 筆等待狀態；metadata 仍為 `v10.4.1` |
 | `data/assets.json` | 74 筆 seed；metadata 為 `v10.3` |

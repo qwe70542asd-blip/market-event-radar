@@ -6,8 +6,8 @@
 
 目的：先確認資料更新管線真的能寫出資料。
 
-1. 上傳這個基準前，先確認線上 `.github/workflows/update-live-data.yml` 是 `Update v10.7.1 integrated live data`。
-2. GitHub → Actions → `Update v10.7.1 integrated live data`。
+1. 上傳這個基準前，先確認線上 `.github/workflows/update-live-data.yml` 是 `Update v10.8.0 integrated live data`。
+2. GitHub → Actions → `Update v10.8.0 integrated live data`。
 3. 手動執行，`mode` 選 `all`。
 4. 等待完成，檢查每個步驟是否綠色。
 5. 檢查 `live-data` 分支是否建立。
