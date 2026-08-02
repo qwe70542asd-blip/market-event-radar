@@ -5,6 +5,7 @@
   let payload={metadata:{},sources:[],items:[]};
 
   function fmt(value) {
+    if (!value) return "—";
     const date=new Date(value||0);
     if (Number.isNaN(date.getTime())) return "—";
     return date.toLocaleString("zh-TW",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit",hour12:false});
@@ -72,4 +73,9 @@
     if(status) status.textContent={live:"原文資料",cached:"上次成功資料",empty:"等待更新"}[event.detail.status]||"同步中";
     renderSources();render();
   });
+  if (window.MarketNews?.payload) {
+    payload=window.MarketNews.payload;
+    if ($("#newsPageUpdatedAt")) $("#newsPageUpdatedAt").textContent=fmt(payload.metadata?.updated_at);
+    renderSources();render();
+  }
 })();

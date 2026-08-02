@@ -105,7 +105,14 @@
 
   function merge(primary,seed) {
     const items=dedupe([...(primary?.items||[]),...(seed?.items||[])]);
-    return {...primary,items};
+    const primaryHasItems=Boolean(primary?.items?.length);
+    return {
+      ...primary,
+      metadata: primaryHasItems ? primary.metadata : {...(primary?.metadata||{}),...(seed?.metadata||{})},
+      source: primaryHasItems ? primary.source : (seed?.source||primary?.source||{}),
+      sources: [...new Map([...(primary?.sources||[]),...(seed?.sources||[])].map(source=>[source.name,source])).values()],
+      items,
+    };
   }
 
   function emit() {
