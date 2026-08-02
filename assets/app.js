@@ -1,7 +1,8 @@
 (() => {
   "use strict";
 
-  const PREF_KEY = "market-event-radar-v10-6-0";
+  const PREF_KEY = "market-event-radar-v11-0-0";
+  const LEGACY_PREF_KEY = "market-event-radar-v10-6-0";
   const state = {
     payload: { metadata: {}, sources: [], events: [] },
     newsPayload: { metadata: {}, source: {}, items: [] },
@@ -64,7 +65,11 @@
   }
 
   function loadPrefs() {
-    try { return JSON.parse(localStorage.getItem(PREF_KEY) || "{}"); }
+    try {
+      const current=localStorage.getItem(PREF_KEY);
+      const legacy=localStorage.getItem(LEGACY_PREF_KEY);
+      return JSON.parse(current||legacy||"{}");
+    }
     catch { return {}; }
   }
   function savePrefs() {

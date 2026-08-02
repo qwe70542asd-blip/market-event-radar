@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Market Event Radar v10.8.4 multi-source finance-news updater.
+"""Market Event Radar v11.0.0 multi-source finance-news updater.
 
 v10.1 priorities:
 - Traditional-Chinese financial coverage first.
@@ -43,7 +43,7 @@ NEWS_RETENTION_DAYS = 20
 FULL_REFRESH = os.getenv("NEWS_FULL_REFRESH", "").strip().lower() in {"1", "true", "yes", "on"}
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/10.8.4; +https://github.com/qwe70542asd-blip/market-event-radar)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.0.0; +https://github.com/qwe70542asd-blip/market-event-radar)",
     "Accept-Language": "zh-TW,zh;q=0.95,en-US;q=0.75,en;q=0.65",
 }
 
@@ -966,6 +966,122 @@ def event_queries(events):
             rows.append((event, clean(f'{event.get("title","")} {assets} 市場')))
     return rows[:10]
 
+
+AI_CATEGORIES = ["taiwan-stock", "us-stock", "global-market", "macro", "earnings", "etf-fund", "crypto", "broker", "official", "industry"]
+AI_INDUSTRIES = list(INDUSTRY_LABELS)
+
+
+def response_output_text(payload):
+    for output in payload.get("output") or []:
+        for content in output.get("content") or []:
+            if content.get("type") == "output_text" and content.get("text"):
+                return content["text"]
+    return payload.get("output_text") or ""
+
+
+def ai_schema():
+    item = {
+        "type": "object",
+        "additionalProperties": False,
+        "properties": {
+            "id": {"type": "string"},
+            "category": {"type": "string", "enum": AI_CATEGORIES},
+            "primary_industry": {"type": "string", "enum": AI_INDUSTRIES},
+            "impact": {"type": "string", "enum": ["high", "medium", "low"]},
+            "market": {"type": "string", "enum": ["TW", "US", "GLOBAL", "ASIA", "HK"]},
+            "summary": {"type": "string"},
+            "event_key": {"type": "string"},
+        },
+        "required": ["id", "category", "primary_industry", "impact", "market", "summary", "event_key"],
+    }
+    return {"type": "object", "additionalProperties": False, "properties": {"items": {"type": "array", "items": item}}, "required": ["items"]}
+
+
+def ai_enrich_news(items):
+    """Optionally classify verified headlines; any failure returns rule-based rows."""
+    api_key = os.getenv("OPENAI_API_KEY", "").strip()
+    if not api_key:
+        return items, {"mode": "rule-fallback", "model": None, "enriched_count": 0, "message": "OPENAI_API_KEY not configured"}
+    model = os.getenv("OPENAI_NEWS_MODEL", "gpt-5.6-luna").strip() or "gpt-5.6-luna"
+    candidates = [item for item in items if not item.get("ai_model")][:60]
+    enriched = {item.get("id"): dict(item) for item in items}
+    success = 0
+    errors = []
+    for start in range(0, len(candidates), 12):
+        batch = candidates[start:start + 12]
+        compact_rows = [{
+            "id": item.get("id"), "title": item.get("title"), "summary": item.get("summary", "")[:260],
+            "source": item.get("source"), "region": item.get("region"), "topic": item.get("topic"),
+        } for item in batch]
+        request_payload = {
+            "model": model,
+            "reasoning": {"effort": "low"},
+            "input": [
+                {"role": "system", "content": "你是台灣市場新聞編輯。只依輸入標題與摘要分類；摘要用繁體中文自行改寫，最多55字，不補未提供的數字或事實。event_key 對同一事件使用相同、簡短且穩定的英文鍵。"},
+                {"role": "user", "content": json.dumps(compact_rows, ensure_ascii=False)},
+            ],
+            "text": {"format": {"type": "json_schema", "name": "market_news_enrichment", "strict": True, "schema": ai_schema()}},
+        }
+        try:
+            response = requests.post(
+                "https://api.openai.com/v1/responses",
+                headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+                json=request_payload,
+                timeout=90,
+            )
+            response.raise_for_status()
+            parsed = json.loads(response_output_text(response.json()))
+            for result in parsed.get("items") or []:
+                item_id = result.get("id")
+                if item_id not in enriched:
+                    continue
+                row = enriched[item_id]
+                industry = result.get("primary_industry") if result.get("primary_industry") in AI_INDUSTRIES else row.get("primary_industry", "other")
+                row.update({
+                    "ai_category": result.get("category"),
+                    "primary_industry": industry,
+                    "industries": list(dict.fromkeys([industry, *(row.get("industries") or [])]))[:3],
+                    "industry_label": INDUSTRY_LABELS.get(industry, "其他產業"),
+                    "impact": result.get("impact"),
+                    "region": result.get("market") or row.get("region"),
+                    "ai_summary": clean(result.get("summary"))[:180],
+                    "event_key": clean(result.get("event_key")).lower()[:100],
+                    "ai_model": model,
+                    "ai_enriched_at": iso(NOW),
+                })
+                success += 1
+        except Exception as exc:
+            errors.append(str(exc)[:160])
+    rows = [enriched.get(item.get("id"), item) for item in items]
+    return rows, {
+        "mode": "ai-enhanced" if success else "rule-fallback",
+        "model": model,
+        "enriched_count": success,
+        "message": errors[0] if errors and not success else "",
+    }
+
+
+def merge_ai_events(items):
+    """Merge AI-confirmed same events without discarding distinct time windows."""
+    clusters = []
+    by_key = {}
+    removed = 0
+    for raw in sorted(items, key=representative_rank, reverse=True):
+        item = dict(raw)
+        key = clean(item.get("event_key")).lower()
+        if not key:
+            clusters.append(item)
+            continue
+        keeper_index = by_key.get(key)
+        if keeper_index is None or not same_news_window(item, clusters[keeper_index]):
+            by_key[key] = len(clusters)
+            clusters.append(item)
+            continue
+        keeper = clusters[keeper_index]
+        clusters[keeper_index] = merge_duplicate_metadata(keeper, item)
+        removed += 1
+    return clusters, removed
+
 def main():
     previous = read_json(NEWS_PATH, {"items": [], "sources": []})
     link_cache = read_json(LINK_CACHE_PATH, {})
@@ -1083,6 +1199,8 @@ def main():
     link_result = attach_article_links(session, final, link_cache)
     unresolved_count = sum(1 for item in link_result["items"] if item.get("link_status") != "direct")
     final = [item for item in link_result["items"] if item.get("link_status") == "direct" and valid_direct_candidate(item.get("link"))]
+    final, ai_status = ai_enrich_news(final)
+    final, ai_event_duplicates = merge_ai_events(final)
     LINK_CACHE_PATH.write_text(
         json.dumps(link_result["cache"], ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
@@ -1103,12 +1221,14 @@ def main():
             "healthy_sources": source_ok,
             "source_count": len(statuses),
             "rotation_bucket": bucket,
-            "version": "v10.8.4",
+            "version": "v11.0.0",
             "retention_days": NEWS_RETENTION_DAYS,
             "retention_cutoff": iso(NOW - timedelta(days=NEWS_RETENTION_DAYS)),
             "full_refresh": FULL_REFRESH,
             "industry_counts": industry_counts,
             "duplicate_titles_removed": duplicate_title_count,
+            "ai_event_duplicates_removed": ai_event_duplicates,
+            "ai": ai_status,
             "direct_link_count": link_result["direct"],
             "resolved_google_link_count": link_result["resolved"],
             "unresolved_link_count": unresolved_count,
@@ -1135,6 +1255,7 @@ def main():
         f"healthy sources {source_ok}/{len(statuses)}; "
         f"removed duplicate titles {duplicate_title_count}; "
         f"direct links {link_result['direct']}, withheld {unresolved_count}; "
+        f"AI {ai_status['mode']} ({ai_status['enriched_count']}); "
         f"rotation bucket {bucket}"
     )
 

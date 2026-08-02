@@ -9,7 +9,7 @@
 <title>全球市場即時雷達｜整合版</title>
 <link href="manifest.webmanifest" rel="manifest"/>
 <link href="assets/favicon.svg" rel="icon" type="image/svg+xml"/>
-<link href="assets/styles.css?v=10.8.4" rel="stylesheet"/>
+<link href="assets/styles.css?v=11.0.0" rel="stylesheet"/>
 </head>
 <body>
 <div aria-hidden="true" class="noise"></div>
@@ -18,12 +18,12 @@
 <span aria-hidden="true" class="brand-mark">
 <svg role="img" viewbox="0 0 48 48"><path d="M7 34 16 24l7 6 10-16 8 6"></path><path d="M7 40h34"></path></svg>
 </span>
-<span><strong>全球市場即時雷達 <em class="version-badge">v10.8.4</em></strong><small>PERSONAL MARKET &amp; EVENT RADAR</small></span>
+<span><strong>全球市場即時雷達 <em class="version-badge">v11.0.0</em></strong><small>PERSONAL MARKET &amp; EVENT RADAR</small></span>
 </a>
 <div class="top-actions">
 <span class="live-dot"><i></i> 自動更新</span>
 <a class="mini-btn top-mini nav-link" href="news.html">財經新聞</a>
-<a class="mini-btn top-mini nav-link portfolio-top-link" href="portfolio.html">投資組合</a>
+<a class="mini-btn top-mini nav-link portfolio-top-link" href="tw-market.html">台股排行</a>
 <button class="mini-btn top-mini" id="watchlistBtn" type="button">自選 <span id="watchlistCount">0</span></button>
 <button aria-label="帳號與同步" class="account-btn" id="accountBtn" type="button">
 <span class="account-avatar" id="accountAvatar">訪</span>
@@ -139,8 +139,8 @@
 <button class="home-feature-card feature-industry" data-radar-focus="rates" type="button">
 <b>01</b><span><strong>產業景氣</strong><small>製造、服務、科技、金融、航運與消費等市場指標</small></span><em>查看事件 →</em>
 </button>
-<a class="home-feature-card feature-fundamental" href="portfolio.html">
-<b>02</b><span><strong>個股基本面與同業比較</strong><small>先從投資組合選擇標的，再查看財務體質與產業比較</small></span><em>選擇標的 →</em>
+<a class="home-feature-card feature-fundamental" href="tw-market.html">
+<b>02</b><span><strong>台股漲跌榜與我的組合</strong><small>上市、上櫃漲跌排行，自訂股數與成本計算持股損益</small></span><em>查看台股 →</em>
 </a>
 <a class="home-feature-card feature-institutional" href="institutional.html">
 <b>03</b><span><strong>法人資金</strong><small>上市、上櫃三大法人與個股買賣超走勢</small></span><em>查看籌碼 →</em>
@@ -155,7 +155,7 @@
 <section aria-label="次要即時資訊" class="home-secondary-grid">
 <section class="important-announcement-section announcement-compact-section announcement-dashboard">
 <div class="announcement-compact-head">
-<div><p class="eyebrow">OFFICIAL &amp; INSTITUTIONAL</p><h2>法人資金與最新官方公告</h2></div>
+<div><p class="eyebrow">TAIWAN MARKET CHIPS</p><h2>法人、當沖與融資券</h2></div>
 <span>更新 <strong id="announcementUpdatedAt">等待中</strong></span>
 </div>
 <div class="announcement-dashboard-grid">
@@ -164,12 +164,13 @@
 <div class="institutional-cards" id="institutionalCards"></div>
 <a class="institutional-detail-link" href="institutional.html">查看法人日／週／月圖表 <span>→</span></a>
 </section>
-<section aria-label="最新官方公告" class="official-announcement-panel">
-<div class="announcement-subhead"><div><strong>最新官方公告</strong><small id="announcementCount">同步中</small></div><span class="official-source-badge">官方來源</span></div>
-<div aria-live="polite" class="official-announcement-list" id="announcementList"><div class="announcement-unified-empty">正在同步官方公告…</div></div>
+<section aria-label="當沖與融資券" class="chip-summary-panel">
+<div class="announcement-subhead"><div><strong>當沖／融資券</strong><small id="chipTradingDate">最近交易日</small></div><span class="official-source-badge">官方盤後</span></div>
+<div aria-live="polite" class="chip-summary-grid" id="chipSummaryCards"><div class="announcement-unified-empty">正在同步當沖與融資券資料…</div></div>
+<a class="institutional-detail-link" href="tw-market.html">查看台股排行與個股資料 <span>→</span></a>
 </section>
 </div>
-<p class="announcement-note">休市日顯示各市場最近交易日；官方公告優先開啟原文，無文章直連時會前往官方公告頁。</p>
+<p class="announcement-note">上市／上櫃切換會同時更新兩側資料；當沖為盤後彙整，融資券顯示最近交易日官方餘額。</p>
 </section>
 <section class="events-section compact-agenda ultra-compact-agenda home-secondary-agenda" id="agendaSection">
 <div class="section-heading section-heading-tight"><div><p class="eyebrow">UPCOMING</p><h2>近期高影響事件</h2></div><span id="resultCount">0 筆</span></div>
@@ -285,22 +286,23 @@
 <nav aria-label="手機主要導覽" class="mobile-bottom-nav">
 <a class="active" href="#homeTop"><span>⌂</span><b>首頁</b></a>
 <a href="#calendarSection"><span>▦</span><b>日曆</b></a>
-<a href="#marketSection"><span>↗</span><b>行情</b></a>
+<a href="tw-market.html"><span>↕</span><b>台股</b></a>
 <a href="#homeFeatureStrip"><span>•••</span><b>更多</b></a>
 </nav>
-<script src="data/seed.js?v=10.8.4"></script>
-<script src="data/assets-seed.js?v=10.8.4"></script>
-<script src="data/announcements-seed.js?v=10.8.4"></script>
-<script src="data/news-seed.js?v=10.8.4"></script>
-<script src="data/market-snapshot-seed.js?v=10.8.4"></script>
-<script defer="" src="assets/data-source.js?v=10.8.4"></script><script src="assets/auth.js?v=10.8.4" type="module"></script>
-<script defer="" src="assets/market-ticker.js?v=10.8.4"></script>
-<script defer="" src="assets/crypto-live.js?v=10.8.4"></script><script defer="" src="assets/app.js?v=10.8.4"></script>
-<script defer="" src="assets/asset-master.js?v=10.8.4"></script>
-<script defer="" src="assets/announcements.js?v=10.8.4"></script>
-<script defer="" src="assets/news-core.js?v=10.8.4"></script>
-<script defer="" src="assets/news-ui.js?v=10.8.4"></script>
-<script defer="" src="assets/portfolio.js?v=10.8.4"></script>
-<script defer="" src="assets/sw-register.js?v=10.8.4"></script>
+<script src="data/seed.js?v=11.0.0"></script>
+<script src="data/assets-seed.js?v=11.0.0"></script>
+<script src="data/announcements-seed.js?v=11.0.0"></script>
+<script src="data/tw-chips-seed.js?v=11.0.0"></script>
+<script src="data/news-seed.js?v=11.0.0"></script>
+<script src="data/market-snapshot-seed.js?v=11.0.0"></script>
+<script defer="" src="assets/data-source.js?v=11.0.0"></script><script src="assets/auth.js?v=11.0.0" type="module"></script>
+<script defer="" src="assets/market-ticker.js?v=11.0.0"></script>
+<script defer="" src="assets/crypto-live.js?v=11.0.0"></script><script defer="" src="assets/app.js?v=11.0.0"></script>
+<script defer="" src="assets/asset-master.js?v=11.0.0"></script>
+<script defer="" src="assets/announcements.js?v=11.0.0"></script>
+<script defer="" src="assets/news-core.js?v=11.0.0"></script>
+<script defer="" src="assets/news-ui.js?v=11.0.0"></script>
+<script defer="" src="assets/portfolio.js?v=11.0.0"></script>
+<script defer="" src="assets/sw-register.js?v=11.0.0"></script>
 </body>
 </html>

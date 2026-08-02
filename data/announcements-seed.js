@@ -1,6 +1,6 @@
 window.__MARKET_ANNOUNCEMENT_SEED__ = {
   "metadata": {
-    "version": "v10.8.4",
+    "version": "v11.0.0",
     "updated_at": null,
     "status": "waiting",
     "retention_days": 30,

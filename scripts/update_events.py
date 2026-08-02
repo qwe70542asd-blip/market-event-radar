@@ -1110,7 +1110,7 @@ def main() -> int:
             "generation_mode": "offline" if args.offline else "multi-source-live",
             "event_count": len(events),
             "group_counts": event_counts(events),
-            "calendar_version": "v10.4-rich-calendar",
+            "calendar_version": "v11.0.0",
             "coverage_note": "Company events include low-impact rows; use calendar filters and portfolio priority.",
             "sources_healthy": sum(1 for row in source_rows if row.get("status") == "ok"),
             "source_count": len(source_rows),

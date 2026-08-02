@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="#07111f" name="theme-color"/>
+<meta content="台股上市上櫃漲幅榜、跌幅榜與瀏覽器本機投資組合。" name="description"/>
+<title>台股排行與我的組合｜全球市場即時雷達</title>
+<link href="manifest.webmanifest" rel="manifest"/>
+<link href="assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="assets/styles.css?v=11.0.0" rel="stylesheet"/>
+</head>
+<body>
+<div aria-hidden="true" class="noise"></div>
+<header class="topbar">
+<a aria-label="返回市場事件雷達首頁" class="brand" href="index.html">
+<span aria-hidden="true" class="brand-mark"><svg viewBox="0 0 48 48"><path d="M7 34 16 24l7 6 10-16 8 6"></path><path d="M7 40h34"></path></svg></span>
+<span><strong>台股行情中心 <em class="version-badge">v11.0.0</em></strong><small>TAIWAN MARKET &amp; MY PORTFOLIO</small></span>
+</a>
+<div class="top-actions">
+<a class="mini-btn nav-link" href="index.html">事件首頁</a>
+<a class="mini-btn nav-link" href="news.html">財經新聞</a>
+<button aria-label="重新讀取台股行情" class="icon-btn" id="twRefreshBtn" title="重新讀取行情" type="button"><svg viewBox="0 0 24 24"><path d="M20 6v5h-5"></path><path d="M4 18v-5h5"></path><path d="M6.1 9A7 7 0 0 1 18.3 6.3L20 11M4 13l1.7 4.7A7 7 0 0 0 17.9 15"></path></svg></button>
+</div>
+</header>
+
+<main class="shell tw-market-shell" id="twMarketTop">
+<section class="tw-market-hero">
+<div class="tw-market-hero-copy">
+<p class="eyebrow">TAIWAN STOCK API</p>
+<div class="tw-market-title-line"><h1>台股漲跌榜與我的組合</h1><span class="tw-session-pill pending" id="twSessionPill">讀取中</span></div>
+<p>整合上市、上櫃股票與 ETF。排行使用全市場漲跌幅；自訂組合只保存在這台裝置的瀏覽器。</p>
+<div class="tw-market-meta"><span>資料日期 <strong id="twTradingDate">—</strong></span><span>行情時間 <strong id="twUpdatedAt">讀取中</strong></span><span>來源 <strong id="twDataSource">官方行情</strong></span></div>
+</div>
+<div class="tw-market-clock">
+<span>台灣時間</span><strong id="twClock">—</strong><small id="twFreshness">正在連線行情資料…</small>
+</div>
+</section>
+
+<section aria-label="台股市場家數" class="tw-breadth-grid">
+<article><span>上漲家數</span><strong class="up" id="twUpCount">—</strong><small>相較昨收</small></article>
+<article><span>下跌家數</span><strong class="down" id="twDownCount">—</strong><small>相較昨收</small></article>
+<article><span>平盤家數</span><strong id="twFlatCount">—</strong><small>含無漲跌</small></article>
+<article><span>有效行情</span><strong id="twQuoteCount">—</strong><small>不含權證</small></article>
+</section>
+
+<section class="tw-ranking-shell" id="twRankingSection">
+<div class="tw-ranking-toolbar">
+<div><p class="eyebrow">MARKET MOVERS</p><h2>漲幅榜／跌幅榜</h2></div>
+<div class="tw-ranking-controls">
+<div aria-label="市場篩選" class="tw-segmented" id="twExchangeFilter"><button class="active" data-exchange="ALL" type="button">全部</button><button data-exchange="TWSE" type="button">上市</button><button data-exchange="TPEx" type="button">上櫃</button></div>
+<select aria-label="標的類型" id="twClassFilter"><option value="all">股票＋ETF</option><option value="stock">只看股票</option><option value="etf">只看 ETF</option></select>
+<select aria-label="排行顯示數量" id="twRankLimit"><option value="10">前 10 名</option><option selected value="20">前 20 名</option><option value="30">前 30 名</option></select>
+</div>
+</div>
+<div class="tw-ranking-grid">
+<section class="tw-rank-card up-card">
+<div class="tw-rank-card-head"><div><span>▲</span><h3>漲幅榜</h3></div><small>漲幅高到低</small></div>
+<div class="tw-table-wrap"><table class="tw-rank-table"><thead><tr><th>排名</th><th>代號／名稱</th><th>成交價</th><th>漲幅</th><th>成交量</th><th></th></tr></thead><tbody id="twGainersBody"><tr><td colspan="6">正在讀取資料…</td></tr></tbody></table></div>
+</section>
+<section class="tw-rank-card down-card">
+<div class="tw-rank-card-head"><div><span>▼</span><h3>跌幅榜</h3></div><small>跌幅低到高</small></div>
+<div class="tw-table-wrap"><table class="tw-rank-table"><thead><tr><th>排名</th><th>代號／名稱</th><th>成交價</th><th>跌幅</th><th>成交量</th><th></th></tr></thead><tbody id="twLosersBody"><tr><td colspan="6">正在讀取資料…</td></tr></tbody></table></div>
+</section>
+</div>
+</section>
+
+<section class="tw-holdings-shell" id="twHoldingsSection">
+<div class="tw-holdings-heading">
+<div><p class="eyebrow">MY TAIWAN PORTFOLIO</p><h2>我的台股組合</h2><p>股數與平均成本可留空；留空時就是自選觀察清單。</p></div>
+<span class="tw-local-pill">只存在此瀏覽器</span>
+</div>
+<div aria-label="投資組合摘要" class="tw-portfolio-stats">
+<article><span>持有市值</span><strong id="twPortfolioValue">NT$0</strong></article>
+<article><span>投入成本</span><strong id="twPortfolioCost">NT$0</strong></article>
+<article><span>未實現損益</span><strong id="twPortfolioPnl">—</strong></article>
+<article><span>今日損益</span><strong id="twPortfolioDayPnl">—</strong></article>
+</div>
+<div class="tw-holdings-layout">
+<aside class="tw-holding-form-card">
+<div class="tw-card-title"><h3 id="twHoldingFormTitle">加入台股</h3><button hidden id="twCancelEdit" type="button">取消編輯</button></div>
+<form autocomplete="off" class="tw-holding-form" id="twHoldingForm">
+<label>股票／ETF<input id="twAssetQuery" name="query" placeholder="輸入 2330、台積電、00631L…" required type="search"/><span>請從搜尋結果選擇標的</span></label>
+<div class="tw-asset-suggestions" hidden id="twAssetSuggestions"></div>
+<div class="tw-form-two"><label>持有股數<input inputmode="decimal" min="0" name="shares" placeholder="可留空" step="1" type="number"/></label><label>平均成本<input inputmode="decimal" min="0" name="avg_cost" placeholder="可留空" step="0.01" type="number"/></label></div>
+<button class="tw-primary-btn" type="submit">儲存到我的組合</button>
+<p aria-live="polite" class="tw-form-status" id="twHoldingStatus"></p>
+</form>
+<div class="tw-holding-note"><strong>計算方式</strong><span>未實現損益＝（目前價－平均成本）×股數；不含手續費與交易稅。</span></div>
+</aside>
+<section class="tw-holdings-table-card">
+<div class="tw-card-title"><h3>持有與觀察</h3><span id="twHoldingCount">0 個標的</span></div>
+<div class="tw-table-wrap"><table class="tw-holdings-table"><thead><tr><th>標的</th><th>目前價／今日</th><th>股數／均價</th><th>市值</th><th>未實現損益</th><th>操作</th></tr></thead><tbody id="twHoldingsBody"><tr><td colspan="6">尚未加入台股。</td></tr></tbody></table></div>
+</section>
+</div>
+</section>
+
+<footer class="tw-market-footer"><span>資料僅供市場觀察，不構成投資建議；盤中數值可能延遲。</span><a href="https://mis.twse.com.tw/stock/index.jsp" rel="noreferrer noopener" target="_blank">證交所基本市況報導 ↗</a></footer>
+</main>
+
+<nav aria-label="手機主要導覽" class="mobile-bottom-nav">
+<a href="index.html"><span>⌂</span><b>首頁</b></a>
+<a class="active" href="#twRankingSection"><span>↕</span><b>漲跌榜</b></a>
+<a href="#twHoldingsSection"><span>★</span><b>我的組合</b></a>
+<a href="news.html"><span>▤</span><b>新聞</b></a>
+</nav>
+<script src="data/tw-market-seed.js?v=11.0.0"></script>
+<script src="data/assets-seed.js?v=11.0.0"></script>
+<script defer src="assets/data-source.js?v=11.0.0"></script>
+<script defer src="assets/asset-master.js?v=11.0.0"></script>
+<script defer src="assets/tw-market.js?v=11.0.0"></script>
+<script defer src="assets/sw-register.js?v=11.0.0"></script>
+</body>
+</html>

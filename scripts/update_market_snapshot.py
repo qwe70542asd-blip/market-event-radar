@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build last-trading-day index and ETF snapshots for Market Event Radar v10.8.4.
+"""Build last-trading-day index and ETF snapshots for Market Event Radar v11.0.0.
 
 Visible groups:
 - Taiwan indices: TAIEX and TPEx.
@@ -37,7 +37,7 @@ SEED = DATA / "market-snapshot-seed.js"
 TAIPEI = ZoneInfo("Asia/Taipei")
 UTC = ZoneInfo("UTC")
 NOW = datetime.now(TAIPEI)
-VERSION = "v10.8.4"
+VERSION = "v11.0.0"
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/150.0 Safari/537.36",

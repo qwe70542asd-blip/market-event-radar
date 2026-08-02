@@ -1,0 +1,125 @@
+name: Update v11.0.0 finance news
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/update-news.yml"
+      - "scripts/update_news.py"
+      - "requirements.txt"
+      - "data/events.json"
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+    inputs:
+      full_refresh:
+        description: Scan all configured sources and backfill the rolling 20-day window
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: market-radar-single-live-data-writer
+  cancel-in-progress: false
+
+jobs:
+  update-news:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      LIVE_BRANCH: live-data
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      OPENAI_NEWS_MODEL: ${{ vars.OPENAI_NEWS_MODEL }}
+    steps:
+      - name: Checkout website source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Restore previous successful news archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git ls-remote --exit-code --heads origin "$LIVE_BRANCH" >/dev/null 2>&1; then
+            git fetch --depth=1 origin "$LIVE_BRANCH"
+            for file in news.json news-seed.js news-link-cache.json; do
+              if git cat-file -e "FETCH_HEAD:$file" 2>/dev/null; then
+                git show "FETCH_HEAD:$file" > "data/$file"
+              fi
+            done
+          fi
+
+      - name: Resolve refresh scope
+        id: scope
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "push" ] || [ "${{ inputs.full_refresh }}" = "true" ]; then
+            echo "full=1" >> "$GITHUB_OUTPUT"
+          else
+            echo "full=0" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Fetch, classify and merge finance news
+        env:
+          NEWS_FULL_REFRESH: ${{ steps.scope.outputs.full }}
+        run: python scripts/update_news.py
+
+      - name: Validate independent news payload
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          payload = json.loads(Path("data/news.json").read_text(encoding="utf-8"))
+          items = payload.get("items") or []
+          if not items:
+              raise SystemExit("News updater produced no verified publisher links; previous live file was not replaced.")
+          if int(payload.get("metadata", {}).get("retention_days", 0)) != 20:
+              raise SystemExit("News retention must remain 20 days.")
+          if any(not str(item.get("link", "")).startswith(("https://", "http://")) for item in items):
+              raise SystemExit("News payload contains a non-article link.")
+          print("OK independent finance news", len(items))
+          PY
+
+      - name: Publish only news files
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/news-live
+          mkdir -p /tmp/news-live
+          cd /tmp/news-live
+          git init
+          git config user.name "market-event-radar-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if git ls-remote --exit-code --heads origin "$LIVE_BRANCH" >/dev/null 2>&1; then
+            git fetch --depth=1 origin "$LIVE_BRANCH"
+            git checkout -B "$LIVE_BRANCH" FETCH_HEAD
+          else
+            git checkout --orphan "$LIVE_BRANCH"
+          fi
+          cp "$GITHUB_WORKSPACE/data/news.json" ./news.json
+          cp "$GITHUB_WORKSPACE/data/news-seed.js" ./news-seed.js
+          cp "$GITHUB_WORKSPACE/data/news-link-cache.json" ./news-link-cache.json
+          git add news.json news-seed.js news-link-cache.json
+          if git diff --cached --quiet; then
+            echo "No finance-news changes."
+            exit 0
+          fi
+          git commit -m "chore: refresh independent finance news v11.0.0"
+          git push origin "HEAD:$LIVE_BRANCH"

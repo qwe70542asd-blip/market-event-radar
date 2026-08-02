@@ -1,0 +1,25 @@
+{
+  "metadata": {
+    "version": "v11.0.0",
+    "updated_at": null,
+    "trading_date": null,
+    "mode": "pending",
+    "source": "TWSE／TPEx 官方盤後資料",
+    "note": "等待第一次籌碼排程；沒有資料時不以零值代替。"
+  },
+  "markets": {
+    "twse": {
+      "date": null,
+      "day_trading": {"ratio_percent": null, "trade_value": null, "volume": null},
+      "margin": {"balance_shares": null, "balance_amount": null, "change_shares": null},
+      "short": {"balance_shares": null, "change_shares": null}
+    },
+    "tpex": {
+      "date": null,
+      "day_trading": {"ratio_percent": null, "trade_value": null, "volume": null},
+      "margin": {"balance_shares": null, "balance_amount": null, "change_shares": null},
+      "short": {"balance_shares": null, "change_shares": null}
+    }
+  },
+  "items": {}
+}

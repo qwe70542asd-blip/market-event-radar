@@ -4,7 +4,7 @@
   const $=selector=>document.querySelector(selector);
   const $$=selector=>[...document.querySelectorAll(selector)];
   const escapeHtml=value=>String(value??"").replace(/[&<>\"]/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[char]));
-  const state={payload:{institutional:{},items:[]},market:"twse"};
+  const state={payload:{institutional:{}},chips:{markets:{}},market:"twse"};
 
   function fmt(value,{dateOnly=false}={}) {
     if (!value) return "—";
@@ -80,49 +80,70 @@
     }).join("");
   }
 
-  function renderAnnouncements() {
-    const root=$("#announcementList");
+  function compact(value,{money=false,signed=false}={}) {
+    const number=Number(value);
+    if (!Number.isFinite(number)) return "等待資料";
+    const sign=signed&&number>0?"+":"";
+    const absolute=Math.abs(number);
+    if (money) {
+      const amount=absolute>=1e8?`${(absolute/1e8).toFixed(1)} 億`:absolute>=1e4?`${(absolute/1e4).toFixed(1)} 萬`:absolute.toLocaleString("zh-TW");
+      return `${number<0?"-":sign}${amount}`;
+    }
+    const lotCount=absolute/1000;
+    const lots=lotCount>=10000?`${(lotCount/10000).toFixed(1)} 萬張`:lotCount>=1000?`${(lotCount/1000).toFixed(1)} 千張`:`${Math.round(lotCount).toLocaleString("zh-TW")} 張`;
+    return `${number<0?"-":sign}${lots}`;
+  }
+
+  function renderChips() {
+    const root=$("#chipSummaryCards");
     if (!root) return;
-    const items=(state.payload.items||[])
-      .filter(item=>articleLink(item))
-      .sort((a,b)=>new Date(b.published_at||0)-new Date(a.published_at||0))
-      .slice(0,5);
-    const count=$("#announcementCount");
-    if (count) count.textContent=items.length?`最新 ${items.length} 則`:"尚無有效公告";
-    if (!items.length) {
-      root.innerHTML='<div class="announcement-unified-empty"><strong>尚未取得官方公告</strong><span>更新流程若抓取失敗會在 Actions 顯示錯誤，不再用占位資料冒充成功。</span></div>';
+    const market=state.chips?.markets?.[state.market]||{};
+    const day=market.day_trading||{}, margin=market.margin||{}, short=market.short||{};
+    const dateNode=$("#chipTradingDate");
+    if (dateNode) dateNode.textContent=`${state.market==="twse"?"上市":"上櫃"} · ${formatTradingDate(market.date||state.chips?.metadata?.trading_date)}`;
+    const values=[day.ratio_percent,day.trade_value,margin.balance_shares,short.balance_shares];
+    if (!values.some(value=>Number.isFinite(Number(value)))) {
+      root.innerHTML='<div class="announcement-unified-empty"><strong>等待官方籌碼資料</strong><span>尚未取得時不會以 0 或破折號冒充有效數值。</span></div>';
       return;
     }
-    root.innerHTML=items.map(item=>`
-      <a class="official-announcement-row" href="${escapeHtml(articleLink(item))}" target="_blank" rel="noreferrer noopener">
-        <time>${escapeHtml(fmt(item.published_at,{dateOnly:true}))}</time>
-        <span><b>${escapeHtml(item.source||item.region||"官方")}</b><strong>${escapeHtml(item.title_zh||item.title_original||"官方公告")}</strong></span>
-        <em>↗</em>
-      </a>`).join("");
+    const ratio=Number(day.ratio_percent);
+    root.innerHTML=[
+      ["當沖成交占比",Number.isFinite(ratio)?`${ratio.toFixed(2)}%`:"等待資料",null],
+      ["當沖成交額",compact(day.trade_value,{money:true}),null],
+      ["融資餘額",compact(margin.balance_shares),margin.change_shares],
+      ["融券餘額",compact(short.balance_shares),short.change_shares],
+    ].map(([label,value,change])=>`<article class="chip-summary-card ${valueClass(change)}"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong><small>${change===null||change===undefined?"官方盤後資料":`較前日 ${compact(change,{signed:true})}`}</small></article>`).join("");
   }
 
   function render(payload) {
     state.payload=payload||{institutional:{},items:[]};
     renderInstitutional();
-    renderAnnouncements();
+    renderChips();
     const updated=$("#announcementUpdatedAt");
-    if (updated) updated.textContent=payload?.metadata?.updated_at?fmt(payload.metadata.updated_at):"等待第一次排程";
+    const newest=[payload?.metadata?.updated_at,state.chips?.metadata?.updated_at].filter(Boolean).sort().at(-1);
+    if (updated) updated.textContent=newest?fmt(newest):"等待第一次排程";
   }
 
   async function load() {
     const seed=window.__MARKET_ANNOUNCEMENT_SEED__||{institutional:{},items:[]};
-    let payload=seed;
+    const chipSeed=window.__TW_CHIPS_SEED__||{markets:{}};
+    let payload=seed, chips=chipSeed;
     try {
-      payload=window.MarketDataSource?.loadJson
-        ? await window.MarketDataSource.loadJson("data/announcements.json",seed)
-        : seed;
+      if (window.MarketDataSource?.loadJson) {
+        [payload,chips]=await Promise.all([
+          window.MarketDataSource.loadJson("data/announcements.json",seed),
+          window.MarketDataSource.loadJson("data/tw-chips.json",chipSeed),
+        ]);
+      }
     } catch {}
+    state.chips=chips;
     render(payload);
   }
 
   $$(`[data-institutional-market]`).forEach(button=>button.addEventListener("click",()=>{
     state.market=button.dataset.institutionalMarket;
     renderInstitutional();
+    renderChips();
   }));
   load();
   setInterval(load,30_000);

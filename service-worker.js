@@ -1,13 +1,13 @@
-const CACHE_NAME = "market-event-radar-v10-8-4-news-announcements";
+const CACHE_NAME = "market-event-radar-v11-0-0-complete";
 const STATIC_ASSETS = [
-  "./", "index.html", "404.html", "event.html", "news.html", "portfolio.html", "asset.html", "institutional.html", "manifest.webmanifest",
-  "assets/styles.css?v=10.8.4", "assets/data-source.js?v=10.8.4", "assets/app.js?v=10.8.4",
-  "assets/market-ticker.js?v=10.8.4", "assets/crypto-live.js?v=10.8.4", "assets/event.js?v=10.8.4",
-  "assets/auth.js?v=10.8.4", "assets/firebase-config.js",
-  "assets/news-core.js?v=10.8.4", "assets/news-ui.js?v=10.8.4",
-  "assets/news-page.js?v=10.8.4", "assets/portfolio.js?v=10.8.4", "assets/asset-master.js?v=10.8.4", "assets/asset-detail.js?v=10.8.4", "assets/announcements.js?v=10.8.4",
-  "assets/institutional.js?v=10.8.4", "assets/sw-register.js?v=10.8.4", "assets/favicon.svg",
-  "data/seed.js?v=10.8.4", "data/news-seed.js?v=10.8.4", "data/assets-seed.js?v=10.8.4", "data/announcements-seed.js?v=10.8.4", "data/institutional-history-seed.js?v=10.8.4", "data/market-snapshot-seed.js?v=10.8.4"
+  "./", "index.html", "404.html", "event.html", "news.html", "portfolio.html", "tw-market.html", "asset.html", "institutional.html", "manifest.webmanifest",
+  "assets/styles.css?v=11.0.0", "assets/data-source.js?v=11.0.0", "assets/app.js?v=11.0.0",
+  "assets/market-ticker.js?v=11.0.0", "assets/crypto-live.js?v=11.0.0", "assets/event.js?v=11.0.0",
+  "assets/auth.js?v=11.0.0", "assets/firebase-config.js",
+  "assets/news-core.js?v=11.0.0", "assets/news-ui.js?v=11.0.0",
+  "assets/news-page.js?v=11.0.0", "assets/portfolio.js?v=11.0.0", "assets/asset-master.js?v=11.0.0", "assets/asset-detail.js?v=11.0.0", "assets/announcements.js?v=11.0.0",
+  "assets/institutional.js?v=11.0.0", "assets/tw-market.js?v=11.0.0", "assets/sw-register.js?v=11.0.0", "assets/favicon.svg",
+  "data/seed.js?v=11.0.0", "data/news-seed.js?v=11.0.0", "data/assets-seed.js?v=11.0.0", "data/announcements-seed.js?v=11.0.0", "data/institutional-history-seed.js?v=11.0.0", "data/market-snapshot-seed.js?v=11.0.0", "data/tw-market-seed.js?v=11.0.0", "data/tw-chips-seed.js?v=11.0.0"
 ];
 
 self.addEventListener("install", event => {
@@ -62,7 +62,7 @@ self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
   const url = new URL(event.request.url);
 
-  if (url.pathname.endsWith("/data/news.json") || url.pathname.endsWith("/data/events.json") || url.pathname.endsWith("/data/assets.json") || url.pathname.endsWith("/data/announcements.json") || url.pathname.endsWith("/data/institutional-history.json") || url.pathname.endsWith("/data/market-snapshot.json")) {
+  if (url.pathname.endsWith("/data/news.json") || url.pathname.endsWith("/data/events.json") || url.pathname.endsWith("/data/assets.json") || url.pathname.endsWith("/data/announcements.json") || url.pathname.endsWith("/data/institutional-history.json") || url.pathname.endsWith("/data/market-snapshot.json") || url.pathname.endsWith("/data/tw-market.json") || url.pathname.endsWith("/data/tw-chips.json")) {
     event.respondWith(networkFirst(event.request));
     return;
   }

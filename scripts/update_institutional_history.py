@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Update TWSE institutional history and stock rankings for v10.8.4."""
+"""Update TWSE institutional history, rankings and per-stock flows for v11.0.0."""
 from __future__ import annotations
 import json, re, time
 from datetime import date, datetime, timedelta
@@ -15,7 +15,7 @@ SEED = DATA / "institutional-history-seed.js"
 TAIPEI = ZoneInfo("Asia/Taipei")
 NOW = datetime.now(TAIPEI)
 HEADERS = {
-    "User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/10.8.4; +https://github.com/qwe70542asd-blip/market-event-radar)",
+    "User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.0.0; +https://github.com/qwe70542asd-blip/market-event-radar)",
     "Accept-Language":"zh-TW,zh;q=0.9,en;q=0.8",
     "Referer":"https://www.twse.com.tw/zh/trading/foreign/bfi82u.html",
 }
@@ -125,13 +125,13 @@ def cell(row: list[Any], index: int|None) -> float:
     return value or 0
 
 
-def parse_t86(payload: dict[str,Any], reported_date: str) -> dict[str,Any]:
+def parse_t86(payload: dict[str,Any], reported_date: str) -> tuple[dict[str,Any],dict[str,Any]]:
     fields=[clean(value) for value in payload.get("fields") or []]
     rows=payload.get("data") or []
     symbol_i=find_index(fields,["證券代號"])
     name_i=find_index(fields,["證券名稱"])
     indexes={
-        "foreign":{"buy":find_index(fields,["外陸資買進"],["自營商"]),"sell":find_index(fields,["外陸資賣出"],["自營商"]),"net":find_index(fields,["外陸資買賣超"],["自營商"])},
+        "foreign":{"buy":find_index(fields,["外陸資買進"]),"sell":find_index(fields,["外陸資賣出"]),"net":find_index(fields,["外陸資買賣超"])},
         "investment_trust":{"buy":find_index(fields,["投信買進"]),"sell":find_index(fields,["投信賣出"]),"net":find_index(fields,["投信買賣超"])},
         "dealer":{"buy":None,"sell":None,"net":find_index(fields,["自營商買賣超股數"],["自行買賣","避險"])},
         "total":{"buy":None,"sell":None,"net":find_index(fields,["三大法人買賣超股數"])},
@@ -139,10 +139,12 @@ def parse_t86(payload: dict[str,Any], reported_date: str) -> dict[str,Any]:
     dealer_buy=[find_index(fields,["自營商買進股數","自行買賣"]),find_index(fields,["自營商買進股數","避險"])]
     dealer_sell=[find_index(fields,["自營商賣出股數","自行買賣"]),find_index(fields,["自營商賣出股數","避險"])]
     parsed={key:[] for key in indexes}
+    stocks={}
     for row in rows:
         symbol=clean(row[symbol_i]) if symbol_i is not None and symbol_i<len(row) else ""
         name=clean(row[name_i]) if name_i is not None and name_i<len(row) else ""
         if not symbol: continue
+        stock={"symbol":symbol,"name":name,"date":reported_date,"flows":{}}
         for key,idx in indexes.items():
             buy=cell(row,idx["buy"])
             sell=cell(row,idx["sell"])
@@ -150,43 +152,49 @@ def parse_t86(payload: dict[str,Any], reported_date: str) -> dict[str,Any]:
                 buy=sum(cell(row,i) for i in dealer_buy)
                 sell=sum(cell(row,i) for i in dealer_sell)
             net=cell(row,idx["net"])
-            parsed[key].append({"symbol":symbol,"name":name,"buy":buy,"sell":sell,"net":net})
+            flow={"buy":buy,"sell":sell,"net":net}
+            parsed[key].append({"symbol":symbol,"name":name,**flow})
+            stock["flows"][key]=flow
+        stocks[symbol]=stock
     rankings={}
     for key,items in parsed.items():
         rankings[key]={
             "buys":sorted(items,key=lambda item:item["net"],reverse=True)[:10],
             "sells":sorted(items,key=lambda item:item["net"])[:10],
         }
-    return rankings
+    return rankings,stocks
 
 
-def fetch_rankings(session: requests.Session, dates: list[str]) -> tuple[str|None,dict[str,Any]]:
+def fetch_rankings(session: requests.Session, dates: list[str]) -> tuple[str|None,dict[str,Any],dict[str,Any]]:
     for date_text in reversed(dates[-10:]):
         for select_type in ("ALLBUT0999","01"):
             try:
                 payload=request_json(session,T86,{"response":"json","date":date_text.replace("-",""),"selectType":select_type},attempts=2)
                 if payload.get("data"):
-                    return date_text,parse_t86(payload,date_text)
+                    rankings,stocks=parse_t86(payload,date_text)
+                    return date_text,rankings,stocks
             except Exception as exc:
                 print("warning T86",date_text,select_type,exc)
         time.sleep(0.1)
-    return None,{}
+    return None,{},{}
 
 
 def main() -> int:
     DATA.mkdir(parents=True,exist_ok=True)
-    previous=read_json(OUT,{"daily":[],"rankings":{}})
+    previous=read_json(OUT,{"daily":[],"rankings":{},"stocks":{}})
     session=requests.Session()
     history=fetch_history(session)
     if not history:
         history=previous.get("daily",[])
-    ranking_date,rankings=fetch_rankings(session,[row["date"] for row in history]) if history else (None,{})
+    ranking_date,rankings,stocks=fetch_rankings(session,[row["date"] for row in history]) if history else (None,{}, {})
     if not rankings:
         rankings=previous.get("rankings",{})
         ranking_date=previous.get("ranking_date")
+    if not stocks:
+        stocks=previous.get("stocks",{})
     payload={
         "metadata":{
-            "version":"v10.8.4",
+            "version":"v11.0.0",
             "updated_at":NOW.isoformat(timespec="seconds"),
             "latest_date":history[-1]["date"] if history else None,
             "history_count":len(history),
@@ -197,6 +205,7 @@ def main() -> int:
         "daily":history,
         "ranking_date":ranking_date,
         "rankings":rankings,
+        "stocks":stocks,
     }
     OUT.write_text(json.dumps(payload,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     SEED.write_text("window.__INSTITUTIONAL_HISTORY_SEED__ = "+json.dumps(payload,ensure_ascii=False,indent=2)+";\n",encoding="utf-8")

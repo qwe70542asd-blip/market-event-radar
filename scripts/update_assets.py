@@ -223,7 +223,7 @@ def main():
                 try:ranks[label]=f'{ranked.index(a)+1}/{len(ranked)}'
                 except ValueError:ranks[label]="資料不足"
             a["rankings"]=ranks
-    payload={"metadata":{"version":"v10.3","updated_at":NOW.isoformat(timespec="seconds"),"asset_count":len(assets),
+    payload={"metadata":{"version":"v11.0.0","updated_at":NOW.isoformat(timespec="seconds"),"asset_count":len(assets),
       "note":"TW official master + US SEC/Nasdaq master; missing data remains explicit."},"assets":sorted(assets.values(),key=lambda x:(x["asset_class"],x["market"],x["symbol"]))}
     ASSETS.write_text(json.dumps(payload,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     SEED.write_text("window.__MARKET_ASSET_SEED__ = "+json.dumps(payload,ensure_ascii=False,indent=2)+";\n",encoding="utf-8")

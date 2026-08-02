@@ -306,10 +306,10 @@
   $("#cryptoPause")?.addEventListener("click",event=>{
     state.paused=!state.paused;
     event.currentTarget.textContent=state.paused ? "▶" : "Ⅱ";
+    event.currentTarget.setAttribute("aria-label",state.paused ? "繼續輪播" : "暫停輪播");
+    event.currentTarget.setAttribute("aria-pressed",state.paused ? "true" : "false");
     restartRotation();
   });
-  viewport?.addEventListener("mouseenter",()=>{state.paused=true;restartRotation();});
-  viewport?.addEventListener("mouseleave",()=>{state.paused=false;restartRotation();});
 
   connectBinance();
   refreshRankings();

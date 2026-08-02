@@ -2,7 +2,7 @@
 
 ## 唯一修改來源
 
-只使用資料夾：`market-event-radar-current-v10.8.4-full-integration`
+只使用完整包：`market-event-radar-v11.0.0-complete.zip`
 
 以下舊檔不再使用：
 
@@ -17,7 +17,9 @@
 
 | 路徑 | 用途 | 目前注意事項 |
 |---|---|---|
-| `.github/workflows/update-live-data.yml` | 所有自動更新入口 | 第一個要在線上驗證的檔案 |
+| `.github/workflows/update-live-data.yml` | 市場、公告、事件與主檔更新 | 與新聞排程分開驗證 |
+| `.github/workflows/update-news.yml` | 獨立新聞抓取、分類、AI 可選增強與發布 | 失敗不阻擋市場／公告 |
+| `.github/workflows/update-tw-market.yml` | 台股行情、當沖與融資券更新 | 交易時段每 5 分鐘檢查 |
 | `assets/data-source.js` | `live-data`、main 與 seed 的讀取優先順序 | `live-data` 使用根目錄；本機與 main 保留 `data/` 目錄 |
 | `assets/market-ticker.js` | 指數與 ETF 行情 | 需驗證 30 秒檢查與缺值顯示 |
 | `assets/news-core.js` | 共用新聞載入 | 需驗證空 JSON 與備援合併 |
@@ -25,12 +27,14 @@
 | `assets/news-page.js` | 完整新聞頁 | 需驗證筆數、時間與連結 |
 | `assets/institutional.js` | 法人頁 | 需驗證最近交易日與排行 |
 | `assets/crypto-live.js` | 幣圈排行與串流 | 需驗證局部更新、不跳動 |
-| `assets/app.js` | 首頁事件、篩選、時間與偏好 | 仍有舊偏好鍵與時區問題待處理 |
+| `assets/app.js` | 首頁事件、篩選、時間與偏好 | 舊偏好鍵僅用於一次性讀取遷移 |
+| `assets/asset-detail.js` | 個股／ETF 分流、籌碼、成分、配息與新聞 | 缺授權資料時顯示限制，不填假值 |
 | `service-worker.js` | 快取策略 | 版本更動時必須同步更新 |
 | `assets/sw-register.js` | 新 Service Worker 接管 | 與快取版本必須一致 |
 | `data/*.json` | 安裝包資料／最近資料 | 不能代替線上更新成功證據 |
 | `data/*-seed.js` | JSON 失敗時的離線備援 | 必须标示 seed，不冒充即時資料 |
-| `scripts/*.py` | 各類資料抓取與產生 | metadata 版本尚未统一 |
+| `scripts/update_tw_chips.py` | 當沖、融資與融券官方資料 | 單一交易所失敗時保留前次成功值 |
+| `scripts/*.py` | 各類資料抓取與產生 | metadata 版本統一為 v11.0.0 |
 
 ## 上傳 GitHub 前
 
@@ -44,7 +48,7 @@
 整理基準第一次提交可使用：
 
 ```text
-v10.8.4：整合 live-data 路徑、完整首次更新與首頁區塊排序
+v11.0.0：整合 live-data 路徑、完整首次更新與首頁區塊排序
 ```
 
 後續每次只提交一個問題，例如：

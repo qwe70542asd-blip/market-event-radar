@@ -1,0 +1,124 @@
+name: Update v11.0.0 Taiwan rankings and chips
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/update-tw-market.yml"
+      - "scripts/update_tw_market.py"
+      - "scripts/update_tw_chips.py"
+      - "data/tw-market.json"
+      - "requirements.txt"
+  schedule:
+    # 08:00-14:55 Asia/Taipei, Monday-Friday. GitHub cron uses UTC.
+    - cron: "*/5 0-6 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: market-radar-single-live-data-writer
+  cancel-in-progress: false
+
+jobs:
+  update-taiwan-market:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      LIVE_BRANCH: live-data
+    steps:
+      - name: Checkout website source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Reuse latest expanded security master
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git ls-remote --exit-code --heads origin "$LIVE_BRANCH" >/dev/null 2>&1; then
+            git fetch --depth=1 origin "$LIVE_BRANCH"
+            if git cat-file -e FETCH_HEAD:assets.json 2>/dev/null; then
+              git show FETCH_HEAD:assets.json > data/assets.json
+              echo "Expanded live asset master restored."
+            fi
+            for file in tw-chips.json tw-chips-seed.js; do
+              if git cat-file -e "FETCH_HEAD:$file" 2>/dev/null; then
+                git show "FETCH_HEAD:$file" > "data/$file"
+              fi
+            done
+          fi
+
+      - name: Fetch Taiwan cash-market quotes
+        run: python scripts/update_tw_market.py
+
+      - name: Fetch official day trading and margin data
+        continue-on-error: true
+        run: python scripts/update_tw_chips.py
+
+      - name: Validate ranking payload
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("data/tw-market.json")
+          payload = json.loads(path.read_text(encoding="utf-8"))
+          usable = [row for row in payload.get("items", []) if row.get("price") is not None and row.get("previous_close") is not None]
+          if len(usable) < 25:
+              raise SystemExit(f"Only {len(usable)} usable quotes; refusing to publish.")
+          if not payload.get("metadata", {}).get("updated_at"):
+              raise SystemExit("Taiwan ranking payload has no update time.")
+          print("OK Taiwan ranking payload", len(usable))
+          PY
+
+      - name: Publish only Taiwan ranking files
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/tw-market-live
+          mkdir -p /tmp/tw-market-live
+          cd /tmp/tw-market-live
+          git init
+          git config user.name "market-event-radar-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+
+          if git ls-remote --exit-code --heads origin "$LIVE_BRANCH" >/dev/null 2>&1; then
+            git fetch --depth=1 origin "$LIVE_BRANCH"
+            git checkout -B "$LIVE_BRANCH" FETCH_HEAD
+          else
+            git checkout --orphan "$LIVE_BRANCH"
+          fi
+
+          cp "$GITHUB_WORKSPACE/data/tw-market.json" ./tw-market.json
+          cp "$GITHUB_WORKSPACE/data/tw-market-seed.js" ./tw-market-seed.js
+          if python - <<'PY'
+          import json, os
+          from pathlib import Path
+          payload = json.loads((Path(os.environ["GITHUB_WORKSPACE"]) / "data/tw-chips.json").read_text(encoding="utf-8"))
+          raise SystemExit(0 if payload.get("metadata", {}).get("updated_at") else 1)
+          PY
+          then
+            cp "$GITHUB_WORKSPACE/data/tw-chips.json" ./tw-chips.json
+            cp "$GITHUB_WORKSPACE/data/tw-chips-seed.js" ./tw-chips-seed.js
+          fi
+          git add tw-market.json tw-market-seed.js
+          if [ -f tw-chips.json ]; then git add tw-chips.json tw-chips-seed.js; fi
+          if git diff --cached --quiet; then
+            echo "No Taiwan market changes."
+            exit 0
+          fi
+          git commit -m "chore: refresh Taiwan rankings and chips v11.0.0"
+          git push origin "HEAD:$LIVE_BRANCH"

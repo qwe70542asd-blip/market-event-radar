@@ -10,7 +10,7 @@
       "macro": 36,
       "corporate": 4
     },
-    "calendar_version": "v10.4-rich-calendar",
+    "calendar_version": "v11.0.0",
     "coverage_note": "Company events include low-impact rows; use calendar filters and portfolio priority.",
     "sources_healthy": 2,
     "source_count": 16

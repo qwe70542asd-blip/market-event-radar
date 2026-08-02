@@ -1,4 +1,4 @@
-name: Update v10.8.4 live data
+name: Update v11.0.0 market and official data
 
 on:
   push:
@@ -19,7 +19,7 @@ on:
         required: true
         default: all
         type: choice
-        options: [all, frequent, market, news, daily]
+        options: [all, frequent, market, daily]
 
 permissions:
   contents: write
@@ -82,6 +82,8 @@ jobs:
               events.json seed.js \
               news.json news-seed.js news-link-cache.json \
               market-snapshot.json market-snapshot-seed.js \
+              tw-market.json tw-market-seed.js \
+              tw-chips.json tw-chips-seed.js \
               institutional-history.json institutional-history-seed.js; do
               if [ -f "/tmp/previous-live/$file" ]; then
                 cp "/tmp/previous-live/$file" "data/$file"
@@ -100,15 +102,18 @@ jobs:
         if: steps.mode.outputs.mode == 'frequent' || steps.mode.outputs.mode == 'market' || steps.mode.outputs.mode == 'all'
         run: python scripts/update_market_snapshot.py
 
-      - name: Update finance news
-        if: steps.mode.outputs.mode == 'frequent' || steps.mode.outputs.mode == 'news' || steps.mode.outputs.mode == 'all'
-        env:
-          NEWS_FULL_REFRESH: ${{ steps.mode.outputs.mode == 'all' && '1' || '0' }}
-        run: python scripts/update_news.py
+      - name: Update Taiwan rankings
+        if: steps.mode.outputs.mode == 'market' || steps.mode.outputs.mode == 'all'
+        run: python scripts/update_tw_market.py
 
       - name: Update announcements
-        if: steps.mode.outputs.mode == 'frequent' || steps.mode.outputs.mode == 'news' || steps.mode.outputs.mode == 'daily' || steps.mode.outputs.mode == 'all'
+        if: steps.mode.outputs.mode == 'frequent' || steps.mode.outputs.mode == 'daily' || steps.mode.outputs.mode == 'all'
         run: python scripts/update_announcements.py
+
+      - name: Update Taiwan day trading and margin data
+        if: steps.mode.outputs.mode == 'market' || steps.mode.outputs.mode == 'daily' || steps.mode.outputs.mode == 'all'
+        continue-on-error: true
+        run: python scripts/update_tw_chips.py
 
       - name: Update asset master
         if: steps.mode.outputs.mode == 'daily' || steps.mode.outputs.mode == 'all'
@@ -137,7 +142,8 @@ jobs:
 
           required = [
               "announcements.json", "assets.json", "events.json", "news.json",
-              "market-snapshot.json", "institutional-history.json",
+              "market-snapshot.json", "institutional-history.json", "tw-chips.json",
+              "tw-market.json",
           ]
           for name in required:
               path = Path("data") / name
@@ -147,16 +153,11 @@ jobs:
               print("OK", path)
 
           mode = os.environ.get("UPDATE_MODE", "")
-          if mode in {"all", "frequent", "news"}:
-              news = json.loads(Path("data/news.json").read_text(encoding="utf-8"))
+          if mode in {"all", "frequent", "daily"}:
               announcements = json.loads(Path("data/announcements.json").read_text(encoding="utf-8"))
-              if not news.get("items"):
-                  raise SystemExit("News update produced no usable items; live-data was not published.")
               if not announcements.get("items"):
                   raise SystemExit("Announcement update produced no usable items; live-data was not published.")
-              if int(news.get("metadata", {}).get("retention_days", 0)) != 20:
-                  raise SystemExit("News retention metadata is not 20 days.")
-              print("OK live news and announcements")
+              print("OK live announcements; finance news publishes independently")
 
           for path in Path("data/asset-details").glob("*.json") if Path("data/asset-details").exists() else []:
               json.loads(path.read_text(encoding="utf-8"))
@@ -175,6 +176,8 @@ jobs:
             events.json seed.js \
             news.json news-seed.js news-link-cache.json \
             market-snapshot.json market-snapshot-seed.js \
+            tw-market.json tw-market-seed.js \
+            tw-chips.json tw-chips-seed.js \
             institutional-history.json institutional-history-seed.js; do
             if [ -f "data/$file" ]; then
               cp "data/$file" "/tmp/live-payload/$file"
@@ -218,5 +221,5 @@ jobs:
             echo "No live data changes."
             exit 0
           fi
-          git commit -m "chore: refresh live data v10.8.4"
+          git commit -m "chore: refresh market data v11.0.0"
           git push origin "HEAD:$LIVE_BRANCH"

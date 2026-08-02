@@ -1,6 +1,6 @@
 window.__MARKET_ASSET_SEED__ = {
   "metadata": {
-    "version": "v10.3",
+    "version": "v11.0.0",
     "updated_at": null,
     "coverage": {
       "TW": "seed + official updater",

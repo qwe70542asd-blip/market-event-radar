@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Refresh official announcements and institutional flow for v10.8.4.
+"""Refresh official announcements and institutional flow for v11.0.0.
 
 Key fixes:
 - Weekend/holiday runs show the latest available trading day instead of today's empty date.
@@ -34,7 +34,7 @@ NOW = datetime.now(TAIPEI)
 ANNOUNCEMENT_RETENTION_DAYS = 30
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/10.8.4; +https://github.com/qwe70542asd-blip/market-event-radar)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.0.0; +https://github.com/qwe70542asd-blip/market-event-radar)",
     "Accept-Language": "zh-TW,zh;q=0.95,en-US;q=0.75,en;q=0.65,ja;q=0.55",
 }
 
@@ -429,7 +429,7 @@ def main():
 
     payload = {
         "metadata": {
-            "version": "v10.8.4",
+            "version": "v11.0.0",
             "updated_at": NOW.isoformat(timespec="seconds"),
             "status": "ok" if deduplicated else "warning",
             "retention_days": ANNOUNCEMENT_RETENTION_DAYS,

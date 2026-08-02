@@ -1,0 +1,22 @@
+市場事件雷達 v11.0.0｜完整包上傳方式
+
+1. 解壓縮後，將壓縮包內全部檔案與資料夾上傳到 GitHub 儲存庫根目錄。
+2. 這是完整包，不是更新補丁；不要再混入 v10.9.0 或更舊版本檔案。
+3. 上傳後三個排程會依工作流程檔變更自動啟動：
+   - Update v11.0.0 finance news
+   - Update v11.0.0 market and official data
+   - Update v11.0.0 Taiwan rankings and chips
+4. 三個排程共用同一個寫入鎖，依序執行是正常現象，不需要同時完成。
+5. 新聞即使沒有 AI 金鑰也會使用規則分類並正常發布。
+6. 若要啟用 AI 摘要／分類，可在 GitHub 儲存庫 Secrets 新增 OPENAI_API_KEY；沒有設定時不影響新聞抓取。
+7. 第一次完成後檢查：
+   - live-data/news.json 的 item_count 大於 0。
+   - live-data/tw-market.json 有最新交易日與 quote_count。
+   - live-data/tw-chips.json 的 updated_at 不為空；若某交易所官方端點暫時失敗，頁面會保留舊值或顯示等待資料。
+8. 瀏覽器若仍看到舊版，重新整理一次；v11.0.0 會更換 Service Worker 快取名稱並自動清除舊快取。
+
+資料規則：
+- 新聞只保存標題、來源、時間、短摘要與原文連結，不搬全文與圖片。
+- AI 失敗時不會阻止新聞發布。
+- 券商分點沒有授權資料時只提供官方查詢入口，不顯示猜測排行。
+- 當沖、融資與融券沒有有效官方值時不以 0 冒充。

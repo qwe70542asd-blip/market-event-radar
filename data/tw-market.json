@@ -1,0 +1,29 @@
+{
+  "metadata": {
+    "version": "v11.0.0",
+    "updated_at": null,
+    "trading_date": null,
+    "market_status": "pending",
+    "quote_count": 0,
+    "source": "臺灣證券交易所基本市況報導、TWSE／TPEx OpenAPI",
+    "refresh_seconds": 300,
+    "note": "等待第一次台股行情排程；休市時將顯示最後交易日。"
+  },
+  "breadth": {
+    "up": 0,
+    "down": 0,
+    "flat": 0
+  },
+  "items": [
+    {"symbol":"2330","name":"台積電","exchange":"TWSE","asset_class":"stock","price":null,"previous_close":null,"change":null,"change_percent":null,"open":null,"high":null,"low":null,"volume":null,"trade_value":null,"quote_date":"","quote_time":"","status":"pending"},
+    {"symbol":"2317","name":"鴻海","exchange":"TWSE","asset_class":"stock","price":null,"previous_close":null,"change":null,"change_percent":null,"open":null,"high":null,"low":null,"volume":null,"trade_value":null,"quote_date":"","quote_time":"","status":"pending"},
+    {"symbol":"2454","name":"聯發科","exchange":"TWSE","asset_class":"stock","price":null,"previous_close":null,"change":null,"change_percent":null,"open":null,"high":null,"low":null,"volume":null,"trade_value":null,"quote_date":"","quote_time":"","status":"pending"},
+    {"symbol":"2382","name":"廣達","exchange":"TWSE","asset_class":"stock","price":null,"previous_close":null,"change":null,"change_percent":null,"open":null,"high":null,"low":null,"volume":null,"trade_value":null,"quote_date":"","quote_time":"","status":"pending"},
+    {"symbol":"3231","name":"緯創","exchange":"TWSE","asset_class":"stock","price":null,"previous_close":null,"change":null,"change_percent":null,"open":null,"high":null,"low":null,"volume":null,"trade_value":null,"quote_date":"","quote_time":"","status":"pending"},
+    {"symbol":"0050","name":"元大台灣50","exchange":"TWSE","asset_class":"etf","price":null,"previous_close":null,"change":null,"change_percent":null,"open":null,"high":null,"low":null,"volume":null,"trade_value":null,"quote_date":"","quote_time":"","status":"pending"},
+    {"symbol":"006208","name":"富邦台50","exchange":"TWSE","asset_class":"etf","price":null,"previous_close":null,"change":null,"change_percent":null,"open":null,"high":null,"low":null,"volume":null,"trade_value":null,"quote_date":"","quote_time":"","status":"pending"},
+    {"symbol":"00631L","name":"元大台灣50正2","exchange":"TWSE","asset_class":"etf","price":null,"previous_close":null,"change":null,"change_percent":null,"open":null,"high":null,"low":null,"volume":null,"trade_value":null,"quote_date":"","quote_time":"","status":"pending"},
+    {"symbol":"00981A","name":"主動統一台股增長","exchange":"TWSE","asset_class":"etf","price":null,"previous_close":null,"change":null,"change_percent":null,"open":null,"high":null,"low":null,"volume":null,"trade_value":null,"quote_date":"","quote_time":"","status":"pending"},
+    {"symbol":"00403A","name":"主動野村臺灣優選","exchange":"TWSE","asset_class":"etf","price":null,"previous_close":null,"change":null,"change_percent":null,"open":null,"high":null,"low":null,"volume":null,"trade_value":null,"quote_date":"","quote_time":"","status":"pending"}
+  ]
+}
