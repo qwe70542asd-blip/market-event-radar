@@ -1316,7 +1316,7 @@ select option:checked { color:#07111f !important; background:#79f0b7 !important;
 }
 
 
-/* v10.4.6 institutional analytics */
+/* v10.5.0 institutional analytics */
 .institutional-card { position:relative; }
 .institutional-card::after { content:"查看 ›"; position:absolute; right:10px; top:9px; color:#7890a0; font-size:8px; }
 .institutional-shell { max-width:1420px; }
@@ -1418,4 +1418,120 @@ select option:checked { color:#07111f !important; background:#79f0b7 !important;
   .flow-rank-row { grid-template-columns:22px minmax(130px,1fr) 70px; }
   .flow-rank-row .rank-bar { display:none; }
   .institutional-source-links { grid-template-columns:1fr; }
+}
+
+
+/* v10.5 clean portfolio live strip */
+.portfolio-live-section {
+  margin-top:10px;
+  padding:12px 14px 13px;
+  border:1px solid rgba(121,240,183,.15);
+  border-radius:16px;
+  background:linear-gradient(135deg,rgba(121,240,183,.045),rgba(9,24,39,.9));
+  box-shadow:0 12px 30px rgba(0,0,0,.16);
+}
+.portfolio-live-head {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  margin-bottom:9px;
+}
+.portfolio-live-head .eyebrow { margin-bottom:4px; font-size:9px; }
+.portfolio-live-title-line { display:flex; align-items:center; gap:9px; flex-wrap:wrap; }
+.portfolio-live-title-line h2 { margin:0; font-size:19px; letter-spacing:-.02em; }
+.portfolio-live-title-line > span { color:#8fa5b5; font-size:9px; }
+.portfolio-quote-status {
+  display:inline-flex;
+  align-items:center;
+  min-height:22px;
+  padding:2px 8px;
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:999px;
+  background:rgba(255,255,255,.025);
+}
+.portfolio-quote-status[data-state="live"] { color:#8de4bd; border-color:rgba(121,240,183,.18); background:rgba(121,240,183,.055); }
+.portfolio-quote-status[data-state="close"] { color:#ffd27c; border-color:rgba(255,211,109,.16); background:rgba(255,211,109,.045); }
+.portfolio-page-link {
+  flex:0 0 auto;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  min-height:36px;
+  padding:0 12px;
+  border:1px solid rgba(121,240,183,.2);
+  border-radius:10px;
+  background:rgba(121,240,183,.07);
+  color:#9ceac9;
+  font-size:10px;
+  font-weight:800;
+  text-decoration:none;
+}
+.portfolio-page-link:hover { border-color:rgba(121,240,183,.38); background:rgba(121,240,183,.11); }
+.portfolio-page-link span { font-size:14px; }
+.portfolio-live-empty {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  min-height:44px;
+  padding:8px 11px;
+  border:1px dashed rgba(255,255,255,.08);
+  border-radius:11px;
+  color:#8ea3b2;
+  font-size:10px;
+}
+.portfolio-live-empty a { color:#8fe3bf; text-decoration:none; font-weight:750; }
+.portfolio-quote-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(245px,1fr));
+  gap:7px;
+}
+.portfolio-quote-card {
+  min-width:0;
+  display:grid;
+  gap:7px;
+  padding:10px 11px 8px;
+  border:1px solid rgba(255,255,255,.055);
+  border-radius:12px;
+  background:rgba(255,255,255,.018);
+  color:inherit;
+  text-decoration:none;
+  overflow:hidden;
+}
+.portfolio-quote-card:hover { border-color:rgba(121,240,183,.19); background:rgba(121,240,183,.025); }
+.portfolio-quote-card.status-stale { opacity:.78; }
+.portfolio-quote-top {
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  gap:8px;
+}
+.portfolio-quote-top > div { min-width:0; }
+.portfolio-quote-top strong,.portfolio-quote-top small { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.portfolio-quote-top strong { font-size:11px; }
+.portfolio-quote-top small { margin-top:2px; color:#718898; font-size:7px; }
+.portfolio-quote-top > b { font-size:11px; }
+.portfolio-quote-card.up .portfolio-quote-top > b { color:#ff7588; }
+.portfolio-quote-card.down .portfolio-quote-top > b { color:#67e2b3; }
+.portfolio-quote-card.flat .portfolio-quote-top > b { color:#9badb9; }
+.portfolio-quote-body { display:grid; grid-template-columns:auto minmax(110px,1fr); align-items:end; gap:8px; min-height:55px; }
+.portfolio-quote-body > div { min-width:76px; }
+.portfolio-quote-body > div > strong { display:block; font-size:17px; letter-spacing:-.025em; white-space:nowrap; }
+.portfolio-quote-body > div > small { display:block; margin-top:4px; color:#748a99; font-size:7px; white-space:nowrap; }
+.portfolio-sparkline { display:block; width:100%; height:52px; overflow:visible; }
+.portfolio-sparkline .sparkline-line { fill:none; stroke:#91a9ba; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.portfolio-sparkline .sparkline-area { fill:rgba(145,169,186,.06); }
+.portfolio-sparkline.up .sparkline-line { stroke:#ff7588; }
+.portfolio-sparkline.up .sparkline-area { fill:rgba(255,117,136,.08); }
+.portfolio-sparkline.down .sparkline-line { stroke:#67e2b3; }
+.portfolio-sparkline.down .sparkline-area { fill:rgba(103,226,179,.07); }
+.portfolio-sparkline .sparkline-flat { fill:none; stroke:rgba(160,182,197,.24); stroke-width:1.3; stroke-dasharray:3 4; }
+.portfolio-quote-foot { display:flex; align-items:center; justify-content:space-between; gap:8px; padding-top:6px; border-top:1px solid rgba(255,255,255,.04); }
+.portfolio-quote-foot span,.portfolio-quote-foot em { overflow:hidden; color:#6f8797; font-size:7px; font-style:normal; text-overflow:ellipsis; white-space:nowrap; }
+.portfolio-quote-foot em { max-width:40%; text-align:right; }
+@media(max-width:700px) {
+  .portfolio-live-head { align-items:flex-start; }
+  .portfolio-page-link { min-height:32px; padding:0 9px; font-size:9px; }
+  .portfolio-quote-grid { display:flex; overflow-x:auto; scroll-snap-type:x mandatory; padding-bottom:3px; }
+  .portfolio-quote-card { flex:0 0 82vw; max-width:330px; scroll-snap-align:start; }
 }

@@ -210,9 +210,17 @@ http://localhost:8000
 - 個別來源失敗時保留上次成功資料，不讓整條跑馬燈出現黑色錯誤格。
 
 
-## v10.4.6 法人與籌碼分析試作版
+## v10.5.0 法人與籌碼分析試作版
 
 - 法人摘要卡不再直接開啟原始 JSON。
 - 新增法人詳情頁、日／週／累積圖表、買賣金額比較及每日表格。
 - 新增 TWSE T86 外資、投信、自營商與三大法人個股排行。
 - 明確區分免費官方彙總與需授權的個別外資券商分點資料。
+
+
+## v10.5.0 clean rebuild
+
+- Full clean-install package only; no incremental overlay package.
+- Compact portfolio live/last-close quote cards with mini sparklines.
+- Each quote exposes freshness mode, market timestamp and source.
+- Portfolio management stays on `portfolio.html`.

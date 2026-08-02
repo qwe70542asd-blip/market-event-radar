@@ -238,7 +238,7 @@
   }
 
   function rankMarkup(items,kind) {
-    if (!items?.length) return '<div class="ranking-empty">第一次執行「Update v10.4.6 institutional analytics」後，會由 TWSE T86 補上官方個股排行。</div>';
+    if (!items?.length) return '<div class="ranking-empty">第一次執行「Update v10.5.0 institutional analytics」後，會由 TWSE T86 補上官方個股排行。</div>';
     const max = Math.max(...items.map(item => Math.abs(num(item.net))),1);
     return items.slice(0,10).map((item,index) => `<a href="asset.html?id=TW:${encodeURIComponent(item.symbol)}" class="flow-rank-row"><b>${index+1}</b><div><strong>${escapeHtml(item.symbol)} ${escapeHtml(item.name)}</strong><small>買 ${shares(item.buy)}｜賣 ${shares(item.sell)}</small></div><span class="rank-bar"><i style="width:${Math.abs(num(item.net))/max*100}%"></i></span><em class="${kind==='buy'?'positive':'negative'}">${item.net>=0?'+':''}${shares(item.net)}</em></a>`).join('');
   }

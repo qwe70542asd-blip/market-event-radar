@@ -3,12 +3,14 @@
 
   const STORAGE_KEY = "market-radar-portfolio-v10-3";
   const LEGACY_KEYS = ["market-radar-portfolio-v10"];
-  const state = { entries: [], news: [], events: [], assetsReady: false };
+  const state = { entries: [], news: [], events: [], assetsReady: false, quotes: new Map(), quoteLoading: false, quoteTimer: null };
 
   const $ = (s, root = document) => root.querySelector(s);
   const $$ = (s, root = document) => [...root.querySelectorAll(s)];
   const escapeHtml = v => String(v || "").replace(/[&<>\"]/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
   const normalize = v => window.MarketAssets?.normalize(v) || String(v || "").toLowerCase().replace(/\s+/g,"");
+  const QUOTE_CACHE_KEY = "market-radar-portfolio-quotes-v10-5";
+  const QUOTE_REFRESH_MS = 30000;
 
   const SECTOR_KEYWORDS = {
     technology:["科技","AI","人工智慧","半導體","晶片","伺服器","軟體","雲端","電子"],
@@ -63,6 +65,8 @@
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state.entries));
     window.dispatchEvent(new CustomEvent("market-portfolio-changed", { detail: state.entries }));
     renderEverywhere();
+    startQuoteLoop();
+    refreshQuotes(true);
   }
 
   function typeLabel(entry) {
@@ -131,6 +135,225 @@
     return rows.sort((a,b)=>b.score-a.score || new Date(a.event.start)-new Date(b.event.start)).slice(0,limit);
   }
 
+
+  function quoteKey(entry) {
+    return entry.asset_id || `${entry.market || "GLOBAL"}:${entry.symbol || entry.name}`;
+  }
+
+  function loadQuoteCache() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(QUOTE_CACHE_KEY) || "{}");
+      Object.entries(raw).forEach(([key, value]) => {
+        if (value && Number.isFinite(Number(value.price))) state.quotes.set(key, value);
+      });
+    } catch {}
+  }
+
+  function saveQuoteCache() {
+    try {
+      const serializable = {};
+      state.quotes.forEach((value, key) => { serializable[key] = value; });
+      localStorage.setItem(QUOTE_CACHE_KEY, JSON.stringify(serializable));
+    } catch {}
+  }
+
+  function yahooSymbol(entry) {
+    const symbol = String(entry.symbol || "").trim().toUpperCase();
+    if (!symbol || symbol === "FUND") return "";
+    if (entry.asset_class === "crypto") return `${symbol}-USD`;
+    if (entry.market === "TW") return `${symbol}${String(entry.exchange || "").toUpperCase().includes("TPEX") ? ".TWO" : ".TW"}`;
+    return symbol;
+  }
+
+  function coinGeckoId(entry) {
+    return ({BTC:"bitcoin",ETH:"ethereum",USDT:"tether",USDC:"usd-coin",BNB:"binancecoin",SOL:"solana",XRP:"ripple",DOGE:"dogecoin",ADA:"cardano",AVAX:"avalanche-2",LINK:"chainlink",UNI:"uniswap"})[String(entry.symbol || "").toUpperCase()] || "";
+  }
+
+  async function fetchJson(url, timeout = 9000) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeout);
+    try {
+      const response = await fetch(url, { cache:"no-store", signal:controller.signal, headers:{"Accept":"application/json"} });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return await response.json();
+    } finally { clearTimeout(timer); }
+  }
+
+  function finite(value) {
+    const number = Number(value);
+    return Number.isFinite(number) ? number : null;
+  }
+
+  function normalizePoints(timestamps, closes, limit = 55) {
+    const rows = [];
+    (timestamps || []).forEach((timestamp, index) => {
+      const value = finite(closes?.[index]);
+      if (value !== null) rows.push({ t:Number(timestamp) * 1000, v:value });
+    });
+    return rows.slice(-limit);
+  }
+
+  async function fetchYahooQuote(entry) {
+    const symbol = yahooSymbol(entry);
+    if (!symbol) throw new Error("沒有公開行情代碼");
+    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?range=5d&interval=5m&includePrePost=false&events=div%2Csplits`;
+    const payload = await fetchJson(url);
+    const result = payload?.chart?.result?.[0];
+    if (!result) throw new Error(payload?.chart?.error?.description || "行情不存在");
+    const meta = result.meta || {};
+    const closes = result?.indicators?.quote?.[0]?.close || [];
+    const points = normalizePoints(result.timestamp || [], closes);
+    const price = finite(meta.regularMarketPrice) ?? points.at(-1)?.v ?? null;
+    const previous = finite(meta.chartPreviousClose) ?? finite(meta.previousClose) ?? (points.length > 1 ? points.at(-2).v : null);
+    if (price === null) throw new Error("行情價格空白");
+    const change = previous !== null ? price - previous : null;
+    const changePercent = previous ? change / previous * 100 : null;
+    const latestAt = finite(meta.regularMarketTime) ? Number(meta.regularMarketTime) * 1000 : (points.at(-1)?.t || Date.now());
+    const age = Math.max(0, Date.now() - latestAt);
+    const isCrypto = entry.asset_class === "crypto";
+    const liveWindow = isCrypto ? 3 * 60e3 : 12 * 60e3;
+    return {
+      price, previous, change, changePercent, points,
+      currency: meta.currency || entry.currency || (isCrypto ? "USD" : ""),
+      source: "Yahoo 公開行情", fetchedAt:Date.now(), marketAt:latestAt,
+      mode: age <= liveWindow ? (isCrypto ? "近即時" : "盤中／延遲") : "前次收盤",
+      status:"ok", symbol
+    };
+  }
+
+  async function fetchCoinGeckoQuote(entry) {
+    const id = coinGeckoId(entry);
+    if (!id) throw new Error("CoinGecko 未收錄對照");
+    const payload = await fetchJson(`https://api.coingecko.com/api/v3/simple/price?ids=${encodeURIComponent(id)}&vs_currencies=usd&include_24hr_change=true&include_last_updated_at=true`);
+    const row = payload?.[id];
+    const price = finite(row?.usd);
+    const changePercent = finite(row?.usd_24h_change);
+    if (price === null) throw new Error("CoinGecko 價格空白");
+    const previous = changePercent !== null && changePercent > -100 ? price / (1 + changePercent / 100) : null;
+    return {
+      price, previous, change:previous !== null ? price - previous : null, changePercent,
+      points:[], currency:"USD", source:"CoinGecko 備援", fetchedAt:Date.now(),
+      marketAt:finite(row?.last_updated_at) ? Number(row.last_updated_at) * 1000 : Date.now(),
+      mode:"延遲備援", status:"fallback", symbol:String(entry.symbol || "")
+    };
+  }
+
+  async function fetchQuote(entry) {
+    try { return await fetchYahooQuote(entry); }
+    catch (primaryError) {
+      if (entry.asset_class === "crypto") {
+        try { return await fetchCoinGeckoQuote(entry); }
+        catch {}
+      }
+      const cached = state.quotes.get(quoteKey(entry));
+      if (cached) return { ...cached, mode:"上次成功資料", status:"stale", error:String(primaryError?.message || primaryError) };
+      return { price:null, previous:null, change:null, changePercent:null, points:[], currency:entry.currency || "", source:"", fetchedAt:Date.now(), marketAt:null, mode:"等待行情", status:"pending", error:String(primaryError?.message || primaryError) };
+    }
+  }
+
+  function formatPrice(value, currency = "") {
+    if (!Number.isFinite(Number(value))) return "—";
+    const number = Number(value);
+    const digits = number >= 1000 ? 0 : number >= 10 ? 2 : number >= 1 ? 3 : 5;
+    const prefix = currency === "USD" ? "$" : currency === "TWD" ? "NT$" : "";
+    return `${prefix}${number.toLocaleString("zh-TW", { maximumFractionDigits:digits, minimumFractionDigits: number < 1 ? Math.min(2,digits) : 0 })}`;
+  }
+
+  function formatPercent(value) {
+    if (!Number.isFinite(Number(value))) return "—";
+    const number = Number(value);
+    return `${number > 0 ? "+" : ""}${number.toFixed(2)}%`;
+  }
+
+  function formatQuoteTime(value) {
+    if (!value) return "尚無時間";
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return "尚無時間";
+    return date.toLocaleString("zh-TW", { month:"numeric", day:"numeric", hour:"2-digit", minute:"2-digit", hour12:false });
+  }
+
+  function sparkline(points, direction = "flat") {
+    const values = (points || []).map(point => Number(point.v)).filter(Number.isFinite);
+    if (values.length < 2) return `<svg class="portfolio-sparkline ${direction}" viewBox="0 0 180 52" aria-label="尚無盤中走勢"><path class="sparkline-flat" d="M4 27 L176 27"/></svg>`;
+    const min = Math.min(...values), max = Math.max(...values), spread = max - min || 1;
+    const path = values.map((value, index) => {
+      const x = 4 + index / Math.max(1, values.length - 1) * 172;
+      const y = 47 - (value - min) / spread * 42;
+      return `${index ? "L" : "M"}${x.toFixed(1)} ${y.toFixed(1)}`;
+    }).join(" ");
+    return `<svg class="portfolio-sparkline ${direction}" viewBox="0 0 180 52" role="img" aria-label="近期價格走勢"><path class="sparkline-area" d="${path} L176 50 L4 50 Z"/><path class="sparkline-line" d="${path}"/></svg>`;
+  }
+
+  function quoteCard(entry) {
+    const quote = state.quotes.get(quoteKey(entry)) || {};
+    const pct = finite(quote.changePercent);
+    const direction = pct === null ? "flat" : pct > 0 ? "up" : pct < 0 ? "down" : "flat";
+    const href = `asset.html?id=${encodeURIComponent(entry.asset_id || entry.id)}`;
+    return `<a class="portfolio-quote-card ${direction} status-${escapeHtml(quote.status || "pending")}" href="${href}">
+      <div class="portfolio-quote-top">
+        <span class="asset-type ${escapeHtml(entry.asset_class)}">${typeLabel(entry)}</span>
+        <div><strong>${escapeHtml(entry.name)}</strong><small>${escapeHtml(entry.symbol || "—")} · ${escapeHtml(entry.exchange || entry.market || "自訂")}</small></div>
+        <b>${formatPercent(pct)}</b>
+      </div>
+      <div class="portfolio-quote-body">
+        <div><strong>${formatPrice(quote.price, quote.currency || entry.currency)}</strong><small>前收 ${formatPrice(quote.previous, quote.currency || entry.currency)}</small></div>
+        ${sparkline(quote.points, direction)}
+      </div>
+      <div class="portfolio-quote-foot"><span>${escapeHtml(quote.mode || "等待行情")} · ${formatQuoteTime(quote.marketAt)}</span><em>${escapeHtml(quote.source || "尚無來源")}</em></div>
+    </a>`;
+  }
+
+  function renderQuoteGrid() {
+    const grid = $("#portfolioQuoteGrid");
+    if (!grid) return;
+    grid.innerHTML = state.entries.map(quoteCard).join("");
+  }
+
+  function setQuoteStatus() {
+    const node = $("#portfolioQuoteStatus");
+    if (!node) return;
+    if (state.quoteLoading) { node.textContent = "行情更新中"; node.dataset.state = "loading"; return; }
+    const quotes = state.entries.map(entry => state.quotes.get(quoteKey(entry))).filter(Boolean);
+    const live = quotes.filter(quote => ["近即時","盤中／延遲"].includes(quote.mode)).length;
+    const stale = quotes.filter(quote => ["前次收盤","上次成功資料"].includes(quote.mode)).length;
+    node.textContent = live ? `${live} 項盤中／近即時` : stale ? `${stale} 項前次收盤` : "等待行情";
+    node.dataset.state = live ? "live" : stale ? "close" : "pending";
+  }
+
+  async function refreshQuotes(force = false) {
+    if (state.quoteLoading || !state.entries.length || document.hidden) return;
+    state.quoteLoading = true;
+    setQuoteStatus();
+    const entries = [...state.entries];
+    const workers = [];
+    let cursor = 0;
+    const worker = async () => {
+      while (cursor < entries.length) {
+        const entry = entries[cursor++];
+        const key = quoteKey(entry);
+        const existing = state.quotes.get(key);
+        if (!force && existing && Date.now() - Number(existing.fetchedAt || 0) < QUOTE_REFRESH_MS - 2000) continue;
+        const quote = await fetchQuote(entry);
+        state.quotes.set(key, quote);
+        renderQuoteGrid();
+        setQuoteStatus();
+      }
+    };
+    for (let i = 0; i < Math.min(4, entries.length); i++) workers.push(worker());
+    await Promise.all(workers);
+    state.quoteLoading = false;
+    saveQuoteCache();
+    renderQuoteGrid();
+    setQuoteStatus();
+  }
+
+  function startQuoteLoop() {
+    clearInterval(state.quoteTimer);
+    if (!state.entries.length) return;
+    refreshQuotes(false);
+    state.quoteTimer = setInterval(() => refreshQuotes(false), QUOTE_REFRESH_MS);
+  }
+
   function renderEntryList(target) {
     if (!target) return;
     if (!state.entries.length) {
@@ -152,25 +375,13 @@
   }
 
   function renderHome() {
-    const empty=$("#portfolioFocusEmpty"), content=$("#portfolioFocusContent"), count=$("#portfolioAssetCount");
-    const newsGrid=$("#portfolioNewsGrid"), eventList=$("#portfolioEventFocus");
+    const empty = $("#portfolioFocusEmpty"), content = $("#portfolioFocusContent"), count = $("#portfolioAssetCount");
     if (!empty || !content) return;
-    count.textContent = `${state.entries.length} 個持有／追蹤標的`;
-    empty.hidden = state.entries.length>0; content.hidden = state.entries.length===0;
-    if (!state.entries.length) return;
-    const relatedNews = newsForPortfolio(4);
-    newsGrid.innerHTML = relatedNews.length ? relatedNews.map(({item,reason})=>`
-      <a class="portfolio-news-card" href="${window.MarketNewsLink?.safeLink?.(item) || window.MarketNews?.safeLink?.(item) || item.link}" target="_blank" rel="noreferrer noopener">
-        <div><span>${escapeHtml(item.source||"財經新聞")}</span><b>關聯：${escapeHtml(reason.name)} ${escapeHtml(reason.symbol||"")}</b></div>
-        <h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.summary||"點擊前往原始新聞")}</p>
-      </a>`).join("") : '<div class="portfolio-empty-mini">尚未找到直接相關新聞，下一次資料更新後會重新比對。</div>';
-    const relatedEvents=eventsForPortfolio(4);
-    eventList.innerHTML = relatedEvents.length ? relatedEvents.map(({event,reason})=>`
-      <a class="portfolio-event-row" href="event.html?id=${encodeURIComponent(event.id)}">
-        <time>${new Date(event.start).toLocaleString("zh-TW",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit",hour12:false})}</time>
-        <span><strong>${escapeHtml(event.title)}</strong><small>可能影響：${escapeHtml(reason.name)} ${escapeHtml(reason.symbol||"")}</small></span>
-        <b class="impact-${event.impact||"low"}">${event.impact==="high"?"高":event.impact==="medium"?"中":"低"}</b>
-      </a>`).join("") : '<div class="portfolio-empty-mini">尚無明確關聯事件。</div>';
+    if (count) count.textContent = `${state.entries.length} 個標的`;
+    empty.hidden = state.entries.length > 0;
+    content.hidden = state.entries.length === 0;
+    renderQuoteGrid();
+    setQuoteStatus();
   }
 
   function renderPage() {
@@ -282,11 +493,14 @@
     $("#closePortfolioDialog")?.addEventListener("click",()=>dialog?.close());
   }
 
-  window.addEventListener("market-assets-loaded",()=>{state.assetsReady=true;migrateEntries();renderEverywhere();});
+  window.addEventListener("market-assets-loaded",()=>{state.assetsReady=true;migrateEntries();renderEverywhere();startQuoteLoop();});
   window.addEventListener("market-news-loaded",event=>{state.news=event.detail.items||[];renderEverywhere();});
+  loadQuoteCache();
   load();
   state.events=window.__MARKET_EVENT_SEED__?.events||[];
-  bindForms(); bindDialog(); renderEverywhere();
+  bindForms(); bindDialog(); renderEverywhere(); startQuoteLoop();
+  window.addEventListener("online",()=>refreshQuotes(true));
+  document.addEventListener("visibilitychange",()=>{ if(!document.hidden) refreshQuotes(true); });
 
   window.MarketPortfolio={state,addResolved,remove,save,newsForPortfolio,eventsForPortfolio};
 })();

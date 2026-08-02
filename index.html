@@ -8,7 +8,7 @@
   <title>全球市場即時雷達｜Global Market Radar</title>
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="assets/styles.css?v=10.4.6" />
+  <link rel="stylesheet" href="assets/styles.css?v=10.5.0" />
 </head>
 <body>
   <div class="noise" aria-hidden="true"></div>
@@ -17,7 +17,7 @@
       <span class="brand-mark" aria-hidden="true">
         <svg viewBox="0 0 48 48" role="img"><path d="M7 34 16 24l7 6 10-16 8 6"/><path d="M7 40h34"/></svg>
       </span>
-      <span><strong>全球市場即時雷達 <em class="version-badge">v10.4.6</em></strong><small>PERSONAL MARKET & EVENT RADAR</small></span>
+      <span><strong>全球市場即時雷達 <em class="version-badge">v10.5.0</em></strong><small>PERSONAL MARKET & EVENT RADAR</small></span>
     </a>
     <div class="top-actions">
       <span class="live-dot"><i></i> 自動更新</span>
@@ -44,7 +44,7 @@
     </div>
   </section>
 
-  <section class="breaking-news-bar aria-label="重要財經新聞跑馬燈">
+  <section class="breaking-news-bar" aria-label="重要財經新聞跑馬燈">
     <a class="breaking-label" href="news.html"><span></span>重要新聞</a>
     <div class="breaking-viewport">
       <a id="breakingNewsLink" href="news.html">
@@ -110,36 +110,24 @@
       <p class="announcement-note">個別外資券商分點資料可能涉及授權；目前只顯示官方公開的三大法人與外資持股資訊，不以推測資料代替。</p>
     </section>
 
-    <section class="portfolio-focus-section">
-      <div class="portfolio-focus-head">
+    <section class="portfolio-live-section" aria-label="我的投資組合即時漲幅">
+      <div class="portfolio-live-head">
         <div>
-          <p class="eyebrow">MY INVESTMENT FOCUS</p>
-          <h2>我的投資今日焦點</h2>
-          <p>加入持有或追蹤的股票、基金或虛擬貨幣後，優先顯示名稱、代號、相關新聞與事件。</p>
+          <p class="eyebrow">MY PORTFOLIO LIVE</p>
+          <div class="portfolio-live-title-line">
+            <h2>我的投資組合</h2>
+            <span id="portfolioAssetCount">0 個標的</span>
+            <span id="portfolioQuoteStatus" class="portfolio-quote-status">等待行情</span>
+          </div>
         </div>
-        <div>
-          <span id="portfolioAssetCount">0 個持有／追蹤標的</span>
-          <button id="portfolioSetupBtn" class="mini-btn" type="button">設定投資組合</button>
-        </div>
+        <a class="portfolio-page-link" href="portfolio.html">前往個人頁面 <span>→</span></a>
       </div>
-      <div id="portfolioFocusEmpty" class="portfolio-onboarding">
-        <div>
-          <strong>建立你的個人投資首頁</strong>
-          <p>可只輸入名稱或代碼；數量與成本都不是必填。訪客資料只保存在目前裝置。</p>
-        </div>
-        <button id="portfolioManageBtn" class="primary-compact-btn" type="button">加入第一個標的</button>
+      <div id="portfolioFocusEmpty" class="portfolio-live-empty">
+        <span>尚未加入投資標的</span>
+        <a href="portfolio.html">到個人頁面新增 →</a>
       </div>
       <div id="portfolioFocusContent" hidden>
-        <div class="portfolio-focus-grid">
-          <section>
-            <div class="mini-section-title"><h3>與持倉相關的新聞</h3><a href="portfolio.html">查看全部</a></div>
-            <div id="portfolioNewsGrid" class="portfolio-news-grid"></div>
-          </section>
-          <section>
-            <div class="mini-section-title"><h3>可能影響持倉的事件</h3><a href="#calendarSection">完整月曆</a></div>
-            <div id="portfolioEventFocus" class="portfolio-event-focus"></div>
-          </section>
-        </div>
+        <div id="portfolioQuoteGrid" class="portfolio-quote-grid" aria-live="polite"></div>
       </div>
     </section>
 
@@ -346,14 +334,14 @@
   <script src="data/announcements-seed.js"></script>
   <script src="data/news-seed.js"></script>
   <script src="data/market-snapshot-seed.js"></script>
-  <script type="module" src="assets/auth.js?v=10.4.6"></script>
-  <script src="assets/market-ticker.js?v=10.4.6" defer></script>
-  <script src="assets/app.js?v=10.4.6" defer></script>
-  <script src="assets/asset-master.js?v=10.4.6" defer></script>
-  <script src="assets/announcements.js?v=10.4.6" defer></script>
-  <script src="assets/news-core.js?v=10.4.6" defer></script>
-  <script src="assets/news-ui.js?v=10.4.6" defer></script>
-  <script src="assets/portfolio.js?v=10.4.6" defer></script>
-  <script src="assets/sw-register.js?v=10.4.6" defer></script>
+  <script type="module" src="assets/auth.js?v=10.5.0"></script>
+  <script src="assets/market-ticker.js?v=10.5.0" defer></script>
+  <script src="assets/app.js?v=10.5.0" defer></script>
+  <script src="assets/asset-master.js?v=10.5.0" defer></script>
+  <script src="assets/announcements.js?v=10.5.0" defer></script>
+  <script src="assets/news-core.js?v=10.5.0" defer></script>
+  <script src="assets/news-ui.js?v=10.5.0" defer></script>
+  <script src="assets/portfolio.js?v=10.5.0" defer></script>
+  <script src="assets/sw-register.js?v=10.5.0" defer></script>
 </body>
 </html>

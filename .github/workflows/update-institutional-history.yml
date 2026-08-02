@@ -1,4 +1,4 @@
-name: Update v10.4.6 institutional analytics
+name: Update v10.5.0 institutional analytics
 
 on:
   push:
@@ -66,7 +66,7 @@ jobs:
           git config user.name "market-event-radar-bot"
           git config user.email "actions@users.noreply.github.com"
           git add data/institutional-history.json data/institutional-history-seed.js
-          git commit -m "chore: refresh institutional analytics v10.4.6"
+          git commit -m "chore: refresh institutional analytics v10.5.0"
           for attempt in 1 2 3; do
             git pull --rebase && git push && exit 0
             sleep $((attempt * 4))
