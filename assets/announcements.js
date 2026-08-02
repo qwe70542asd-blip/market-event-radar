@@ -53,9 +53,9 @@
     return `${number >= 0 ? "+" : ""}${number.toFixed(1)} 億`;
   }
 
-  function institutionalCard(label, value, dateText, url, note) {
-    const href = url || "#";
-    return `<a class="institutional-card" href="${escapeHtml(href)}" target="_blank" rel="noreferrer noopener">
+  function institutionalCard(label, value, dateText, href, note, external = false) {
+    const target = external ? ' target="_blank" rel="noreferrer noopener"' : '';
+    return `<a class="institutional-card" href="${escapeHtml(href || '#')}"${target}>
       <span>${escapeHtml(label)}</span>
       <strong>${amount(value)}</strong>
       <small>${escapeHtml(dateText)}${note ? ` · ${escapeHtml(note)}` : ""}</small>
@@ -72,10 +72,10 @@
       const tpexDate = formatTradingDate(institutional.tpex_date || institutional.date);
       const lagNote = institutional.is_previous_trading_day ? "最近交易日" : "當日盤後";
       cards.innerHTML = [
-        institutionalCard("上市外資", twse.foreign, twseDate, institutional.twse_url, lagNote),
-        institutionalCard("上市投信", twse.investment_trust, twseDate, institutional.twse_url, "官方彙總"),
-        institutionalCard("上市自營商", twse.dealer, twseDate, institutional.twse_url, "自行＋避險"),
-        institutionalCard("上櫃三大法人", tpex.total, tpexDate, institutional.tpex_url, lagNote)
+        institutionalCard("上市外資", twse.foreign, twseDate, "institutional.html?market=twse&type=foreign", `${lagNote} · 查看圖表`),
+        institutionalCard("上市投信", twse.investment_trust, twseDate, "institutional.html?market=twse&type=investment_trust", "官方彙總 · 查看圖表"),
+        institutionalCard("上市自營商", twse.dealer, twseDate, "institutional.html?market=twse&type=dealer", "自行＋避險 · 查看圖表"),
+        institutionalCard("上櫃三大法人", tpex.total, tpexDate, institutional.tpex_url, `${lagNote} · 官方頁`, true)
       ].join("");
     }
 

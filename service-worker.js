@@ -1,13 +1,13 @@
-const CACHE_NAME = "market-event-radar-v10-4-5";
+const CACHE_NAME = "market-event-radar-v10-4-6";
 const STATIC_ASSETS = [
-  "./", "index.html", "404.html", "event.html", "news.html", "portfolio.html", "asset.html", "manifest.webmanifest",
-  "assets/styles.css?v=10.4.5", "assets/app.js?v=10.4.5",
-  "assets/market-ticker.js?v=10.4.5", "assets/event.js?v=10.4.5",
-  "assets/auth.js?v=10.4.5", "assets/firebase-config.js",
-  "assets/news-core.js?v=10.4.5", "assets/news-ui.js?v=10.4.5",
-  "assets/news-page.js?v=10.4.5", "assets/portfolio.js?v=10.4.5", "assets/asset-master.js?v=10.4.5", "assets/asset-detail.js?v=10.4.5", "assets/announcements.js?v=10.4.5",
-  "assets/sw-register.js?v=10.4.5", "assets/favicon.svg",
-  "data/seed.js", "data/news-seed.js", "data/assets-seed.js", "data/announcements-seed.js"
+  "./", "index.html", "404.html", "event.html", "news.html", "portfolio.html", "asset.html", "institutional.html", "manifest.webmanifest",
+  "assets/styles.css?v=10.4.6", "assets/app.js?v=10.4.6",
+  "assets/market-ticker.js?v=10.4.6", "assets/event.js?v=10.4.6",
+  "assets/auth.js?v=10.4.6", "assets/firebase-config.js",
+  "assets/news-core.js?v=10.4.6", "assets/news-ui.js?v=10.4.6",
+  "assets/news-page.js?v=10.4.6", "assets/portfolio.js?v=10.4.6", "assets/asset-master.js?v=10.4.6", "assets/asset-detail.js?v=10.4.6", "assets/announcements.js?v=10.4.6",
+  "assets/institutional.js?v=10.4.6", "assets/sw-register.js?v=10.4.6", "assets/favicon.svg",
+  "data/seed.js", "data/news-seed.js", "data/assets-seed.js", "data/announcements-seed.js", "data/institutional-history-seed.js"
 ];
 
 self.addEventListener("install", event => {
@@ -62,7 +62,7 @@ self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
   const url = new URL(event.request.url);
 
-  if (url.pathname.endsWith("/data/news.json") || url.pathname.endsWith("/data/events.json") || url.pathname.endsWith("/data/assets.json") || url.pathname.endsWith("/data/announcements.json")) {
+  if (url.pathname.endsWith("/data/news.json") || url.pathname.endsWith("/data/events.json") || url.pathname.endsWith("/data/assets.json") || url.pathname.endsWith("/data/announcements.json") || url.pathname.endsWith("/data/institutional-history.json")) {
     event.respondWith(networkFirst(event.request));
     return;
   }
