@@ -8,8 +8,7 @@
   <title>全球市場即時雷達｜Global Market Radar</title>
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="assets/styles.css?v=10.4.3" />
-  <script type="module" src="https://widgets.tradingview-widget.com/w/en/tv-ticker-tape.js"></script>
+  <link rel="stylesheet" href="assets/styles.css?v=10.4.5" />
 </head>
 <body>
   <div class="noise" aria-hidden="true"></div>
@@ -18,7 +17,7 @@
       <span class="brand-mark" aria-hidden="true">
         <svg viewBox="0 0 48 48" role="img"><path d="M7 34 16 24l7 6 10-16 8 6"/><path d="M7 40h34"/></svg>
       </span>
-      <span><strong>全球市場即時雷達 <em class="version-badge">v10.4.3</em></strong><small>PERSONAL MARKET & EVENT RADAR</small></span>
+      <span><strong>全球市場即時雷達 <em class="version-badge">v10.4.5</em></strong><small>PERSONAL MARKET & EVENT RADAR</small></span>
     </a>
     <div class="top-actions">
       <span class="live-dot"><i></i> 自動更新</span>
@@ -35,17 +34,17 @@
     </div>
   </header>
 
-  <div class="ticker-shell" aria-label="全球市場代理行情跑馬燈">
-    <tv-ticker-tape
-      symbols="AMEX:EWT,NYSE:TSM,AMEX:SPY,NASDAQ:QQQ,NASDAQ:SOXX,AMEX:EWJ,AMEX:EWY,AMEX:FEZ,FX_IDC:USDJPY,TVC:US10Y,CBOE:VIX"
-      item-size="compact"
-      theme="dark"
-      locale="zh_TW"
-      transparent-background
-    ></tv-ticker-tape>
-  </div>
+  <section class="market-ticker-shell" aria-label="全球市場指數跑馬燈">
+    <div class="market-ticker-head">
+      <span><i></i>全球市場快照</span>
+      <small id="marketTickerStatus">讀取市場資料中…</small>
+    </div>
+    <div id="marketTicker" class="market-ticker" aria-live="polite">
+      <div class="market-ticker-empty"><strong>市場指數同步中</strong></div>
+    </div>
+  </section>
 
-  <section class="breaking-news-bar" aria-label="重要財經新聞跑馬燈">
+  <section class="breaking-news-bar aria-label="重要財經新聞跑馬燈">
     <a class="breaking-label" href="news.html"><span></span>重要新聞</a>
     <div class="breaking-viewport">
       <a id="breakingNewsLink" href="news.html">
@@ -346,13 +345,15 @@
   <script src="data/assets-seed.js"></script>
   <script src="data/announcements-seed.js"></script>
   <script src="data/news-seed.js"></script>
-  <script type="module" src="assets/auth.js?v=10.4.3"></script>
-  <script src="assets/app.js?v=10.4.3" defer></script>
-  <script src="assets/asset-master.js?v=10.4.3" defer></script>
-  <script src="assets/announcements.js?v=10.4.3" defer></script>
-  <script src="assets/news-core.js?v=10.4.3" defer></script>
-  <script src="assets/news-ui.js?v=10.4.3" defer></script>
-  <script src="assets/portfolio.js?v=10.4.3" defer></script>
-  <script src="assets/sw-register.js?v=10.4.3" defer></script>
+  <script src="data/market-snapshot-seed.js"></script>
+  <script type="module" src="assets/auth.js?v=10.4.5"></script>
+  <script src="assets/market-ticker.js?v=10.4.5" defer></script>
+  <script src="assets/app.js?v=10.4.5" defer></script>
+  <script src="assets/asset-master.js?v=10.4.5" defer></script>
+  <script src="assets/announcements.js?v=10.4.5" defer></script>
+  <script src="assets/news-core.js?v=10.4.5" defer></script>
+  <script src="assets/news-ui.js?v=10.4.5" defer></script>
+  <script src="assets/portfolio.js?v=10.4.5" defer></script>
+  <script src="assets/sw-register.js?v=10.4.5" defer></script>
 </body>
 </html>

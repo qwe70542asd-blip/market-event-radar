@@ -1,0 +1,76 @@
+name: Update v10.4.5 multi-source market ticker
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "scripts/update_market_snapshot.py"
+      - "data/market-snapshot.json"
+      - "data/market-snapshot-seed.js"
+      - "requirements.txt"
+      - ".github/workflows/update-market-ticker.yml"
+  schedule:
+    - cron: "7,37 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: market-radar-market-ticker
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Update market snapshot
+        run: python scripts/update_market_snapshot.py
+
+      - name: Validate snapshot
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          data = json.loads(Path("data/market-snapshot.json").read_text(encoding="utf-8"))
+          items = data.get("items", [])
+          assert items
+          assert any(row.get("id") == "TAIEX" and row.get("value") is not None for row in items)
+          assert all(row.get("id") and row.get("name") for row in items)
+          print("items:", len(items))
+          print("healthy:", data.get("metadata", {}).get("healthy_count"))
+          for row in items:
+              print(row["id"], row.get("value"), row.get("source"), row.get("status"))
+          PY
+
+      - name: Commit ticker data
+        run: |
+          if git diff --quiet -- data/market-snapshot.json data/market-snapshot-seed.js; then
+            echo "No ticker changes."
+            exit 0
+          fi
+          git config user.name "market-event-radar-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/market-snapshot.json data/market-snapshot-seed.js
+          git commit -m "chore: refresh multi-source market ticker v10.4.5"
+          for attempt in 1 2 3; do
+            git pull --rebase && git push && exit 0
+            echo "Push attempt $attempt failed; retrying..."
+            sleep $((attempt * 4))
+          done
+          exit 1

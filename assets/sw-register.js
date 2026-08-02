@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const VERSION = "10.4.3";
+  const VERSION = "10.4.5";
   const VERSION_KEY = "market-radar-version";
   if (!("serviceWorker" in navigator)) return;
 

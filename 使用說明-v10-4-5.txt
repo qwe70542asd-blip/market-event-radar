@@ -1,0 +1,36 @@
+全球市場即時雷達 v10.4.5｜多來源指數跑馬燈
+
+問題原因
+TradingView 顯示「This symbol is only available on TradingView」不是網站程式壞掉，
+而是該商品的資料授權不允許在外部 Widget 顯示。更換同類 TradingView 代碼，
+仍可能再次遇到黑色錯誤格。
+
+v10.4.5 改動
+- 完全移除首頁 TradingView ticker tape。
+- 改成本站自己的市場跑馬燈，不會再出現 TradingView 黑色錯誤格。
+- 某一個來源失敗時只隱藏或保留該項前次資料，不影響整條跑馬燈。
+- 滑鼠移到跑馬燈上會暫停。
+- 每個項目標示延遲／收盤資料，不假裝是交易所即時報價。
+
+收錄項目
+台股加權、櫃買、S&P 500、NASDAQ、道瓊、費城半導體、
+日經 225、KOSPI、VIX、美國 10 年債、美元／日圓、美元／台幣、
+WTI 原油、黃金、Bitcoin、Ethereum。
+
+來源順序
+- 台股加權：TWSE 官方 OpenAPI。
+- 櫃買：TPEx 官方 OpenAPI；失敗時改用 Yahoo 延遲行情。
+- 國際指數與匯率：Yahoo chart；失敗時部分項目改用 Stooq 日資料。
+- 美國 10 年債：FRED 官方日資料。
+- VIX：Yahoo／Stooq；都失敗時用 FRED 日資料。
+- Bitcoin／Ethereum：CoinGecko public API。
+- 全部來源都失敗時保留上一次成功資料，並標示前次成功資料。
+
+更新頻率
+GitHub Actions 每小時第 7 分與第 37 分執行。
+GitHub 排程可能延遲，因此顯示為延遲／最近成交／盤後資料。
+
+上傳後執行
+Actions → Update v10.4.5 multi-source market ticker → Run workflow
+
+第一次 Action 完成前，安裝包只先顯示 TWSE 官方台股加權初始資料。

@@ -1057,3 +1057,260 @@ select option:checked { color:#07111f !important; background:#79f0b7 !important;
   border-color:rgba(255,200,102,.2) !important;
   color:#ffd381 !important;
 }
+
+
+/* v10.4.4 compact source directory at page bottom */
+.source-directory-compact {
+  margin:18px 0 8px;
+  padding:0;
+  overflow:hidden;
+  border:1px solid rgba(158,190,216,.12);
+  border-radius:13px;
+  background:rgba(7,20,34,.72);
+}
+.source-directory-summary {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  min-height:48px;
+  padding:9px 13px;
+  cursor:pointer;
+  list-style:none;
+  user-select:none;
+}
+.source-directory-summary::-webkit-details-marker { display:none; }
+.source-directory-summary::after {
+  content:"＋";
+  flex:0 0 auto;
+  display:grid;
+  place-items:center;
+  width:22px;
+  height:22px;
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:7px;
+  color:#9db1c0;
+  font-size:14px;
+  line-height:1;
+}
+.source-directory-compact[open] .source-directory-summary::after { content:"−"; }
+.source-directory-summary > span:first-child {
+  display:grid;
+  gap:2px;
+  min-width:0;
+}
+.source-directory-summary b {
+  color:#eaf4f9;
+  font-size:13px;
+  line-height:1.2;
+}
+.source-directory-summary small {
+  overflow:hidden;
+  color:#8197a7;
+  font-size:9px;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.source-directory-count {
+  margin-left:auto;
+  color:#9fb1bd;
+  font-size:9px;
+  white-space:nowrap;
+}
+.source-directory-body {
+  padding:9px 12px 12px;
+  border-top:1px solid rgba(255,255,255,.045);
+}
+.source-directory-compact .source-group-block + .source-group-block {
+  margin-top:9px;
+  padding-top:8px;
+}
+.source-directory-compact .source-group-block h3 {
+  margin:0 0 5px;
+  color:#93a8b7;
+  font-size:9px;
+  font-weight:750;
+}
+.source-directory-compact .source-link-grid-expanded {
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:5px;
+}
+.source-directory-compact .source-link-grid a {
+  display:flex;
+  align-items:center;
+  min-width:0;
+  min-height:31px;
+  padding:5px 7px;
+  border-radius:8px;
+  background:rgba(255,255,255,.014);
+}
+.source-directory-compact .source-link-grid a:hover {
+  border-color:rgba(121,240,183,.18);
+  background:rgba(121,240,183,.04);
+}
+.source-directory-compact .source-link-grid b {
+  overflow:hidden;
+  width:100%;
+  color:#dce9f0;
+  font-size:10px;
+  line-height:1.15;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.source-directory-compact .source-link-grid small {
+  display:none;
+}
+.source-directory-compact .official-source-links a {
+  border-color:rgba(121,240,183,.075);
+  background:rgba(121,240,183,.018);
+}
+.source-directory-compact .official-source-links a b {
+  color:#9bdcc1;
+}
+@media(max-width:1100px) {
+  .source-directory-compact .source-link-grid-expanded {
+    grid-template-columns:repeat(4,minmax(0,1fr));
+  }
+}
+@media(max-width:700px) {
+  .source-directory-summary { padding:9px 10px; }
+  .source-directory-count { display:none; }
+  .source-directory-compact .source-link-grid-expanded {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+
+
+/* v10.4.5 multi-source market ticker */
+.market-ticker-shell {
+  margin:14px auto 8px;
+  width:min(1410px,calc(100% - 28px));
+  overflow:hidden;
+  border:1px solid rgba(127,166,196,.16);
+  border-radius:16px;
+  background:#071522;
+  box-shadow:0 10px 28px rgba(0,0,0,.14);
+}
+.market-ticker-head {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  min-height:28px;
+  padding:4px 12px;
+  border-bottom:1px solid rgba(255,255,255,.04);
+  color:#8299aa;
+  font-size:8px;
+}
+.market-ticker-head > span {
+  display:flex;
+  align-items:center;
+  gap:6px;
+  color:#b8c9d5;
+  font-weight:750;
+}
+.market-ticker-head i {
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#79f0b7;
+  box-shadow:0 0 0 4px rgba(121,240,183,.08);
+}
+#marketTickerStatus.warning { color:#f4c978; }
+.market-ticker {
+  overflow:hidden;
+  min-height:57px;
+}
+.market-ticker-track {
+  display:flex;
+  width:max-content;
+  animation:marketTickerScroll 62s linear infinite;
+  will-change:transform;
+}
+.market-ticker-shell:hover .market-ticker-track,
+.market-ticker-shell:focus-within .market-ticker-track {
+  animation-play-state:paused;
+}
+.market-ticker-set {
+  display:flex;
+  flex:0 0 auto;
+}
+.market-ticker-item {
+  display:grid;
+  grid-template-columns:auto minmax(105px,1fr) auto auto;
+  align-items:center;
+  gap:8px;
+  min-width:245px;
+  min-height:57px;
+  padding:7px 13px;
+  border-right:1px solid rgba(255,255,255,.055);
+  color:#e8f0f5;
+  text-decoration:none;
+}
+.market-ticker-item:hover { background:rgba(121,240,183,.035); }
+.market-ticker-region {
+  display:grid;
+  place-items:center;
+  min-width:25px;
+  height:21px;
+  padding:0 5px;
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:7px;
+  background:rgba(255,255,255,.025);
+  color:#9eb2c0;
+  font-size:7px;
+  font-weight:800;
+}
+.market-ticker-item > div { display:grid; gap:2px; min-width:0; }
+.market-ticker-item strong {
+  overflow:hidden;
+  font-size:11px;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.market-ticker-item small {
+  color:#748b9b;
+  font-size:7px;
+}
+.market-ticker-item > b {
+  color:#f0f6f9;
+  font-size:12px;
+  white-space:nowrap;
+}
+.market-ticker-item > em {
+  min-width:52px;
+  font-size:10px;
+  font-style:normal;
+  font-weight:850;
+  text-align:right;
+}
+.market-ticker-item.up > em { color:#ff7286; }
+.market-ticker-item.down > em { color:#62e3b3; }
+.market-ticker-item.flat > em { color:#9eb1bf; }
+.market-ticker-item.stale { opacity:.76; }
+.market-ticker-empty {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  min-height:57px;
+  color:#8398a7;
+  font-size:9px;
+}
+.market-ticker-empty strong { color:#c6d5de; }
+@keyframes marketTickerScroll {
+  from { transform:translateX(0); }
+  to { transform:translateX(-50%); }
+}
+@media(max-width:700px) {
+  .market-ticker-shell { width:calc(100% - 16px); margin-top:8px; border-radius:12px; }
+  .market-ticker-head { padding-inline:9px; }
+  .market-ticker-item { min-width:205px; grid-template-columns:auto minmax(82px,1fr) auto; gap:6px; padding:6px 9px; }
+  .market-ticker-item > em { grid-column:3; min-width:45px; }
+  .market-ticker-item > b { font-size:11px; }
+  .market-ticker-item strong { font-size:10px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .market-ticker-track { animation:none; }
+  .market-ticker { overflow-x:auto; }
+  .market-ticker-set[aria-hidden="true"] { display:none; }
+}
