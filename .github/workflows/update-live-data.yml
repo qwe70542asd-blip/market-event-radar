@@ -1,0 +1,209 @@
+name: Update v10.8.2 last-trading-day data
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/update-live-data.yml"
+      - "scripts/**"
+      - "requirements.txt"
+      - "data/manual_events.json"
+  schedule:
+    - cron: "*/5 * * * *"
+    - cron: "2,17,32,47 * * * *"
+    - cron: "25 10 * * 1-5"
+    - cron: "40 3 * * *"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Data group to update
+        required: true
+        default: all
+        type: choice
+        options: [all, market, news, daily]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: market-radar-single-live-data-writer
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      LIVE_BRANCH: live-data
+    steps:
+      - name: Checkout website source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Resolve update mode
+        id: mode
+        shell: bash
+        run: |
+          MODE="${{ inputs.mode }}"
+          if [ -z "$MODE" ]; then
+            if [ "${{ github.event_name }}" = "push" ]; then
+              MODE="market"
+            else
+              case "${{ github.event.schedule }}" in
+                "*/5 * * * *") MODE="market" ;;
+                "2,17,32,47 * * * *") MODE="news" ;;
+                *) MODE="daily" ;;
+              esac
+            fi
+          fi
+          echo "mode=$MODE" >> "$GITHUB_OUTPUT"
+          echo "Mode: $MODE"
+
+      - name: Restore previous successful live data
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/previous-live
+          mkdir -p /tmp/previous-live
+          if git ls-remote --exit-code --heads origin "$LIVE_BRANCH" >/dev/null 2>&1; then
+            git fetch --depth=1 origin "$LIVE_BRANCH"
+            git archive FETCH_HEAD | tar -x -C /tmp/previous-live
+            for file in \
+              announcements.json announcements-seed.js \
+              assets.json assets-seed.js \
+              events.json seed.js \
+              news.json news-seed.js news-link-cache.json \
+              market-snapshot.json market-snapshot-seed.js \
+              institutional-history.json institutional-history-seed.js; do
+              if [ -f "/tmp/previous-live/$file" ]; then
+                cp "/tmp/previous-live/$file" "data/$file"
+              fi
+            done
+            if [ -d /tmp/previous-live/asset-details ]; then
+              mkdir -p data/asset-details
+              rsync -a /tmp/previous-live/asset-details/ data/asset-details/
+            fi
+            echo "Previous live-data restored."
+          else
+            echo "live-data branch does not exist yet; using package seed data."
+          fi
+
+      - name: Update last-trading-day market data
+        if: steps.mode.outputs.mode == 'market' || steps.mode.outputs.mode == 'all'
+        run: python scripts/update_market_snapshot.py
+
+      - name: Update finance news
+        if: steps.mode.outputs.mode == 'news' || steps.mode.outputs.mode == 'all'
+        continue-on-error: true
+        run: python scripts/update_news.py
+
+      - name: Update announcements
+        if: steps.mode.outputs.mode == 'news' || steps.mode.outputs.mode == 'daily' || steps.mode.outputs.mode == 'all'
+        continue-on-error: true
+        run: python scripts/update_announcements.py
+
+      - name: Update asset master
+        if: steps.mode.outputs.mode == 'daily' || steps.mode.outputs.mode == 'all'
+        continue-on-error: true
+        run: python scripts/update_assets.py
+
+      - name: Update event calendar
+        if: steps.mode.outputs.mode == 'daily' || steps.mode.outputs.mode == 'all'
+        continue-on-error: true
+        run: python scripts/update_events.py
+
+      - name: Update institutional history
+        if: steps.mode.outputs.mode == 'daily' || steps.mode.outputs.mode == 'all'
+        continue-on-error: true
+        run: python scripts/update_institutional_history.py
+
+      - name: Validate generated data
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          required = [
+              "announcements.json", "assets.json", "events.json", "news.json",
+              "market-snapshot.json", "institutional-history.json",
+          ]
+          for name in required:
+              path = Path("data") / name
+              if not path.exists():
+                  raise SystemExit(f"Missing required file: {path}")
+              json.loads(path.read_text(encoding="utf-8"))
+              print("OK", path)
+
+          for path in Path("data/asset-details").glob("*.json") if Path("data/asset-details").exists() else []:
+              json.loads(path.read_text(encoding="utf-8"))
+              print("OK", path)
+          PY
+
+      - name: Prepare live-data payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/live-payload
+          mkdir -p /tmp/live-payload
+          for file in \
+            announcements.json announcements-seed.js \
+            assets.json assets-seed.js \
+            events.json seed.js \
+            news.json news-seed.js news-link-cache.json \
+            market-snapshot.json market-snapshot-seed.js \
+            institutional-history.json institutional-history-seed.js; do
+            if [ -f "data/$file" ]; then
+              cp "data/$file" "/tmp/live-payload/$file"
+            fi
+          done
+          if [ -d data/asset-details ]; then
+            mkdir -p /tmp/live-payload/asset-details
+            rsync -a data/asset-details/ /tmp/live-payload/asset-details/
+          fi
+          printf '%s\n' \
+            '# Market Event Radar live data' \
+            '' \
+            'This branch is written only by GitHub Actions.' \
+            'Website source remains on main to prevent merge conflicts.' \
+            > /tmp/live-payload/README.md
+
+      - name: Publish to conflict-free live-data branch
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/live-data-repo
+          mkdir -p /tmp/live-data-repo
+          cd /tmp/live-data-repo
+          git init
+          git config user.name "market-event-radar-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+
+          if git ls-remote --exit-code --heads origin "$LIVE_BRANCH" >/dev/null 2>&1; then
+            git fetch --depth=1 origin "$LIVE_BRANCH"
+            git checkout -B "$LIVE_BRANCH" FETCH_HEAD
+          else
+            git checkout --orphan "$LIVE_BRANCH"
+          fi
+
+          rsync -a --delete --exclude='.git/' /tmp/live-payload/ ./
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No live data changes."
+            exit 0
+          fi
+          git commit -m "chore: refresh last-trading-day data v10.8.2"
+          git push origin "HEAD:$LIVE_BRANCH"

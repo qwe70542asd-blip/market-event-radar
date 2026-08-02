@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="#07111f" name="theme-color"/>
+<title>我的投資組合｜全球市場即時雷達</title>
+<link href="manifest.webmanifest" rel="manifest"/>
+<link href="assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+<link href="assets/styles.css?v=10.8.2" rel="stylesheet"/>
+</head>
+<body>
+<div aria-hidden="true" class="noise"></div>
+<header class="topbar">
+<a class="brand" href="index.html">
+<span class="brand-mark"><svg viewbox="0 0 48 48"><path d="M7 34 16 24l7 6 10-16 8 6"></path><path d="M7 40h34"></path></svg></span>
+<span><strong>我的投資組合 <em class="version-badge">v10.8.2</em></strong><small>PERSONALIZED MARKET FEED</small></span>
+</a>
+<div class="top-actions">
+<a class="mini-btn nav-link" href="index.html">事件首頁</a>
+<a class="mini-btn nav-link" href="news.html">全部新聞</a>
+</div>
+</header>
+<main class="shell portfolio-page-shell">
+<section class="portfolio-page-hero">
+<div>
+<p class="eyebrow">MY ASSETS</p>
+<h1>讓首頁以你的持股為主</h1>
+<p>分為股票、基金與虛擬貨幣。股票與幣種會由主檔解析成正式名稱與代號，基金可使用代碼或完整名稱。</p>
+</div>
+<div class="portfolio-page-stats" id="portfolioPageStats"></div>
+</section>
+<section class="portfolio-page-layout">
+<aside class="portfolio-manager-card">
+<div class="section-heading section-heading-tight">
+<div><p class="eyebrow">ADD ASSET</p><h2>加入標的</h2></div>
+</div>
+<form class="portfolio-add-form portfolio-add-form-page asset-resolver-form" id="portfolioPageAddForm">
+<select name="asset_class"><option value="stock">股票／ETF</option><option value="fund">基金</option><option value="crypto">虛擬貨幣</option></select>
+<label class="market-field"><select name="market"><option value="TW">台灣</option><option value="US">美國</option><option value="GLOBAL">全球／基金</option></select></label>
+<div class="asset-query-field"><input autocomplete="off" name="query" placeholder="搜尋正式代碼或名稱"/><div class="asset-search-results" hidden=""></div></div>
+<div class="manual-fund-fields" hidden=""><input name="manual_code" placeholder="基金代碼／ISIN（可選）"/><input name="manual_name" placeholder="基金完整名稱"/></div>
+<button type="submit">加入投資組合</button><span class="portfolio-form-status"></span>
+</form>
+<div class="portfolio-entry-list" id="portfolioPageEntries"></div>
+</aside>
+<section class="portfolio-feed-card">
+<div class="section-heading section-heading-tight">
+<div><p class="eyebrow">PERSONAL NEWS</p><h2>與你的投資相關</h2></div>
+<span>依名稱、代碼、區域與基金主題排序</span>
+</div>
+<div class="portfolio-page-news-grid" id="portfolioPageNews"></div>
+</section>
+</section>
+</main>
+<nav class="mobile-bottom-nav">
+<a href="index.html"><span>⌂</span><b>首頁</b></a>
+<a href="index.html#calendarSection"><span>▦</span><b>日曆</b></a>
+<a href="news.html"><span>▤</span><b>快訊</b></a>
+<a class="active" href="portfolio.html"><span>★</span><b>投資組合</b></a>
+</nav>
+<script src="data/seed.js"></script>
+<script src="data/assets-seed.js"></script>
+<script src="data/news-seed.js"></script>
+<script defer="" src="assets/data-source.js?v=10.8.2"></script><script defer="" src="assets/news-core.js?v=10.8.2"></script>
+<script defer="" src="assets/asset-master.js?v=10.8.2"></script>
+<script defer="" src="assets/portfolio.js?v=10.8.2"></script>
+<script defer="" src="assets/sw-register.js?v=10.8.2"></script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+全球市場即時雷達 v8：Google 登入與跨裝置同步設定
+
+一、目前已完成
+- 訪客模式：不登入即可使用
+- 本機儲存：自選股票、收藏事件、偏好
+- Google 登入介面
+- Firestore 跨裝置同步程式
+- 電腦與手機瀏覽器共用同一 Google 帳號即可同步
+- 資料離線快取
+- 自選清單、收藏事件、通知權限介面
+
+二、你還要在 Firebase Console 做一次設定
+1. 建立 Firebase 專案
+2. 新增 Web App
+3. 將 Web App 的 firebaseConfig 貼到 assets/firebase-config.js
+4. Authentication → Sign-in method → 啟用 Google
+5. Authentication → Settings → Authorized domains
+   加入：qwe70542asd-blip.github.io
+6. 建立 Cloud Firestore
+7. 將 firestore.rules 的內容發布為 Firestore Security Rules
+
+三、Google Play
+這一版仍是 PWA / 網頁基礎。日後可用 Capacitor 或 Trusted Web Activity 包裝成 Android App。
+若要 App 關閉後仍收到推播，還需加入 Firebase Cloud Messaging 與通知排程後端。
