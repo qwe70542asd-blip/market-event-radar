@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Market Event Radar v10.3 multi-source finance-news updater.
+"""Market Event Radar v10.4.3 multi-source finance-news updater.
 
 v10.1 priorities:
 - Traditional-Chinese financial coverage first.
@@ -12,6 +12,7 @@ Only headline metadata, short summaries and original links are stored.
 """
 from __future__ import annotations
 
+import base64
 import hashlib
 import html
 import json
@@ -23,7 +24,7 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
 from email.utils import parsedate_to_datetime
 from pathlib import Path
-from urllib.parse import quote_plus
+from urllib.parse import quote_plus, unquote, urljoin, urlparse
 from zoneinfo import ZoneInfo
 
 import requests
@@ -34,11 +35,12 @@ DATA = ROOT / "data"
 EVENTS_PATH = DATA / "events.json"
 NEWS_PATH = DATA / "news.json"
 SEED_PATH = DATA / "news-seed.js"
+LINK_CACHE_PATH = DATA / "news-link-cache.json"
 TAIPEI = ZoneInfo("Asia/Taipei")
 NOW = datetime.now(TAIPEI)
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/10.4.1; +https://github.com/qwe70542asd-blip/market-event-radar)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/10.4.3; +https://github.com/qwe70542asd-blip/market-event-radar)",
     "Accept-Language": "zh-TW,zh;q=0.95,en-US;q=0.75,en;q=0.65",
 }
 
@@ -67,6 +69,38 @@ DIRECT_RSS = [
         "url": "https://www.twse.com.tw/rwd/zh/news/feed?type=rss",
         "region": "TW", "topic": "official", "language": "zh-Hant",
         "source_group": "official-tw", "quality_score": 100,
+    },
+    {
+        "name": "Yahoo 股市最新新聞",
+        "display_name": "Yahoo 股市",
+        "url": "https://tw.stock.yahoo.com/rss?category=news",
+        "source_home": "https://tw.stock.yahoo.com/news/",
+        "region": "TW", "topic": "market", "language": "zh-Hant",
+        "source_group": "tw-media", "quality_score": 84,
+    },
+    {
+        "name": "Yahoo 股市台股動態",
+        "display_name": "Yahoo 股市",
+        "url": "https://tw.stock.yahoo.com/rss?category=tw-market",
+        "source_home": "https://tw.stock.yahoo.com/tw-market/",
+        "region": "TW", "topic": "market", "language": "zh-Hant",
+        "source_group": "tw-media", "quality_score": 84,
+    },
+    {
+        "name": "Yahoo 股市國際財經",
+        "display_name": "Yahoo 股市",
+        "url": "https://tw.stock.yahoo.com/rss?category=intl-markets",
+        "source_home": "https://tw.stock.yahoo.com/intl-markets/",
+        "region": "GLOBAL", "topic": "market", "language": "zh-Hant",
+        "source_group": "tw-media", "quality_score": 83,
+    },
+    {
+        "name": "Yahoo 股市基金動態",
+        "display_name": "Yahoo 股市",
+        "url": "https://tw.stock.yahoo.com/rss?category=funds-news",
+        "source_home": "https://tw.stock.yahoo.com/funds-news/",
+        "region": "TW", "topic": "fund", "language": "zh-Hant",
+        "source_group": "tw-media", "quality_score": 82,
     },
 ]
 
@@ -189,9 +223,293 @@ def safe_search_url(title, source=""):
 
 def safe_article_url(link, title, source=""):
     value = clean(link)
-    if value and not is_google_news_url(value):
+    if value:
         return value
     return safe_search_url(title, source)
+
+
+
+GOOGLE_NEWS_HOSTS = {"news.google.com", "google.com", "www.google.com"}
+DIRECT_LINK_CACHE_DAYS = 21
+MAX_NEW_LINK_RESOLUTIONS = 90
+
+SOURCE_LINK_RULES = [
+    (("Yahoo 股市", "Yahoo奇摩股市"), ("tw.stock.yahoo.com",), "https://tw.stock.yahoo.com/news/"),
+    (("中央社",), ("cna.com.tw",), "https://www.cna.com.tw/list/aie.aspx"),
+    (("經濟日報",), ("money.udn.com",), "https://money.udn.com/"),
+    (("鉅亨", "Anue"), ("cnyes.com",), "https://news.cnyes.com/"),
+    (("MoneyDJ",), ("moneydj.com",), "https://www.moneydj.com/"),
+    (("工商時報",), ("ctee.com.tw",), "https://ctee.com.tw/"),
+    (("科技新報", "財經新報"), ("technews.tw", "finance.technews.tw"), "https://finance.technews.tw/"),
+    (("自由財經",), ("ec.ltn.com.tw",), "https://ec.ltn.com.tw/"),
+    (("今周刊",), ("businesstoday.com.tw",), "https://www.businesstoday.com.tw/"),
+    (("商業周刊",), ("businessweekly.com.tw",), "https://www.businessweekly.com.tw/"),
+    (("財訊",), ("wealth.com.tw",), "https://www.wealth.com.tw/"),
+    (("ETtoday",), ("ettoday.net",), "https://finance.ettoday.net/"),
+    (("數位時代",), ("bnext.com.tw",), "https://www.bnext.com.tw/"),
+    (("iThome",), ("ithome.com.tw",), "https://www.ithome.com.tw/"),
+    (("INSIDE",), ("inside.com.tw",), "https://www.inside.com.tw/"),
+    (("風傳媒",), ("storm.mg",), "https://www.storm.mg/category/118"),
+    (("信傳媒",), ("cmmedia.com.tw",), "https://www.cmmedia.com.tw/"),
+    (("聯合新聞網", "udn"), ("udn.com",), "https://udn.com/news/cate/2/6644"),
+    (("華視",), ("news.cts.com.tw",), "https://news.cts.com.tw/finance/"),
+    (("AASTOCKS",), ("aastocks.com",), "https://www.aastocks.com/tc/"),
+    (("經濟通", "ET Net"), ("etnet.com.hk",), "https://www.etnet.com.hk/"),
+    (("香港經濟日報",), ("hket.com",), "https://inews.hket.com/"),
+    (("信報",), ("hkej.com",), "https://www.hkej.com/"),
+    (("明報",), ("mingpao.com",), "https://finance.mingpao.com/"),
+    (("香港01",), ("hk01.com",), "https://www.hk01.com/channel/財經快訊"),
+    (("Reuters", "路透"), ("reuters.com",), "https://www.reuters.com/markets/"),
+    (("CNBC",), ("cnbc.com",), "https://www.cnbc.com/markets/"),
+    (("Nikkei Asia",), ("asia.nikkei.com",), "https://asia.nikkei.com/"),
+    (("White House",), ("whitehouse.gov",), "https://www.whitehouse.gov/news/"),
+    (("CoinDesk",), ("coindesk.com",), "https://www.coindesk.com/"),
+    (("Cointelegraph",), ("cointelegraph.com",), "https://cointelegraph.com/"),
+    (("BlockTempo", "動區動趨"), ("blocktempo.com",), "https://www.blocktempo.com/"),
+    (("鏈新聞", "ABMedia"), ("abmedia.io",), "https://abmedia.io/"),
+    (("臺灣證券交易所", "證交所"), ("twse.com.tw",), "https://www.twse.com.tw/zh/about/news/news/list.html"),
+    (("櫃買中心", "TPEx"), ("tpex.org.tw",), "https://www.tpex.org.tw/"),
+    (("中央銀行",), ("cbc.gov.tw",), "https://www.cbc.gov.tw/"),
+    (("金管會",), ("fsc.gov.tw",), "https://www.fsc.gov.tw/"),
+    (("主計總處",), ("dgbas.gov.tw",), "https://www.dgbas.gov.tw/"),
+    (("財政部",), ("mof.gov.tw",), "https://www.mof.gov.tw/"),
+    (("經濟部",), ("moea.gov.tw",), "https://www.moea.gov.tw/"),
+]
+
+def source_link_rule(source="", source_home=""):
+    text = clean(source).lower()
+    for aliases, domains, home in SOURCE_LINK_RULES:
+        if any(alias.lower() in text for alias in aliases):
+            return set(domains), home
+    host = urlparse(clean(source_home)).hostname or ""
+    return ({host.lower()} if host else set()), clean(source_home)
+
+def external_http_url(value):
+    try:
+        parsed = urlparse(clean(value))
+        return parsed.scheme in {"http", "https"} and bool(parsed.hostname)
+    except Exception:
+        return False
+
+def google_search_url(value):
+    try:
+        parsed = urlparse(clean(value))
+        return parsed.hostname in {"google.com", "www.google.com"} and parsed.path.startswith("/search")
+    except Exception:
+        return False
+
+def hostname_matches(host, expected_domains):
+    host = (host or "").lower().lstrip("www.")
+    return any(host == domain.lstrip("www.") or host.endswith("." + domain.lstrip("www.")) for domain in expected_domains)
+
+def valid_direct_candidate(value, expected_domains=None):
+    value = clean(value)
+    if not external_http_url(value):
+        return False
+    parsed = urlparse(value)
+    host = (parsed.hostname or "").lower()
+    if host in GOOGLE_NEWS_HOSTS or host.endswith(".google.com"):
+        return False
+    if expected_domains and not hostname_matches(host, expected_domains):
+        return False
+    if parsed.path in {"", "/"}:
+        return False
+    lowered = value.lower()
+    if any(lowered.endswith(ext) for ext in (".jpg", ".jpeg", ".png", ".gif", ".svg", ".webp", ".mp4", ".pdf")):
+        return False
+    return True
+
+def decode_old_google_news_token(value):
+    """Decode legacy Google News RSS tokens which still embed the publisher URL."""
+    try:
+        token = urlparse(value).path.rstrip("/").split("/")[-1]
+        decoded = base64.urlsafe_b64decode(token + "=" * (-len(token) % 4))
+        prefix = bytes((0x08, 0x13, 0x22))
+        suffix = bytes((0xD2, 0x01, 0x00))
+        if decoded.startswith(prefix):
+            decoded = decoded[len(prefix):]
+        if decoded.endswith(suffix):
+            decoded = decoded[:-len(suffix)]
+        data = bytearray(decoded)
+        if not data:
+            return ""
+        if data[0] >= 0x80 and len(data) > 2:
+            length, start = data[1], 2
+        else:
+            length, start = data[0], 1
+        candidate = bytes(data[start:start + length]).decode("utf-8", errors="ignore")
+        return candidate if external_http_url(candidate) else ""
+    except Exception:
+        return ""
+
+def clean_embedded_url(value):
+    value = html.unescape(clean(value))
+    value = value.replace("\\u003d", "=").replace("\\u0026", "&").replace("\\/", "/")
+    value = unquote(value)
+    value = value.rstrip("\\,.;)'\"")
+    return value
+
+def candidate_score(value, expected_domains):
+    parsed = urlparse(value)
+    score = 0
+    if expected_domains and hostname_matches(parsed.hostname, expected_domains):
+        score += 100
+    if len(parsed.path) > 18:
+        score += 20
+    if re.search(r"/20\d{2}/\d{1,2}/\d{1,2}/|/news/|/article/|/story/|/posts?/", parsed.path, re.I):
+        score += 16
+    if parsed.query:
+        score += 2
+    return score
+
+def extract_publisher_candidates(response, expected_domains):
+    candidates = []
+    final_url = clean(getattr(response, "url", ""))
+    if valid_direct_candidate(final_url, expected_domains):
+        candidates.append(final_url)
+
+    text = getattr(response, "text", "") or ""
+    if not text:
+        return candidates
+
+    soup = BeautifulSoup(text, "html.parser")
+    selectors = [
+        ("link", {"rel": "canonical"}, "href"),
+        ("meta", {"property": "og:url"}, "content"),
+        ("meta", {"name": "twitter:url"}, "content"),
+        ("meta", {"itemprop": "url"}, "content"),
+    ]
+    for tag, attrs, field in selectors:
+        node = soup.find(tag, attrs=attrs)
+        if node:
+            candidate = clean_embedded_url(node.get(field))
+            if valid_direct_candidate(candidate, expected_domains):
+                candidates.append(candidate)
+
+    for node in soup.select("[data-n-au], a[href]"):
+        raw = node.get("data-n-au") or node.get("href")
+        candidate = clean_embedded_url(urljoin(final_url or "https://news.google.com/", raw or ""))
+        if valid_direct_candidate(candidate, expected_domains):
+            candidates.append(candidate)
+
+    normalized = text.replace("\\u003d", "=").replace("\\u0026", "&").replace("\\/", "/")
+    for raw in re.findall(r"https?://[^\"'<>\\s]+", normalized):
+        candidate = clean_embedded_url(raw)
+        if valid_direct_candidate(candidate, expected_domains):
+            candidates.append(candidate)
+
+    unique = list(dict.fromkeys(candidates))
+    unique.sort(key=lambda value: candidate_score(value, expected_domains), reverse=True)
+    return unique
+
+def resolve_google_news_url(session, value, source="", source_home=""):
+    expected_domains, default_home = source_link_rule(source, source_home)
+    decoded = decode_old_google_news_token(value)
+    if valid_direct_candidate(decoded, expected_domains):
+        return decoded, "decoded-token"
+
+    try:
+        response = session.get(
+            value,
+            headers={**HEADERS, "Accept": "text/html,application/xhtml+xml"},
+            timeout=9,
+            allow_redirects=True,
+        )
+        response.raise_for_status()
+        candidates = extract_publisher_candidates(response, expected_domains)
+        if candidates:
+            return candidates[0], "resolved-page"
+    except Exception:
+        pass
+    return "", ""
+
+def source_search_url(title, source="", source_home=""):
+    expected_domains, default_home = source_link_rule(source, source_home)
+    domain = sorted(expected_domains)[0] if expected_domains else ""
+    query_parts = [f'"{clean(title)}"']
+    if domain:
+        query_parts.append(f"site:{domain}")
+    elif source:
+        query_parts.append(clean(source))
+    return "https://www.google.com/search?q=" + quote_plus(" ".join(query_parts))
+
+def cache_fresh(entry):
+    value = clean((entry or {}).get("checked_at"))
+    if not value:
+        return False
+    try:
+        checked = datetime.fromisoformat(value)
+        if checked.tzinfo is None:
+            checked = checked.replace(tzinfo=TAIPEI)
+        return checked >= NOW - timedelta(days=DIRECT_LINK_CACHE_DAYS)
+    except Exception:
+        return False
+
+def attach_article_links(session, items, cache):
+    attempts = 0
+    resolved = 0
+    direct = 0
+    fallback = 0
+    updated_cache = dict(cache or {})
+
+    for item in items:
+        source = clean(item.get("source"))
+        source_home = clean(item.get("source_home"))
+        _, registry_home = source_link_rule(source, source_home)
+        source_home = source_home or registry_home
+        item["source_home"] = source_home
+
+        original = clean(item.get("original_link") or item.get("link"))
+        existing_direct = clean(item.get("direct_link"))
+        if valid_direct_candidate(existing_direct):
+            chosen, link_type = existing_direct, item.get("link_type") or "direct"
+        elif valid_direct_candidate(original):
+            chosen, link_type = original, "direct-feed"
+        else:
+            cache_key = hashlib.sha1((original or canonical_title(item.get("title"))).encode("utf-8")).hexdigest()
+            cached = updated_cache.get(cache_key) or {}
+            cached_url = clean(cached.get("direct_link"))
+            if cache_fresh(cached) and valid_direct_candidate(cached_url):
+                chosen, link_type = cached_url, cached.get("method") or "cached-direct"
+            else:
+                chosen, link_type = "", ""
+                if original and is_google_news_url(original) and attempts < MAX_NEW_LINK_RESOLUTIONS:
+                    attempts += 1
+                    chosen, link_type = resolve_google_news_url(session, original, source, source_home)
+                updated_cache[cache_key] = {
+                    "title": clean(item.get("title")),
+                    "source": source,
+                    "original_link": original,
+                    "direct_link": chosen,
+                    "method": link_type or "unresolved",
+                    "checked_at": iso(NOW),
+                }
+
+        fallback_url = source_search_url(item.get("title"), source, source_home)
+        if chosen:
+            item["direct_link"] = chosen
+            item["link"] = chosen
+            item["link_type"] = link_type
+            item["link_status"] = "direct"
+            resolved += int(link_type not in {"direct", "direct-feed"})
+            direct += 1
+        else:
+            item["direct_link"] = ""
+            item["link"] = fallback_url
+            item["link_type"] = "search-fallback"
+            item["link_status"] = "fallback"
+            fallback += 1
+        item["fallback_link"] = fallback_url
+        item["link_checked_at"] = iso(NOW)
+
+    return {
+        "items": items,
+        "cache": updated_cache,
+        "attempts": attempts,
+        "resolved": resolved,
+        "direct": direct,
+        "fallback": fallback,
+    }
 
 
 KNOWN_SOURCE_SUFFIXES = [
@@ -482,14 +800,24 @@ def parse_feed(content, source, origin):
         pub = text_from(node, ["pubDate", "published", "updated", "{http://www.w3.org/2005/Atom}published", "{http://www.w3.org/2005/Atom}updated"])
         if title and link:
             lowered = title.lower()
-            feed_publisher = text_from(node, ["source", "{http://www.w3.org/2005/Atom}source"])
-            display_source = feed_publisher if origin in {"publisher-search", "event-search"} and feed_publisher else source["name"]
+            feed_source_node = node.find("source") or node.find("{http://www.w3.org/2005/Atom}source")
+            feed_publisher = clean(feed_source_node.text) if feed_source_node is not None and feed_source_node.text else ""
+            feed_source_home = clean(feed_source_node.attrib.get("url")) if feed_source_node is not None else ""
+            display_source = (
+                feed_publisher if origin in {"publisher-search", "event-search"} and feed_publisher
+                else source.get("display_name", source["name"])
+            )
             industries = classify_industries(title, summary, source.get("industry_hint"))
+            direct_link = link if not is_google_news_url(link) else ""
             rows.append({
                 "id": stable_id(display_source, link),
                 "title": title,
-                "link": safe_article_url(link, title, display_source),
+                "link": link,
                 "original_link": link,
+                "direct_link": direct_link,
+                "link_status": "direct" if direct_link else "pending",
+                "link_type": "direct-feed" if direct_link else "google-news-pending",
+                "source_home": feed_source_home or source.get("source_home", ""),
                 "source": display_source,
                 "query_source": source["name"],
                 "summary": summary[:320],
@@ -515,7 +843,12 @@ def enrich_previous(item):
     meta = SOURCE_META.get(row.get("source"), {})
     original_link = row.get("original_link") or row.get("link") or ""
     row["original_link"] = original_link
-    row["link"] = safe_article_url(row.get("safe_link") or row.get("link"), row.get("title"), row.get("source"))
+    if row.get("direct_link"):
+        row["link"] = row["direct_link"]
+    elif original_link:
+        row["link"] = original_link
+    else:
+        row["link"] = safe_search_url(row.get("title"), row.get("source"))
     row.setdefault("language", meta.get("language", "zh-Hant"))
     row.setdefault("source_group", meta.get("source_group", "tw-media"))
     row.setdefault("quality_score", meta.get("quality_score", 65))
@@ -592,6 +925,7 @@ def event_queries(events):
 
 def main():
     previous = read_json(NEWS_PATH, {"items": [], "sources": []})
+    link_cache = read_json(LINK_CACHE_PATH, {})
     previous_map = previous_by_source(previous)
     session = requests.Session()
     items = []
@@ -700,6 +1034,13 @@ def main():
     if not final:
         final = [enrich_previous(x) for x in previous.get("items", []) if still_recent(x, days=20)]
 
+    link_result = attach_article_links(session, final, link_cache)
+    final = link_result["items"]
+    LINK_CACHE_PATH.write_text(
+        json.dumps(link_result["cache"], ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
     source_ok = sum(1 for x in statuses if x["status"] == "ok")
     chinese_items = sum(1 for x in final if x.get("language") == "zh-Hant")
     industry_counts = {}
@@ -715,10 +1056,14 @@ def main():
             "healthy_sources": source_ok,
             "source_count": len(statuses),
             "rotation_bucket": bucket,
-            "version": "v10.4.1",
+            "version": "v10.4.3",
             "industry_counts": industry_counts,
             "duplicate_titles_removed": duplicate_title_count,
-            "note": "All-industry coverage prioritized. Google News redirect links are replaced with stable title searches to prevent 404 pages.",
+            "direct_link_count": link_result["direct"],
+            "resolved_google_link_count": link_result["resolved"],
+            "fallback_link_count": link_result["fallback"],
+            "link_resolution_attempts": link_result["attempts"],
+            "note": "Publisher article URLs are preferred. Search links are used only when an original article URL cannot be resolved.",
         },
         "source": {
             "name": "多來源財經新聞",
@@ -738,7 +1083,9 @@ def main():
         f"Wrote {len(payload['items'])} items "
         f"({chinese_items} Traditional Chinese); "
         f"healthy sources {source_ok}/{len(statuses)}; "
-        f"removed duplicate titles {duplicate_title_count}; rotation bucket {bucket}"
+        f"removed duplicate titles {duplicate_title_count}; "
+        f"direct links {link_result['direct']}, fallbacks {link_result['fallback']}; "
+        f"rotation bucket {bucket}"
     )
 
 if __name__ == "__main__":

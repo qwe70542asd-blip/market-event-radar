@@ -160,7 +160,7 @@
     if (!state.entries.length) return;
     const relatedNews = newsForPortfolio(4);
     newsGrid.innerHTML = relatedNews.length ? relatedNews.map(({item,reason})=>`
-      <a class="portfolio-news-card" href="${window.MarketNews?.safeLink?.(item) || item.link}" target="_blank" rel="noreferrer noopener">
+      <a class="portfolio-news-card" href="${window.MarketNewsLink?.safeLink?.(item) || window.MarketNews?.safeLink?.(item) || item.link}" target="_blank" rel="noreferrer noopener">
         <div><span>${escapeHtml(item.source||"財經新聞")}</span><b>關聯：${escapeHtml(reason.name)} ${escapeHtml(reason.symbol||"")}</b></div>
         <h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.summary||"點擊前往原始新聞")}</p>
       </a>`).join("") : '<div class="portfolio-empty-mini">尚未找到直接相關新聞，下一次資料更新後會重新比對。</div>';
@@ -188,7 +188,7 @@
       <article><span>虛擬貨幣</span><strong>${counts.crypto}</strong></article>`;
     const feed=$("#portfolioPageNews"), related=newsForPortfolio(16);
     feed.innerHTML = related.length ? related.map(({item,reason})=>`
-      <a class="portfolio-page-news" href="${window.MarketNews?.safeLink?.(item) || item.link}" target="_blank" rel="noreferrer noopener">
+      <a class="portfolio-page-news" href="${window.MarketNewsLink?.safeLink?.(item) || window.MarketNews?.safeLink?.(item) || item.link}" target="_blank" rel="noreferrer noopener">
         <div><span>${escapeHtml(item.source||"財經新聞")}</span><b>${escapeHtml(reason.name)} ${escapeHtml(reason.symbol||"")}</b></div>
         <h2>${escapeHtml(item.title)}</h2><p>${escapeHtml(item.summary||"點擊前往原始來源")}</p>
       </a>`).join("") : '<div class="portfolio-empty-mini">加入標的後，這裡會優先顯示相關新聞。</div>';

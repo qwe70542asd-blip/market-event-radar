@@ -33,7 +33,7 @@
     const item = items[current];
     breakingSource.textContent = item.source || "財經新聞";
     breakingTitle.textContent = item.title || "查看最新財經新聞";
-    breakingLink.href = window.MarketNews?.safeLink?.(item) || item.link || "news.html";
+    breakingLink.href = window.MarketNewsLink?.safeLink?.(item) || window.MarketNews?.safeLink?.(item) || item.link || "news.html";
     breakingLink.target = /^https?:/.test(item.link || "") ? "_blank" : "_self";
     breakingLink.rel = "noreferrer noopener";
     breakingCounter.textContent = `${current + 1}/${items.length}`;
@@ -71,8 +71,8 @@
     if (!rail) return;
     const visible = pickDiverseHeadlines(items, 3);
     rail.innerHTML = visible.map(item => `
-      <a class="headline-card" href="${window.MarketNews?.safeLink?.(item) || item.link}" target="_blank" rel="noreferrer noopener">
-        <div><span>${escapeHtml(item.source || "財經新聞")}${item.duplicate_count ? ` · 另 ${item.duplicate_count} 來源` : ""}</span><small>${escapeHtml(item.industry_label || item.region || "市場")}</small></div>
+      <a class="headline-card" href="${window.MarketNewsLink?.safeLink?.(item) || window.MarketNews?.safeLink?.(item) || item.link}" target="_blank" rel="noreferrer noopener">
+        <div><span>${escapeHtml(item.source || "財經新聞")}${item.duplicate_count ? ` · 另 ${item.duplicate_count} 來源` : ""}</span><small>${escapeHtml(item.industry_label || item.region || "市場")} · ${window.MarketNewsLink?.linkMode?.(item) === "direct" ? "原文" : "搜尋"}</small></div>
         <h3>${escapeHtml(item.title)}</h3>
         <p>${escapeHtml(item.summary || item.event_title || "點擊前往原始來源")}</p>
       </a>`).join("");

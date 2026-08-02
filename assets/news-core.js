@@ -89,17 +89,46 @@
     return `https://www.google.com/search?q=${encodeURIComponent(query)}`;
   }
 
+  function isGoogleSearch(value) {
+    try {
+      const url = new URL(String(value || ""), location.href);
+      return /(^|\.)google\.com$/i.test(url.hostname) && url.pathname.startsWith("/search");
+    } catch {
+      return false;
+    }
+  }
+
   function safeLink(item) {
-    const preferred = item?.safe_link || item?.direct_link || item?.publisher_link || item?.link;
-    if (isHttpUrl(preferred) && !isGoogleNewsRedirect(preferred)) return preferred;
+    const direct = item?.direct_link || item?.publisher_link || item?.safe_link;
+    if (isHttpUrl(direct) && !isGoogleNewsRedirect(direct) && !isGoogleSearch(direct)) return direct;
+    const current = item?.link;
+    if (isHttpUrl(current) && !isGoogleNewsRedirect(current)) return current;
+    if (item?.fallback_link && isHttpUrl(item.fallback_link)) return item.fallback_link;
     if (item?.title) return searchUrl(item);
     return "news.html";
+  }
+
+  function sourceHome(item) {
+    const value = item?.source_home;
+    return isHttpUrl(value) && !isGoogleNewsRedirect(value) ? value : "";
+  }
+
+  function linkMode(item) {
+    const value = safeLink(item);
+    if (item?.link_status === "direct" || (item?.direct_link && !isGoogleSearch(item.direct_link))) return "direct";
+    if (isGoogleSearch(value) || item?.link_status === "fallback") return "fallback";
+    return "direct";
+  }
+
+  function linkLabel(item) {
+    return linkMode(item) === "direct" ? "閱讀原文" : "搜尋原文";
   }
 
   function normalizeItem(raw) {
     const item = { ...raw };
     item.original_link = item.original_link || item.link || "";
     item.link = safeLink(item);
+    item.link_status = linkMode(item);
     return item;
   }
 
@@ -262,6 +291,7 @@
     return state.payload;
   }
 
+  window.MarketNewsLink = { safeLink, sourceHome, linkMode, linkLabel };
   window.MarketNewsLoader = { load, state, safeLink, searchUrl, isGoogleNewsRedirect };
   load();
 })();

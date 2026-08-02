@@ -39,13 +39,25 @@
         && (language === "all" || (item.language || "zh-Hant") === language)
         && (group === "all" || item.source_group === group);
     });
-    $("#newsPageGrid").innerHTML = items.map(item => `
-      <a class="news-page-card" href="${window.MarketNews?.safeLink?.(item) || item.link}" target="_blank" rel="noreferrer noopener">
-        <div class="news-card-top"><span>${escapeHtml(item.source || "財經新聞")}</span><small>${fmt(item.published_at)}</small></div>
-        <h2>${escapeHtml(item.title)}</h2>
-        <p>${escapeHtml(item.summary || item.event_title || "點擊前往原始來源")}</p>
-        <div class="news-card-tags"><span class="asset-class-badge ${escapeHtml(item.asset_class || "stock")}">${item.asset_class==="crypto"?"虛擬貨幣":item.asset_class==="fund"?"基金":"股票"}</span><span>${escapeHtml(item.region || "GLOBAL")}</span><span>${escapeHtml(item.industry_label || "其他產業")}</span><span>${escapeHtml(item.topic || "market")}</span><span>${escapeHtml(item.source_group === "official-tw" ? "官方" : item.source_group === "hk-media" ? "香港中文" : item.language === "zh-Hant" ? "中文" : "英文")}</span>${item.duplicate_count ? `<span>另有 ${item.duplicate_count} 個來源</span>` : ""}${item.origin === "fallback" ? "<span>備援入口</span>" : ""}</div>
-      </a>`).join("");
+    $("#newsPageGrid").innerHTML = items.map(item => {
+      const articleLink = window.MarketNewsLink?.safeLink?.(item) || window.MarketNews?.safeLink?.(item) || item.link;
+      const sourceHome = window.MarketNewsLink?.sourceHome?.(item) || "";
+      const mode = window.MarketNewsLink?.linkMode?.(item) || item.link_status || "fallback";
+      const label = window.MarketNewsLink?.linkLabel?.(item) || (mode === "direct" ? "閱讀原文" : "搜尋原文");
+      return `
+      <article class="news-page-card">
+        <a class="news-card-main" href="${escapeHtml(articleLink)}" target="_blank" rel="noreferrer noopener">
+          <div class="news-card-top"><span>${escapeHtml(item.source || "財經新聞")}</span><small>${fmt(item.published_at)}</small></div>
+          <h2>${escapeHtml(item.title)}</h2>
+          <p>${escapeHtml(item.summary || item.event_title || "點擊前往新聞來源")}</p>
+          <div class="news-card-tags"><span class="asset-class-badge ${escapeHtml(item.asset_class || "stock")}">${item.asset_class==="crypto"?"虛擬貨幣":item.asset_class==="fund"?"基金":"股票"}</span><span>${escapeHtml(item.region || "GLOBAL")}</span><span>${escapeHtml(item.industry_label || "其他產業")}</span><span>${escapeHtml(item.topic || "market")}</span><span>${escapeHtml(item.source_group === "official-tw" ? "官方" : item.source_group === "hk-media" ? "香港中文" : item.language === "zh-Hant" ? "中文" : "英文")}</span>${item.duplicate_count ? `<span>另有 ${item.duplicate_count} 個來源</span>` : ""}<span class="link-mode-badge ${mode}">${mode === "direct" ? "原文連結" : "搜尋備援"}</span></div>
+        </a>
+        <div class="news-card-actions">
+          <a href="${escapeHtml(articleLink)}" target="_blank" rel="noreferrer noopener">${label} ↗</a>
+          ${sourceHome ? `<a href="${escapeHtml(sourceHome)}" target="_blank" rel="noreferrer noopener">來源首頁</a>` : ""}
+        </div>
+      </article>`;
+    }).join("");
     $("#newsPageEmpty").hidden = items.length > 0;
     $("#newsPageCount").textContent = `${items.length} 則`;
   }
