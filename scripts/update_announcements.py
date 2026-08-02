@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Refresh official announcements and institutional flow for v10.8.2.
+"""Refresh official announcements and institutional flow for v10.8.3.
 
 Key fixes:
 - Weekend/holiday runs show the latest available trading day instead of today's empty date.
@@ -32,7 +32,7 @@ TAIPEI = ZoneInfo("Asia/Taipei")
 NOW = datetime.now(TAIPEI)
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/10.8.2; +https://github.com/qwe70542asd-blip/market-event-radar)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/10.8.3; +https://github.com/qwe70542asd-blip/market-event-radar)",
     "Accept-Language": "zh-TW,zh;q=0.95,en-US;q=0.75,en;q=0.65,ja;q=0.55",
 }
 

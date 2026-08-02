@@ -7,8 +7,17 @@
   const REMOTE_BASE=`https://raw.githubusercontent.com/${OWNER}/${REPO}/${LIVE_BRANCH}/`;
   const MAIN_BASE=`https://raw.githubusercontent.com/${OWNER}/${REPO}/${MAIN_BRANCH}/`;
 
+  function normalizePath(path) {
+    return String(path || "").replace(/^\.\//,"").replace(/^\/+/,"");
+  }
+
+  function livePath(path) {
+    const cleanPath=normalizePath(path);
+    return cleanPath.startsWith("data/") ? cleanPath.slice(5) : cleanPath;
+  }
+
   function remotePath(path) {
-    return REMOTE_BASE + String(path || "").replace(/^\.\//,"");
+    return REMOTE_BASE + livePath(path);
   }
 
   async function fetchJsonUrl(url,timeout=6000) {
@@ -22,7 +31,10 @@
   }
 
   function dataScore(payload) {
-    const arrays=[payload?.items,payload?.events,payload?.announcements,payload?.taiwan_etfs,payload?.us_etfs];
+    const arrays=[
+      payload?.items,payload?.events,payload?.announcements,payload?.assets,payload?.daily,
+      payload?.taiwan_etfs,payload?.us_etfs,
+    ];
     return arrays.reduce((total,rows)=>total+(Array.isArray(rows)?rows.length:0),0);
   }
 
@@ -39,7 +51,7 @@
   }
 
   async function loadJson(path,fallback={}) {
-    const cleanPath=String(path||"").replace(/^\.\//,"");
+    const cleanPath=normalizePath(path);
     const requests=[
       ["live-data",remotePath(cleanPath)],
       ["local",cleanPath],
@@ -59,5 +71,5 @@
     return selected;
   }
 
-  window.MarketDataSource={REMOTE_BASE,MAIN_BASE,remotePath,fetchJsonUrl,loadJson};
+  window.MarketDataSource={REMOTE_BASE,MAIN_BASE,livePath,remotePath,fetchJsonUrl,loadJson};
 })();

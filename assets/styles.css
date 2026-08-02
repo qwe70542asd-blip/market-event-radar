@@ -1906,7 +1906,7 @@ input, select, button { font-size: 15px; }
   .decision-radar-card em { grid-column:2; }
 }
 
-/* v10.8.2 unified version, Taiwan-time status and final readability pass */
+/* v10.8.3 unified version, Taiwan-time status and final readability pass */
 html { font-size:17px; }
 body { font-size:17px; }
 .version-badge { padding:3px 7px; font-size:11px; }
@@ -1938,7 +1938,7 @@ body { font-size:17px; }
   .market-board-head small { font-size:12px; }
 }
 
-/* v10.8.2 approved desktop/mobile homepage layout */
+/* v10.8.3 approved desktop/mobile homepage layout */
 html { scroll-behavior:smooth; }
 #calendarSection,#marketSection,#homeFeatureStrip,#todayNewsSection { scroll-margin-top:86px; }
 
@@ -1970,6 +1970,10 @@ html { scroll-behavior:smooth; }
   margin-top:12px;
 }
 .home-market-rail { min-width:0; }
+.home-market-rail .home-market-crypto {
+  min-width:0;
+  margin:0;
+}
 .home-market-board {
   width:100%;
   margin:0;
@@ -2096,7 +2100,8 @@ html { scroll-behavior:smooth; }
   margin-top:10px;
 }
 .home-secondary-grid .important-announcement-section,
-.home-secondary-grid .crypto-live-section { min-width:0; margin-top:0; }
+.home-secondary-grid .home-secondary-agenda { min-width:0; margin-top:0; }
+.home-secondary-grid .home-secondary-agenda .event-list { max-height:none; }
 
 @media (max-width:1160px) {
   .home-primary-layout { grid-template-columns:minmax(0,1.45fr) minmax(380px,.8fr); }
@@ -2183,7 +2188,8 @@ html { scroll-behavior:smooth; }
 
   .home-secondary-grid { gap:8px; margin-top:8px; }
   .home-secondary-grid .important-announcement-section,
-  .home-secondary-grid .crypto-live-section { border-radius:14px; }
+  .home-secondary-grid .home-secondary-agenda,
+  .home-market-rail .home-market-crypto { border-radius:14px; }
   .today-news-section { scroll-margin-top:82px; }
   .mobile-bottom-nav b { font-size:12px; }
 }

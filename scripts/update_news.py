@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Market Event Radar v10.8.2 multi-source finance-news updater.
+"""Market Event Radar v10.8.3 multi-source finance-news updater.
 
 v10.1 priorities:
 - Traditional-Chinese financial coverage first.
@@ -1079,7 +1079,7 @@ def main():
             "healthy_sources": source_ok,
             "source_count": len(statuses),
             "rotation_bucket": bucket,
-            "version": "v10.8.2",
+            "version": "v10.8.3",
             "industry_counts": industry_counts,
             "duplicate_titles_removed": duplicate_title_count,
             "direct_link_count": link_result["direct"],

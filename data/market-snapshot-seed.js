@@ -2,7 +2,7 @@ window.__MARKET_SNAPSHOT_SEED__ = {
   "metadata": {
     "updated_at": "2026-08-02T10:19:00+08:00",
     "timezone": "Asia/Taipei",
-    "version": "v10.8.2",
+    "version": "v10.8.3",
     "item_count": 33,
     "healthy_count": 1,
     "status": "seed",
@@ -15,7 +15,7 @@ window.__MARKET_SNAPSHOT_SEED__ = {
       "KR": ""
     },
     "tw_etf_ranking": "daily-trading-value",
-    "note": "v10.8.2 install seed. The first market workflow creates live-data and fills each market's latest trading day."
+    "note": "v10.8.3 install seed. The first market workflow creates live-data and fills each market's latest trading day."
   },
   "sources": [],
   "items": [

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Update TWSE institutional history and stock rankings for v10.8.2."""
+"""Update TWSE institutional history and stock rankings for v10.8.3."""
 from __future__ import annotations
 import json, re, time
 from datetime import date, datetime, timedelta
@@ -15,7 +15,7 @@ SEED = DATA / "institutional-history-seed.js"
 TAIPEI = ZoneInfo("Asia/Taipei")
 NOW = datetime.now(TAIPEI)
 HEADERS = {
-    "User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/10.8.2; +https://github.com/qwe70542asd-blip/market-event-radar)",
+    "User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/10.8.3; +https://github.com/qwe70542asd-blip/market-event-radar)",
     "Accept-Language":"zh-TW,zh;q=0.9,en;q=0.8",
     "Referer":"https://www.twse.com.tw/zh/trading/foreign/bfi82u.html",
 }
@@ -186,7 +186,7 @@ def main() -> int:
         ranking_date=previous.get("ranking_date")
     payload={
         "metadata":{
-            "version":"v10.8.2",
+            "version":"v10.8.3",
             "updated_at":NOW.isoformat(timespec="seconds"),
             "latest_date":history[-1]["date"] if history else None,
             "history_count":len(history),

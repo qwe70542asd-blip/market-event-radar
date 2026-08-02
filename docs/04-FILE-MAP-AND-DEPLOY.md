@@ -2,7 +2,7 @@
 
 ## 唯一修改來源
 
-只使用資料夾：`market-event-radar-current-v10.8.2-last-trading-day`
+只使用資料夾：`market-event-radar-current-v10.8.3-full-integration`
 
 以下舊檔不再使用：
 
@@ -18,7 +18,7 @@
 | 路徑 | 用途 | 目前注意事項 |
 |---|---|---|
 | `.github/workflows/update-live-data.yml` | 所有自動更新入口 | 第一個要在線上驗證的檔案 |
-| `assets/data-source.js` | `live-data`、main 與 seed 的读取优先顺序 | 必须避免空資料覆蓋有效資料 |
+| `assets/data-source.js` | `live-data`、main 與 seed 的讀取優先順序 | `live-data` 使用根目錄；本機與 main 保留 `data/` 目錄 |
 | `assets/market-ticker.js` | 指數與 ETF 行情 | 需驗證 30 秒檢查與缺值顯示 |
 | `assets/news-core.js` | 共用新聞載入 | 需驗證空 JSON 與備援合併 |
 | `assets/news-ui.js` | 首頁新聞顯示 | 需驗證輪播與台灣時間 |
@@ -44,7 +44,7 @@
 整理基準第一次提交可使用：
 
 ```text
-v10.8.2：修正各市場最後交易日與 5 分鐘行情更新
+v10.8.3：整合 live-data 路徑、完整首次更新與首頁區塊排序
 ```
 
 後續每次只提交一個問題，例如：

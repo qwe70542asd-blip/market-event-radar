@@ -1,11 +1,11 @@
 {
   "project": "market-event-radar",
-  "baseline_version": "10.8.2",
-  "label": "v10.8.2-last-trading-day",
-  "status": "last-trading-day-user-test",
+  "baseline_version": "10.8.3",
+  "label": "v10.8.3-full-integration",
+  "status": "full-integration-user-test",
   "timezone": "Asia/Taipei",
   "updated_date": "2026-08-02",
-  "supersedes": ["10.6.1", "10.6.2", "10.7.0", "10.7.1"],
+  "supersedes": ["10.6.1", "10.6.2", "10.7.0", "10.7.1", "10.8.0", "10.8.1", "10.8.2"],
   "release_ready": false,
-  "next_test": "Upload and confirm the live-data branch is created"
+  "next_test": "Upload and confirm root-level live-data files are created and read by the website"
 }

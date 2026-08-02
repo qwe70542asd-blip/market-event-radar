@@ -6,14 +6,15 @@
 
 目的：先確認資料更新管線真的能寫出資料。
 
-1. 上傳後確認 `.github/workflows/update-live-data.yml` 顯示 `Update v10.8.2 last-trading-day data`。
-2. 這次 push 會自動只跑 `market`，不等待新聞與法人。
-3. 若沒有自動執行，到 GitHub → Actions 手動執行，`mode` 選 `market`。
-4. 等待完成，確認 `Update last-trading-day market data` 與發布步驟為綠色。
+1. 上傳後確認 `.github/workflows/update-live-data.yml` 顯示 `Update v10.8.3 live data`。
+2. 這次 push 會自動跑 `all`，一次建立行情、新聞、公告、法人、事件與標的資料。
+3. 若沒有自動執行，到 GitHub → Actions 手動執行，`mode` 選 `all`。
+4. 等待完成，確認各更新步驟與發布步驟為綠色；允許標示為可略過的來源顯示警告，但輸出 JSON 必須存在。
 5. 檢查 `live-data` 分支已建立。
-6. 檢查 `live-data/market-snapshot.json` 不再只有 1 筆有效值。
+6. 檢查 `live-data/market-snapshot.json` 不再只有 1 筆有效值，並確認 `news.json`、`announcements.json`、`institutional-history.json` 位於分支根目錄。
+7. 開啟首頁後確認資料來源會讀取根目錄檔案，不再要求 `live-data/data/...`。
 
-通過條件：Action 成功、分支存在、主要指數與 ETF 有最後交易日及有效數值。  
+通過條件：Action 成功、分支存在、主要指數與 ETF 有最後交易日及有效數值，首頁能讀到新聞、法人與公告。  
 失敗時要保存：紅色步驟名稱與錯誤畫面；先不改前端。
 
 ## T02｜版本與快取

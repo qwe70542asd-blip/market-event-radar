@@ -1,4 +1,4 @@
-name: Update v10.8.2 last-trading-day data
+name: Update v10.8.3 live data
 
 on:
   push:
@@ -57,7 +57,7 @@ jobs:
           MODE="${{ inputs.mode }}"
           if [ -z "$MODE" ]; then
             if [ "${{ github.event_name }}" = "push" ]; then
-              MODE="market"
+              MODE="all"
             else
               case "${{ github.event.schedule }}" in
                 "*/5 * * * *") MODE="market" ;;
@@ -205,5 +205,5 @@ jobs:
             echo "No live data changes."
             exit 0
           fi
-          git commit -m "chore: refresh last-trading-day data v10.8.2"
+          git commit -m "chore: refresh last-trading-day data v10.8.3"
           git push origin "HEAD:$LIVE_BRANCH"

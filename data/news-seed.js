@@ -3,7 +3,7 @@ window.__MARKET_NEWS_SEED__ = {
     updated_at: "2026-08-02T13:15:00+08:00",
     timezone: "Asia/Taipei",
     item_count: 20,
-    version: "v10.8.2",
+    version: "v10.8.3",
     note: "20 則可直接開啟原文的內建備援；頁面每 30 秒檢查，自動排程最快每 5 分鐘更新並合併更多新聞。"
   },
   source: { name: "財經快訊備援", status: "cached", message: "顯示最近可直接開啟的原始文章" },
