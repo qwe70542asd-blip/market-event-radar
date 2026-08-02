@@ -1,29 +1,37 @@
 window.__MARKET_NEWS_SEED__ = {
   "metadata": {
-    "updated_at": "2026-08-02T07:51:59+08:00",
+    "updated_at": "2026-08-02T08:12:50+08:00",
     "timezone": "Asia/Taipei",
     "item_count": 220,
-    "chinese_item_count": 278,
-    "healthy_sources": 28,
-    "source_count": 57,
-    "rotation_bucket": 3,
-    "version": "v10.4.1",
+    "chinese_item_count": 437,
+    "healthy_sources": 32,
+    "source_count": 61,
+    "rotation_bucket": 0,
+    "version": "v10.4.3",
     "industry_counts": {
-      "finance": 30,
-      "macro-policy": 11,
-      "other": 153,
-      "energy": 17,
-      "technology": 80,
-      "healthcare": 2,
-      "telecom": 13,
-      "automotive": 2,
+      "finance": 51,
+      "macro-policy": 27,
+      "other": 232,
+      "energy": 7,
+      "telecom": 5,
+      "technology": 107,
+      "crypto": 12,
+      "materials": 13,
+      "healthcare": 7,
+      "automotive": 4,
       "consumer": 4,
-      "industrial": 4,
-      "agriculture": 12,
-      "crypto": 10
+      "industrial": 2,
+      "tourism": 2,
+      "real-estate": 1,
+      "shipping": 12,
+      "agriculture": 1
     },
-    "duplicate_titles_removed": 3,
-    "note": "All-industry coverage prioritized. Google News redirect links are replaced with stable title searches to prevent 404 pages."
+    "duplicate_titles_removed": 31,
+    "direct_link_count": 235,
+    "resolved_google_link_count": 17,
+    "fallback_link_count": 252,
+    "link_resolution_attempts": 90,
+    "note": "Publisher article URLs are preferred. Search links are used only when an original article URL cannot be resolved."
   },
   "source": {
     "name": "多來源財經新聞",
@@ -66,6 +74,42 @@ window.__MARKET_NEWS_SEED__ = {
       "language": "zh-Hant",
       "source_group": "official-tw",
       "url": "https://www.twse.com.tw/rwd/zh/news/feed?type=rss"
+    },
+    {
+      "name": "Yahoo 股市最新新聞",
+      "status": "ok",
+      "count": 50,
+      "mode": "direct-rss",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "url": "https://tw.stock.yahoo.com/rss?category=news"
+    },
+    {
+      "name": "Yahoo 股市台股動態",
+      "status": "ok",
+      "count": 50,
+      "mode": "direct-rss",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "url": "https://tw.stock.yahoo.com/rss?category=tw-market"
+    },
+    {
+      "name": "Yahoo 股市國際財經",
+      "status": "ok",
+      "count": 50,
+      "mode": "direct-rss",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "url": "https://tw.stock.yahoo.com/rss?category=intl-markets"
+    },
+    {
+      "name": "Yahoo 股市基金動態",
+      "status": "ok",
+      "count": 50,
+      "mode": "direct-rss",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "url": "https://tw.stock.yahoo.com/rss?category=funds-news"
     },
     {
       "name": "Yahoo 股市",
@@ -132,55 +176,47 @@ window.__MARKET_NEWS_SEED__ = {
       "source_group": "official-tw"
     },
     {
-      "name": "AASTOCKS",
+      "name": "今周刊",
       "status": "ok",
       "count": 12,
       "mode": "publisher-search",
       "language": "zh-Hant",
-      "source_group": "hk-media"
+      "source_group": "tw-media"
     },
     {
-      "name": "經濟通 ET Net",
+      "name": "商業周刊",
       "status": "ok",
       "count": 12,
       "mode": "publisher-search",
       "language": "zh-Hant",
-      "source_group": "hk-media"
+      "source_group": "tw-media"
     },
     {
-      "name": "香港經濟日報",
+      "name": "財訊",
       "status": "ok",
       "count": 12,
       "mode": "publisher-search",
       "language": "zh-Hant",
-      "source_group": "hk-media"
+      "source_group": "tw-media"
     },
     {
-      "name": "信報財經新聞",
+      "name": "ETtoday 財經雲",
       "status": "ok",
       "count": 12,
       "mode": "publisher-search",
       "language": "zh-Hant",
-      "source_group": "hk-media"
+      "source_group": "tw-media"
     },
     {
-      "name": "明報財經",
+      "name": "證券櫃檯買賣中心",
       "status": "ok",
       "count": 12,
       "mode": "publisher-search",
       "language": "zh-Hant",
-      "source_group": "hk-media"
+      "source_group": "official-tw"
     },
     {
-      "name": "香港01財經",
-      "status": "empty",
-      "count": 0,
-      "mode": "publisher-search",
-      "language": "zh-Hant",
-      "source_group": "hk-media"
-    },
-    {
-      "name": "產業雷達・能源公用",
+      "name": "產業雷達・金融",
       "status": "ok",
       "count": 12,
       "mode": "publisher-search",
@@ -188,7 +224,7 @@ window.__MARKET_NEWS_SEED__ = {
       "source_group": "sector-search"
     },
     {
-      "name": "產業雷達・電信媒體",
+      "name": "產業雷達・航運運輸",
       "status": "ok",
       "count": 12,
       "mode": "publisher-search",
@@ -196,7 +232,7 @@ window.__MARKET_NEWS_SEED__ = {
       "source_group": "sector-search"
     },
     {
-      "name": "產業雷達・農業食品",
+      "name": "產業雷達・鋼鐵原物料",
       "status": "ok",
       "count": 12,
       "mode": "publisher-search",
@@ -204,11 +240,11 @@ window.__MARKET_NEWS_SEED__ = {
       "source_group": "sector-search"
     },
     {
-      "name": "Cointelegraph",
+      "name": "動區動趨 BlockTempo",
       "status": "ok",
       "count": 12,
       "mode": "publisher-search",
-      "language": "en",
+      "language": "zh-Hant",
       "source_group": "crypto-media"
     },
     {
@@ -266,46 +302,6 @@ window.__MARKET_NEWS_SEED__ = {
       "mode": "publisher-search",
       "language": "en",
       "source_group": "official-global"
-    },
-    {
-      "name": "今周刊",
-      "status": "rotating-cache",
-      "count": 4,
-      "mode": "rotation-0",
-      "language": "zh-Hant",
-      "source_group": "tw-media"
-    },
-    {
-      "name": "商業周刊",
-      "status": "scheduled",
-      "count": 0,
-      "mode": "rotation-0",
-      "language": "zh-Hant",
-      "source_group": "tw-media"
-    },
-    {
-      "name": "財訊",
-      "status": "rotating-cache",
-      "count": 10,
-      "mode": "rotation-0",
-      "language": "zh-Hant",
-      "source_group": "tw-media"
-    },
-    {
-      "name": "ETtoday 財經雲",
-      "status": "scheduled",
-      "count": 0,
-      "mode": "rotation-0",
-      "language": "zh-Hant",
-      "source_group": "tw-media"
-    },
-    {
-      "name": "證券櫃檯買賣中心",
-      "status": "rotating-cache",
-      "count": 1,
-      "mode": "rotation-0",
-      "language": "zh-Hant",
-      "source_group": "official-tw"
     },
     {
       "name": "數位時代",
@@ -396,28 +392,52 @@ window.__MARKET_NEWS_SEED__ = {
       "source_group": "official-tw"
     },
     {
-      "name": "產業雷達・金融",
+      "name": "AASTOCKS",
       "status": "scheduled",
       "count": 0,
-      "mode": "rotation-0",
+      "mode": "rotation-3",
       "language": "zh-Hant",
-      "source_group": "sector-search"
+      "source_group": "hk-media"
     },
     {
-      "name": "產業雷達・航運運輸",
+      "name": "經濟通 ET Net",
       "status": "scheduled",
       "count": 0,
-      "mode": "rotation-0",
+      "mode": "rotation-3",
       "language": "zh-Hant",
-      "source_group": "sector-search"
+      "source_group": "hk-media"
     },
     {
-      "name": "產業雷達・鋼鐵原物料",
+      "name": "香港經濟日報",
       "status": "scheduled",
       "count": 0,
-      "mode": "rotation-0",
+      "mode": "rotation-3",
       "language": "zh-Hant",
-      "source_group": "sector-search"
+      "source_group": "hk-media"
+    },
+    {
+      "name": "信報財經新聞",
+      "status": "scheduled",
+      "count": 0,
+      "mode": "rotation-3",
+      "language": "zh-Hant",
+      "source_group": "hk-media"
+    },
+    {
+      "name": "明報財經",
+      "status": "scheduled",
+      "count": 0,
+      "mode": "rotation-3",
+      "language": "zh-Hant",
+      "source_group": "hk-media"
+    },
+    {
+      "name": "香港01財經",
+      "status": "scheduled",
+      "count": 0,
+      "mode": "rotation-3",
+      "language": "zh-Hant",
+      "source_group": "hk-media"
     },
     {
       "name": "產業雷達・機械工業",
@@ -468,12 +488,28 @@ window.__MARKET_NEWS_SEED__ = {
       "source_group": "sector-search"
     },
     {
-      "name": "動區動趨 BlockTempo",
+      "name": "產業雷達・能源公用",
       "status": "scheduled",
       "count": 0,
-      "mode": "rotation-0",
+      "mode": "rotation-3",
       "language": "zh-Hant",
-      "source_group": "crypto-media"
+      "source_group": "sector-search"
+    },
+    {
+      "name": "產業雷達・電信媒體",
+      "status": "scheduled",
+      "count": 0,
+      "mode": "rotation-3",
+      "language": "zh-Hant",
+      "source_group": "sector-search"
+    },
+    {
+      "name": "產業雷達・農業食品",
+      "status": "scheduled",
+      "count": 0,
+      "mode": "rotation-3",
+      "language": "zh-Hant",
+      "source_group": "sector-search"
     },
     {
       "name": "鏈新聞 ABMedia",
@@ -490,14 +526,26 @@ window.__MARKET_NEWS_SEED__ = {
       "mode": "rotation-2",
       "language": "en",
       "source_group": "crypto-media"
+    },
+    {
+      "name": "Cointelegraph",
+      "status": "scheduled",
+      "count": 0,
+      "mode": "rotation-3",
+      "language": "en",
+      "source_group": "crypto-media"
     }
   ],
   "items": [
     {
       "id": "52ba75bab1bcdedb",
       "title": "臺灣證券交易所對泰山企業股份有限公司、福壽實業股份有限公司、福懋油脂股份有限公司及南僑投資控股股份有限公司違反重大訊息規定，各處以新台幣30萬元違約金",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f6fbe888101d5",
+      "link": "https://www.google.com/search?q=%22%E8%87%BA%E7%81%A3%E8%AD%89%E5%88%B8%E4%BA%A4%E6%98%93%E6%89%80%E5%B0%8D%E6%B3%B0%E5%B1%B1%E4%BC%81%E6%A5%AD%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E3%80%81%E7%A6%8F%E5%A3%BD%E5%AF%A6%E6%A5%AD%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E3%80%81%E7%A6%8F%E6%87%8B%E6%B2%B9%E8%84%82%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E5%8F%8A%E5%8D%97%E5%83%91%E6%8A%95%E8%B3%87%E6%8E%A7%E8%82%A1%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E9%81%95%E5%8F%8D%E9%87%8D%E5%A4%A7%E8%A8%8A%E6%81%AF%E8%A6%8F%E5%AE%9A%EF%BC%8C%E5%90%84%E8%99%95%E4%BB%A5%E6%96%B0%E5%8F%B0%E5%B9%A330%E8%90%AC%E5%85%83%E9%81%95%E7%B4%84%E9%87%91%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f6fbe888101d5",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -516,17 +564,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": true,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%87%BA%E7%81%A3%E8%AD%89%E5%88%B8%E4%BA%A4%E6%98%93%E6%89%80%E5%B0%8D%E6%B3%B0%E5%B1%B1%E4%BC%81%E6%A5%AD%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E3%80%81%E7%A6%8F%E5%A3%BD%E5%AF%A6%E6%A5%AD%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E3%80%81%E7%A6%8F%E6%87%8B%E6%B2%B9%E8%84%82%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E5%8F%8A%E5%8D%97%E5%83%91%E6%8A%95%E8%B3%87%E6%8E%A7%E8%82%A1%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E9%81%95%E5%8F%8D%E9%87%8D%E5%A4%A7%E8%A8%8A%E6%81%AF%E8%A6%8F%E5%AE%9A%EF%BC%8C%E5%90%84%E8%99%95%E4%BB%A5%E6%96%B0%E5%8F%B0%E5%B9%A330%E8%90%AC%E5%85%83%E9%81%95%E7%B4%84%E9%87%91%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "63fdb8d0af8bd582",
       "title": "憂通膨居高不下 美聯準會3持異議官員籲升息",
       "link": "https://www.cna.com.tw/news/afe/202608010021.aspx",
       "original_link": "https://www.cna.com.tw/news/afe/202608010021.aspx",
+      "direct_link": "https://www.cna.com.tw/news/afe/202608010021.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社產經證券",
       "query_source": "中央社產經證券",
       "summary": "（中央社華盛頓31日綜合外電報導）美國聯邦準備理事會（Fed）本週稍早決定維持利率不變，3名持反對意見的決策官員今天表示，為了避免通膨根深蒂固，現在必須升息。",
@@ -545,17 +599,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": true,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
+        "Yahoo 股市",
         "中央社產經證券"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 1,
+      "fallback_link": "https://www.google.com/search?q=%22%E6%86%82%E9%80%9A%E8%86%A8%E5%B1%85%E9%AB%98%E4%B8%8D%E4%B8%8B+%E7%BE%8E%E8%81%AF%E6%BA%96%E6%9C%833%E6%8C%81%E7%95%B0%E8%AD%B0%E5%AE%98%E5%93%A1%E7%B1%B2%E5%8D%87%E6%81%AF%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "f28d72d0eba33c06",
       "title": "伊朗戰事持續發酵 油價月線漲幅為3月以來最大",
       "link": "https://www.cna.com.tw/news/afe/202608010009.aspx",
       "original_link": "https://www.cna.com.tw/news/afe/202608010009.aspx",
+      "direct_link": "https://www.cna.com.tw/news/afe/202608010009.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社產經證券",
       "query_source": "中央社產經證券",
       "summary": "（中央社紐約31日綜合外電報導）交易員權衡持續發酵的全球衝突，以及從波斯灣到黑海地區的供應威脅，油價今天上漲，月線漲幅為3月以來最大。",
@@ -574,17 +635,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": true,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E4%BC%8A%E6%9C%97%E6%88%B0%E4%BA%8B%E6%8C%81%E7%BA%8C%E7%99%BC%E9%85%B5+%E6%B2%B9%E5%83%B9%E6%9C%88%E7%B7%9A%E6%BC%B2%E5%B9%85%E7%82%BA3%E6%9C%88%E4%BB%A5%E4%BE%86%E6%9C%80%E5%A4%A7%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "ddc4b094a062c8b9",
       "title": "美國明尼蘇達州供水系統遭網攻 疑伊朗駭客所為",
       "link": "https://www.cna.com.tw/news/ait/202607290031.aspx",
       "original_link": "https://www.cna.com.tw/news/ait/202607290031.aspx",
+      "direct_link": "https://www.cna.com.tw/news/ait/202607290031.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社科技",
       "query_source": "中央社科技",
       "summary": "（中央社明尼蘇達州28日綜合外電報導）美國明尼蘇達州IT部門今天指出，州內超過30個供水系統遭到「協調式網路攻擊」，與伊朗駭客攻擊事件類似。有城市的水井和淨水廠一度癱瘓，另有城市被迫採手動操作。",
@@ -603,18 +670,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": true,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E7%BE%8E%E5%9C%8B%E6%98%8E%E5%B0%BC%E8%98%87%E9%81%94%E5%B7%9E%E4%BE%9B%E6%B0%B4%E7%B3%BB%E7%B5%B1%E9%81%AD%E7%B6%B2%E6%94%BB+%E7%96%91%E4%BC%8A%E6%9C%97%E9%A7%AD%E5%AE%A2%E6%89%80%E7%82%BA%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "ff89288b5ff588f6",
+      "id": "8010e25f4b52a79b",
       "title": "川普動手伊朗威脅報復鄰國 美示警：公民應考慮離開中東 - facebook.com",
-      "link": "https://www.google.com/search?q=%22%E5%B7%9D%E6%99%AE%E5%8B%95%E6%89%8B%E4%BC%8A%E6%9C%97%E5%A8%81%E8%84%85%E5%A0%B1%E5%BE%A9%E9%84%B0%E5%9C%8B+%E7%BE%8E%E7%A4%BA%E8%AD%A6%EF%BC%9A%E5%85%AC%E6%B0%91%E6%87%89%E8%80%83%E6%85%AE%E9%9B%A2%E9%96%8B%E4%B8%AD%E6%9D%B1+-+facebook.com%22+facebook.com",
+      "link": "http://www.w3.org/2000/",
       "original_link": "https://news.google.com/rss/articles/CBMiiANBVV95cUxPVDdlVURCMDNjWkhNaFBqV1g2dXVaOW16ckwzd1JHOVRmZFZoS041NVpHVmI2X3ltWkNkMkhzeEdod2VhOUs3cHNfWDZYMldab3VmOHhHNkpxM2lrZnc5M1JMUWZmUGdZN3FoeFN5ZUhLRW43TF8ydGpOQjAyclBLcFk0MUc3ajZ3RVpOLTAxM3MtVG9pVE5QS0VfMXhCQUZrWVRfemdsSjZ2VHZLOEJXcUF3TXR4RmtwVmpYcGFLcFlPczVNbnZsVHdDNWhadXl3ZFFVNHlIaUlid1FzR0QzcWRjbnN0UENuRjFjc2ZTVEZqaFFZVURNczhjWk41MUpyeDZkak5KdDRhWThlSTdMS2x3cEFjalJ6Y1hhNWV5MkpkaE02Ymd2WFRyZ2FIZm9yMWRWV1F0cG5iZlAyYzFXUjMxQy1uSWhrZW1mdzhkcXZLNjlXZWZLY3gyWC1vWDZtN2d0NXRQWURXUk5jOHZla0VpVnJ2Zmo1U0tGaFBvUW5Sb2pUcnY5aQ?oc=5",
-      "source": "facebook.com",
+      "direct_link": "http://www.w3.org/2000/",
+      "link_status": "direct",
+      "link_type": "resolved-page",
+      "source_home": "",
+      "source": "中文國際突發",
       "query_source": "中文國際突發",
       "summary": "川普動手伊朗威脅報復鄰國 美示警：公民應考慮離開中東 facebook.com",
       "published_at": "2026-08-02T07:25:53+08:00",
@@ -632,20 +705,26 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 88,
       "is_breaking": true,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "facebook.com"
+        "中文國際突發"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%B7%9D%E6%99%AE%E5%8B%95%E6%89%8B%E4%BC%8A%E6%9C%97%E5%A8%81%E8%84%85%E5%A0%B1%E5%BE%A9%E9%84%B0%E5%9C%8B+%E7%BE%8E%E7%A4%BA%E8%AD%A6%EF%BC%9A%E5%85%AC%E6%B0%91%E6%87%89%E8%80%83%E6%85%AE%E9%9B%A2%E9%96%8B%E4%B8%AD%E6%9D%B1+-+facebook.com%22+%E4%B8%AD%E6%96%87%E5%9C%8B%E9%9A%9B%E7%AA%81%E7%99%BC",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "549c2735b9f0bf0d",
-      "title": "美國呼籲公民考慮離開中東 警告地區衝突可能升級 - RFI",
-      "link": "https://www.google.com/search?q=%22%E7%BE%8E%E5%9C%8B%E5%91%BC%E7%B1%B2%E5%85%AC%E6%B0%91%E8%80%83%E6%85%AE%E9%9B%A2%E9%96%8B%E4%B8%AD%E6%9D%B1+%E8%AD%A6%E5%91%8A%E5%9C%B0%E5%8D%80%E8%A1%9D%E7%AA%81%E5%8F%AF%E8%83%BD%E5%8D%87%E7%B4%9A+-+RFI%22+RFI",
+      "id": "f68ada6cf7cd519b",
+      "title": "美國呼籲公民考慮離開中東 警告地區衝突可能升級 - rfi.fr",
+      "link": "http://www.w3.org/2000/",
       "original_link": "https://news.google.com/rss/articles/CBMi6AJBVV95cUxPNnJpUVFlQUZRa0FJdTFqbUE4UW9iTlJpZ3lDSElRa1F1SHlfOGRjZUpoQUs4UVd4bWJOa0ZseDM5X2J4UUNvSnNUWmY0eXhiTlRzcnJSUGZQNl92bFYtcWsxZlNmLWpzWEtnV3NPOG9QOWM5bE0zcFJyRWZCZ203MkpFa2o1Z2VEdkktSF82M0lqQ1dnZExTQk9nV1BEYlhONmhqMVdvT2pxWDBSWm02Tkd5Ui1naTlnMVRWUUxSektTYXV6VGR0SXJFNTg5dGxkelFWSzVfbTNacnFFMkdQNmpZbTYwZjdhRW50dGRUNXpUemxHcG5xTTRwTzRwdWN3dWMxcl9TNnhLcFNadDNwS0ZBbmZQdHZZNTRNZXFLOFVub05yMWkycldNVnFLQ3JrMzRrZDktQ0MtaWtBdTlFV0VZMFZaZVRSWlhxcnRsOE9zclduNlRBTFdHYkl3UGZJRjZiWXNfeHo?oc=5",
-      "source": "RFI",
+      "direct_link": "http://www.w3.org/2000/",
+      "link_status": "direct",
+      "link_type": "resolved-page",
+      "source_home": "",
+      "source": "中文國際突發",
       "query_source": "中文國際突發",
-      "summary": "美國呼籲公民考慮離開中東 警告地區衝突可能升級 RFI",
+      "summary": "美國呼籲公民考慮離開中東 警告地區衝突可能升級 rfi.fr",
       "published_at": "2026-08-02T05:14:02+08:00",
       "region": "GLOBAL",
       "topic": "policy",
@@ -661,20 +740,26 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 88,
       "is_breaking": true,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "RFI"
+        "中文國際突發"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E7%BE%8E%E5%9C%8B%E5%91%BC%E7%B1%B2%E5%85%AC%E6%B0%91%E8%80%83%E6%85%AE%E9%9B%A2%E9%96%8B%E4%B8%AD%E6%9D%B1+%E8%AD%A6%E5%91%8A%E5%9C%B0%E5%8D%80%E8%A1%9D%E7%AA%81%E5%8F%AF%E8%83%BD%E5%8D%87%E7%B4%9A+-+rfi.fr%22+%E4%B8%AD%E6%96%87%E5%9C%8B%E9%9A%9B%E7%AA%81%E7%99%BC",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "00952b012cac6957",
-      "title": "伊朗指控美國助長“緊張局勢升級” 阿曼附近一油輪遭襲 - RFI",
-      "link": "https://www.google.com/search?q=%22%E4%BC%8A%E6%9C%97%E6%8C%87%E6%8E%A7%E7%BE%8E%E5%9C%8B%E5%8A%A9%E9%95%B7%E2%80%9C%E7%B7%8A%E5%BC%B5%E5%B1%80%E5%8B%A2%E5%8D%87%E7%B4%9A%E2%80%9D+%E9%98%BF%E6%9B%BC%E9%99%84%E8%BF%91%E4%B8%80%E6%B2%B9%E8%BC%AA%E9%81%AD%E8%A5%B2+-+RFI%22+RFI",
+      "id": "a2997f9edaba4edf",
+      "title": "伊朗指控美國助長“緊張局勢升級” 阿曼附近一油輪遭襲 - rfi.fr",
+      "link": "http://www.w3.org/2000/",
       "original_link": "https://news.google.com/rss/articles/CBMi9gJBVV95cUxQaV9iQ2d3aEprdGtfZ05YdF9Hdzh5Y01Nc1FFVUJ2c2tuRkFERmZaRkp0ZDZITGR0bnFqcnVEMXEtQlpOY2tRZmFHdGtPZ1BTT3FvcHZWVk9Vc2hLYm12ZVZ0MEZEbm9pU3ZpYVJSZ1EwMFBVdTJhd0RyYnJGN3ZEMEpCZ2NiYTZ5VDd1UzRlc0FsNzBLc3dKQUhXNFltb2REZ0NaeEdyR1pCWXBRZ2I4Vko3NTZHZE16WndPYklpT05IaVhBeTZGWUxmbmxUeHpYSXF4VTFoaUhReWNrekloc2RWdGxaZjBGYkNQbkVyeU1DTE5IUFJyaXUyQzd3bmVwSG9aWVNxVXF3MjJYb0ZSdFBVN3p2Zy05UENPLVFLa3hFNlltV0d5akEtdjEyTDl4MU15aVdySFhjdFpGMDNkbU5LS2hrWjRQMVBTQXF0dS1vWUpta2dXaUdaT3FNMjEyeGdpb0VUS0dJdVN1TndGSnFTMGxPdw?oc=5",
-      "source": "RFI",
+      "direct_link": "http://www.w3.org/2000/",
+      "link_status": "direct",
+      "link_type": "resolved-page",
+      "source_home": "",
+      "source": "中文國際突發",
       "query_source": "中文國際突發",
-      "summary": "伊朗指控美國助長“緊張局勢升級” 阿曼附近一油輪遭襲 RFI",
+      "summary": "伊朗指控美國助長“緊張局勢升級” 阿曼附近一油輪遭襲 rfi.fr",
       "published_at": "2026-08-01T23:57:55+08:00",
       "region": "GLOBAL",
       "topic": "policy",
@@ -690,20 +775,26 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 88,
       "is_breaking": true,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "RFI"
+        "中文國際突發"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E4%BC%8A%E6%9C%97%E6%8C%87%E6%8E%A7%E7%BE%8E%E5%9C%8B%E5%8A%A9%E9%95%B7%E2%80%9C%E7%B7%8A%E5%BC%B5%E5%B1%80%E5%8B%A2%E5%8D%87%E7%B4%9A%E2%80%9D+%E9%98%BF%E6%9B%BC%E9%99%84%E8%BF%91%E4%B8%80%E6%B2%B9%E8%BC%AA%E9%81%AD%E8%A5%B2+-+rfi.fr%22+%E4%B8%AD%E6%96%87%E5%9C%8B%E9%9A%9B%E7%AA%81%E7%99%BC",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "e223212f89c121d6",
-      "title": "川普下令 打到伊朗投降 - tw.news.yahoo.com",
-      "link": "https://www.google.com/search?q=%22%E5%B7%9D%E6%99%AE%E4%B8%8B%E4%BB%A4+%E6%89%93%E5%88%B0%E4%BC%8A%E6%9C%97%E6%8A%95%E9%99%8D+-+tw.news.yahoo.com%22+tw.news.yahoo.com",
+      "id": "4cb039924ef95af8",
+      "title": "川普下令 打到伊朗投降 - Yahoo新聞",
+      "link": "http://www.w3.org/2000/",
       "original_link": "https://news.google.com/rss/articles/CBMizAFBVV95cUxOX1lQenBFZkJoTzBfeEVGX241UGRPcGJNejdYVWJCak1wT1B0am1ia2UzTEVtNnpsVmFTX0JNb2ZrbERBTUV1WHFzcmI1QmxwcGFoY3UtODA4ZF9KUjhpQjMweWpWZm5tS0tmNlVkUUdnbkJxeHJJVG1aOUFBa2ZScUtBWXA4ZVlPUDNpRGNvMWdZWGRBZlczbHIyZVd6LURWUWVzcWw0Q1g2Y0taUG1hV0dmV0dsZlA0S3MwZW55TzVYbHNQdzB4U2lrQ2E?oc=5",
-      "source": "tw.news.yahoo.com",
+      "direct_link": "http://www.w3.org/2000/",
+      "link_status": "direct",
+      "link_type": "resolved-page",
+      "source_home": "",
+      "source": "中文國際突發",
       "query_source": "中文國際突發",
-      "summary": "川普下令 打到伊朗投降 tw.news.yahoo.com",
+      "summary": "川普下令 打到伊朗投降 Yahoo新聞",
       "published_at": "2026-08-01T21:16:41+08:00",
       "region": "GLOBAL",
       "topic": "policy",
@@ -719,20 +810,26 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 88,
       "is_breaking": true,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "tw.news.yahoo.com"
+        "中文國際突發"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%B7%9D%E6%99%AE%E4%B8%8B%E4%BB%A4+%E6%89%93%E5%88%B0%E4%BC%8A%E6%9C%97%E6%8A%95%E9%99%8D+-+Yahoo%E6%96%B0%E8%81%9E%22+%E4%B8%AD%E6%96%87%E5%9C%8B%E9%9A%9B%E7%AA%81%E7%99%BC",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "da1a63095a302adb",
-      "title": "川普下令新一波空襲伊朗！斥德黑蘭撒謊 能源設施最快週末挨炸 - tw.news.yahoo.com",
-      "link": "https://www.google.com/search?q=%22%E5%B7%9D%E6%99%AE%E4%B8%8B%E4%BB%A4%E6%96%B0%E4%B8%80%E6%B3%A2%E7%A9%BA%E8%A5%B2%E4%BC%8A%E6%9C%97%EF%BC%81%E6%96%A5%E5%BE%B7%E9%BB%91%E8%98%AD%E6%92%92%E8%AC%8A+%E8%83%BD%E6%BA%90%E8%A8%AD%E6%96%BD%E6%9C%80%E5%BF%AB%E9%80%B1%E6%9C%AB%E6%8C%A8%E7%82%B8+-+tw.news.yahoo.com%22+tw.news.yahoo.com",
+      "id": "c4ff2b4adf67271c",
+      "title": "川普下令新一波空襲伊朗！斥德黑蘭撒謊 能源設施最快週末挨炸 - Yahoo新聞",
+      "link": "http://www.w3.org/2000/",
       "original_link": "https://news.google.com/rss/articles/CBMijwNBVV95cUxOTW15TmprOXU0dm5jZ2VmZG52N0dLTzd6WW5kNUNyeG5CNmF5bVh3LUhudnQtUFI3blZwN0RPZl9RVDRnY3IyOURFRl9qb0E1SGlTV1JjLUNvb3JCWW91cmlfWlNJQl9QNDNmRy1Bcjh6WTYxblV4SGtmZjhLcldsOEhoMXVrLWVtZTJvWVBIcUtIaUVDNTJHbHI5X0k0UDAwSnRiYlZGMWJRbkJTcHRiZTEzVEpTOUtycy0wWmtqV1pIMVZ0Y2FlUkZxNXduT1VWbHUtX0ZvR3R5MjR0WnhZYnUwLWxuUG5uak95RUZxVVJwNGlnQ1oyMk1rUGdYcmxRc1dfM0pwbmNZdmFVRUNVWExpQXEtbEVOZ0xORzM4clVpLWVZQ3Flay1XeVMzV2Fpa3hCb2JMTl9HcXI4X1llZlhWcm80OV9oVnJzZkJlVENFVDdXWTJudWtNeHRwYXZoVy1JT3NlMUdDRmVKRnZSd2lPb3daenJaV3FaOWw3MF9DUFhscllGaDlnZHFlM28?oc=5",
-      "source": "tw.news.yahoo.com",
+      "direct_link": "http://www.w3.org/2000/",
+      "link_status": "direct",
+      "link_type": "resolved-page",
+      "source_home": "",
+      "source": "中文國際突發",
       "query_source": "中文國際突發",
-      "summary": "川普下令新一波空襲伊朗！斥德黑蘭撒謊 能源設施最快週末挨炸 tw.news.yahoo.com",
+      "summary": "川普下令新一波空襲伊朗！斥德黑蘭撒謊 能源設施最快週末挨炸 Yahoo新聞",
       "published_at": "2026-08-01T14:18:47+08:00",
       "region": "GLOBAL",
       "topic": "policy",
@@ -748,18 +845,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 88,
       "is_breaking": true,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "tw.news.yahoo.com"
+        "中文國際突發"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%B7%9D%E6%99%AE%E4%B8%8B%E4%BB%A4%E6%96%B0%E4%B8%80%E6%B3%A2%E7%A9%BA%E8%A5%B2%E4%BC%8A%E6%9C%97%EF%BC%81%E6%96%A5%E5%BE%B7%E9%BB%91%E8%98%AD%E6%92%92%E8%AC%8A+%E8%83%BD%E6%BA%90%E8%A8%AD%E6%96%BD%E6%9C%80%E5%BF%AB%E9%80%B1%E6%9C%AB%E6%8C%A8%E7%82%B8+-+Yahoo%E6%96%B0%E8%81%9E%22+%E4%B8%AD%E6%96%87%E5%9C%8B%E9%9A%9B%E7%AA%81%E7%99%BC",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "8e9ab871d8d6c0ae",
+      "id": "29536e1d758db9b3",
       "title": "美伊戰火再起！川普痛批伊朗不誠實 要打到德黑蘭撐不下去｜川普：出兵伊朗斷後援 促成哈瑪斯繳械｜2026/08/01 中央社全球午間快報 - 中央社 CNA",
-      "link": "https://www.google.com/search?q=%22%E7%BE%8E%E4%BC%8A%E6%88%B0%E7%81%AB%E5%86%8D%E8%B5%B7%EF%BC%81%E5%B7%9D%E6%99%AE%E7%97%9B%E6%89%B9%E4%BC%8A%E6%9C%97%E4%B8%8D%E8%AA%A0%E5%AF%A6+%E8%A6%81%E6%89%93%E5%88%B0%E5%BE%B7%E9%BB%91%E8%98%AD%E6%92%90%E4%B8%8D%E4%B8%8B%E5%8E%BB%EF%BD%9C%E5%B7%9D%E6%99%AE%EF%BC%9A%E5%87%BA%E5%85%B5%E4%BC%8A%E6%9C%97%E6%96%B7%E5%BE%8C%E6%8F%B4+%E4%BF%83%E6%88%90%E5%93%88%E7%91%AA%E6%96%AF%E7%B9%B3%E6%A2%B0%EF%BD%9C2026%2F08%2F01+%E4%B8%AD%E5%A4%AE%E7%A4%BE%E5%85%A8%E7%90%83%E5%8D%88%E9%96%93%E5%BF%AB%E5%A0%B1+-+%E4%B8%AD%E5%A4%AE%E7%A4%BE+CNA%22+%E4%B8%AD%E5%A4%AE%E7%A4%BE+CNA",
+      "link": "http://www.w3.org/2000/",
       "original_link": "https://news.google.com/rss/articles/CBMiW0FVX3lxTE1NOVQyTHo0QVVrWFZKblBHaTV2dGw0Z3Q2eUltTFJjblNVMlhKTzgtdXJxdE5Na3g0SmYycmxMR1V2RW51aUdxTUd3VTNYNVA0VTdrNEs1bTdoaWc?oc=5",
-      "source": "中央社 CNA",
+      "direct_link": "http://www.w3.org/2000/",
+      "link_status": "direct",
+      "link_type": "resolved-page",
+      "source_home": "",
+      "source": "中文國際突發",
       "query_source": "中文國際突發",
       "summary": "美伊戰火再起！川普痛批伊朗不誠實 要打到德黑蘭撐不下去｜川普：出兵伊朗斷後援 促成哈瑪斯繳械｜2026/08/01 中央社全球午間快報 中央社 CNA",
       "published_at": "2026-08-01T13:06:12+08:00",
@@ -777,18 +880,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 88,
       "is_breaking": true,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "中央社 CNA"
+        "中文國際突發"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E7%BE%8E%E4%BC%8A%E6%88%B0%E7%81%AB%E5%86%8D%E8%B5%B7%EF%BC%81%E5%B7%9D%E6%99%AE%E7%97%9B%E6%89%B9%E4%BC%8A%E6%9C%97%E4%B8%8D%E8%AA%A0%E5%AF%A6+%E8%A6%81%E6%89%93%E5%88%B0%E5%BE%B7%E9%BB%91%E8%98%AD%E6%92%90%E4%B8%8D%E4%B8%8B%E5%8E%BB%EF%BD%9C%E5%B7%9D%E6%99%AE%EF%BC%9A%E5%87%BA%E5%85%B5%E4%BC%8A%E6%9C%97%E6%96%B7%E5%BE%8C%E6%8F%B4+%E4%BF%83%E6%88%90%E5%93%88%E7%91%AA%E6%96%AF%E7%B9%B3%E6%A2%B0%EF%BD%9C2026%2F08%2F01+%E4%B8%AD%E5%A4%AE%E7%A4%BE%E5%85%A8%E7%90%83%E5%8D%88%E9%96%93%E5%BF%AB%E5%A0%B1+-+%E4%B8%AD%E5%A4%AE%E7%A4%BE+CNA%22+%E4%B8%AD%E6%96%87%E5%9C%8B%E9%9A%9B%E7%AA%81%E7%99%BC",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "f8aad392db22f07c",
+      "id": "b1d67e78df6f046a",
       "title": "日本青森外海5.8地震！ 受影響區域曝光- 國際 - 自由時報",
-      "link": "https://www.google.com/search?q=%22%E6%97%A5%E6%9C%AC%E9%9D%92%E6%A3%AE%E5%A4%96%E6%B5%B75.8%E5%9C%B0%E9%9C%87%EF%BC%81+%E5%8F%97%E5%BD%B1%E9%9F%BF%E5%8D%80%E5%9F%9F%E6%9B%9D%E5%85%89-+%E5%9C%8B%E9%9A%9B+-+%E8%87%AA%E7%94%B1%E6%99%82%E5%A0%B1%22+%E8%87%AA%E7%94%B1%E6%99%82%E5%A0%B1",
+      "link": "http://www.w3.org/2000/",
       "original_link": "https://news.google.com/rss/articles/CBMiZkFVX3lxTE03N1Jvcm9sa1pTV1BDYm9GT0ktVnVNU2NkM0VSel80d3ZIWk5lWl9kUkRFVE4tX0QtcFlhOEdNZXZNekNDNWMxbjVQOVpXeUNvUXVVZ1k3UTBPeUlmY0N4VWpFNUk1Zw?oc=5",
-      "source": "自由時報",
+      "direct_link": "http://www.w3.org/2000/",
+      "link_status": "direct",
+      "link_type": "resolved-page",
+      "source_home": "",
+      "source": "中文國際突發",
       "query_source": "中文國際突發",
       "summary": "日本青森外海5.8地震！ 受影響區域曝光- 國際 自由時報",
       "published_at": "2026-08-01T11:41:53+08:00",
@@ -806,20 +915,26 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 88,
       "is_breaking": true,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "自由時報"
+        "中文國際突發"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E6%97%A5%E6%9C%AC%E9%9D%92%E6%A3%AE%E5%A4%96%E6%B5%B75.8%E5%9C%B0%E9%9C%87%EF%BC%81+%E5%8F%97%E5%BD%B1%E9%9F%BF%E5%8D%80%E5%9F%9F%E6%9B%9D%E5%85%89-+%E5%9C%8B%E9%9A%9B+-+%E8%87%AA%E7%94%B1%E6%99%82%E5%A0%B1%22+%E4%B8%AD%E6%96%87%E5%9C%8B%E9%9A%9B%E7%AA%81%E7%99%BC",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "772c6cdebfc6a068",
+      "id": "2847f41eeab1192c",
       "title": "日本又震！青森外海規模5.8地震 北海道、東北最大震度4",
-      "link": "https://www.google.com/search?q=%22%E6%97%A5%E6%9C%AC%E5%8F%88%E9%9C%87%EF%BC%81%E9%9D%92%E6%A3%AE%E5%A4%96%E6%B5%B7%E8%A6%8F%E6%A8%A15.8%E5%9C%B0%E9%9C%87+%E5%8C%97%E6%B5%B7%E9%81%93%E3%80%81%E6%9D%B1%E5%8C%97%E6%9C%80%E5%A4%A7%E9%9C%87%E5%BA%A64+-+UDN%22+UDN",
+      "link": "http://www.w3.org/2000/",
       "original_link": "https://news.google.com/rss/articles/CBMiU0FVX3lxTE1PTXlmWl9SMWpLMjU3WXBOZTFNbk5sSjhjd0tMdmwzY0lUNHZuaWIyeVd4WDJOWk9VTHVHeUZ1ZVdGS2FMX01rTl9nVnhWVktFU2040gFYQVVfeXFMTmxWekJFYnF3SHN1eTJqamlSWFlWUUwzZkNrRzctTHgwOWhMT2MxQjdxQVFsMENlQjBTcXFXSm0wSGY0RU5RUmdZd0c5ZURCQ0EtNEdDSVNuQg?oc=5",
-      "source": "UDN",
+      "direct_link": "http://www.w3.org/2000/",
+      "link_status": "direct",
+      "link_type": "resolved-page",
+      "source_home": "",
+      "source": "中文國際突發",
       "query_source": "中文國際突發",
-      "summary": "日本又震！青森外海規模5.8地震 北海道、東北最大震度4 UDN",
+      "summary": "日本又震！青森外海規模5.8地震 北海道、東北最大震度4 udn",
       "published_at": "2026-08-01T11:39:41+08:00",
       "region": "GLOBAL",
       "topic": "policy",
@@ -835,18 +950,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 88,
       "is_breaking": true,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "UDN"
+        "中文國際突發"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E6%97%A5%E6%9C%AC%E5%8F%88%E9%9C%87%EF%BC%81%E9%9D%92%E6%A3%AE%E5%A4%96%E6%B5%B7%E8%A6%8F%E6%A8%A15.8%E5%9C%B0%E9%9C%87+%E5%8C%97%E6%B5%B7%E9%81%93%E3%80%81%E6%9D%B1%E5%8C%97%E6%9C%80%E5%A4%A7%E9%9C%87%E5%BA%A64%22+%E4%B8%AD%E6%96%87%E5%9C%8B%E9%9A%9B%E7%AA%81%E7%99%BC",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "9b5d3b72a599cb1d",
+      "id": "bf6adb85f812d172",
       "title": "青森規模5.8地震 青森縣、岩手縣部分地區最大震度4 - 中央社 CNA",
-      "link": "https://www.google.com/search?q=%22%E9%9D%92%E6%A3%AE%E8%A6%8F%E6%A8%A15.8%E5%9C%B0%E9%9C%87+%E9%9D%92%E6%A3%AE%E7%B8%A3%E3%80%81%E5%B2%A9%E6%89%8B%E7%B8%A3%E9%83%A8%E5%88%86%E5%9C%B0%E5%8D%80%E6%9C%80%E5%A4%A7%E9%9C%87%E5%BA%A64+-+%E4%B8%AD%E5%A4%AE%E7%A4%BE+CNA%22+%E4%B8%AD%E5%A4%AE%E7%A4%BE+CNA",
+      "link": "http://www.w3.org/2000/",
       "original_link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9admxEZjVlQVd6aHBVaTRQVVNpcWNZRlFiVGNfQ2RjOWZHcHA3SHVFMEdobmJJZ1JfTWRpcURlamZlTVZNeUNTVHBDN0Qta2R2eXB3MnFOSWpQRWF5eGow?oc=5",
-      "source": "中央社 CNA",
+      "direct_link": "http://www.w3.org/2000/",
+      "link_status": "direct",
+      "link_type": "resolved-page",
+      "source_home": "",
+      "source": "中文國際突發",
       "query_source": "中文國際突發",
       "summary": "青森規模5.8地震 青森縣、岩手縣部分地區最大震度4 中央社 CNA",
       "published_at": "2026-08-01T11:21:00+08:00",
@@ -864,20 +985,26 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 88,
       "is_breaking": true,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "中央社 CNA"
+        "中文國際突發"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E9%9D%92%E6%A3%AE%E8%A6%8F%E6%A8%A15.8%E5%9C%B0%E9%9C%87+%E9%9D%92%E6%A3%AE%E7%B8%A3%E3%80%81%E5%B2%A9%E6%89%8B%E7%B8%A3%E9%83%A8%E5%88%86%E5%9C%B0%E5%8D%80%E6%9C%80%E5%A4%A7%E9%9C%87%E5%BA%A64+-+%E4%B8%AD%E5%A4%AE%E7%A4%BE+CNA%22+%E4%B8%AD%E6%96%87%E5%9C%8B%E9%9A%9B%E7%AA%81%E7%99%BC",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "bd489ecf30e52e37",
+      "id": "802d47fbc8cd5e36",
       "title": "嗆把伊朗「打到受不了」！川普下令再轟伊朗 美以擬猛轟能源設施",
-      "link": "https://www.google.com/search?q=%22%E5%97%86%E6%8A%8A%E4%BC%8A%E6%9C%97%E3%80%8C%E6%89%93%E5%88%B0%E5%8F%97%E4%B8%8D%E4%BA%86%E3%80%8D%EF%BC%81%E5%B7%9D%E6%99%AE%E4%B8%8B%E4%BB%A4%E5%86%8D%E8%BD%9F%E4%BC%8A%E6%9C%97+%E7%BE%8E%E4%BB%A5%E6%93%AC%E7%8C%9B%E8%BD%9F%E8%83%BD%E6%BA%90%E8%A8%AD%E6%96%BD+-+UDN%22+UDN",
+      "link": "http://www.w3.org/2000/",
       "original_link": "https://news.google.com/rss/articles/CBMiU0FVX3lxTFBoTkJhTXdoQlFEN3hBc3JTUE5XbVZ2b19ZRW85a0MwQmdpbUpsb3piR0lZQTM1dEZheF9ocE15YldCME1SYzQ3NWVIanN2bEYyV0VR0gFYQVVfeXFMTTduUkItTjA1enE5NThGMGUxVGF4bWZwT0lWanEzb2dMYnNIMlVaRUFLc3FhbmVvOWhheW1Cd291ZGJSSEttUUk0ZTRzblJWMkZPd0JzbHhGWA?oc=5",
-      "source": "UDN",
+      "direct_link": "http://www.w3.org/2000/",
+      "link_status": "direct",
+      "link_type": "resolved-page",
+      "source_home": "",
+      "source": "中文國際突發",
       "query_source": "中文國際突發",
-      "summary": "嗆把伊朗「打到受不了」！川普下令再轟伊朗 美以擬猛轟能源設施 UDN",
+      "summary": "嗆把伊朗「打到受不了」！川普下令再轟伊朗 美以擬猛轟能源設施 udn",
       "published_at": "2026-08-01T07:32:59+08:00",
       "region": "GLOBAL",
       "topic": "policy",
@@ -893,18 +1020,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 88,
       "is_breaking": true,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "UDN"
+        "中文國際突發"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%97%86%E6%8A%8A%E4%BC%8A%E6%9C%97%E3%80%8C%E6%89%93%E5%88%B0%E5%8F%97%E4%B8%8D%E4%BA%86%E3%80%8D%EF%BC%81%E5%B7%9D%E6%99%AE%E4%B8%8B%E4%BB%A4%E5%86%8D%E8%BD%9F%E4%BC%8A%E6%9C%97+%E7%BE%8E%E4%BB%A5%E6%93%AC%E7%8C%9B%E8%BD%9F%E8%83%BD%E6%BA%90%E8%A8%AD%E6%96%BD%22+%E4%B8%AD%E6%96%87%E5%9C%8B%E9%9A%9B%E7%AA%81%E7%99%BC",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "a7e3a35b5e2ec940",
+      "id": "0500fa1ab9e2a317",
       "title": "川普：美國將「猛烈打擊」伊朗 矢言贏得戰爭 - news.cnyes.com",
-      "link": "https://www.google.com/search?q=%22%E5%B7%9D%E6%99%AE%EF%BC%9A%E7%BE%8E%E5%9C%8B%E5%B0%87%E3%80%8C%E7%8C%9B%E7%83%88%E6%89%93%E6%93%8A%E3%80%8D%E4%BC%8A%E6%9C%97+%E7%9F%A2%E8%A8%80%E8%B4%8F%E5%BE%97%E6%88%B0%E7%88%AD+-+news.cnyes.com%22+news.cnyes.com",
+      "link": "http://www.w3.org/2000/",
       "original_link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE03S0pKVXpzdEZoVFk3TzBENXRuYl9sa3FhNnR1T0FlWGhialZjR1QzX0ladkhtSHE2SWYtV1h5UnJyMzJsSks4VDkzTlNfbVE?oc=5",
-      "source": "news.cnyes.com",
+      "direct_link": "http://www.w3.org/2000/",
+      "link_status": "direct",
+      "link_type": "resolved-page",
+      "source_home": "",
+      "source": "中文國際突發",
       "query_source": "中文國際突發",
       "summary": "川普：美國將「猛烈打擊」伊朗 矢言贏得戰爭 news.cnyes.com",
       "published_at": "2026-08-01T05:00:07+08:00",
@@ -922,18 +1055,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 88,
       "is_breaking": true,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "news.cnyes.com"
+        "中文國際突發"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%B7%9D%E6%99%AE%EF%BC%9A%E7%BE%8E%E5%9C%8B%E5%B0%87%E3%80%8C%E7%8C%9B%E7%83%88%E6%89%93%E6%93%8A%E3%80%8D%E4%BC%8A%E6%9C%97+%E7%9F%A2%E8%A8%80%E8%B4%8F%E5%BE%97%E6%88%B0%E7%88%AD+-+news.cnyes.com%22+%E4%B8%AD%E6%96%87%E5%9C%8B%E9%9A%9B%E7%AA%81%E7%99%BC",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "7b0877619705fa0c",
+      "id": "de42a555a8e62f74",
       "title": "第053號 7月31日0時58分 規模 4.7 臺東縣政府北北東方 44.1 公里 (位於臺東縣成功鎮) - 中央氣象署地震測報中心",
-      "link": "https://www.google.com/search?q=%22%E7%AC%AC053%E8%99%9F+7%E6%9C%8831%E6%97%A50%E6%99%8258%E5%88%86+%E8%A6%8F%E6%A8%A1+4.7+%E8%87%BA%E6%9D%B1%E7%B8%A3%E6%94%BF%E5%BA%9C%E5%8C%97%E5%8C%97%E6%9D%B1%E6%96%B9+44.1+%E5%85%AC%E9%87%8C+%28%E4%BD%8D%E6%96%BC%E8%87%BA%E6%9D%B1%E7%B8%A3%E6%88%90%E5%8A%9F%E9%8E%AE%29+-+%E4%B8%AD%E5%A4%AE%E6%B0%A3%E8%B1%A1%E7%BD%B2%E5%9C%B0%E9%9C%87%E6%B8%AC%E5%A0%B1%E4%B8%AD%E5%BF%83%22+%E4%B8%AD%E5%A4%AE%E6%B0%A3%E8%B1%A1%E7%BD%B2%E5%9C%B0%E9%9C%87%E6%B8%AC%E5%A0%B1%E4%B8%AD%E5%BF%83",
+      "link": "http://www.w3.org/2000/",
       "original_link": "https://news.google.com/rss/articles/CBMieEFVX3lxTE9USjNDc2d3WDA3YXJJc2pxR3NGaTBoQlRSYm5WQUxMU3JvdnVrTDhJakplTVFFbzJTTzZLOTZ3ZTdRemJIVDkzYS1xUm9jRE01Mko5N1ZkUGZJR3Q2RXhzZDRnajNXeGVGU0tiQmZDT3NhSXFGYTF5RQ?oc=5",
-      "source": "中央氣象署地震測報中心",
+      "direct_link": "http://www.w3.org/2000/",
+      "link_status": "direct",
+      "link_type": "resolved-page",
+      "source_home": "",
+      "source": "中文國際突發",
       "query_source": "中文國際突發",
       "summary": "第053號 7月31日0時58分 規模 4.7 臺東縣政府北北東方 44.1 公里 (位於臺東縣成功鎮) 中央氣象署地震測報中心",
       "published_at": "2026-07-31T00:58:00+08:00",
@@ -951,18 +1090,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 88,
       "is_breaking": true,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "中央氣象署地震測報中心"
+        "中文國際突發"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E7%AC%AC053%E8%99%9F+7%E6%9C%8831%E6%97%A50%E6%99%8258%E5%88%86+%E8%A6%8F%E6%A8%A1+4.7+%E8%87%BA%E6%9D%B1%E7%B8%A3%E6%94%BF%E5%BA%9C%E5%8C%97%E5%8C%97%E6%9D%B1%E6%96%B9+44.1+%E5%85%AC%E9%87%8C+%28%E4%BD%8D%E6%96%BC%E8%87%BA%E6%9D%B1%E7%B8%A3%E6%88%90%E5%8A%9F%E9%8E%AE%29+-+%E4%B8%AD%E5%A4%AE%E6%B0%A3%E8%B1%A1%E7%BD%B2%E5%9C%B0%E9%9C%87%E6%B8%AC%E5%A0%B1%E4%B8%AD%E5%BF%83%22+%E4%B8%AD%E6%96%87%E5%9C%8B%E9%9A%9B%E7%AA%81%E7%99%BC",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "7aac3d6c84907254",
+      "id": "ed00ab5ddc454072",
       "title": "市場不信Fed會再升息？美債曲線出現罕見警訊 - news.cnyes.com",
-      "link": "https://www.google.com/search?q=%22%E5%B8%82%E5%A0%B4%E4%B8%8D%E4%BF%A1Fed%E6%9C%83%E5%86%8D%E5%8D%87%E6%81%AF%EF%BC%9F%E7%BE%8E%E5%82%B5%E6%9B%B2%E7%B7%9A%E5%87%BA%E7%8F%BE%E7%BD%95%E8%A6%8B%E8%AD%A6%E8%A8%8A+-+news.cnyes.com%22+news.cnyes.com",
+      "link": "https://www.google.com/search?q=%22%E5%B8%82%E5%A0%B4%E4%B8%8D%E4%BF%A1Fed%E6%9C%83%E5%86%8D%E5%8D%87%E6%81%AF%EF%BC%9F%E7%BE%8E%E5%82%B5%E6%9B%B2%E7%B7%9A%E5%87%BA%E7%8F%BE%E7%BD%95%E8%A6%8B%E8%AD%A6%E8%A8%8A+-+news.cnyes.com%22+site%3Acnyes.com",
       "original_link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9hVk5CQWhVUzd2WG43cEsxV250d3p5QTZ1M3dOa051TV9zd0FVTFp6MjE5c3FEUnVJeXc0eWszazJJdDRTZGR6TlZmMGNTSmc?oc=5",
-      "source": "news.cnyes.com",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://news.cnyes.com/",
+      "source": "鉅亨網",
       "query_source": "鉅亨網",
       "summary": "市場不信Fed會再升息？美債曲線出現罕見警訊 news.cnyes.com",
       "published_at": "2026-07-31T23:00:07+08:00",
@@ -980,18 +1125,273 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 86,
       "is_breaking": true,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "news.cnyes.com"
+        "鉅亨網"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%B8%82%E5%A0%B4%E4%B8%8D%E4%BF%A1Fed%E6%9C%83%E5%86%8D%E5%8D%87%E6%81%AF%EF%BC%9F%E7%BE%8E%E5%82%B5%E6%9B%B2%E7%B7%9A%E5%87%BA%E7%8F%BE%E7%BD%95%E8%A6%8B%E8%AD%A6%E8%A8%8A+-+news.cnyes.com%22+site%3Acnyes.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "4d26d1560b6b8e34",
+      "id": "bce56e59d5ddb50f",
+      "title": "川普擬恢復對伊朗動武 美籲公民考慮離境",
+      "link": "https://tw.news.yahoo.com/%E5%B7%9D%E6%99%AE%E6%93%AC%E6%81%A2%E5%BE%A9%E5%B0%8D%E4%BC%8A%E6%9C%97%E5%8B%95%E6%AD%A6-%E7%BE%8E%E7%B1%B2%E5%85%AC%E6%B0%91%E8%80%83%E6%85%AE%E9%9B%A2%E5%A2%83-235522964.html",
+      "original_link": "https://tw.news.yahoo.com/%E5%B7%9D%E6%99%AE%E6%93%AC%E6%81%A2%E5%BE%A9%E5%B0%8D%E4%BC%8A%E6%9C%97%E5%8B%95%E6%AD%A6-%E7%BE%8E%E7%B1%B2%E5%85%AC%E6%B0%91%E8%80%83%E6%85%AE%E9%9B%A2%E5%A2%83-235522964.html",
+      "direct_link": "https://tw.news.yahoo.com/%E5%B7%9D%E6%99%AE%E6%93%AC%E6%81%A2%E5%BE%A9%E5%B0%8D%E4%BC%8A%E6%9C%97%E5%8B%95%E6%AD%A6-%E7%BE%8E%E7%B1%B2%E5%85%AC%E6%B0%91%E8%80%83%E6%85%AE%E9%9B%A2%E5%A2%83-235522964.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "[NOWNEWS今日新聞]美國總統川普（DonaldTrump）7月31日表示將恢復對伊朗的軍事打擊，最快可能於本周末展開新一輪攻勢，而且可能持續多日。隨著中東局勢持續升溫，美國駐約旦等地使館陸續發布",
+      "published_at": "2026-08-02T07:55:22+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": true,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%B7%9D%E6%99%AE%E6%93%AC%E6%81%A2%E5%BE%A9%E5%B0%8D%E4%BC%8A%E6%9C%97%E5%8B%95%E6%AD%A6+%E7%BE%8E%E7%B1%B2%E5%85%AC%E6%B0%91%E8%80%83%E6%85%AE%E9%9B%A2%E5%A2%83%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "08323efd1bb8631b",
+      "title": "伊朗威脅 美國若發動新攻擊將襲擊他國能源設施",
+      "link": "https://tw.news.yahoo.com/%E4%BC%8A%E6%9C%97%E5%A8%81%E8%84%85-%E7%BE%8E%E5%9C%8B%E8%8B%A5%E7%99%BC%E5%8B%95%E6%96%B0%E6%94%BB%E6%93%8A%E5%B0%87%E8%A5%B2%E6%93%8A%E4%BB%96%E5%9C%8B%E8%83%BD%E6%BA%90%E8%A8%AD%E6%96%BD-231447047.html",
+      "original_link": "https://tw.news.yahoo.com/%E4%BC%8A%E6%9C%97%E5%A8%81%E8%84%85-%E7%BE%8E%E5%9C%8B%E8%8B%A5%E7%99%BC%E5%8B%95%E6%96%B0%E6%94%BB%E6%93%8A%E5%B0%87%E8%A5%B2%E6%93%8A%E4%BB%96%E5%9C%8B%E8%83%BD%E6%BA%90%E8%A8%AD%E6%96%BD-231447047.html",
+      "direct_link": "https://tw.news.yahoo.com/%E4%BC%8A%E6%9C%97%E5%A8%81%E8%84%85-%E7%BE%8E%E5%9C%8B%E8%8B%A5%E7%99%BC%E5%8B%95%E6%96%B0%E6%94%BB%E6%93%8A%E5%B0%87%E8%A5%B2%E6%93%8A%E4%BB%96%E5%9C%8B%E8%83%BD%E6%BA%90%E8%A8%AD%E6%96%BD-231447047.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "路透社報導，伊朗1日警告美國不要採取任何「冒險行動」，表示一旦美軍執行美國總統川普(Donald Trump)的威脅對伊朗目標發動新攻擊，伊朗將會果斷報復。 伊朗外長阿拉奇(Abbas Araghch",
+      "published_at": "2026-08-02T07:14:47+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "energy"
+      ],
+      "primary_industry": "energy",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "能源公用",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": true,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E4%BC%8A%E6%9C%97%E5%A8%81%E8%84%85+%E7%BE%8E%E5%9C%8B%E8%8B%A5%E7%99%BC%E5%8B%95%E6%96%B0%E6%94%BB%E6%93%8A%E5%B0%87%E8%A5%B2%E6%93%8A%E4%BB%96%E5%9C%8B%E8%83%BD%E6%BA%90%E8%A8%AD%E6%96%BD%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "9651ff999c76a367",
+      "title": "法新：美國駐中東使館敦促公民 隨時做好撤離準備",
+      "link": "https://tw.news.yahoo.com/%E6%B3%95%E6%96%B0-%E7%BE%8E%E5%9C%8B%E9%A7%90%E4%B8%AD%E6%9D%B1%E4%BD%BF%E9%A4%A8%E6%95%A6%E4%BF%83%E5%85%AC%E6%B0%91-%E9%9A%A8%E6%99%82%E5%81%9A%E5%A5%BD%E6%92%A4%E9%9B%A2%E6%BA%96%E5%82%99-131252456.html",
+      "original_link": "https://tw.news.yahoo.com/%E6%B3%95%E6%96%B0-%E7%BE%8E%E5%9C%8B%E9%A7%90%E4%B8%AD%E6%9D%B1%E4%BD%BF%E9%A4%A8%E6%95%A6%E4%BF%83%E5%85%AC%E6%B0%91-%E9%9A%A8%E6%99%82%E5%81%9A%E5%A5%BD%E6%92%A4%E9%9B%A2%E6%BA%96%E5%82%99-131252456.html",
+      "direct_link": "https://tw.news.yahoo.com/%E6%B3%95%E6%96%B0-%E7%BE%8E%E5%9C%8B%E9%A7%90%E4%B8%AD%E6%9D%B1%E4%BD%BF%E9%A4%A8%E6%95%A6%E4%BF%83%E5%85%AC%E6%B0%91-%E9%9A%A8%E6%99%82%E5%81%9A%E5%A5%BD%E6%92%A4%E9%9B%A2%E6%BA%96%E5%82%99-131252456.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "法新社今天（1日）報導，美國在中東的大使館紛紛發出警訊，要求美國公民隨時注意當地局勢，做好撤離的準備。 美國駐約旦、以色列和伊拉克大使館在社群媒體上發布安全警示，敦促在中東地區的美國人「考慮離開，或做",
+      "published_at": "2026-08-01T21:12:52+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "telecom"
+      ],
+      "primary_industry": "telecom",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "電信媒體",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": true,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E6%B3%95%E6%96%B0%EF%BC%9A%E7%BE%8E%E5%9C%8B%E9%A7%90%E4%B8%AD%E6%9D%B1%E4%BD%BF%E9%A4%A8%E6%95%A6%E4%BF%83%E5%85%AC%E6%B0%91+%E9%9A%A8%E6%99%82%E5%81%9A%E5%A5%BD%E6%92%A4%E9%9B%A2%E6%BA%96%E5%82%99%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "d84112426bb8f016",
+      "title": "記憶體巨頭「回購牛市」將到來？鎧俠宣布8000億日元股票回購計畫開第一槍",
+      "link": "https://tw.stock.yahoo.com/news/%E8%A8%98%E6%86%B6%E9%AB%94%E5%B7%A8%E9%A0%AD-%E5%9B%9E%E8%B3%BC%E7%89%9B%E5%B8%82-%E5%B0%87%E5%88%B0%E4%BE%86-%E9%8E%A7%E4%BF%A0%E5%AE%A3%E5%B8%838000%E5%84%84%E6%97%A5%E5%85%83%E8%82%A1%E7%A5%A8%E5%9B%9E%E8%B3%BC%E8%A8%88%E7%95%AB%E9%96%8B%E7%AC%AC-%E6%A7%8D-131002280.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E8%A8%98%E6%86%B6%E9%AB%94%E5%B7%A8%E9%A0%AD-%E5%9B%9E%E8%B3%BC%E7%89%9B%E5%B8%82-%E5%B0%87%E5%88%B0%E4%BE%86-%E9%8E%A7%E4%BF%A0%E5%AE%A3%E5%B8%838000%E5%84%84%E6%97%A5%E5%85%83%E8%82%A1%E7%A5%A8%E5%9B%9E%E8%B3%BC%E8%A8%88%E7%95%AB%E9%96%8B%E7%AC%AC-%E6%A7%8D-131002280.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E8%A8%98%E6%86%B6%E9%AB%94%E5%B7%A8%E9%A0%AD-%E5%9B%9E%E8%B3%BC%E7%89%9B%E5%B8%82-%E5%B0%87%E5%88%B0%E4%BE%86-%E9%8E%A7%E4%BF%A0%E5%AE%A3%E5%B8%838000%E5%84%84%E6%97%A5%E5%85%83%E8%82%A1%E7%A5%A8%E5%9B%9E%E8%B3%BC%E8%A8%88%E7%95%AB%E9%96%8B%E7%AC%AC-%E6%A7%8D-131002280.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "日本快閃記憶體大廠鎧俠宣布啟動規模 8000 億日元股票回購計畫，搭配 AI 資料中心需求升溫，推動 NAND 產業迎來超級景氣循環。摩根大通、瑞銀看好鎧俠獲利爆發，南韓三星與 SK 海力士也可能加入",
+      "published_at": "2026-08-01T21:10:02+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "technology"
+      ],
+      "primary_industry": "technology",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "科技電子",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": true,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%A8%98%E6%86%B6%E9%AB%94%E5%B7%A8%E9%A0%AD%E3%80%8C%E5%9B%9E%E8%B3%BC%E7%89%9B%E5%B8%82%E3%80%8D%E5%B0%87%E5%88%B0%E4%BE%86%EF%BC%9F%E9%8E%A7%E4%BF%A0%E5%AE%A3%E5%B8%838000%E5%84%84%E6%97%A5%E5%85%83%E8%82%A1%E7%A5%A8%E5%9B%9E%E8%B3%BC%E8%A8%88%E7%95%AB%E9%96%8B%E7%AC%AC%E4%B8%80%E6%A7%8D%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "de5eeb9471e02128",
+      "title": "俄羅斯7月376枚飛彈襲烏 寫單月最高紀錄",
+      "link": "https://tw.news.yahoo.com/%E4%BF%84%E7%BE%85%E6%96%AF7%E6%9C%88376%E6%9E%9A%E9%A3%9B%E5%BD%88%E8%A5%B2%E7%83%8F-%E5%AF%AB%E5%96%AE%E6%9C%88%E6%9C%80%E9%AB%98%E7%B4%80%E9%8C%84-121902999.html",
+      "original_link": "https://tw.news.yahoo.com/%E4%BF%84%E7%BE%85%E6%96%AF7%E6%9C%88376%E6%9E%9A%E9%A3%9B%E5%BD%88%E8%A5%B2%E7%83%8F-%E5%AF%AB%E5%96%AE%E6%9C%88%E6%9C%80%E9%AB%98%E7%B4%80%E9%8C%84-121902999.html",
+      "direct_link": "https://tw.news.yahoo.com/%E4%BF%84%E7%BE%85%E6%96%AF7%E6%9C%88376%E6%9E%9A%E9%A3%9B%E5%BD%88%E8%A5%B2%E7%83%8F-%E5%AF%AB%E5%96%AE%E6%9C%88%E6%9C%80%E9%AB%98%E7%B4%80%E9%8C%84-121902999.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "法新社分析顯示，俄羅斯7月對烏克蘭發射了376枚飛彈，創下單月最高紀錄。基輔當局正持續敦促盟友提供反彈道飛彈防空系統。 法新社今天（1日）報導，根據烏克蘭空軍發布的每日戰況報告，俄軍7月間一共對烏克蘭",
+      "published_at": "2026-08-01T20:19:02+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": true,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E4%BF%84%E7%BE%85%E6%96%AF7%E6%9C%88376%E6%9E%9A%E9%A3%9B%E5%BD%88%E8%A5%B2%E7%83%8F+%E5%AF%AB%E5%96%AE%E6%9C%88%E6%9C%80%E9%AB%98%E7%B4%80%E9%8C%84%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "4e78629cd5a2ebb3",
+      "title": "【8月行情搶先看】聯準會沒升息、市場利率先收緊 法人：投資回歸企業獲利",
+      "link": "https://tw.news.yahoo.com/8%E6%9C%88%E8%A1%8C%E6%83%85%E6%90%B6%E5%85%88%E7%9C%8B-%E8%81%AF%E6%BA%96%E6%9C%83%E6%B2%92%E5%8D%87%E6%81%AF-%E5%B8%82%E5%A0%B4%E5%88%A9%E7%8E%87%E5%85%88%E6%94%B6%E7%B7%8A-%E6%B3%95%E4%BA%BA-%E6%8A%95%E8%B3%87%E5%9B%9E%E6%AD%B8%E4%BC%81%E6%A5%AD%E7%8D%B2%E5%88%A9-164535877.html",
+      "original_link": "https://tw.news.yahoo.com/8%E6%9C%88%E8%A1%8C%E6%83%85%E6%90%B6%E5%85%88%E7%9C%8B-%E8%81%AF%E6%BA%96%E6%9C%83%E6%B2%92%E5%8D%87%E6%81%AF-%E5%B8%82%E5%A0%B4%E5%88%A9%E7%8E%87%E5%85%88%E6%94%B6%E7%B7%8A-%E6%B3%95%E4%BA%BA-%E6%8A%95%E8%B3%87%E5%9B%9E%E6%AD%B8%E4%BC%81%E6%A5%AD%E7%8D%B2%E5%88%A9-164535877.html",
+      "direct_link": "https://tw.news.yahoo.com/8%E6%9C%88%E8%A1%8C%E6%83%85%E6%90%B6%E5%85%88%E7%9C%8B-%E8%81%AF%E6%BA%96%E6%9C%83%E6%B2%92%E5%8D%87%E6%81%AF-%E5%B8%82%E5%A0%B4%E5%88%A9%E7%8E%87%E5%85%88%E6%94%B6%E7%B7%8A-%E6%B3%95%E4%BA%BA-%E6%8A%95%E8%B3%87%E5%9B%9E%E6%AD%B8%E4%BC%81%E6%A5%AD%E7%8D%B2%E5%88%A9-164535877.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/intl-markets/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市國際財經",
+      "summary": "聯準會本次維持政策利率不變，但會議中仍有三位官員主張升息，市場對後續政策方向再度出現討論。「鉅亨買基金」表示，債券殖利率與企業融資成本早已率先攀升，金融環境實際上已比政策利率更早收緊。此外，除了能源價",
+      "published_at": "2026-08-02T00:45:35+08:00",
+      "region": "GLOBAL",
+      "topic": "market",
+      "industries": [
+        "macro-policy",
+        "energy",
+        "finance"
+      ],
+      "primary_industry": "macro-policy",
+      "asset_class": "fund",
+      "crypto_categories": [],
+      "industry_label": "總經政策",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 83,
+      "is_breaking": true,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E3%80%908%E6%9C%88%E8%A1%8C%E6%83%85%E6%90%B6%E5%85%88%E7%9C%8B%E3%80%91%E8%81%AF%E6%BA%96%E6%9C%83%E6%B2%92%E5%8D%87%E6%81%AF%E3%80%81%E5%B8%82%E5%A0%B4%E5%88%A9%E7%8E%87%E5%85%88%E6%94%B6%E7%B7%8A+%E6%B3%95%E4%BA%BA%EF%BC%9A%E6%8A%95%E8%B3%87%E5%9B%9E%E6%AD%B8%E4%BC%81%E6%A5%AD%E7%8D%B2%E5%88%A9%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "28f16e1c67ac3d2e",
+      "title": "漲瘋了！韓股飆15%熔斷，台股噴2900點史上最大：海力士飆27%、台積電大漲8％ - 動區動趨",
+      "link": "https://www.google.com/search?q=%22%E6%BC%B2%E7%98%8B%E4%BA%86%EF%BC%81%E9%9F%93%E8%82%A1%E9%A3%8615%25%E7%86%94%E6%96%B7%EF%BC%8C%E5%8F%B0%E8%82%A1%E5%99%B42900%E9%BB%9E%E5%8F%B2%E4%B8%8A%E6%9C%80%E5%A4%A7%EF%BC%9A%E6%B5%B7%E5%8A%9B%E5%A3%AB%E9%A3%8627%25%E3%80%81%E5%8F%B0%E7%A9%8D%E9%9B%BB%E5%A4%A7%E6%BC%B28%EF%BC%85+-+%E5%8B%95%E5%8D%80%E5%8B%95%E8%B6%A8%22+site%3Ablocktempo.com",
+      "original_link": "https://news.google.com/rss/articles/CBMimwFBVV95cUxObDlSSGxIZ3VmQU1kTkpaM1RYOFVrWnVEQzJsNkxCTVNVSFpXLWVHTXZpRGFUQTlCS3BzZHZVbmlJNnNuV1BhYk9IMktSNV9SY1lkaVFRVGNQSEVXUzhHMy01SWI5Y21RV0hneFY4XzJUZ1JoV2twNVNIc0J6T3A5WHoxdWw5bU9qQS1TTUJjWVN2enhmWFJ0M0hUQQ?oc=5",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.blocktempo.com/",
+      "source": "動區動趨 BlockTempo",
+      "query_source": "動區動趨 BlockTempo",
+      "summary": "漲瘋了！韓股飆15%熔斷，台股噴2900點史上最大：海力士飆27%、台積電大漲8％ 動區動趨",
+      "published_at": "2026-07-31T10:13:24+08:00",
+      "region": "GLOBAL",
+      "topic": "crypto",
+      "industries": [
+        "crypto"
+      ],
+      "primary_industry": "crypto",
+      "asset_class": "crypto",
+      "crypto_categories": [
+        "market"
+      ],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "crypto-media",
+      "origin": "publisher-search",
+      "quality_score": 82,
+      "is_breaking": true,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "動區動趨 BlockTempo"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E6%BC%B2%E7%98%8B%E4%BA%86%EF%BC%81%E9%9F%93%E8%82%A1%E9%A3%8615%25%E7%86%94%E6%96%B7%EF%BC%8C%E5%8F%B0%E8%82%A1%E5%99%B42900%E9%BB%9E%E5%8F%B2%E4%B8%8A%E6%9C%80%E5%A4%A7%EF%BC%9A%E6%B5%B7%E5%8A%9B%E5%A3%AB%E9%A3%8627%25%E3%80%81%E5%8F%B0%E7%A9%8D%E9%9B%BB%E5%A4%A7%E6%BC%B28%EF%BC%85+-+%E5%8B%95%E5%8D%80%E5%8B%95%E8%B6%A8%22+site%3Ablocktempo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "247d5aeca11e4cd9",
       "title": "快訊／新竹湖口「互力精密化學」工廠驚傳爆炸起火！焦黑濃煙竄天 周邊道路緊急封閉",
-      "link": "https://www.google.com/search?q=%22%E5%BF%AB%E8%A8%8A%EF%BC%8F%E6%96%B0%E7%AB%B9%E6%B9%96%E5%8F%A3%E3%80%8C%E4%BA%92%E5%8A%9B%E7%B2%BE%E5%AF%86%E5%8C%96%E5%AD%B8%E3%80%8D%E5%B7%A5%E5%BB%A0%E9%A9%9A%E5%82%B3%E7%88%86%E7%82%B8%E8%B5%B7%E7%81%AB%EF%BC%81%E7%84%A6%E9%BB%91%E6%BF%83%E7%85%99%E7%AB%84%E5%A4%A9+%E5%91%A8%E9%82%8A%E9%81%93%E8%B7%AF%E7%B7%8A%E6%80%A5%E5%B0%81%E9%96%89+-+Yahoo%E8%82%A1%E5%B8%82%22+Yahoo%E8%82%A1%E5%B8%82",
+      "link": "https://www.google.com/search?q=%22%E5%BF%AB%E8%A8%8A%EF%BC%8F%E6%96%B0%E7%AB%B9%E6%B9%96%E5%8F%A3%E3%80%8C%E4%BA%92%E5%8A%9B%E7%B2%BE%E5%AF%86%E5%8C%96%E5%AD%B8%E3%80%8D%E5%B7%A5%E5%BB%A0%E9%A9%9A%E5%82%B3%E7%88%86%E7%82%B8%E8%B5%B7%E7%81%AB%EF%BC%81%E7%84%A6%E9%BB%91%E6%BF%83%E7%85%99%E7%AB%84%E5%A4%A9+%E5%91%A8%E9%82%8A%E9%81%93%E8%B7%AF%E7%B7%8A%E6%80%A5%E5%B0%81%E9%96%89%22+site%3Atw.stock.yahoo.com",
       "original_link": "https://news.google.com/rss/articles/CBMijANBVV95cUxOb2lMTlhiaFJ4bmZERm52dEZEOE54QV8yUFdhbXYtSGxSMWVQeWN1Y1hXYk1JTE5lRmRYa19hVXY5SUdHNFlaTVBwaUhvRzg5dExQdm9qYnJPU3pFSUFEN09nSWhLVWdFR2hJQUNZTzVoRmJCUTJXc1VzV29mUVZodFZWVVhnYnR4cGRseE9mbmtHQ0wzOHFFMlRWUzZrQk52R29SejIwQnp4LWJZUnI3cjZqVTV2d0ZzbXk2Q093R3dRU0VlY1pGbDhsbUhCZ3pfdDZvTFVUaUxyakh4NWVySThnWXNLNHl5dTMzUTk5U0pUZ3FJSkJCbktpZnNEU1BOTEoyZWxFRG9ERjJpVEpkMnEybXVJdE1WMXFYV3l1NC1ndFBlVGlMU2lGZU80TFZVcXRxVGQwbVNWT29nc3BRRVpCNXp2aXRUR2lSY2ZwRWZJNXVuRTFUSjdMVTJuN1ZkVTZDLWpjYWFfcTJDZGg1VThTeEZfcGlvcHU0YUhIR1NfbzZRa3JGWHZiUUY?oc=5",
-      "source": "Yahoo股市",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
       "query_source": "Yahoo 股市",
       "summary": "快訊／新竹湖口「互力精密化學」工廠驚傳爆炸起火！焦黑濃煙竄天 周邊道路緊急封閉 Yahoo股市",
       "published_at": "2026-08-01T17:12:20+08:00",
@@ -1009,75 +1409,198 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 80,
       "is_breaking": true,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "Yahoo股市"
+        "Yahoo 股市"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%BF%AB%E8%A8%8A%EF%BC%8F%E6%96%B0%E7%AB%B9%E6%B9%96%E5%8F%A3%E3%80%8C%E4%BA%92%E5%8A%9B%E7%B2%BE%E5%AF%86%E5%8C%96%E5%AD%B8%E3%80%8D%E5%B7%A5%E5%BB%A0%E9%A9%9A%E5%82%B3%E7%88%86%E7%82%B8%E8%B5%B7%E7%81%AB%EF%BC%81%E7%84%A6%E9%BB%91%E6%BF%83%E7%85%99%E7%AB%84%E5%A4%A9+%E5%91%A8%E9%82%8A%E9%81%93%E8%B7%AF%E7%B7%8A%E6%80%A5%E5%B0%81%E9%96%89%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "82b65f80655d27d2",
-      "title": "中油宣布 桶裝瓦斯等8月價格凍漲 - 東森新聞",
-      "link": "https://www.google.com/search?q=%22%E4%B8%AD%E6%B2%B9%E5%AE%A3%E5%B8%83+%E6%A1%B6%E8%A3%9D%E7%93%A6%E6%96%AF%E7%AD%898%E6%9C%88%E5%83%B9%E6%A0%BC%E5%87%8D%E6%BC%B2+-+%E6%9D%B1%E6%A3%AE%E6%96%B0%E8%81%9E%22+%E6%9D%B1%E6%A3%AE%E6%96%B0%E8%81%9E",
-      "original_link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE9JVzd1Rkt3dkJkU21kTksybDA0bkR4TFYtSVl1bmdycV85M245TldzdmdSd0lvMERvNkI4SE0zMkZhMmFLajZqeVVKN3l6clRUWWR6SQ?oc=5",
-      "source": "東森新聞",
-      "query_source": "產業雷達・能源公用",
-      "summary": "中油宣布 桶裝瓦斯等8月價格凍漲 東森新聞",
-      "published_at": "2026-08-01T16:28:00+08:00",
+      "id": "6cb733058cba11ee",
+      "title": "高盛(GS)走弱拖累美國金融股，這波分歧真正關鍵不在升息-沈奕辰 - CMoney投資網誌",
+      "link": "http://www.w3.org/2000/",
+      "original_link": "https://news.google.com/rss/articles/CBMigwFBVV95cUxPTnBsU0ZJYy05TVl5TDBWTVVlVjFxUnlOaG1hdWEybkRWRFh0QzJMVVRwMTA4S1hsY00zUXM1M3VneDlOTVB4bDJfeVpFOGJfekU5dnRTQ0xzb0xwR0dPeVBaRTBtNXM2YXpOd3VWYjdTRl9JaTFrd0tISW5SeGFnZWkzWQ?oc=5",
+      "direct_link": "http://www.w3.org/2000/",
+      "link_status": "direct",
+      "link_type": "resolved-page",
+      "source_home": "",
+      "source": "產業雷達・金融",
+      "query_source": "產業雷達・金融",
+      "summary": "高盛(GS)走弱拖累美國金融股，這波分歧真正關鍵不在升息-沈奕辰 CMoney投資網誌",
+      "published_at": "2026-08-01T22:20:08+08:00",
       "region": "TW",
       "topic": "industry",
       "industries": [
-        "energy"
+        "finance"
       ],
-      "primary_industry": "energy",
+      "primary_industry": "finance",
       "asset_class": "stock",
       "crypto_categories": [],
-      "industry_label": "能源公用",
+      "industry_label": "金融保險",
       "language": "zh-Hant",
       "source_group": "sector-search",
       "origin": "publisher-search",
       "quality_score": 74,
       "is_breaking": true,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "東森新聞"
+        "產業雷達・金融"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E9%AB%98%E7%9B%9B%28GS%29%E8%B5%B0%E5%BC%B1%E6%8B%96%E7%B4%AF%E7%BE%8E%E5%9C%8B%E9%87%91%E8%9E%8D%E8%82%A1%EF%BC%8C%E9%80%99%E6%B3%A2%E5%88%86%E6%AD%A7%E7%9C%9F%E6%AD%A3%E9%97%9C%E9%8D%B5%E4%B8%8D%E5%9C%A8%E5%8D%87%E6%81%AF-%E6%B2%88%E5%A5%95%E8%BE%B0+-+CMoney%E6%8A%95%E8%B3%87%E7%B6%B2%E8%AA%8C%22+%E7%94%A2%E6%A5%AD%E9%9B%B7%E9%81%94%E3%83%BB%E9%87%91%E8%9E%8D",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "c5de1f143d767502",
-      "title": "巴紐關閉我方駐處「天然氣進口占8％」外交部宣布停止採購 經濟部說話了",
-      "link": "https://www.google.com/search?q=%22%E5%B7%B4%E7%B4%90%E9%97%9C%E9%96%89%E6%88%91%E6%96%B9%E9%A7%90%E8%99%95%E3%80%8C%E5%A4%A9%E7%84%B6%E6%B0%A3%E9%80%B2%E5%8F%A3%E5%8D%A08%EF%BC%85%E3%80%8D%E5%A4%96%E4%BA%A4%E9%83%A8%E5%AE%A3%E5%B8%83%E5%81%9C%E6%AD%A2%E6%8E%A1%E8%B3%BC+%E7%B6%93%E6%BF%9F%E9%83%A8%E8%AA%AA%E8%A9%B1%E4%BA%86+-+UDN%22+UDN",
-      "original_link": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE4tcms3UmlleWJrU2ZlYzBaTnh6Z1VKMksyZzY0QTlHRS1mOEdkSW1rcWhIdUkwb043N05lNFl2TW16d3B0bnZvYm81SENJNWZq0gFWQVVfeXFMUHY3QVRhTjAySTFrbG4xRDJhZ3EwMER4bmVydmJucm1qeVI1Z3RsYXh0YUU2QjRFc1NOcDhOT3hKVXlXOVR0Wlg5aEJRWDhyX3RqbjFxR3c?oc=5",
-      "source": "UDN",
-      "query_source": "產業雷達・能源公用",
-      "summary": "巴紐關閉我方駐處「天然氣進口占8％」外交部宣布停止採購 經濟部說話了 UDN",
-      "published_at": "2026-07-28T16:55:32+08:00",
+      "id": "2b206308526ca81b",
+      "title": "鉅亨速報 - Factset 最新調查：空氣化工產品公司(APD-US)EPS預估上修至13.44元，預估目標價為350.00元 - TradingView",
+      "link": "http://www.w3.org/2000/",
+      "original_link": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE5NV1YzdW0zWl9IdmticlFQTmxFQl9PejdNbEYyU21veHIyY0s4WWRvMUtVVXFXOE41dFR6aEdfLXNRenYtSDBGc3JuNERrUGNhWVE0TThaNWk0Tkh5dElHeGJuemg?oc=5",
+      "direct_link": "http://www.w3.org/2000/",
+      "link_status": "direct",
+      "link_type": "resolved-page",
+      "source_home": "",
+      "source": "產業雷達・鋼鐵原物料",
+      "query_source": "產業雷達・鋼鐵原物料",
+      "summary": "鉅亨速報 - Factset 最新調查：空氣化工產品公司(APD-US)EPS預估上修至13.44元，預估目標價為350.00元 TradingView",
+      "published_at": "2026-07-31T20:16:28+08:00",
       "region": "TW",
       "topic": "industry",
       "industries": [
-        "energy"
+        "materials"
       ],
-      "primary_industry": "energy",
+      "primary_industry": "materials",
       "asset_class": "stock",
       "crypto_categories": [],
-      "industry_label": "能源公用",
+      "industry_label": "原物料傳產",
       "language": "zh-Hant",
       "source_group": "sector-search",
       "origin": "publisher-search",
-      "quality_score": 74,
+      "quality_score": 73,
       "is_breaking": true,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "UDN"
+        "產業雷達・鋼鐵原物料"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E9%89%85%E4%BA%A8%E9%80%9F%E5%A0%B1+-+Factset+%E6%9C%80%E6%96%B0%E8%AA%BF%E6%9F%A5%EF%BC%9A%E7%A9%BA%E6%B0%A3%E5%8C%96%E5%B7%A5%E7%94%A2%E5%93%81%E5%85%AC%E5%8F%B8%28APD-US%29EPS%E9%A0%90%E4%BC%B0%E4%B8%8A%E4%BF%AE%E8%87%B313.44%E5%85%83%EF%BC%8C%E9%A0%90%E4%BC%B0%E7%9B%AE%E6%A8%99%E5%83%B9%E7%82%BA350.00%E5%85%83+-+TradingView%22+%E7%94%A2%E6%A5%AD%E9%9B%B7%E9%81%94%E3%83%BB%E9%8B%BC%E9%90%B5%E5%8E%9F%E7%89%A9%E6%96%99",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "3ac13cc355aca29a",
+      "title": "快訊／華星光爆1736.15萬元違約交割 台股韭菜連日翻車",
+      "link": "https://www.google.com/search?q=%22%E5%BF%AB%E8%A8%8A%EF%BC%8F%E8%8F%AF%E6%98%9F%E5%85%89%E7%88%861736.15%E8%90%AC%E5%85%83%E9%81%95%E7%B4%84%E4%BA%A4%E5%89%B2+%E5%8F%B0%E8%82%A1%E9%9F%AD%E8%8F%9C%E9%80%A3%E6%97%A5%E7%BF%BB%E8%BB%8A%22+site%3Aettoday.net",
+      "original_link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTE5GblR6T1k4WUxnZVdYQk10VW4yZF9JRWk5ZnQ4QlFGbnE5dkJXLWZ0V0tiSWdpNTFQMzhWMmt0VmVUODlUZUlYRldJUUFxemR1WVHSAVBBVV95cUxNZjhMOHlfN3ZMZFJwbEx0Zk1fM25OeFd6eWxaM0dxa29aWFpDcEZZQ2IyMG4xS0s5SkVBYkNSMDZLbkgwNHpwOHNoTWRORDd1aA?oc=5",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://finance.ettoday.net/",
+      "source": "ETtoday 財經雲",
+      "query_source": "ETtoday 財經雲",
+      "summary": "快訊／華星光爆1736.15萬元違約交割 台股韭菜連日翻車 ETtoday財經雲",
+      "published_at": "2026-07-31T18:36:00+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "publisher-search",
+      "quality_score": 70,
+      "is_breaking": true,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "ETtoday 財經雲"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%BF%AB%E8%A8%8A%EF%BC%8F%E8%8F%AF%E6%98%9F%E5%85%89%E7%88%861736.15%E8%90%AC%E5%85%83%E9%81%95%E7%B4%84%E4%BA%A4%E5%89%B2+%E5%8F%B0%E8%82%A1%E9%9F%AD%E8%8F%9C%E9%80%A3%E6%97%A5%E7%BF%BB%E8%BB%8A%22+site%3Aettoday.net",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "2c2ac60062a6fbfe",
+      "title": "快訊／161萬人喜迎！00878季配1.01元史上最高 年化配息率逾12%",
+      "link": "https://www.google.com/search?q=%22%E5%BF%AB%E8%A8%8A%EF%BC%8F161%E8%90%AC%E4%BA%BA%E5%96%9C%E8%BF%8E%EF%BC%8100878%E5%AD%A3%E9%85%8D1.01%E5%85%83%E5%8F%B2%E4%B8%8A%E6%9C%80%E9%AB%98+%E5%B9%B4%E5%8C%96%E9%85%8D%E6%81%AF%E7%8E%87%E9%80%BE12%25%22+site%3Aettoday.net",
+      "original_link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTFBSSzJWcVR6c0hQMVlKWkxFTDZHQ0FySmZuaGs4ckxnOUR6bFRQcE9QUWZkaGw3emZnNDF1UjlPTV8wRklwQ1hMOWdtVmMwem1pMEHSAVBBVV95cUxPcnBmT2NxeE4zcU1fQVFYS0s5elRac0VxZW5ZdE5OMHE0ODNzekZNcEVmblZyektpUVFJc3B4X1BMaW9sQ2dMeGxENWdvT19DNw?oc=5",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://finance.ettoday.net/",
+      "source": "ETtoday 財經雲",
+      "query_source": "ETtoday 財經雲",
+      "summary": "快訊／161萬人喜迎！00878季配1.01元史上最高 年化配息率逾12% ETtoday財經雲",
+      "published_at": "2026-07-31T16:49:00+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "fund",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "publisher-search",
+      "quality_score": 70,
+      "is_breaking": true,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "ETtoday 財經雲"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%BF%AB%E8%A8%8A%EF%BC%8F161%E8%90%AC%E4%BA%BA%E5%96%9C%E8%BF%8E%EF%BC%8100878%E5%AD%A3%E9%85%8D1.01%E5%85%83%E5%8F%B2%E4%B8%8A%E6%9C%80%E9%AB%98+%E5%B9%B4%E5%8C%96%E9%85%8D%E6%81%AF%E7%8E%87%E9%80%BE12%25%22+site%3Aettoday.net",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "e96b00d6c92bb1ca",
+      "title": "快訊／台股收跌105.88點 台積電漲5元、國巨收跌停",
+      "link": "https://www.google.com/search?q=%22%E5%BF%AB%E8%A8%8A%EF%BC%8F%E5%8F%B0%E8%82%A1%E6%94%B6%E8%B7%8C105.88%E9%BB%9E+%E5%8F%B0%E7%A9%8D%E9%9B%BB%E6%BC%B25%E5%85%83%E3%80%81%E5%9C%8B%E5%B7%A8%E6%94%B6%E8%B7%8C%E5%81%9C%22+site%3Aettoday.net",
+      "original_link": "https://news.google.com/rss/articles/CBMiUkFVX3lxTFBaZlN2VTFUaVpwby1PbE5DVkhEV0ZCYzNkdEMzS180TUQwejJycjAtQXcyUlhCZUM4bFVQQWZ6RmNpOVQyal9vMjBqN0Y1WEdYSlHSAVBBVV95cUxNSHBwV3ZydXRPX1lxb3ZQVkpwR1ZSX2ZPNHB3U09Gd0R6YjNla05DMkphdmNMQlM0YjdvSV9GR2k1UDFGZzV6ZDVIczVkZzdtZQ?oc=5",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://finance.ettoday.net/",
+      "source": "ETtoday 財經雲",
+      "query_source": "ETtoday 財經雲",
+      "summary": "快訊／台股收跌105.88點 台積電漲5元、國巨收跌停 ETtoday財經雲",
+      "published_at": "2026-07-30T13:37:00+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "publisher-search",
+      "quality_score": 70,
+      "is_breaking": true,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "ETtoday 財經雲"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%BF%AB%E8%A8%8A%EF%BC%8F%E5%8F%B0%E8%82%A1%E6%94%B6%E8%B7%8C105.88%E9%BB%9E+%E5%8F%B0%E7%A9%8D%E9%9B%BB%E6%BC%B25%E5%85%83%E3%80%81%E5%9C%8B%E5%B7%A8%E6%94%B6%E8%B7%8C%E5%81%9C%22+site%3Aettoday.net",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "105bf8bd72bd1f62",
       "title": "資訊透明讓投資更踏實！理性評估ETF收益結構與產品特質",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fb7a5bf9c00b6",
+      "link": "https://www.google.com/search?q=%22%E8%B3%87%E8%A8%8A%E9%80%8F%E6%98%8E%E8%AE%93%E6%8A%95%E8%B3%87%E6%9B%B4%E8%B8%8F%E5%AF%A6%EF%BC%81%E7%90%86%E6%80%A7%E8%A9%95%E4%BC%B0ETF%E6%94%B6%E7%9B%8A%E7%B5%90%E6%A7%8B%E8%88%87%E7%94%A2%E5%93%81%E7%89%B9%E8%B3%AA%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fb7a5bf9c00b6",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -1096,17 +1619,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%B3%87%E8%A8%8A%E9%80%8F%E6%98%8E%E8%AE%93%E6%8A%95%E8%B3%87%E6%9B%B4%E8%B8%8F%E5%AF%A6%EF%BC%81%E7%90%86%E6%80%A7%E8%A9%95%E4%BC%B0ETF%E6%94%B6%E7%9B%8A%E7%B5%90%E6%A7%8B%E8%88%87%E7%94%A2%E5%93%81%E7%89%B9%E8%B3%AA%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "89b76d5b0ae6c395",
       "title": "本週發行量加權股價指數跌幅約為1.23%，上市股票總市值達140.85兆元",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fb781130700b2",
+      "link": "https://www.google.com/search?q=%22%E6%9C%AC%E9%80%B1%E7%99%BC%E8%A1%8C%E9%87%8F%E5%8A%A0%E6%AC%8A%E8%82%A1%E5%83%B9%E6%8C%87%E6%95%B8%E8%B7%8C%E5%B9%85%E7%B4%84%E7%82%BA1.23%25%EF%BC%8C%E4%B8%8A%E5%B8%82%E8%82%A1%E7%A5%A8%E7%B8%BD%E5%B8%82%E5%80%BC%E9%81%94140.85%E5%85%86%E5%85%83%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fb781130700b2",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -1125,17 +1654,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E6%9C%AC%E9%80%B1%E7%99%BC%E8%A1%8C%E9%87%8F%E5%8A%A0%E6%AC%8A%E8%82%A1%E5%83%B9%E6%8C%87%E6%95%B8%E8%B7%8C%E5%B9%85%E7%B4%84%E7%82%BA1.23%25%EF%BC%8C%E4%B8%8A%E5%B8%82%E8%82%A1%E7%A5%A8%E7%B8%BD%E5%B8%82%E5%80%BC%E9%81%94140.85%E5%85%86%E5%85%83%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "013b0cdeb87152ac",
       "title": "臺灣證券交易所有價證券上市審議委員會審議通過英屬開曼群島商禾碩康股份有限公司（NPIC Cayman）初次申請股票第一上市案",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fb775c2a600ae",
+      "link": "https://www.google.com/search?q=%22%E8%87%BA%E7%81%A3%E8%AD%89%E5%88%B8%E4%BA%A4%E6%98%93%E6%89%80%E6%9C%89%E5%83%B9%E8%AD%89%E5%88%B8%E4%B8%8A%E5%B8%82%E5%AF%A9%E8%AD%B0%E5%A7%94%E5%93%A1%E6%9C%83%E5%AF%A9%E8%AD%B0%E9%80%9A%E9%81%8E%E8%8B%B1%E5%B1%AC%E9%96%8B%E6%9B%BC%E7%BE%A4%E5%B3%B6%E5%95%86%E7%A6%BE%E7%A2%A9%E5%BA%B7%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%EF%BC%88NPIC+Cayman%EF%BC%89%E5%88%9D%E6%AC%A1%E7%94%B3%E8%AB%8B%E8%82%A1%E7%A5%A8%E7%AC%AC%E4%B8%80%E4%B8%8A%E5%B8%82%E6%A1%88%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fb775c2a600ae",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -1154,18 +1689,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%87%BA%E7%81%A3%E8%AD%89%E5%88%B8%E4%BA%A4%E6%98%93%E6%89%80%E6%9C%89%E5%83%B9%E8%AD%89%E5%88%B8%E4%B8%8A%E5%B8%82%E5%AF%A9%E8%AD%B0%E5%A7%94%E5%93%A1%E6%9C%83%E5%AF%A9%E8%AD%B0%E9%80%9A%E9%81%8E%E8%8B%B1%E5%B1%AC%E9%96%8B%E6%9B%BC%E7%BE%A4%E5%B3%B6%E5%95%86%E7%A6%BE%E7%A2%A9%E5%BA%B7%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%EF%BC%88NPIC+Cayman%EF%BC%89%E5%88%9D%E6%AC%A1%E7%94%B3%E8%AB%8B%E8%82%A1%E7%A5%A8%E7%AC%AC%E4%B8%80%E4%B8%8A%E5%B8%82%E6%A1%88%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "17f0f5eaae2835b3",
+      "id": "3cf574c2289514f6",
       "title": "中文版-最新消息-新聞稿-115年6月銀行衍生性金融商品交易量統計 - cbc.gov.tw",
-      "link": "https://www.google.com/search?q=%22%E4%B8%AD%E6%96%87%E7%89%88-%E6%9C%80%E6%96%B0%E6%B6%88%E6%81%AF-%E6%96%B0%E8%81%9E%E7%A8%BF-115%E5%B9%B46%E6%9C%88%E9%8A%80%E8%A1%8C%E8%A1%8D%E7%94%9F%E6%80%A7%E9%87%91%E8%9E%8D%E5%95%86%E5%93%81%E4%BA%A4%E6%98%93%E9%87%8F%E7%B5%B1%E8%A8%88+-+cbc.gov.tw%22+cbc.gov.tw",
+      "link": "https://www.google.com/search?q=%22%E4%B8%AD%E6%96%87%E7%89%88-%E6%9C%80%E6%96%B0%E6%B6%88%E6%81%AF-%E6%96%B0%E8%81%9E%E7%A8%BF-115%E5%B9%B46%E6%9C%88%E9%8A%80%E8%A1%8C%E8%A1%8D%E7%94%9F%E6%80%A7%E9%87%91%E8%9E%8D%E5%95%86%E5%93%81%E4%BA%A4%E6%98%93%E9%87%8F%E7%B5%B1%E8%A8%88+-+cbc.gov.tw%22+site%3Acbc.gov.tw",
       "original_link": "https://news.google.com/rss/articles/CBMiYkFVX3lxTFBCRExDM21LdS04UlN4aWJ5aUdfMVg2d3duVml6RmFDMU0tRlo3NzdULTdQMnlyVDRUQzB0X3d3YUtwQkozUlVoc21pQms1ZGNycklRSHJjNDNBX1lxVTl2T0NB?oc=5",
-      "source": "cbc.gov.tw",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.cbc.gov.tw/",
+      "source": "中央銀行",
       "query_source": "中央銀行",
       "summary": "中文版-最新消息-新聞稿-115年6月銀行衍生性金融商品交易量統計 cbc.gov.tw",
       "published_at": "2026-07-31T16:53:25+08:00",
@@ -1183,18 +1724,59 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "cbc.gov.tw"
+        "中央銀行"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E4%B8%AD%E6%96%87%E7%89%88-%E6%9C%80%E6%96%B0%E6%B6%88%E6%81%AF-%E6%96%B0%E8%81%9E%E7%A8%BF-115%E5%B9%B46%E6%9C%88%E9%8A%80%E8%A1%8C%E8%A1%8D%E7%94%9F%E6%80%A7%E9%87%91%E8%9E%8D%E5%95%86%E5%93%81%E4%BA%A4%E6%98%93%E9%87%8F%E7%B5%B1%E8%A8%88+-+cbc.gov.tw%22+site%3Acbc.gov.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "96a07b36668729d2",
+      "id": "7fb290ec84e72e70",
+      "title": "櫃買新聞稿 - tpex.org.tw",
+      "link": "http://www.w3.org/2000/",
+      "original_link": "https://news.google.com/rss/articles/CBMidkFVX3lxTFBqMTA1NjFtYkE1NnVIc3Uyakc3YVlaZHZ5TVNDQTNtQnRyQ3hyMk9lSzNuM3E4TlhheDFxVmtESFU2MkdZdWVkY1hVMmpMTnJnbzNfS3l0TnotU0pqcjJyUkl3M245OFo3LWVTWUx2SGNSRklFMmc?oc=5",
+      "direct_link": "http://www.w3.org/2000/",
+      "link_status": "direct",
+      "link_type": "resolved-page",
+      "source_home": "",
+      "source": "證券櫃檯買賣中心",
+      "query_source": "證券櫃檯買賣中心",
+      "summary": "櫃買新聞稿 tpex.org.tw",
+      "published_at": "2026-07-31T15:43:57+08:00",
+      "region": "TW",
+      "topic": "official",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "official-tw",
+      "origin": "publisher-search",
+      "quality_score": 100,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "證券櫃檯買賣中心"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E6%AB%83%E8%B2%B7%E6%96%B0%E8%81%9E%E7%A8%BF+-+tpex.org.tw%22+%E8%AD%89%E5%88%B8%E6%AB%83%E6%AA%AF%E8%B2%B7%E8%B3%A3%E4%B8%AD%E5%BF%83",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "87d4a136fc629637",
       "title": "中文版-中文版首頁區塊-首頁資訊-本行發行存單-115年7月31日中央銀行公開市場操作資訊 - cbc.gov.tw",
-      "link": "https://www.google.com/search?q=%22%E4%B8%AD%E6%96%87%E7%89%88-%E4%B8%AD%E6%96%87%E7%89%88%E9%A6%96%E9%A0%81%E5%8D%80%E5%A1%8A-%E9%A6%96%E9%A0%81%E8%B3%87%E8%A8%8A-%E6%9C%AC%E8%A1%8C%E7%99%BC%E8%A1%8C%E5%AD%98%E5%96%AE-115%E5%B9%B47%E6%9C%8831%E6%97%A5%E4%B8%AD%E5%A4%AE%E9%8A%80%E8%A1%8C%E5%85%AC%E9%96%8B%E5%B8%82%E5%A0%B4%E6%93%8D%E4%BD%9C%E8%B3%87%E8%A8%8A+-+cbc.gov.tw%22+cbc.gov.tw",
+      "link": "https://www.google.com/search?q=%22%E4%B8%AD%E6%96%87%E7%89%88-%E4%B8%AD%E6%96%87%E7%89%88%E9%A6%96%E9%A0%81%E5%8D%80%E5%A1%8A-%E9%A6%96%E9%A0%81%E8%B3%87%E8%A8%8A-%E6%9C%AC%E8%A1%8C%E7%99%BC%E8%A1%8C%E5%AD%98%E5%96%AE-115%E5%B9%B47%E6%9C%8831%E6%97%A5%E4%B8%AD%E5%A4%AE%E9%8A%80%E8%A1%8C%E5%85%AC%E9%96%8B%E5%B8%82%E5%A0%B4%E6%93%8D%E4%BD%9C%E8%B3%87%E8%A8%8A+-+cbc.gov.tw%22+site%3Acbc.gov.tw",
       "original_link": "https://news.google.com/rss/articles/CBMiY0FVX3lxTE5oYUhZZnpGRnhBaG1jWm51Q2R2SXJhYlZiVVkwVTBDVTUzSnNGcHdOM2xfME1MRHNaNjFhYmRpMmVnTTlaZ2tOc2VSc3F3ODZiMWFfeExfLTJmdEpzbXBjN3N1MA?oc=5",
-      "source": "cbc.gov.tw",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.cbc.gov.tw/",
+      "source": "中央銀行",
       "query_source": "中央銀行",
       "summary": "中文版-中文版首頁區塊-首頁資訊-本行發行存單-115年7月31日中央銀行公開市場操作資訊 cbc.gov.tw",
       "published_at": "2026-07-31T15:30:30+08:00",
@@ -1212,17 +1794,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "cbc.gov.tw"
+        "中央銀行"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E4%B8%AD%E6%96%87%E7%89%88-%E4%B8%AD%E6%96%87%E7%89%88%E9%A6%96%E9%A0%81%E5%8D%80%E5%A1%8A-%E9%A6%96%E9%A0%81%E8%B3%87%E8%A8%8A-%E6%9C%AC%E8%A1%8C%E7%99%BC%E8%A1%8C%E5%AD%98%E5%96%AE-115%E5%B9%B47%E6%9C%8831%E6%97%A5%E4%B8%AD%E5%A4%AE%E9%8A%80%E8%A1%8C%E5%85%AC%E9%96%8B%E5%B8%82%E5%A0%B4%E6%93%8D%E4%BD%9C%E8%B3%87%E8%A8%8A+-+cbc.gov.tw%22+site%3Acbc.gov.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "c489cd549dcdf059",
       "title": "2026年6月集中市場相關數據",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fb6ffa4b200a6",
+      "link": "https://www.google.com/search?q=%222026%E5%B9%B46%E6%9C%88%E9%9B%86%E4%B8%AD%E5%B8%82%E5%A0%B4%E7%9B%B8%E9%97%9C%E6%95%B8%E6%93%9A%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fb6ffa4b200a6",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -1241,17 +1829,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%222026%E5%B9%B46%E6%9C%88%E9%9B%86%E4%B8%AD%E5%B8%82%E5%A0%B4%E7%9B%B8%E9%97%9C%E6%95%B8%E6%93%9A%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "11c4809f58f5fc52",
       "title": "和運租車 (證券代號：7855)採競價拍賣方式辦理承銷，於7月31日順利完成",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fb6f64bd200a2",
+      "link": "https://www.google.com/search?q=%22%E5%92%8C%E9%81%8B%E7%A7%9F%E8%BB%8A+%28%E8%AD%89%E5%88%B8%E4%BB%A3%E8%99%9F%EF%BC%9A7855%29%E6%8E%A1%E7%AB%B6%E5%83%B9%E6%8B%8D%E8%B3%A3%E6%96%B9%E5%BC%8F%E8%BE%A6%E7%90%86%E6%89%BF%E9%8A%B7%EF%BC%8C%E6%96%BC7%E6%9C%8831%E6%97%A5%E9%A0%86%E5%88%A9%E5%AE%8C%E6%88%90%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fb6f64bd200a2",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -1270,16 +1864,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%92%8C%E9%81%8B%E7%A7%9F%E8%BB%8A+%28%E8%AD%89%E5%88%B8%E4%BB%A3%E8%99%9F%EF%BC%9A7855%29%E6%8E%A1%E7%AB%B6%E5%83%B9%E6%8B%8D%E8%B3%A3%E6%96%B9%E5%BC%8F%E8%BE%A6%E7%90%86%E6%89%BF%E9%8A%B7%EF%BC%8C%E6%96%BC7%E6%9C%8831%E6%97%A5%E9%A0%86%E5%88%A9%E5%AE%8C%E6%88%90%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "7c2a48a245258c8a",
       "title": "興櫃股票>市場公告 - 證券櫃檯買賣中心",
-      "link": "https://www.google.com/search?q=%22%E8%88%88%E6%AB%83%E8%82%A1%E7%A5%A8%3E%E5%B8%82%E5%A0%B4%E5%85%AC%E5%91%8A+-+%E8%AD%89%E5%88%B8%E6%AB%83%E6%AA%AF%E8%B2%B7%E8%B3%A3%E4%B8%AD%E5%BF%83%22+%E8%AD%89%E5%88%B8%E6%AB%83%E6%AA%AF%E8%B2%B7%E8%B3%A3%E4%B8%AD%E5%BF%83",
+      "link": "http://www.w3.org/2000/",
+      "original_link": "https://news.google.com/rss/articles/CBMid0FVX3lxTFBBcFBGS0kza053ZGgxRGdIdmEtLURiNFBhM1RFNTAyNWJsQXJKU1JwZ2lVdHZ3TDNSVHlLWmNiRlRiQ3Jid0xNUC1USDVzREhqbFFDcjRYcy1oTDRkdFNtZktySm9zYkU1OTRjQy1sdl9BMjlBVW1r?oc=5",
+      "direct_link": "http://www.w3.org/2000/",
+      "link_status": "direct",
+      "link_type": "resolved-page",
+      "source_home": "",
       "source": "證券櫃檯買賣中心",
       "query_source": "證券櫃檯買賣中心",
       "summary": "興櫃股票>市場公告 證券櫃檯買賣中心",
@@ -1298,19 +1899,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T04:13:27+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "證券櫃檯買賣中心"
       ],
       "duplicate_count": 0,
-      "stale": true,
-      "original_link": "https://news.google.com/rss/articles/CBMid0FVX3lxTFBBcFBGS0kza053ZGgxRGdIdmEtLURiNFBhM1RFNTAyNWJsQXJKU1JwZ2lVdHZ3TDNSVHlLWmNiRlRiQ3Jid0xNUC1USDVzREhqbFFDcjRYcy1oTDRkdFNtZktySm9zYkU1OTRjQy1sdl9BMjlBVW1r?oc=5"
+      "fallback_link": "https://www.google.com/search?q=%22%E8%88%88%E6%AB%83%E8%82%A1%E7%A5%A8%3E%E5%B8%82%E5%A0%B4%E5%85%AC%E5%91%8A+-+%E8%AD%89%E5%88%B8%E6%AB%83%E6%AA%AF%E8%B2%B7%E8%B3%A3%E4%B8%AD%E5%BF%83%22+%E8%AD%89%E5%88%B8%E6%AB%83%E6%AA%AF%E8%B2%B7%E8%B3%A3%E4%B8%AD%E5%BF%83",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "7ebfe50e1d78c4b7",
       "title": "臺灣證券交易所與中華電信公司簽訂「新建備援資訊中心」合作備忘錄",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fb265be3d008e",
+      "link": "https://www.google.com/search?q=%22%E8%87%BA%E7%81%A3%E8%AD%89%E5%88%B8%E4%BA%A4%E6%98%93%E6%89%80%E8%88%87%E4%B8%AD%E8%8F%AF%E9%9B%BB%E4%BF%A1%E5%85%AC%E5%8F%B8%E7%B0%BD%E8%A8%82%E3%80%8C%E6%96%B0%E5%BB%BA%E5%82%99%E6%8F%B4%E8%B3%87%E8%A8%8A%E4%B8%AD%E5%BF%83%E3%80%8D%E5%90%88%E4%BD%9C%E5%82%99%E5%BF%98%E9%8C%84%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fb265be3d008e",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -1330,17 +1935,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%87%BA%E7%81%A3%E8%AD%89%E5%88%B8%E4%BA%A4%E6%98%93%E6%89%80%E8%88%87%E4%B8%AD%E8%8F%AF%E9%9B%BB%E4%BF%A1%E5%85%AC%E5%8F%B8%E7%B0%BD%E8%A8%82%E3%80%8C%E6%96%B0%E5%BB%BA%E5%82%99%E6%8F%B4%E8%B3%87%E8%A8%8A%E4%B8%AD%E5%BF%83%E3%80%8D%E5%90%88%E4%BD%9C%E5%82%99%E5%BF%98%E9%8C%84%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "a7526f4384ea8956",
       "title": "貝萊德投信募集發行之「貝萊德iShares安碩世界股票ETF」、「貝萊德iShares安碩10年期以上A級美元公司債ETF」及永豐投信募集發行之「永豐台灣科技趨勢主動式ETF」，自115年8月3日起掛牌上市，並得辦理融資融券",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fb25bf91d008a",
+      "link": "https://www.google.com/search?q=%22%E8%B2%9D%E8%90%8A%E5%BE%B7%E6%8A%95%E4%BF%A1%E5%8B%9F%E9%9B%86%E7%99%BC%E8%A1%8C%E4%B9%8B%E3%80%8C%E8%B2%9D%E8%90%8A%E5%BE%B7iShares%E5%AE%89%E7%A2%A9%E4%B8%96%E7%95%8C%E8%82%A1%E7%A5%A8ETF%E3%80%8D%E3%80%81%E3%80%8C%E8%B2%9D%E8%90%8A%E5%BE%B7iShares%E5%AE%89%E7%A2%A910%E5%B9%B4%E6%9C%9F%E4%BB%A5%E4%B8%8AA%E7%B4%9A%E7%BE%8E%E5%85%83%E5%85%AC%E5%8F%B8%E5%82%B5ETF%E3%80%8D%E5%8F%8A%E6%B0%B8%E8%B1%90%E6%8A%95%E4%BF%A1%E5%8B%9F%E9%9B%86%E7%99%BC%E8%A1%8C%E4%B9%8B%E3%80%8C%E6%B0%B8%E8%B1%90%E5%8F%B0%E7%81%A3%E7%A7%91%E6%8A%80%E8%B6%A8%E5%8B%A2%E4%B8%BB%E5%8B%95%E5%BC%8FETF%E3%80%8D%EF%BC%8C%E8%87%AA115%E5%B9%B48%E6%9C%883%E6%97%A5%E8%B5%B7%E6%8E%9B%E7%89%8C%E4%B8%8A%E5%B8%82%EF%BC%8C%E4%B8%A6%E5%BE%97%E8%BE%A6%E7%90%86%E8%9E%8D%E8%B3%87%E8%9E%8D%E5%88%B8%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fb25bf91d008a",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -1359,17 +1970,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%B2%9D%E8%90%8A%E5%BE%B7%E6%8A%95%E4%BF%A1%E5%8B%9F%E9%9B%86%E7%99%BC%E8%A1%8C%E4%B9%8B%E3%80%8C%E8%B2%9D%E8%90%8A%E5%BE%B7iShares%E5%AE%89%E7%A2%A9%E4%B8%96%E7%95%8C%E8%82%A1%E7%A5%A8ETF%E3%80%8D%E3%80%81%E3%80%8C%E8%B2%9D%E8%90%8A%E5%BE%B7iShares%E5%AE%89%E7%A2%A910%E5%B9%B4%E6%9C%9F%E4%BB%A5%E4%B8%8AA%E7%B4%9A%E7%BE%8E%E5%85%83%E5%85%AC%E5%8F%B8%E5%82%B5ETF%E3%80%8D%E5%8F%8A%E6%B0%B8%E8%B1%90%E6%8A%95%E4%BF%A1%E5%8B%9F%E9%9B%86%E7%99%BC%E8%A1%8C%E4%B9%8B%E3%80%8C%E6%B0%B8%E8%B1%90%E5%8F%B0%E7%81%A3%E7%A7%91%E6%8A%80%E8%B6%A8%E5%8B%A2%E4%B8%BB%E5%8B%95%E5%BC%8FETF%E3%80%8D%EF%BC%8C%E8%87%AA115%E5%B9%B48%E6%9C%883%E6%97%A5%E8%B5%B7%E6%8E%9B%E7%89%8C%E4%B8%8A%E5%B8%82%EF%BC%8C%E4%B8%A6%E5%BE%97%E8%BE%A6%E7%90%86%E8%9E%8D%E8%B3%87%E8%9E%8D%E5%88%B8%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "f40b8bbefe05019b",
       "title": "證交所攜手台經院與資策會推出臺灣創新板(tib-創)數位雲端、綠能環保、生技醫療及汽車工業之洞察報告",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fb2513e000086",
+      "link": "https://www.google.com/search?q=%22%E8%AD%89%E4%BA%A4%E6%89%80%E6%94%9C%E6%89%8B%E5%8F%B0%E7%B6%93%E9%99%A2%E8%88%87%E8%B3%87%E7%AD%96%E6%9C%83%E6%8E%A8%E5%87%BA%E8%87%BA%E7%81%A3%E5%89%B5%E6%96%B0%E6%9D%BF%28tib-%E5%89%B5%29%E6%95%B8%E4%BD%8D%E9%9B%B2%E7%AB%AF%E3%80%81%E7%B6%A0%E8%83%BD%E7%92%B0%E4%BF%9D%E3%80%81%E7%94%9F%E6%8A%80%E9%86%AB%E7%99%82%E5%8F%8A%E6%B1%BD%E8%BB%8A%E5%B7%A5%E6%A5%AD%E4%B9%8B%E6%B4%9E%E5%AF%9F%E5%A0%B1%E5%91%8A%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fb2513e000086",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -1390,17 +2007,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%AD%89%E4%BA%A4%E6%89%80%E6%94%9C%E6%89%8B%E5%8F%B0%E7%B6%93%E9%99%A2%E8%88%87%E8%B3%87%E7%AD%96%E6%9C%83%E6%8E%A8%E5%87%BA%E8%87%BA%E7%81%A3%E5%89%B5%E6%96%B0%E6%9D%BF%28tib-%E5%89%B5%29%E6%95%B8%E4%BD%8D%E9%9B%B2%E7%AB%AF%E3%80%81%E7%B6%A0%E8%83%BD%E7%92%B0%E4%BF%9D%E3%80%81%E7%94%9F%E6%8A%80%E9%86%AB%E7%99%82%E5%8F%8A%E6%B1%BD%E8%BB%8A%E5%B7%A5%E6%A5%AD%E4%B9%8B%E6%B4%9E%E5%AF%9F%E5%A0%B1%E5%91%8A%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "fa8fc9887a9adf37",
       "title": "華德動能(證券代號：2237)採競價拍賣方式辦理承銷，於7月30日順利完成",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fb23dd0390082",
+      "link": "https://www.google.com/search?q=%22%E8%8F%AF%E5%BE%B7%E5%8B%95%E8%83%BD%28%E8%AD%89%E5%88%B8%E4%BB%A3%E8%99%9F%EF%BC%9A2237%29%E6%8E%A1%E7%AB%B6%E5%83%B9%E6%8B%8D%E8%B3%A3%E6%96%B9%E5%BC%8F%E8%BE%A6%E7%90%86%E6%89%BF%E9%8A%B7%EF%BC%8C%E6%96%BC7%E6%9C%8830%E6%97%A5%E9%A0%86%E5%88%A9%E5%AE%8C%E6%88%90%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fb23dd0390082",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -1419,18 +2042,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%8F%AF%E5%BE%B7%E5%8B%95%E8%83%BD%28%E8%AD%89%E5%88%B8%E4%BB%A3%E8%99%9F%EF%BC%9A2237%29%E6%8E%A1%E7%AB%B6%E5%83%B9%E6%8B%8D%E8%B3%A3%E6%96%B9%E5%BC%8F%E8%BE%A6%E7%90%86%E6%89%BF%E9%8A%B7%EF%BC%8C%E6%96%BC7%E6%9C%8830%E6%97%A5%E9%A0%86%E5%88%A9%E5%AE%8C%E6%88%90%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "c7ae4baa92a904c7",
+      "id": "f6150bc8f3c2fe5b",
       "title": "中文版-最新消息-新聞稿-第21屆理事會第6次理監事聯席會議貨幣政策議事錄摘要 - cbc.gov.tw",
-      "link": "https://www.google.com/search?q=%22%E4%B8%AD%E6%96%87%E7%89%88-%E6%9C%80%E6%96%B0%E6%B6%88%E6%81%AF-%E6%96%B0%E8%81%9E%E7%A8%BF-%E7%AC%AC21%E5%B1%86%E7%90%86%E4%BA%8B%E6%9C%83%E7%AC%AC6%E6%AC%A1%E7%90%86%E7%9B%A3%E4%BA%8B%E8%81%AF%E5%B8%AD%E6%9C%83%E8%AD%B0%E8%B2%A8%E5%B9%A3%E6%94%BF%E7%AD%96%E8%AD%B0%E4%BA%8B%E9%8C%84%E6%91%98%E8%A6%81+-+cbc.gov.tw%22+cbc.gov.tw",
+      "link": "https://www.google.com/search?q=%22%E4%B8%AD%E6%96%87%E7%89%88-%E6%9C%80%E6%96%B0%E6%B6%88%E6%81%AF-%E6%96%B0%E8%81%9E%E7%A8%BF-%E7%AC%AC21%E5%B1%86%E7%90%86%E4%BA%8B%E6%9C%83%E7%AC%AC6%E6%AC%A1%E7%90%86%E7%9B%A3%E4%BA%8B%E8%81%AF%E5%B8%AD%E6%9C%83%E8%AD%B0%E8%B2%A8%E5%B9%A3%E6%94%BF%E7%AD%96%E8%AD%B0%E4%BA%8B%E9%8C%84%E6%91%98%E8%A6%81+-+cbc.gov.tw%22+site%3Acbc.gov.tw",
       "original_link": "https://news.google.com/rss/articles/CBMiYkFVX3lxTE1nN1RXTzVmZEpuX1c4TEtLRXhTSkcxNkpDWnNQTTFxem9rR3pMcU9UUlpyN0FmSEljUW5sclIwWXdxejBRSGJfY012b0JFSENzVXF3T3JZTDZlRWl3UWprM3dR?oc=5",
-      "source": "cbc.gov.tw",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.cbc.gov.tw/",
+      "source": "中央銀行",
       "query_source": "中央銀行",
       "summary": "中文版-最新消息-新聞稿-第21屆理事會第6次理監事聯席會議貨幣政策議事錄摘要 cbc.gov.tw",
       "published_at": "2026-07-30T16:24:18+08:00",
@@ -1448,17 +2077,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "cbc.gov.tw"
+        "中央銀行"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E4%B8%AD%E6%96%87%E7%89%88-%E6%9C%80%E6%96%B0%E6%B6%88%E6%81%AF-%E6%96%B0%E8%81%9E%E7%A8%BF-%E7%AC%AC21%E5%B1%86%E7%90%86%E4%BA%8B%E6%9C%83%E7%AC%AC6%E6%AC%A1%E7%90%86%E7%9B%A3%E4%BA%8B%E8%81%AF%E5%B8%AD%E6%9C%83%E8%AD%B0%E8%B2%A8%E5%B9%A3%E6%94%BF%E7%AD%96%E8%AD%B0%E4%BA%8B%E9%8C%84%E6%91%98%E8%A6%81+-+cbc.gov.tw%22+site%3Acbc.gov.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "817bf6ca3f7f52b8",
       "title": "國際市場波動加劇 臺股基本面及資金動能維持穩健",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fad937542007f",
+      "link": "https://www.google.com/search?q=%22%E5%9C%8B%E9%9A%9B%E5%B8%82%E5%A0%B4%E6%B3%A2%E5%8B%95%E5%8A%A0%E5%8A%87+%E8%87%BA%E8%82%A1%E5%9F%BA%E6%9C%AC%E9%9D%A2%E5%8F%8A%E8%B3%87%E9%87%91%E5%8B%95%E8%83%BD%E7%B6%AD%E6%8C%81%E7%A9%A9%E5%81%A5%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fad937542007f",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -1477,17 +2112,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%9C%8B%E9%9A%9B%E5%B8%82%E5%A0%B4%E6%B3%A2%E5%8B%95%E5%8A%A0%E5%8A%87+%E8%87%BA%E8%82%A1%E5%9F%BA%E6%9C%AC%E9%9D%A2%E5%8F%8A%E8%B3%87%E9%87%91%E5%8B%95%E8%83%BD%E7%B6%AD%E6%8C%81%E7%A9%A9%E5%81%A5%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "675634f450e4a631",
       "title": "臺灣證券交易所訂於7月31日召開有價證券上市審議委員會第890次會議，將審議英屬開曼群島商禾碩康(股)公司之申請股票上市案",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fad59df59007b",
+      "link": "https://www.google.com/search?q=%22%E8%87%BA%E7%81%A3%E8%AD%89%E5%88%B8%E4%BA%A4%E6%98%93%E6%89%80%E8%A8%82%E6%96%BC7%E6%9C%8831%E6%97%A5%E5%8F%AC%E9%96%8B%E6%9C%89%E5%83%B9%E8%AD%89%E5%88%B8%E4%B8%8A%E5%B8%82%E5%AF%A9%E8%AD%B0%E5%A7%94%E5%93%A1%E6%9C%83%E7%AC%AC890%E6%AC%A1%E6%9C%83%E8%AD%B0%EF%BC%8C%E5%B0%87%E5%AF%A9%E8%AD%B0%E8%8B%B1%E5%B1%AC%E9%96%8B%E6%9B%BC%E7%BE%A4%E5%B3%B6%E5%95%86%E7%A6%BE%E7%A2%A9%E5%BA%B7%28%E8%82%A1%29%E5%85%AC%E5%8F%B8%E4%B9%8B%E7%94%B3%E8%AB%8B%E8%82%A1%E7%A5%A8%E4%B8%8A%E5%B8%82%E6%A1%88%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fad59df59007b",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -1506,17 +2147,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%87%BA%E7%81%A3%E8%AD%89%E5%88%B8%E4%BA%A4%E6%98%93%E6%89%80%E8%A8%82%E6%96%BC7%E6%9C%8831%E6%97%A5%E5%8F%AC%E9%96%8B%E6%9C%89%E5%83%B9%E8%AD%89%E5%88%B8%E4%B8%8A%E5%B8%82%E5%AF%A9%E8%AD%B0%E5%A7%94%E5%93%A1%E6%9C%83%E7%AC%AC890%E6%AC%A1%E6%9C%83%E8%AD%B0%EF%BC%8C%E5%B0%87%E5%AF%A9%E8%AD%B0%E8%8B%B1%E5%B1%AC%E9%96%8B%E6%9B%BC%E7%BE%A4%E5%B3%B6%E5%95%86%E7%A6%BE%E7%A2%A9%E5%BA%B7%28%E8%82%A1%29%E5%85%AC%E5%8F%B8%E4%B9%8B%E7%94%B3%E8%AB%8B%E8%82%A1%E7%A5%A8%E4%B8%8A%E5%B8%82%E6%A1%88%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "f35861737ab2deca",
       "title": "澄清媒體有關交割安全疑慮報導",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fa85711c0006d",
+      "link": "https://www.google.com/search?q=%22%E6%BE%84%E6%B8%85%E5%AA%92%E9%AB%94%E6%9C%89%E9%97%9C%E4%BA%A4%E5%89%B2%E5%AE%89%E5%85%A8%E7%96%91%E6%85%AE%E5%A0%B1%E5%B0%8E%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fa85711c0006d",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -1535,17 +2182,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E6%BE%84%E6%B8%85%E5%AA%92%E9%AB%94%E6%9C%89%E9%97%9C%E4%BA%A4%E5%89%B2%E5%AE%89%E5%85%A8%E7%96%91%E6%85%AE%E5%A0%B1%E5%B0%8E%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "bbf651b221cb5eb4",
       "title": "大東電業廠股份有限公司上市股票自本(115)年7月29日起得為融資融券交易",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fa820e5420069",
+      "link": "https://www.google.com/search?q=%22%E5%A4%A7%E6%9D%B1%E9%9B%BB%E6%A5%AD%E5%BB%A0%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E4%B8%8A%E5%B8%82%E8%82%A1%E7%A5%A8%E8%87%AA%E6%9C%AC%28115%29%E5%B9%B47%E6%9C%8829%E6%97%A5%E8%B5%B7%E5%BE%97%E7%82%BA%E8%9E%8D%E8%B3%87%E8%9E%8D%E5%88%B8%E4%BA%A4%E6%98%93%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fa820e5420069",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -1564,17 +2217,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%A4%A7%E6%9D%B1%E9%9B%BB%E6%A5%AD%E5%BB%A0%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E4%B8%8A%E5%B8%82%E8%82%A1%E7%A5%A8%E8%87%AA%E6%9C%AC%28115%29%E5%B9%B47%E6%9C%8829%E6%97%A5%E8%B5%B7%E5%BE%97%E7%82%BA%E8%9E%8D%E8%B3%87%E8%9E%8D%E5%88%B8%E4%BA%A4%E6%98%93%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "cc2ed48703f3b0e7",
       "title": "三商美邦人壽保險股份有限公司 (三商壽，公司代號：2867)因進行股份轉換其上市有價證券自115年8月20日起停止買賣，並自115年9月1日起終止上市",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fa7a779a60065",
+      "link": "https://www.google.com/search?q=%22%E4%B8%89%E5%95%86%E7%BE%8E%E9%82%A6%E4%BA%BA%E5%A3%BD%E4%BF%9D%E9%9A%AA%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8+%28%E4%B8%89%E5%95%86%E5%A3%BD%EF%BC%8C%E5%85%AC%E5%8F%B8%E4%BB%A3%E8%99%9F%EF%BC%9A2867%29%E5%9B%A0%E9%80%B2%E8%A1%8C%E8%82%A1%E4%BB%BD%E8%BD%89%E6%8F%9B%E5%85%B6%E4%B8%8A%E5%B8%82%E6%9C%89%E5%83%B9%E8%AD%89%E5%88%B8%E8%87%AA115%E5%B9%B48%E6%9C%8820%E6%97%A5%E8%B5%B7%E5%81%9C%E6%AD%A2%E8%B2%B7%E8%B3%A3%EF%BC%8C%E4%B8%A6%E8%87%AA115%E5%B9%B49%E6%9C%881%E6%97%A5%E8%B5%B7%E7%B5%82%E6%AD%A2%E4%B8%8A%E5%B8%82%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fa7a779a60065",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -1593,17 +2252,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E4%B8%89%E5%95%86%E7%BE%8E%E9%82%A6%E4%BA%BA%E5%A3%BD%E4%BF%9D%E9%9A%AA%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8+%28%E4%B8%89%E5%95%86%E5%A3%BD%EF%BC%8C%E5%85%AC%E5%8F%B8%E4%BB%A3%E8%99%9F%EF%BC%9A2867%29%E5%9B%A0%E9%80%B2%E8%A1%8C%E8%82%A1%E4%BB%BD%E8%BD%89%E6%8F%9B%E5%85%B6%E4%B8%8A%E5%B8%82%E6%9C%89%E5%83%B9%E8%AD%89%E5%88%B8%E8%87%AA115%E5%B9%B48%E6%9C%8820%E6%97%A5%E8%B5%B7%E5%81%9C%E6%AD%A2%E8%B2%B7%E8%B3%A3%EF%BC%8C%E4%B8%A6%E8%87%AA115%E5%B9%B49%E6%9C%881%E6%97%A5%E8%B5%B7%E7%B5%82%E6%AD%A2%E4%B8%8A%E5%B8%82%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "6ec58a3881afd710",
       "title": "饗賓餐旅事業(股)公司及欣雄天然氣(股)公司於115年7月27日送件申請股票上市",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fa2fbf2d80035",
+      "link": "https://www.google.com/search?q=%22%E9%A5%97%E8%B3%93%E9%A4%90%E6%97%85%E4%BA%8B%E6%A5%AD%28%E8%82%A1%29%E5%85%AC%E5%8F%B8%E5%8F%8A%E6%AC%A3%E9%9B%84%E5%A4%A9%E7%84%B6%E6%B0%A3%28%E8%82%A1%29%E5%85%AC%E5%8F%B8%E6%96%BC115%E5%B9%B47%E6%9C%8827%E6%97%A5%E9%80%81%E4%BB%B6%E7%94%B3%E8%AB%8B%E8%82%A1%E7%A5%A8%E4%B8%8A%E5%B8%82%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fa2fbf2d80035",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -1622,17 +2287,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E9%A5%97%E8%B3%93%E9%A4%90%E6%97%85%E4%BA%8B%E6%A5%AD%28%E8%82%A1%29%E5%85%AC%E5%8F%B8%E5%8F%8A%E6%AC%A3%E9%9B%84%E5%A4%A9%E7%84%B6%E6%B0%A3%28%E8%82%A1%29%E5%85%AC%E5%8F%B8%E6%96%BC115%E5%B9%B47%E6%9C%8827%E6%97%A5%E9%80%81%E4%BB%B6%E7%94%B3%E8%AB%8B%E8%82%A1%E7%A5%A8%E4%B8%8A%E5%B8%82%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "68146c4b740586a7",
       "title": "大鵬科技股份有限公司股票自115年7月28日開始上市買賣",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fa2ec90b70031",
+      "link": "https://www.google.com/search?q=%22%E5%A4%A7%E9%B5%AC%E7%A7%91%E6%8A%80%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E8%82%A1%E7%A5%A8%E8%87%AA115%E5%B9%B47%E6%9C%8828%E6%97%A5%E9%96%8B%E5%A7%8B%E4%B8%8A%E5%B8%82%E8%B2%B7%E8%B3%A3%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fa2ec90b70031",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -1651,17 +2322,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%A4%A7%E9%B5%AC%E7%A7%91%E6%8A%80%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E8%82%A1%E7%A5%A8%E8%87%AA115%E5%B9%B47%E6%9C%8828%E6%97%A5%E9%96%8B%E5%A7%8B%E4%B8%8A%E5%B8%82%E8%B2%B7%E8%B3%A3%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "f58ed903826a9de9",
       "title": "上週外資在集中市場賣超470.64億元，賣超力積電10.88萬張最多，另買超緯創15.49萬張最多",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fa17b05a50008",
+      "link": "https://www.google.com/search?q=%22%E4%B8%8A%E9%80%B1%E5%A4%96%E8%B3%87%E5%9C%A8%E9%9B%86%E4%B8%AD%E5%B8%82%E5%A0%B4%E8%B3%A3%E8%B6%85470.64%E5%84%84%E5%85%83%EF%BC%8C%E8%B3%A3%E8%B6%85%E5%8A%9B%E7%A9%8D%E9%9B%BB10.88%E8%90%AC%E5%BC%B5%E6%9C%80%E5%A4%9A%EF%BC%8C%E5%8F%A6%E8%B2%B7%E8%B6%85%E7%B7%AF%E5%89%B515.49%E8%90%AC%E5%BC%B5%E6%9C%80%E5%A4%9A%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69f96ff79019fa17b05a50008",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -1680,17 +2357,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E4%B8%8A%E9%80%B1%E5%A4%96%E8%B3%87%E5%9C%A8%E9%9B%86%E4%B8%AD%E5%B8%82%E5%A0%B4%E8%B3%A3%E8%B6%85470.64%E5%84%84%E5%85%83%EF%BC%8C%E8%B3%A3%E8%B6%85%E5%8A%9B%E7%A9%8D%E9%9B%BB10.88%E8%90%AC%E5%BC%B5%E6%9C%80%E5%A4%9A%EF%BC%8C%E5%8F%A6%E8%B2%B7%E8%B6%85%E7%B7%AF%E5%89%B515.49%E8%90%AC%E5%BC%B5%E6%9C%80%E5%A4%9A%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "a7e2b38862cc9436",
       "title": "本週發行量加權股價指數漲幅約為2.30%，上市股票總市值達142.58兆元",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f939355570270",
+      "link": "https://www.google.com/search?q=%22%E6%9C%AC%E9%80%B1%E7%99%BC%E8%A1%8C%E9%87%8F%E5%8A%A0%E6%AC%8A%E8%82%A1%E5%83%B9%E6%8C%87%E6%95%B8%E6%BC%B2%E5%B9%85%E7%B4%84%E7%82%BA2.30%25%EF%BC%8C%E4%B8%8A%E5%B8%82%E8%82%A1%E7%A5%A8%E7%B8%BD%E5%B8%82%E5%80%BC%E9%81%94142.58%E5%85%86%E5%85%83%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f939355570270",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -1709,17 +2392,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E6%9C%AC%E9%80%B1%E7%99%BC%E8%A1%8C%E9%87%8F%E5%8A%A0%E6%AC%8A%E8%82%A1%E5%83%B9%E6%8C%87%E6%95%B8%E6%BC%B2%E5%B9%85%E7%B4%84%E7%82%BA2.30%25%EF%BC%8C%E4%B8%8A%E5%B8%82%E8%82%A1%E7%A5%A8%E7%B8%BD%E5%B8%82%E5%80%BC%E9%81%94142.58%E5%85%86%E5%85%83%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "55e5a7c013be4eaf",
       "title": "英柏得科技(股)公司於115年7月24日送件申請股票上市",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f9358fd67026c",
+      "link": "https://www.google.com/search?q=%22%E8%8B%B1%E6%9F%8F%E5%BE%97%E7%A7%91%E6%8A%80%28%E8%82%A1%29%E5%85%AC%E5%8F%B8%E6%96%BC115%E5%B9%B47%E6%9C%8824%E6%97%A5%E9%80%81%E4%BB%B6%E7%94%B3%E8%AB%8B%E8%82%A1%E7%A5%A8%E4%B8%8A%E5%B8%82%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f9358fd67026c",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -1738,18 +2427,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%8B%B1%E6%9F%8F%E5%BE%97%E7%A7%91%E6%8A%80%28%E8%82%A1%29%E5%85%AC%E5%8F%B8%E6%96%BC115%E5%B9%B47%E6%9C%8824%E6%97%A5%E9%80%81%E4%BB%B6%E7%94%B3%E8%AB%8B%E8%82%A1%E7%A5%A8%E4%B8%8A%E5%B8%82%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "1c13cefb4994edf4",
+      "id": "baaa626209e3894b",
       "title": "中文版-最新消息-新聞稿-本行對「美國財政部匯率政策報告」之說明 - cbc.gov.tw",
-      "link": "https://www.google.com/search?q=%22%E4%B8%AD%E6%96%87%E7%89%88-%E6%9C%80%E6%96%B0%E6%B6%88%E6%81%AF-%E6%96%B0%E8%81%9E%E7%A8%BF-%E6%9C%AC%E8%A1%8C%E5%B0%8D%E3%80%8C%E7%BE%8E%E5%9C%8B%E8%B2%A1%E6%94%BF%E9%83%A8%E5%8C%AF%E7%8E%87%E6%94%BF%E7%AD%96%E5%A0%B1%E5%91%8A%E3%80%8D%E4%B9%8B%E8%AA%AA%E6%98%8E+-+cbc.gov.tw%22+cbc.gov.tw",
+      "link": "https://www.google.com/search?q=%22%E4%B8%AD%E6%96%87%E7%89%88-%E6%9C%80%E6%96%B0%E6%B6%88%E6%81%AF-%E6%96%B0%E8%81%9E%E7%A8%BF-%E6%9C%AC%E8%A1%8C%E5%B0%8D%E3%80%8C%E7%BE%8E%E5%9C%8B%E8%B2%A1%E6%94%BF%E9%83%A8%E5%8C%AF%E7%8E%87%E6%94%BF%E7%AD%96%E5%A0%B1%E5%91%8A%E3%80%8D%E4%B9%8B%E8%AA%AA%E6%98%8E+-+cbc.gov.tw%22+site%3Acbc.gov.tw",
       "original_link": "https://news.google.com/rss/articles/CBMiYkFVX3lxTE5PRWtZcXhZbHZVMWc0bDA5cXdRWWNQRW1TTEJIUE5DVHdINzhHZFhWYXQxTDZDRlN6bkRYcW1VbkUyQ0k5U0pOUFhWcUl0Smdhc2c5ZVVqS2tBMEE4WDdLeWJB?oc=5",
-      "source": "cbc.gov.tw",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.cbc.gov.tw/",
+      "source": "中央銀行",
       "query_source": "中央銀行",
       "summary": "中文版-最新消息-新聞稿-本行對「美國財政部匯率政策報告」之說明 cbc.gov.tw",
       "published_at": "2026-07-24T16:37:56+08:00",
@@ -1767,17 +2462,58 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "cbc.gov.tw"
+        "中央銀行"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E4%B8%AD%E6%96%87%E7%89%88-%E6%9C%80%E6%96%B0%E6%B6%88%E6%81%AF-%E6%96%B0%E8%81%9E%E7%A8%BF-%E6%9C%AC%E8%A1%8C%E5%B0%8D%E3%80%8C%E7%BE%8E%E5%9C%8B%E8%B2%A1%E6%94%BF%E9%83%A8%E5%8C%AF%E7%8E%87%E6%94%BF%E7%AD%96%E5%A0%B1%E5%91%8A%E3%80%8D%E4%B9%8B%E8%AA%AA%E6%98%8E+-+cbc.gov.tw%22+site%3Acbc.gov.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "ffa56b94bdba21ae",
+      "title": "櫃買新聞稿 - tpex.org.tw",
+      "link": "http://www.w3.org/2000/",
+      "original_link": "https://news.google.com/rss/articles/CBMidkFVX3lxTE5idU1EWVZ5TFhoeVRMYUptMTlNZmVLdlkyTlRTT05nc2VRdlNUNURqd1JQQUhTYXVISGlPQ0IxZUxtVGJ1ZjY1VERycVVhZllRcEVBdDR2dGNVQ1RzYzhFRWhxUEdWSkVwYzRDWFcza3FJcnNTeFE?oc=5",
+      "direct_link": "http://www.w3.org/2000/",
+      "link_status": "direct",
+      "link_type": "resolved-page",
+      "source_home": "",
+      "source": "證券櫃檯買賣中心",
+      "query_source": "證券櫃檯買賣中心",
+      "summary": "櫃買新聞稿 tpex.org.tw",
+      "published_at": "2026-07-24T16:26:46+08:00",
+      "region": "TW",
+      "topic": "official",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "official-tw",
+      "origin": "publisher-search",
+      "quality_score": 100,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "證券櫃檯買賣中心"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E6%AB%83%E8%B2%B7%E6%96%B0%E8%81%9E%E7%A8%BF+-+tpex.org.tw%22+%E8%AD%89%E5%88%B8%E6%AB%83%E6%AA%AF%E8%B2%B7%E8%B3%A3%E4%B8%AD%E5%BF%83",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "7cfe4ebcf0f7fe93",
       "title": "泰宗生物科技股份有限公司(泰宗，公司代號：4169)上市普通股自115年7月24日起恢復交易",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f8eb654820253",
+      "link": "https://www.google.com/search?q=%22%E6%B3%B0%E5%AE%97%E7%94%9F%E7%89%A9%E7%A7%91%E6%8A%80%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%28%E6%B3%B0%E5%AE%97%EF%BC%8C%E5%85%AC%E5%8F%B8%E4%BB%A3%E8%99%9F%EF%BC%9A4169%29%E4%B8%8A%E5%B8%82%E6%99%AE%E9%80%9A%E8%82%A1%E8%87%AA115%E5%B9%B47%E6%9C%8824%E6%97%A5%E8%B5%B7%E6%81%A2%E5%BE%A9%E4%BA%A4%E6%98%93%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f8eb654820253",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -1796,17 +2532,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E6%B3%B0%E5%AE%97%E7%94%9F%E7%89%A9%E7%A7%91%E6%8A%80%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%28%E6%B3%B0%E5%AE%97%EF%BC%8C%E5%85%AC%E5%8F%B8%E4%BB%A3%E8%99%9F%EF%BC%9A4169%29%E4%B8%8A%E5%B8%82%E6%99%AE%E9%80%9A%E8%82%A1%E8%87%AA115%E5%B9%B47%E6%9C%8824%E6%97%A5%E8%B5%B7%E6%81%A2%E5%BE%A9%E4%BA%A4%E6%98%93%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "47d1af35731cc387",
       "title": "證交所舉辦「企業併購實戰論壇」，助力上市公司價值提升開創新局",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f8e9defe8024f",
+      "link": "https://www.google.com/search?q=%22%E8%AD%89%E4%BA%A4%E6%89%80%E8%88%89%E8%BE%A6%E3%80%8C%E4%BC%81%E6%A5%AD%E4%BD%B5%E8%B3%BC%E5%AF%A6%E6%88%B0%E8%AB%96%E5%A3%87%E3%80%8D%EF%BC%8C%E5%8A%A9%E5%8A%9B%E4%B8%8A%E5%B8%82%E5%85%AC%E5%8F%B8%E5%83%B9%E5%80%BC%E6%8F%90%E5%8D%87%E9%96%8B%E5%89%B5%E6%96%B0%E5%B1%80%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f8e9defe8024f",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -1825,17 +2567,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%AD%89%E4%BA%A4%E6%89%80%E8%88%89%E8%BE%A6%E3%80%8C%E4%BC%81%E6%A5%AD%E4%BD%B5%E8%B3%BC%E5%AF%A6%E6%88%B0%E8%AB%96%E5%A3%87%E3%80%8D%EF%BC%8C%E5%8A%A9%E5%8A%9B%E4%B8%8A%E5%B8%82%E5%85%AC%E5%8F%B8%E5%83%B9%E5%80%BC%E6%8F%90%E5%8D%87%E9%96%8B%E5%89%B5%E6%96%B0%E5%B1%80%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "6a38d33a578a2b41",
       "title": "自115年7月27日起，隆銘綠能科技工程股份有限公司(隆銘綠能，公司代號：3018)上市有價證券恢復交易方法",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f8e8a033b024b",
+      "link": "https://www.google.com/search?q=%22%E8%87%AA115%E5%B9%B47%E6%9C%8827%E6%97%A5%E8%B5%B7%EF%BC%8C%E9%9A%86%E9%8A%98%E7%B6%A0%E8%83%BD%E7%A7%91%E6%8A%80%E5%B7%A5%E7%A8%8B%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%28%E9%9A%86%E9%8A%98%E7%B6%A0%E8%83%BD%EF%BC%8C%E5%85%AC%E5%8F%B8%E4%BB%A3%E8%99%9F%EF%BC%9A3018%29%E4%B8%8A%E5%B8%82%E6%9C%89%E5%83%B9%E8%AD%89%E5%88%B8%E6%81%A2%E5%BE%A9%E4%BA%A4%E6%98%93%E6%96%B9%E6%B3%95%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f8e8a033b024b",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -1856,17 +2604,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%87%AA115%E5%B9%B47%E6%9C%8827%E6%97%A5%E8%B5%B7%EF%BC%8C%E9%9A%86%E9%8A%98%E7%B6%A0%E8%83%BD%E7%A7%91%E6%8A%80%E5%B7%A5%E7%A8%8B%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%28%E9%9A%86%E9%8A%98%E7%B6%A0%E8%83%BD%EF%BC%8C%E5%85%AC%E5%8F%B8%E4%BB%A3%E8%99%9F%EF%BC%9A3018%29%E4%B8%8A%E5%B8%82%E6%9C%89%E5%83%B9%E8%AD%89%E5%88%B8%E6%81%A2%E5%BE%A9%E4%BA%A4%E6%98%93%E6%96%B9%E6%B3%95%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "e572e627ad193bee",
       "title": "關貿網路股份有限公司等9家公司預計於115年8月份假證交所場地自行舉辦法人說明會",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f8e6ca26a0247",
+      "link": "https://www.google.com/search?q=%22%E9%97%9C%E8%B2%BF%E7%B6%B2%E8%B7%AF%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E7%AD%899%E5%AE%B6%E5%85%AC%E5%8F%B8%E9%A0%90%E8%A8%88%E6%96%BC115%E5%B9%B48%E6%9C%88%E4%BB%BD%E5%81%87%E8%AD%89%E4%BA%A4%E6%89%80%E5%A0%B4%E5%9C%B0%E8%87%AA%E8%A1%8C%E8%88%89%E8%BE%A6%E6%B3%95%E4%BA%BA%E8%AA%AA%E6%98%8E%E6%9C%83%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f8e6ca26a0247",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -1885,17 +2639,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E9%97%9C%E8%B2%BF%E7%B6%B2%E8%B7%AF%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E7%AD%899%E5%AE%B6%E5%85%AC%E5%8F%B8%E9%A0%90%E8%A8%88%E6%96%BC115%E5%B9%B48%E6%9C%88%E4%BB%BD%E5%81%87%E8%AD%89%E4%BA%A4%E6%89%80%E5%A0%B4%E5%9C%B0%E8%87%AA%E8%A1%8C%E8%88%89%E8%BE%A6%E6%B3%95%E4%BA%BA%E8%AA%AA%E6%98%8E%E6%9C%83%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "bc454a0b65372d19",
       "title": "永悅健康股份有限公司股票自115年7月24日於臺灣創新板上市開始買賣",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f8e57159c023e",
+      "link": "https://www.google.com/search?q=%22%E6%B0%B8%E6%82%85%E5%81%A5%E5%BA%B7%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E8%82%A1%E7%A5%A8%E8%87%AA115%E5%B9%B47%E6%9C%8824%E6%97%A5%E6%96%BC%E8%87%BA%E7%81%A3%E5%89%B5%E6%96%B0%E6%9D%BF%E4%B8%8A%E5%B8%82%E9%96%8B%E5%A7%8B%E8%B2%B7%E8%B3%A3%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f8e57159c023e",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -1914,17 +2674,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E6%B0%B8%E6%82%85%E5%81%A5%E5%BA%B7%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E8%82%A1%E7%A5%A8%E8%87%AA115%E5%B9%B47%E6%9C%8824%E6%97%A5%E6%96%BC%E8%87%BA%E7%81%A3%E5%89%B5%E6%96%B0%E6%9D%BF%E4%B8%8A%E5%B8%82%E9%96%8B%E5%A7%8B%E8%B2%B7%E8%B3%A3%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "1f026f94cc66bc58",
       "title": "全體證券商115年6月稅後淨利265.72億元，累計稅後淨利1,440.9億元",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f893137cb022f",
+      "link": "https://www.google.com/search?q=%22%E5%85%A8%E9%AB%94%E8%AD%89%E5%88%B8%E5%95%86115%E5%B9%B46%E6%9C%88%E7%A8%85%E5%BE%8C%E6%B7%A8%E5%88%A9265.72%E5%84%84%E5%85%83%EF%BC%8C%E7%B4%AF%E8%A8%88%E7%A8%85%E5%BE%8C%E6%B7%A8%E5%88%A91%2C440.9%E5%84%84%E5%85%83%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f893137cb022f",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -1943,17 +2709,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%85%A8%E9%AB%94%E8%AD%89%E5%88%B8%E5%95%86115%E5%B9%B46%E6%9C%88%E7%A8%85%E5%BE%8C%E6%B7%A8%E5%88%A9265.72%E5%84%84%E5%85%83%EF%BC%8C%E7%B4%AF%E8%A8%88%E7%A8%85%E5%BE%8C%E6%B7%A8%E5%88%A91%2C440.9%E5%84%84%E5%85%83%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "d7286411c37cba48",
       "title": "臺灣創新板（tib-創）以新經濟雙引擎 接軌全球創新資本浪潮 AI原生防禦 × 訂閱制內容經濟：臺灣新興科技企業的資本市場新路徑",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f89254ab6022b",
+      "link": "https://www.google.com/search?q=%22%E8%87%BA%E7%81%A3%E5%89%B5%E6%96%B0%E6%9D%BF%EF%BC%88tib-%E5%89%B5%EF%BC%89%E4%BB%A5%E6%96%B0%E7%B6%93%E6%BF%9F%E9%9B%99%E5%BC%95%E6%93%8E+%E6%8E%A5%E8%BB%8C%E5%85%A8%E7%90%83%E5%89%B5%E6%96%B0%E8%B3%87%E6%9C%AC%E6%B5%AA%E6%BD%AE+AI%E5%8E%9F%E7%94%9F%E9%98%B2%E7%A6%A6+%C3%97+%E8%A8%82%E9%96%B1%E5%88%B6%E5%85%A7%E5%AE%B9%E7%B6%93%E6%BF%9F%EF%BC%9A%E8%87%BA%E7%81%A3%E6%96%B0%E8%88%88%E7%A7%91%E6%8A%80%E4%BC%81%E6%A5%AD%E7%9A%84%E8%B3%87%E6%9C%AC%E5%B8%82%E5%A0%B4%E6%96%B0%E8%B7%AF%E5%BE%91%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f89254ab6022b",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -1972,17 +2744,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%87%BA%E7%81%A3%E5%89%B5%E6%96%B0%E6%9D%BF%EF%BC%88tib-%E5%89%B5%EF%BC%89%E4%BB%A5%E6%96%B0%E7%B6%93%E6%BF%9F%E9%9B%99%E5%BC%95%E6%93%8E+%E6%8E%A5%E8%BB%8C%E5%85%A8%E7%90%83%E5%89%B5%E6%96%B0%E8%B3%87%E6%9C%AC%E6%B5%AA%E6%BD%AE+AI%E5%8E%9F%E7%94%9F%E9%98%B2%E7%A6%A6+%C3%97+%E8%A8%82%E9%96%B1%E5%88%B6%E5%85%A7%E5%AE%B9%E7%B6%93%E6%BF%9F%EF%BC%9A%E8%87%BA%E7%81%A3%E6%96%B0%E8%88%88%E7%A7%91%E6%8A%80%E4%BC%81%E6%A5%AD%E7%9A%84%E8%B3%87%E6%9C%AC%E5%B8%82%E5%A0%B4%E6%96%B0%E8%B7%AF%E5%BE%91%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "ed7e7ce6cf13e75f",
       "title": "長廣精機股份有限公司上市股票自本（115）年7月23日起得為融資融券交易",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f8909d3cd0227",
+      "link": "https://www.google.com/search?q=%22%E9%95%B7%E5%BB%A3%E7%B2%BE%E6%A9%9F%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E4%B8%8A%E5%B8%82%E8%82%A1%E7%A5%A8%E8%87%AA%E6%9C%AC%EF%BC%88115%EF%BC%89%E5%B9%B47%E6%9C%8823%E6%97%A5%E8%B5%B7%E5%BE%97%E7%82%BA%E8%9E%8D%E8%B3%87%E8%9E%8D%E5%88%B8%E4%BA%A4%E6%98%93%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f8909d3cd0227",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -2001,17 +2779,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E9%95%B7%E5%BB%A3%E7%B2%BE%E6%A9%9F%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E4%B8%8A%E5%B8%82%E8%82%A1%E7%A5%A8%E8%87%AA%E6%9C%AC%EF%BC%88115%EF%BC%89%E5%B9%B47%E6%9C%8823%E6%97%A5%E8%B5%B7%E5%BE%97%E7%82%BA%E8%9E%8D%E8%B3%87%E8%9E%8D%E5%88%B8%E4%BA%A4%E6%98%93%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "d739aa2ece9b14ec",
       "title": "聚賢研發股份有限公司上市股票自本（115）年7月23日起得為融資融券交易",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f8902f8d80223",
+      "link": "https://www.google.com/search?q=%22%E8%81%9A%E8%B3%A2%E7%A0%94%E7%99%BC%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E4%B8%8A%E5%B8%82%E8%82%A1%E7%A5%A8%E8%87%AA%E6%9C%AC%EF%BC%88115%EF%BC%89%E5%B9%B47%E6%9C%8823%E6%97%A5%E8%B5%B7%E5%BE%97%E7%82%BA%E8%9E%8D%E8%B3%87%E8%9E%8D%E5%88%B8%E4%BA%A4%E6%98%93%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f8902f8d80223",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -2030,17 +2814,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%81%9A%E8%B3%A2%E7%A0%94%E7%99%BC%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E4%B8%8A%E5%B8%82%E8%82%A1%E7%A5%A8%E8%87%AA%E6%9C%AC%EF%BC%88115%EF%BC%89%E5%B9%B47%E6%9C%8823%E6%97%A5%E8%B5%B7%E5%BE%97%E7%82%BA%E8%9E%8D%E8%B3%87%E8%9E%8D%E5%88%B8%E4%BA%A4%E6%98%93%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "386f0d9b4e9c225e",
       "title": "台鎔科技材料股份有限公司股票自115年7月23日開始上市買賣",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f88fc71ec021f",
+      "link": "https://www.google.com/search?q=%22%E5%8F%B0%E9%8E%94%E7%A7%91%E6%8A%80%E6%9D%90%E6%96%99%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E8%82%A1%E7%A5%A8%E8%87%AA115%E5%B9%B47%E6%9C%8823%E6%97%A5%E9%96%8B%E5%A7%8B%E4%B8%8A%E5%B8%82%E8%B2%B7%E8%B3%A3%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f88fc71ec021f",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -2059,17 +2849,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%8F%B0%E9%8E%94%E7%A7%91%E6%8A%80%E6%9D%90%E6%96%99%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E8%82%A1%E7%A5%A8%E8%87%AA115%E5%B9%B47%E6%9C%8823%E6%97%A5%E9%96%8B%E5%A7%8B%E4%B8%8A%E5%B8%82%E8%B2%B7%E8%B3%A3%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "8742691b36380f4f",
       "title": "輝創電子股份有限公司上市股票（輝創，代號：6722）自115年7月23日起得為融資融券交易",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f88f63f5c021b",
+      "link": "https://www.google.com/search?q=%22%E8%BC%9D%E5%89%B5%E9%9B%BB%E5%AD%90%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E4%B8%8A%E5%B8%82%E8%82%A1%E7%A5%A8%EF%BC%88%E8%BC%9D%E5%89%B5%EF%BC%8C%E4%BB%A3%E8%99%9F%EF%BC%9A6722%EF%BC%89%E8%87%AA115%E5%B9%B47%E6%9C%8823%E6%97%A5%E8%B5%B7%E5%BE%97%E7%82%BA%E8%9E%8D%E8%B3%87%E8%9E%8D%E5%88%B8%E4%BA%A4%E6%98%93%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f88f63f5c021b",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -2088,17 +2884,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%BC%9D%E5%89%B5%E9%9B%BB%E5%AD%90%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E4%B8%8A%E5%B8%82%E8%82%A1%E7%A5%A8%EF%BC%88%E8%BC%9D%E5%89%B5%EF%BC%8C%E4%BB%A3%E8%99%9F%EF%BC%9A6722%EF%BC%89%E8%87%AA115%E5%B9%B47%E6%9C%8823%E6%97%A5%E8%B5%B7%E5%BE%97%E7%82%BA%E8%9E%8D%E8%B3%87%E8%9E%8D%E5%88%B8%E4%BA%A4%E6%98%93%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "1c26818215834e72",
       "title": "證交所持續推動2026年「地球特攻隊」永續宣導「清冰箱救剩食」倡議惜食減廢 打造低碳生活新習慣",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f87860f9301f6",
+      "link": "https://www.google.com/search?q=%22%E8%AD%89%E4%BA%A4%E6%89%80%E6%8C%81%E7%BA%8C%E6%8E%A8%E5%8B%952026%E5%B9%B4%E3%80%8C%E5%9C%B0%E7%90%83%E7%89%B9%E6%94%BB%E9%9A%8A%E3%80%8D%E6%B0%B8%E7%BA%8C%E5%AE%A3%E5%B0%8E%E3%80%8C%E6%B8%85%E5%86%B0%E7%AE%B1%E6%95%91%E5%89%A9%E9%A3%9F%E3%80%8D%E5%80%A1%E8%AD%B0%E6%83%9C%E9%A3%9F%E6%B8%9B%E5%BB%A2+%E6%89%93%E9%80%A0%E4%BD%8E%E7%A2%B3%E7%94%9F%E6%B4%BB%E6%96%B0%E7%BF%92%E6%85%A3%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f87860f9301f6",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -2117,17 +2919,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%AD%89%E4%BA%A4%E6%89%80%E6%8C%81%E7%BA%8C%E6%8E%A8%E5%8B%952026%E5%B9%B4%E3%80%8C%E5%9C%B0%E7%90%83%E7%89%B9%E6%94%BB%E9%9A%8A%E3%80%8D%E6%B0%B8%E7%BA%8C%E5%AE%A3%E5%B0%8E%E3%80%8C%E6%B8%85%E5%86%B0%E7%AE%B1%E6%95%91%E5%89%A9%E9%A3%9F%E3%80%8D%E5%80%A1%E8%AD%B0%E6%83%9C%E9%A3%9F%E6%B8%9B%E5%BB%A2+%E6%89%93%E9%80%A0%E4%BD%8E%E7%A2%B3%E7%94%9F%E6%B4%BB%E6%96%B0%E7%BF%92%E6%85%A3%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "2c34e5be354ad17d",
       "title": "耐特科技材料(股)公司於115年7月20日送件申請股票上市",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f7eeec83301f1",
+      "link": "https://www.google.com/search?q=%22%E8%80%90%E7%89%B9%E7%A7%91%E6%8A%80%E6%9D%90%E6%96%99%28%E8%82%A1%29%E5%85%AC%E5%8F%B8%E6%96%BC115%E5%B9%B47%E6%9C%8820%E6%97%A5%E9%80%81%E4%BB%B6%E7%94%B3%E8%AB%8B%E8%82%A1%E7%A5%A8%E4%B8%8A%E5%B8%82%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f7eeec83301f1",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -2146,17 +2954,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%80%90%E7%89%B9%E7%A7%91%E6%8A%80%E6%9D%90%E6%96%99%28%E8%82%A1%29%E5%85%AC%E5%8F%B8%E6%96%BC115%E5%B9%B47%E6%9C%8820%E6%97%A5%E9%80%81%E4%BB%B6%E7%94%B3%E8%AB%8B%E8%82%A1%E7%A5%A8%E4%B8%8A%E5%B8%82%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "fa51b3f40a66ea2c",
       "title": "「永續資訊確信機構宣導暨交流會」圓滿完成 提升永續資訊揭露品質",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f7ec098ad01ed",
+      "link": "https://www.google.com/search?q=%22%E3%80%8C%E6%B0%B8%E7%BA%8C%E8%B3%87%E8%A8%8A%E7%A2%BA%E4%BF%A1%E6%A9%9F%E6%A7%8B%E5%AE%A3%E5%B0%8E%E6%9A%A8%E4%BA%A4%E6%B5%81%E6%9C%83%E3%80%8D%E5%9C%93%E6%BB%BF%E5%AE%8C%E6%88%90+%E6%8F%90%E5%8D%87%E6%B0%B8%E7%BA%8C%E8%B3%87%E8%A8%8A%E6%8F%AD%E9%9C%B2%E5%93%81%E8%B3%AA%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f7ec098ad01ed",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -2175,17 +2989,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E3%80%8C%E6%B0%B8%E7%BA%8C%E8%B3%87%E8%A8%8A%E7%A2%BA%E4%BF%A1%E6%A9%9F%E6%A7%8B%E5%AE%A3%E5%B0%8E%E6%9A%A8%E4%BA%A4%E6%B5%81%E6%9C%83%E3%80%8D%E5%9C%93%E6%BB%BF%E5%AE%8C%E6%88%90+%E6%8F%90%E5%8D%87%E6%B0%B8%E7%BA%8C%E8%B3%87%E8%A8%8A%E6%8F%AD%E9%9C%B2%E5%93%81%E8%B3%AA%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "f710c96df429ecf3",
       "title": "上週外資在集中市場賣超3,095.17億元，賣超友達18.24萬張最多，另買超長榮航15.20萬張最多",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f7e2a0dc701e9",
+      "link": "https://www.google.com/search?q=%22%E4%B8%8A%E9%80%B1%E5%A4%96%E8%B3%87%E5%9C%A8%E9%9B%86%E4%B8%AD%E5%B8%82%E5%A0%B4%E8%B3%A3%E8%B6%853%2C095.17%E5%84%84%E5%85%83%EF%BC%8C%E8%B3%A3%E8%B6%85%E5%8F%8B%E9%81%9418.24%E8%90%AC%E5%BC%B5%E6%9C%80%E5%A4%9A%EF%BC%8C%E5%8F%A6%E8%B2%B7%E8%B6%85%E9%95%B7%E6%A6%AE%E8%88%AA15.20%E8%90%AC%E5%BC%B5%E6%9C%80%E5%A4%9A%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f7e2a0dc701e9",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -2204,17 +3024,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E4%B8%8A%E9%80%B1%E5%A4%96%E8%B3%87%E5%9C%A8%E9%9B%86%E4%B8%AD%E5%B8%82%E5%A0%B4%E8%B3%A3%E8%B6%853%2C095.17%E5%84%84%E5%85%83%EF%BC%8C%E8%B3%A3%E8%B6%85%E5%8F%8B%E9%81%9418.24%E8%90%AC%E5%BC%B5%E6%9C%80%E5%A4%9A%EF%BC%8C%E5%8F%A6%E8%B2%B7%E8%B6%85%E9%95%B7%E6%A6%AE%E8%88%AA15.20%E8%90%AC%E5%BC%B5%E6%9C%80%E5%A4%9A%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "5d30243bdfee393e",
       "title": "本週發行量加權股價指數跌幅約為5.92%，上市股票總市值達139.36兆元",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f6f7ca59b01d1",
+      "link": "https://www.google.com/search?q=%22%E6%9C%AC%E9%80%B1%E7%99%BC%E8%A1%8C%E9%87%8F%E5%8A%A0%E6%AC%8A%E8%82%A1%E5%83%B9%E6%8C%87%E6%95%B8%E8%B7%8C%E5%B9%85%E7%B4%84%E7%82%BA5.92%25%EF%BC%8C%E4%B8%8A%E5%B8%82%E8%82%A1%E7%A5%A8%E7%B8%BD%E5%B8%82%E5%80%BC%E9%81%94139.36%E5%85%86%E5%85%83%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f6f7ca59b01d1",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -2233,17 +3059,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E6%9C%AC%E9%80%B1%E7%99%BC%E8%A1%8C%E9%87%8F%E5%8A%A0%E6%AC%8A%E8%82%A1%E5%83%B9%E6%8C%87%E6%95%B8%E8%B7%8C%E5%B9%85%E7%B4%84%E7%82%BA5.92%25%EF%BC%8C%E4%B8%8A%E5%B8%82%E8%82%A1%E7%A5%A8%E7%B8%BD%E5%B8%82%E5%80%BC%E9%81%94139.36%E5%85%86%E5%85%83%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "8c803ccfb3804dd1",
       "title": "臺灣證券交易所對台揚科技股份有限公司（代號：2314）違反資訊申報作業辦法規定，處以新台幣5萬元違約金",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f6f6b8d0401cd",
+      "link": "https://www.google.com/search?q=%22%E8%87%BA%E7%81%A3%E8%AD%89%E5%88%B8%E4%BA%A4%E6%98%93%E6%89%80%E5%B0%8D%E5%8F%B0%E6%8F%9A%E7%A7%91%E6%8A%80%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%EF%BC%88%E4%BB%A3%E8%99%9F%EF%BC%9A2314%EF%BC%89%E9%81%95%E5%8F%8D%E8%B3%87%E8%A8%8A%E7%94%B3%E5%A0%B1%E4%BD%9C%E6%A5%AD%E8%BE%A6%E6%B3%95%E8%A6%8F%E5%AE%9A%EF%BC%8C%E8%99%95%E4%BB%A5%E6%96%B0%E5%8F%B0%E5%B9%A35%E8%90%AC%E5%85%83%E9%81%95%E7%B4%84%E9%87%91%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f6f6b8d0401cd",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -2263,17 +3095,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%87%BA%E7%81%A3%E8%AD%89%E5%88%B8%E4%BA%A4%E6%98%93%E6%89%80%E5%B0%8D%E5%8F%B0%E6%8F%9A%E7%A7%91%E6%8A%80%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%EF%BC%88%E4%BB%A3%E8%99%9F%EF%BC%9A2314%EF%BC%89%E9%81%95%E5%8F%8D%E8%B3%87%E8%A8%8A%E7%94%B3%E5%A0%B1%E4%BD%9C%E6%A5%AD%E8%BE%A6%E6%B3%95%E8%A6%8F%E5%AE%9A%EF%BC%8C%E8%99%95%E4%BB%A5%E6%96%B0%E5%8F%B0%E5%B9%A35%E8%90%AC%E5%85%83%E9%81%95%E7%B4%84%E9%87%91%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "a811295896644e23",
       "title": "大鵬科(證券代號：7689)採競價拍賣方式辦理承銷，於7月17日順利完成",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f6eca1d3201bc",
+      "link": "https://www.google.com/search?q=%22%E5%A4%A7%E9%B5%AC%E7%A7%91%28%E8%AD%89%E5%88%B8%E4%BB%A3%E8%99%9F%EF%BC%9A7689%29%E6%8E%A1%E7%AB%B6%E5%83%B9%E6%8B%8D%E8%B3%A3%E6%96%B9%E5%BC%8F%E8%BE%A6%E7%90%86%E6%89%BF%E9%8A%B7%EF%BC%8C%E6%96%BC7%E6%9C%8817%E6%97%A5%E9%A0%86%E5%88%A9%E5%AE%8C%E6%88%90%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f6eca1d3201bc",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -2292,17 +3130,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%A4%A7%E9%B5%AC%E7%A7%91%28%E8%AD%89%E5%88%B8%E4%BB%A3%E8%99%9F%EF%BC%9A7689%29%E6%8E%A1%E7%AB%B6%E5%83%B9%E6%8B%8D%E8%B3%A3%E6%96%B9%E5%BC%8F%E8%BE%A6%E7%90%86%E6%89%BF%E9%8A%B7%EF%BC%8C%E6%96%BC7%E6%9C%8817%E6%97%A5%E9%A0%86%E5%88%A9%E5%AE%8C%E6%88%90%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "8070ab2aa60da33b",
       "title": "下半年溫室氣體盤查實作工作坊擴大辦理 協助產業提升碳管理與揭露之永續競爭力",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f6e1eee8401aa",
+      "link": "https://www.google.com/search?q=%22%E4%B8%8B%E5%8D%8A%E5%B9%B4%E6%BA%AB%E5%AE%A4%E6%B0%A3%E9%AB%94%E7%9B%A4%E6%9F%A5%E5%AF%A6%E4%BD%9C%E5%B7%A5%E4%BD%9C%E5%9D%8A%E6%93%B4%E5%A4%A7%E8%BE%A6%E7%90%86+%E5%8D%94%E5%8A%A9%E7%94%A2%E6%A5%AD%E6%8F%90%E5%8D%87%E7%A2%B3%E7%AE%A1%E7%90%86%E8%88%87%E6%8F%AD%E9%9C%B2%E4%B9%8B%E6%B0%B8%E7%BA%8C%E7%AB%B6%E7%88%AD%E5%8A%9B%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f6e1eee8401aa",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -2321,17 +3165,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E4%B8%8B%E5%8D%8A%E5%B9%B4%E6%BA%AB%E5%AE%A4%E6%B0%A3%E9%AB%94%E7%9B%A4%E6%9F%A5%E5%AF%A6%E4%BD%9C%E5%B7%A5%E4%BD%9C%E5%9D%8A%E6%93%B4%E5%A4%A7%E8%BE%A6%E7%90%86+%E5%8D%94%E5%8A%A9%E7%94%A2%E6%A5%AD%E6%8F%90%E5%8D%87%E7%A2%B3%E7%AE%A1%E7%90%86%E8%88%87%E6%8F%AD%E9%9C%B2%E4%B9%8B%E6%B0%B8%E7%BA%8C%E7%AB%B6%E7%88%AD%E5%8A%9B%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "465b8d802c045159",
       "title": "證交所攜手櫃買中心舉辦「我國綠色證券認證制度」宣導會圓滿落幕",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f6e2ce99c01b7",
+      "link": "https://www.google.com/search?q=%22%E8%AD%89%E4%BA%A4%E6%89%80%E6%94%9C%E6%89%8B%E6%AB%83%E8%B2%B7%E4%B8%AD%E5%BF%83%E8%88%89%E8%BE%A6%E3%80%8C%E6%88%91%E5%9C%8B%E7%B6%A0%E8%89%B2%E8%AD%89%E5%88%B8%E8%AA%8D%E8%AD%89%E5%88%B6%E5%BA%A6%E3%80%8D%E5%AE%A3%E5%B0%8E%E6%9C%83%E5%9C%93%E6%BB%BF%E8%90%BD%E5%B9%95%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f6e2ce99c01b7",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -2350,17 +3200,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%AD%89%E4%BA%A4%E6%89%80%E6%94%9C%E6%89%8B%E6%AB%83%E8%B2%B7%E4%B8%AD%E5%BF%83%E8%88%89%E8%BE%A6%E3%80%8C%E6%88%91%E5%9C%8B%E7%B6%A0%E8%89%B2%E8%AD%89%E5%88%B8%E8%AA%8D%E8%AD%89%E5%88%B6%E5%BA%A6%E3%80%8D%E5%AE%A3%E5%B0%8E%E6%9C%83%E5%9C%93%E6%BB%BF%E8%90%BD%E5%B9%95%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "7538919b11003b99",
       "title": "證交所前進亞洲生技大展 助攻生技產業接軌資本市場",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f6a8c35c201a6",
+      "link": "https://www.google.com/search?q=%22%E8%AD%89%E4%BA%A4%E6%89%80%E5%89%8D%E9%80%B2%E4%BA%9E%E6%B4%B2%E7%94%9F%E6%8A%80%E5%A4%A7%E5%B1%95+%E5%8A%A9%E6%94%BB%E7%94%9F%E6%8A%80%E7%94%A2%E6%A5%AD%E6%8E%A5%E8%BB%8C%E8%B3%87%E6%9C%AC%E5%B8%82%E5%A0%B4%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f6a8c35c201a6",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -2379,17 +3235,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%AD%89%E4%BA%A4%E6%89%80%E5%89%8D%E9%80%B2%E4%BA%9E%E6%B4%B2%E7%94%9F%E6%8A%80%E5%A4%A7%E5%B1%95+%E5%8A%A9%E6%94%BB%E7%94%9F%E6%8A%80%E7%94%A2%E6%A5%AD%E6%8E%A5%E8%BB%8C%E8%B3%87%E6%9C%AC%E5%B8%82%E5%A0%B4%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "db18d3e2e0e9c33f",
       "title": "臺灣證券交易所有價證券上市審議委員會審議通過東擎科技股份有限公司初次申請股票上市案",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f6a3a83b2019d",
+      "link": "https://www.google.com/search?q=%22%E8%87%BA%E7%81%A3%E8%AD%89%E5%88%B8%E4%BA%A4%E6%98%93%E6%89%80%E6%9C%89%E5%83%B9%E8%AD%89%E5%88%B8%E4%B8%8A%E5%B8%82%E5%AF%A9%E8%AD%B0%E5%A7%94%E5%93%A1%E6%9C%83%E5%AF%A9%E8%AD%B0%E9%80%9A%E9%81%8E%E6%9D%B1%E6%93%8E%E7%A7%91%E6%8A%80%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E5%88%9D%E6%AC%A1%E7%94%B3%E8%AB%8B%E8%82%A1%E7%A5%A8%E4%B8%8A%E5%B8%82%E6%A1%88%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f6a3a83b2019d",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -2409,17 +3271,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%87%BA%E7%81%A3%E8%AD%89%E5%88%B8%E4%BA%A4%E6%98%93%E6%89%80%E6%9C%89%E5%83%B9%E8%AD%89%E5%88%B8%E4%B8%8A%E5%B8%82%E5%AF%A9%E8%AD%B0%E5%A7%94%E5%93%A1%E6%9C%83%E5%AF%A9%E8%AD%B0%E9%80%9A%E9%81%8E%E6%9D%B1%E6%93%8E%E7%A7%91%E6%8A%80%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E5%88%9D%E6%AC%A1%E7%94%B3%E8%AB%8B%E8%82%A1%E7%A5%A8%E4%B8%8A%E5%B8%82%E6%A1%88%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "bca0e1b4fc7a3c7c",
       "title": "兆捷科技國際(股)公司於115年7月16日送件申請股票創新板上市",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f69e71b6d0199",
+      "link": "https://www.google.com/search?q=%22%E5%85%86%E6%8D%B7%E7%A7%91%E6%8A%80%E5%9C%8B%E9%9A%9B%28%E8%82%A1%29%E5%85%AC%E5%8F%B8%E6%96%BC115%E5%B9%B47%E6%9C%8816%E6%97%A5%E9%80%81%E4%BB%B6%E7%94%B3%E8%AB%8B%E8%82%A1%E7%A5%A8%E5%89%B5%E6%96%B0%E6%9D%BF%E4%B8%8A%E5%B8%82%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f69e71b6d0199",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -2438,17 +3306,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%85%86%E6%8D%B7%E7%A7%91%E6%8A%80%E5%9C%8B%E9%9A%9B%28%E8%82%A1%29%E5%85%AC%E5%8F%B8%E6%96%BC115%E5%B9%B47%E6%9C%8816%E6%97%A5%E9%80%81%E4%BB%B6%E7%94%B3%E8%AB%8B%E8%82%A1%E7%A5%A8%E5%89%B5%E6%96%B0%E6%9D%BF%E4%B8%8A%E5%B8%82%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "5002e1d1bd3305ec",
       "title": "凌陽創新科技股份有限公司股票自115年7月16日開始上市買賣",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f648a19d00170",
+      "link": "https://www.google.com/search?q=%22%E5%87%8C%E9%99%BD%E5%89%B5%E6%96%B0%E7%A7%91%E6%8A%80%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E8%82%A1%E7%A5%A8%E8%87%AA115%E5%B9%B47%E6%9C%8816%E6%97%A5%E9%96%8B%E5%A7%8B%E4%B8%8A%E5%B8%82%E8%B2%B7%E8%B3%A3%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f648a19d00170",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -2467,17 +3341,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%87%8C%E9%99%BD%E5%89%B5%E6%96%B0%E7%A7%91%E6%8A%80%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E8%82%A1%E7%A5%A8%E8%87%AA115%E5%B9%B47%E6%9C%8816%E6%97%A5%E9%96%8B%E5%A7%8B%E4%B8%8A%E5%B8%82%E8%B2%B7%E8%B3%A3%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "6a19a9d010ea83fa",
       "title": "永悅健康(證券代號：7835)採競價拍賣方式辦理承銷，於7月15日順利完成",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f648098ec016c",
+      "link": "https://www.google.com/search?q=%22%E6%B0%B8%E6%82%85%E5%81%A5%E5%BA%B7%28%E8%AD%89%E5%88%B8%E4%BB%A3%E8%99%9F%EF%BC%9A7835%29%E6%8E%A1%E7%AB%B6%E5%83%B9%E6%8B%8D%E8%B3%A3%E6%96%B9%E5%BC%8F%E8%BE%A6%E7%90%86%E6%89%BF%E9%8A%B7%EF%BC%8C%E6%96%BC7%E6%9C%8815%E6%97%A5%E9%A0%86%E5%88%A9%E5%AE%8C%E6%88%90%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f648098ec016c",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -2496,17 +3376,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E6%B0%B8%E6%82%85%E5%81%A5%E5%BA%B7%28%E8%AD%89%E5%88%B8%E4%BB%A3%E8%99%9F%EF%BC%9A7835%29%E6%8E%A1%E7%AB%B6%E5%83%B9%E6%8B%8D%E8%B3%A3%E6%96%B9%E5%BC%8F%E8%BE%A6%E7%90%86%E6%89%BF%E9%8A%B7%EF%BC%8C%E6%96%BC7%E6%9C%8815%E6%97%A5%E9%A0%86%E5%88%A9%E5%AE%8C%E6%88%90%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "5da36451bd40aa46",
       "title": "CAROTA Corporation(英屬開曼群島商科絡達股份有限公司)於115年7月15日送件申請股票創新板第一上市",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f646a21dc0168",
+      "link": "https://www.google.com/search?q=%22CAROTA+Corporation%28%E8%8B%B1%E5%B1%AC%E9%96%8B%E6%9B%BC%E7%BE%A4%E5%B3%B6%E5%95%86%E7%A7%91%E7%B5%A1%E9%81%94%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%29%E6%96%BC115%E5%B9%B47%E6%9C%8815%E6%97%A5%E9%80%81%E4%BB%B6%E7%94%B3%E8%AB%8B%E8%82%A1%E7%A5%A8%E5%89%B5%E6%96%B0%E6%9D%BF%E7%AC%AC%E4%B8%80%E4%B8%8A%E5%B8%82%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f646a21dc0168",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -2525,17 +3411,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22CAROTA+Corporation%28%E8%8B%B1%E5%B1%AC%E9%96%8B%E6%9B%BC%E7%BE%A4%E5%B3%B6%E5%95%86%E7%A7%91%E7%B5%A1%E9%81%94%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%29%E6%96%BC115%E5%B9%B47%E6%9C%8815%E6%97%A5%E9%80%81%E4%BB%B6%E7%94%B3%E8%AB%8B%E8%82%A1%E7%A5%A8%E5%89%B5%E6%96%B0%E6%9D%BF%E7%AC%AC%E4%B8%80%E4%B8%8A%E5%B8%82%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "e3a4c0d33df9e42f",
       "title": "AI 基礎建設產業接軌資本市場：臺灣創新板（tib-創）成為散熱、電源與先進封裝企業的資本化路徑",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f5ffd9dc2015c",
+      "link": "https://www.google.com/search?q=%22AI+%E5%9F%BA%E7%A4%8E%E5%BB%BA%E8%A8%AD%E7%94%A2%E6%A5%AD%E6%8E%A5%E8%BB%8C%E8%B3%87%E6%9C%AC%E5%B8%82%E5%A0%B4%EF%BC%9A%E8%87%BA%E7%81%A3%E5%89%B5%E6%96%B0%E6%9D%BF%EF%BC%88tib-%E5%89%B5%EF%BC%89%E6%88%90%E7%82%BA%E6%95%A3%E7%86%B1%E3%80%81%E9%9B%BB%E6%BA%90%E8%88%87%E5%85%88%E9%80%B2%E5%B0%81%E8%A3%9D%E4%BC%81%E6%A5%AD%E7%9A%84%E8%B3%87%E6%9C%AC%E5%8C%96%E8%B7%AF%E5%BE%91%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f5ffd9dc2015c",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -2554,17 +3446,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22AI+%E5%9F%BA%E7%A4%8E%E5%BB%BA%E8%A8%AD%E7%94%A2%E6%A5%AD%E6%8E%A5%E8%BB%8C%E8%B3%87%E6%9C%AC%E5%B8%82%E5%A0%B4%EF%BC%9A%E8%87%BA%E7%81%A3%E5%89%B5%E6%96%B0%E6%9D%BF%EF%BC%88tib-%E5%89%B5%EF%BC%89%E6%88%90%E7%82%BA%E6%95%A3%E7%86%B1%E3%80%81%E9%9B%BB%E6%BA%90%E8%88%87%E5%85%88%E9%80%B2%E5%B0%81%E8%A3%9D%E4%BC%81%E6%A5%AD%E7%9A%84%E8%B3%87%E6%9C%AC%E5%8C%96%E8%B7%AF%E5%BE%91%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "3259561e8b0cbc67",
       "title": "台鎔科技(證券代號：6947)採競價拍賣方式辦理承銷，於7月14日順利完成",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f5f90c0810157",
+      "link": "https://www.google.com/search?q=%22%E5%8F%B0%E9%8E%94%E7%A7%91%E6%8A%80%28%E8%AD%89%E5%88%B8%E4%BB%A3%E8%99%9F%EF%BC%9A6947%29%E6%8E%A1%E7%AB%B6%E5%83%B9%E6%8B%8D%E8%B3%A3%E6%96%B9%E5%BC%8F%E8%BE%A6%E7%90%86%E6%89%BF%E9%8A%B7%EF%BC%8C%E6%96%BC7%E6%9C%8814%E6%97%A5%E9%A0%86%E5%88%A9%E5%AE%8C%E6%88%90%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f5f90c0810157",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -2584,17 +3482,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%8F%B0%E9%8E%94%E7%A7%91%E6%8A%80%28%E8%AD%89%E5%88%B8%E4%BB%A3%E8%99%9F%EF%BC%9A6947%29%E6%8E%A1%E7%AB%B6%E5%83%B9%E6%8B%8D%E8%B3%A3%E6%96%B9%E5%BC%8F%E8%BE%A6%E7%90%86%E6%89%BF%E9%8A%B7%EF%BC%8C%E6%96%BC7%E6%9C%8814%E6%97%A5%E9%A0%86%E5%88%A9%E5%AE%8C%E6%88%90%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "7471bd49772fa021",
       "title": "全體上市公司(不含金融保險業及三商投資控股股份有限公司)115年6月份當月營收較114年同期成長47.16％，累計營業收入較114年同期成長32.10％",
-      "link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f5f8b45930153",
+      "link": "https://www.google.com/search?q=%22%E5%85%A8%E9%AB%94%E4%B8%8A%E5%B8%82%E5%85%AC%E5%8F%B8%28%E4%B8%8D%E5%90%AB%E9%87%91%E8%9E%8D%E4%BF%9D%E9%9A%AA%E6%A5%AD%E5%8F%8A%E4%B8%89%E5%95%86%E6%8A%95%E8%B3%87%E6%8E%A7%E8%82%A1%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%29115%E5%B9%B46%E6%9C%88%E4%BB%BD%E7%95%B6%E6%9C%88%E7%87%9F%E6%94%B6%E8%BC%83114%E5%B9%B4%E5%90%8C%E6%9C%9F%E6%88%90%E9%95%B747.16%EF%BC%85%EF%BC%8C%E7%B4%AF%E8%A8%88%E7%87%9F%E6%A5%AD%E6%94%B6%E5%85%A5%E8%BC%83114%E5%B9%B4%E5%90%8C%E6%9C%9F%E6%88%90%E9%95%B732.10%EF%BC%85%22+site%3Atwse.com.tw",
       "original_link": "/rwd/zh/news/newsDetail/8a8216d69ef76943019f5f8b45930153",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "source": "臺灣證券交易所",
       "query_source": "臺灣證券交易所",
       "summary": "",
@@ -2613,17 +3517,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 100,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "臺灣證券交易所"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%85%A8%E9%AB%94%E4%B8%8A%E5%B8%82%E5%85%AC%E5%8F%B8%28%E4%B8%8D%E5%90%AB%E9%87%91%E8%9E%8D%E4%BF%9D%E9%9A%AA%E6%A5%AD%E5%8F%8A%E4%B8%89%E5%95%86%E6%8A%95%E8%B3%87%E6%8E%A7%E8%82%A1%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%29115%E5%B9%B46%E6%9C%88%E4%BB%BD%E7%95%B6%E6%9C%88%E7%87%9F%E6%94%B6%E8%BC%83114%E5%B9%B4%E5%90%8C%E6%9C%9F%E6%88%90%E9%95%B747.16%EF%BC%85%EF%BC%8C%E7%B4%AF%E8%A8%88%E7%87%9F%E6%A5%AD%E6%94%B6%E5%85%A5%E8%BC%83114%E5%B9%B4%E5%90%8C%E6%9C%9F%E6%88%90%E9%95%B732.10%EF%BC%85%22+site%3Atwse.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "84f83b7986f54080",
       "title": "今彩539第115186期 頭獎5注中獎",
       "link": "https://www.cna.com.tw/news/ahel/202608010214.aspx",
       "original_link": "https://www.cna.com.tw/news/ahel/202608010214.aspx",
+      "direct_link": "https://www.cna.com.tw/news/ahel/202608010214.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社產經證券",
       "query_source": "中央社產經證券",
       "summary": "（中央社台北1日電）今彩539第115186期開獎，中獎號碼06、22、29、11、18；派彩結果，頭獎5注中獎，每注獎金新台幣480萬元。",
@@ -2642,17 +3552,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E4%BB%8A%E5%BD%A9539%E7%AC%AC115186%E6%9C%9F+%E9%A0%AD%E7%8D%8E5%E6%B3%A8%E4%B8%AD%E7%8D%8E%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "a7d20d6d14b2cc6f",
       "title": "龔化中8/1接任國家資通安全研究院長",
       "link": "https://www.cna.com.tw/news/afe/202608010213.aspx",
       "original_link": "https://www.cna.com.tw/news/afe/202608010213.aspx",
+      "direct_link": "https://www.cna.com.tw/news/afe/202608010213.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社產經證券",
       "query_source": "中央社產經證券",
       "summary": "（中央社記者趙敏雅台北1日電）國家資通安全研究院今年初發現員工涉及內部駭侵事件，主動請求調查局介入偵辦，並引發立委關注，前院長林盈達扛起行政責任、請辭。資安院董事會近日決議，由前副院長龔化中接任院長。",
@@ -2671,17 +3587,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
+        "Yahoo 股市",
         "中央社產經證券"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 1,
+      "fallback_link": "https://www.google.com/search?q=%22%E9%BE%94%E5%8C%96%E4%B8%AD8%2F1%E6%8E%A5%E4%BB%BB%E5%9C%8B%E5%AE%B6%E8%B3%87%E9%80%9A%E5%AE%89%E5%85%A8%E7%A0%94%E7%A9%B6%E9%99%A2%E9%95%B7%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "5b456241fa2bdd7e",
       "title": "今彩539第115186期開獎",
       "link": "https://www.cna.com.tw/news/ahel/202608010201.aspx",
       "original_link": "https://www.cna.com.tw/news/ahel/202608010201.aspx",
+      "direct_link": "https://www.cna.com.tw/news/ahel/202608010201.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社產經證券",
       "query_source": "中央社產經證券",
       "summary": "（中央社台北1日電）今彩539第115186期開獎，中獎號碼06、22、29、11、18。3星彩中獎號碼566，4星彩中獎號碼7195。",
@@ -2700,17 +3623,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E4%BB%8A%E5%BD%A9539%E7%AC%AC115186%E6%9C%9F%E9%96%8B%E7%8D%8E%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "ae66d6789ae30473",
       "title": "婚禮變危機 24歲矽谷股神高槓桿借款押AI一夕翻車",
       "link": "https://www.cna.com.tw/news/aopl/202608010166.aspx",
       "original_link": "https://www.cna.com.tw/news/aopl/202608010166.aspx",
+      "direct_link": "https://www.cna.com.tw/news/aopl/202608010166.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社產經證券",
       "query_source": "中央社產經證券",
       "summary": "（中央社記者張欣瑜舊金山31日專電）這週，AI股行情宛如坐雲霄飛車；華爾街與矽谷也上演一場似電影情節般的「神話崩解」事件。在投資圈被奉為股神的舊金山精英艾森勃納，因高槓桿借款押注AI失利，致使其一手創辦、規模達450億美元的基金慘賠。華爾街日報指出，事件爆發時他正準備步入禮堂。",
@@ -2729,17 +3658,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%A9%9A%E7%A6%AE%E8%AE%8A%E5%8D%B1%E6%A9%9F+24%E6%AD%B2%E7%9F%BD%E8%B0%B7%E8%82%A1%E7%A5%9E%E9%AB%98%E6%A7%93%E6%A1%BF%E5%80%9F%E6%AC%BE%E6%8A%BCAI%E4%B8%80%E5%A4%95%E7%BF%BB%E8%BB%8A%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "521b814ec30f6e85",
       "title": "中油：3日起汽柴油價格不調整 95無鉛維持32元",
       "link": "https://www.cna.com.tw/news/ahel/202608010162.aspx",
       "original_link": "https://www.cna.com.tw/news/ahel/202608010162.aspx",
+      "direct_link": "https://www.cna.com.tw/news/ahel/202608010162.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社產經證券",
       "query_source": "中央社產經證券",
       "summary": "（中央社記者曾筠庭台北1日電）中東地緣政治衝突升溫，國際油價高檔震盪，台灣中油今天宣布，為照顧國內民生與平穩物價，自下週一（3日）凌晨零時起至8月9日晚上12時止，汽、柴油價格皆不調整。",
@@ -2758,17 +3693,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E4%B8%AD%E6%B2%B9%EF%BC%9A3%E6%97%A5%E8%B5%B7%E6%B1%BD%E6%9F%B4%E6%B2%B9%E5%83%B9%E6%A0%BC%E4%B8%8D%E8%AA%BF%E6%95%B4+95%E7%84%A1%E9%89%9B%E7%B6%AD%E6%8C%8132%E5%85%83%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "b16bca62eb8f9755",
       "title": "宇樹科技：美禁令不影響現有產品 但後續或無法銷美",
       "link": "https://www.cna.com.tw/news/acn/202608010139.aspx",
       "original_link": "https://www.cna.com.tw/news/acn/202608010139.aspx",
+      "direct_link": "https://www.cna.com.tw/news/acn/202608010139.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社產經證券",
       "query_source": "中央社產經證券",
       "summary": "（中央社台北1日電）美國政府日前宣布將人形機器人納入禁止進口的產品清單，衝擊中國製造商，即將首次公開募股（IPO）的中國人形機器人龍頭企業宇樹科技稱，禁令不影響公司現有產品繼續在美國銷售，但可能影響後續開發的新型號機器人產品。",
@@ -2787,17 +3728,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%AE%87%E6%A8%B9%E7%A7%91%E6%8A%80%EF%BC%9A%E7%BE%8E%E7%A6%81%E4%BB%A4%E4%B8%8D%E5%BD%B1%E9%9F%BF%E7%8F%BE%E6%9C%89%E7%94%A2%E5%93%81+%E4%BD%86%E5%BE%8C%E7%BA%8C%E6%88%96%E7%84%A1%E6%B3%95%E9%8A%B7%E7%BE%8E%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "cbedc4a59723f4f5",
       "title": "維持物價穩定 中油：8月桶裝瓦斯價格不調整",
       "link": "https://www.cna.com.tw/news/ahel/202608010130.aspx",
       "original_link": "https://www.cna.com.tw/news/ahel/202608010130.aspx",
+      "direct_link": "https://www.cna.com.tw/news/ahel/202608010130.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社產經證券",
       "query_source": "中央社產經證券",
       "summary": "（中央社記者曾筠庭台北1日電）中東地緣政治衝突升溫，台灣中油今天宣布，明天凌晨零時起，8月家庭用液化石油氣（桶裝瓦斯）、工業用丙烷、丁烷、混合丙丁烷及車用液化石油氣價格均不調整，以減輕民生負擔並維持物價穩定。",
@@ -2817,17 +3764,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E7%B6%AD%E6%8C%81%E7%89%A9%E5%83%B9%E7%A9%A9%E5%AE%9A+%E4%B8%AD%E6%B2%B9%EF%BC%9A8%E6%9C%88%E6%A1%B6%E8%A3%9D%E7%93%A6%E6%96%AF%E5%83%B9%E6%A0%BC%E4%B8%8D%E8%AA%BF%E6%95%B4%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "c813b1f03dcd9dca",
       "title": "中國採購逾84萬噸美國大豆 10至11月付運",
       "link": "https://www.cna.com.tw/news/acn/202608010129.aspx",
       "original_link": "https://www.cna.com.tw/news/acn/202608010129.aspx",
+      "direct_link": "https://www.cna.com.tw/news/acn/202608010129.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社產經證券",
       "query_source": "中央社產經證券",
       "summary": "（中央社台北1日電）路透社報導，中國買家7月31日採購了至少14船、總計逾84萬公噸的美國大豆，計劃今年10至11月付運。",
@@ -2846,17 +3799,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E4%B8%AD%E5%9C%8B%E6%8E%A1%E8%B3%BC%E9%80%BE84%E8%90%AC%E5%99%B8%E7%BE%8E%E5%9C%8B%E5%A4%A7%E8%B1%86+10%E8%87%B311%E6%9C%88%E4%BB%98%E9%81%8B%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "4dd7f5fedeb22744",
       "title": "黃崇仁辭世 龔明鑫：生前促售廠給美光是重要貢獻",
       "link": "https://www.cna.com.tw/news/afe/202608010110.aspx",
       "original_link": "https://www.cna.com.tw/news/afe/202608010110.aspx",
+      "direct_link": "https://www.cna.com.tw/news/afe/202608010110.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社產經證券",
       "query_source": "中央社產經證券",
       "summary": "（中央社記者曾筠庭台北1日電）經濟部長龔明鑫今天表示，晶圓代工廠力積電董事長黃崇仁辭世對台灣產業界及國家而言都是損失。黃崇仁生前，他們曾多次討論力積電出售廠房給美光一案，認為這是「對力積電好、對美光好、對台美都好」的決定，也是對全球半導體產業的一大貢獻。",
@@ -2875,17 +3834,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E9%BB%83%E5%B4%87%E4%BB%81%E8%BE%AD%E4%B8%96+%E9%BE%94%E6%98%8E%E9%91%AB%EF%BC%9A%E7%94%9F%E5%89%8D%E4%BF%83%E5%94%AE%E5%BB%A0%E7%B5%A6%E7%BE%8E%E5%85%89%E6%98%AF%E9%87%8D%E8%A6%81%E8%B2%A2%E7%8D%BB%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "f8c260ad8f6112e6",
       "title": "華爾街日報：華許拋減少聯準會利率決策會議構想",
       "link": "https://www.cna.com.tw/news/aopl/202608010106.aspx",
       "original_link": "https://www.cna.com.tw/news/aopl/202608010106.aspx",
+      "direct_link": "https://www.cna.com.tw/news/aopl/202608010106.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社產經證券",
       "query_source": "中央社產經證券",
       "summary": "（中央社華盛頓31日綜合外電報導）「華爾街日報」報導，知情人士透露，美國聯邦準備理事會（Fed）主席華許（Kevin Warsh）本週向同僚提出減少會議次數的構想，這意味著聯準會運作將出現重大改變。",
@@ -2904,17 +3869,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
+        "Yahoo 股市",
         "中央社產經證券"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 1,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%8F%AF%E7%88%BE%E8%A1%97%E6%97%A5%E5%A0%B1%EF%BC%9A%E8%8F%AF%E8%A8%B1%E6%8B%8B%E6%B8%9B%E5%B0%91%E8%81%AF%E6%BA%96%E6%9C%83%E5%88%A9%E7%8E%87%E6%B1%BA%E7%AD%96%E6%9C%83%E8%AD%B0%E6%A7%8B%E6%83%B3%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "d1f6521bde247667",
       "title": "台指期夜盤下挫1077點 法人：恐不利台股下週一表現",
       "link": "https://www.cna.com.tw/news/afe/202608010096.aspx",
       "original_link": "https://www.cna.com.tw/news/afe/202608010096.aspx",
+      "direct_link": "https://www.cna.com.tw/news/afe/202608010096.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社產經證券",
       "query_source": "中央社產經證券",
       "summary": "（中央社記者張建中台北1日電）台股7月31日飆漲3186.45點，創下史上最大漲點，收在43119.75點，但台指期夜盤震盪走低，下挫1077點。法人表示，這恐將不利台股下週一表現，短期可能呈現箱型整理格局，半年線是重要支撐關卡，不宜跌破。",
@@ -2933,17 +3905,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
+        "Yahoo 股市",
         "中央社產經證券"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 1,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E4%B8%8B%E6%8C%AB1077%E9%BB%9E+%E6%B3%95%E4%BA%BA%EF%BC%9A%E6%81%90%E4%B8%8D%E5%88%A9%E5%8F%B0%E8%82%A1%E4%B8%8B%E9%80%B1%E4%B8%80%E8%A1%A8%E7%8F%BE%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "1875b97455bb2e60",
       "title": "手搖飲風味不再憑感覺 AI複製老師傅經驗解決痛點【專訪】",
       "link": "https://www.cna.com.tw/news/afe/202608010060.aspx",
       "original_link": "https://www.cna.com.tw/news/afe/202608010060.aspx",
+      "direct_link": "https://www.cna.com.tw/news/afe/202608010060.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社產經證券",
       "query_source": "中央社產經證券",
       "summary": "（中央社記者曾筠庭台北1日電）茶香是茶飲品牌塑造風味特色的重要元素，但也是最難標準化的一環。食品工業發展研究所近期研發出「AI智慧茶香氣輪廓建模技術」，希望將茶葉老師傅的經驗轉化為AI模型，不只提升茶香分析能力，更瞄準解決茶飲產業長年面臨品質不一、缺工等痛點。",
@@ -2963,17 +3942,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E6%89%8B%E6%90%96%E9%A3%B2%E9%A2%A8%E5%91%B3%E4%B8%8D%E5%86%8D%E6%86%91%E6%84%9F%E8%A6%BA+AI%E8%A4%87%E8%A3%BD%E8%80%81%E5%B8%AB%E5%82%85%E7%B6%93%E9%A9%97%E8%A7%A3%E6%B1%BA%E7%97%9B%E9%BB%9E%E3%80%90%E5%B0%88%E8%A8%AA%E3%80%91%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "23d33c6022b0f494",
       "title": "SEMICON West長期移師鳳凰城 延續半導體生態動能",
       "link": "https://www.cna.com.tw/news/afe/202608010059.aspx",
       "original_link": "https://www.cna.com.tw/news/afe/202608010059.aspx",
+      "direct_link": "https://www.cna.com.tw/news/afe/202608010059.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社產經證券",
       "query_source": "中央社產經證券",
       "summary": "（中央社記者張欣瑜舊金山31日專電）國際半導體產業協會（SEMI）主辦的旗艦盛會SEMICON West將正式結束在舊金山灣區逾半世紀的歷史，長期在亞利桑那州鳳凰城舉辦。同時為了配合台灣、日本、印度、歐洲展會行程，也將改至春季舉行。",
@@ -2992,17 +3977,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22SEMICON+West%E9%95%B7%E6%9C%9F%E7%A7%BB%E5%B8%AB%E9%B3%B3%E5%87%B0%E5%9F%8E+%E5%BB%B6%E7%BA%8C%E5%8D%8A%E5%B0%8E%E9%AB%94%E7%94%9F%E6%85%8B%E5%8B%95%E8%83%BD%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "c3ed5be55b099806",
       "title": "美石油巨擘獲利因戰爭大增 警告油價將維持高檔",
       "link": "https://www.cna.com.tw/news/afe/202608010054.aspx",
       "original_link": "https://www.cna.com.tw/news/afe/202608010054.aspx",
+      "direct_link": "https://www.cna.com.tw/news/afe/202608010054.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社產經證券",
       "query_source": "中央社產經證券",
       "summary": "（中央社紐約31日綜合外電報導）受到中東戰爭影響，美國石油巨擘埃克森美孚公司（ExxonMobil）與雪佛龍公司（Chevron）今天公布亮眼獲利，然而高層同時警告，汽油價格居高不下，可能持續對消費者帶來壓力。",
@@ -3022,17 +4013,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
+        "Yahoo 股市",
         "中央社產經證券"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 1,
+      "fallback_link": "https://www.google.com/search?q=%22%E7%BE%8E%E7%9F%B3%E6%B2%B9%E5%B7%A8%E6%93%98%E7%8D%B2%E5%88%A9%E5%9B%A0%E6%88%B0%E7%88%AD%E5%A4%A7%E5%A2%9E+%E8%AD%A6%E5%91%8A%E6%B2%B9%E5%83%B9%E5%B0%87%E7%B6%AD%E6%8C%81%E9%AB%98%E6%AA%94%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "19ce2e2a46ae1c0f",
       "title": "科技巨頭現金流集體惡化 AI軍備競賽代價浮現",
       "link": "https://www.cna.com.tw/news/afe/202608010042.aspx",
       "original_link": "https://www.cna.com.tw/news/afe/202608010042.aspx",
+      "direct_link": "https://www.cna.com.tw/news/afe/202608010042.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社產經證券",
       "query_source": "中央社產經證券",
       "summary": "（中央社舊金山31日綜合外電報導）亞馬遜、Alphabet 和特斯拉（Tesla）等大公司最新一季都出現負現金流，而Meta創造現金流的能力更暴跌91%。人工智慧基建大規模擴張，正對企業資產負債表造成巨大衝擊。",
@@ -3051,17 +4049,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E7%A7%91%E6%8A%80%E5%B7%A8%E9%A0%AD%E7%8F%BE%E9%87%91%E6%B5%81%E9%9B%86%E9%AB%94%E6%83%A1%E5%8C%96+AI%E8%BB%8D%E5%82%99%E7%AB%B6%E8%B3%BD%E4%BB%A3%E5%83%B9%E6%B5%AE%E7%8F%BE%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "53bc0c054a8fba8d",
       "title": "AI獨好消費電子冷 半導體第3季景氣不同調",
       "link": "https://www.cna.com.tw/news/afe/202608010039.aspx",
       "original_link": "https://www.cna.com.tw/news/afe/202608010039.aspx",
+      "direct_link": "https://www.cna.com.tw/news/afe/202608010039.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社產經證券",
       "query_source": "中央社產經證券",
       "summary": "（中央社記者張建中新竹1日電）人工智慧（AI）持續蓬勃發展，相關需求依然強勁，成為支撐半導體產業景氣的一大動力，反觀消費性電子市場需求疲弱，使得第3季半導體產業景氣呈現不同調局面。不過，面對成本高漲壓力，消費電子晶片廠仍醞釀調漲產品價格。",
@@ -3081,17 +4085,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22AI%E7%8D%A8%E5%A5%BD%E6%B6%88%E8%B2%BB%E9%9B%BB%E5%AD%90%E5%86%B7+%E5%8D%8A%E5%B0%8E%E9%AB%94%E7%AC%AC3%E5%AD%A3%E6%99%AF%E6%B0%A3%E4%B8%8D%E5%90%8C%E8%AA%BF%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "2c480d90edb1b734",
       "title": "路透照片曝美財長待辦事項 疑擬投入百億美元買日圓",
       "link": "https://www.cna.com.tw/news/aopl/202608010038.aspx",
       "original_link": "https://www.cna.com.tw/news/aopl/202608010038.aspx",
+      "direct_link": "https://www.cna.com.tw/news/aopl/202608010038.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社產經證券",
       "query_source": "中央社產經證券",
       "summary": "（中央社馬里蘭州大衛營31日綜合外電報導）路透社拍攝的照片顯示，在總統川普主持的內閣會議期間，美國財政部長貝森特桌上的便條紙寫著「待辦事項」，下方寫著「買入（價值）50億至100億（美元）的日圓」。",
@@ -3110,17 +4120,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
+        "Yahoo 股市",
         "中央社產經證券"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 1,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%B7%AF%E9%80%8F%E7%85%A7%E7%89%87%E6%9B%9D%E7%BE%8E%E8%B2%A1%E9%95%B7%E5%BE%85%E8%BE%A6%E4%BA%8B%E9%A0%85+%E7%96%91%E6%93%AC%E6%8A%95%E5%85%A5%E7%99%BE%E5%84%84%E7%BE%8E%E5%85%83%E8%B2%B7%E6%97%A5%E5%9C%93%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "8226e687826de3bd",
       "title": "從永康街到首爾 一碗芒果豆花征服韓國人甜點胃【專訪】",
       "link": "https://www.cna.com.tw/news/afe/202608010017.aspx",
       "original_link": "https://www.cna.com.tw/news/afe/202608010017.aspx",
+      "direct_link": "https://www.cna.com.tw/news/afe/202608010017.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社產經證券",
       "query_source": "中央社產經證券",
       "summary": "（中央社記者曾筠庭台北1日電）首爾汝矣島現代百貨地下2樓，原本連百貨主管都不看好台灣豆花，快閃開幕半個月便創下近新台幣250萬元業績，最熱銷的不是預期中的芒果雪花冰，而是芒果豆花，一碗芒果豆花賣價折合新台幣約200元，這樣的銷售成績，連山海豆花創辦人劉孆婷都直呼「非常出乎意料」。",
@@ -3139,17 +4156,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 96,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社產經證券"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%BE%9E%E6%B0%B8%E5%BA%B7%E8%A1%97%E5%88%B0%E9%A6%96%E7%88%BE+%E4%B8%80%E7%A2%97%E8%8A%92%E6%9E%9C%E8%B1%86%E8%8A%B1%E5%BE%81%E6%9C%8D%E9%9F%93%E5%9C%8B%E4%BA%BA%E7%94%9C%E9%BB%9E%E8%83%83%E3%80%90%E5%B0%88%E8%A8%AA%E3%80%91%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "5784ce5a4d729b38",
       "title": "AI生成假影像疑慮 Google地球新功能急下架",
       "link": "https://www.cna.com.tw/news/ait/202608010069.aspx",
       "original_link": "https://www.cna.com.tw/news/ait/202608010069.aspx",
+      "direct_link": "https://www.cna.com.tw/news/ait/202608010069.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社科技",
       "query_source": "中央社科技",
       "summary": "（中央社舊金山31日綜合外電報導）美國科技巨擘Alphabet旗下公司谷歌（Google）今天表示，他們撤回昨天在Google地球推出的人工智慧（AI）影像生成新功能，原因是部分用戶分享的影像疑似違反公司政策。",
@@ -3169,17 +4192,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22AI%E7%94%9F%E6%88%90%E5%81%87%E5%BD%B1%E5%83%8F%E7%96%91%E6%85%AE+Google%E5%9C%B0%E7%90%83%E6%96%B0%E5%8A%9F%E8%83%BD%E6%80%A5%E4%B8%8B%E6%9E%B6%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "2749afeb3d7e6eaf",
       "title": "OpenAI更多AI代理突破防線 安全與競爭陷入拉鋸",
       "link": "https://www.cna.com.tw/news/ait/202608010023.aspx",
       "original_link": "https://www.cna.com.tw/news/ait/202608010023.aspx",
+      "direct_link": "https://www.cna.com.tw/news/ait/202608010023.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社科技",
       "query_source": "中央社科技",
       "summary": "（中央社記者張欣瑜舊金山31日專電）AI代理失控事件持續延燒。路透社報導，OpenAI旗下AI系統之前駭入Hugging Face，公司擴大調查發現，過去還有其他AI代理突破隔離限制。AI安全專家憂心，AI公司開發駭客代理能力已超過控制代理能力。",
@@ -3198,17 +4227,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22OpenAI%E6%9B%B4%E5%A4%9AAI%E4%BB%A3%E7%90%86%E7%AA%81%E7%A0%B4%E9%98%B2%E7%B7%9A+%E5%AE%89%E5%85%A8%E8%88%87%E7%AB%B6%E7%88%AD%E9%99%B7%E5%85%A5%E6%8B%89%E9%8B%B8%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "a78b1008df67f1bb",
       "title": "上海AI新創推出影片模型H3 宣稱成本是對手1/3",
       "link": "https://www.cna.com.tw/news/ait/202607310317.aspx",
       "original_link": "https://www.cna.com.tw/news/ait/202607310317.aspx",
+      "direct_link": "https://www.cna.com.tw/news/ait/202607310317.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社科技",
       "query_source": "中央社科技",
       "summary": "（中央社台北31日電）綜合星、港媒體報導，中國大陸人工智慧（AI）新創公司上海稀宇科技（MiniMax）今天發布新款影片生成模型H3。MiniMax表示，H3模型生成2K影片的成本不到主流競爭對手產品的1/3。",
@@ -3228,17 +4263,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E4%B8%8A%E6%B5%B7AI%E6%96%B0%E5%89%B5%E6%8E%A8%E5%87%BA%E5%BD%B1%E7%89%87%E6%A8%A1%E5%9E%8BH3+%E5%AE%A3%E7%A8%B1%E6%88%90%E6%9C%AC%E6%98%AF%E5%B0%8D%E6%89%8B1%2F3%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "fe9353da9e0ffaff",
       "title": "祖克柏預言：5年內數十億人用AI代理人照料生活",
       "link": "https://www.cna.com.tw/news/aopl/202607310264.aspx",
       "original_link": "https://www.cna.com.tw/news/aopl/202607310264.aspx",
+      "direct_link": "https://www.cna.com.tw/news/aopl/202607310264.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社科技",
       "query_source": "中央社科技",
       "summary": "（中央社麻薩諸塞州劍橋30日綜合外電報導）Meta執行長祖克柏表示，5年內將有數十億人運用人工智慧代理（AI Agent）來實現生活自動化。這可能包含生活大小事，從處理人際關係和家務，到照料財務和健康。",
@@ -3258,17 +4299,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E7%A5%96%E5%85%8B%E6%9F%8F%E9%A0%90%E8%A8%80%EF%BC%9A5%E5%B9%B4%E5%85%A7%E6%95%B8%E5%8D%81%E5%84%84%E4%BA%BA%E7%94%A8AI%E4%BB%A3%E7%90%86%E4%BA%BA%E7%85%A7%E6%96%99%E7%94%9F%E6%B4%BB%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "b6acaacfcadf862c",
       "title": "OpenAI後又一例 Anthropic也爆測試時駭3公司",
       "link": "https://www.cna.com.tw/news/ait/202607310036.aspx",
       "original_link": "https://www.cna.com.tw/news/ait/202607310036.aspx",
+      "direct_link": "https://www.cna.com.tw/news/ait/202607310036.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社科技",
       "query_source": "中央社科技",
       "summary": "（中央社紐約30日綜合外電報導）繼OpenAI上週爆出AI代理程式逃脫並駭入其他公司的事件後，Anthropic今天也證實，近期檢視超過14萬筆測試紀錄，發現旗下Claude的AI模型測試期間也曾駭入3家公司系統。",
@@ -3287,17 +4334,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22OpenAI%E5%BE%8C%E5%8F%88%E4%B8%80%E4%BE%8B+Anthropic%E4%B9%9F%E7%88%86%E6%B8%AC%E8%A9%A6%E6%99%82%E9%A7%AD3%E5%85%AC%E5%8F%B8%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "0a10d55ae37eb276",
       "title": "AI模型競爭激烈 OpenAI調降GPT-5.6價格",
       "link": "https://www.cna.com.tw/news/ait/202607310020.aspx",
       "original_link": "https://www.cna.com.tw/news/ait/202607310020.aspx",
+      "direct_link": "https://www.cna.com.tw/news/ait/202607310020.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社科技",
       "query_source": "中央社科技",
       "summary": "（中央社記者張欣瑜舊金山30日專電）AI模型開發商OpenAI今天宣布，將調降旗下GPT-5.6模型價格，GPT-5.6 Terra調降20%，GPT-5.6 Luna則大幅降低80%。這項宣布正值中國新創公司推出Kimi K3模型，及客戶對成本日益敏感之際。",
@@ -3316,17 +4369,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22AI%E6%A8%A1%E5%9E%8B%E7%AB%B6%E7%88%AD%E6%BF%80%E7%83%88+OpenAI%E8%AA%BF%E9%99%8DGPT-5.6%E5%83%B9%E6%A0%BC%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "d431bfd1f92f6ac7",
       "title": "美擬砸8.74億美元資助7家半導體商 強化AI晶片研發",
       "link": "https://www.cna.com.tw/news/ait/202607310016.aspx",
       "original_link": "https://www.cna.com.tw/news/ait/202607310016.aspx",
+      "direct_link": "https://www.cna.com.tw/news/ait/202607310016.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社科技",
       "query_source": "中央社科技",
       "summary": "（中央社華盛頓30日綜合外電報導）美國商務部今天指出，已與7家開發人工智慧（AI）及先進運算系統半導體技術的公司簽署意向書，將提供總金額8.74億美元的補助獎勵。",
@@ -3345,17 +4404,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E7%BE%8E%E6%93%AC%E7%A0%B88.74%E5%84%84%E7%BE%8E%E5%85%83%E8%B3%87%E5%8A%A97%E5%AE%B6%E5%8D%8A%E5%B0%8E%E9%AB%94%E5%95%86+%E5%BC%B7%E5%8C%96AI%E6%99%B6%E7%89%87%E7%A0%94%E7%99%BC%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "972d5261c666f4ab",
       "title": "Telegram未下架恐怖主義影片 澳洲監管機構喊罰",
       "link": "https://www.cna.com.tw/news/ait/202607300139.aspx",
       "original_link": "https://www.cna.com.tw/news/ait/202607300139.aspx",
+      "direct_link": "https://www.cna.com.tw/news/ait/202607300139.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社科技",
       "query_source": "中央社科技",
       "summary": "（中央社雪梨30日綜合外電報導）澳洲網路安全監管機構今天對社群平台Telegram採取法律行動，指控未刪除恐怖主義內容，最重可依澳洲網路安全法開罰澳幣5460萬元（約新台幣12.3億元）。",
@@ -3374,17 +4439,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22Telegram%E6%9C%AA%E4%B8%8B%E6%9E%B6%E6%81%90%E6%80%96%E4%B8%BB%E7%BE%A9%E5%BD%B1%E7%89%87+%E6%BE%B3%E6%B4%B2%E7%9B%A3%E7%AE%A1%E6%A9%9F%E6%A7%8B%E5%96%8A%E7%BD%B0%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "873948f73b15f8de",
       "title": "阿特曼：AI代理失控如科幻事件 真切感受到威脅",
       "link": "https://www.cna.com.tw/news/ait/202607300026.aspx",
       "original_link": "https://www.cna.com.tw/news/ait/202607300026.aspx",
+      "direct_link": "https://www.cna.com.tw/news/ait/202607300026.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社科技",
       "query_source": "中央社科技",
       "summary": "（中央社記者張欣瑜舊金山29日專電）OpenAI模型入侵Hugging Face事件曝光後，OpenAI執行長阿特曼近日在podcast節目受訪表示，這起事件讓他真切感受到威脅，對他來說非常科幻，並呼籲控制AI發展速度、讓社會有足夠時間建立更強的防護機制。",
@@ -3403,17 +4474,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E9%98%BF%E7%89%B9%E6%9B%BC%EF%BC%9AAI%E4%BB%A3%E7%90%86%E5%A4%B1%E6%8E%A7%E5%A6%82%E7%A7%91%E5%B9%BB%E4%BA%8B%E4%BB%B6+%E7%9C%9F%E5%88%87%E6%84%9F%E5%8F%97%E5%88%B0%E5%A8%81%E8%84%85%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "63814d1d90f9b64c",
       "title": "美商無人艇菲海域拍中國驅逐艦 揭示戰爭型態改變",
       "link": "https://www.cna.com.tw/news/aopl/202607300024.aspx",
       "original_link": "https://www.cna.com.tw/news/aopl/202607300024.aspx",
+      "direct_link": "https://www.cna.com.tw/news/aopl/202607300024.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社科技",
       "query_source": "中央社科技",
       "summary": "（中央社記者張欣瑜舊金山29日專電）總部位於加州的小型無人機製造商Seasats表示，旗下一艘無人艇6月在菲律賓專屬經濟海域拍攝到中國軍艦。路透社核實和比對後，確認該艘軍艦為中國052D型導彈驅逐艦。這再次揭示戰爭型態改變，24萬美元小型無人艇也能接近10億美元大型軍艦。",
@@ -3432,17 +4509,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E7%BE%8E%E5%95%86%E7%84%A1%E4%BA%BA%E8%89%87%E8%8F%B2%E6%B5%B7%E5%9F%9F%E6%8B%8D%E4%B8%AD%E5%9C%8B%E9%A9%85%E9%80%90%E8%89%A6+%E6%8F%AD%E7%A4%BA%E6%88%B0%E7%88%AD%E5%9E%8B%E6%85%8B%E6%94%B9%E8%AE%8A%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "c026b6bec797dc76",
       "title": "台灣新創科穎達布局無人機熱影像 國防應用受關注",
       "link": "https://www.cna.com.tw/news/ait/202607300021.aspx",
       "original_link": "https://www.cna.com.tw/news/ait/202607300021.aspx",
+      "direct_link": "https://www.cna.com.tw/news/ait/202607300021.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社科技",
       "query_source": "中央社科技",
       "summary": "（中央社記者張欣瑜舊金山29日專電）台灣新創科穎達專注光學技術創新，開發AI平台解決超穎透鏡產品從設計走向「量產」的問題，其技術除可應用於消費性電子產品，也能應用於無人機熱影像系統，在中國管制鍺材料出口之際，備受國防領域關注。",
@@ -3462,17 +4545,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%8F%B0%E7%81%A3%E6%96%B0%E5%89%B5%E7%A7%91%E7%A9%8E%E9%81%94%E5%B8%83%E5%B1%80%E7%84%A1%E4%BA%BA%E6%A9%9F%E7%86%B1%E5%BD%B1%E5%83%8F+%E5%9C%8B%E9%98%B2%E6%87%89%E7%94%A8%E5%8F%97%E9%97%9C%E6%B3%A8%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "14903c614cf1b838",
       "title": "IQM上市掀關注 芬蘭專家解析量子電腦",
       "link": "https://www.cna.com.tw/news/ait/202607290375.aspx",
       "original_link": "https://www.cna.com.tw/news/ait/202607290375.aspx",
+      "direct_link": "https://www.cna.com.tw/news/ait/202607290375.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社科技",
       "query_source": "中央社科技",
       "summary": "（中央社記者巫祈麟赫爾辛基29日專電）芬蘭量子科技新創公司IQM近日完成美國與芬蘭證券交易所上市，再度引發市場關注這項新興技術何時能真正走入商業應用。芬蘭量子科技專家表示，隨著硬體持續進步，第一批具實用價值的應用可望很快問世，有望解決連現今超級電腦都難以完成的複雜運算。",
@@ -3492,17 +4581,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22IQM%E4%B8%8A%E5%B8%82%E6%8E%80%E9%97%9C%E6%B3%A8+%E8%8A%AC%E8%98%AD%E5%B0%88%E5%AE%B6%E8%A7%A3%E6%9E%90%E9%87%8F%E5%AD%90%E9%9B%BB%E8%85%A6%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "5125ac05dbd49616",
       "title": "Google個人AI代理 Gemini Spark將在台開放",
       "link": "https://www.cna.com.tw/news/ait/202607290331.aspx",
       "original_link": "https://www.cna.com.tw/news/ait/202607290331.aspx",
+      "direct_link": "https://www.cna.com.tw/news/ait/202607290331.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社科技",
       "query_source": "中央社科技",
       "summary": "（中央社記者江明晏台北29日電）Google宣布，Gemini Spark將在台灣開放給Google AI Pro 用戶，是一款能全天候在背景運作的個人AI代理，將在用戶的引導下，代勞複雜且耗時的任務，把寶貴的時間留給自己。",
@@ -3521,17 +4616,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22Google%E5%80%8B%E4%BA%BAAI%E4%BB%A3%E7%90%86+Gemini+Spark%E5%B0%87%E5%9C%A8%E5%8F%B0%E9%96%8B%E6%94%BE%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "9eff1a5446bc8bba",
       "title": "辛巴威發現新恐龍 2.1億年前居非洲南部體重如成豬",
       "link": "https://www.cna.com.tw/news/ait/202607290193.aspx",
       "original_link": "https://www.cna.com.tw/news/ait/202607290193.aspx",
+      "direct_link": "https://www.cna.com.tw/news/ait/202607290193.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社科技",
       "query_source": "中央社科技",
       "summary": "（中央社約翰尼斯堡29日綜合外電報導）科學家今天宣布在辛巴威新發現一種恐龍，不僅為恐龍多樣性演化提供新線索，也顯示牠們可能曾分布於非洲南部不同的生態系。",
@@ -3550,17 +4651,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%BE%9B%E5%B7%B4%E5%A8%81%E7%99%BC%E7%8F%BE%E6%96%B0%E6%81%90%E9%BE%8D+2.1%E5%84%84%E5%B9%B4%E5%89%8D%E5%B1%85%E9%9D%9E%E6%B4%B2%E5%8D%97%E9%83%A8%E9%AB%94%E9%87%8D%E5%A6%82%E6%88%90%E8%B1%AC%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "547b64262eab9ef9",
       "title": "祖克柏加入AI監管論戰 反對封殺中國模型",
       "link": "https://www.cna.com.tw/news/ait/202607290115.aspx",
       "original_link": "https://www.cna.com.tw/news/ait/202607290115.aspx",
+      "direct_link": "https://www.cna.com.tw/news/ait/202607290115.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社科技",
       "query_source": "中央社科技",
       "summary": "（中央社舊金山28日綜合外電報導）Meta創辦人祖克柏（Mark Zuckerberg）表示，美國政府不應為了在人工智慧（AI）競爭中取得優勢而封殺中國模型，並警告美國領先實驗室「監管俘虜」（regulatory capture）的現象，可能會壓制國內競爭。",
@@ -3579,17 +4686,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E7%A5%96%E5%85%8B%E6%9F%8F%E5%8A%A0%E5%85%A5AI%E7%9B%A3%E7%AE%A1%E8%AB%96%E6%88%B0+%E5%8F%8D%E5%B0%8D%E5%B0%81%E6%AE%BA%E4%B8%AD%E5%9C%8B%E6%A8%A1%E5%9E%8B%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "a624df238d62801c",
       "title": "OpenAI失控AI波及範圍擴大 Modal客戶也遭駭",
       "link": "https://www.cna.com.tw/news/ait/202607290039.aspx",
       "original_link": "https://www.cna.com.tw/news/ait/202607290039.aspx",
+      "direct_link": "https://www.cna.com.tw/news/ait/202607290039.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社科技",
       "query_source": "中央社科技",
       "summary": "（中央社華盛頓28日綜合外電報導）OpenAI旗下一個AI自主代理（agent）程式日前在測試期間脫離控制，隨後駭入人工智慧（AI）新創公司Hugging Face，引發軒然大波。如今最新消息顯示，另一間位在美國紐約的科技公司Modal Labs也有客戶遭波及。",
@@ -3608,17 +4721,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22OpenAI%E5%A4%B1%E6%8E%A7AI%E6%B3%A2%E5%8F%8A%E7%AF%84%E5%9C%8D%E6%93%B4%E5%A4%A7+Modal%E5%AE%A2%E6%88%B6%E4%B9%9F%E9%81%AD%E9%A7%AD%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "b02359e39ab23926",
       "title": "路透：中國開始量產自主研發浸潤式DUV微影機",
       "link": "https://www.cna.com.tw/news/ait/202607280305.aspx",
       "original_link": "https://www.cna.com.tw/news/ait/202607280305.aspx",
+      "direct_link": "https://www.cna.com.tw/news/ait/202607280305.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社科技",
       "query_source": "中央社科技",
       "summary": "（中央社新加坡28日綜合外電報導）消息人士表示，中國已開始量產自主研發的浸潤式深紫外線（DUV）微影機，這項先進晶片製造關鍵設備，象徵北京降低對外國技術依賴的努力邁出重要一步。",
@@ -3638,17 +4757,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%B7%AF%E9%80%8F%EF%BC%9A%E4%B8%AD%E5%9C%8B%E9%96%8B%E5%A7%8B%E9%87%8F%E7%94%A2%E8%87%AA%E4%B8%BB%E7%A0%94%E7%99%BC%E6%B5%B8%E6%BD%A4%E5%BC%8FDUV%E5%BE%AE%E5%BD%B1%E6%A9%9F%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "126749cffd40f4aa",
       "title": "金融時報：輝達簽500億美元租約 包下德州資料中心",
       "link": "https://www.cna.com.tw/news/aopl/202607280161.aspx",
       "original_link": "https://www.cna.com.tw/news/aopl/202607280161.aspx",
+      "direct_link": "https://www.cna.com.tw/news/aopl/202607280161.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社科技",
       "query_source": "中央社科技",
       "summary": "（中央社紐約28日綜合外電報導）英國「金融時報」（Financial Times）今天引述5名知情人士說法報導，輝達（Nvidia）已簽署高達500億美元（約新台幣1.6兆元）的租約，承租由Hut 8興建的德州資料中心。",
@@ -3667,17 +4792,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E9%87%91%E8%9E%8D%E6%99%82%E5%A0%B1%EF%BC%9A%E8%BC%9D%E9%81%94%E7%B0%BD500%E5%84%84%E7%BE%8E%E5%85%83%E7%A7%9F%E7%B4%84+%E5%8C%85%E4%B8%8B%E5%BE%B7%E5%B7%9E%E8%B3%87%E6%96%99%E4%B8%AD%E5%BF%83%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "f20264ce16c4f272",
       "title": "歐盟AI透明度新制8月上路 AI生成內容須依法標示",
       "link": "https://www.cna.com.tw/news/ait/202607280131.aspx",
       "original_link": "https://www.cna.com.tw/news/ait/202607280131.aspx",
+      "direct_link": "https://www.cna.com.tw/news/ait/202607280131.aspx",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://www.cna.com.tw/list/aie.aspx",
       "source": "中央社科技",
       "query_source": "中央社科技",
       "summary": "（中央社布魯塞爾27日綜合外電報導）歐盟人工智慧（AI）透明度新規定將於8月2日實施，屆時深偽影音（Deepfake）及其他AI生成內容須依法標示，讓歐洲網友得以立即辨別網路內容真偽。",
@@ -3696,17 +4827,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 95,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "中央社科技"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E6%AD%90%E7%9B%9FAI%E9%80%8F%E6%98%8E%E5%BA%A6%E6%96%B0%E5%88%B68%E6%9C%88%E4%B8%8A%E8%B7%AF+AI%E7%94%9F%E6%88%90%E5%85%A7%E5%AE%B9%E9%A0%88%E4%BE%9D%E6%B3%95%E6%A8%99%E7%A4%BA%22+site%3Acna.com.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "c4ff9e680f659110",
       "title": "老闆問：Do you have any bandwidth？不是問你頻寬夠不夠！",
       "link": "https://money.udn.com/money/story/5601/9546392",
       "original_link": "https://money.udn.com/money/story/5601/9546392",
+      "direct_link": "https://money.udn.com/money/story/5601/9546392",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://money.udn.com/",
       "source": "經濟日報",
       "query_source": "經濟日報",
       "summary": "會議快結束時，主管轉過來問 Ken 一句：“Do you have any bandwidth?”他愣了一下。頻寬？網路？速度不夠嗎？但其實，主管問的不是這個。bandwidth 這個字，很多人其實「看得懂」，但一進到職場英文溝通，就會弄錯。Bandwidth 原本是技術用語，確實是「頻寬」。例如：“There’s a bandwidth bottleneck during peak hours.”（尖峰時段會出現頻寬瓶頸。）但在職場對話中，它經常和網路無關，而是在講人。當有人說：“I don’t have the bandwidth for this.”意思不是他沒網速，而是——他現在沒有多餘的時間、精力，或處理空間。這是一個在科",
@@ -3725,17 +4862,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 92,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "經濟日報"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%80%81%E9%97%86%E5%95%8F%EF%BC%9ADo+you+have+any+bandwidth%EF%BC%9F%E4%B8%8D%E6%98%AF%E5%95%8F%E4%BD%A0%E9%A0%BB%E5%AF%AC%E5%A4%A0%E4%B8%8D%E5%A4%A0%EF%BC%81%22+site%3Amoney.udn.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "ee2315b776bf14b9",
       "title": "你說 I have a thing for you？小心變成辦公室告白",
       "link": "https://money.udn.com/money/story/5601/9495547",
       "original_link": "https://money.udn.com/money/story/5601/9495547",
+      "direct_link": "https://money.udn.com/money/story/5601/9495547",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://money.udn.com/",
       "source": "經濟日報",
       "query_source": "經濟日報",
       "summary": "有天早上，Wendy 手上拿著一份同事交代的文件，走到設計部門說：“Hey, I have a thing for you.”她原本只是想說「我有東西要給你」，結果對方瞬間愣住、露出一絲尷尬又疑惑的表情。這才發現——用了thing 這個字，不小心「誤踩感情地雷」。為什麼 thing 會惹出誤會？在英文裡，“have a thing for someone” 指的不是「有東西給他」，而是：have a thing for someone = 對某人有意思、有好感這樣講很像告白：「我有點喜歡你。」． I think she has a thing for Jason. 我覺得她好像喜歡Jason。． He has a thing for",
@@ -3754,17 +4897,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 92,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "經濟日報"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E4%BD%A0%E8%AA%AA+I+have+a+thing+for+you%EF%BC%9F%E5%B0%8F%E5%BF%83%E8%AE%8A%E6%88%90%E8%BE%A6%E5%85%AC%E5%AE%A4%E5%91%8A%E7%99%BD%22+site%3Amoney.udn.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "02c40278eac1a786",
       "title": "Balance、Statement、Credit？你以為你懂，但在金融英文裡可能全都誤會了",
       "link": "https://money.udn.com/money/story/5601/9419641",
       "original_link": "https://money.udn.com/money/story/5601/9419641",
+      "direct_link": "https://money.udn.com/money/story/5601/9419641",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://money.udn.com/",
       "source": "經濟日報",
       "query_source": "經濟日報",
       "summary": "你第一天進金融公司上班，收到老闆的一封信：“Please prepare a monthly statement by tomorrow.”你心想：「statement嘛，就是陳述，我明天整理一下心得⋯⋯」結果隔天老闆冷冷問：「So where’s the bank statement?」你愣住：「咦？不是要我講講看法嗎？」這一刻你才發現，statement 在金融世界的意思，根本不是你以為的那個「陳述」。金融英文，真正考驗的是「概念力」很多金融常見字，看起來簡單又熟悉：• balance（平衡？還是欠款？）• credit（讚美？還是貸款額度？）• statement（陳述？還是帳單？）但就是因為「太熟」，反而最容易用錯。而這些錯",
@@ -3783,18 +4932,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "direct-rss",
       "quality_score": 92,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "經濟日報"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22Balance%E3%80%81Statement%E3%80%81Credit%EF%BC%9F%E4%BD%A0%E4%BB%A5%E7%82%BA%E4%BD%A0%E6%87%82%EF%BC%8C%E4%BD%86%E5%9C%A8%E9%87%91%E8%9E%8D%E8%8B%B1%E6%96%87%E8%A3%A1%E5%8F%AF%E8%83%BD%E5%85%A8%E9%83%BD%E8%AA%A4%E6%9C%83%E4%BA%86%22+site%3Amoney.udn.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "5d73f991880fb781",
+      "id": "dbd101f51495623d",
       "title": "不熟 AI 也能脫穎而出，專家教你用「具體實例」打造必勝面試策略 - TechNews 科技新報",
-      "link": "https://www.google.com/search?q=%22%E4%B8%8D%E7%86%9F+AI+%E4%B9%9F%E8%83%BD%E8%84%AB%E7%A9%8E%E8%80%8C%E5%87%BA%EF%BC%8C%E5%B0%88%E5%AE%B6%E6%95%99%E4%BD%A0%E7%94%A8%E3%80%8C%E5%85%B7%E9%AB%94%E5%AF%A6%E4%BE%8B%E3%80%8D%E6%89%93%E9%80%A0%E5%BF%85%E5%8B%9D%E9%9D%A2%E8%A9%A6%E7%AD%96%E7%95%A5+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1",
+      "link": "https://www.google.com/search?q=%22%E4%B8%8D%E7%86%9F+AI+%E4%B9%9F%E8%83%BD%E8%84%AB%E7%A9%8E%E8%80%8C%E5%87%BA%EF%BC%8C%E5%B0%88%E5%AE%B6%E6%95%99%E4%BD%A0%E7%94%A8%E3%80%8C%E5%85%B7%E9%AB%94%E5%AF%A6%E4%BE%8B%E3%80%8D%E6%89%93%E9%80%A0%E5%BF%85%E5%8B%9D%E9%9D%A2%E8%A9%A6%E7%AD%96%E7%95%A5+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+site%3Afinance.technews.tw",
       "original_link": "https://news.google.com/rss/articles/CBMidkFVX3lxTFBLaFFDNXFMSWo1SW5BU18tWUhnYW1QMU9kbVNCOGZxMXo4TmFlNUhmT0Jlb3o0QUc2azRrMkIyZjR0aWcxQ0JTVnJIa3ByUG1XelozTjlZR2xmWWNhdF9ETkwteW1Qbi00Yk1vYWN5enlELXkxZHc?oc=5",
-      "source": "TechNews 科技新報",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://finance.technews.tw/",
+      "source": "科技新報／財經新報",
       "query_source": "科技新報／財經新報",
       "summary": "不熟 AI 也能脫穎而出，專家教你用「具體實例」打造必勝面試策略 TechNews 科技新報",
       "published_at": "2026-08-02T07:34:33+08:00",
@@ -3812,18 +4967,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 87,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "TechNews 科技新報"
+        "科技新報／財經新報"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E4%B8%8D%E7%86%9F+AI+%E4%B9%9F%E8%83%BD%E8%84%AB%E7%A9%8E%E8%80%8C%E5%87%BA%EF%BC%8C%E5%B0%88%E5%AE%B6%E6%95%99%E4%BD%A0%E7%94%A8%E3%80%8C%E5%85%B7%E9%AB%94%E5%AF%A6%E4%BE%8B%E3%80%8D%E6%89%93%E9%80%A0%E5%BF%85%E5%8B%9D%E9%9D%A2%E8%A9%A6%E7%AD%96%E7%95%A5+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+site%3Afinance.technews.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "9f66f4a912e40542",
+      "id": "e9760cc5985fb2b4",
       "title": "英國推 14 歲起學 AI 兼企業實習，終結大學至上應對失業潮 - TechNews 科技新報",
-      "link": "https://www.google.com/search?q=%22%E8%8B%B1%E5%9C%8B%E6%8E%A8+14+%E6%AD%B2%E8%B5%B7%E5%AD%B8+AI+%E5%85%BC%E4%BC%81%E6%A5%AD%E5%AF%A6%E7%BF%92%EF%BC%8C%E7%B5%82%E7%B5%90%E5%A4%A7%E5%AD%B8%E8%87%B3%E4%B8%8A%E6%87%89%E5%B0%8D%E5%A4%B1%E6%A5%AD%E6%BD%AE+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1",
+      "link": "https://www.google.com/search?q=%22%E8%8B%B1%E5%9C%8B%E6%8E%A8+14+%E6%AD%B2%E8%B5%B7%E5%AD%B8+AI+%E5%85%BC%E4%BC%81%E6%A5%AD%E5%AF%A6%E7%BF%92%EF%BC%8C%E7%B5%82%E7%B5%90%E5%A4%A7%E5%AD%B8%E8%87%B3%E4%B8%8A%E6%87%89%E5%B0%8D%E5%A4%B1%E6%A5%AD%E6%BD%AE+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+site%3Afinance.technews.tw",
       "original_link": "https://news.google.com/rss/articles/CBMirAFBVV95cUxQSUY4LXdzYzctclJBdlNjNjlTaVF4ZFNfVUVKdVRjNXJ3bGtMU1VoTno0cVFFdUNJTWdpSm4tZUxXUkdvdVp3UXBJVFNDejZPd1BIUVpTYmsxU05TMzNKN09KRHVxQ3RwSjBkRlM0TGg3WHppZXFQYU1HTUMzU25ycnNEYWtBM0dWcVdkcVdlbVhyVDJyR004bmU3RWR3TVZselhZRS0xM1NDUUpI?oc=5",
-      "source": "TechNews 科技新報",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://finance.technews.tw/",
+      "source": "科技新報／財經新報",
       "query_source": "科技新報／財經新報",
       "summary": "英國推 14 歲起學 AI 兼企業實習，終結大學至上應對失業潮 TechNews 科技新報",
       "published_at": "2026-08-02T00:04:33+08:00",
@@ -3841,18 +5002,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 87,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "TechNews 科技新報"
+        "科技新報／財經新報"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%8B%B1%E5%9C%8B%E6%8E%A8+14+%E6%AD%B2%E8%B5%B7%E5%AD%B8+AI+%E5%85%BC%E4%BC%81%E6%A5%AD%E5%AF%A6%E7%BF%92%EF%BC%8C%E7%B5%82%E7%B5%90%E5%A4%A7%E5%AD%B8%E8%87%B3%E4%B8%8A%E6%87%89%E5%B0%8D%E5%A4%B1%E6%A5%AD%E6%BD%AE+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+site%3Afinance.technews.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "80eb3beb3315e2c4",
+      "id": "e3884201458cb712",
       "title": "自由現金流拉警報！美四大 CSP 累計資本支出超過 1.1 兆美元，AI 豪賭終點在哪？ - TechNews 科技新報",
-      "link": "https://www.google.com/search?q=%22%E8%87%AA%E7%94%B1%E7%8F%BE%E9%87%91%E6%B5%81%E6%8B%89%E8%AD%A6%E5%A0%B1%EF%BC%81%E7%BE%8E%E5%9B%9B%E5%A4%A7+CSP+%E7%B4%AF%E8%A8%88%E8%B3%87%E6%9C%AC%E6%94%AF%E5%87%BA%E8%B6%85%E9%81%8E+1.1+%E5%85%86%E7%BE%8E%E5%85%83%EF%BC%8CAI+%E8%B1%AA%E8%B3%AD%E7%B5%82%E9%BB%9E%E5%9C%A8%E5%93%AA%EF%BC%9F+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1",
+      "link": "https://www.google.com/search?q=%22%E8%87%AA%E7%94%B1%E7%8F%BE%E9%87%91%E6%B5%81%E6%8B%89%E8%AD%A6%E5%A0%B1%EF%BC%81%E7%BE%8E%E5%9B%9B%E5%A4%A7+CSP+%E7%B4%AF%E8%A8%88%E8%B3%87%E6%9C%AC%E6%94%AF%E5%87%BA%E8%B6%85%E9%81%8E+1.1+%E5%85%86%E7%BE%8E%E5%85%83%EF%BC%8CAI+%E8%B1%AA%E8%B3%AD%E7%B5%82%E9%BB%9E%E5%9C%A8%E5%93%AA%EF%BC%9F+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+site%3Afinance.technews.tw",
       "original_link": "https://news.google.com/rss/articles/CBMihgFBVV95cUxQbjVWcGVPcUM5aW9SMGN5SHoxcjQ1ZUtFcm9RUHhKTzNuUEgwXzY0Tk1YUXBnMEg0TmM5S2JvNnF4V21wN2htenJoYlh0alJvZFVPN1dDaFRvSUxaUEdGVmx3dFVqQUpiS1h0UlNETzhjdnMtMFlaTHA4TGdXbGladF9yUloyZw?oc=5",
-      "source": "TechNews 科技新報",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://finance.technews.tw/",
+      "source": "科技新報／財經新報",
       "query_source": "科技新報／財經新報",
       "summary": "自由現金流拉警報！美四大 CSP 累計資本支出超過 1.1 兆美元，AI 豪賭終點在哪？ TechNews 科技新報",
       "published_at": "2026-08-01T17:29:32+08:00",
@@ -3870,18 +5037,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 87,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "TechNews 科技新報"
+        "科技新報／財經新報"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%87%AA%E7%94%B1%E7%8F%BE%E9%87%91%E6%B5%81%E6%8B%89%E8%AD%A6%E5%A0%B1%EF%BC%81%E7%BE%8E%E5%9B%9B%E5%A4%A7+CSP+%E7%B4%AF%E8%A8%88%E8%B3%87%E6%9C%AC%E6%94%AF%E5%87%BA%E8%B6%85%E9%81%8E+1.1+%E5%85%86%E7%BE%8E%E5%85%83%EF%BC%8CAI+%E8%B1%AA%E8%B3%AD%E7%B5%82%E9%BB%9E%E5%9C%A8%E5%93%AA%EF%BC%9F+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+site%3Afinance.technews.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "af3b80cf6bf120d2",
+      "id": "a0482c11ab56a02d",
       "title": "Meta 低調測試 AI 兒童故事 App StoryKit，三步驟客製化專屬繪本與配樂 - TechNews 科技新報",
-      "link": "https://www.google.com/search?q=%22Meta+%E4%BD%8E%E8%AA%BF%E6%B8%AC%E8%A9%A6+AI+%E5%85%92%E7%AB%A5%E6%95%85%E4%BA%8B+App+StoryKit%EF%BC%8C%E4%B8%89%E6%AD%A5%E9%A9%9F%E5%AE%A2%E8%A3%BD%E5%8C%96%E5%B0%88%E5%B1%AC%E7%B9%AA%E6%9C%AC%E8%88%87%E9%85%8D%E6%A8%82+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1",
+      "link": "https://www.google.com/search?q=%22Meta+%E4%BD%8E%E8%AA%BF%E6%B8%AC%E8%A9%A6+AI+%E5%85%92%E7%AB%A5%E6%95%85%E4%BA%8B+App+StoryKit%EF%BC%8C%E4%B8%89%E6%AD%A5%E9%A9%9F%E5%AE%A2%E8%A3%BD%E5%8C%96%E5%B0%88%E5%B1%AC%E7%B9%AA%E6%9C%AC%E8%88%87%E9%85%8D%E6%A8%82+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+site%3Afinance.technews.tw",
       "original_link": "https://news.google.com/rss/articles/CBMid0FVX3lxTE03ekFad2d4ZURnUWFGTjU1dmJTbGw5Q0htV1gwbUNnbnBDM3dpd3d3aXNabmxMcy03T2c5Z2xZOHE3U3lSRzk4bWZxSE9zWnh5c3daYzNhcUFZb1BSSmx5eWNyMEdxUFBZT0FCdE5keUp3ek52NUtr?oc=5",
-      "source": "TechNews 科技新報",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://finance.technews.tw/",
+      "source": "科技新報／財經新報",
       "query_source": "科技新報／財經新報",
       "summary": "Meta 低調測試 AI 兒童故事 App StoryKit，三步驟客製化專屬繪本與配樂 TechNews 科技新報",
       "published_at": "2026-08-01T14:31:25+08:00",
@@ -3899,18 +5072,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 87,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "TechNews 科技新報"
+        "科技新報／財經新報"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22Meta+%E4%BD%8E%E8%AA%BF%E6%B8%AC%E8%A9%A6+AI+%E5%85%92%E7%AB%A5%E6%95%85%E4%BA%8B+App+StoryKit%EF%BC%8C%E4%B8%89%E6%AD%A5%E9%A9%9F%E5%AE%A2%E8%A3%BD%E5%8C%96%E5%B0%88%E5%B1%AC%E7%B9%AA%E6%9C%AC%E8%88%87%E9%85%8D%E6%A8%82+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+site%3Afinance.technews.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "2b11a309eeceeace",
+      "id": "17724a5a3193f5af",
       "title": "年輕人不說「Google 一下」，改口「search it up」背後的 AI 影響力 - TechNews 科技新報",
-      "link": "https://www.google.com/search?q=%22%E5%B9%B4%E8%BC%95%E4%BA%BA%E4%B8%8D%E8%AA%AA%E3%80%8CGoogle+%E4%B8%80%E4%B8%8B%E3%80%8D%EF%BC%8C%E6%94%B9%E5%8F%A3%E3%80%8Csearch+it+up%E3%80%8D%E8%83%8C%E5%BE%8C%E7%9A%84+AI+%E5%BD%B1%E9%9F%BF%E5%8A%9B+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1",
+      "link": "https://www.google.com/search?q=%22%E5%B9%B4%E8%BC%95%E4%BA%BA%E4%B8%8D%E8%AA%AA%E3%80%8CGoogle+%E4%B8%80%E4%B8%8B%E3%80%8D%EF%BC%8C%E6%94%B9%E5%8F%A3%E3%80%8Csearch+it+up%E3%80%8D%E8%83%8C%E5%BE%8C%E7%9A%84+AI+%E5%BD%B1%E9%9F%BF%E5%8A%9B+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+site%3Afinance.technews.tw",
       "original_link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBPczBpUmxyWEUyaHprQ1RqSGRnTFdRV08zOVdmLTZMRDFhbUpZbGpXNUxCUEEwSFZhRHlSejRadlRvdDJfTUVSRzlqbjZUemlMQ0VpcVczYUwwRHJ0VDFJ?oc=5",
-      "source": "TechNews 科技新報",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://finance.technews.tw/",
+      "source": "科技新報／財經新報",
       "query_source": "科技新報／財經新報",
       "summary": "年輕人不說「Google 一下」，改口「search it up」背後的 AI 影響力 TechNews 科技新報",
       "published_at": "2026-08-01T11:34:20+08:00",
@@ -3928,18 +5107,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 87,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "TechNews 科技新報"
+        "科技新報／財經新報"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%B9%B4%E8%BC%95%E4%BA%BA%E4%B8%8D%E8%AA%AA%E3%80%8CGoogle+%E4%B8%80%E4%B8%8B%E3%80%8D%EF%BC%8C%E6%94%B9%E5%8F%A3%E3%80%8Csearch+it+up%E3%80%8D%E8%83%8C%E5%BE%8C%E7%9A%84+AI+%E5%BD%B1%E9%9F%BF%E5%8A%9B+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+site%3Afinance.technews.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "3ba1dbcfa703e3a8",
+      "id": "d59f9684e58a45ad",
       "title": "高通完成收購 Modular，加速生成式 AI、代理式 AI 邊緣到雲端布局 - TechNews 科技新報",
-      "link": "https://www.google.com/search?q=%22%E9%AB%98%E9%80%9A%E5%AE%8C%E6%88%90%E6%94%B6%E8%B3%BC+Modular%EF%BC%8C%E5%8A%A0%E9%80%9F%E7%94%9F%E6%88%90%E5%BC%8F+AI%E3%80%81%E4%BB%A3%E7%90%86%E5%BC%8F+AI+%E9%82%8A%E7%B7%A3%E5%88%B0%E9%9B%B2%E7%AB%AF%E5%B8%83%E5%B1%80+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1",
+      "link": "https://www.google.com/search?q=%22%E9%AB%98%E9%80%9A%E5%AE%8C%E6%88%90%E6%94%B6%E8%B3%BC+Modular%EF%BC%8C%E5%8A%A0%E9%80%9F%E7%94%9F%E6%88%90%E5%BC%8F+AI%E3%80%81%E4%BB%A3%E7%90%86%E5%BC%8F+AI+%E9%82%8A%E7%B7%A3%E5%88%B0%E9%9B%B2%E7%AB%AF%E5%B8%83%E5%B1%80+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+site%3Afinance.technews.tw",
       "original_link": "https://news.google.com/rss/articles/CBMiXEFVX3lxTFBiV0VGYWFTaFdmNnFYc0p4bE5RWWc3UFFOZ0N5cmNyV3J1eDFuWmxQWU1oMWhlQWpFWGNmX05PbG5OYjJ6RkppRjhGVUpvMkxQc1hkZDgxS1Y5c0pI?oc=5",
-      "source": "TechNews 科技新報",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://finance.technews.tw/",
+      "source": "科技新報／財經新報",
       "query_source": "科技新報／財經新報",
       "summary": "高通完成收購 Modular，加速生成式 AI、代理式 AI 邊緣到雲端布局 TechNews 科技新報",
       "published_at": "2026-08-01T10:29:20+08:00",
@@ -3957,18 +5142,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 87,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "TechNews 科技新報"
+        "科技新報／財經新報"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E9%AB%98%E9%80%9A%E5%AE%8C%E6%88%90%E6%94%B6%E8%B3%BC+Modular%EF%BC%8C%E5%8A%A0%E9%80%9F%E7%94%9F%E6%88%90%E5%BC%8F+AI%E3%80%81%E4%BB%A3%E7%90%86%E5%BC%8F+AI+%E9%82%8A%E7%B7%A3%E5%88%B0%E9%9B%B2%E7%AB%AF%E5%B8%83%E5%B1%80+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+site%3Afinance.technews.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "a5462958511ec6c5",
+      "id": "d2937c8bb896474a",
       "title": "尋找外星生命恐反被 AI 誤導，研究揭「自信誤判」恐成 NASA 太空任務隱憂 - TechNews 科技新報",
-      "link": "https://www.google.com/search?q=%22%E5%B0%8B%E6%89%BE%E5%A4%96%E6%98%9F%E7%94%9F%E5%91%BD%E6%81%90%E5%8F%8D%E8%A2%AB+AI+%E8%AA%A4%E5%B0%8E%EF%BC%8C%E7%A0%94%E7%A9%B6%E6%8F%AD%E3%80%8C%E8%87%AA%E4%BF%A1%E8%AA%A4%E5%88%A4%E3%80%8D%E6%81%90%E6%88%90+NASA+%E5%A4%AA%E7%A9%BA%E4%BB%BB%E5%8B%99%E9%9A%B1%E6%86%82+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1",
+      "link": "https://www.google.com/search?q=%22%E5%B0%8B%E6%89%BE%E5%A4%96%E6%98%9F%E7%94%9F%E5%91%BD%E6%81%90%E5%8F%8D%E8%A2%AB+AI+%E8%AA%A4%E5%B0%8E%EF%BC%8C%E7%A0%94%E7%A9%B6%E6%8F%AD%E3%80%8C%E8%87%AA%E4%BF%A1%E8%AA%A4%E5%88%A4%E3%80%8D%E6%81%90%E6%88%90+NASA+%E5%A4%AA%E7%A9%BA%E4%BB%BB%E5%8B%99%E9%9A%B1%E6%86%82+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+site%3Afinance.technews.tw",
       "original_link": "https://news.google.com/rss/articles/CBMickFVX3lxTE1RbWFuVTk0WkRCb253X3RhTWhKYm9IUGppZ0l6aVJ6UVUzYklJdTlseWlzY29aa0RyZVota012c2hhY2xMZV9KR3FXTURraWI5OGwyNXgyVWU0UFhteGtoTTFYSW1teTQwSHdwUFVEYTJGUQ?oc=5",
-      "source": "TechNews 科技新報",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://finance.technews.tw/",
+      "source": "科技新報／財經新報",
       "query_source": "科技新報／財經新報",
       "summary": "尋找外星生命恐反被 AI 誤導，研究揭「自信誤判」恐成 NASA 太空任務隱憂 TechNews 科技新報",
       "published_at": "2026-08-01T08:34:14+08:00",
@@ -3986,18 +5177,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 87,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "TechNews 科技新報"
+        "科技新報／財經新報"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%B0%8B%E6%89%BE%E5%A4%96%E6%98%9F%E7%94%9F%E5%91%BD%E6%81%90%E5%8F%8D%E8%A2%AB+AI+%E8%AA%A4%E5%B0%8E%EF%BC%8C%E7%A0%94%E7%A9%B6%E6%8F%AD%E3%80%8C%E8%87%AA%E4%BF%A1%E8%AA%A4%E5%88%A4%E3%80%8D%E6%81%90%E6%88%90+NASA+%E5%A4%AA%E7%A9%BA%E4%BB%BB%E5%8B%99%E9%9A%B1%E6%86%82+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+site%3Afinance.technews.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "f5641af25755a9cf",
+      "id": "a89c2940c8b1ba81",
       "title": "AI 帶旺投資消費，上半年經濟成長 13.72% 創 50 年最強 - TechNews 科技新報",
-      "link": "https://www.google.com/search?q=%22AI+%E5%B8%B6%E6%97%BA%E6%8A%95%E8%B3%87%E6%B6%88%E8%B2%BB%EF%BC%8C%E4%B8%8A%E5%8D%8A%E5%B9%B4%E7%B6%93%E6%BF%9F%E6%88%90%E9%95%B7+13.72%25+%E5%89%B5+50+%E5%B9%B4%E6%9C%80%E5%BC%B7+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1",
+      "link": "https://www.google.com/search?q=%22AI+%E5%B8%B6%E6%97%BA%E6%8A%95%E8%B3%87%E6%B6%88%E8%B2%BB%EF%BC%8C%E4%B8%8A%E5%8D%8A%E5%B9%B4%E7%B6%93%E6%BF%9F%E6%88%90%E9%95%B7+13.72%25+%E5%89%B5+50+%E5%B9%B4%E6%9C%80%E5%BC%B7+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+site%3Afinance.technews.tw",
       "original_link": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxOUFppWm5nT3pmd2FyemdIR3dVM3lFeEJfd2FDOUg2X05RVGxheVZEeEl3RmJ6YlZnQ0RlYlEtd1lPWHgzWEg4UWVEV2p4ZGJqcWZJUEowMDZzZ1psbjl4aTRXdXBVWXRpU05jWGhYOEFSMWVWR2I2VWxZX2FON0lycktqYjlsdHppOXpsenlaa1oyTEt6NGJKNmI3RlBIN2N5YjR0SU44c2xERF9CaGFUV1hZS1Z6VHJ2Y1NfQS0xSnB3UQ?oc=5",
-      "source": "TechNews 科技新報",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://finance.technews.tw/",
+      "source": "科技新報／財經新報",
       "query_source": "科技新報／財經新報",
       "summary": "AI 帶旺投資消費，上半年經濟成長 13.72% 創 50 年最強 TechNews 科技新報",
       "published_at": "2026-08-01T03:11:51+08:00",
@@ -4016,18 +5213,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 87,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "TechNews 科技新報"
+        "科技新報／財經新報"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22AI+%E5%B8%B6%E6%97%BA%E6%8A%95%E8%B3%87%E6%B6%88%E8%B2%BB%EF%BC%8C%E4%B8%8A%E5%8D%8A%E5%B9%B4%E7%B6%93%E6%BF%9F%E6%88%90%E9%95%B7+13.72%25+%E5%89%B5+50+%E5%B9%B4%E6%9C%80%E5%BC%B7+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+site%3Afinance.technews.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "4351a8432b35e198",
+      "id": "d62d2dfd49389d72",
       "title": "6 億觀看量能換成多少張電影票？人氣 YouTuber 攜手 AI 打造科幻長片進軍大銀幕 - TechNews 科技新報",
-      "link": "https://www.google.com/search?q=%226+%E5%84%84%E8%A7%80%E7%9C%8B%E9%87%8F%E8%83%BD%E6%8F%9B%E6%88%90%E5%A4%9A%E5%B0%91%E5%BC%B5%E9%9B%BB%E5%BD%B1%E7%A5%A8%EF%BC%9F%E4%BA%BA%E6%B0%A3+YouTuber+%E6%94%9C%E6%89%8B+AI+%E6%89%93%E9%80%A0%E7%A7%91%E5%B9%BB%E9%95%B7%E7%89%87%E9%80%B2%E8%BB%8D%E5%A4%A7%E9%8A%80%E5%B9%95+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1",
+      "link": "https://www.google.com/search?q=%226+%E5%84%84%E8%A7%80%E7%9C%8B%E9%87%8F%E8%83%BD%E6%8F%9B%E6%88%90%E5%A4%9A%E5%B0%91%E5%BC%B5%E9%9B%BB%E5%BD%B1%E7%A5%A8%EF%BC%9F%E4%BA%BA%E6%B0%A3+YouTuber+%E6%94%9C%E6%89%8B+AI+%E6%89%93%E9%80%A0%E7%A7%91%E5%B9%BB%E9%95%B7%E7%89%87%E9%80%B2%E8%BB%8D%E5%A4%A7%E9%8A%80%E5%B9%95+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+site%3Afinance.technews.tw",
       "original_link": "https://news.google.com/rss/articles/CBMihwFBVV95cUxPMFBzQWtOemFPMks1c044ZGtvbjhvRGlsQ3p6bTBkUUFlR0Y0My1iMXhKcEVmcmdoUFNjTk5mZnJpeFN3dTItNktmckNkdTd6MDNEblg5Z3gxTlZJS2h0blZidFJZbG5ueTFidEoxMmtyNHFJNl9ETDBONFYtWkktRHNIWkVJOU0?oc=5",
-      "source": "TechNews 科技新報",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://finance.technews.tw/",
+      "source": "科技新報／財經新報",
       "query_source": "科技新報／財經新報",
       "summary": "6 億觀看量能換成多少張電影票？人氣 YouTuber 攜手 AI 打造科幻長片進軍大銀幕 TechNews 科技新報",
       "published_at": "2026-08-01T00:03:40+08:00",
@@ -4045,18 +5248,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 87,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "TechNews 科技新報"
+        "科技新報／財經新報"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%226+%E5%84%84%E8%A7%80%E7%9C%8B%E9%87%8F%E8%83%BD%E6%8F%9B%E6%88%90%E5%A4%9A%E5%B0%91%E5%BC%B5%E9%9B%BB%E5%BD%B1%E7%A5%A8%EF%BC%9F%E4%BA%BA%E6%B0%A3+YouTuber+%E6%94%9C%E6%89%8B+AI+%E6%89%93%E9%80%A0%E7%A7%91%E5%B9%BB%E9%95%B7%E7%89%87%E9%80%B2%E8%BB%8D%E5%A4%A7%E9%8A%80%E5%B9%95+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+site%3Afinance.technews.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "347c7619d94b20fc",
+      "id": "b4a61401e72fc042",
       "title": "以 Siri AI 為核心的蘋果全新智慧家庭產品組合就緒，最快 10 月推出 - TechNews 科技新報",
-      "link": "https://www.google.com/search?q=%22%E4%BB%A5+Siri+AI+%E7%82%BA%E6%A0%B8%E5%BF%83%E7%9A%84%E8%98%8B%E6%9E%9C%E5%85%A8%E6%96%B0%E6%99%BA%E6%85%A7%E5%AE%B6%E5%BA%AD%E7%94%A2%E5%93%81%E7%B5%84%E5%90%88%E5%B0%B1%E7%B7%92%EF%BC%8C%E6%9C%80%E5%BF%AB+10+%E6%9C%88%E6%8E%A8%E5%87%BA+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1",
+      "link": "https://www.google.com/search?q=%22%E4%BB%A5+Siri+AI+%E7%82%BA%E6%A0%B8%E5%BF%83%E7%9A%84%E8%98%8B%E6%9E%9C%E5%85%A8%E6%96%B0%E6%99%BA%E6%85%A7%E5%AE%B6%E5%BA%AD%E7%94%A2%E5%93%81%E7%B5%84%E5%90%88%E5%B0%B1%E7%B7%92%EF%BC%8C%E6%9C%80%E5%BF%AB+10+%E6%9C%88%E6%8E%A8%E5%87%BA+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+site%3Afinance.technews.tw",
       "original_link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxORDRfM205Z3RRSU9QdjNWSHV2SXlGcm5yZlZiOFY5bENSazVaY1NjT3JNcmdfbHR5NzdjcXNKaGFJWmlRSXFzd3FyRGI0NFRjRFExSW95eU1QemFPRDAwRVZKakUtT1Q2Q2Rpa2JGZnlUX052b3l1enI2UjhFM0Rib0dxOHlEQ284UzB1NnZUUFlCRGJMOVM3STlTMHJidUVz?oc=5",
-      "source": "TechNews 科技新報",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://finance.technews.tw/",
+      "source": "科技新報／財經新報",
       "query_source": "科技新報／財經新報",
       "summary": "以 Siri AI 為核心的蘋果全新智慧家庭產品組合就緒，最快 10 月推出 TechNews 科技新報",
       "published_at": "2026-08-01T00:03:40+08:00",
@@ -4074,18 +5283,59 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 87,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "TechNews 科技新報"
+        "科技新報／財經新報"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E4%BB%A5+Siri+AI+%E7%82%BA%E6%A0%B8%E5%BF%83%E7%9A%84%E8%98%8B%E6%9E%9C%E5%85%A8%E6%96%B0%E6%99%BA%E6%85%A7%E5%AE%B6%E5%BA%AD%E7%94%A2%E5%93%81%E7%B5%84%E5%90%88%E5%B0%B1%E7%B7%92%EF%BC%8C%E6%9C%80%E5%BF%AB+10+%E6%9C%88%E6%8E%A8%E5%87%BA+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+site%3Afinance.technews.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "d0ae2d1ee080117c",
+      "id": "374d38d703efbdb8",
+      "title": "Meta 攜手貝萊德砸 140 億美元建德州 AI 資料中心，採合資模式加速算力佈局 - TechNews 科技新報",
+      "link": "https://www.google.com/search?q=%22Meta+%E6%94%9C%E6%89%8B%E8%B2%9D%E8%90%8A%E5%BE%B7%E7%A0%B8+140+%E5%84%84%E7%BE%8E%E5%85%83%E5%BB%BA%E5%BE%B7%E5%B7%9E+AI+%E8%B3%87%E6%96%99%E4%B8%AD%E5%BF%83%EF%BC%8C%E6%8E%A1%E5%90%88%E8%B3%87%E6%A8%A1%E5%BC%8F%E5%8A%A0%E9%80%9F%E7%AE%97%E5%8A%9B%E4%BD%88%E5%B1%80+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+site%3Afinance.technews.tw",
+      "original_link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxPelU0akFpb0NrTFRDNWVJV2t6cDRBbDRZWWJpSHo4OGVUTE9jbWJneVVLbTNsckN5bTBxU3pxUnV4Vlp0UkVncWxhT2pqNFRVVmpSOEJTLWdPUG51X0xWUWI5VlFQZmIyT01vZUJlN1h3RmF2ajJUNXJxSXRKTWpINnRwR3hKZ0JhTDU5c0laeF9VS0VtNW15YjhpeUNrbTNQcm1yblJqWHJTbWsxMG42bXBncw?oc=5",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://finance.technews.tw/",
+      "source": "科技新報／財經新報",
+      "query_source": "科技新報／財經新報",
+      "summary": "Meta 攜手貝萊德砸 140 億美元建德州 AI 資料中心，採合資模式加速算力佈局 TechNews 科技新報",
+      "published_at": "2026-07-31T18:07:15+08:00",
+      "region": "TW",
+      "topic": "tech",
+      "industries": [
+        "technology"
+      ],
+      "primary_industry": "technology",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "科技電子",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "publisher-search",
+      "quality_score": 87,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "科技新報／財經新報"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22Meta+%E6%94%9C%E6%89%8B%E8%B2%9D%E8%90%8A%E5%BE%B7%E7%A0%B8+140+%E5%84%84%E7%BE%8E%E5%85%83%E5%BB%BA%E5%BE%B7%E5%B7%9E+AI+%E8%B3%87%E6%96%99%E4%B8%AD%E5%BF%83%EF%BC%8C%E6%8E%A1%E5%90%88%E8%B3%87%E6%A8%A1%E5%BC%8F%E5%8A%A0%E9%80%9F%E7%AE%97%E5%8A%9B%E4%BD%88%E5%B1%80+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+site%3Afinance.technews.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "7d4c795c5ae41ed6",
       "title": "涉嫌竊取 700 筆機密賣給中國！弘塑前總座等五人遭起訴羈押 - TechNews 科技新報",
-      "link": "https://www.google.com/search?q=%22%E6%B6%89%E5%AB%8C%E7%AB%8A%E5%8F%96+700+%E7%AD%86%E6%A9%9F%E5%AF%86%E8%B3%A3%E7%B5%A6%E4%B8%AD%E5%9C%8B%EF%BC%81%E5%BC%98%E5%A1%91%E5%89%8D%E7%B8%BD%E5%BA%A7%E7%AD%89%E4%BA%94%E4%BA%BA%E9%81%AD%E8%B5%B7%E8%A8%B4%E7%BE%88%E6%8A%BC+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1",
+      "link": "https://www.google.com/search?q=%22%E6%B6%89%E5%AB%8C%E7%AB%8A%E5%8F%96+700+%E7%AD%86%E6%A9%9F%E5%AF%86%E8%B3%A3%E7%B5%A6%E4%B8%AD%E5%9C%8B%EF%BC%81%E5%BC%98%E5%A1%91%E5%89%8D%E7%B8%BD%E5%BA%A7%E7%AD%89%E4%BA%94%E4%BA%BA%E9%81%AD%E8%B5%B7%E8%A8%B4%E7%BE%88%E6%8A%BC+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+site%3Afinance.technews.tw",
       "original_link": "https://news.google.com/rss/articles/CBMiVEFVX3lxTE1seVhhaWVxT2k0X2Z0NVJqNEl4Z3VHZE9PaGNQXzBxVUcwUmI1eXU1VWx5X05Xbnd6Q01mTU5pTjJfYjFMZDJjVWZMMUxRd1NEaUdOVw?oc=5",
-      "source": "TechNews 科技新報",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://finance.technews.tw/",
+      "source": "科技新報／財經新報",
       "query_source": "科技新報／財經新報",
       "summary": "涉嫌竊取 700 筆機密賣給中國！弘塑前總座等五人遭起訴羈押 TechNews 科技新報",
       "published_at": "2026-07-30T17:42:42+08:00",
@@ -4103,47 +5353,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 87,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "TechNews 科技新報"
+        "科技新報／財經新報"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E6%B6%89%E5%AB%8C%E7%AB%8A%E5%8F%96+700+%E7%AD%86%E6%A9%9F%E5%AF%86%E8%B3%A3%E7%B5%A6%E4%B8%AD%E5%9C%8B%EF%BC%81%E5%BC%98%E5%A1%91%E5%89%8D%E7%B8%BD%E5%BA%A7%E7%AD%89%E4%BA%94%E4%BA%BA%E9%81%AD%E8%B5%B7%E8%A8%B4%E7%BE%88%E6%8A%BC+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+site%3Afinance.technews.tw",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "481bfe4569e28a8e",
-      "title": "貝恩資本清倉、股價回檔 65％，鎧俠 AI 翻身後陷擴產兩難 - TechNews 科技新報",
-      "link": "https://www.google.com/search?q=%22%E8%B2%9D%E6%81%A9%E8%B3%87%E6%9C%AC%E6%B8%85%E5%80%89%E3%80%81%E8%82%A1%E5%83%B9%E5%9B%9E%E6%AA%94+65%EF%BC%85%EF%BC%8C%E9%8E%A7%E4%BF%A0+AI+%E7%BF%BB%E8%BA%AB%E5%BE%8C%E9%99%B7%E6%93%B4%E7%94%A2%E5%85%A9%E9%9B%A3+-+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1%22+TechNews+%E7%A7%91%E6%8A%80%E6%96%B0%E5%A0%B1",
-      "original_link": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE40ejZ3NFlyeUdEcTMwSkM4anRQMGxxaHFxbWhLbnNuOVF5ZVN2b2FXc1JxZk5nX2RUdVNKSTBlT0VHbVFNc2Z3Mk44VVNqWEFfd3JuUXdXTDlOcnBzUHhGOWpIRUdTVGc?oc=5",
-      "source": "TechNews 科技新報",
-      "query_source": "科技新報／財經新報",
-      "summary": "貝恩資本清倉、股價回檔 65％，鎧俠 AI 翻身後陷擴產兩難 TechNews 科技新報",
-      "published_at": "2026-07-29T17:31:45+08:00",
-      "region": "TW",
-      "topic": "tech",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 87,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "TechNews 科技新報"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "24d4c2b5f5d86079",
+      "id": "7b7758774a843884",
       "title": "橋水達利歐示警「AI泡沫」！稱80年一次的「大週期」進入尾聲、黃金成避險首選 - news.cnyes.com",
-      "link": "https://www.google.com/search?q=%22%E6%A9%8B%E6%B0%B4%E9%81%94%E5%88%A9%E6%AD%90%E7%A4%BA%E8%AD%A6%E3%80%8CAI%E6%B3%A1%E6%B2%AB%E3%80%8D%EF%BC%81%E7%A8%B180%E5%B9%B4%E4%B8%80%E6%AC%A1%E7%9A%84%E3%80%8C%E5%A4%A7%E9%80%B1%E6%9C%9F%E3%80%8D%E9%80%B2%E5%85%A5%E5%B0%BE%E8%81%B2%E3%80%81%E9%BB%83%E9%87%91%E6%88%90%E9%81%BF%E9%9A%AA%E9%A6%96%E9%81%B8+-+news.cnyes.com%22+news.cnyes.com",
+      "link": "https://www.google.com/search?q=%22%E6%A9%8B%E6%B0%B4%E9%81%94%E5%88%A9%E6%AD%90%E7%A4%BA%E8%AD%A6%E3%80%8CAI%E6%B3%A1%E6%B2%AB%E3%80%8D%EF%BC%81%E7%A8%B180%E5%B9%B4%E4%B8%80%E6%AC%A1%E7%9A%84%E3%80%8C%E5%A4%A7%E9%80%B1%E6%9C%9F%E3%80%8D%E9%80%B2%E5%85%A5%E5%B0%BE%E8%81%B2%E3%80%81%E9%BB%83%E9%87%91%E6%88%90%E9%81%BF%E9%9A%AA%E9%A6%96%E9%81%B8+-+news.cnyes.com%22+site%3Acnyes.com",
       "original_link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9iLTl4bTN6bml6V0tlYjljcGFxRzRHaER1SmNtQmF3cDRHSTFCUk4yV25WZ2xJOXlNWjl0MmxoYlQ4c3A1SkVaWkZrdUp0UjQ?oc=5",
-      "source": "news.cnyes.com",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://news.cnyes.com/",
+      "source": "鉅亨網",
       "query_source": "鉅亨網",
       "summary": "橋水達利歐示警「AI泡沫」！稱80年一次的「大週期」進入尾聲、黃金成避險首選 news.cnyes.com",
       "published_at": "2026-08-01T22:10:05+08:00",
@@ -4161,18 +5388,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 86,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "news.cnyes.com"
+        "鉅亨網"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E6%A9%8B%E6%B0%B4%E9%81%94%E5%88%A9%E6%AD%90%E7%A4%BA%E8%AD%A6%E3%80%8CAI%E6%B3%A1%E6%B2%AB%E3%80%8D%EF%BC%81%E7%A8%B180%E5%B9%B4%E4%B8%80%E6%AC%A1%E7%9A%84%E3%80%8C%E5%A4%A7%E9%80%B1%E6%9C%9F%E3%80%8D%E9%80%B2%E5%85%A5%E5%B0%BE%E8%81%B2%E3%80%81%E9%BB%83%E9%87%91%E6%88%90%E9%81%BF%E9%9A%AA%E9%A6%96%E9%81%B8+-+news.cnyes.com%22+site%3Acnyes.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "60fea7bb8847c5e8",
+      "id": "e09bc7abbc198f7c",
       "title": "美股下周催化劑：7月非農、SpaceX首份財報、SK海力士評級解禁 - news.cnyes.com",
-      "link": "https://www.google.com/search?q=%22%E7%BE%8E%E8%82%A1%E4%B8%8B%E5%91%A8%E5%82%AC%E5%8C%96%E5%8A%91%EF%BC%9A7%E6%9C%88%E9%9D%9E%E8%BE%B2%E3%80%81SpaceX%E9%A6%96%E4%BB%BD%E8%B2%A1%E5%A0%B1%E3%80%81SK%E6%B5%B7%E5%8A%9B%E5%A3%AB%E8%A9%95%E7%B4%9A%E8%A7%A3%E7%A6%81+-+news.cnyes.com%22+news.cnyes.com",
+      "link": "https://www.google.com/search?q=%22%E7%BE%8E%E8%82%A1%E4%B8%8B%E5%91%A8%E5%82%AC%E5%8C%96%E5%8A%91%EF%BC%9A7%E6%9C%88%E9%9D%9E%E8%BE%B2%E3%80%81SpaceX%E9%A6%96%E4%BB%BD%E8%B2%A1%E5%A0%B1%E3%80%81SK%E6%B5%B7%E5%8A%9B%E5%A3%AB%E8%A9%95%E7%B4%9A%E8%A7%A3%E7%A6%81+-+news.cnyes.com%22+site%3Acnyes.com",
       "original_link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE40Ry1sMHFjUlZZVUhQZDFwMFFZam04aHJMb19nR1N0eDFKRjhyNzNab25XQ28zZ3FiNGhCdmdHbDAxdHlZZE9vd1BTOUhJbUE?oc=5",
-      "source": "news.cnyes.com",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://news.cnyes.com/",
+      "source": "鉅亨網",
       "query_source": "鉅亨網",
       "summary": "美股下周催化劑：7月非農、SpaceX首份財報、SK海力士評級解禁 news.cnyes.com",
       "published_at": "2026-08-01T21:00:34+08:00",
@@ -4190,20 +5423,26 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 86,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "news.cnyes.com"
+        "鉅亨網"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E7%BE%8E%E8%82%A1%E4%B8%8B%E5%91%A8%E5%82%AC%E5%8C%96%E5%8A%91%EF%BC%9A7%E6%9C%88%E9%9D%9E%E8%BE%B2%E3%80%81SpaceX%E9%A6%96%E4%BB%BD%E8%B2%A1%E5%A0%B1%E3%80%81SK%E6%B5%B7%E5%8A%9B%E5%A3%AB%E8%A9%95%E7%B4%9A%E8%A7%A3%E7%A6%81+-+news.cnyes.com%22+site%3Acnyes.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "3fe4a40c16dc0964",
-      "title": "AI股反攻背後的爆倉風暴！「AI股神」基金被迫出清、華爾街避險基金7月仍難逃重創",
-      "link": "https://www.google.com/search?q=%22AI%E8%82%A1%E5%8F%8D%E6%94%BB%E8%83%8C%E5%BE%8C%E7%9A%84%E7%88%86%E5%80%89%E9%A2%A8%E6%9A%B4%EF%BC%81%E3%80%8CAI%E8%82%A1%E7%A5%9E%E3%80%8D%E5%9F%BA%E9%87%91%E8%A2%AB%E8%BF%AB%E5%87%BA%E6%B8%85%E3%80%81%E8%8F%AF%E7%88%BE%E8%A1%97%E9%81%BF%E9%9A%AA%E5%9F%BA%E9%87%917%E6%9C%88%E4%BB%8D%E9%9B%A3%E9%80%83%E9%87%8D%E5%89%B5+-+%E9%89%85%E4%BA%A8%E7%B6%B2%22+%E9%89%85%E4%BA%A8%E7%B6%B2",
+      "title": "AI股反攻背後的爆倉風暴！「AI股神」基金被迫出清、華爾街避險基金7月仍難逃重創 - cnyes.com",
+      "link": "https://www.google.com/search?q=%22AI%E8%82%A1%E5%8F%8D%E6%94%BB%E8%83%8C%E5%BE%8C%E7%9A%84%E7%88%86%E5%80%89%E9%A2%A8%E6%9A%B4%EF%BC%81%E3%80%8CAI%E8%82%A1%E7%A5%9E%E3%80%8D%E5%9F%BA%E9%87%91%E8%A2%AB%E8%BF%AB%E5%87%BA%E6%B8%85%E3%80%81%E8%8F%AF%E7%88%BE%E8%A1%97%E9%81%BF%E9%9A%AA%E5%9F%BA%E9%87%917%E6%9C%88%E4%BB%8D%E9%9B%A3%E9%80%83%E9%87%8D%E5%89%B5+-+cnyes.com%22+site%3Acnyes.com",
       "original_link": "https://news.google.com/rss/articles/CBMiS0FVX3lxTE5NZlJSZVQ3R2hMSm1GZWI2N1JTSnVqVkJmZ211NHVJOVR4SDhPam82Y3JqVS1JZFhsV01qNS1WNThpZFc3NEFnSUstbw?oc=5",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://news.cnyes.com/",
       "source": "鉅亨網",
       "query_source": "鉅亨網",
-      "summary": "AI股反攻背後的爆倉風暴！「AI股神」基金被迫出清、華爾街避險基金7月仍難逃重創 鉅亨網",
+      "summary": "AI股反攻背後的爆倉風暴！「AI股神」基金被迫出清、華爾街避險基金7月仍難逃重創 cnyes.com",
       "published_at": "2026-08-01T19:10:02+08:00",
       "region": "TW",
       "topic": "market",
@@ -4219,105 +5458,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 86,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "鉅亨網"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22AI%E8%82%A1%E5%8F%8D%E6%94%BB%E8%83%8C%E5%BE%8C%E7%9A%84%E7%88%86%E5%80%89%E9%A2%A8%E6%9A%B4%EF%BC%81%E3%80%8CAI%E8%82%A1%E7%A5%9E%E3%80%8D%E5%9F%BA%E9%87%91%E8%A2%AB%E8%BF%AB%E5%87%BA%E6%B8%85%E3%80%81%E8%8F%AF%E7%88%BE%E8%A1%97%E9%81%BF%E9%9A%AA%E5%9F%BA%E9%87%917%E6%9C%88%E4%BB%8D%E9%9B%A3%E9%80%83%E9%87%8D%E5%89%B5+-+cnyes.com%22+site%3Acnyes.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "bc76ec8b6d4e56b0",
-      "title": "台股史上最狂反彈！一表看18檔主被動ETF齊亮紅燈 0050、00981A入列 - news.cnyes.com",
-      "link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E5%8F%B2%E4%B8%8A%E6%9C%80%E7%8B%82%E5%8F%8D%E5%BD%88%EF%BC%81%E4%B8%80%E8%A1%A8%E7%9C%8B18%E6%AA%94%E4%B8%BB%E8%A2%AB%E5%8B%95ETF%E9%BD%8A%E4%BA%AE%E7%B4%85%E7%87%88+0050%E3%80%8100981A%E5%85%A5%E5%88%97+-+news.cnyes.com%22+news.cnyes.com",
-      "original_link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE5tMmZqRS0tOWhKMjdqd0o1MnJZZW9yVW9wWHJRbTJYTmZGdmo2dzdZT3pxUU5zSzZFMmdsYWhYLUVFQlNhTXJZZTFKTlFOWHM?oc=5",
-      "source": "news.cnyes.com",
-      "query_source": "鉅亨網",
-      "summary": "台股史上最狂反彈！一表看18檔主被動ETF齊亮紅燈 0050、00981A入列 news.cnyes.com",
-      "published_at": "2026-08-01T15:06:34+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "fund",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 86,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "news.cnyes.com"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "1c6c6e33f8e70fc9",
-      "title": "AI科技股暴跌真相？25歲明星基金高槓桿踩雷、Citadel抄底後市場急反彈 - news.cnyes.com",
-      "link": "https://www.google.com/search?q=%22AI%E7%A7%91%E6%8A%80%E8%82%A1%E6%9A%B4%E8%B7%8C%E7%9C%9F%E7%9B%B8%EF%BC%9F25%E6%AD%B2%E6%98%8E%E6%98%9F%E5%9F%BA%E9%87%91%E9%AB%98%E6%A7%93%E6%A1%BF%E8%B8%A9%E9%9B%B7%E3%80%81Citadel%E6%8A%84%E5%BA%95%E5%BE%8C%E5%B8%82%E5%A0%B4%E6%80%A5%E5%8F%8D%E5%BD%88+-+news.cnyes.com%22+news.cnyes.com",
-      "original_link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBYSkRjRTZkU3FiMWdXQVJmVDhQZ1NkTV80RjY3T2g0M1NWbTE4OElwTGRKYzljQnZYanVmcFZhOUlmdC1yU3I1Yi1iUElEeFk?oc=5",
-      "source": "news.cnyes.com",
-      "query_source": "鉅亨網",
-      "summary": "AI科技股暴跌真相？25歲明星基金高槓桿踩雷、Citadel抄底後市場急反彈 news.cnyes.com",
-      "published_at": "2026-08-01T14:30:06+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "fund",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 86,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "news.cnyes.com"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "66d03545b418537c",
-      "title": "AI股神爆倉真相曝光 Citadel折價接手160億美元持股引爆市場反彈 - news.cnyes.com",
-      "link": "https://www.google.com/search?q=%22AI%E8%82%A1%E7%A5%9E%E7%88%86%E5%80%89%E7%9C%9F%E7%9B%B8%E6%9B%9D%E5%85%89+Citadel%E6%8A%98%E5%83%B9%E6%8E%A5%E6%89%8B160%E5%84%84%E7%BE%8E%E5%85%83%E6%8C%81%E8%82%A1%E5%BC%95%E7%88%86%E5%B8%82%E5%A0%B4%E5%8F%8D%E5%BD%88+-+news.cnyes.com%22+news.cnyes.com",
-      "original_link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE13YnJWR2VWeHhnSHVkWVdiZG9CbHd3dzgyLVN1dG9QUGJBUVZLcTRHaEpMSU13VG5JRWxPSERjWkJIZE43VXBGdXV2XzVKd1E?oc=5",
-      "source": "news.cnyes.com",
-      "query_source": "鉅亨網",
-      "summary": "AI股神爆倉真相曝光 Citadel折價接手160億美元持股引爆市場反彈 news.cnyes.com",
-      "published_at": "2026-08-01T13:20:03+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 86,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "news.cnyes.com"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "e74dc2014f6f7fbf",
+      "id": "2fb3d32fdc2d08db",
       "title": "美股狂歡別高興太早？華許引爆美債「熊市陡峭化」警訊 - news.cnyes.com",
-      "link": "https://www.google.com/search?q=%22%E7%BE%8E%E8%82%A1%E7%8B%82%E6%AD%A1%E5%88%A5%E9%AB%98%E8%88%88%E5%A4%AA%E6%97%A9%EF%BC%9F%E8%8F%AF%E8%A8%B1%E5%BC%95%E7%88%86%E7%BE%8E%E5%82%B5%E3%80%8C%E7%86%8A%E5%B8%82%E9%99%A1%E5%B3%AD%E5%8C%96%E3%80%8D%E8%AD%A6%E8%A8%8A+-+news.cnyes.com%22+news.cnyes.com",
+      "link": "https://www.google.com/search?q=%22%E7%BE%8E%E8%82%A1%E7%8B%82%E6%AD%A1%E5%88%A5%E9%AB%98%E8%88%88%E5%A4%AA%E6%97%A9%EF%BC%9F%E8%8F%AF%E8%A8%B1%E5%BC%95%E7%88%86%E7%BE%8E%E5%82%B5%E3%80%8C%E7%86%8A%E5%B8%82%E9%99%A1%E5%B3%AD%E5%8C%96%E3%80%8D%E8%AD%A6%E8%A8%8A+-+news.cnyes.com%22+site%3Acnyes.com",
       "original_link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE1BWTRRb0dmalQ2OUN5M2N1OWxydmlBUzU2WmdaaWxLY3Z6QkduaDhSX1p6a1dxWkNkVURnVk5CVFI0Z2kwdXVkNE13YVE4TXc?oc=5",
-      "source": "news.cnyes.com",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://news.cnyes.com/",
+      "source": "鉅亨網",
       "query_source": "鉅亨網",
       "summary": "美股狂歡別高興太早？華許引爆美債「熊市陡峭化」警訊 news.cnyes.com",
       "published_at": "2026-08-01T13:10:02+08:00",
@@ -4335,18 +5493,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 86,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "news.cnyes.com"
+        "鉅亨網"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E7%BE%8E%E8%82%A1%E7%8B%82%E6%AD%A1%E5%88%A5%E9%AB%98%E8%88%88%E5%A4%AA%E6%97%A9%EF%BC%9F%E8%8F%AF%E8%A8%B1%E5%BC%95%E7%88%86%E7%BE%8E%E5%82%B5%E3%80%8C%E7%86%8A%E5%B8%82%E9%99%A1%E5%B3%AD%E5%8C%96%E3%80%8D%E8%AD%A6%E8%A8%8A+-+news.cnyes.com%22+site%3Acnyes.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "a9dd134a6ab43de5",
+      "id": "66b1c0f917c50f6e",
       "title": "GoogleTPU，產量驚人 - 鉅亨號",
-      "link": "https://www.google.com/search?q=%22GoogleTPU%EF%BC%8C%E7%94%A2%E9%87%8F%E9%A9%9A%E4%BA%BA+-+%E9%89%85%E4%BA%A8%E8%99%9F%22+%E9%89%85%E4%BA%A8%E8%99%9F",
+      "link": "https://www.google.com/search?q=%22GoogleTPU%EF%BC%8C%E7%94%A2%E9%87%8F%E9%A9%9A%E4%BA%BA+-+%E9%89%85%E4%BA%A8%E8%99%9F%22+site%3Acnyes.com",
       "original_link": "https://news.google.com/rss/articles/CBMiSEFVX3lxTFB1X0piaFc2TnJod3RzZThiVExUaHlJeUFrSFRmMm8xVjlldmpJck9ydEJQOWlGTlhZT0l3dllydTVzTUFrR250bw?oc=5",
-      "source": "鉅亨號",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://news.cnyes.com/",
+      "source": "鉅亨網",
       "query_source": "鉅亨網",
       "summary": "GoogleTPU，產量驚人 鉅亨號",
       "published_at": "2026-08-01T12:15:42+08:00",
@@ -4364,18 +5528,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 86,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "鉅亨號"
+        "鉅亨網"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22GoogleTPU%EF%BC%8C%E7%94%A2%E9%87%8F%E9%A9%9A%E4%BA%BA+-+%E9%89%85%E4%BA%A8%E8%99%9F%22+site%3Acnyes.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "bbfb643a910a1ce3",
+      "id": "db46e884e81bbbb9",
       "title": "美光科技股價周五爲何下跌？ - 鉅亨號",
-      "link": "https://www.google.com/search?q=%22%E7%BE%8E%E5%85%89%E7%A7%91%E6%8A%80%E8%82%A1%E5%83%B9%E5%91%A8%E4%BA%94%E7%88%B2%E4%BD%95%E4%B8%8B%E8%B7%8C%EF%BC%9F+-+%E9%89%85%E4%BA%A8%E8%99%9F%22+%E9%89%85%E4%BA%A8%E8%99%9F",
+      "link": "https://www.google.com/search?q=%22%E7%BE%8E%E5%85%89%E7%A7%91%E6%8A%80%E8%82%A1%E5%83%B9%E5%91%A8%E4%BA%94%E7%88%B2%E4%BD%95%E4%B8%8B%E8%B7%8C%EF%BC%9F+-+%E9%89%85%E4%BA%A8%E8%99%9F%22+site%3Acnyes.com",
       "original_link": "https://news.google.com/rss/articles/CBMiSEFVX3lxTE9BcC1ObzF1SGJmbDFaOFJobGE0TkpENEk1WTk2XzNiN0VrOFVBZ2xrSTd3OEtlQkhQZW5CRWdqdDBLaGRBb2N3Sg?oc=5",
-      "source": "鉅亨號",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://news.cnyes.com/",
+      "source": "鉅亨網",
       "query_source": "鉅亨網",
       "summary": "美光科技股價周五爲何下跌？ 鉅亨號",
       "published_at": "2026-08-01T12:15:42+08:00",
@@ -4393,18 +5563,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 86,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "鉅亨號"
+        "鉅亨網"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E7%BE%8E%E5%85%89%E7%A7%91%E6%8A%80%E8%82%A1%E5%83%B9%E5%91%A8%E4%BA%94%E7%88%B2%E4%BD%95%E4%B8%8B%E8%B7%8C%EF%BC%9F+-+%E9%89%85%E4%BA%A8%E8%99%9F%22+site%3Acnyes.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "3b033eaf9b4c9b4c",
+      "id": "7c790c075021484f",
       "title": "台股飆近3000點創史上最大漲點 抄底大軍瘋搶這兩檔正2 ETF - news.cnyes.com",
-      "link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E9%A3%86%E8%BF%913000%E9%BB%9E%E5%89%B5%E5%8F%B2%E4%B8%8A%E6%9C%80%E5%A4%A7%E6%BC%B2%E9%BB%9E+%E6%8A%84%E5%BA%95%E5%A4%A7%E8%BB%8D%E7%98%8B%E6%90%B6%E9%80%99%E5%85%A9%E6%AA%94%E6%AD%A32+ETF+-+news.cnyes.com%22+news.cnyes.com",
+      "link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E9%A3%86%E8%BF%913000%E9%BB%9E%E5%89%B5%E5%8F%B2%E4%B8%8A%E6%9C%80%E5%A4%A7%E6%BC%B2%E9%BB%9E+%E6%8A%84%E5%BA%95%E5%A4%A7%E8%BB%8D%E7%98%8B%E6%90%B6%E9%80%99%E5%85%A9%E6%AA%94%E6%AD%A32+ETF+-+news.cnyes.com%22+site%3Acnyes.com",
       "original_link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTE9vU3h6TDVtc3NkdEQyYS00bXdQa3Y4T2o2LW5Jd3oxZ1RvVVdHTE9MbXZuRWcwZkkyNzQ2ZDZPaEx0SW9ybExIMUozWWNmYU0?oc=5",
-      "source": "news.cnyes.com",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://news.cnyes.com/",
+      "source": "鉅亨網",
       "query_source": "鉅亨網",
       "summary": "台股飆近3000點創史上最大漲點 抄底大軍瘋搶這兩檔正2 ETF news.cnyes.com",
       "published_at": "2026-07-31T11:26:00+08:00",
@@ -4422,18 +5598,24 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 86,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "news.cnyes.com"
+        "鉅亨網"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E9%A3%86%E8%BF%913000%E9%BB%9E%E5%89%B5%E5%8F%B2%E4%B8%8A%E6%9C%80%E5%A4%A7%E6%BC%B2%E9%BB%9E+%E6%8A%84%E5%BA%95%E5%A4%A7%E8%BB%8D%E7%98%8B%E6%90%B6%E9%80%99%E5%85%A9%E6%AA%94%E6%AD%A32+ETF+-+news.cnyes.com%22+site%3Acnyes.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "fd668824db06e7e9",
+      "id": "ae741cdd56caa15c",
       "title": "歷史性一刻！AI股回血助台股漲近3000點 9檔主動式ETF齊衝漲停 - news.cnyes.com",
-      "link": "https://www.google.com/search?q=%22%E6%AD%B7%E5%8F%B2%E6%80%A7%E4%B8%80%E5%88%BB%EF%BC%81AI%E8%82%A1%E5%9B%9E%E8%A1%80%E5%8A%A9%E5%8F%B0%E8%82%A1%E6%BC%B2%E8%BF%913000%E9%BB%9E+9%E6%AA%94%E4%B8%BB%E5%8B%95%E5%BC%8FETF%E9%BD%8A%E8%A1%9D%E6%BC%B2%E5%81%9C+-+news.cnyes.com%22+news.cnyes.com",
+      "link": "https://www.google.com/search?q=%22%E6%AD%B7%E5%8F%B2%E6%80%A7%E4%B8%80%E5%88%BB%EF%BC%81AI%E8%82%A1%E5%9B%9E%E8%A1%80%E5%8A%A9%E5%8F%B0%E8%82%A1%E6%BC%B2%E8%BF%913000%E9%BB%9E+9%E6%AA%94%E4%B8%BB%E5%8B%95%E5%BC%8FETF%E9%BD%8A%E8%A1%9D%E6%BC%B2%E5%81%9C+-+news.cnyes.com%22+site%3Acnyes.com",
       "original_link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBPanNSMzBCRVpUQTZkZGVJSEtWb0dXRlpKVUd1bExicTlZSFpBTlV4cWtOR3lNTkNma2ZOcW5sdmZOUmVmampyWWk4OGJtRVE?oc=5",
-      "source": "news.cnyes.com",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://news.cnyes.com/",
+      "source": "鉅亨網",
       "query_source": "鉅亨網",
       "summary": "歷史性一刻！AI股回血助台股漲近3000點 9檔主動式ETF齊衝漲停 news.cnyes.com",
       "published_at": "2026-07-31T10:31:32+08:00",
@@ -4451,17 +5633,58 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 86,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "news.cnyes.com"
+        "鉅亨網"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E6%AD%B7%E5%8F%B2%E6%80%A7%E4%B8%80%E5%88%BB%EF%BC%81AI%E8%82%A1%E5%9B%9E%E8%A1%80%E5%8A%A9%E5%8F%B0%E8%82%A1%E6%BC%B2%E8%BF%913000%E9%BB%9E+9%E6%AA%94%E4%B8%BB%E5%8B%95%E5%BC%8FETF%E9%BD%8A%E8%A1%9D%E6%BC%B2%E5%81%9C+-+news.cnyes.com%22+site%3Acnyes.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "90f110b9738ac496",
+      "title": "押注AI慘翻車！前OpenAI研究員遭多空雙殺、旗下基金被迫清倉 - news.cnyes.com",
+      "link": "https://www.google.com/search?q=%22%E6%8A%BC%E6%B3%A8AI%E6%85%98%E7%BF%BB%E8%BB%8A%EF%BC%81%E5%89%8DOpenAI%E7%A0%94%E7%A9%B6%E5%93%A1%E9%81%AD%E5%A4%9A%E7%A9%BA%E9%9B%99%E6%AE%BA%E3%80%81%E6%97%97%E4%B8%8B%E5%9F%BA%E9%87%91%E8%A2%AB%E8%BF%AB%E6%B8%85%E5%80%89+-+news.cnyes.com%22+site%3Acnyes.com",
+      "original_link": "https://news.google.com/rss/articles/CBMiT0FVX3lxTFBMX1NrNWlTTkYta2NYcDhnTXN0VTZqOUhONU8zakl2TlI3WjZZVjg3M0tqeEdvRzZwUFlaS2FUQkpVYk8yQWgxLVlySWVPVHc?oc=5",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://news.cnyes.com/",
+      "source": "鉅亨網",
+      "query_source": "鉅亨網",
+      "summary": "押注AI慘翻車！前OpenAI研究員遭多空雙殺、旗下基金被迫清倉 news.cnyes.com",
+      "published_at": "2026-07-31T00:59:16+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "technology"
+      ],
+      "primary_industry": "technology",
+      "asset_class": "fund",
+      "crypto_categories": [],
+      "industry_label": "科技電子",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "publisher-search",
+      "quality_score": 86,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "鉅亨網"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E6%8A%BC%E6%B3%A8AI%E6%85%98%E7%BF%BB%E8%BB%8A%EF%BC%81%E5%89%8DOpenAI%E7%A0%94%E7%A9%B6%E5%93%A1%E9%81%AD%E5%A4%9A%E7%A9%BA%E9%9B%99%E6%AE%BA%E3%80%81%E6%97%97%E4%B8%8B%E5%9F%BA%E9%87%91%E8%A2%AB%E8%BF%AB%E6%B8%85%E5%80%89+-+news.cnyes.com%22+site%3Acnyes.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "4299c6843c1ee414",
       "title": "《強勢美股特報》IESC,DLB,SPXC,MSA等10檔",
-      "link": "https://www.google.com/search?q=%22%E3%80%8A%E5%BC%B7%E5%8B%A2%E7%BE%8E%E8%82%A1%E7%89%B9%E5%A0%B1%E3%80%8BIESC%2CDLB%2CSPXC%2CMSA%E7%AD%8910%E6%AA%94+-+MoneyDJ%22+MoneyDJ",
+      "link": "https://www.google.com/search?q=%22%E3%80%8A%E5%BC%B7%E5%8B%A2%E7%BE%8E%E8%82%A1%E7%89%B9%E5%A0%B1%E3%80%8BIESC%2CDLB%2CSPXC%2CMSA%E7%AD%8910%E6%AA%94%22+site%3Amoneydj.com",
       "original_link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxPcFR5dEppNG43S1ZCRXh2Z1VHX2dNd3d1TTV2Zk1iRl9zS0VTblR0NW9wMWpCUGJwXzJieXFzREhGQjRYVVJRc2pCMXFrQmVac1NvNVZvNTR0REJXbDdRd0U5akczaURHSU5tazljbGdtXzZIcWFrTDB1eDB6OVI5Z1B1dk1Bc0Etd01nTTd0aWhCdw?oc=5",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.moneydj.com/",
       "source": "MoneyDJ",
       "query_source": "MoneyDJ",
       "summary": "《強勢美股特報》IESC,DLB,SPXC,MSA等10檔 MoneyDJ",
@@ -4480,17 +5703,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 85,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "MoneyDJ"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E3%80%8A%E5%BC%B7%E5%8B%A2%E7%BE%8E%E8%82%A1%E7%89%B9%E5%A0%B1%E3%80%8BIESC%2CDLB%2CSPXC%2CMSA%E7%AD%8910%E6%AA%94%22+site%3Amoneydj.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "f620eb08dc220a5f",
       "title": "《強勢美股特報》AMZN,DXCM,GOOGL,ANET等10檔",
-      "link": "https://www.google.com/search?q=%22%E3%80%8A%E5%BC%B7%E5%8B%A2%E7%BE%8E%E8%82%A1%E7%89%B9%E5%A0%B1%E3%80%8BAMZN%2CDXCM%2CGOOGL%2CANET%E7%AD%8910%E6%AA%94+-+MoneyDJ%22+MoneyDJ",
+      "link": "https://www.google.com/search?q=%22%E3%80%8A%E5%BC%B7%E5%8B%A2%E7%BE%8E%E8%82%A1%E7%89%B9%E5%A0%B1%E3%80%8BAMZN%2CDXCM%2CGOOGL%2CANET%E7%AD%8910%E6%AA%94%22+site%3Amoneydj.com",
       "original_link": "https://news.google.com/rss/articles/CBMieEFVX3lxTFBUcjBIU2R1RnJMYXN6LWV4X09TcGw4QUxJTzRVWEVReVBRejJjb2d6cHdhUkVpWEgzXzhwcUNrLTJHQ0ZxWjRLa0dWcDhnTTVlbGRPdTZkNlJMcFRGVFJJOXZzMVBoaVlmUm9vcXRQaS1aTWRYdnFLOQ?oc=5",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.moneydj.com/",
       "source": "MoneyDJ",
       "query_source": "MoneyDJ",
       "summary": "《強勢美股特報》AMZN,DXCM,GOOGL,ANET等10檔 MoneyDJ",
@@ -4509,17 +5738,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 85,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "MoneyDJ"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E3%80%8A%E5%BC%B7%E5%8B%A2%E7%BE%8E%E8%82%A1%E7%89%B9%E5%A0%B1%E3%80%8BAMZN%2CDXCM%2CGOOGL%2CANET%E7%AD%8910%E6%AA%94%22+site%3Amoneydj.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "34b255ebc574918e",
       "title": "《強勢美股特報》IESC,SPXC,DLB,MSA等10檔",
-      "link": "https://www.google.com/search?q=%22%E3%80%8A%E5%BC%B7%E5%8B%A2%E7%BE%8E%E8%82%A1%E7%89%B9%E5%A0%B1%E3%80%8BIESC%2CSPXC%2CDLB%2CMSA%E7%AD%8910%E6%AA%94+-+MoneyDJ%22+MoneyDJ",
+      "link": "https://www.google.com/search?q=%22%E3%80%8A%E5%BC%B7%E5%8B%A2%E7%BE%8E%E8%82%A1%E7%89%B9%E5%A0%B1%E3%80%8BIESC%2CSPXC%2CDLB%2CMSA%E7%AD%8910%E6%AA%94%22+site%3Amoneydj.com",
       "original_link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxObGo4OUE5WWFMaEhyRkpJZGV3UEhwSDN5X3JmVWRaNWRycThFcVZpc2RIRFh6UmxoOEQ0X2VGb2tYWjhYM2xpMnRwRnlDc3RjZHpjN0Z5UF9kd1BUWTgxamF0V0FXQjQyQ2JtR19rY0MtV0dRVUtpSlBQd3lUMkx5cURvLWxRQmY1c09pMFUycjhBUQ?oc=5",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.moneydj.com/",
       "source": "MoneyDJ",
       "query_source": "MoneyDJ",
       "summary": "《強勢美股特報》IESC,SPXC,DLB,MSA等10檔 MoneyDJ",
@@ -4538,17 +5773,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 85,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "MoneyDJ"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E3%80%8A%E5%BC%B7%E5%8B%A2%E7%BE%8E%E8%82%A1%E7%89%B9%E5%A0%B1%E3%80%8BIESC%2CSPXC%2CDLB%2CMSA%E7%AD%8910%E6%AA%94%22+site%3Amoneydj.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "93c89a25df21ded1",
       "title": "《強勢美股特報》SPXC,DLB,MSA,NVT等10檔",
-      "link": "https://www.google.com/search?q=%22%E3%80%8A%E5%BC%B7%E5%8B%A2%E7%BE%8E%E8%82%A1%E7%89%B9%E5%A0%B1%E3%80%8BSPXC%2CDLB%2CMSA%2CNVT%E7%AD%8910%E6%AA%94+-+MoneyDJ%22+MoneyDJ",
+      "link": "https://www.google.com/search?q=%22%E3%80%8A%E5%BC%B7%E5%8B%A2%E7%BE%8E%E8%82%A1%E7%89%B9%E5%A0%B1%E3%80%8BSPXC%2CDLB%2CMSA%2CNVT%E7%AD%8910%E6%AA%94%22+site%3Amoneydj.com",
       "original_link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxPU3BIekpzZDRmQkQ2aGo0T1FUUk41Vlp1cVB4NmxYV0FmTEc2cVBsU2Z4WFl6d2RaUWNQU3hIalk0SFVRWVlWeldUR2hyTmpjb3pwekZ1aHBhbDQ5SkZMLVdfbGhNZHhVXzVLamNJc3JGM1BPS2l0ekRWTmRjUm9WZTlLOEg0a0d3enZXdW1rcTZZUQ?oc=5",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.moneydj.com/",
       "source": "MoneyDJ",
       "query_source": "MoneyDJ",
       "summary": "《強勢美股特報》SPXC,DLB,MSA,NVT等10檔 MoneyDJ",
@@ -4567,46 +5808,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 85,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "MoneyDJ"
       ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "179683f4fa356c1b",
-      "title": "聯發科子公司取得Zhongfang Capital Partners Asia Opportunities基金，上限3千萬美元- 新聞",
-      "link": "https://www.google.com/search?q=%22%E8%81%AF%E7%99%BC%E7%A7%91%E5%AD%90%E5%85%AC%E5%8F%B8%E5%8F%96%E5%BE%97Zhongfang+Capital+Partners+Asia+Opportunities%E5%9F%BA%E9%87%91%EF%BC%8C%E4%B8%8A%E9%99%903%E5%8D%83%E8%90%AC%E7%BE%8E%E5%85%83-+%E6%96%B0%E8%81%9E+-+MoneyDJ%22+MoneyDJ",
-      "original_link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxOcHlZbmlnMWtyaDMyOEVjUXFMQ3A0LVJaYnFwR0F3ZVNEQjdCWnpWNVg1NXBjOGN5SmNWNkswaXByckFtVWJBdnFjYlhDeWJ1ZXZaNDRJYkhUelI4NVBTa2RnTXdyQ3dsWnI3cndXY0ZyU1Q0WFFIN2xUSGt0d0h2WTZFMWVaNU04cFFjM3ZZZTlGZw?oc=5",
-      "source": "MoneyDJ",
-      "query_source": "MoneyDJ",
-      "summary": "聯發科子公司取得Zhongfang Capital Partners Asia Opportunities基金，上限3千萬美元- 新聞 MoneyDJ",
-      "published_at": "2026-07-31T22:50:00+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "fund",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 85,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "MoneyDJ"
-      ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E3%80%8A%E5%BC%B7%E5%8B%A2%E7%BE%8E%E8%82%A1%E7%89%B9%E5%A0%B1%E3%80%8BSPXC%2CDLB%2CMSA%2CNVT%E7%AD%8910%E6%AA%94%22+site%3Amoneydj.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "c5731351a6cfcaf4",
       "title": "《強勢美股特報》AMZN,DXCM,MRVL,ANET等10檔",
-      "link": "https://www.google.com/search?q=%22%E3%80%8A%E5%BC%B7%E5%8B%A2%E7%BE%8E%E8%82%A1%E7%89%B9%E5%A0%B1%E3%80%8BAMZN%2CDXCM%2CMRVL%2CANET%E7%AD%8910%E6%AA%94+-+MoneyDJ%22+MoneyDJ",
+      "link": "https://www.google.com/search?q=%22%E3%80%8A%E5%BC%B7%E5%8B%A2%E7%BE%8E%E8%82%A1%E7%89%B9%E5%A0%B1%E3%80%8BAMZN%2CDXCM%2CMRVL%2CANET%E7%AD%8910%E6%AA%94%22+site%3Amoneydj.com",
       "original_link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxPNFk3RmNIeU9DcUVDZlA0RWZ6LVUzTHJub3Z6MGE0dUNlaTEzc3ozOTJEOFN3Wkp6emtuWE1ObUVpbGNYQkctUkRDYTAxOFh0ZTFOTnhiakFZaWlBUlY5anl3UFhCS1VKVkVoNlJHOWRpeDJ6VDRFdUgzaVRoS2lRTXJYYXUzamN5U3UxRHU1LXBUZw?oc=5",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.moneydj.com/",
       "source": "MoneyDJ",
       "query_source": "MoneyDJ",
       "summary": "《強勢美股特報》AMZN,DXCM,MRVL,ANET等10檔 MoneyDJ",
@@ -4625,17 +5843,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 85,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "MoneyDJ"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E3%80%8A%E5%BC%B7%E5%8B%A2%E7%BE%8E%E8%82%A1%E7%89%B9%E5%A0%B1%E3%80%8BAMZN%2CDXCM%2CMRVL%2CANET%E7%AD%8910%E6%AA%94%22+site%3Amoneydj.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "c54a69973f3af3a0",
       "title": "《港股》恆指漲0.1%、週K連五紅；恆科指漲0.53%-新聞內容-基金",
-      "link": "https://www.google.com/search?q=%22%E3%80%8A%E6%B8%AF%E8%82%A1%E3%80%8B%E6%81%86%E6%8C%87%E6%BC%B20.1%25%E3%80%81%E9%80%B1K%E9%80%A3%E4%BA%94%E7%B4%85%EF%BC%9B%E6%81%86%E7%A7%91%E6%8C%87%E6%BC%B20.53%25-%E6%96%B0%E8%81%9E%E5%85%A7%E5%AE%B9-%E5%9F%BA%E9%87%91+-+MoneyDJ%22+MoneyDJ",
+      "link": "https://www.google.com/search?q=%22%E3%80%8A%E6%B8%AF%E8%82%A1%E3%80%8B%E6%81%86%E6%8C%87%E6%BC%B20.1%25%E3%80%81%E9%80%B1K%E9%80%A3%E4%BA%94%E7%B4%85%EF%BC%9B%E6%81%86%E7%A7%91%E6%8C%87%E6%BC%B20.53%25-%E6%96%B0%E8%81%9E%E5%85%A7%E5%AE%B9-%E5%9F%BA%E9%87%91%22+site%3Amoneydj.com",
       "original_link": "https://news.google.com/rss/articles/CBMikAFBVV95cUxQQ1N4blB1U2VqdGpyRm5PaldiaWwyWEI1bU5icl94MUZ1QnRoUjNjTHREQzg0djRhX1VhczVSUXMxY2pSRFBnNXRCLUJ3NVprSC1mOXNFYVFSZFZZTlJkdkh2amhFTmg4VmUtVEJ6T0wwOFMtaF83V3piR21kLWtFbnVHRmRJbm8xbld5TUE1dUQ?oc=5",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.moneydj.com/",
       "source": "MoneyDJ",
       "query_source": "MoneyDJ",
       "summary": "《港股》恆指漲0.1%、週K連五紅；恆科指漲0.53%-新聞內容-基金 MoneyDJ",
@@ -4654,17 +5878,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 85,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "MoneyDJ"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E3%80%8A%E6%B8%AF%E8%82%A1%E3%80%8B%E6%81%86%E6%8C%87%E6%BC%B20.1%25%E3%80%81%E9%80%B1K%E9%80%A3%E4%BA%94%E7%B4%85%EF%BC%9B%E6%81%86%E7%A7%91%E6%8C%87%E6%BC%B20.53%25-%E6%96%B0%E8%81%9E%E5%85%A7%E5%AE%B9-%E5%9F%BA%E9%87%91%22+site%3Amoneydj.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "752db7d8e5fc192a",
       "title": "野村臺灣趨勢動能高股息ETF基金115年7月收益分配-新聞內容-基金",
-      "link": "https://www.google.com/search?q=%22%E9%87%8E%E6%9D%91%E8%87%BA%E7%81%A3%E8%B6%A8%E5%8B%A2%E5%8B%95%E8%83%BD%E9%AB%98%E8%82%A1%E6%81%AFETF%E5%9F%BA%E9%87%91115%E5%B9%B47%E6%9C%88%E6%94%B6%E7%9B%8A%E5%88%86%E9%85%8D-%E6%96%B0%E8%81%9E%E5%85%A7%E5%AE%B9-%E5%9F%BA%E9%87%91+-+MoneyDJ%22+MoneyDJ",
+      "link": "https://www.google.com/search?q=%22%E9%87%8E%E6%9D%91%E8%87%BA%E7%81%A3%E8%B6%A8%E5%8B%A2%E5%8B%95%E8%83%BD%E9%AB%98%E8%82%A1%E6%81%AFETF%E5%9F%BA%E9%87%91115%E5%B9%B47%E6%9C%88%E6%94%B6%E7%9B%8A%E5%88%86%E9%85%8D-%E6%96%B0%E8%81%9E%E5%85%A7%E5%AE%B9-%E5%9F%BA%E9%87%91%22+site%3Amoneydj.com",
       "original_link": "https://news.google.com/rss/articles/CBMikAFBVV95cUxQeFUyeENzQ1M0UVNRZlNjX0tJN2g2cDFVWllJUE51MkNKVjBvWFJ2UjNiNlVqOFZ3ajVUd3JDeUxOYUxMWmpvTHREMnZNaEdHQ2swNWJVal93YnM3NmRmejY4MkVWdmpQRTlKckFsWTBRdnRnWjJGQTlRekdPQWM3bGMzdXA5eEJSMmd1aDl2cnI?oc=5",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.moneydj.com/",
       "source": "MoneyDJ",
       "query_source": "MoneyDJ",
       "summary": "野村臺灣趨勢動能高股息ETF基金115年7月收益分配-新聞內容-基金 MoneyDJ",
@@ -4683,17 +5913,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 85,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "MoneyDJ"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E9%87%8E%E6%9D%91%E8%87%BA%E7%81%A3%E8%B6%A8%E5%8B%A2%E5%8B%95%E8%83%BD%E9%AB%98%E8%82%A1%E6%81%AFETF%E5%9F%BA%E9%87%91115%E5%B9%B47%E6%9C%88%E6%94%B6%E7%9B%8A%E5%88%86%E9%85%8D-%E6%96%B0%E8%81%9E%E5%85%A7%E5%AE%B9-%E5%9F%BA%E9%87%91%22+site%3Amoneydj.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "4c998e855c25b377",
       "title": "野村臺灣智慧優選主動式ETF基金115年7月收益分配- 新聞",
-      "link": "https://www.google.com/search?q=%22%E9%87%8E%E6%9D%91%E8%87%BA%E7%81%A3%E6%99%BA%E6%85%A7%E5%84%AA%E9%81%B8%E4%B8%BB%E5%8B%95%E5%BC%8FETF%E5%9F%BA%E9%87%91115%E5%B9%B47%E6%9C%88%E6%94%B6%E7%9B%8A%E5%88%86%E9%85%8D-+%E6%96%B0%E8%81%9E+-+MoneyDJ%22+MoneyDJ",
+      "link": "https://www.google.com/search?q=%22%E9%87%8E%E6%9D%91%E8%87%BA%E7%81%A3%E6%99%BA%E6%85%A7%E5%84%AA%E9%81%B8%E4%B8%BB%E5%8B%95%E5%BC%8FETF%E5%9F%BA%E9%87%91115%E5%B9%B47%E6%9C%88%E6%94%B6%E7%9B%8A%E5%88%86%E9%85%8D-+%E6%96%B0%E8%81%9E%22+site%3Amoneydj.com",
       "original_link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxQeUtyZzFQcE9XeDdUWnNVdGY3S0NGM1NzanNva2FDeW9ZMDZpTzZLaTlZeHkzTHBkdFQ3Y0lndEEyVUFqM2ZNS3UzR2JST1hXTkJyU2x3ZHFaTGJHTjY0VndfVjA3LWI3SHduaVVQOG9JY29CZ2VGaGFJbmdtUFprazVIZG84Y2FWVjltUnVRZ1Rldw?oc=5",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.moneydj.com/",
       "source": "MoneyDJ",
       "query_source": "MoneyDJ",
       "summary": "野村臺灣智慧優選主動式ETF基金115年7月收益分配- 新聞 MoneyDJ",
@@ -4712,17 +5948,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 85,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "MoneyDJ"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E9%87%8E%E6%9D%91%E8%87%BA%E7%81%A3%E6%99%BA%E6%85%A7%E5%84%AA%E9%81%B8%E4%B8%BB%E5%8B%95%E5%BC%8FETF%E5%9F%BA%E9%87%91115%E5%B9%B47%E6%9C%88%E6%94%B6%E7%9B%8A%E5%88%86%E9%85%8D-+%E6%96%B0%E8%81%9E%22+site%3Amoneydj.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "ada654aafad33528",
       "title": "《日股》半導體買盤回流 日經終場大漲近2500點-新聞內容-基金",
-      "link": "https://www.google.com/search?q=%22%E3%80%8A%E6%97%A5%E8%82%A1%E3%80%8B%E5%8D%8A%E5%B0%8E%E9%AB%94%E8%B2%B7%E7%9B%A4%E5%9B%9E%E6%B5%81+%E6%97%A5%E7%B6%93%E7%B5%82%E5%A0%B4%E5%A4%A7%E6%BC%B2%E8%BF%912500%E9%BB%9E-%E6%96%B0%E8%81%9E%E5%85%A7%E5%AE%B9-%E5%9F%BA%E9%87%91+-+MoneyDJ%22+MoneyDJ",
+      "link": "https://www.google.com/search?q=%22%E3%80%8A%E6%97%A5%E8%82%A1%E3%80%8B%E5%8D%8A%E5%B0%8E%E9%AB%94%E8%B2%B7%E7%9B%A4%E5%9B%9E%E6%B5%81+%E6%97%A5%E7%B6%93%E7%B5%82%E5%A0%B4%E5%A4%A7%E6%BC%B2%E8%BF%912500%E9%BB%9E-%E6%96%B0%E8%81%9E%E5%85%A7%E5%AE%B9-%E5%9F%BA%E9%87%91%22+site%3Amoneydj.com",
       "original_link": "https://news.google.com/rss/articles/CBMikAFBVV95cUxPOXpfWGc4cFZaVU5sc3ljLXBybWtZU1lxNjEtSUZ3RGJsYk9rc2tVYzRaaGs0ZjdSYzVXVVpEblFDZkhtaHI1RzZybnpXTElzRlJKajkxVXhNbEFZT2NhM09hVGZ3eGVIUTNfYkkzeGlWdzhZMmJXbHZQMHlpMDJCV1VJeXVqd3h6RUZ0UHUzTm0?oc=5",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.moneydj.com/",
       "source": "MoneyDJ",
       "query_source": "MoneyDJ",
       "summary": "《日股》半導體買盤回流 日經終場大漲近2500點-新聞內容-基金 MoneyDJ",
@@ -4741,17 +5983,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 85,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "MoneyDJ"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E3%80%8A%E6%97%A5%E8%82%A1%E3%80%8B%E5%8D%8A%E5%B0%8E%E9%AB%94%E8%B2%B7%E7%9B%A4%E5%9B%9E%E6%B5%81+%E6%97%A5%E7%B6%93%E7%B5%82%E5%A0%B4%E5%A4%A7%E6%BC%B2%E8%BF%912500%E9%BB%9E-%E6%96%B0%E8%81%9E%E5%85%A7%E5%AE%B9-%E5%9F%BA%E9%87%91%22+site%3Amoneydj.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "4b491a403b983960",
       "title": "美股指數期貨最新報價 16:37 - 國際股市 - 新聞",
-      "link": "https://www.google.com/search?q=%22%E7%BE%8E%E8%82%A1%E6%8C%87%E6%95%B8%E6%9C%9F%E8%B2%A8%E6%9C%80%E6%96%B0%E5%A0%B1%E5%83%B9+16%3A37+-+%E5%9C%8B%E9%9A%9B%E8%82%A1%E5%B8%82+-+%E6%96%B0%E8%81%9E+-+MoneyDJ%22+MoneyDJ",
+      "link": "https://www.google.com/search?q=%22%E7%BE%8E%E8%82%A1%E6%8C%87%E6%95%B8%E6%9C%9F%E8%B2%A8%E6%9C%80%E6%96%B0%E5%A0%B1%E5%83%B9+16%3A37+-+%E5%9C%8B%E9%9A%9B%E8%82%A1%E5%B8%82+-+%E6%96%B0%E8%81%9E%22+site%3Amoneydj.com",
       "original_link": "https://news.google.com/rss/articles/CBMiggFBVV95cUxNQlhtM1lIcUc4cmVPZjdaSUFnOUZYMjE3QW1KMFJFa0FRcjFEcUg0TjFaN2tJZkVyTVdpaU5EbUR5TldkeVhLWWc3SlpHd3ZBSXFEMFlFOFBJWTBZNHVzalZqaXRLRDczTk8ycGJTNnZ2Y2VJcTRUVUZlOURNZkdQQTd3?oc=5",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.moneydj.com/",
       "source": "MoneyDJ",
       "query_source": "MoneyDJ",
       "summary": "美股指數期貨最新報價 16:37 - 國際股市 - 新聞 MoneyDJ",
@@ -4770,17 +6018,23 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 85,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "MoneyDJ"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E7%BE%8E%E8%82%A1%E6%8C%87%E6%95%B8%E6%9C%9F%E8%B2%A8%E6%9C%80%E6%96%B0%E5%A0%B1%E5%83%B9+16%3A37+-+%E5%9C%8B%E9%9A%9B%E8%82%A1%E5%B8%82+-+%E6%96%B0%E8%81%9E%22+site%3Amoneydj.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
       "id": "bf252cd8c7b7be74",
       "title": "《韓股》半導體領軍強彈，KOSPI收漲近18%",
-      "link": "https://www.google.com/search?q=%22%E3%80%8A%E9%9F%93%E8%82%A1%E3%80%8B%E5%8D%8A%E5%B0%8E%E9%AB%94%E9%A0%98%E8%BB%8D%E5%BC%B7%E5%BD%88%EF%BC%8CKOSPI%E6%94%B6%E6%BC%B2%E8%BF%9118%25+-+MoneyDJ%22+MoneyDJ",
+      "link": "https://www.google.com/search?q=%22%E3%80%8A%E9%9F%93%E8%82%A1%E3%80%8B%E5%8D%8A%E5%B0%8E%E9%AB%94%E9%A0%98%E8%BB%8D%E5%BC%B7%E5%BD%88%EF%BC%8CKOSPI%E6%94%B6%E6%BC%B2%E8%BF%9118%25%22+site%3Amoneydj.com",
       "original_link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxNSE5oanJ5QTVIbFI1NWMxdzRjczV6ZERFcm5PSEpEUnVpak9GYWMwdUVaWXB6eXNNU1E3eUdzWVVRWHlqdFh4UXZfMjNJMXhHaC1mSE15bkRHVWM1bTlXY3pKWUpmejZXUWIyNV9MVEgtYXhndFVhc01XWFAta2Y0V3NyQVZfZXJVek1ycmhiU1I0UQ?oc=5",
+      "direct_link": "",
+      "link_status": "fallback",
+      "link_type": "search-fallback",
+      "source_home": "https://www.moneydj.com/",
       "source": "MoneyDJ",
       "query_source": "MoneyDJ",
       "summary": "《韓股》半導體領軍強彈，KOSPI收漲近18% MoneyDJ",
@@ -4799,369 +6053,26 @@ window.__MARKET_NEWS_SEED__ = {
       "origin": "publisher-search",
       "quality_score": 85,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
         "MoneyDJ"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E3%80%8A%E9%9F%93%E8%82%A1%E3%80%8B%E5%8D%8A%E5%B0%8E%E9%AB%94%E9%A0%98%E8%BB%8D%E5%BC%B7%E5%BD%88%EF%BC%8CKOSPI%E6%94%B6%E6%BC%B2%E8%BF%9118%25%22+site%3Amoneydj.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "6a49c7839b8b82ea",
-      "title": "台股沒轉空！杜金龍危機入市、加碼這2檔估最快「這時」迎新行情- 證券",
-      "link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E6%B2%92%E8%BD%89%E7%A9%BA%EF%BC%81%E6%9D%9C%E9%87%91%E9%BE%8D%E5%8D%B1%E6%A9%9F%E5%85%A5%E5%B8%82%E3%80%81%E5%8A%A0%E7%A2%BC%E9%80%992%E6%AA%94%E4%BC%B0%E6%9C%80%E5%BF%AB%E3%80%8C%E9%80%99%E6%99%82%E3%80%8D%E8%BF%8E%E6%96%B0%E8%A1%8C%E6%83%85-+%E8%AD%89%E5%88%B8+-+%E5%B7%A5%E5%95%86%E6%99%82%E5%A0%B1%22+%E5%B7%A5%E5%95%86%E6%99%82%E5%A0%B1",
-      "original_link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE14cVNIMXZ6QmhKUXFHLUwwR2UyOGs2S2NnNnJBM3cxRmd5RGE3cXd2SlFiSnRzSTZJRnZkNXZhYlZYNm1QZGRlUDJOSkwzN0x0QWYzQXpMcElNYjRoZlYw?oc=5",
-      "source": "工商時報",
-      "query_source": "工商時報",
-      "summary": "台股沒轉空！杜金龍危機入市、加碼這2檔估最快「這時」迎新行情- 證券 工商時報",
-      "published_at": "2026-08-01T08:06:00+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "finance"
-      ],
-      "primary_industry": "finance",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "金融保險",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 84,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "工商時報"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "dc4d7ac3eee4cbec",
-      "title": "暴跌後狂彈3,000點台股8月會V轉？五大投顧點名台積電、鴻海等16檔有甜甜價- 日報",
-      "link": "https://www.google.com/search?q=%22%E6%9A%B4%E8%B7%8C%E5%BE%8C%E7%8B%82%E5%BD%883%2C000%E9%BB%9E%E5%8F%B0%E8%82%A18%E6%9C%88%E6%9C%83V%E8%BD%89%EF%BC%9F%E4%BA%94%E5%A4%A7%E6%8A%95%E9%A1%A7%E9%BB%9E%E5%90%8D%E5%8F%B0%E7%A9%8D%E9%9B%BB%E3%80%81%E9%B4%BB%E6%B5%B7%E7%AD%8916%E6%AA%94%E6%9C%89%E7%94%9C%E7%94%9C%E5%83%B9-+%E6%97%A5%E5%A0%B1+-+%E5%B7%A5%E5%95%86%E6%99%82%E5%A0%B1%22+%E5%B7%A5%E5%95%86%E6%99%82%E5%A0%B1",
-      "original_link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE4tZnkyeEJYSUpERDViSXlJYTJ6c2t5OTU0Q3ljSU1FSEJFZ0tqUzdQUWdhS1ZDMk1xZi02UXoza0dWZ1lnNHA1c3N5N2lUTGE5OU9ManpKZllGTkdtM29j?oc=5",
-      "source": "工商時報",
-      "query_source": "工商時報",
-      "summary": "暴跌後狂彈3,000點台股8月會V轉？五大投顧點名台積電、鴻海等16檔有甜甜價- 日報 工商時報",
-      "published_at": "2026-08-01T03:00:00+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 84,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "工商時報"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "9a75a4b8ecbaebf7",
-      "title": "台股跌深反彈誰先衝？15檔法人回頭加碼股出列- 日報",
-      "link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E8%B7%8C%E6%B7%B1%E5%8F%8D%E5%BD%88%E8%AA%B0%E5%85%88%E8%A1%9D%EF%BC%9F15%E6%AA%94%E6%B3%95%E4%BA%BA%E5%9B%9E%E9%A0%AD%E5%8A%A0%E7%A2%BC%E8%82%A1%E5%87%BA%E5%88%97-+%E6%97%A5%E5%A0%B1+-+%E5%B7%A5%E5%95%86%E6%99%82%E5%A0%B1%22+%E5%B7%A5%E5%95%86%E6%99%82%E5%A0%B1",
-      "original_link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5KYnVyM2xmS29KVWRya3ozS0hmdTNqLVBkMTEzYkIwTTJHa3RxcTBYSDJPcV9LTkgyOFd0bjludlQ0LXZwbDNfazB1ZXRWdElwS19id05tem0xVTR6eWQ4?oc=5",
-      "source": "工商時報",
-      "query_source": "工商時報",
-      "summary": "台股跌深反彈誰先衝？15檔法人回頭加碼股出列- 日報 工商時報",
-      "published_at": "2026-08-01T03:00:00+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 84,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "工商時報"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "69d7f383a2fbe87d",
-      "title": "75萬人砍在阿呆谷！錯過台股暴漲3,000點大行情 籌碼洗乾淨了嗎？",
-      "link": "https://www.google.com/search?q=%2275%E8%90%AC%E4%BA%BA%E7%A0%8D%E5%9C%A8%E9%98%BF%E5%91%86%E8%B0%B7%EF%BC%81%E9%8C%AF%E9%81%8E%E5%8F%B0%E8%82%A1%E6%9A%B4%E6%BC%B23%2C000%E9%BB%9E%E5%A4%A7%E8%A1%8C%E6%83%85+%E7%B1%8C%E7%A2%BC%E6%B4%97%E4%B9%BE%E6%B7%A8%E4%BA%86%E5%97%8E%EF%BC%9F+-+%E5%B7%A5%E5%95%86%E6%99%82%E5%A0%B1%22+%E5%B7%A5%E5%95%86%E6%99%82%E5%A0%B1",
-      "original_link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1xT0FnSnhhV1lzajlMM3NPdFZVY0Jmd1RSNGFYRXVEZERJS1hiczd5QVRkQUI5RnhSSk5oTUp4VjRjV0FxcUo3Vm5lbE1SejY2VU1iUGZNMUFSZVN3RmxF?oc=5",
-      "source": "工商時報",
-      "query_source": "工商時報",
-      "summary": "75萬人砍在阿呆谷！錯過台股暴漲3,000點大行情 籌碼洗乾淨了嗎？ 工商時報",
-      "published_at": "2026-07-31T15:29:00+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 84,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "工商時報"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "7e791e273cce2a22",
-      "title": "台股狂噴3,186點創史上最大漲點「雙王」發功「這檔」亮唯一綠燈- 證券",
-      "link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E7%8B%82%E5%99%B43%2C186%E9%BB%9E%E5%89%B5%E5%8F%B2%E4%B8%8A%E6%9C%80%E5%A4%A7%E6%BC%B2%E9%BB%9E%E3%80%8C%E9%9B%99%E7%8E%8B%E3%80%8D%E7%99%BC%E5%8A%9F%E3%80%8C%E9%80%99%E6%AA%94%E3%80%8D%E4%BA%AE%E5%94%AF%E4%B8%80%E7%B6%A0%E7%87%88-+%E8%AD%89%E5%88%B8+-+%E5%B7%A5%E5%95%86%E6%99%82%E5%A0%B1%22+%E5%B7%A5%E5%95%86%E6%99%82%E5%A0%B1",
-      "original_link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBKckJaTGpoT0hNeDlnTFJHS2lGT2lBVUkyTmlKeEItYVk5WDZKbDZ0T3RqUGZMQTNkR1dsTTZXZEdiYld2R3M2d0k5ODI5SXpNVlFVNjBDeGxPeWZoMHdR?oc=5",
-      "source": "工商時報",
-      "query_source": "工商時報",
-      "summary": "台股狂噴3,186點創史上最大漲點「雙王」發功「這檔」亮唯一綠燈- 證券 工商時報",
-      "published_at": "2026-07-31T14:20:00+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "finance"
-      ],
-      "primary_industry": "finance",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "金融保險",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 84,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "工商時報"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "b69c5710cccea1e7",
-      "title": "台積電領軍大漲！台股勁揚2,800點記憶體開趴南亞科、華邦電飆漲停- 證券",
-      "link": "https://www.google.com/search?q=%22%E5%8F%B0%E7%A9%8D%E9%9B%BB%E9%A0%98%E8%BB%8D%E5%A4%A7%E6%BC%B2%EF%BC%81%E5%8F%B0%E8%82%A1%E5%8B%81%E6%8F%9A2%2C800%E9%BB%9E%E8%A8%98%E6%86%B6%E9%AB%94%E9%96%8B%E8%B6%B4%E5%8D%97%E4%BA%9E%E7%A7%91%E3%80%81%E8%8F%AF%E9%82%A6%E9%9B%BB%E9%A3%86%E6%BC%B2%E5%81%9C-+%E8%AD%89%E5%88%B8+-+%E5%B7%A5%E5%95%86%E6%99%82%E5%A0%B1%22+%E5%B7%A5%E5%95%86%E6%99%82%E5%A0%B1",
-      "original_link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBNX2xybU1TUG5lZVhia1NrMVZJTTA5cFkxamEwb3ppX0hib2RNQW9QZ1RGbDRCMjEzMERQZXFsNXYzQzlva3lJRl9JZW9pRzFLZHVWV1ZLaVVGQXNzNW1Z?oc=5",
-      "source": "工商時報",
-      "query_source": "工商時報",
-      "summary": "台積電領軍大漲！台股勁揚2,800點記憶體開趴南亞科、華邦電飆漲停- 證券 工商時報",
-      "published_at": "2026-07-31T09:12:00+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "finance",
-        "technology"
-      ],
-      "primary_industry": "finance",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "金融保險",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 84,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "工商時報"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "1ac526e05894c009",
-      "title": "台股陷修正多頭總司令張錫喊「安啦！」 直言台積電甜甜價已現5萬點看得到- 日報",
-      "link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E9%99%B7%E4%BF%AE%E6%AD%A3%E5%A4%9A%E9%A0%AD%E7%B8%BD%E5%8F%B8%E4%BB%A4%E5%BC%B5%E9%8C%AB%E5%96%8A%E3%80%8C%E5%AE%89%E5%95%A6%EF%BC%81%E3%80%8D+%E7%9B%B4%E8%A8%80%E5%8F%B0%E7%A9%8D%E9%9B%BB%E7%94%9C%E7%94%9C%E5%83%B9%E5%B7%B2%E7%8F%BE5%E8%90%AC%E9%BB%9E%E7%9C%8B%E5%BE%97%E5%88%B0-+%E6%97%A5%E5%A0%B1+-+%E5%B7%A5%E5%95%86%E6%99%82%E5%A0%B1%22+%E5%B7%A5%E5%95%86%E6%99%82%E5%A0%B1",
-      "original_link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9nTWtYclNfVTNJbHlYdFBZVHdwUHkwN3NBWnJRQktaeW5zQkVPa1FCejhNVmV1dk9OcU1YNmdXWTJrNmdWbFNFUjNSY0I1UkhTY1Nma1cyOGh0bFoyOWFj?oc=5",
-      "source": "工商時報",
-      "query_source": "工商時報",
-      "summary": "台股陷修正多頭總司令張錫喊「安啦！」 直言台積電甜甜價已現5萬點看得到- 日報 工商時報",
-      "published_at": "2026-07-31T03:00:00+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 84,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "工商時報"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "3f44332812ceeac6",
-      "title": "台股月、季線將「死亡交叉」 反彈時候到了？名師看多空分水嶺在這一「點」",
-      "link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E6%9C%88%E3%80%81%E5%AD%A3%E7%B7%9A%E5%B0%87%E3%80%8C%E6%AD%BB%E4%BA%A1%E4%BA%A4%E5%8F%89%E3%80%8D+%E5%8F%8D%E5%BD%88%E6%99%82%E5%80%99%E5%88%B0%E4%BA%86%EF%BC%9F%E5%90%8D%E5%B8%AB%E7%9C%8B%E5%A4%9A%E7%A9%BA%E5%88%86%E6%B0%B4%E5%B6%BA%E5%9C%A8%E9%80%99%E4%B8%80%E3%80%8C%E9%BB%9E%E3%80%8D+-+%E5%B7%A5%E5%95%86%E6%99%82%E5%A0%B1%22+%E5%B7%A5%E5%95%86%E6%99%82%E5%A0%B1",
-      "original_link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5DZWswTFYyZU5OaUxBanFtYUdOYlFvUHhGbjZnR05VRFByOVFvYzFRbWU0QW9VZnNFMjYxUC03V2RDb3JjM1FiR0RzbHZPT3VfbU40eEVjaEFKcVNHZnN3?oc=5",
-      "source": "工商時報",
-      "query_source": "工商時報",
-      "summary": "台股月、季線將「死亡交叉」 反彈時候到了？名師看多空分水嶺在這一「點」 工商時報",
-      "published_at": "2026-07-31T03:00:00+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 84,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "工商時報"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "a9e9375cfb87e629",
-      "title": "擴大產業觸角聚和中長線營運迎利多- 日報",
-      "link": "https://www.google.com/search?q=%22%E6%93%B4%E5%A4%A7%E7%94%A2%E6%A5%AD%E8%A7%B8%E8%A7%92%E8%81%9A%E5%92%8C%E4%B8%AD%E9%95%B7%E7%B7%9A%E7%87%9F%E9%81%8B%E8%BF%8E%E5%88%A9%E5%A4%9A-+%E6%97%A5%E5%A0%B1+-+%E5%B7%A5%E5%95%86%E6%99%82%E5%A0%B1%22+%E5%B7%A5%E5%95%86%E6%99%82%E5%A0%B1",
-      "original_link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE96STZEV091bS1VVlNrU0UxaFBmcWVZXzM3RmtJWnp1TVdwTU9jQm05MnlpWkFuQXZEZVd4UkVTc0xnZHlLNUVNUWVOOUhLRjRUaEFVYUREUkoteTVoLXo0?oc=5",
-      "source": "工商時報",
-      "query_source": "工商時報",
-      "summary": "擴大產業觸角聚和中長線營運迎利多- 日報 工商時報",
-      "published_at": "2026-07-31T03:00:00+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 84,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "工商時報"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "5344cf98e1d3f663",
-      "title": "融資瘦身破紀錄！台股反彈訊號亮了？後市關注焦點、金管會國安基金說法一次看- 證券",
-      "link": "https://www.google.com/search?q=%22%E8%9E%8D%E8%B3%87%E7%98%A6%E8%BA%AB%E7%A0%B4%E7%B4%80%E9%8C%84%EF%BC%81%E5%8F%B0%E8%82%A1%E5%8F%8D%E5%BD%88%E8%A8%8A%E8%99%9F%E4%BA%AE%E4%BA%86%EF%BC%9F%E5%BE%8C%E5%B8%82%E9%97%9C%E6%B3%A8%E7%84%A6%E9%BB%9E%E3%80%81%E9%87%91%E7%AE%A1%E6%9C%83%E5%9C%8B%E5%AE%89%E5%9F%BA%E9%87%91%E8%AA%AA%E6%B3%95%E4%B8%80%E6%AC%A1%E7%9C%8B-+%E8%AD%89%E5%88%B8+-+%E5%B7%A5%E5%95%86%E6%99%82%E5%A0%B1%22+%E5%B7%A5%E5%95%86%E6%99%82%E5%A0%B1",
-      "original_link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE0yUWpLSUMwc1VhcjFiLUZXdDFYYTFYXzNkbDVwcHZvenJXajVHdzVkQkdXb2hmcFpzc3V0ejZxSVJFMnV3VzI1dC1nU2haUDcwZzZMaGNKSlZhZTVZbW1V?oc=5",
-      "source": "工商時報",
-      "query_source": "工商時報",
-      "summary": "融資瘦身破紀錄！台股反彈訊號亮了？後市關注焦點、金管會國安基金說法一次看- 證券 工商時報",
-      "published_at": "2026-07-30T08:43:00+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "finance"
-      ],
-      "primary_industry": "finance",
-      "asset_class": "fund",
-      "crypto_categories": [],
-      "industry_label": "金融保險",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 84,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "工商時報"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "fbf2c8d5e585ea7d",
-      "title": "台股融資大退散短線反彈契機已到？專家估8月有望戰季線- 日報",
-      "link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E8%9E%8D%E8%B3%87%E5%A4%A7%E9%80%80%E6%95%A3%E7%9F%AD%E7%B7%9A%E5%8F%8D%E5%BD%88%E5%A5%91%E6%A9%9F%E5%B7%B2%E5%88%B0%EF%BC%9F%E5%B0%88%E5%AE%B6%E4%BC%B08%E6%9C%88%E6%9C%89%E6%9C%9B%E6%88%B0%E5%AD%A3%E7%B7%9A-+%E6%97%A5%E5%A0%B1+-+%E5%B7%A5%E5%95%86%E6%99%82%E5%A0%B1%22+%E5%B7%A5%E5%95%86%E6%99%82%E5%A0%B1",
-      "original_link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1XTG9EcDhONmROUDIyVGRlZ3ZfUEFuXzVTaWRLQnNyQTVHeVZpU01iTmRjdXlmbUViS3pvY0IyTFdYeWVFSWxwM095aHhLRFlKUlowdDh1ZDctR01SREMw?oc=5",
-      "source": "工商時報",
-      "query_source": "工商時報",
-      "summary": "台股融資大退散短線反彈契機已到？專家估8月有望戰季線- 日報 工商時報",
-      "published_at": "2026-07-30T03:00:00+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 84,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "工商時報"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "09b7c4fefe31c1c0",
-      "title": "台股崩盤不敢買？孫慶龍股災做對一件事 52萬竟變成8千萬 未來十年最看好這2檔",
-      "link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E5%B4%A9%E7%9B%A4%E4%B8%8D%E6%95%A2%E8%B2%B7%EF%BC%9F%E5%AD%AB%E6%85%B6%E9%BE%8D%E8%82%A1%E7%81%BD%E5%81%9A%E5%B0%8D%E4%B8%80%E4%BB%B6%E4%BA%8B+52%E8%90%AC%E7%AB%9F%E8%AE%8A%E6%88%908%E5%8D%83%E8%90%AC+%E6%9C%AA%E4%BE%86%E5%8D%81%E5%B9%B4%E6%9C%80%E7%9C%8B%E5%A5%BD%E9%80%992%E6%AA%94+-+%E5%B7%A5%E5%95%86%E6%99%82%E5%A0%B1%22+%E5%B7%A5%E5%95%86%E6%99%82%E5%A0%B1",
-      "original_link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE54ZWRoVEcxZGw2YTJTZjZzVFVOeG92aVlLT0ZoWFZKbGNrckRYTFNUS0l3aTBfMzZZLWdka1BkWFhSX1d1Zmg1UzhzeEI0a3k2QlRZVVl1SGVzRlJWeGVv?oc=5",
-      "source": "工商時報",
-      "query_source": "工商時報",
-      "summary": "台股崩盤不敢買？孫慶龍股災做對一件事 52萬竟變成8千萬 未來十年最看好這2檔 工商時報",
-      "published_at": "2026-07-29T11:41:00+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 84,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "工商時報"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "f3f2ba726757b05d",
+      "id": "f11a36a3adc17c43",
       "title": "台股史詩級噴發！單日暴漲3186點「權值三王鎖漲停、0050也亮燈」 超過200檔個股狂歡",
-      "link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E5%8F%B2%E8%A9%A9%E7%B4%9A%E5%99%B4%E7%99%BC%EF%BC%81%E5%96%AE%E6%97%A5%E6%9A%B4%E6%BC%B23186%E9%BB%9E%E3%80%8C%E6%AC%8A%E5%80%BC%E4%B8%89%E7%8E%8B%E9%8E%96%E6%BC%B2%E5%81%9C%E3%80%810050%E4%B9%9F%E4%BA%AE%E7%87%88%E3%80%8D+%E8%B6%85%E9%81%8E200%E6%AA%94%E5%80%8B%E8%82%A1%E7%8B%82%E6%AD%A1+-+Yahoo%E8%82%A1%E5%B8%82%22+Yahoo%E8%82%A1%E5%B8%82",
-      "original_link": "https://news.google.com/rss/articles/CBMiywNBVV95cUxQTHZmWEhxMU9QQXBCZDQyd0FEbXJsaGtqc3ZWYWxJblhVOUFUZXcyT0t3aWpxSERUc3ZwRVNjcU1YVUdFWkxSOUVtSUh2d3hvbFZNUTl5eWFRU3YxRlNFSHc2amtsVjl2QXVtSmdkSmFBekVLZy1rUl9tR09NXzMyMzQ2SGQ2ejlXVlBKYkN1Nk1uU0RIWHZIWVVrTUd6aWxNNGVlbkJhanRwX2ZfOVY0NUlLbXNxbDhuYjlULW85RVVqaG9FXzdvcjktRk9tY3ZXemdyd2JwOVdVSEhiNFI1eFN4eDRKbTJZbngxejNUU1I0Q195TjZIaW5sZTlzRVF2NzVPLXUyWjlZNUlmanZnaGl5ZGVGSE9zUEw5U2dnQWV4NDRUZk9wWEZiUUUxNldlcXhac29LQ0pkWHN5bU1MWTJneExqUDltOTE0WnJOQmpoTEJzS2VHRDQyWmJFVWFLNTJ6V2Z0Ty1SWVFCd1NySmVkYUd3bnMzcXN1U2JpUkUyWkZWNUFVS3laQjBJbTlKVFFNSmFQTnNkc04tSzN0eVZDWnVMOHhoZ1RaTGdJVmliX0VCMXI4Wmo4VDZHdnBnQmIzRmpaOW5ra28?oc=5",
-      "source": "Yahoo股市",
-      "query_source": "Yahoo 股市",
-      "summary": "台股史詩級噴發！單日暴漲3186點「權值三王鎖漲停、0050也亮燈」 超過200檔個股狂歡 Yahoo股市",
+      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E5%8F%B2%E8%A9%A9%E7%B4%9A%E5%99%B4%E7%99%BC-%E5%96%AE%E6%97%A5%E6%9A%B4%E6%BC%B23186%E9%BB%9E-%E6%AC%8A%E5%80%BC%E4%B8%89%E7%8E%8B%E9%8E%96%E6%BC%B2%E5%81%9C-0050%E4%B9%9F%E4%BA%AE%E7%87%88-%E8%B6%85%E9%81%8E200%E6%AA%94%E5%80%8B%E8%82%A1%E7%8B%82%E6%AD%A1-234500424.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E5%8F%B2%E8%A9%A9%E7%B4%9A%E5%99%B4%E7%99%BC-%E5%96%AE%E6%97%A5%E6%9A%B4%E6%BC%B23186%E9%BB%9E-%E6%AC%8A%E5%80%BC%E4%B8%89%E7%8E%8B%E9%8E%96%E6%BC%B2%E5%81%9C-0050%E4%B9%9F%E4%BA%AE%E7%87%88-%E8%B6%85%E9%81%8E200%E6%AA%94%E5%80%8B%E8%82%A1%E7%8B%82%E6%AD%A1-234500424.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E5%8F%B2%E8%A9%A9%E7%B4%9A%E5%99%B4%E7%99%BC-%E5%96%AE%E6%97%A5%E6%9A%B4%E6%BC%B23186%E9%BB%9E-%E6%AC%8A%E5%80%BC%E4%B8%89%E7%8E%8B%E9%8E%96%E6%BC%B2%E5%81%9C-0050%E4%B9%9F%E4%BA%AE%E7%87%88-%E8%B6%85%E9%81%8E200%E6%AA%94%E5%80%8B%E8%82%A1%E7%8B%82%E6%AD%A1-234500424.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/tw-market/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市台股動態",
+      "summary": "[FTNN新聞網]記者陳宣穎／綜合報導韓股上週五（7/31）在SK海力士爆漲之下，韓國綜合指數KOSPI指數開高走高，盤中甚至一度觸發「買盤熔斷」暫停交易，終場收在...",
       "published_at": "2026-08-02T07:45:00+08:00",
       "region": "TW",
       "topic": "market",
@@ -5174,23 +6085,1258 @@ window.__MARKET_NEWS_SEED__ = {
       "industry_label": "其他產業",
       "language": "zh-Hant",
       "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 80,
+      "origin": "direct-rss",
+      "quality_score": 84,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "Yahoo股市"
+        "Yahoo 股市"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E5%8F%B2%E8%A9%A9%E7%B4%9A%E5%99%B4%E7%99%BC%EF%BC%81%E5%96%AE%E6%97%A5%E6%9A%B4%E6%BC%B23186%E9%BB%9E%E3%80%8C%E6%AC%8A%E5%80%BC%E4%B8%89%E7%8E%8B%E9%8E%96%E6%BC%B2%E5%81%9C%E3%80%810050%E4%B9%9F%E4%BA%AE%E7%87%88%E3%80%8D+%E8%B6%85%E9%81%8E200%E6%AA%94%E5%80%8B%E8%82%A1%E7%8B%82%E6%AD%A1%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "a5ece76b63c22134",
+      "id": "1750f82cb7de0f94",
+      "title": "大陸內需警訊未解！7月物價數據9日揭曉 CPI年增率恐降至0.9％",
+      "link": "https://tw.stock.yahoo.com/news/%E5%A4%A7%E9%99%B8%E5%85%A7%E9%9C%80%E8%AD%A6%E8%A8%8A%E6%9C%AA%E8%A7%A3-7%E6%9C%88%E7%89%A9%E5%83%B9%E6%95%B8%E6%93%9A9%E6%97%A5%E6%8F%AD%E6%9B%89-cpi%E5%B9%B4%E5%A2%9E%E7%8E%87%E6%81%90%E9%99%8D%E8%87%B30-9-233930029.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E5%A4%A7%E9%99%B8%E5%85%A7%E9%9C%80%E8%AD%A6%E8%A8%8A%E6%9C%AA%E8%A7%A3-7%E6%9C%88%E7%89%A9%E5%83%B9%E6%95%B8%E6%93%9A9%E6%97%A5%E6%8F%AD%E6%9B%89-cpi%E5%B9%B4%E5%A2%9E%E7%8E%87%E6%81%90%E9%99%8D%E8%87%B30-9-233930029.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E5%A4%A7%E9%99%B8%E5%85%A7%E9%9C%80%E8%AD%A6%E8%A8%8A%E6%9C%AA%E8%A7%A3-7%E6%9C%88%E7%89%A9%E5%83%B9%E6%95%B8%E6%93%9A9%E6%97%A5%E6%8F%AD%E6%9B%89-cpi%E5%B9%B4%E5%A2%9E%E7%8E%87%E6%81%90%E9%99%8D%E8%87%B30-9-233930029.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "大陸統計局將於8月9日公布2026年7月份消費者物價指數（CPI）與生產者物價指數（PPI），分析預測，受國際大宗商品價格回落與境內消費需求疲弱影響，CPI預計將微幅回落。",
+      "published_at": "2026-08-02T07:39:30+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "macro-policy",
+        "consumer"
+      ],
+      "primary_industry": "macro-policy",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "總經政策",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%A4%A7%E9%99%B8%E5%85%A7%E9%9C%80%E8%AD%A6%E8%A8%8A%E6%9C%AA%E8%A7%A3%EF%BC%817%E6%9C%88%E7%89%A9%E5%83%B9%E6%95%B8%E6%93%9A9%E6%97%A5%E6%8F%AD%E6%9B%89+CPI%E5%B9%B4%E5%A2%9E%E7%8E%87%E6%81%90%E9%99%8D%E8%87%B30.9%EF%BC%85%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "00c23c36b4b0fb5a",
+      "title": "美股本周兩大焦點！7月非農就業數據、SpaceX迎上市後首份財報",
+      "link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E8%82%A1%E6%9C%AC%E5%91%A8%E5%85%A9%E5%A4%A7%E7%84%A6%E9%BB%9E-7%E6%9C%88%E9%9D%9E%E8%BE%B2%E5%B0%B1%E6%A5%AD%E6%95%B8%E6%93%9A-spacex%E8%BF%8E%E4%B8%8A%E5%B8%82%E5%BE%8C%E9%A6%96%E4%BB%BD%E8%B2%A1%E5%A0%B1-233830403.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E8%82%A1%E6%9C%AC%E5%91%A8%E5%85%A9%E5%A4%A7%E7%84%A6%E9%BB%9E-7%E6%9C%88%E9%9D%9E%E8%BE%B2%E5%B0%B1%E6%A5%AD%E6%95%B8%E6%93%9A-spacex%E8%BF%8E%E4%B8%8A%E5%B8%82%E5%BE%8C%E9%A6%96%E4%BB%BD%E8%B2%A1%E5%A0%B1-233830403.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E7%BE%8E%E8%82%A1%E6%9C%AC%E5%91%A8%E5%85%A9%E5%A4%A7%E7%84%A6%E9%BB%9E-7%E6%9C%88%E9%9D%9E%E8%BE%B2%E5%B0%B1%E6%A5%AD%E6%95%B8%E6%93%9A-spacex%E8%BF%8E%E4%B8%8A%E5%B8%82%E5%BE%8C%E9%A6%96%E4%BB%BD%E8%B2%A1%E5%A0%B1-233830403.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "美國財報季還在進行，但市場最關注的科技巨頭財報大部份已公布，因此市場關注的焦點再次回到經濟指標，尤其多項美國就業數據，是投資人用來觀察會否影響聯準會（Fed）的貨幣政策走向。",
+      "published_at": "2026-08-02T07:38:30+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "macro-policy",
+        "technology"
+      ],
+      "primary_industry": "macro-policy",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "總經政策",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E7%BE%8E%E8%82%A1%E6%9C%AC%E5%91%A8%E5%85%A9%E5%A4%A7%E7%84%A6%E9%BB%9E%EF%BC%817%E6%9C%88%E9%9D%9E%E8%BE%B2%E5%B0%B1%E6%A5%AD%E6%95%B8%E6%93%9A%E3%80%81SpaceX%E8%BF%8E%E4%B8%8A%E5%B8%82%E5%BE%8C%E9%A6%96%E4%BB%BD%E8%B2%A1%E5%A0%B1%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "c7bfb4642c7b9d11",
+      "title": "高齡健康產業博覽會8／7登場 1,380攤位搶攻長壽新經濟",
+      "link": "https://tw.stock.yahoo.com/news/%E9%AB%98%E9%BD%A1%E5%81%A5%E5%BA%B7%E7%94%A2%E6%A5%AD%E5%8D%9A%E8%A6%BD%E6%9C%838-7%E7%99%BB%E5%A0%B4-1-380%E6%94%A4%E4%BD%8D%E6%90%B6%E6%94%BB%E9%95%B7%E5%A3%BD%E6%96%B0%E7%B6%93%E6%BF%9F-233630552.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E9%AB%98%E9%BD%A1%E5%81%A5%E5%BA%B7%E7%94%A2%E6%A5%AD%E5%8D%9A%E8%A6%BD%E6%9C%838-7%E7%99%BB%E5%A0%B4-1-380%E6%94%A4%E4%BD%8D%E6%90%B6%E6%94%BB%E9%95%B7%E5%A3%BD%E6%96%B0%E7%B6%93%E6%BF%9F-233630552.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E9%AB%98%E9%BD%A1%E5%81%A5%E5%BA%B7%E7%94%A2%E6%A5%AD%E5%8D%9A%E8%A6%BD%E6%9C%838-7%E7%99%BB%E5%A0%B4-1-380%E6%94%A4%E4%BD%8D%E6%90%B6%E6%94%BB%E9%95%B7%E5%A3%BD%E6%96%B0%E7%B6%93%E6%BF%9F-233630552.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "第三屆高齡健康產業博覽會將於8月7日至9日登場。今年以「長壽新經濟──讓人生更長，也讓生活更精彩」為主軸，集結健康照護、食衣住行育樂、金融服務、運動活力、宜居城市及高齡就業六大領域，共1,380個攤位",
+      "published_at": "2026-08-02T07:36:30+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "finance"
+      ],
+      "primary_industry": "finance",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "金融保險",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E9%AB%98%E9%BD%A1%E5%81%A5%E5%BA%B7%E7%94%A2%E6%A5%AD%E5%8D%9A%E8%A6%BD%E6%9C%838%EF%BC%8F7%E7%99%BB%E5%A0%B4+1%2C380%E6%94%A4%E4%BD%8D%E6%90%B6%E6%94%BB%E9%95%B7%E5%A3%BD%E6%96%B0%E7%B6%93%E6%BF%9F%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "4f4585168aff5c45",
+      "title": "莫斯科餐廳爆炸3死 女子自製炸彈闖入引爆",
+      "link": "https://tw.news.yahoo.com/%E8%8E%AB%E6%96%AF%E7%A7%91%E9%A4%90%E5%BB%B3%E7%88%86%E7%82%B83%E6%AD%BB-%E5%A5%B3%E5%AD%90%E8%87%AA%E8%A3%BD%E7%82%B8%E5%BD%88%E9%97%96%E5%85%A5%E5%BC%95%E7%88%86-233056432.html",
+      "original_link": "https://tw.news.yahoo.com/%E8%8E%AB%E6%96%AF%E7%A7%91%E9%A4%90%E5%BB%B3%E7%88%86%E7%82%B83%E6%AD%BB-%E5%A5%B3%E5%AD%90%E8%87%AA%E8%A3%BD%E7%82%B8%E5%BD%88%E9%97%96%E5%85%A5%E5%BC%95%E7%88%86-233056432.html",
+      "direct_link": "https://tw.news.yahoo.com/%E8%8E%AB%E6%96%AF%E7%A7%91%E9%A4%90%E5%BB%B3%E7%88%86%E7%82%B83%E6%AD%BB-%E5%A5%B3%E5%AD%90%E8%87%AA%E8%A3%BD%E7%82%B8%E5%BD%88%E9%97%96%E5%85%A5%E5%BC%95%E7%88%86-233056432.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "[NOWNEWS今日新聞]俄羅斯首都莫斯科市中心一間高級義大利餐廳附近，1日晚間發生爆炸事件。一名女子攜帶的自製炸彈在餐廳入口附近引爆，造成包括該名女子在內共3人死亡、至少21人受傷。俄羅斯當局已封鎖",
+      "published_at": "2026-08-02T07:30:56+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%8E%AB%E6%96%AF%E7%A7%91%E9%A4%90%E5%BB%B3%E7%88%86%E7%82%B83%E6%AD%BB+%E5%A5%B3%E5%AD%90%E8%87%AA%E8%A3%BD%E7%82%B8%E5%BD%88%E9%97%96%E5%85%A5%E5%BC%95%E7%88%86%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "e6a54faf3ea6e854",
+      "title": "7月台股跌跌不休 何如芸被兒逼問：賠了多少？",
+      "link": "https://tw.news.yahoo.com/7%E6%9C%88%E5%8F%B0%E8%82%A1%E8%B7%8C%E8%B7%8C%E4%B8%8D%E4%BC%91-%E4%BD%95%E5%A6%82%E8%8A%B8%E8%A2%AB%E5%85%92%E9%80%BC%E5%95%8F-%E8%B3%A0%E4%BA%86%E5%A4%9A%E5%B0%91-232113158.html",
+      "original_link": "https://tw.news.yahoo.com/7%E6%9C%88%E5%8F%B0%E8%82%A1%E8%B7%8C%E8%B7%8C%E4%B8%8D%E4%BC%91-%E4%BD%95%E5%A6%82%E8%8A%B8%E8%A2%AB%E5%85%92%E9%80%BC%E5%95%8F-%E8%B3%A0%E4%BA%86%E5%A4%9A%E5%B0%91-232113158.html",
+      "direct_link": "https://tw.news.yahoo.com/7%E6%9C%88%E5%8F%B0%E8%82%A1%E8%B7%8C%E8%B7%8C%E4%B8%8D%E4%BC%91-%E4%BD%95%E5%A6%82%E8%8A%B8%E8%A2%AB%E5%85%92%E9%80%BC%E5%95%8F-%E8%B3%A0%E4%BA%86%E5%A4%9A%E5%B0%91-232113158.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/tw-market/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市台股動態",
+      "summary": "台股7月跌跌不休，大盤一度跌破4萬點大關，但也因為電子權值股與高本益比AI族群一路下殺，反而凸顯金融類股的強勢防禦、抗跌能力，辣媽女星何如芸也鬆口認了：「這星期過得真的很blue！」何如芸透露，第一次",
+      "published_at": "2026-08-02T07:21:13+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "technology",
+        "finance"
+      ],
+      "primary_industry": "technology",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "科技電子",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%227%E6%9C%88%E5%8F%B0%E8%82%A1%E8%B7%8C%E8%B7%8C%E4%B8%8D%E4%BC%91+%E4%BD%95%E5%A6%82%E8%8A%B8%E8%A2%AB%E5%85%92%E9%80%BC%E5%95%8F%EF%BC%9A%E8%B3%A0%E4%BA%86%E5%A4%9A%E5%B0%91%EF%BC%9F%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "71ca1d5393adcab4",
+      "title": "台股下週一穩了？反彈3186點「史上最大」 分析師竟示警：快逃",
+      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E7%A9%A9%E4%BA%86-%E5%8F%8D%E5%BD%883186%E9%BB%9E-%E5%8F%B2%E4%B8%8A%E6%9C%80%E5%A4%A7-%E5%88%86%E6%9E%90%E5%B8%AB%E5%8D%BB%E5%94%B1%E5%8F%8D%E8%AA%BF-%E5%BF%AB%E9%80%83-060810933.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E7%A9%A9%E4%BA%86-%E5%8F%8D%E5%BD%883186%E9%BB%9E-%E5%8F%B2%E4%B8%8A%E6%9C%80%E5%A4%A7-%E5%88%86%E6%9E%90%E5%B8%AB%E5%8D%BB%E5%94%B1%E5%8F%8D%E8%AA%BF-%E5%BF%AB%E9%80%83-060810933.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E7%A9%A9%E4%BA%86-%E5%8F%8D%E5%BD%883186%E9%BB%9E-%E5%8F%B2%E4%B8%8A%E6%9C%80%E5%A4%A7-%E5%88%86%E6%9E%90%E5%B8%AB%E5%8D%BB%E5%94%B1%E5%8F%8D%E8%AA%BF-%E5%BF%AB%E9%80%83-060810933.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "首次上稿：08/01 14:08更新時間：08/02 07:17即時中心／陳奕劭報導科技股與晶片股領軍反攻，微軟公布優於市場預期的財測，帶動AI概念股回神，美國股市週四（30日）全面大漲，台指期夜盤也",
+      "published_at": "2026-08-02T07:17:16+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "technology"
+      ],
+      "primary_industry": "technology",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "科技電子",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E4%B8%8B%E9%80%B1%E4%B8%80%E7%A9%A9%E4%BA%86%EF%BC%9F%E5%8F%8D%E5%BD%883186%E9%BB%9E%E3%80%8C%E5%8F%B2%E4%B8%8A%E6%9C%80%E5%A4%A7%E3%80%8D+%E5%88%86%E6%9E%90%E5%B8%AB%E7%AB%9F%E7%A4%BA%E8%AD%A6%EF%BC%9A%E5%BF%AB%E9%80%83%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "a204bdc8d4e69ab8",
+      "title": "俄軍摧毀基輔美國公司無人機工廠！川普：尚未同意授權烏克蘭生產「愛國者」",
+      "link": "https://tw.stock.yahoo.com/news/%E4%BF%84%E8%BB%8D%E6%91%A7%E6%AF%80%E5%9F%BA%E8%BC%94%E7%BE%8E%E5%9C%8B%E5%85%AC%E5%8F%B8%E7%84%A1%E4%BA%BA%E6%A9%9F%E5%B7%A5%E5%BB%A0-%E5%B7%9D%E6%99%AE-%E5%B0%9A%E6%9C%AA%E5%90%8C%E6%84%8F%E6%8E%88%E6%AC%8A%E7%83%8F%E5%85%8B%E8%98%AD%E7%94%9F%E7%94%A2-%E6%84%9B%E5%9C%8B%E8%80%85-230003507.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E4%BF%84%E8%BB%8D%E6%91%A7%E6%AF%80%E5%9F%BA%E8%BC%94%E7%BE%8E%E5%9C%8B%E5%85%AC%E5%8F%B8%E7%84%A1%E4%BA%BA%E6%A9%9F%E5%B7%A5%E5%BB%A0-%E5%B7%9D%E6%99%AE-%E5%B0%9A%E6%9C%AA%E5%90%8C%E6%84%8F%E6%8E%88%E6%AC%8A%E7%83%8F%E5%85%8B%E8%98%AD%E7%94%9F%E7%94%A2-%E6%84%9B%E5%9C%8B%E8%80%85-230003507.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E4%BF%84%E8%BB%8D%E6%91%A7%E6%AF%80%E5%9F%BA%E8%BC%94%E7%BE%8E%E5%9C%8B%E5%85%AC%E5%8F%B8%E7%84%A1%E4%BA%BA%E6%A9%9F%E5%B7%A5%E5%BB%A0-%E5%B7%9D%E6%99%AE-%E5%B0%9A%E6%9C%AA%E5%90%8C%E6%84%8F%E6%8E%88%E6%AC%8A%E7%83%8F%E5%85%8B%E8%98%AD%E7%94%9F%E7%94%A2-%E6%84%9B%E5%9C%8B%E8%80%85-230003507.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "俄軍對烏克蘭首都基輔發動大規模飛彈與無人機攻擊，造成至少 9 死 28 傷，並傳出具美國背景的無人機工廠遭摧毀。另一方面，美國總統川普證實尚未批准烏克蘭自行生產愛國者防空攔截彈，俄烏戰局、美烏軍事合作",
+      "published_at": "2026-08-02T07:00:03+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E4%BF%84%E8%BB%8D%E6%91%A7%E6%AF%80%E5%9F%BA%E8%BC%94%E7%BE%8E%E5%9C%8B%E5%85%AC%E5%8F%B8%E7%84%A1%E4%BA%BA%E6%A9%9F%E5%B7%A5%E5%BB%A0%EF%BC%81%E5%B7%9D%E6%99%AE%EF%BC%9A%E5%B0%9A%E6%9C%AA%E5%90%8C%E6%84%8F%E6%8E%88%E6%AC%8A%E7%83%8F%E5%85%8B%E8%98%AD%E7%94%9F%E7%94%A2%E3%80%8C%E6%84%9B%E5%9C%8B%E8%80%85%E3%80%8D%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "9344c72a45cb32f8",
+      "title": "下週兩大考驗登場 美股迎「超級震盪週」",
+      "link": "https://tw.news.yahoo.com/%E4%B8%8B%E9%80%B1%E5%85%A9%E5%A4%A7%E8%80%83%E9%A9%97%E7%99%BB%E5%A0%B4-%E7%BE%8E%E8%82%A1%E8%BF%8E-%E8%B6%85%E7%B4%9A%E9%9C%87%E7%9B%AA%E9%80%B1-224813775.html",
+      "original_link": "https://tw.news.yahoo.com/%E4%B8%8B%E9%80%B1%E5%85%A9%E5%A4%A7%E8%80%83%E9%A9%97%E7%99%BB%E5%A0%B4-%E7%BE%8E%E8%82%A1%E8%BF%8E-%E8%B6%85%E7%B4%9A%E9%9C%87%E7%9B%AA%E9%80%B1-224813775.html",
+      "direct_link": "https://tw.news.yahoo.com/%E4%B8%8B%E9%80%B1%E5%85%A9%E5%A4%A7%E8%80%83%E9%A9%97%E7%99%BB%E5%A0%B4-%E7%BE%8E%E8%82%A1%E8%BF%8E-%E8%B6%85%E7%B4%9A%E9%9C%87%E7%9B%AA%E9%80%B1-224813775.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "[NOWNEWS今日新聞]在科技巨頭亞馬遜（Amazon）強勁獲利抵銷美國公債殖利率上升影響，美股在週五、也是7月最後一個交易日收紅。不過美股在下週仍將迎來就業數據與企業財報密集公布，市場預料持續震盪",
+      "published_at": "2026-08-02T06:48:13+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "macro-policy",
+        "technology"
+      ],
+      "primary_industry": "macro-policy",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "總經政策",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E4%B8%8B%E9%80%B1%E5%85%A9%E5%A4%A7%E8%80%83%E9%A9%97%E7%99%BB%E5%A0%B4+%E7%BE%8E%E8%82%A1%E8%BF%8E%E3%80%8C%E8%B6%85%E7%B4%9A%E9%9C%87%E7%9B%AA%E9%80%B1%E3%80%8D%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "0dbd234a5dd54db2",
+      "title": "延燒逾1週 法國總理：毀滅性野火「已獲控制」",
+      "link": "https://tw.news.yahoo.com/%E5%BB%B6%E7%87%92%E9%80%BE1%E9%80%B1-%E6%B3%95%E5%9C%8B%E7%B8%BD%E7%90%86-%E6%AF%80%E6%BB%85%E6%80%A7%E9%87%8E%E7%81%AB-%E5%B7%B2%E7%8D%B2%E6%8E%A7%E5%88%B6-222232833.html",
+      "original_link": "https://tw.news.yahoo.com/%E5%BB%B6%E7%87%92%E9%80%BE1%E9%80%B1-%E6%B3%95%E5%9C%8B%E7%B8%BD%E7%90%86-%E6%AF%80%E6%BB%85%E6%80%A7%E9%87%8E%E7%81%AB-%E5%B7%B2%E7%8D%B2%E6%8E%A7%E5%88%B6-222232833.html",
+      "direct_link": "https://tw.news.yahoo.com/%E5%BB%B6%E7%87%92%E9%80%BE1%E9%80%B1-%E6%B3%95%E5%9C%8B%E7%B8%BD%E7%90%86-%E6%AF%80%E6%BB%85%E6%80%A7%E9%87%8E%E7%81%AB-%E5%B7%B2%E7%8D%B2%E6%8E%A7%E5%88%B6-222232833.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "在法國爆發自1949年以來最大規模野火的超過1週後，法國總理勒克努(Sebastien Lecornu)1日表示，肆虐法國的野火「今天已獲得控制」。 他在接受「星期日論壇報」(La Tribune D",
+      "published_at": "2026-08-02T06:22:32+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%BB%B6%E7%87%92%E9%80%BE1%E9%80%B1+%E6%B3%95%E5%9C%8B%E7%B8%BD%E7%90%86%EF%BC%9A%E6%AF%80%E6%BB%85%E6%80%A7%E9%87%8E%E7%81%AB%E3%80%8C%E5%B7%B2%E7%8D%B2%E6%8E%A7%E5%88%B6%E3%80%8D%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "ecc8014ecff3bea3",
+      "title": "台股6,500億股息活水來了！廣達、中信金等將躍多頭行情重要推手",
+      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A16-500%E5%84%84%E8%82%A1%E6%81%AF%E6%B4%BB%E6%B0%B4%E4%BE%86%E4%BA%86-%E5%BB%A3%E9%81%94-%E4%B8%AD%E4%BF%A1%E9%87%91%E7%AD%89%E5%B0%87%E8%BA%8D%E5%A4%9A%E9%A0%AD%E8%A1%8C%E6%83%85%E9%87%8D%E8%A6%81%E6%8E%A8%E6%89%8B-221547625.html",
+      "original_link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A16-500%E5%84%84%E8%82%A1%E6%81%AF%E6%B4%BB%E6%B0%B4%E4%BE%86%E4%BA%86-%E5%BB%A3%E9%81%94-%E4%B8%AD%E4%BF%A1%E9%87%91%E7%AD%89%E5%B0%87%E8%BA%8D%E5%A4%9A%E9%A0%AD%E8%A1%8C%E6%83%85%E9%87%8D%E8%A6%81%E6%8E%A8%E6%89%8B-221547625.html",
+      "direct_link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A16-500%E5%84%84%E8%82%A1%E6%81%AF%E6%B4%BB%E6%B0%B4%E4%BE%86%E4%BA%86-%E5%BB%A3%E9%81%94-%E4%B8%AD%E4%BF%A1%E9%87%91%E7%AD%89%E5%B0%87%E8%BA%8D%E5%A4%9A%E9%A0%AD%E8%A1%8C%E6%83%85%E9%87%8D%E8%A6%81%E6%8E%A8%E6%89%8B-221547625.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/tw-market/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市台股動態",
+      "summary": "台股8月將迎來新一波現金股利狂潮。雖台股短線震盪，但上市櫃公司在6月底召開年度股東會完成後，許多公司開始陸續除權息，排定在8月開始發放現金股利，在廣達、中信金等重量級「大咖」助陣中，合計發放金額高達6",
+      "published_at": "2026-08-02T06:15:47+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A16%2C500%E5%84%84%E8%82%A1%E6%81%AF%E6%B4%BB%E6%B0%B4%E4%BE%86%E4%BA%86%EF%BC%81%E5%BB%A3%E9%81%94%E3%80%81%E4%B8%AD%E4%BF%A1%E9%87%91%E7%AD%89%E5%B0%87%E8%BA%8D%E5%A4%9A%E9%A0%AD%E8%A1%8C%E6%83%85%E9%87%8D%E8%A6%81%E6%8E%A8%E6%89%8B%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "97402bb3e034195a",
+      "title": "槓桿斷裂引爆「恐慌極限」！台股週一漲還跌？謝金河：8月股市看這2檔",
+      "link": "https://tw.news.yahoo.com/%E6%A7%93%E6%A1%BF%E6%96%B7%E8%A3%82%E5%BC%95%E7%88%86-%E6%81%90%E6%85%8C%E6%A5%B5%E9%99%90-%E5%8F%B0%E8%82%A1%E9%80%B1-%E6%BC%B2%E9%82%84%E8%B7%8C-%E8%AC%9D%E9%87%91%E6%B2%B3-220800921.html",
+      "original_link": "https://tw.news.yahoo.com/%E6%A7%93%E6%A1%BF%E6%96%B7%E8%A3%82%E5%BC%95%E7%88%86-%E6%81%90%E6%85%8C%E6%A5%B5%E9%99%90-%E5%8F%B0%E8%82%A1%E9%80%B1-%E6%BC%B2%E9%82%84%E8%B7%8C-%E8%AC%9D%E9%87%91%E6%B2%B3-220800921.html",
+      "direct_link": "https://tw.news.yahoo.com/%E6%A7%93%E6%A1%BF%E6%96%B7%E8%A3%82%E5%BC%95%E7%88%86-%E6%81%90%E6%85%8C%E6%A5%B5%E9%99%90-%E5%8F%B0%E8%82%A1%E9%80%B1-%E6%BC%B2%E9%82%84%E8%B7%8C-%E8%AC%9D%E9%87%91%E6%B2%B3-220800921.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/tw-market/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市台股動態",
+      "summary": "7月全球資本市場出現亂流，南韓股市帶來的槓桿調整，造成南韓股市7月重挫逾34%，也拖累了台股。對此，財信傳媒董事長謝金河指出，行情總在絕望中誕生，7月31日股市大漲，「這都是恐慌的極致，一番兩瞪眼的極",
+      "published_at": "2026-08-02T06:08:00+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E6%A7%93%E6%A1%BF%E6%96%B7%E8%A3%82%E5%BC%95%E7%88%86%E3%80%8C%E6%81%90%E6%85%8C%E6%A5%B5%E9%99%90%E3%80%8D%EF%BC%81%E5%8F%B0%E8%82%A1%E9%80%B1%E4%B8%80%E6%BC%B2%E9%82%84%E8%B7%8C%EF%BC%9F%E8%AC%9D%E9%87%91%E6%B2%B3%EF%BC%9A8%E6%9C%88%E8%82%A1%E5%B8%82%E7%9C%8B%E9%80%992%E6%AA%94%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "d891558ba8ce7352",
+      "title": "台股暴漲3200點只是前菜？專家曝「主升段剛開始」目標出爐 看好這類股",
+      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E6%9A%B4%E6%BC%B23200%E9%BB%9E%E5%8F%AA%E6%98%AF%E5%89%8D%E8%8F%9C-%E5%B0%88%E5%AE%B6%E6%9B%9D-%E4%B8%BB%E5%8D%87%E6%AE%B5%E5%89%9B%E9%96%8B%E5%A7%8B-%E7%9B%AE%E6%A8%99%E5%87%BA%E7%88%90-%E7%9C%8B%E5%A5%BD%E9%80%99%E9%A1%9E%E8%82%A1-210200743.html",
+      "original_link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E6%9A%B4%E6%BC%B23200%E9%BB%9E%E5%8F%AA%E6%98%AF%E5%89%8D%E8%8F%9C-%E5%B0%88%E5%AE%B6%E6%9B%9D-%E4%B8%BB%E5%8D%87%E6%AE%B5%E5%89%9B%E9%96%8B%E5%A7%8B-%E7%9B%AE%E6%A8%99%E5%87%BA%E7%88%90-%E7%9C%8B%E5%A5%BD%E9%80%99%E9%A1%9E%E8%82%A1-210200743.html",
+      "direct_link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E6%9A%B4%E6%BC%B23200%E9%BB%9E%E5%8F%AA%E6%98%AF%E5%89%8D%E8%8F%9C-%E5%B0%88%E5%AE%B6%E6%9B%9D-%E4%B8%BB%E5%8D%87%E6%AE%B5%E5%89%9B%E9%96%8B%E5%A7%8B-%E7%9B%AE%E6%A8%99%E5%87%BA%E7%88%90-%E7%9C%8B%E5%A5%BD%E9%80%99%E9%A1%9E%E8%82%A1-210200743.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/tw-market/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市台股動態",
+      "summary": "台股走過前幾日的急殺陰霾，7月31日終場暴漲3186.45點，收在4萬3119.75點，漲幅高達7.98%，直接刷下台股史上單日最大收盤漲點紀錄。對此，資深分析師周代運指出，「這不是什麼跌深反彈，是真",
+      "published_at": "2026-08-02T05:02:00+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E6%9A%B4%E6%BC%B23200%E9%BB%9E%E5%8F%AA%E6%98%AF%E5%89%8D%E8%8F%9C%EF%BC%9F%E5%B0%88%E5%AE%B6%E6%9B%9D%E3%80%8C%E4%B8%BB%E5%8D%87%E6%AE%B5%E5%89%9B%E9%96%8B%E5%A7%8B%E3%80%8D%E7%9B%AE%E6%A8%99%E5%87%BA%E7%88%90+%E7%9C%8B%E5%A5%BD%E9%80%99%E9%A1%9E%E8%82%A1%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "dc604b3cc38e258c",
+      "title": "台指期夜盤瀉1077點 台股本周不妙",
+      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E7%80%891077%E9%BB%9E-%E5%8F%B0%E8%82%A1%E6%9C%AC%E5%91%A8%E4%B8%8D%E5%A6%99-201000906.html",
+      "original_link": "https://tw.news.yahoo.com/%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E7%80%891077%E9%BB%9E-%E5%8F%B0%E8%82%A1%E6%9C%AC%E5%91%A8%E4%B8%8D%E5%A6%99-201000906.html",
+      "direct_link": "https://tw.news.yahoo.com/%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E7%80%891077%E9%BB%9E-%E5%8F%B0%E8%82%A1%E6%9C%AC%E5%91%A8%E4%B8%8D%E5%A6%99-201000906.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/tw-market/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市台股動態",
+      "summary": "台股周五狂飆3186點，與台積電雙雙創下史上最大漲點，恐怕只有一日行情，因為台指期夜盤暴跌1077點、跌幅達2.46％，收在4萬2650點；台股分析師直言，這波回檔還沒結束，夜盤再暴跌，恐不利本周台股",
+      "published_at": "2026-08-02T04:10:00+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E7%80%891077%E9%BB%9E+%E5%8F%B0%E8%82%A1%E6%9C%AC%E5%91%A8%E4%B8%8D%E5%A6%99%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "3666b8b4b15c9170",
+      "title": "汽柴油價格凍結止漲 8月瓦斯天然氣也不調價",
+      "link": "https://tw.news.yahoo.com/%E6%B1%BD%E6%9F%B4%E6%B2%B9%E5%83%B9%E6%A0%BC%E5%87%8D%E7%B5%90%E6%AD%A2%E6%BC%B2-8%E6%9C%88%E7%93%A6%E6%96%AF%E5%A4%A9%E7%84%B6%E6%B0%A3%E4%B9%9F%E4%B8%8D%E8%AA%BF%E5%83%B9-190747089.html",
+      "original_link": "https://tw.news.yahoo.com/%E6%B1%BD%E6%9F%B4%E6%B2%B9%E5%83%B9%E6%A0%BC%E5%87%8D%E7%B5%90%E6%AD%A2%E6%BC%B2-8%E6%9C%88%E7%93%A6%E6%96%AF%E5%A4%A9%E7%84%B6%E6%B0%A3%E4%B9%9F%E4%B8%8D%E8%AA%BF%E5%83%B9-190747089.html",
+      "direct_link": "https://tw.news.yahoo.com/%E6%B1%BD%E6%9F%B4%E6%B2%B9%E5%83%B9%E6%A0%BC%E5%87%8D%E7%B5%90%E6%AD%A2%E6%BC%B2-8%E6%9C%88%E7%93%A6%E6%96%AF%E5%A4%A9%E7%84%B6%E6%B0%A3%E4%B9%9F%E4%B8%8D%E8%AA%BF%E5%83%B9-190747089.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "8/3起汽柴油價格不調整，而8月份液化石油氣及天然氣也不調價(圖/卡優新聞網)",
+      "published_at": "2026-08-02T03:07:47+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "energy"
+      ],
+      "primary_industry": "energy",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "能源公用",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E6%B1%BD%E6%9F%B4%E6%B2%B9%E5%83%B9%E6%A0%BC%E5%87%8D%E7%B5%90%E6%AD%A2%E6%BC%B2+8%E6%9C%88%E7%93%A6%E6%96%AF%E5%A4%A9%E7%84%B6%E6%B0%A3%E4%B9%9F%E4%B8%8D%E8%AA%BF%E5%83%B9%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "c319b993cf28deb3",
+      "title": "威廉、凱特帶3萌娃現身！路易小王子成焦點",
+      "link": "https://tw.news.yahoo.com/%E5%A8%81%E5%BB%89-%E5%87%B1%E7%89%B9%E5%B8%B63%E8%90%8C%E5%A8%83%E7%8F%BE%E8%BA%AB-%E8%B7%AF%E6%98%93%E5%B0%8F%E7%8E%8B%E5%AD%90%E6%88%90%E7%84%A6%E9%BB%9E-151039427.html",
+      "original_link": "https://tw.news.yahoo.com/%E5%A8%81%E5%BB%89-%E5%87%B1%E7%89%B9%E5%B8%B63%E8%90%8C%E5%A8%83%E7%8F%BE%E8%BA%AB-%E8%B7%AF%E6%98%93%E5%B0%8F%E7%8E%8B%E5%AD%90%E6%88%90%E7%84%A6%E9%BB%9E-151039427.html",
+      "direct_link": "https://tw.news.yahoo.com/%E5%A8%81%E5%BB%89-%E5%87%B1%E7%89%B9%E5%B8%B63%E8%90%8C%E5%A8%83%E7%8F%BE%E8%BA%AB-%E8%B7%AF%E6%98%93%E5%B0%8F%E7%8E%8B%E5%AD%90%E6%88%90%E7%84%A6%E9%BB%9E-151039427.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "[NOWNEWS今日新聞]目前正值暑期休假期間的英國威爾斯親王威廉與凱特王妃（PrinceandPrincessofWales），於今（1）日暫停了他們的家庭假期，現身蘇格蘭格拉斯哥（Glasgow）",
+      "published_at": "2026-08-01T23:10:39+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%A8%81%E5%BB%89%E3%80%81%E5%87%B1%E7%89%B9%E5%B8%B63%E8%90%8C%E5%A8%83%E7%8F%BE%E8%BA%AB%EF%BC%81%E8%B7%AF%E6%98%93%E5%B0%8F%E7%8E%8B%E5%AD%90%E6%88%90%E7%84%A6%E9%BB%9E%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "d2e70507fd4cb4b0",
+      "title": "台灣經濟真全面領先韓國？黃世聰曝三星「這一步棋」：恐成台積電隱憂",
+      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E7%81%A3%E7%B6%93%E6%BF%9F%E7%9C%9F%E5%85%A8%E9%9D%A2%E9%A0%98%E5%85%88%E9%9F%93%E5%9C%8B-%E9%BB%83%E4%B8%96%E8%81%B0%E6%9B%9D%E4%B8%89%E6%98%9F-%E9%80%99-%E6%AD%A5%E6%A3%8B-%E6%81%90%E6%88%90%E5%8F%B0%E7%A9%8D%E9%9B%BB%E9%9A%B1%E6%86%82-150000290.html",
+      "original_link": "https://tw.news.yahoo.com/%E5%8F%B0%E7%81%A3%E7%B6%93%E6%BF%9F%E7%9C%9F%E5%85%A8%E9%9D%A2%E9%A0%98%E5%85%88%E9%9F%93%E5%9C%8B-%E9%BB%83%E4%B8%96%E8%81%B0%E6%9B%9D%E4%B8%89%E6%98%9F-%E9%80%99-%E6%AD%A5%E6%A3%8B-%E6%81%90%E6%88%90%E5%8F%B0%E7%A9%8D%E9%9B%BB%E9%9A%B1%E6%86%82-150000290.html",
+      "direct_link": "https://tw.news.yahoo.com/%E5%8F%B0%E7%81%A3%E7%B6%93%E6%BF%9F%E7%9C%9F%E5%85%A8%E9%9D%A2%E9%A0%98%E5%85%88%E9%9F%93%E5%9C%8B-%E9%BB%83%E4%B8%96%E8%81%B0%E6%9B%9D%E4%B8%89%E6%98%9F-%E9%80%99-%E6%AD%A5%E6%A3%8B-%E6%81%90%E6%88%90%E5%8F%B0%E7%A9%8D%E9%9B%BB%E9%9A%B1%E6%86%82-150000290.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/tw-market/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市台股動態",
+      "summary": "國際貨幣基金組織（IMF）於最新《世界經濟展望》報告中預測，台灣與韓國人均GDP差距將持續擴大，以長期趨勢而言，2031年台灣人均GDP將達到5萬6101美元、南韓則為4萬6019美元，差距達約1萬美",
+      "published_at": "2026-08-01T23:00:00+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "macro-policy"
+      ],
+      "primary_industry": "macro-policy",
+      "asset_class": "fund",
+      "crypto_categories": [],
+      "industry_label": "總經政策",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%8F%B0%E7%81%A3%E7%B6%93%E6%BF%9F%E7%9C%9F%E5%85%A8%E9%9D%A2%E9%A0%98%E5%85%88%E9%9F%93%E5%9C%8B%EF%BC%9F%E9%BB%83%E4%B8%96%E8%81%B0%E6%9B%9D%E4%B8%89%E6%98%9F%E3%80%8C%E9%80%99%E4%B8%80%E6%AD%A5%E6%A3%8B%E3%80%8D%EF%BC%9A%E6%81%90%E6%88%90%E5%8F%B0%E7%A9%8D%E9%9B%BB%E9%9A%B1%E6%86%82%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "b360ab44c1df828c",
+      "title": "打破救災資料孤島 彭啓明推動建立「AI智慧安全官」",
+      "link": "https://tw.stock.yahoo.com/news/%E6%89%93%E7%A0%B4%E6%95%91%E7%81%BD%E8%B3%87%E6%96%99%E5%AD%A4%E5%B3%B6-%E5%BD%AD%E5%95%93%E6%98%8E%E6%8E%A8%E5%8B%95%E5%BB%BA%E7%AB%8B-ai%E6%99%BA%E6%85%A7%E5%AE%89%E5%85%A8%E5%AE%98-145259457.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E6%89%93%E7%A0%B4%E6%95%91%E7%81%BD%E8%B3%87%E6%96%99%E5%AD%A4%E5%B3%B6-%E5%BD%AD%E5%95%93%E6%98%8E%E6%8E%A8%E5%8B%95%E5%BB%BA%E7%AB%8B-ai%E6%99%BA%E6%85%A7%E5%AE%89%E5%85%A8%E5%AE%98-145259457.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E6%89%93%E7%A0%B4%E6%95%91%E7%81%BD%E8%B3%87%E6%96%99%E5%AD%A4%E5%B3%B6-%E5%BD%AD%E5%95%93%E6%98%8E%E6%8E%A8%E5%8B%95%E5%BB%BA%E7%AB%8B-ai%E6%99%BA%E6%85%A7%E5%AE%89%E5%85%A8%E5%AE%98-145259457.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "半導體業是台灣產經的守護神，若沒有好好處置其中的化學物質，恐將洩漏致災。環境部長彭啓明指出，未來預計成立的行政法人「國家化學安全中心」，也可與半導體及高科技產業的合作，將企業應變諮詢與服務費用制度化，",
+      "published_at": "2026-08-01T22:52:59+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "technology"
+      ],
+      "primary_industry": "technology",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "科技電子",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E6%89%93%E7%A0%B4%E6%95%91%E7%81%BD%E8%B3%87%E6%96%99%E5%AD%A4%E5%B3%B6+%E5%BD%AD%E5%95%93%E6%98%8E%E6%8E%A8%E5%8B%95%E5%BB%BA%E7%AB%8B%E3%80%8CAI%E6%99%BA%E6%85%A7%E5%AE%89%E5%85%A8%E5%AE%98%E3%80%8D%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "e8af9fc41c72785e",
+      "title": "記憶體業績爆發! 員工不滿獎金制度 傳台灣美光工會醞釀罷工",
+      "link": "https://tw.stock.yahoo.com/news/%E8%A8%98%E6%86%B6%E9%AB%94%E6%A5%AD%E7%B8%BE%E7%88%86%E7%99%BC-%E5%93%A1%E5%B7%A5%E4%B8%8D%E6%BB%BF%E7%8D%8E%E9%87%91%E5%88%B6%E5%BA%A6-%E5%82%B3%E5%8F%B0%E7%81%A3%E7%BE%8E%E5%85%89%E5%B7%A5%E6%9C%83%E9%86%9E%E9%87%80%E7%BD%B7%E5%B7%A5-143324197.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E8%A8%98%E6%86%B6%E9%AB%94%E6%A5%AD%E7%B8%BE%E7%88%86%E7%99%BC-%E5%93%A1%E5%B7%A5%E4%B8%8D%E6%BB%BF%E7%8D%8E%E9%87%91%E5%88%B6%E5%BA%A6-%E5%82%B3%E5%8F%B0%E7%81%A3%E7%BE%8E%E5%85%89%E5%B7%A5%E6%9C%83%E9%86%9E%E9%87%80%E7%BD%B7%E5%B7%A5-143324197.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E8%A8%98%E6%86%B6%E9%AB%94%E6%A5%AD%E7%B8%BE%E7%88%86%E7%99%BC-%E5%93%A1%E5%B7%A5%E4%B8%8D%E6%BB%BF%E7%8D%8E%E9%87%91%E5%88%B6%E5%BA%A6-%E5%82%B3%E5%8F%B0%E7%81%A3%E7%BE%8E%E5%85%89%E5%B7%A5%E6%9C%83%E9%86%9E%E9%87%80%E7%BD%B7%E5%B7%A5-143324197.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "財經中心／楊思敏、嚴凱 台北報導全球加速佈局AI基礎建設，也帶動大量記憶體需求，相關廠商業績強強滾，但今年初先是三星員工，不滿績效獎金制度，揚言罷工，幸好最後勞資達成協議，才化解危機。最近台灣也傳出，",
+      "published_at": "2026-08-01T22:33:24+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "technology"
+      ],
+      "primary_industry": "technology",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "科技電子",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%A8%98%E6%86%B6%E9%AB%94%E6%A5%AD%E7%B8%BE%E7%88%86%E7%99%BC%21+%E5%93%A1%E5%B7%A5%E4%B8%8D%E6%BB%BF%E7%8D%8E%E9%87%91%E5%88%B6%E5%BA%A6+%E5%82%B3%E5%8F%B0%E7%81%A3%E7%BE%8E%E5%85%89%E5%B7%A5%E6%9C%83%E9%86%9E%E9%87%80%E7%BD%B7%E5%B7%A5%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "b27e40a53d7af0e9",
+      "title": "台股波動劇烈掀FOMO情緒蔓延！阮慕驊公開操作心法：今年帳面加獲利約5000萬",
+      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E6%B3%A2%E5%8B%95%E5%8A%87%E7%83%88%E6%8E%80fomo%E6%83%85%E7%B7%92%E8%94%93%E5%BB%B6-%E9%98%AE%E6%85%95%E9%A9%8A%E5%85%AC%E9%96%8B%E6%93%8D%E4%BD%9C%E5%BF%83%E6%B3%95-%E4%BB%8A%E5%B9%B4%E5%B8%B3%E9%9D%A2%E5%8A%A0%E7%8D%B2%E5%88%A9%E7%B4%845000%E8%90%AC-143000192.html",
+      "original_link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E6%B3%A2%E5%8B%95%E5%8A%87%E7%83%88%E6%8E%80fomo%E6%83%85%E7%B7%92%E8%94%93%E5%BB%B6-%E9%98%AE%E6%85%95%E9%A9%8A%E5%85%AC%E9%96%8B%E6%93%8D%E4%BD%9C%E5%BF%83%E6%B3%95-%E4%BB%8A%E5%B9%B4%E5%B8%B3%E9%9D%A2%E5%8A%A0%E7%8D%B2%E5%88%A9%E7%B4%845000%E8%90%AC-143000192.html",
+      "direct_link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E6%B3%A2%E5%8B%95%E5%8A%87%E7%83%88%E6%8E%80fomo%E6%83%85%E7%B7%92%E8%94%93%E5%BB%B6-%E9%98%AE%E6%85%95%E9%A9%8A%E5%85%AC%E9%96%8B%E6%93%8D%E4%BD%9C%E5%BF%83%E6%B3%95-%E4%BB%8A%E5%B9%B4%E5%B8%B3%E9%9D%A2%E5%8A%A0%E7%8D%B2%E5%88%A9%E7%B4%845000%E8%90%AC-143000192.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/tw-market/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市台股動態",
+      "summary": "台股7月波動劇烈，最後一周歷經兩度崩跌、一度失守4萬點整數關卡後，最後一個交易日以飆漲近3200點作收，投資人如坐雲霄飛車，權值股如台積電、鴻海與記憶體族群成為市場多空與資金焦點。對於多投資人陷入恐慌",
+      "published_at": "2026-08-01T22:30:00+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "technology"
+      ],
+      "primary_industry": "technology",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "科技電子",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E6%B3%A2%E5%8B%95%E5%8A%87%E7%83%88%E6%8E%80FOMO%E6%83%85%E7%B7%92%E8%94%93%E5%BB%B6%EF%BC%81%E9%98%AE%E6%85%95%E9%A9%8A%E5%85%AC%E9%96%8B%E6%93%8D%E4%BD%9C%E5%BF%83%E6%B3%95%EF%BC%9A%E4%BB%8A%E5%B9%B4%E5%B8%B3%E9%9D%A2%E5%8A%A0%E7%8D%B2%E5%88%A9%E7%B4%845000%E8%90%AC%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "2641e37153c16e01",
+      "title": "社安網2.0神隊友到位！政府五年注資819.6億元",
+      "link": "https://tw.stock.yahoo.com/news/%E7%A4%BE%E5%AE%89%E7%B6%B22-0%E7%A5%9E%E9%9A%8A%E5%8F%8B%E5%88%B0%E4%BD%8D-%E6%94%BF%E5%BA%9C%E4%BA%94%E5%B9%B4%E6%B3%A8%E8%B3%87819-6%E5%84%84%E5%85%83-142353458.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E7%A4%BE%E5%AE%89%E7%B6%B22-0%E7%A5%9E%E9%9A%8A%E5%8F%8B%E5%88%B0%E4%BD%8D-%E6%94%BF%E5%BA%9C%E4%BA%94%E5%B9%B4%E6%B3%A8%E8%B3%87819-6%E5%84%84%E5%85%83-142353458.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E7%A4%BE%E5%AE%89%E7%B6%B22-0%E7%A5%9E%E9%9A%8A%E5%8F%8B%E5%88%B0%E4%BD%8D-%E6%94%BF%E5%BA%9C%E4%BA%94%E5%B9%B4%E6%B3%A8%E8%B3%87819-6%E5%84%84%E5%85%83-142353458.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "衛福部表示，社會安全網每一項成果的背後，都來自第一線夥伴日復一日的專業投入與堅持，也有賴中央各部會、地方政府及民間團體攜手合作。未來將持續深化跨網絡合作，精進服務品質，讓社會安全網成為每一位需要幫助民",
+      "published_at": "2026-08-01T22:23:53+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E7%A4%BE%E5%AE%89%E7%B6%B22.0%E7%A5%9E%E9%9A%8A%E5%8F%8B%E5%88%B0%E4%BD%8D%EF%BC%81%E6%94%BF%E5%BA%9C%E4%BA%94%E5%B9%B4%E6%B3%A8%E8%B3%87819.6%E5%84%84%E5%85%83%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "cce4b24b7b552969",
+      "title": "台股週一暴跌？專家曝「跌深就是機會」 點名6檔可撿便宜",
+      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E9%80%B1-%E6%9A%B4%E8%B7%8C-%E5%B0%88%E5%AE%B6%E6%9B%9D-%E8%B7%8C%E6%B7%B1%E5%B0%B1%E6%98%AF%E6%A9%9F%E6%9C%83-%E9%BB%9E%E5%90%8D6%E6%AA%94%E5%8F%AF%E6%92%BF%E4%BE%BF%E5%AE%9C-142200666.html",
+      "original_link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E9%80%B1-%E6%9A%B4%E8%B7%8C-%E5%B0%88%E5%AE%B6%E6%9B%9D-%E8%B7%8C%E6%B7%B1%E5%B0%B1%E6%98%AF%E6%A9%9F%E6%9C%83-%E9%BB%9E%E5%90%8D6%E6%AA%94%E5%8F%AF%E6%92%BF%E4%BE%BF%E5%AE%9C-142200666.html",
+      "direct_link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E9%80%B1-%E6%9A%B4%E8%B7%8C-%E5%B0%88%E5%AE%B6%E6%9B%9D-%E8%B7%8C%E6%B7%B1%E5%B0%B1%E6%98%AF%E6%A9%9F%E6%9C%83-%E9%BB%9E%E5%90%8D6%E6%AA%94%E5%8F%AF%E6%92%BF%E4%BE%BF%E5%AE%9C-142200666.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/tw-market/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市台股動態",
+      "summary": "台股31日單日飆漲3186點，台指期夜盤卻暴跌1077點，投資人擔心下週台股會不會很慘？對此，不敗教主陳重銘今（1）日直言，週一還是會有賣壓，但跌深就是機會，推薦六檔都可以考慮撿便宜進場。",
+      "published_at": "2026-08-01T22:22:00+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E9%80%B1%E4%B8%80%E6%9A%B4%E8%B7%8C%EF%BC%9F%E5%B0%88%E5%AE%B6%E6%9B%9D%E3%80%8C%E8%B7%8C%E6%B7%B1%E5%B0%B1%E6%98%AF%E6%A9%9F%E6%9C%83%E3%80%8D+%E9%BB%9E%E5%90%8D6%E6%AA%94%E5%8F%AF%E6%92%BF%E4%BE%BF%E5%AE%9C%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "1ae88675da5118cd",
+      "title": "泰警追查俄國姊弟失蹤！竟破獲另起滅門血案",
+      "link": "https://tw.news.yahoo.com/%E6%B3%B0%E8%AD%A6%E8%BF%BD%E6%9F%A5%E4%BF%84%E5%9C%8B%E5%A7%8A%E5%BC%9F%E5%A4%B1%E8%B9%A4-%E7%AB%9F%E7%A0%B4%E7%8D%B2%E5%8F%A6%E8%B5%B7%E6%BB%85%E9%96%80%E8%A1%80%E6%A1%88-141809469.html",
+      "original_link": "https://tw.news.yahoo.com/%E6%B3%B0%E8%AD%A6%E8%BF%BD%E6%9F%A5%E4%BF%84%E5%9C%8B%E5%A7%8A%E5%BC%9F%E5%A4%B1%E8%B9%A4-%E7%AB%9F%E7%A0%B4%E7%8D%B2%E5%8F%A6%E8%B5%B7%E6%BB%85%E9%96%80%E8%A1%80%E6%A1%88-141809469.html",
+      "direct_link": "https://tw.news.yahoo.com/%E6%B3%B0%E8%AD%A6%E8%BF%BD%E6%9F%A5%E4%BF%84%E5%9C%8B%E5%A7%8A%E5%BC%9F%E5%A4%B1%E8%B9%A4-%E7%AB%9F%E7%A0%B4%E7%8D%B2%E5%8F%A6%E8%B5%B7%E6%BB%85%E9%96%80%E8%A1%80%E6%A1%88-141809469.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "[NOWNEWS今日新聞]泰國觀光勝地春武里府（ChonBuri）芭達雅（Pattaya）爆發震驚各界的連環命案。警方本週五（7月31日）逮捕兩名涉嫌殺害一對俄羅斯籍姊弟的嫌犯，並前往棄屍地點開挖遺體",
+      "published_at": "2026-08-01T22:18:09+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "tourism"
+      ],
+      "primary_industry": "tourism",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "觀光休閒",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E6%B3%B0%E8%AD%A6%E8%BF%BD%E6%9F%A5%E4%BF%84%E5%9C%8B%E5%A7%8A%E5%BC%9F%E5%A4%B1%E8%B9%A4%EF%BC%81%E7%AB%9F%E7%A0%B4%E7%8D%B2%E5%8F%A6%E8%B5%B7%E6%BB%85%E9%96%80%E8%A1%80%E6%A1%88%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "14cbff7f0f26c9ac",
+      "title": "世界冠軍現聲勞工局深愛築夢市集 激勵身心障礙者在各領域發光發熱",
+      "link": "https://tw.stock.yahoo.com/news/%E4%B8%96%E7%95%8C%E5%86%A0%E8%BB%8D%E7%8F%BE%E8%81%B2%E5%8B%9E%E5%B7%A5%E5%B1%80%E6%B7%B1%E6%84%9B%E7%AF%89%E5%A4%A2%E5%B8%82%E9%9B%86-%E6%BF%80%E5%8B%B5%E8%BA%AB%E5%BF%83%E9%9A%9C%E7%A4%99%E8%80%85%E5%9C%A8%E5%90%84%E9%A0%98%E5%9F%9F%E7%99%BC%E5%85%89%E7%99%BC%E7%86%B1-135235831.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E4%B8%96%E7%95%8C%E5%86%A0%E8%BB%8D%E7%8F%BE%E8%81%B2%E5%8B%9E%E5%B7%A5%E5%B1%80%E6%B7%B1%E6%84%9B%E7%AF%89%E5%A4%A2%E5%B8%82%E9%9B%86-%E6%BF%80%E5%8B%B5%E8%BA%AB%E5%BF%83%E9%9A%9C%E7%A4%99%E8%80%85%E5%9C%A8%E5%90%84%E9%A0%98%E5%9F%9F%E7%99%BC%E5%85%89%E7%99%BC%E7%86%B1-135235831.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E4%B8%96%E7%95%8C%E5%86%A0%E8%BB%8D%E7%8F%BE%E8%81%B2%E5%8B%9E%E5%B7%A5%E5%B1%80%E6%B7%B1%E6%84%9B%E7%AF%89%E5%A4%A2%E5%B8%82%E9%9B%86-%E6%BF%80%E5%8B%B5%E8%BA%AB%E5%BF%83%E9%9A%9C%E7%A4%99%E8%80%85%E5%9C%A8%E5%90%84%E9%A0%98%E5%9F%9F%E7%99%BC%E5%85%89%E7%99%BC%E7%86%B1-135235831.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "商傳媒｜記者張安禾／高雄報導高雄市勞工局「深愛築夢市集暨主題表演活動」，(1)日下午於衛武營榕樹廣場登場，邀請身心障礙朋友、職訓學員與團體帶來各式特色美食、文創攤位，並結合平權主題闖關體驗及摸彩活動，",
+      "published_at": "2026-08-01T21:52:35+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E4%B8%96%E7%95%8C%E5%86%A0%E8%BB%8D%E7%8F%BE%E8%81%B2%E5%8B%9E%E5%B7%A5%E5%B1%80%E6%B7%B1%E6%84%9B%E7%AF%89%E5%A4%A2%E5%B8%82%E9%9B%86+%E6%BF%80%E5%8B%B5%E8%BA%AB%E5%BF%83%E9%9A%9C%E7%A4%99%E8%80%85%E5%9C%A8%E5%90%84%E9%A0%98%E5%9F%9F%E7%99%BC%E5%85%89%E7%99%BC%E7%86%B1%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "1effc34dfae47ff5",
+      "title": "家庭主婦買股賺到8200萬！揭多數人賠錢真相",
+      "link": "https://tw.stock.yahoo.com/news/%E5%AE%B6%E5%BA%AD%E4%B8%BB%E5%A9%A6%E8%B2%B7%E8%82%A1%E8%B3%BA%E5%88%B08200%E8%90%AC-%E6%8F%AD%E5%A4%9A%E6%95%B8%E4%BA%BA%E8%B3%A0%E9%8C%A2%E7%9C%9F%E7%9B%B8-134352069.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E5%AE%B6%E5%BA%AD%E4%B8%BB%E5%A9%A6%E8%B2%B7%E8%82%A1%E8%B3%BA%E5%88%B08200%E8%90%AC-%E6%8F%AD%E5%A4%9A%E6%95%B8%E4%BA%BA%E8%B3%A0%E9%8C%A2%E7%9C%9F%E7%9B%B8-134352069.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E5%AE%B6%E5%BA%AD%E4%B8%BB%E5%A9%A6%E8%B2%B7%E8%82%A1%E8%B3%BA%E5%88%B08200%E8%90%AC-%E6%8F%AD%E5%A4%9A%E6%95%B8%E4%BA%BA%E8%B3%A0%E9%8C%A2%E7%9C%9F%E7%9B%B8-134352069.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "財經中心／駱瑩倫報導一名家庭主婦靠著長期投資策略，雖然50多歲才踏入股市，卻意外累積出驚人身家。她直到50多歲、丈夫退休後才開始研究股票，憑藉多年摸索出的投資方法，最終將資產滾到4億日圓，約新台幣82",
+      "published_at": "2026-08-01T21:43:52+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%AE%B6%E5%BA%AD%E4%B8%BB%E5%A9%A6%E8%B2%B7%E8%82%A1%E8%B3%BA%E5%88%B08200%E8%90%AC%EF%BC%81%E6%8F%AD%E5%A4%9A%E6%95%B8%E4%BA%BA%E8%B3%A0%E9%8C%A2%E7%9C%9F%E7%9B%B8%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "4d04b71bfb117158",
+      "title": "火星生技* 公告本公司董事會決議通過委任第二屆薪資報酬委員會委員名單",
+      "link": "https://tw.stock.yahoo.com/news/%E7%81%AB%E6%98%9F%E7%94%9F%E6%8A%80-%E5%85%AC%E5%91%8A%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E6%B1%BA%E8%AD%B0%E9%80%9A%E9%81%8E%E5%A7%94%E4%BB%BB%E7%AC%AC%E4%BA%8C%E5%B1%86%E8%96%AA%E8%B3%87%E5%A0%B1%E9%85%AC%E5%A7%94%E5%93%A1%E6%9C%83%E5%A7%94%E5%93%A1%E5%90%8D%E5%96%AE-132900030.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E7%81%AB%E6%98%9F%E7%94%9F%E6%8A%80-%E5%85%AC%E5%91%8A%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E6%B1%BA%E8%AD%B0%E9%80%9A%E9%81%8E%E5%A7%94%E4%BB%BB%E7%AC%AC%E4%BA%8C%E5%B1%86%E8%96%AA%E8%B3%87%E5%A0%B1%E9%85%AC%E5%A7%94%E5%93%A1%E6%9C%83%E5%A7%94%E5%93%A1%E5%90%8D%E5%96%AE-132900030.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E7%81%AB%E6%98%9F%E7%94%9F%E6%8A%80-%E5%85%AC%E5%91%8A%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E6%B1%BA%E8%AD%B0%E9%80%9A%E9%81%8E%E5%A7%94%E4%BB%BB%E7%AC%AC%E4%BA%8C%E5%B1%86%E8%96%AA%E8%B3%87%E5%A0%B1%E9%85%AC%E5%A7%94%E5%93%A1%E6%9C%83%E5%A7%94%E5%93%A1%E5%90%8D%E5%96%AE-132900030.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "公開資訊觀測站重大訊息公告(7731)火星生技*-公告本公司董事會決議通過委任第二屆薪資報酬委員會委員名單1.發生變動日期:115/08/012.功能性委員會名稱:薪資報酬委員會3.舊任者姓名:(1)",
+      "published_at": "2026-08-01T21:29:00+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "healthcare"
+      ],
+      "primary_industry": "healthcare",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "生技醫療",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E7%81%AB%E6%98%9F%E7%94%9F%E6%8A%80%2A+%E5%85%AC%E5%91%8A%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E6%B1%BA%E8%AD%B0%E9%80%9A%E9%81%8E%E5%A7%94%E4%BB%BB%E7%AC%AC%E4%BA%8C%E5%B1%86%E8%96%AA%E8%B3%87%E5%A0%B1%E9%85%AC%E5%A7%94%E5%93%A1%E6%9C%83%E5%A7%94%E5%93%A1%E5%90%8D%E5%96%AE%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "8c0b427fa4c0957c",
+      "title": "食藥署調查：苦茶油案8批問題油 均來自源春製油廠",
+      "link": "https://tw.stock.yahoo.com/news/%E9%A3%9F%E8%97%A5%E7%BD%B2%E8%AA%BF%E6%9F%A5-%E8%8B%A6%E8%8C%B6%E6%B2%B9%E6%A1%888%E6%89%B9%E5%95%8F%E9%A1%8C%E6%B2%B9-%E5%9D%87%E4%BE%86%E8%87%AA%E6%BA%90%E6%98%A5%E8%A3%BD%E6%B2%B9%E5%BB%A0-131855064.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E9%A3%9F%E8%97%A5%E7%BD%B2%E8%AA%BF%E6%9F%A5-%E8%8B%A6%E8%8C%B6%E6%B2%B9%E6%A1%888%E6%89%B9%E5%95%8F%E9%A1%8C%E6%B2%B9-%E5%9D%87%E4%BE%86%E8%87%AA%E6%BA%90%E6%98%A5%E8%A3%BD%E6%B2%B9%E5%BB%A0-131855064.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E9%A3%9F%E8%97%A5%E7%BD%B2%E8%AA%BF%E6%9F%A5-%E8%8B%A6%E8%8C%B6%E6%B2%B9%E6%A1%888%E6%89%B9%E5%95%8F%E9%A1%8C%E6%B2%B9-%E5%9D%87%E4%BE%86%E8%87%AA%E6%BA%90%E6%98%A5%E8%A3%BD%E6%B2%B9%E5%BB%A0-131855064.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "雙北地區接獲永豐餘、國際機能等業者通報，苦茶油檢出致癌物質苯駢芘，食藥署1日公布最新進度，8批問題油的源頭皆指向嘉義源春製油廠，除要求停工，另發現原料苦茶籽來源疑不明，已移送檢調。",
+      "published_at": "2026-08-01T21:18:55+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E9%A3%9F%E8%97%A5%E7%BD%B2%E8%AA%BF%E6%9F%A5%EF%BC%9A%E8%8B%A6%E8%8C%B6%E6%B2%B9%E6%A1%888%E6%89%B9%E5%95%8F%E9%A1%8C%E6%B2%B9+%E5%9D%87%E4%BE%86%E8%87%AA%E6%BA%90%E6%98%A5%E8%A3%BD%E6%B2%B9%E5%BB%A0%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "e8e44dd635bed430",
+      "title": "【公告】火星生技*董事會選任第三屆董事長",
+      "link": "https://tw.stock.yahoo.com/news/%E5%85%AC%E5%91%8A-%E7%81%AB%E6%98%9F%E7%94%9F%E6%8A%80-%E8%91%A3%E4%BA%8B%E6%9C%83%E9%81%B8%E4%BB%BB%E7%AC%AC%E4%B8%89%E5%B1%86%E8%91%A3%E4%BA%8B%E9%95%B7-130015382.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E5%85%AC%E5%91%8A-%E7%81%AB%E6%98%9F%E7%94%9F%E6%8A%80-%E8%91%A3%E4%BA%8B%E6%9C%83%E9%81%B8%E4%BB%BB%E7%AC%AC%E4%B8%89%E5%B1%86%E8%91%A3%E4%BA%8B%E9%95%B7-130015382.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E5%85%AC%E5%91%8A-%E7%81%AB%E6%98%9F%E7%94%9F%E6%8A%80-%E8%91%A3%E4%BA%8B%E6%9C%83%E9%81%B8%E4%BB%BB%E7%AC%AC%E4%B8%89%E5%B1%86%E8%91%A3%E4%BA%8B%E9%95%B7-130015382.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "日 期：2026年08月01日公司名稱：火星生技*(7731)主 旨：火星生技*董事會選任第三屆董事長發言人：林玉龍說 明：1.董事會決議日期或發生變動日期:115/08/012.人員別（請輸入董事長",
+      "published_at": "2026-08-01T21:00:15+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "healthcare"
+      ],
+      "primary_industry": "healthcare",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "生技醫療",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E3%80%90%E5%85%AC%E5%91%8A%E3%80%91%E7%81%AB%E6%98%9F%E7%94%9F%E6%8A%80%2A%E8%91%A3%E4%BA%8B%E6%9C%83%E9%81%B8%E4%BB%BB%E7%AC%AC%E4%B8%89%E5%B1%86%E8%91%A3%E4%BA%8B%E9%95%B7%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "72609df0d78ab956",
+      "title": "奇蹟沒發生！Netflix傳奇登山家證實罹難",
+      "link": "https://tw.news.yahoo.com/%E5%A5%87%E8%B9%9F%E6%B2%92%E7%99%BC%E7%94%9F-netflix%E5%82%B3%E5%A5%87%E7%99%BB%E5%B1%B1%E5%AE%B6%E8%AD%89%E5%AF%A6%E7%BD%B9%E9%9B%A3-125621111.html",
+      "original_link": "https://tw.news.yahoo.com/%E5%A5%87%E8%B9%9F%E6%B2%92%E7%99%BC%E7%94%9F-netflix%E5%82%B3%E5%A5%87%E7%99%BB%E5%B1%B1%E5%AE%B6%E8%AD%89%E5%AF%A6%E7%BD%B9%E9%9B%A3-125621111.html",
+      "direct_link": "https://tw.news.yahoo.com/%E5%A5%87%E8%B9%9F%E6%B2%92%E7%99%BC%E7%94%9F-netflix%E5%82%B3%E5%A5%87%E7%99%BB%E5%B1%B1%E5%AE%B6%E8%AD%89%E5%AF%A6%E7%BD%B9%E9%9B%A3-125621111.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "[NOWNEWS今日新聞]知名的尼泊爾裔英籍登山家普爾賈（NirmalPurja）帶領一支10人的國際登山隊，在巴基斯坦攀登布洛阿特峰（BroadPeak）時遭遇雪崩。普爾賈失聯後外界一度盼望奇蹟發生",
+      "published_at": "2026-08-01T20:56:21+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "fund",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%A5%87%E8%B9%9F%E6%B2%92%E7%99%BC%E7%94%9F%EF%BC%81Netflix%E5%82%B3%E5%A5%87%E7%99%BB%E5%B1%B1%E5%AE%B6%E8%AD%89%E5%AF%A6%E7%BD%B9%E9%9B%A3%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "ae575078f1759625",
+      "title": "火星生技* 公告本公司董事會選任第三屆董事長",
+      "link": "https://tw.stock.yahoo.com/news/%E7%81%AB%E6%98%9F%E7%94%9F%E6%8A%80-%E5%85%AC%E5%91%8A%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E9%81%B8%E4%BB%BB%E7%AC%AC%E4%B8%89%E5%B1%86%E8%91%A3%E4%BA%8B%E9%95%B7-124800421.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E7%81%AB%E6%98%9F%E7%94%9F%E6%8A%80-%E5%85%AC%E5%91%8A%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E9%81%B8%E4%BB%BB%E7%AC%AC%E4%B8%89%E5%B1%86%E8%91%A3%E4%BA%8B%E9%95%B7-124800421.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E7%81%AB%E6%98%9F%E7%94%9F%E6%8A%80-%E5%85%AC%E5%91%8A%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E9%81%B8%E4%BB%BB%E7%AC%AC%E4%B8%89%E5%B1%86%E8%91%A3%E4%BA%8B%E9%95%B7-124800421.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "公開資訊觀測站重大訊息公告(7731)火星生技*-公告本公司董事會選任第三屆董事長1.董事會決議日期或發生變動日期:115/08/012.人員別（請輸入董事長或總經理）:董事長3.舊任者姓名:林玉龍4",
+      "published_at": "2026-08-01T20:48:00+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "healthcare"
+      ],
+      "primary_industry": "healthcare",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "生技醫療",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E7%81%AB%E6%98%9F%E7%94%9F%E6%8A%80%2A+%E5%85%AC%E5%91%8A%E6%9C%AC%E5%85%AC%E5%8F%B8%E8%91%A3%E4%BA%8B%E6%9C%83%E9%81%B8%E4%BB%BB%E7%AC%AC%E4%B8%89%E5%B1%86%E8%91%A3%E4%BA%8B%E9%95%B7%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "c09c12bd2ba5dabe",
+      "title": "國巨強攻漲停還有救？死亡交叉警訊來襲 專家「1招」逆轉",
+      "link": "https://tw.news.yahoo.com/%E5%9C%8B%E5%B7%A8%E5%BC%B7%E6%94%BB%E6%BC%B2%E5%81%9C%E9%82%84%E6%9C%89%E6%95%91-%E6%AD%BB%E4%BA%A1%E4%BA%A4%E5%8F%89%E8%AD%A6%E8%A8%8A%E4%BE%86%E8%A5%B2-%E5%B0%88%E5%AE%B6-1%E6%8B%9B-%E9%80%86%E8%BD%89-123727260.html",
+      "original_link": "https://tw.news.yahoo.com/%E5%9C%8B%E5%B7%A8%E5%BC%B7%E6%94%BB%E6%BC%B2%E5%81%9C%E9%82%84%E6%9C%89%E6%95%91-%E6%AD%BB%E4%BA%A1%E4%BA%A4%E5%8F%89%E8%AD%A6%E8%A8%8A%E4%BE%86%E8%A5%B2-%E5%B0%88%E5%AE%B6-1%E6%8B%9B-%E9%80%86%E8%BD%89-123727260.html",
+      "direct_link": "https://tw.news.yahoo.com/%E5%9C%8B%E5%B7%A8%E5%BC%B7%E6%94%BB%E6%BC%B2%E5%81%9C%E9%82%84%E6%9C%89%E6%95%91-%E6%AD%BB%E4%BA%A1%E4%BA%A4%E5%8F%89%E8%AD%A6%E8%A8%8A%E4%BE%86%E8%A5%B2-%E5%B0%88%E5%AE%B6-1%E6%8B%9B-%E9%80%86%E8%BD%89-123727260.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "被動元件龍頭國巨近期股價歷經劇烈洗牌，自高點重挫逾六成後強勢攻上漲停，吸引市場目光。專家分析，目前國巨技術面面臨多重均線反壓，難以出現V型反轉，建議投資人改採波段操作因應。",
+      "published_at": "2026-08-01T20:37:27+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%9C%8B%E5%B7%A8%E5%BC%B7%E6%94%BB%E6%BC%B2%E5%81%9C%E9%82%84%E6%9C%89%E6%95%91%EF%BC%9F%E6%AD%BB%E4%BA%A1%E4%BA%A4%E5%8F%89%E8%AD%A6%E8%A8%8A%E4%BE%86%E8%A5%B2+%E5%B0%88%E5%AE%B6%E3%80%8C1%E6%8B%9B%E3%80%8D%E9%80%86%E8%BD%89%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "9f4be220f9489d87",
+      "title": "SpaceX火箭將撞上月球！威力相當3噸TNT爆炸",
+      "link": "https://tw.news.yahoo.com/spacex%E7%81%AB%E7%AE%AD%E5%B0%87%E6%92%9E%E4%B8%8A%E6%9C%88%E7%90%83-%E5%A8%81%E5%8A%9B%E7%9B%B8%E7%95%B63%E5%99%B8tnt%E7%88%86%E7%82%B8-123119486.html",
+      "original_link": "https://tw.news.yahoo.com/spacex%E7%81%AB%E7%AE%AD%E5%B0%87%E6%92%9E%E4%B8%8A%E6%9C%88%E7%90%83-%E5%A8%81%E5%8A%9B%E7%9B%B8%E7%95%B63%E5%99%B8tnt%E7%88%86%E7%82%B8-123119486.html",
+      "direct_link": "https://tw.news.yahoo.com/spacex%E7%81%AB%E7%AE%AD%E5%B0%87%E6%92%9E%E4%B8%8A%E6%9C%88%E7%90%83-%E5%A8%81%E5%8A%9B%E7%9B%B8%E7%95%B63%E5%99%B8tnt%E7%88%86%E7%82%B8-123119486.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "[NOWNEWS今日新聞]一枚曾於一年多前發射的SpaceX火箭殘骸，目前正直朝月球而去，預期將於5日以7倍音速的高速撞擊月球表面，撞擊所產生的能量，相當於3噸TNT炸藥爆炸，估計將在月球表面砸出巨大",
+      "published_at": "2026-08-01T20:31:19+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22SpaceX%E7%81%AB%E7%AE%AD%E5%B0%87%E6%92%9E%E4%B8%8A%E6%9C%88%E7%90%83%EF%BC%81%E5%A8%81%E5%8A%9B%E7%9B%B8%E7%95%B63%E5%99%B8TNT%E7%88%86%E7%82%B8%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "04e6530337fedd12",
+      "title": "台股飆3186點後夜盤重挫千點！分析師曝下周一操作策略",
+      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E9%A3%863186%E9%BB%9E%E5%BE%8C%E5%A4%9C%E7%9B%A4%E9%87%8D%E6%8C%AB%E5%8D%83%E9%BB%9E-%E5%88%86%E6%9E%90%E5%B8%AB%E6%9B%9D%E4%B8%8B%E5%91%A8-%E6%93%8D%E4%BD%9C%E7%AD%96%E7%95%A5-122432219.html",
+      "original_link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E9%A3%863186%E9%BB%9E%E5%BE%8C%E5%A4%9C%E7%9B%A4%E9%87%8D%E6%8C%AB%E5%8D%83%E9%BB%9E-%E5%88%86%E6%9E%90%E5%B8%AB%E6%9B%9D%E4%B8%8B%E5%91%A8-%E6%93%8D%E4%BD%9C%E7%AD%96%E7%95%A5-122432219.html",
+      "direct_link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E9%A3%863186%E9%BB%9E%E5%BE%8C%E5%A4%9C%E7%9B%A4%E9%87%8D%E6%8C%AB%E5%8D%83%E9%BB%9E-%E5%88%86%E6%9E%90%E5%B8%AB%E6%9B%9D%E4%B8%8B%E5%91%A8-%E6%93%8D%E4%BD%9C%E7%AD%96%E7%95%A5-122432219.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "台股周五（31日）大漲3186點，創下史上最大單日漲點，但台指期夜盤隨即重挫1077點、跌幅2.46%，收在42650點，與美股四大指數全面收紅走勢脫鉤，也讓市場擔憂下周一（3日）台股恐面臨震盪整理。",
+      "published_at": "2026-08-01T20:24:32+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E9%A3%863186%E9%BB%9E%E5%BE%8C%E5%A4%9C%E7%9B%A4%E9%87%8D%E6%8C%AB%E5%8D%83%E9%BB%9E%EF%BC%81%E5%88%86%E6%9E%90%E5%B8%AB%E6%9B%9D%E4%B8%8B%E5%91%A8%E4%B8%80%E6%93%8D%E4%BD%9C%E7%AD%96%E7%95%A5%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "b76ed7a42d9eec8d",
+      "title": "別怕台指期慘崩！專家公開「台股下週超簡單操作」",
+      "link": "https://tw.news.yahoo.com/%E5%88%A5%E6%80%95%E5%8F%B0%E6%8C%87%E6%9C%9F%E6%85%98%E5%B4%A9-%E5%B0%88%E5%AE%B6%E5%85%AC%E9%96%8B-%E5%8F%B0%E8%82%A1%E4%B8%8B%E9%80%B1%E8%B6%85%E7%B0%A1%E5%96%AE%E6%93%8D%E4%BD%9C-122100217.html",
+      "original_link": "https://tw.news.yahoo.com/%E5%88%A5%E6%80%95%E5%8F%B0%E6%8C%87%E6%9C%9F%E6%85%98%E5%B4%A9-%E5%B0%88%E5%AE%B6%E5%85%AC%E9%96%8B-%E5%8F%B0%E8%82%A1%E4%B8%8B%E9%80%B1%E8%B6%85%E7%B0%A1%E5%96%AE%E6%93%8D%E4%BD%9C-122100217.html",
+      "direct_link": "https://tw.news.yahoo.com/%E5%88%A5%E6%80%95%E5%8F%B0%E6%8C%87%E6%9C%9F%E6%85%98%E5%B4%A9-%E5%B0%88%E5%AE%B6%E5%85%AC%E9%96%8B-%E5%8F%B0%E8%82%A1%E4%B8%8B%E9%80%B1%E8%B6%85%E7%B0%A1%E5%96%AE%E6%93%8D%E4%BD%9C-122100217.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/tw-market/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市台股動態",
+      "summary": "台指期夜盤震盪重挫，盤中一度跌破1300點，終場跌1077點，許多投資人憂心下週台股怎麼辦？資深分析師周代運今（1）日信心喊話「不用怕」，並表示．下週的操作其實很單純。",
+      "published_at": "2026-08-01T20:21:00+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%88%A5%E6%80%95%E5%8F%B0%E6%8C%87%E6%9C%9F%E6%85%98%E5%B4%A9%EF%BC%81%E5%B0%88%E5%AE%B6%E5%85%AC%E9%96%8B%E3%80%8C%E5%8F%B0%E8%82%A1%E4%B8%8B%E9%80%B1%E8%B6%85%E7%B0%A1%E5%96%AE%E6%93%8D%E4%BD%9C%E3%80%8D%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "f55bb7b65b33970f",
+      "title": "汐止租屋熱區曝光！這條路竟現「租比買划算」 捷運利多推升房價反讓房貸更重",
+      "link": "https://tw.stock.yahoo.com/news/%E6%B1%90%E6%AD%A2%E7%A7%9F%E5%B1%8B%E7%86%B1%E5%8D%80%E6%9B%9D%E5%85%89-%E9%80%99%E6%A2%9D%E8%B7%AF%E7%AB%9F%E7%8F%BE-%E7%A7%9F%E6%AF%94%E8%B2%B7%E5%88%92%E7%AE%97-%E6%8D%B7%E9%81%8B%E5%88%A9%E5%A4%9A%E6%8E%A8%E5%8D%87%E6%88%BF%E5%83%B9%E5%8F%8D%E8%AE%93%E6%88%BF%E8%B2%B8%E6%9B%B4%E9%87%8D-121900889.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E6%B1%90%E6%AD%A2%E7%A7%9F%E5%B1%8B%E7%86%B1%E5%8D%80%E6%9B%9D%E5%85%89-%E9%80%99%E6%A2%9D%E8%B7%AF%E7%AB%9F%E7%8F%BE-%E7%A7%9F%E6%AF%94%E8%B2%B7%E5%88%92%E7%AE%97-%E6%8D%B7%E9%81%8B%E5%88%A9%E5%A4%9A%E6%8E%A8%E5%8D%87%E6%88%BF%E5%83%B9%E5%8F%8D%E8%AE%93%E6%88%BF%E8%B2%B8%E6%9B%B4%E9%87%8D-121900889.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E6%B1%90%E6%AD%A2%E7%A7%9F%E5%B1%8B%E7%86%B1%E5%8D%80%E6%9B%9D%E5%85%89-%E9%80%99%E6%A2%9D%E8%B7%AF%E7%AB%9F%E7%8F%BE-%E7%A7%9F%E6%AF%94%E8%B2%B7%E5%88%92%E7%AE%97-%E6%8D%B7%E9%81%8B%E5%88%A9%E5%A4%9A%E6%8E%A8%E5%8D%87%E6%88%BF%E5%83%B9%E5%8F%8D%E8%AE%93%E6%88%BF%E8%B2%B8%E6%9B%B4%E9%87%8D-121900889.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "汐止租屋市場交易持續熱絡。根據新北市汐止地政事務所統計，113年1月至115年3月居住用租賃實價登錄共3,679件，其中十大租屋熱區就占2,014件、約54.7%，顯示租屋需求高度集中在交通便利、生活",
+      "published_at": "2026-08-01T20:19:00+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "real-estate"
+      ],
+      "primary_industry": "real-estate",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "營建房市",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E6%B1%90%E6%AD%A2%E7%A7%9F%E5%B1%8B%E7%86%B1%E5%8D%80%E6%9B%9D%E5%85%89%EF%BC%81%E9%80%99%E6%A2%9D%E8%B7%AF%E7%AB%9F%E7%8F%BE%E3%80%8C%E7%A7%9F%E6%AF%94%E8%B2%B7%E5%88%92%E7%AE%97%E3%80%8D+%E6%8D%B7%E9%81%8B%E5%88%A9%E5%A4%9A%E6%8E%A8%E5%8D%87%E6%88%BF%E5%83%B9%E5%8F%8D%E8%AE%93%E6%88%BF%E8%B2%B8%E6%9B%B4%E9%87%8D%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "1fd3d1a66f54c2a8",
+      "title": "OpenAI AI代理「失控」範圍擴大！Hugging Face遭駭事件引爆全球監管壓力",
+      "link": "https://tw.stock.yahoo.com/news/openai-ai%E4%BB%A3%E7%90%86-%E5%A4%B1%E6%8E%A7-%E7%AF%84%E5%9C%8D%E6%93%B4%E5%A4%A7-hugging-121004058.html",
+      "original_link": "https://tw.stock.yahoo.com/news/openai-ai%E4%BB%A3%E7%90%86-%E5%A4%B1%E6%8E%A7-%E7%AF%84%E5%9C%8D%E6%93%B4%E5%A4%A7-hugging-121004058.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/openai-ai%E4%BB%A3%E7%90%86-%E5%A4%B1%E6%8E%A7-%E7%AF%84%E5%9C%8D%E6%93%B4%E5%A4%A7-hugging-121004058.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "OpenAI 擴大調查 Hugging Face 遭駭事件時，發現旗下 AI 自主代理程式曾出現脫離控制環境案例。雖然目前未有證據顯示代理程式離開 OpenAI 網路，但事件引發 AI 安全疑慮，美國",
+      "published_at": "2026-08-01T20:10:04+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "technology"
+      ],
+      "primary_industry": "technology",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "科技電子",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22OpenAI+AI%E4%BB%A3%E7%90%86%E3%80%8C%E5%A4%B1%E6%8E%A7%E3%80%8D%E7%AF%84%E5%9C%8D%E6%93%B4%E5%A4%A7%EF%BC%81Hugging+Face%E9%81%AD%E9%A7%AD%E4%BA%8B%E4%BB%B6%E5%BC%95%E7%88%86%E5%85%A8%E7%90%83%E7%9B%A3%E7%AE%A1%E5%A3%93%E5%8A%9B%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "e324f9bcdaeb48d2",
       "title": "台股崩跌也檔不住！國家隊7月狂掃6檔「主動式ETF」85萬張 再擲141億元補貨0050",
-      "link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E5%B4%A9%E8%B7%8C%E4%B9%9F%E6%AA%94%E4%B8%8D%E4%BD%8F%EF%BC%81%E5%9C%8B%E5%AE%B6%E9%9A%8A7%E6%9C%88%E7%8B%82%E6%8E%836%E6%AA%94%E3%80%8C%E4%B8%BB%E5%8B%95%E5%BC%8FETF%E3%80%8D85%E8%90%AC%E5%BC%B5+%E5%86%8D%E6%93%B2141%E5%84%84%E5%85%83%E8%A3%9C%E8%B2%A80050+-+Yahoo%E8%82%A1%E5%B8%82%22+Yahoo%E8%82%A1%E5%B8%82",
-      "original_link": "https://news.google.com/rss/articles/CBMiqwNBVV95cUxNWjFiVDBVV0h6MzhkWDdGaWp5SERfNEQyODhQM216WFJTRFZtU3k1elBnSWY3YVctVzlNbjlqbmp2MWFpNThvNmFVXzlsNU1Tbk90aTJlNXBVNDdvRkptWUZHM0NEeUtpTXVNS3dYeFVidW00eHltQjFoOEd1aVI1WXRTYWNRNUt5VGIyUml3MFVqODBUVTlKMjFhbFF3bExoN1JlYVk0TjItdFI2Qm9LUnZCdWwwXzJqRldkY2Z0YnltbHRsV3RON3AyNloxaTMxYUZxUUh3X3ZUX2dCTFNQRmZua3ZnQkczdFhrR2RYNDhJbDFMdjg1dGxvbDJpWVlMbndmT2VQUmlpd2hCaHFtaGJWVGlQNUNFVmZ5SnladDJ1NHpzY3A0X05zc2N4VXhTSGxqNm0wX0JYQnZqYi03ZFRVRzFKRXg4bmxCSEN5bHJsa3dnU1pueFJMYUNfQm1RcVNXQ3FTVGxXUmdwenpuQ0FvYjBqR3diZXRrSTRKeEJacjRFYk5idkRDRVVULW82V19TdU5HWWs3U2REel91MW94U25UN21rZWFz?oc=5",
-      "source": "Yahoo股市",
-      "query_source": "Yahoo 股市",
-      "summary": "台股崩跌也檔不住！國家隊7月狂掃6檔「主動式ETF」85萬張 再擲141億元補貨0050 Yahoo股市",
+      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E5%B4%A9%E8%B7%8C%E4%B9%9F%E6%AA%94%E4%B8%8D%E4%BD%8F-%E5%9C%8B%E5%AE%B6%E9%9A%8A7%E6%9C%88%E7%8B%82%E6%8E%836%E6%AA%94-%E4%B8%BB%E5%8B%95%E5%BC%8Fetf-85%E8%90%AC%E5%BC%B5-%E5%86%8D%E6%93%B2141%E5%84%84%E5%85%83%E8%A3%9C%E8%B2%A80050-120000847.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E5%B4%A9%E8%B7%8C%E4%B9%9F%E6%AA%94%E4%B8%8D%E4%BD%8F-%E5%9C%8B%E5%AE%B6%E9%9A%8A7%E6%9C%88%E7%8B%82%E6%8E%836%E6%AA%94-%E4%B8%BB%E5%8B%95%E5%BC%8Fetf-85%E8%90%AC%E5%BC%B5-%E5%86%8D%E6%93%B2141%E5%84%84%E5%85%83%E8%A3%9C%E8%B2%A80050-120000847.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E5%B4%A9%E8%B7%8C%E4%B9%9F%E6%AA%94%E4%B8%8D%E4%BD%8F-%E5%9C%8B%E5%AE%B6%E9%9A%8A7%E6%9C%88%E7%8B%82%E6%8E%836%E6%AA%94-%E4%B8%BB%E5%8B%95%E5%BC%8Fetf-85%E8%90%AC%E5%BC%B5-%E5%86%8D%E6%93%B2141%E5%84%84%E5%85%83%E8%A3%9C%E8%B2%A80050-120000847.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/tw-market/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市台股動態",
+      "summary": "[FTNN新聞網]記者張書翰／綜合報導台股加權指數7月慘遭重擊，以43119.75點作收，崩跌3006.16點，跌幅6.52%。在股市一片慘綠中，八大公股逆勢搶進大量ETF，買...",
       "published_at": "2026-08-01T20:00:00+08:00",
       "region": "TW",
       "topic": "market",
@@ -5203,24 +7349,205 @@ window.__MARKET_NEWS_SEED__ = {
       "industry_label": "其他產業",
       "language": "zh-Hant",
       "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 80,
+      "origin": "direct-rss",
+      "quality_score": 84,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "Yahoo股市"
+        "Yahoo 股市"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E5%B4%A9%E8%B7%8C%E4%B9%9F%E6%AA%94%E4%B8%8D%E4%BD%8F%EF%BC%81%E5%9C%8B%E5%AE%B6%E9%9A%8A7%E6%9C%88%E7%8B%82%E6%8E%836%E6%AA%94%E3%80%8C%E4%B8%BB%E5%8B%95%E5%BC%8FETF%E3%80%8D85%E8%90%AC%E5%BC%B5+%E5%86%8D%E6%93%B2141%E5%84%84%E5%85%83%E8%A3%9C%E8%B2%A80050%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "099a91e64b519486",
-      "title": "美股七雄「齊漲神話」破滅？亞馬遜、微軟爽收AI紅利 蘋果卻重摔！華爾街熱錢急湧「這族群」",
-      "link": "https://www.google.com/search?q=%22%E7%BE%8E%E8%82%A1%E4%B8%83%E9%9B%84%E3%80%8C%E9%BD%8A%E6%BC%B2%E7%A5%9E%E8%A9%B1%E3%80%8D%E7%A0%B4%E6%BB%85%EF%BC%9F%E4%BA%9E%E9%A6%AC%E9%81%9C%E3%80%81%E5%BE%AE%E8%BB%9F%E7%88%BD%E6%94%B6AI%E7%B4%85%E5%88%A9+%E8%98%8B%E6%9E%9C%E5%8D%BB%E9%87%8D%E6%91%94%EF%BC%81%E8%8F%AF%E7%88%BE%E8%A1%97%E7%86%B1%E9%8C%A2%E6%80%A5%E6%B9%A7%E3%80%8C%E9%80%99%E6%97%8F%E7%BE%A4%E3%80%8D+-+Yahoo%E8%82%A1%E5%B8%82%22+Yahoo%E8%82%A1%E5%B8%82",
-      "original_link": "https://news.google.com/rss/articles/CBMixwJBVV95cUxNRlpGc25pa1dBYXRwYWNKbnBrRjRBUWhJMU9IazB6WjhtZW8zYWotc25QanJXQ2hsUFBwX3JFRXl4a2tOREtjQ0ZwejRkdWx0U1dVby1QdnEyODg0d0hBRGlwU2tjWlVDSTM1T3FGLXZENXRNM3kyOURYUmVhdlh4UEJ5bWlZMlUwYUFCdUV5aVFOMEZxOU1Tcm1CaDNOMzV3OVdCbkp1WU9Bd1g0a0ZaZHZ2dmhlSFROYXRtbE04QzVYSnpieDJLeDJoRHFiT0tjTnpxem9OVkpmTXAzc1pvYW0zMXkzZ2FmRVNVZTJjTV9vUzQ4UGxkZW90OFFmZFZfVnA3UjQ3aHpwd25XLUNuNTUyaV9FaWJkQUl1QUczaFI3cEdxaDJiZjJBdG4tQTBQSlZ0a2ZEclNMbHh6LVU5a19JN0huRTA?oc=5",
-      "source": "Yahoo股市",
-      "query_source": "Yahoo 股市",
-      "summary": "美股七雄「齊漲神話」破滅？亞馬遜、微軟爽收AI紅利 蘋果卻重摔！華爾街熱錢急湧「這族群」 Yahoo股市",
-      "published_at": "2026-08-01T17:50:00+08:00",
+      "id": "f771b4c873631eaa",
+      "title": "台股死亡交叉來了！專家曝「關鍵48小時」 四大止跌訊號一次看",
+      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E6%AD%BB%E4%BA%A1%E4%BA%A4%E5%8F%89%E4%BE%86%E4%BA%86-%E5%B0%88%E5%AE%B6%E6%9B%9D-%E9%97%9C%E9%8D%B548%E5%B0%8F%E6%99%82-%E5%9B%9B%E5%A4%A7%E6%AD%A2%E8%B7%8C%E8%A8%8A%E8%99%9F-%E6%AC%A1%E7%9C%8B-115800934.html",
+      "original_link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E6%AD%BB%E4%BA%A1%E4%BA%A4%E5%8F%89%E4%BE%86%E4%BA%86-%E5%B0%88%E5%AE%B6%E6%9B%9D-%E9%97%9C%E9%8D%B548%E5%B0%8F%E6%99%82-%E5%9B%9B%E5%A4%A7%E6%AD%A2%E8%B7%8C%E8%A8%8A%E8%99%9F-%E6%AC%A1%E7%9C%8B-115800934.html",
+      "direct_link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E6%AD%BB%E4%BA%A1%E4%BA%A4%E5%8F%89%E4%BE%86%E4%BA%86-%E5%B0%88%E5%AE%B6%E6%9B%9D-%E9%97%9C%E9%8D%B548%E5%B0%8F%E6%99%82-%E5%9B%9B%E5%A4%A7%E6%AD%A2%E8%B7%8C%E8%A8%8A%E8%99%9F-%E6%AC%A1%E7%9C%8B-115800934.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/tw-market/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市台股動態",
+      "summary": "台股死亡交叉來了！台北股市剛上演歷史性絕地大反攻，31日單日暴漲3186點刷紀錄，權王台積電更飆出漲停板，沒想到技術面卻面臨「月季線死亡交叉」的嚴峻考驗。面對台指期夜盤隨後重挫逾千點，市場人心惶惶，摩",
+      "published_at": "2026-08-01T19:58:00+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E6%AD%BB%E4%BA%A1%E4%BA%A4%E5%8F%89%E4%BE%86%E4%BA%86%EF%BC%81%E5%B0%88%E5%AE%B6%E6%9B%9D%E3%80%8C%E9%97%9C%E9%8D%B548%E5%B0%8F%E6%99%82%E3%80%8D+%E5%9B%9B%E5%A4%A7%E6%AD%A2%E8%B7%8C%E8%A8%8A%E8%99%9F%E4%B8%80%E6%AC%A1%E7%9C%8B%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "25312431ab12c008",
+      "title": "金映玉籲無人機條例快通過 學者：台灣有製造優勢可強化供應鏈韌性",
+      "link": "https://tw.stock.yahoo.com/news/%E9%87%91%E6%98%A0%E7%8E%89%E7%B1%B2%E7%84%A1%E4%BA%BA%E6%A9%9F%E6%A2%9D%E4%BE%8B%E5%BF%AB%E9%80%9A%E9%81%8E-%E5%AD%B8%E8%80%85-%E5%8F%B0%E7%81%A3%E6%9C%89%E8%A3%BD%E9%80%A0%E5%84%AA%E5%8B%A2%E5%8F%AF%E5%BC%B7%E5%8C%96%E4%BE%9B%E6%87%89%E9%8F%88%E9%9F%8C%E6%80%A7-112100774.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E9%87%91%E6%98%A0%E7%8E%89%E7%B1%B2%E7%84%A1%E4%BA%BA%E6%A9%9F%E6%A2%9D%E4%BE%8B%E5%BF%AB%E9%80%9A%E9%81%8E-%E5%AD%B8%E8%80%85-%E5%8F%B0%E7%81%A3%E6%9C%89%E8%A3%BD%E9%80%A0%E5%84%AA%E5%8B%A2%E5%8F%AF%E5%BC%B7%E5%8C%96%E4%BE%9B%E6%87%89%E9%8F%88%E9%9F%8C%E6%80%A7-112100774.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E9%87%91%E6%98%A0%E7%8E%89%E7%B1%B2%E7%84%A1%E4%BA%BA%E6%A9%9F%E6%A2%9D%E4%BE%8B%E5%BF%AB%E9%80%9A%E9%81%8E-%E5%AD%B8%E8%80%85-%E5%8F%B0%E7%81%A3%E6%9C%89%E8%A3%BD%E9%80%A0%E5%84%AA%E5%8B%A2%E5%8F%AF%E5%BC%B7%E5%8C%96%E4%BE%9B%E6%87%89%E9%8F%88%E9%9F%8C%E6%80%A7-112100774.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "美國聯邦眾院外委會亞太小組主席金映玉率跨黨派訪問團來台，此行高度關注台灣國防改革發展，包括國防預算提升、無人載具特別條例審議等關鍵議題。",
+      "published_at": "2026-08-01T19:21:00+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E9%87%91%E6%98%A0%E7%8E%89%E7%B1%B2%E7%84%A1%E4%BA%BA%E6%A9%9F%E6%A2%9D%E4%BE%8B%E5%BF%AB%E9%80%9A%E9%81%8E+%E5%AD%B8%E8%80%85%EF%BC%9A%E5%8F%B0%E7%81%A3%E6%9C%89%E8%A3%BD%E9%80%A0%E5%84%AA%E5%8B%A2%E5%8F%AF%E5%BC%B7%E5%8C%96%E4%BE%9B%E6%87%89%E9%8F%88%E9%9F%8C%E6%80%A7%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "41cc7a50a8afb19a",
+      "title": "「老闆想要這筆錢」！川普爆親自催企業捐款",
+      "link": "https://tw.news.yahoo.com/%E8%80%81%E9%97%86%E6%83%B3%E8%A6%81%E9%80%99%E7%AD%86%E9%8C%A2-%E5%B7%9D%E6%99%AE%E7%88%86%E8%A6%AA%E8%87%AA%E5%82%AC%E4%BC%81%E6%A5%AD%E6%8D%90%E6%AC%BE-111131347.html",
+      "original_link": "https://tw.news.yahoo.com/%E8%80%81%E9%97%86%E6%83%B3%E8%A6%81%E9%80%99%E7%AD%86%E9%8C%A2-%E5%B7%9D%E6%99%AE%E7%88%86%E8%A6%AA%E8%87%AA%E5%82%AC%E4%BC%81%E6%A5%AD%E6%8D%90%E6%AC%BE-111131347.html",
+      "direct_link": "https://tw.news.yahoo.com/%E8%80%81%E9%97%86%E6%83%B3%E8%A6%81%E9%80%99%E7%AD%86%E9%8C%A2-%E5%B7%9D%E6%99%AE%E7%88%86%E8%A6%AA%E8%87%AA%E5%82%AC%E4%BC%81%E6%A5%AD%E6%8D%90%E6%AC%BE-111131347.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "[NOWNEWS今日新聞]《華爾街日報》報導指出，美國總統川普（DonaldTrump）正以極其罕見且「親力親為」的方式主導募款活動。川普不僅親自指揮數百萬美元的籌款計畫，更不斷施壓各大企業高層，要求",
+      "published_at": "2026-08-01T19:11:31+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E3%80%8C%E8%80%81%E9%97%86%E6%83%B3%E8%A6%81%E9%80%99%E7%AD%86%E9%8C%A2%E3%80%8D%EF%BC%81%E5%B7%9D%E6%99%AE%E7%88%86%E8%A6%AA%E8%87%AA%E5%82%AC%E4%BC%81%E6%A5%AD%E6%8D%90%E6%AC%BE%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "5805a0340ab91558",
+      "title": "解放軍建軍99年／國安人士：解放軍淪區域不安代名詞 已非榮耀象徵",
+      "link": "https://tw.news.yahoo.com/%E8%A7%A3%E6%94%BE%E8%BB%8D%E5%BB%BA%E8%BB%8D99%E5%B9%B4-%E5%9C%8B%E5%AE%89%E4%BA%BA%E5%A3%AB-%E8%A7%A3%E6%94%BE%E8%BB%8D%E6%B7%AA%E5%8D%80%E5%9F%9F%E4%B8%8D%E5%AE%89%E4%BB%A3%E5%90%8D%E8%A9%9E-%E5%B7%B2%E9%9D%9E%E6%A6%AE%E8%80%80%E8%B1%A1%E5%BE%B5-110829649.html",
+      "original_link": "https://tw.news.yahoo.com/%E8%A7%A3%E6%94%BE%E8%BB%8D%E5%BB%BA%E8%BB%8D99%E5%B9%B4-%E5%9C%8B%E5%AE%89%E4%BA%BA%E5%A3%AB-%E8%A7%A3%E6%94%BE%E8%BB%8D%E6%B7%AA%E5%8D%80%E5%9F%9F%E4%B8%8D%E5%AE%89%E4%BB%A3%E5%90%8D%E8%A9%9E-%E5%B7%B2%E9%9D%9E%E6%A6%AE%E8%80%80%E8%B1%A1%E5%BE%B5-110829649.html",
+      "direct_link": "https://tw.news.yahoo.com/%E8%A7%A3%E6%94%BE%E8%BB%8D%E5%BB%BA%E8%BB%8D99%E5%B9%B4-%E5%9C%8B%E5%AE%89%E4%BA%BA%E5%A3%AB-%E8%A7%A3%E6%94%BE%E8%BB%8D%E6%B7%AA%E5%8D%80%E5%9F%9F%E4%B8%8D%E5%AE%89%E4%BB%A3%E5%90%8D%E8%A9%9E-%E5%B7%B2%E9%9D%9E%E6%A6%AE%E8%80%80%E8%B1%A1%E5%BE%B5-110829649.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "中國人民解放軍今天(1日)迎來建軍99週年，總兵力與軍費規模均創下歷史新高，堪稱建政以來規模最龐大的一支軍隊，但熟悉地緣政治的國安人士直言，如今的解放軍早已不是當年那支標榜「小米加步槍」、與人民站在一",
+      "published_at": "2026-08-01T19:08:29+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%A7%A3%E6%94%BE%E8%BB%8D%E5%BB%BA%E8%BB%8D99%E5%B9%B4%EF%BC%8F%E5%9C%8B%E5%AE%89%E4%BA%BA%E5%A3%AB%EF%BC%9A%E8%A7%A3%E6%94%BE%E8%BB%8D%E6%B7%AA%E5%8D%80%E5%9F%9F%E4%B8%8D%E5%AE%89%E4%BB%A3%E5%90%8D%E8%A9%9E+%E5%B7%B2%E9%9D%9E%E6%A6%AE%E8%80%80%E8%B1%A1%E5%BE%B5%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "ef2516c7ba6452dd",
+      "title": "解放軍建軍99年／「建軍節」前夕 「匿名者64」攻下多個解放軍網站",
+      "link": "https://tw.news.yahoo.com/%E8%A7%A3%E6%94%BE%E8%BB%8D%E5%BB%BA%E8%BB%8D99%E5%B9%B4-%E5%BB%BA%E8%BB%8D%E7%AF%80-%E5%89%8D%E5%A4%95-%E5%8C%BF%E5%90%8D%E8%80%8564-%E6%94%BB%E4%B8%8B%E5%A4%9A%E5%80%8B%E8%A7%A3%E6%94%BE%E8%BB%8D%E7%B6%B2%E7%AB%99-110624502.html",
+      "original_link": "https://tw.news.yahoo.com/%E8%A7%A3%E6%94%BE%E8%BB%8D%E5%BB%BA%E8%BB%8D99%E5%B9%B4-%E5%BB%BA%E8%BB%8D%E7%AF%80-%E5%89%8D%E5%A4%95-%E5%8C%BF%E5%90%8D%E8%80%8564-%E6%94%BB%E4%B8%8B%E5%A4%9A%E5%80%8B%E8%A7%A3%E6%94%BE%E8%BB%8D%E7%B6%B2%E7%AB%99-110624502.html",
+      "direct_link": "https://tw.news.yahoo.com/%E8%A7%A3%E6%94%BE%E8%BB%8D%E5%BB%BA%E8%BB%8D99%E5%B9%B4-%E5%BB%BA%E8%BB%8D%E7%AF%80-%E5%89%8D%E5%A4%95-%E5%8C%BF%E5%90%8D%E8%80%8564-%E6%94%BB%E4%B8%8B%E5%A4%9A%E5%80%8B%E8%A7%A3%E6%94%BE%E8%BB%8D%E7%B6%B2%E7%AB%99-110624502.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "正值中國大舉製作各種文宣，慶祝今年適逢解放軍建軍99年的「八一建軍節」，知名網路異議帳號「匿名者64」(Anonymous 64)今天(1日)特別選在社群平台X宣布攻陷「安徽省海軍青少年航空學校」、「",
+      "published_at": "2026-08-01T19:06:24+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "shipping"
+      ],
+      "primary_industry": "shipping",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "航運運輸",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E8%A7%A3%E6%94%BE%E8%BB%8D%E5%BB%BA%E8%BB%8D99%E5%B9%B4%EF%BC%8F%E3%80%8C%E5%BB%BA%E8%BB%8D%E7%AF%80%E3%80%8D%E5%89%8D%E5%A4%95+%E3%80%8C%E5%8C%BF%E5%90%8D%E8%80%8564%E3%80%8D%E6%94%BB%E4%B8%8B%E5%A4%9A%E5%80%8B%E8%A7%A3%E6%94%BE%E8%BB%8D%E7%B6%B2%E7%AB%99%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "36061bcdb8b27c80",
+      "title": "小編下班聊點錢》本週10大熱門零股排行榜：台積電、0050、國巨、南亞科…「便宜到令人髮指」不買對不起自己",
+      "link": "https://tw.stock.yahoo.com/news/%E5%B0%8F%E7%B7%A8%E4%B8%8B%E7%8F%AD%E8%81%8A%E9%BB%9E%E9%8C%A2-%E6%9C%AC%E9%80%B110%E5%A4%A7%E7%86%B1%E9%96%80%E9%9B%B6%E8%82%A1%E6%8E%92%E8%A1%8C%E6%A6%9C-%E5%8F%B0%E7%A9%8D%E9%9B%BB-0050-%E5%9C%8B%E5%B7%A8-110030800.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E5%B0%8F%E7%B7%A8%E4%B8%8B%E7%8F%AD%E8%81%8A%E9%BB%9E%E9%8C%A2-%E6%9C%AC%E9%80%B110%E5%A4%A7%E7%86%B1%E9%96%80%E9%9B%B6%E8%82%A1%E6%8E%92%E8%A1%8C%E6%A6%9C-%E5%8F%B0%E7%A9%8D%E9%9B%BB-0050-%E5%9C%8B%E5%B7%A8-110030800.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E5%B0%8F%E7%B7%A8%E4%B8%8B%E7%8F%AD%E8%81%8A%E9%BB%9E%E9%8C%A2-%E6%9C%AC%E9%80%B110%E5%A4%A7%E7%86%B1%E9%96%80%E9%9B%B6%E8%82%A1%E6%8E%92%E8%A1%8C%E6%A6%9C-%E5%8F%B0%E7%A9%8D%E9%9B%BB-0050-%E5%9C%8B%E5%B7%A8-110030800.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "台股連4年都是大多頭，至少年漲25%起跳，今年更漲至48.9%，躍全球第5大股市，主因台廠是AI核心供應鏈，造成股市熱絡、估值過高、槓桿全開，全民炒股風氣熾熱，如今去槓桿近尾聲，存股族都趁此波修正大撿",
+      "published_at": "2026-08-01T19:00:30+08:00",
       "region": "TW",
       "topic": "market",
       "industries": [
@@ -5232,23 +7559,484 @@ window.__MARKET_NEWS_SEED__ = {
       "industry_label": "科技電子",
       "language": "zh-Hant",
       "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 80,
+      "origin": "direct-rss",
+      "quality_score": 84,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "Yahoo股市"
+        "Yahoo 股市"
       ],
-      "duplicate_count": 0
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%B0%8F%E7%B7%A8%E4%B8%8B%E7%8F%AD%E8%81%8A%E9%BB%9E%E9%8C%A2%E3%80%8B%E6%9C%AC%E9%80%B110%E5%A4%A7%E7%86%B1%E9%96%80%E9%9B%B6%E8%82%A1%E6%8E%92%E8%A1%8C%E6%A6%9C%EF%BC%9A%E5%8F%B0%E7%A9%8D%E9%9B%BB%E3%80%810050%E3%80%81%E5%9C%8B%E5%B7%A8%E3%80%81%E5%8D%97%E4%BA%9E%E7%A7%91%E2%80%A6%E3%80%8C%E4%BE%BF%E5%AE%9C%E5%88%B0%E4%BB%A4%E4%BA%BA%E9%AB%AE%E6%8C%87%E3%80%8D%E4%B8%8D%E8%B2%B7%E5%B0%8D%E4%B8%8D%E8%B5%B7%E8%87%AA%E5%B7%B1%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "1af309c15e7e324b",
+      "id": "9f19b51f9692bddb",
+      "title": "不妙了 台指期夜盤暴跌1077點 分析師：恐不利下周走勢",
+      "link": "https://tw.stock.yahoo.com/news/%E4%B8%8D%E5%A6%99%E4%BA%86-%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E6%9A%B4%E8%B7%8C1077%E9%BB%9E-%E5%88%86%E6%9E%90%E5%B8%AB-%E6%81%90%E4%B8%8D%E5%88%A9%E4%B8%8B%E5%91%A8%E8%B5%B0%E5%8B%A2-104724069.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E4%B8%8D%E5%A6%99%E4%BA%86-%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E6%9A%B4%E8%B7%8C1077%E9%BB%9E-%E5%88%86%E6%9E%90%E5%B8%AB-%E6%81%90%E4%B8%8D%E5%88%A9%E4%B8%8B%E5%91%A8%E8%B5%B0%E5%8B%A2-104724069.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E4%B8%8D%E5%A6%99%E4%BA%86-%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E6%9A%B4%E8%B7%8C1077%E9%BB%9E-%E5%88%86%E6%9E%90%E5%B8%AB-%E6%81%90%E4%B8%8D%E5%88%A9%E4%B8%8B%E5%91%A8%E8%B5%B0%E5%8B%A2-104724069.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "台股周五飆漲3186點，創下史上最大漲點，恐怕只有一日行情，因為台指期夜盤又暴跌1077點、跌幅達2.46％，收在4萬2650 點；分析師直言，這波回檔還沒結束，夜盤再暴跌，恐不利下周台股表現，將呈現",
+      "published_at": "2026-08-01T18:47:24+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E4%B8%8D%E5%A6%99%E4%BA%86+%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E6%9A%B4%E8%B7%8C1077%E9%BB%9E+%E5%88%86%E6%9E%90%E5%B8%AB%EF%BC%9A%E6%81%90%E4%B8%8D%E5%88%A9%E4%B8%8B%E5%91%A8%E8%B5%B0%E5%8B%A2%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "b2ac4e1e1ecbc8a5",
+      "title": "Vinamilk走完五十載征程：越南第二次授予其「勞動英雄」稱號，為其週年慶典獻上一份賀禮",
+      "link": "https://tw.stock.yahoo.com/news/vinamilk%E8%B5%B0%E5%AE%8C%E4%BA%94%E5%8D%81%E8%BC%89%E5%BE%81%E7%A8%8B-%E8%B6%8A%E5%8D%97%E7%AC%AC%E4%BA%8C%E6%AC%A1%E6%8E%88%E4%BA%88%E5%85%B6-%E5%8B%9E%E5%8B%95%E8%8B%B1%E9%9B%84-%E7%A8%B1%E8%99%9F-%E7%82%BA%E5%85%B6%E9%80%B1%E5%B9%B4%E6%85%B6%E5%85%B8%E7%8D%BB%E4%B8%8A-104100181.html",
+      "original_link": "https://tw.stock.yahoo.com/news/vinamilk%E8%B5%B0%E5%AE%8C%E4%BA%94%E5%8D%81%E8%BC%89%E5%BE%81%E7%A8%8B-%E8%B6%8A%E5%8D%97%E7%AC%AC%E4%BA%8C%E6%AC%A1%E6%8E%88%E4%BA%88%E5%85%B6-%E5%8B%9E%E5%8B%95%E8%8B%B1%E9%9B%84-%E7%A8%B1%E8%99%9F-%E7%82%BA%E5%85%B6%E9%80%B1%E5%B9%B4%E6%85%B6%E5%85%B8%E7%8D%BB%E4%B8%8A-104100181.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/vinamilk%E8%B5%B0%E5%AE%8C%E4%BA%94%E5%8D%81%E8%BC%89%E5%BE%81%E7%A8%8B-%E8%B6%8A%E5%8D%97%E7%AC%AC%E4%BA%8C%E6%AC%A1%E6%8E%88%E4%BA%88%E5%85%B6-%E5%8B%9E%E5%8B%95%E8%8B%B1%E9%9B%84-%E7%A8%B1%E8%99%9F-%E7%82%BA%E5%85%B6%E9%80%B1%E5%B9%B4%E6%85%B6%E5%85%B8%E7%8D%BB%E4%B8%8A-104100181.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "2026年7月23日，在河內舉辦的五十週年慶典上，Vinamilk第二次榮獲「勞動英雄」稱號。越共中央前委員、勞動英雄、Vinamilk首席執行官梅嬌蓮(Mai Kieu Lien)，還被越共中央書記",
+      "published_at": "2026-08-01T18:41:00+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "technology"
+      ],
+      "primary_industry": "technology",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "科技電子",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22Vinamilk%E8%B5%B0%E5%AE%8C%E4%BA%94%E5%8D%81%E8%BC%89%E5%BE%81%E7%A8%8B%EF%BC%9A%E8%B6%8A%E5%8D%97%E7%AC%AC%E4%BA%8C%E6%AC%A1%E6%8E%88%E4%BA%88%E5%85%B6%E3%80%8C%E5%8B%9E%E5%8B%95%E8%8B%B1%E9%9B%84%E3%80%8D%E7%A8%B1%E8%99%9F%EF%BC%8C%E7%82%BA%E5%85%B6%E9%80%B1%E5%B9%B4%E6%85%B6%E5%85%B8%E7%8D%BB%E4%B8%8A%E4%B8%80%E4%BB%BD%E8%B3%80%E7%A6%AE%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "fc2b4393f1f0708b",
+      "title": "歐洲股市受企業財報提振 上月實現漲幅",
+      "link": "https://tw.stock.yahoo.com/news/%E6%AD%90%E6%B4%B2%E8%82%A1%E5%B8%82%E5%8F%97%E4%BC%81%E6%A5%AD%E8%B2%A1%E5%A0%B1%E6%8F%90%E6%8C%AF-%E4%B8%8A%E6%9C%88%E5%AF%A6%E7%8F%BE%E6%BC%B2%E5%B9%85-103939737.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E6%AD%90%E6%B4%B2%E8%82%A1%E5%B8%82%E5%8F%97%E4%BC%81%E6%A5%AD%E8%B2%A1%E5%A0%B1%E6%8F%90%E6%8C%AF-%E4%B8%8A%E6%9C%88%E5%AF%A6%E7%8F%BE%E6%BC%B2%E5%B9%85-103939737.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E6%AD%90%E6%B4%B2%E8%82%A1%E5%B8%82%E5%8F%97%E4%BC%81%E6%A5%AD%E8%B2%A1%E5%A0%B1%E6%8F%90%E6%8C%AF-%E4%B8%8A%E6%9C%88%E5%AF%A6%E7%8F%BE%E6%BC%B2%E5%B9%85-103939737.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "商傳媒｜葉安庭／綜合外電報導儘管上週五（7月31日）交易日收盤小幅下跌，歐洲股市在上個月仍錄得整體漲幅。強勁的企業財報抵銷了中東地區衝突升級以及對人工智慧（AI）相關擔憂的影響，成功帶動市場表現。 泛",
+      "published_at": "2026-08-01T18:39:39+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "technology"
+      ],
+      "primary_industry": "technology",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "科技電子",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E6%AD%90%E6%B4%B2%E8%82%A1%E5%B8%82%E5%8F%97%E4%BC%81%E6%A5%AD%E8%B2%A1%E5%A0%B1%E6%8F%90%E6%8C%AF+%E4%B8%8A%E6%9C%88%E5%AF%A6%E7%8F%BE%E6%BC%B2%E5%B9%85%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "591e33993a056bb1",
+      "title": "加密資產平台 CatalX 破產 前執行長違反監管承諾遭罰",
+      "link": "https://tw.stock.yahoo.com/news/%E5%8A%A0%E5%AF%86%E8%B3%87%E7%94%A2%E5%B9%B3%E5%8F%B0-catalx-%E7%A0%B4%E7%94%A2-%E5%89%8D%E5%9F%B7%E8%A1%8C%E9%95%B7%E9%81%95%E5%8F%8D%E7%9B%A3%E7%AE%A1%E6%89%BF%E8%AB%BE%E9%81%AD%E7%BD%B0-103936535.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E5%8A%A0%E5%AF%86%E8%B3%87%E7%94%A2%E5%B9%B3%E5%8F%B0-catalx-%E7%A0%B4%E7%94%A2-%E5%89%8D%E5%9F%B7%E8%A1%8C%E9%95%B7%E9%81%95%E5%8F%8D%E7%9B%A3%E7%AE%A1%E6%89%BF%E8%AB%BE%E9%81%AD%E7%BD%B0-103936535.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E5%8A%A0%E5%AF%86%E8%B3%87%E7%94%A2%E5%B9%B3%E5%8F%B0-catalx-%E7%A0%B4%E7%94%A2-%E5%89%8D%E5%9F%B7%E8%A1%8C%E9%95%B7%E9%81%95%E5%8F%8D%E7%9B%A3%E7%AE%A1%E6%89%BF%E8%AB%BE%E9%81%AD%E7%BD%B0-103936535.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "商傳媒｜吳承岳／台北報導加拿大加密資產交易平台 CatalX CTS Ltd.，因未經授權提款與客戶資產流失，已於 2024 年 1 月進入法院強制接管。該平台的前執行長，近期與加拿大亞伯達省的證券監",
+      "published_at": "2026-08-01T18:39:36+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "finance"
+      ],
+      "primary_industry": "finance",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "金融保險",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%8A%A0%E5%AF%86%E8%B3%87%E7%94%A2%E5%B9%B3%E5%8F%B0+CatalX+%E7%A0%B4%E7%94%A2+%E5%89%8D%E5%9F%B7%E8%A1%8C%E9%95%B7%E9%81%95%E5%8F%8D%E7%9B%A3%E7%AE%A1%E6%89%BF%E8%AB%BE%E9%81%AD%E7%BD%B0%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "03f87e4fbed3e7a3",
+      "title": "福特執行長示警：中國電動車十年內恐席捲美國市場",
+      "link": "https://tw.stock.yahoo.com/news/%E7%A6%8F%E7%89%B9%E5%9F%B7%E8%A1%8C%E9%95%B7%E7%A4%BA%E8%AD%A6-%E4%B8%AD%E5%9C%8B%E9%9B%BB%E5%8B%95%E8%BB%8A%E5%8D%81%E5%B9%B4%E5%85%A7%E6%81%90%E5%B8%AD%E6%8D%B2%E7%BE%8E%E5%9C%8B%E5%B8%82%E5%A0%B4-103933620.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E7%A6%8F%E7%89%B9%E5%9F%B7%E8%A1%8C%E9%95%B7%E7%A4%BA%E8%AD%A6-%E4%B8%AD%E5%9C%8B%E9%9B%BB%E5%8B%95%E8%BB%8A%E5%8D%81%E5%B9%B4%E5%85%A7%E6%81%90%E5%B8%AD%E6%8D%B2%E7%BE%8E%E5%9C%8B%E5%B8%82%E5%A0%B4-103933620.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E7%A6%8F%E7%89%B9%E5%9F%B7%E8%A1%8C%E9%95%B7%E7%A4%BA%E8%AD%A6-%E4%B8%AD%E5%9C%8B%E9%9B%BB%E5%8B%95%E8%BB%8A%E5%8D%81%E5%B9%B4%E5%85%A7%E6%81%90%E5%B8%AD%E6%8D%B2%E7%BE%8E%E5%9C%8B%E5%B8%82%E5%A0%B4-103933620.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "圖／示意圖商傳媒｜方承業／綜合外電報導福特汽車執行長吉姆·法利（Jim Farley）於週四向員工示警，中國汽車製造商可能在未來五到十年內大舉進入美國市場，並強調公司必須為這場日益激烈的全球競爭做好準",
+      "published_at": "2026-08-01T18:39:33+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "automotive"
+      ],
+      "primary_industry": "automotive",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "汽車零組件",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E7%A6%8F%E7%89%B9%E5%9F%B7%E8%A1%8C%E9%95%B7%E7%A4%BA%E8%AD%A6%EF%BC%9A%E4%B8%AD%E5%9C%8B%E9%9B%BB%E5%8B%95%E8%BB%8A%E5%8D%81%E5%B9%B4%E5%85%A7%E6%81%90%E5%B8%AD%E6%8D%B2%E7%BE%8E%E5%9C%8B%E5%B8%82%E5%A0%B4%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "920b2e7d71008a4e",
+      "title": "115年度北投成年禮「GUANDO GO─夢想啟程」 鑼響關渡 青春啟程！",
+      "link": "https://tw.stock.yahoo.com/news/115%E5%B9%B4%E5%BA%A6%E5%8C%97%E6%8A%95%E6%88%90%E5%B9%B4%E7%A6%AE-guando-%E5%A4%A2%E6%83%B3%E5%95%9F%E7%A8%8B-%E9%91%BC%E9%9F%BF%E9%97%9C%E6%B8%A1-%E9%9D%92%E6%98%A5%E5%95%9F%E7%A8%8B-103929688.html",
+      "original_link": "https://tw.stock.yahoo.com/news/115%E5%B9%B4%E5%BA%A6%E5%8C%97%E6%8A%95%E6%88%90%E5%B9%B4%E7%A6%AE-guando-%E5%A4%A2%E6%83%B3%E5%95%9F%E7%A8%8B-%E9%91%BC%E9%9F%BF%E9%97%9C%E6%B8%A1-%E9%9D%92%E6%98%A5%E5%95%9F%E7%A8%8B-103929688.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/115%E5%B9%B4%E5%BA%A6%E5%8C%97%E6%8A%95%E6%88%90%E5%B9%B4%E7%A6%AE-guando-%E5%A4%A2%E6%83%B3%E5%95%9F%E7%A8%8B-%E9%91%BC%E9%9F%BF%E9%97%9C%E6%B8%A1-%E9%9D%92%E6%98%A5%E5%95%9F%E7%A8%8B-103929688.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "成年禮大合照商傳媒｜記者張安禾／台北報導「咚——！」清亮鑼聲響徹關渡宮，也為青春敲下嶄新的起點。北投區公所舉辦的115年度北投成年禮「GUANDO GO—夢想啟程」，於8月1日熱鬧登場。現場40位禮生",
+      "published_at": "2026-08-01T18:39:29+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22115%E5%B9%B4%E5%BA%A6%E5%8C%97%E6%8A%95%E6%88%90%E5%B9%B4%E7%A6%AE%E3%80%8CGUANDO+GO%E2%94%80%E5%A4%A2%E6%83%B3%E5%95%9F%E7%A8%8B%E3%80%8D+%E9%91%BC%E9%9F%BF%E9%97%9C%E6%B8%A1+%E9%9D%92%E6%98%A5%E5%95%9F%E7%A8%8B%EF%BC%81%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "adf2a43df9c1044e",
+      "title": "5越南移工衝倒塌民宅救人！1句話感動全日本",
+      "link": "https://tw.news.yahoo.com/5%E8%B6%8A%E5%8D%97%E7%A7%BB%E5%B7%A5%E8%A1%9D%E5%80%92%E5%A1%8C%E6%B0%91%E5%AE%85%E6%95%91%E4%BA%BA-1%E5%8F%A5%E8%A9%B1%E6%84%9F%E5%8B%95%E5%85%A8%E6%97%A5%E6%9C%AC-103435020.html",
+      "original_link": "https://tw.news.yahoo.com/5%E8%B6%8A%E5%8D%97%E7%A7%BB%E5%B7%A5%E8%A1%9D%E5%80%92%E5%A1%8C%E6%B0%91%E5%AE%85%E6%95%91%E4%BA%BA-1%E5%8F%A5%E8%A9%B1%E6%84%9F%E5%8B%95%E5%85%A8%E6%97%A5%E6%9C%AC-103435020.html",
+      "direct_link": "https://tw.news.yahoo.com/5%E8%B6%8A%E5%8D%97%E7%A7%BB%E5%B7%A5%E8%A1%9D%E5%80%92%E5%A1%8C%E6%B0%91%E5%AE%85%E6%95%91%E4%BA%BA-1%E5%8F%A5%E8%A9%B1%E6%84%9F%E5%8B%95%E5%85%A8%E6%97%A5%E6%9C%AC-103435020.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "[NOWNEWS今日新聞]日本熊本縣28日遭遇強烈地震襲擊，已造成至少36人死亡，多處房屋不幸倒塌。5名在八代市從事農業工作的越南籍年輕男女，在強震發生後不顧自身安危，與當地居民攜手合作，成功從倒塌的",
+      "published_at": "2026-08-01T18:34:35+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "agriculture"
+      ],
+      "primary_industry": "agriculture",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "農業食品",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%225%E8%B6%8A%E5%8D%97%E7%A7%BB%E5%B7%A5%E8%A1%9D%E5%80%92%E5%A1%8C%E6%B0%91%E5%AE%85%E6%95%91%E4%BA%BA%EF%BC%811%E5%8F%A5%E8%A9%B1%E6%84%9F%E5%8B%95%E5%85%A8%E6%97%A5%E6%9C%AC%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "b0b44f6f0ee49cbd",
+      "title": "【公告】毅嘉自行結算115年07月合併營收約新台幣11.67億元。",
+      "link": "https://tw.stock.yahoo.com/news/%E5%85%AC%E5%91%8A-%E6%AF%85%E5%98%89%E8%87%AA%E8%A1%8C%E7%B5%90%E7%AE%97115%E5%B9%B407%E6%9C%88%E5%90%88%E4%BD%B5%E7%87%9F%E6%94%B6%E7%B4%84%E6%96%B0%E5%8F%B0%E5%B9%A311-67%E5%84%84%E5%85%83-103409005.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E5%85%AC%E5%91%8A-%E6%AF%85%E5%98%89%E8%87%AA%E8%A1%8C%E7%B5%90%E7%AE%97115%E5%B9%B407%E6%9C%88%E5%90%88%E4%BD%B5%E7%87%9F%E6%94%B6%E7%B4%84%E6%96%B0%E5%8F%B0%E5%B9%A311-67%E5%84%84%E5%85%83-103409005.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E5%85%AC%E5%91%8A-%E6%AF%85%E5%98%89%E8%87%AA%E8%A1%8C%E7%B5%90%E7%AE%97115%E5%B9%B407%E6%9C%88%E5%90%88%E4%BD%B5%E7%87%9F%E6%94%B6%E7%B4%84%E6%96%B0%E5%8F%B0%E5%B9%A311-67%E5%84%84%E5%85%83-103409005.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "日 期：2026年08月01日公司名稱：毅嘉(2402)主 旨：毅嘉自行結算115年07月合併營收約新台幣11.67億元。發言人：曾恭勝說 明：1.事實發生日:115/08/012.公司名稱:毅嘉科技",
+      "published_at": "2026-08-01T18:34:09+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "technology"
+      ],
+      "primary_industry": "technology",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "科技電子",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E3%80%90%E5%85%AC%E5%91%8A%E3%80%91%E6%AF%85%E5%98%89%E8%87%AA%E8%A1%8C%E7%B5%90%E7%AE%97115%E5%B9%B407%E6%9C%88%E5%90%88%E4%BD%B5%E7%87%9F%E6%94%B6%E7%B4%84%E6%96%B0%E5%8F%B0%E5%B9%A311.67%E5%84%84%E5%85%83%E3%80%82%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "e0b96cf299819dee",
+      "title": "翻轉千億巨債! 力積電董事長黃崇仁逝世 享壽76歲",
+      "link": "https://tw.stock.yahoo.com/news/%E7%BF%BB%E8%BD%89%E5%8D%83%E5%84%84%E5%B7%A8%E5%82%B5-%E5%8A%9B%E7%A9%8D%E9%9B%BB%E8%91%A3%E4%BA%8B%E9%95%B7%E9%BB%83%E5%B4%87%E4%BB%81%E9%80%9D%E4%B8%96-%E4%BA%AB%E5%A3%BD76%E6%AD%B2-103305971.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E7%BF%BB%E8%BD%89%E5%8D%83%E5%84%84%E5%B7%A8%E5%82%B5-%E5%8A%9B%E7%A9%8D%E9%9B%BB%E8%91%A3%E4%BA%8B%E9%95%B7%E9%BB%83%E5%B4%87%E4%BB%81%E9%80%9D%E4%B8%96-%E4%BA%AB%E5%A3%BD76%E6%AD%B2-103305971.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E7%BF%BB%E8%BD%89%E5%8D%83%E5%84%84%E5%B7%A8%E5%82%B5-%E5%8A%9B%E7%A9%8D%E9%9B%BB%E8%91%A3%E4%BA%8B%E9%95%B7%E9%BB%83%E5%B4%87%E4%BB%81%E9%80%9D%E4%B8%96-%E4%BA%AB%E5%A3%BD76%E6%AD%B2-103305971.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "財經中心／唐詩晴、李奇、吳瑞霖、陳聖翰 台北報導半導體業震撼彈！晶圓代工廠力積電，在31號傍晚發重訊，公告董事長黃崇仁因心肺衰竭，在睡夢中安詳離世，享壽76歲。黃崇仁從醫學博士投入科技業，更曾帶領負債",
+      "published_at": "2026-08-01T18:33:05+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "technology"
+      ],
+      "primary_industry": "technology",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "科技電子",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E7%BF%BB%E8%BD%89%E5%8D%83%E5%84%84%E5%B7%A8%E5%82%B5%21+%E5%8A%9B%E7%A9%8D%E9%9B%BB%E8%91%A3%E4%BA%8B%E9%95%B7%E9%BB%83%E5%B4%87%E4%BB%81%E9%80%9D%E4%B8%96+%E4%BA%AB%E5%A3%BD76%E6%AD%B2%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "3b39f39f55cc0663",
+      "title": "「九命怪貓」落幕！嗆謝金河、拒金援柯P 霸氣金句成絕響",
+      "link": "https://tw.stock.yahoo.com/news/%E4%B9%9D%E5%91%BD%E6%80%AA%E8%B2%93-%E8%90%BD%E5%B9%95-%E5%97%86%E8%AC%9D%E9%87%91%E6%B2%B3-%E6%8B%92%E9%87%91%E6%8F%B4%E6%9F%AFp-%E9%9C%B8%E6%B0%A3%E9%87%91%E5%8F%A5%E6%88%90%E7%B5%95%E9%9F%BF-103258379.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E4%B9%9D%E5%91%BD%E6%80%AA%E8%B2%93-%E8%90%BD%E5%B9%95-%E5%97%86%E8%AC%9D%E9%87%91%E6%B2%B3-%E6%8B%92%E9%87%91%E6%8F%B4%E6%9F%AFp-%E9%9C%B8%E6%B0%A3%E9%87%91%E5%8F%A5%E6%88%90%E7%B5%95%E9%9F%BF-103258379.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E4%B9%9D%E5%91%BD%E6%80%AA%E8%B2%93-%E8%90%BD%E5%B9%95-%E5%97%86%E8%AC%9D%E9%87%91%E6%B2%B3-%E6%8B%92%E9%87%91%E6%8F%B4%E6%9F%AFp-%E9%9C%B8%E6%B0%A3%E9%87%91%E5%8F%A5%E6%88%90%E7%B5%95%E9%9F%BF-103258379.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "財經中心／唐詩晴、李奇 台北報導晶圓代工大廠力積電創辦人兼董事長黃崇仁，因心肺衰竭在住家睡夢中安詳辭世，享壽76歲，不過黃崇仁一生極具傳奇色彩，不只背負千億債務後帶領公司浴火重生，獲得九命怪貓封號，他",
+      "published_at": "2026-08-01T18:32:58+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E3%80%8C%E4%B9%9D%E5%91%BD%E6%80%AA%E8%B2%93%E3%80%8D%E8%90%BD%E5%B9%95%EF%BC%81%E5%97%86%E8%AC%9D%E9%87%91%E6%B2%B3%E3%80%81%E6%8B%92%E9%87%91%E6%8F%B4%E6%9F%AFP+%E9%9C%B8%E6%B0%A3%E9%87%91%E5%8F%A5%E6%88%90%E7%B5%95%E9%9F%BF%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "9a2af09551ada8fe",
+      "title": "爆紅黑糖發糕！奶油下鍋煎 竟飄出牛肉香",
+      "link": "https://tw.stock.yahoo.com/news/%E7%88%86%E7%B4%85%E9%BB%91%E7%B3%96%E7%99%BC%E7%B3%95-%E5%A5%B6%E6%B2%B9%E4%B8%8B%E9%8D%8B%E7%85%8E-%E7%AB%9F%E9%A3%84%E5%87%BA%E7%89%9B%E8%82%89%E9%A6%99-103250541.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E7%88%86%E7%B4%85%E9%BB%91%E7%B3%96%E7%99%BC%E7%B3%95-%E5%A5%B6%E6%B2%B9%E4%B8%8B%E9%8D%8B%E7%85%8E-%E7%AB%9F%E9%A3%84%E5%87%BA%E7%89%9B%E8%82%89%E9%A6%99-103250541.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E7%88%86%E7%B4%85%E9%BB%91%E7%B3%96%E7%99%BC%E7%B3%95-%E5%A5%B6%E6%B2%B9%E4%B8%8B%E9%8D%8B%E7%85%8E-%E7%AB%9F%E9%A3%84%E5%87%BA%E7%89%9B%E8%82%89%E9%A6%99-103250541.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "財經中心／陳孟暄 吳志恆 台北報導客家黑糖發糕，可以常溫吃，也有人愛蒸熱吃，現在網路還瘋傳創意吃法，說用煎的，外酥內軟，風味更特別，甚至有人加奶油，還意外飄出牛肉香。不只在台灣熱賣，還紅到香港，甚至有",
+      "published_at": "2026-08-01T18:32:50+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E7%88%86%E7%B4%85%E9%BB%91%E7%B3%96%E7%99%BC%E7%B3%95%EF%BC%81%E5%A5%B6%E6%B2%B9%E4%B8%8B%E9%8D%8B%E7%85%8E+%E7%AB%9F%E9%A3%84%E5%87%BA%E7%89%9B%E8%82%89%E9%A6%99%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "30e752f20bc0eee3",
+      "title": "【公告】毅嘉 2026年7月合併營收11.67億元 年增24.02%",
+      "link": "https://tw.stock.yahoo.com/news/%E5%85%AC%E5%91%8A-%E6%AF%85%E5%98%89-2026%E5%B9%B47%E6%9C%88%E5%90%88%E4%BD%B5%E7%87%9F%E6%94%B611-67%E5%84%84%E5%85%83-%E5%B9%B4%E5%A2%9E24-103206070.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E5%85%AC%E5%91%8A-%E6%AF%85%E5%98%89-2026%E5%B9%B47%E6%9C%88%E5%90%88%E4%BD%B5%E7%87%9F%E6%94%B611-67%E5%84%84%E5%85%83-%E5%B9%B4%E5%A2%9E24-103206070.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E5%85%AC%E5%91%8A-%E6%AF%85%E5%98%89-2026%E5%B9%B47%E6%9C%88%E5%90%88%E4%BD%B5%E7%87%9F%E6%94%B611-67%E5%84%84%E5%85%83-%E5%B9%B4%E5%A2%9E24-103206070.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "日期： 2026 年 08 月 01日上市公司：毅嘉(2402)單位：仟元 【公告】毅嘉 2026年7月合併營收 (單位：仟元)項目合併營業收入淨額本月1,166,674去年同期940,752增減金額",
+      "published_at": "2026-08-01T18:32:06+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E3%80%90%E5%85%AC%E5%91%8A%E3%80%91%E6%AF%85%E5%98%89+2026%E5%B9%B47%E6%9C%88%E5%90%88%E4%BD%B5%E7%87%9F%E6%94%B611.67%E5%84%84%E5%85%83+%E5%B9%B4%E5%A2%9E24.02%25%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "108d271833a42e25",
+      "title": "國巨飆502元漲停 套山頂有救？死亡交叉警訊來襲 專家「1招」逆轉翻倍賺",
+      "link": "https://tw.stock.yahoo.com/news/%E5%9C%8B%E5%B7%A8%E9%A3%86502%E5%85%83%E6%BC%B2%E5%81%9C-%E5%A5%97%E5%B1%B1%E9%A0%82%E6%9C%89%E6%95%91-%E6%AD%BB%E4%BA%A1%E4%BA%A4%E5%8F%89%E8%AD%A6%E8%A8%8A%E4%BE%86%E8%A5%B2-%E5%B0%88%E5%AE%B6-1%E6%8B%9B-103142488.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E5%9C%8B%E5%B7%A8%E9%A3%86502%E5%85%83%E6%BC%B2%E5%81%9C-%E5%A5%97%E5%B1%B1%E9%A0%82%E6%9C%89%E6%95%91-%E6%AD%BB%E4%BA%A1%E4%BA%A4%E5%8F%89%E8%AD%A6%E8%A8%8A%E4%BE%86%E8%A5%B2-%E5%B0%88%E5%AE%B6-1%E6%8B%9B-103142488.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E5%9C%8B%E5%B7%A8%E9%A3%86502%E5%85%83%E6%BC%B2%E5%81%9C-%E5%A5%97%E5%B1%B1%E9%A0%82%E6%9C%89%E6%95%91-%E6%AD%BB%E4%BA%A1%E4%BA%A4%E5%8F%89%E8%AD%A6%E8%A8%8A%E4%BE%86%E8%A5%B2-%E5%B0%88%E5%AE%B6-1%E6%8B%9B-103142488.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/news/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市最新新聞",
+      "summary": "被動元件龍頭國巨近期遭遇空頭獵殺，股價自7月初高點1220元慘崩逾六成，最低跌至456.5元，所幸7月31日買盤強勢湧入，股價直奔502元漲停板，讓高檔套牢的投資人重新燃起解套希望。專家指出，國巨目前",
+      "published_at": "2026-08-01T18:31:42+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%9C%8B%E5%B7%A8%E9%A3%86502%E5%85%83%E6%BC%B2%E5%81%9C+%E5%A5%97%E5%B1%B1%E9%A0%82%E6%9C%89%E6%95%91%EF%BC%9F%E6%AD%BB%E4%BA%A1%E4%BA%A4%E5%8F%89%E8%AD%A6%E8%A8%8A%E4%BE%86%E8%A5%B2+%E5%B0%88%E5%AE%B6%E3%80%8C1%E6%8B%9B%E3%80%8D%E9%80%86%E8%BD%89%E7%BF%BB%E5%80%8D%E8%B3%BA%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "0957ecb960022357",
       "title": "台股血崩又飆漲3186點！施昇輝認了「沒追買0050」親揭投資心法",
-      "link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E8%A1%80%E5%B4%A9%E5%8F%88%E9%A3%86%E6%BC%B23186%E9%BB%9E%EF%BC%81%E6%96%BD%E6%98%87%E8%BC%9D%E8%AA%8D%E4%BA%86%E3%80%8C%E6%B2%92%E8%BF%BD%E8%B2%B70050%E3%80%8D%E8%A6%AA%E6%8F%AD%E6%8A%95%E8%B3%87%E5%BF%83%E6%B3%95+-+Yahoo%E8%82%A1%E5%B8%82%22+Yahoo%E8%82%A1%E5%B8%82",
-      "original_link": "https://news.google.com/rss/articles/CBMi8gJBVV95cUxQbXY2R2Vlald0QmZObUJ2dEFEVGF1VDRkWTFRYWhUS2w2ZEFIWFNmMWlFcVdsc1NmZHRSSHp0RVlYYS1DTko0a3lQMWxmemUybXRPTXAzWXpmdGdJVm9jRUJFaTdLTEdhbUZ6RnBwMWdWTXFVdjlFRnViY1BWMjlHaHE1Wk1ZRlFuemNnMFdSNTF5dmg5bWpEQzQtSFRhQjRYSjkwS3ZVdF8zUHVZYVdIRnJwOHpKUWYtWWdfX1drVy1iOU9TT1lCSTJvVk93amc5WDhDS1J5TXRzN25STlRHVC13bG1GenExYWpxSzVQbVdkaDFGWXVMS2ZlMWVyTXFwQl9aSWRfdmNqX0pDM2xCeGxyZ2hjb3diUnNxRHNYbHdocDlkTDJiQUNpb1FIM3NzZEwtNy1iTTVQcmFva2xjQkF4MHpEenhqdlpsckRwdXdmMi1pc1F4TFFlUmxhUVltZVNPZ0xVRUtQa3VHRi1Tc19R?oc=5",
-      "source": "Yahoo股市",
-      "query_source": "Yahoo 股市",
-      "summary": "台股血崩又飆漲3186點！施昇輝認了「沒追買0050」親揭投資心法 Yahoo股市",
+      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E8%A1%80%E5%B4%A9%E5%8F%88%E9%A3%86%E6%BC%B23186%E9%BB%9E-%E6%96%BD%E6%98%87%E8%BC%9D%E8%AA%8D%E4%BA%86-%E6%B2%92%E8%BF%BD%E8%B2%B70050-%E8%A6%AA%E6%8F%AD%E6%8A%95%E8%B3%87%E5%BF%83%E6%B3%95-092500219.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E8%A1%80%E5%B4%A9%E5%8F%88%E9%A3%86%E6%BC%B23186%E9%BB%9E-%E6%96%BD%E6%98%87%E8%BC%9D%E8%AA%8D%E4%BA%86-%E6%B2%92%E8%BF%BD%E8%B2%B70050-%E8%A6%AA%E6%8F%AD%E6%8A%95%E8%B3%87%E5%BF%83%E6%B3%95-092500219.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E8%A1%80%E5%B4%A9%E5%8F%88%E9%A3%86%E6%BC%B23186%E9%BB%9E-%E6%96%BD%E6%98%87%E8%BC%9D%E8%AA%8D%E4%BA%86-%E6%B2%92%E8%BF%BD%E8%B2%B70050-%E8%A6%AA%E6%8F%AD%E6%8A%95%E8%B3%87%E5%BF%83%E6%B3%95-092500219.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/tw-market/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市台股動態",
+      "summary": "[FTNN新聞網]實習記者藍彥欣／綜合報導台股7月31日強勢反攻，加權指數終場大漲3186點，不少投資人事後直呼「早知道就多買一點」。理財作家施昇輝卻表示，自己...",
       "published_at": "2026-08-01T17:25:00+08:00",
       "region": "TW",
       "topic": "market",
@@ -5261,1622 +8049,65 @@ window.__MARKET_NEWS_SEED__ = {
       "industry_label": "其他產業",
       "language": "zh-Hant",
       "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 80,
+      "origin": "direct-rss",
+      "quality_score": 84,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "Yahoo股市"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "22c4126d539c8706",
-      "title": "台積電ADR收紅 為何夜盤血洗1077點？專家曝背後殺機：下周「這件事」別做",
-      "link": "https://www.google.com/search?q=%22%E5%8F%B0%E7%A9%8D%E9%9B%BBADR%E6%94%B6%E7%B4%85+%E7%82%BA%E4%BD%95%E5%A4%9C%E7%9B%A4%E8%A1%80%E6%B4%971077%E9%BB%9E%EF%BC%9F%E5%B0%88%E5%AE%B6%E6%9B%9D%E8%83%8C%E5%BE%8C%E6%AE%BA%E6%A9%9F%EF%BC%9A%E4%B8%8B%E5%91%A8%E3%80%8C%E9%80%99%E4%BB%B6%E4%BA%8B%E3%80%8D%E5%88%A5%E5%81%9A+-+Yahoo%E8%82%A1%E5%B8%82%22+Yahoo%E8%82%A1%E5%B8%82",
-      "original_link": "https://news.google.com/rss/articles/CBMiigNBVV95cUxQUE1pdUlTWUFCRGViM0gtaVZhQ01rWEdJOExJdl9VaUJTcEc5YXVTdnVGOVZiSk9xeEoxTG9CSUY0Q3VTS2dPWTZZX3libjlIS2lkbkNGSU5pcWtKR3dGRVhIS2NZNzNwQ21qRjBaLXBrdWg5Q01xOUh5Z0UwUkVpNzJzUm15YnlMZUUxQ2pUS196ektkOWtzWWEyMnJfYkhRVEhhOGprcnA0TE1FLUdtVFMwQks2dHdPRGdlUjlfU0ZVSFVwQ2diWEt4NTBCUzJCb2k1SHZBeldYUWNMbVFOamU2ckd5LVZ0RUE0ZG1HQUx0dVdKNXJpaW1kUnFXM082eUNPWU1Kb0NOdGk4LW16Y09kYmY3b3ZlVlN4NGp0azlqWFBqckU3NjI2dFZOeWxTd2V2RU4tUEJYR0ZjN05PbVVpRTBHR2FtUXd6bzhlYmN2SXJoWVJIWDhjdW56YzlSazM2RlVXNVNDdWQ4ckNVZjZtRXAyY2p2RmFzcF85amswbWs1ekJLWGFB?oc=5",
-      "source": "Yahoo股市",
-      "query_source": "Yahoo 股市",
-      "summary": "台積電ADR收紅 為何夜盤血洗1077點？專家曝背後殺機：下周「這件事」別做 Yahoo股市",
-      "published_at": "2026-08-01T14:19:34+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 80,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "Yahoo股市"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "12960508bb4a3d1b",
-      "title": "1億押0050帳賺逾千萬！「哲哲」郭哲榮懸賞2億驗真偽 喊台股5年衝10萬點",
-      "link": "https://www.google.com/search?q=%221%E5%84%84%E6%8A%BC0050%E5%B8%B3%E8%B3%BA%E9%80%BE%E5%8D%83%E8%90%AC%EF%BC%81%E3%80%8C%E5%93%B2%E5%93%B2%E3%80%8D%E9%83%AD%E5%93%B2%E6%A6%AE%E6%87%B8%E8%B3%9E2%E5%84%84%E9%A9%97%E7%9C%9F%E5%81%BD+%E5%96%8A%E5%8F%B0%E8%82%A15%E5%B9%B4%E8%A1%9D10%E8%90%AC%E9%BB%9E+-+Yahoo%E8%82%A1%E5%B8%82%22+Yahoo%E8%82%A1%E5%B8%82",
-      "original_link": "https://news.google.com/rss/articles/CBMilwNBVV95cUxQVDBabFlNWUU0QWRTT2xuSHV3by1qa1BaYlpwVEdVUjZ5WU9XamdUSlNJLTIycU1EbG44WUxxaUdKbkZDSkxvV011Y0pIYlp4a0F1WUxKWFZGQUlDdHkwOW9wd3pKM3Z2eFRmSlFGOXc3QmsyZXE0dFpucFNMRFJQNEhYQTJMMlVrTlNNMVlndUNvV0x6VFhVMWxXTWt2Mm5hRTN3dVMyWVJhR3FrSTYwZ1Ruc2hnLXJsUGtNaUdlX21Xa1hra21PMVRaRlFaQTI1NWtyNXJPMXg5N3FjbXdfWlhSdzlDeERIVl9iSGViZkVvVy1Ma2J4Qy16eWVVcG9UNERxNjJrclY0UWdGdF9HeERyUndtVUc4UmNWNmp6MGVBRElxR1RMTVJhR3c4Um9vZG9PYW90cXNNOWp4bWRRSUVZTUdGX1ZTMlYxTm5OODRNYi1VQkRWNGVOUmJNaWN6LVJEaW5DSmlWOUVQSTJ1NldZRmFXTy1iSlNDZFdDODlsVHdTNXlmSWhleHJnOWhaNzNpVHlSdw?oc=5",
-      "source": "Yahoo股市",
-      "query_source": "Yahoo 股市",
-      "summary": "1億押0050帳賺逾千萬！「哲哲」郭哲榮懸賞2億驗真偽 喊台股5年衝10萬點 Yahoo股市",
-      "published_at": "2026-08-01T14:18:33+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 80,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "Yahoo股市"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "1f81c8a0e940f727",
-      "title": "台股暴漲3200點只是前菜？專家曝「主升段才剛開始」終極目標出爐 這類股最有戲",
-      "link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E6%9A%B4%E6%BC%B23200%E9%BB%9E%E5%8F%AA%E6%98%AF%E5%89%8D%E8%8F%9C%EF%BC%9F%E5%B0%88%E5%AE%B6%E6%9B%9D%E3%80%8C%E4%B8%BB%E5%8D%87%E6%AE%B5%E6%89%8D%E5%89%9B%E9%96%8B%E5%A7%8B%E3%80%8D%E7%B5%82%E6%A5%B5%E7%9B%AE%E6%A8%99%E5%87%BA%E7%88%90+%E9%80%99%E9%A1%9E%E8%82%A1%E6%9C%80%E6%9C%89%E6%88%B2+-+Yahoo%E8%82%A1%E5%B8%82%22+Yahoo%E8%82%A1%E5%B8%82",
-      "original_link": "https://news.google.com/rss/articles/CBMi2gNBVV95cUxQaHRoUGdHOTRWTUItOFdQR0steFZzNVZZUmRUNnByN0FMUHFfQnRjcExrS3lWMW1DTDhmRTZjSVc0aDI4c3ZxeDc1VHF4ZkJqNWJucnlycmhhb1l5YWlMQ3YtNWwzMTd3TmZxZmZZV2RBTl94ekdUM0NreU44MmZGVlgwSEhpZGFqMU9iTzA2bXVEaUctOGlYalVwVmk0dWVIMV91NnZXSjVFVzRzNGR2WFpqdzNOWWw4QjdlcGY5MktISVMtQTlkc2JCcy1VcVJBUDZzc2dWaE4wUXRHLVIzSlo5d0IycXNtWklubjBjSjhCdm04djZURm0yZDl5WG9CUHpUNmxMNzBQN1R4c0JEYXRjdjhwMkNRenJnUlNmZmMyWWw5MmRMRGdjalYzYWFoaUtUZW9faVFIeHp2QmxyWlRpQVJQd1NnQmlVbkk4OTJlekZkT0ZvOU9PZDJycDFLLXd5UmhvWHBkSnFoTG95ZVMwb2xqeTNzWUdMbHhQanFFbzJsd0RNRTBZdUhoRmFjVmZXb1RmTUR3U0VnLS1RcXpkNGR5bDFFdFVTLV9VNXRtTFQ0eXNKc21BUVhyUWZiOEhOemNlUGtmbFJSLXp1LXJ1Qk02amRJeUE?oc=5",
-      "source": "Yahoo股市",
-      "query_source": "Yahoo 股市",
-      "summary": "台股暴漲3200點只是前菜？專家曝「主升段才剛開始」終極目標出爐 這類股最有戲 Yahoo股市",
-      "published_at": "2026-08-01T13:33:30+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 80,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "Yahoo股市"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "5acf92311ead643a",
-      "title": "股民當心！台股下週一開盤恐變天 台指期夜盤狂瀉逾千點",
-      "link": "https://www.google.com/search?q=%22%E8%82%A1%E6%B0%91%E7%95%B6%E5%BF%83%EF%BC%81%E5%8F%B0%E8%82%A1%E4%B8%8B%E9%80%B1%E4%B8%80%E9%96%8B%E7%9B%A4%E6%81%90%E8%AE%8A%E5%A4%A9+%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E7%8B%82%E7%80%89%E9%80%BE%E5%8D%83%E9%BB%9E+-+Yahoo%E8%82%A1%E5%B8%82%22+Yahoo%E8%82%A1%E5%B8%82",
-      "original_link": "https://news.google.com/rss/articles/CBMi8wJBVV95cUxPemd2UWxpdENRbUVsczF6TUgzNWVBaVJDOUU3V1JRVVBOejhtbW1STVliMWdmTWNKOXNYQmxnX2hVNDdkWUUxUy1feEx6cnVCcmp6b1VQU2x2bU1lRkF3dDkzNWh0OTAyNWdZNDFBRTFZdFBGOE83c3ItTE5KWDlaeDRtWjF1a1d4UVIwRTBwY1Y5azZfOEJkRldGUm9memFrWXdta3BZeENvdUdEYmUzOHoyTEMwSXlMSWxnRE1ocXQ2N1FvYXZ0X3owNDRiVHpyVWVWSVJrV05wdm5Wb213UzdTR0FnRmZaeTdmenN5aWFTYTlfc01VNWVXd2Fzdi16bF8ySm9OMkVSZW16MzhsYWZ3ZU9NdzFXYnFzU05NN0c4cjk5UkszVDFSRjRMZWtnVkZQZGVFU1kyenFDUTU1YXRrUEtLMGk4ZTFmeEstRnlLWEhWZU91WG9MZE9EOHRBT3RnVTJqazhMU1VjbmNDeWJVVQ?oc=5",
-      "source": "Yahoo股市",
-      "query_source": "Yahoo 股市",
-      "summary": "股民當心！台股下週一開盤恐變天 台指期夜盤狂瀉逾千點 Yahoo股市",
-      "published_at": "2026-08-01T13:17:40+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 80,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "Yahoo股市"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "156e3dba0d9736c5",
-      "title": "美股全紅也沒用？ 台指期夜盤暴跌1077點 網驚問：人道走廊關了",
-      "link": "https://www.google.com/search?q=%22%E7%BE%8E%E8%82%A1%E5%85%A8%E7%B4%85%E4%B9%9F%E6%B2%92%E7%94%A8%EF%BC%9F+%E5%8F%B0%E6%8C%87%E6%9C%9F%E5%A4%9C%E7%9B%A4%E6%9A%B4%E8%B7%8C1077%E9%BB%9E+%E7%B6%B2%E9%A9%9A%E5%95%8F%EF%BC%9A%E4%BA%BA%E9%81%93%E8%B5%B0%E5%BB%8A%E9%97%9C%E4%BA%86+-+Yahoo%E8%82%A1%E5%B8%82%22+Yahoo%E8%82%A1%E5%B8%82",
-      "original_link": "https://news.google.com/rss/articles/CBMihANBVV95cUxNVklGWFNVQnVJZHFaQ3hodVdRVE96OHAzQVBvci1hSVJkR1p3UG1hWnZrMFpnTXE2SWtmNE5SaHdlVllub0h2M1ROQ2dENFJxb1Bha080X21naWZXUW5EU0tUc0lxem5yZ0JTZlZWMXA0WTkwdmZmSEVRN2NsZTA4ZmFOV2pXUklrUUM5RHQ0NmZZTmQtMGFoUW1CN1JSZnROeWNYZ2VYa0U3azFGcWo0OTFuakpybFdZeko5MmRSRTNVX01wVzUzeDRLMWRld29BZDJieXRUbEt6RW1UYkN3R2NROEtvZ0VBTWdweDdmU3V2bklWWXhubkt3WmdBYWVNUWFNTDhHM1dac1QzYmtTdHduamhITW0tVWh6SWxwc2FwNEZvXy1Jcm5YVUt4RUttUWM0OFNRZ2Q3MlR4dF84RGlMT1JnYndTcVRaZ0E5bUhVLXVGRmg4WC1zWXF1bGtCN3hVaktUcmw2dXJoWDVFZ1QxVl92dm1sX3k2aUR1MXRONkw2?oc=5",
-      "source": "Yahoo股市",
-      "query_source": "Yahoo 股市",
-      "summary": "美股全紅也沒用？ 台指期夜盤暴跌1077點 網驚問：人道走廊關了 Yahoo股市",
-      "published_at": "2026-08-01T12:06:17+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 80,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "Yahoo股市"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "79531e91b02a9247",
-      "title": "美股4巨頭資本支出近翻倍！今年估砸7500億美元拚基建 亞馬遜、微軟加碼AI算力設施",
-      "link": "https://www.google.com/search?q=%22%E7%BE%8E%E8%82%A14%E5%B7%A8%E9%A0%AD%E8%B3%87%E6%9C%AC%E6%94%AF%E5%87%BA%E8%BF%91%E7%BF%BB%E5%80%8D%EF%BC%81%E4%BB%8A%E5%B9%B4%E4%BC%B0%E7%A0%B87500%E5%84%84%E7%BE%8E%E5%85%83%E6%8B%9A%E5%9F%BA%E5%BB%BA+%E4%BA%9E%E9%A6%AC%E9%81%9C%E3%80%81%E5%BE%AE%E8%BB%9F%E5%8A%A0%E7%A2%BCAI%E7%AE%97%E5%8A%9B%E8%A8%AD%E6%96%BD+-+Yahoo%E8%82%A1%E5%B8%82%22+Yahoo%E8%82%A1%E5%B8%82",
-      "original_link": "https://news.google.com/rss/articles/CBMi6ANBVV95cUxOUmNVTUd3SFYtTi1rNHp1aDFvNTdhNUhCdXZ6cGRIeHZYdFBaNnJxa1Z3Yy1vUGxHcXlDd19CYmlUWS1adXlKNC0tZmdyRDZDMnFUREV2bEhRdVVCTVBhdjduTE5hYXRSa2FxWnBRd2wtWENWdkRRbEJGVm5rWkVkd1NabG5Iam9sUTdfdVFXZTZXbW9PTVNib2x6TEdfeGJxUlFwX1kwVTZlQXFjQS1wRlVEMmFVdER6alV1NXF1UjRqUjZ4VkpNYkZkc1lrUG9TN19sbGdWUWVVU2l2QVZob3kwaFJQSkRkQzdXWVJ1ZVFFdVVCaHpxWEw2R1BPRjE5YkM1cHVfck9CaVRwSTlSV0tqSWhMS3E5Q3FRcExjdUhyTmJEanpNUWdLalQySXZGNVlERXo5LVE1OFVCMDJDQUZ2aVQ4MFVob0YyZmFoN1BQeDF6TWlNY0lVLVpfeFBNWERTa0loQktkNlN4WGJJUUVaNktrREJZWDlqNGg0Tl9sd1kzcnFFei15clZpYkJwN19DWndhUm5JSTNSOGtDNHk0Yk9oQUlaSjRVbVlCZW0zcHR1ZEdSYU1wOVBYbnV4bGNIZ211UGpBajd5cklFV1oxbEctTU52QlFSMHdKQkxQU1I5ZHZrdg?oc=5",
-      "source": "Yahoo股市",
-      "query_source": "Yahoo 股市",
-      "summary": "美股4巨頭資本支出近翻倍！今年估砸7500億美元拚基建 亞馬遜、微軟加碼AI算力設施 Yahoo股市",
-      "published_at": "2026-08-01T10:24:12+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 80,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "Yahoo股市"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "7f10e7032b32a3c6",
-      "title": "台股漲3186點史上最大卻只有8千億元成交量！買不到還是沒錢買？ 分析師這麼看",
-      "link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E6%BC%B23186%E9%BB%9E%E5%8F%B2%E4%B8%8A%E6%9C%80%E5%A4%A7%E5%8D%BB%E5%8F%AA%E6%9C%898%E5%8D%83%E5%84%84%E5%85%83%E6%88%90%E4%BA%A4%E9%87%8F%EF%BC%81%E8%B2%B7%E4%B8%8D%E5%88%B0%E9%82%84%E6%98%AF%E6%B2%92%E9%8C%A2%E8%B2%B7%EF%BC%9F+%E5%88%86%E6%9E%90%E5%B8%AB%E9%80%99%E9%BA%BC%E7%9C%8B+-+Yahoo%E8%82%A1%E5%B8%82%22+Yahoo%E8%82%A1%E5%B8%82",
-      "original_link": "https://news.google.com/rss/articles/CBMi7wNBVV95cUxQWjNmUzNNVXBnLWdRU0J4dXNvY1pnMXFoSXFLU3o1UnZSMGY5RkZRQUdmUThkTXBoNXo5Znc1UWdCVXdpVXZQN2lPVkVkNVNOUHJiVVlhd0dXUFVmMnRxNG44b2JrZlB3cDNrSmlKdWxMRVppMHY0RjhjU3Q2bnhfZmo1TnpEeXoyYV9CM3RjemNPNE9rV2Y2NTFTMXpQdTdBdHBRalJRRVVyaTR0cVJSdGNKeWVWUFRMSXhTbWZnMzU5cXZKMUZmLUl3dXp4MHN2cXpZV01vdUktRl9oYWIzOFEyTVE0Y1RWdUl5dDNURFNUZGJ1UTBmelBrTE1iUmZ0VldnMTlTNkM3b2pLcnhWZUNycWQtcTBVZ0czSW94bEFTcVpWTzM4bHhrcVBlN3cxUUFQdndkNG1tNnNpcDA1bnFMMUV3VzdWUnQzVnVPY3d5em1fdk9UdWlPVTMtREdlZm1TWkFFWEtTNVRiWVpPWDB4cC1jajVWOGxhajl4ZVZ3NEJJeTd0YzZZbV9UbEU2UjFQa195akN2LS1uRnpMbV93NVI0VUpQZC1xdWRjc0l3aWFFaHlBNUlOUzRMbGM0LXBYUEZXVXFGVmU2VFVnWlVUOVNXOXBFVE5HMWFlNFZ4UU9NX1JsYVVvNDNwYTA?oc=5",
-      "source": "Yahoo股市",
-      "query_source": "Yahoo 股市",
-      "summary": "台股漲3186點史上最大卻只有8千億元成交量！買不到還是沒錢買？ 分析師這麼看 Yahoo股市",
-      "published_at": "2026-07-31T13:50:13+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 80,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "Yahoo股市"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "8c1e71d26acc27a0",
-      "title": "台股擦鞋童4》家庭資產、負債與儲蓄率 台股抗震力強過韓股",
-      "link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E6%93%A6%E9%9E%8B%E7%AB%A54%E3%80%8B%E5%AE%B6%E5%BA%AD%E8%B3%87%E7%94%A2%E3%80%81%E8%B2%A0%E5%82%B5%E8%88%87%E5%84%B2%E8%93%84%E7%8E%87+%E5%8F%B0%E8%82%A1%E6%8A%97%E9%9C%87%E5%8A%9B%E5%BC%B7%E9%81%8E%E9%9F%93%E8%82%A1+-+%E8%87%AA%E7%94%B1%E8%B2%A1%E7%B6%93%22+%E8%87%AA%E7%94%B1%E8%B2%A1%E7%B6%93",
-      "original_link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFB1N2JSNnNWOWhDMHdKRnlRUTZXdk1JTkVvcXA4T0ZHY3FaeEp4eGI2V3EwSVFBMWZuYks3Y3ZlN2pkWmw2WW1QcGxTQ18xWWo4STVWUG5kOHlOS0hYbk9Z?oc=5",
-      "source": "自由財經",
-      "query_source": "自由財經",
-      "summary": "台股擦鞋童4》家庭資產、負債與儲蓄率 台股抗震力強過韓股 自由財經",
-      "published_at": "2026-08-01T10:17:29+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "自由財經"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "0b00a7eadd4cfd34",
-      "title": "台股擦鞋童3》打炒房後打炒股 央行聯手金管會降溫",
-      "link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E6%93%A6%E9%9E%8B%E7%AB%A53%E3%80%8B%E6%89%93%E7%82%92%E6%88%BF%E5%BE%8C%E6%89%93%E7%82%92%E8%82%A1+%E5%A4%AE%E8%A1%8C%E8%81%AF%E6%89%8B%E9%87%91%E7%AE%A1%E6%9C%83%E9%99%8D%E6%BA%AB+-+%E8%87%AA%E7%94%B1%E8%B2%A1%E7%B6%93%22+%E8%87%AA%E7%94%B1%E8%B2%A1%E7%B6%93",
-      "original_link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1UaFZnX1otTHVzalJzbjI5VmJCeV90WXhVdFZKYWtIeElYVjBEZFJRZU1nX3dmRF9xOTBkRUNEcFY3ZzBXZEN5WVg3NEJNNko4bVlyN0NTbUZDcUJzcVN3?oc=5",
-      "source": "自由財經",
-      "query_source": "自由財經",
-      "summary": "台股擦鞋童3》打炒房後打炒股 央行聯手金管會降溫 自由財經",
-      "published_at": "2026-08-01T10:16:17+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "macro-policy"
-      ],
-      "primary_industry": "macro-policy",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "總經政策",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "自由財經"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "d639fe8cc40d126f",
-      "title": "台股擦鞋童2》散戶3指標狂飆 過熱警鈴大響",
-      "link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E6%93%A6%E9%9E%8B%E7%AB%A52%E3%80%8B%E6%95%A3%E6%88%B63%E6%8C%87%E6%A8%99%E7%8B%82%E9%A3%86+%E9%81%8E%E7%86%B1%E8%AD%A6%E9%88%B4%E5%A4%A7%E9%9F%BF+-+%E8%87%AA%E7%94%B1%E8%B2%A1%E7%B6%93%22+%E8%87%AA%E7%94%B1%E8%B2%A1%E7%B6%93",
-      "original_link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1hTklic05IOEcwNlM4d1JrZ0M4OVNCZUxmWVYwSlAxUVZKaWxseEk1TmE2a2VnaUVLajlPMXNBSm1RS2k4RGpycG9QdlI3Y3JHUHZDczRIRDUxeUV5X1lF?oc=5",
-      "source": "自由財經",
-      "query_source": "自由財經",
-      "summary": "台股擦鞋童2》散戶3指標狂飆 過熱警鈴大響 自由財經",
-      "published_at": "2026-08-01T10:15:10+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "自由財經"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "0c1c929319ac1503",
-      "title": "台股擦鞋童1》ETF一年規模胖3兆 主動式狂飆8倍",
-      "link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E6%93%A6%E9%9E%8B%E7%AB%A51%E3%80%8BETF%E4%B8%80%E5%B9%B4%E8%A6%8F%E6%A8%A1%E8%83%963%E5%85%86+%E4%B8%BB%E5%8B%95%E5%BC%8F%E7%8B%82%E9%A3%868%E5%80%8D+-+%E8%87%AA%E7%94%B1%E8%B2%A1%E7%B6%93%22+%E8%87%AA%E7%94%B1%E8%B2%A1%E7%B6%93",
-      "original_link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBTUGJSWkpHcFNvOTd4cTNKQlM4T3JHeTBXWTlWV2pXY1FBcXdXbEQwMEc0NTg2a2lsWk9hekhfYkgxZ2M0eU1aVVNFdFluN0pialV5SklHRUE5MkkzOW93?oc=5",
-      "source": "自由財經",
-      "query_source": "自由財經",
-      "summary": "台股擦鞋童1》ETF一年規模胖3兆 主動式狂飆8倍 自由財經",
-      "published_at": "2026-08-01T10:13:35+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "fund",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "自由財經"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "2fe47de030ffd201",
-      "title": "台積電漲停帶頭衝 台股飆漲3186點創紀錄",
-      "link": "https://www.google.com/search?q=%22%E5%8F%B0%E7%A9%8D%E9%9B%BB%E6%BC%B2%E5%81%9C%E5%B8%B6%E9%A0%AD%E8%A1%9D+%E5%8F%B0%E8%82%A1%E9%A3%86%E6%BC%B23186%E9%BB%9E%E5%89%B5%E7%B4%80%E9%8C%84+-+%E8%87%AA%E7%94%B1%E8%B2%A1%E7%B6%93%22+%E8%87%AA%E7%94%B1%E8%B2%A1%E7%B6%93",
-      "original_link": "https://news.google.com/rss/articles/CBMiVkFVX3lxTE1zeTRhQlU4Y2VoWUdleDVkZ3pveFo0akluUkU0N05iaXFjRmFaOExkaDBvMXR2R1EyeXNSOEh3THdfS0tJMTFzU3RzUDh3NE9NM0c3Ujh3?oc=5",
-      "source": "自由財經",
-      "query_source": "自由財經",
-      "summary": "台積電漲停帶頭衝 台股飆漲3186點創紀錄 自由財經",
-      "published_at": "2026-08-01T05:30:00+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "自由財經"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "c6b4bd9b5d063dff",
-      "title": "13年賺13倍 Tesla長線股東清倉 - 信報網站",
-      "link": "https://www.google.com/search?q=%2213%E5%B9%B4%E8%B3%BA13%E5%80%8D+Tesla%E9%95%B7%E7%B7%9A%E8%82%A1%E6%9D%B1%E6%B8%85%E5%80%89+-+%E4%BF%A1%E5%A0%B1%E7%B6%B2%E7%AB%99%22+%E4%BF%A1%E5%A0%B1%E7%B6%B2%E7%AB%99",
-      "original_link": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxQY2VsMXdOd28zRENua01pNEVncmM2VFhxQnBCUkdMNnk3eG9lYVpzelR2SDNINVdHblpWaThVUXJXMFJ3UGM3VW1QTzY5UzJzVWhsTUNWakpHdjdEWHNpM1lPWXAtaWo3TE1ERTIzQWRGNTVrZ3RXblA1SnV0Nm1NOWJ5cEdfd2Zsd1FkSVNqVjk1QnZ6cWMtUEpNVjNZRFp5ajZsNlVqSkRyWjFUcWUxMnpNY2RoVHQ5SF92X1F5dmk1dDBiajFURl9namw0NjlYUk9SLUlnVmlfODg?oc=5",
-      "source": "信報網站",
-      "query_source": "信報財經新聞",
-      "summary": "13年賺13倍 Tesla長線股東清倉 信報網站",
-      "published_at": "2026-08-01T03:08:47+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "信報網站"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "58f08ad92fb195d7",
-      "title": "另眼看小皇帝謀殺案 - 信報網站",
-      "link": "https://www.google.com/search?q=%22%E5%8F%A6%E7%9C%BC%E7%9C%8B%E5%B0%8F%E7%9A%87%E5%B8%9D%E8%AC%80%E6%AE%BA%E6%A1%88+-+%E4%BF%A1%E5%A0%B1%E7%B6%B2%E7%AB%99%22+%E4%BF%A1%E5%A0%B1%E7%B6%B2%E7%AB%99",
-      "original_link": "https://news.google.com/rss/articles/CBMiywFBVV95cUxQV0Rqc0czWXZzY0xQUlBPMzlBcWd5d0FyM0o3alc0bmhXcFZrUjlaVU5IY0daMUtpM0h3cy02RHNfZklSU2IzNS1aREZYWFIwMjNLNndLNlRTb25xYWc1R2p2Ny1iYUE4emhHY1VOeld4Tzl5Nmc5S3lmS216Y1hrTk9RanBwQ29xMlhZNXZ1OUdGd0pRemF5MW5RMnNYMnptLXJmREJJczlWZE5ydDdXMFc5UzBXSkdWLVBlVG9kU3JMSU9QT21YMTZVVQ?oc=5",
-      "source": "信報網站",
-      "query_source": "信報財經新聞",
-      "summary": "另眼看小皇帝謀殺案 信報網站",
-      "published_at": "2026-08-01T02:31:10+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "信報網站"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "8d88fe4a3d77ab4a",
-      "title": "月之暗面與阿里享算力協議 可使用2萬枚輝達晶片 - 信報網站",
-      "link": "https://www.google.com/search?q=%22%E6%9C%88%E4%B9%8B%E6%9A%97%E9%9D%A2%E8%88%87%E9%98%BF%E9%87%8C%E4%BA%AB%E7%AE%97%E5%8A%9B%E5%8D%94%E8%AD%B0+%E5%8F%AF%E4%BD%BF%E7%94%A82%E8%90%AC%E6%9E%9A%E8%BC%9D%E9%81%94%E6%99%B6%E7%89%87+-+%E4%BF%A1%E5%A0%B1%E7%B6%B2%E7%AB%99%22+%E4%BF%A1%E5%A0%B1%E7%B6%B2%E7%AB%99",
-      "original_link": "https://news.google.com/rss/articles/CBMi4AJBVV95cUxPLTRFM2VXMTRqekxaQ3JVUkhGMFh6blJmVF9MeUtkZ2RZaVVEc3pKU2xkTHQyUy1EUXp6N1h6TVp4RVlvY1NPcE94MVQ1OW5uQllEeXBxNlBBTVdHMENFVnJqX0t3aFp0T2szZzdRcVQ5TVFtNXZ6QlhZR1dJTGJXdEY3YkNIS2UzWVRuNU5xZHVVX1JoQTZLQzliWHdkUjNNTEZGS0RtOER5LS1uSENVOWxlYWRobmUtNzRHVGpyS0x4Wkt2dDlfWllxLThjSTdvRzhTWUs0aW1oajNMdEE3T2hjZ0Nua3dMeEZNQnN0LTFZei1QZmt5YlhScDM4ZGMwTzNZdm5vR0JXQmhvaE5RVDV0R2RRckMzOXh4T1pJNWp4aXRUOGs3a0VKRjNDSkZsbUc1ZEViZjR3T0gwR0xxVFBYaTJzVGRWUlprSEw0U0dfTUVVaDhDNU10ajEzRU5w?oc=5",
-      "source": "信報網站",
-      "query_source": "信報財經新聞",
-      "summary": "月之暗面與阿里享算力協議 可使用2萬枚輝達晶片 信報網站",
-      "published_at": "2026-07-31T22:31:29+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "信報網站"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "43a5f6d85d4e1528",
-      "title": "台新新光金永續投資「大躍進」 銀行、證券及投信獲8座大獎",
-      "link": "https://www.google.com/search?q=%22%E5%8F%B0%E6%96%B0%E6%96%B0%E5%85%89%E9%87%91%E6%B0%B8%E7%BA%8C%E6%8A%95%E8%B3%87%E3%80%8C%E5%A4%A7%E8%BA%8D%E9%80%B2%E3%80%8D+%E9%8A%80%E8%A1%8C%E3%80%81%E8%AD%89%E5%88%B8%E5%8F%8A%E6%8A%95%E4%BF%A1%E7%8D%B28%E5%BA%A7%E5%A4%A7%E7%8D%8E+-+%E8%87%AA%E7%94%B1%E8%B2%A1%E7%B6%93%22+%E8%87%AA%E7%94%B1%E8%B2%A1%E7%B6%93",
-      "original_link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE12X294TVg0ZFkwS2c2eU8wRDNHelpna3piWExZNllKcTFrVjVMVzhqMW1pNklrYXhlRnBPMkFDVmpRU2Mxd1FPU0wxRC1CLXRkSXIzZmNydklmRUFheWI0?oc=5",
-      "source": "自由財經",
-      "query_source": "自由財經",
-      "summary": "台新新光金永續投資「大躍進」 銀行、證券及投信獲8座大獎 自由財經",
-      "published_at": "2026-07-31T19:26:53+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "finance"
-      ],
-      "primary_industry": "finance",
-      "asset_class": "fund",
-      "crypto_categories": [],
-      "industry_label": "金融保險",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "自由財經"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "f809d5cc280c74d4",
-      "title": "73萬存股族變身飆股！台股暴漲3186點 外資狂掃這檔金融5.5萬張",
-      "link": "https://www.google.com/search?q=%2273%E8%90%AC%E5%AD%98%E8%82%A1%E6%97%8F%E8%AE%8A%E8%BA%AB%E9%A3%86%E8%82%A1%EF%BC%81%E5%8F%B0%E8%82%A1%E6%9A%B4%E6%BC%B23186%E9%BB%9E+%E5%A4%96%E8%B3%87%E7%8B%82%E6%8E%83%E9%80%99%E6%AA%94%E9%87%91%E8%9E%8D5.5%E8%90%AC%E5%BC%B5+-+%E8%87%AA%E7%94%B1%E8%B2%A1%E7%B6%93%22+%E8%87%AA%E7%94%B1%E8%B2%A1%E7%B6%93",
-      "original_link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFByYlRQcllDSXZPRy1iRFRHd3ZDREJfY3BFaWdKeVFweE1jWXVNQmNxbU5JSjhjeFdCRjc1ZWM2WkRpcHNhcnlHVEZ3bkZlZURJWlcyZ213aUh1NDJZNTFN?oc=5",
-      "source": "自由財經",
-      "query_source": "自由財經",
-      "summary": "73萬存股族變身飆股！台股暴漲3186點 外資狂掃這檔金融5.5萬張 自由財經",
-      "published_at": "2026-07-31T17:06:49+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "finance"
-      ],
-      "primary_industry": "finance",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "金融保險",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "自由財經"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "eb70a101e3bdfb02",
-      "title": "台股暴漲史上之最！台積電、華南金買不停 投信前10大揭曉",
-      "link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E6%9A%B4%E6%BC%B2%E5%8F%B2%E4%B8%8A%E4%B9%8B%E6%9C%80%EF%BC%81%E5%8F%B0%E7%A9%8D%E9%9B%BB%E3%80%81%E8%8F%AF%E5%8D%97%E9%87%91%E8%B2%B7%E4%B8%8D%E5%81%9C+%E6%8A%95%E4%BF%A1%E5%89%8D10%E5%A4%A7%E6%8F%AD%E6%9B%89+-+%E8%87%AA%E7%94%B1%E8%B2%A1%E7%B6%93%22+%E8%87%AA%E7%94%B1%E8%B2%A1%E7%B6%93",
-      "original_link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1nVndPeEVqVVBsa0NMX2hoWWN2ZGR2Z1paMEl0c2E4ZWtleXV6V0RqOVk1dGFsem5hbV84WURwWXRVTFNvRzlNNV9aUTdsa3U1RG1lRmlqcGNIN0tob2xv?oc=5",
-      "source": "自由財經",
-      "query_source": "自由財經",
-      "summary": "台股暴漲史上之最！台積電、華南金買不停 投信前10大揭曉 自由財經",
-      "published_at": "2026-07-31T16:44:58+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "fund",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "自由財經"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "bb63a9104cec768d",
-      "title": "台股暴漲3186點史上之最！投信反手大砍這檔被動元件 前10大賣超1次看",
-      "link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E6%9A%B4%E6%BC%B23186%E9%BB%9E%E5%8F%B2%E4%B8%8A%E4%B9%8B%E6%9C%80%EF%BC%81%E6%8A%95%E4%BF%A1%E5%8F%8D%E6%89%8B%E5%A4%A7%E7%A0%8D%E9%80%99%E6%AA%94%E8%A2%AB%E5%8B%95%E5%85%83%E4%BB%B6+%E5%89%8D10%E5%A4%A7%E8%B3%A3%E8%B6%851%E6%AC%A1%E7%9C%8B+-+%E8%87%AA%E7%94%B1%E8%B2%A1%E7%B6%93%22+%E8%87%AA%E7%94%B1%E8%B2%A1%E7%B6%93",
-      "original_link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE54M0JObVlTc2VCdm5qVHJzR2o1dzF6UV9Vc3ZXcUlZVDNmTl9OU0lPWWRkSV9uQUFlVDNaX3JUdkJaZjNNZnhBTHlkZFZldXRvclFLUjBBbFdWTHJIdDNZ?oc=5",
-      "source": "自由財經",
-      "query_source": "自由財經",
-      "summary": "台股暴漲3186點史上之最！投信反手大砍這檔被動元件 前10大賣超1次看 自由財經",
-      "published_at": "2026-07-31T16:29:33+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "fund",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "自由財經"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "ef9eded1a8b33ab6",
-      "title": "6月台股有多熱？一數據創新高讓人吃驚",
-      "link": "https://www.google.com/search?q=%226%E6%9C%88%E5%8F%B0%E8%82%A1%E6%9C%89%E5%A4%9A%E7%86%B1%EF%BC%9F%E4%B8%80%E6%95%B8%E6%93%9A%E5%89%B5%E6%96%B0%E9%AB%98%E8%AE%93%E4%BA%BA%E5%90%83%E9%A9%9A+-+%E8%87%AA%E7%94%B1%E8%B2%A1%E7%B6%93%22+%E8%87%AA%E7%94%B1%E8%B2%A1%E7%B6%93",
-      "original_link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE56b3JBNXZVS0UtLUlqd2puMGRVNnJKME9vVVJNYzA2T2tLMUh6ckl4eXRwal95UEZIZXhKa0gtcnF5MzBXRl9IQUxMWU1INVZBVmJTcno2NGlqMjduSFpV?oc=5",
-      "source": "自由財經",
-      "query_source": "自由財經",
-      "summary": "6月台股有多熱？一數據創新高讓人吃驚 自由財經",
-      "published_at": "2026-07-31T16:25:29+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "自由財經"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "7d83d449dd7313f2",
-      "title": "分析師狂砸1億買0050！台股「史詩級」狂噴、他超狂獲利曝光",
-      "link": "https://www.google.com/search?q=%22%E5%88%86%E6%9E%90%E5%B8%AB%E7%8B%82%E7%A0%B81%E5%84%84%E8%B2%B70050%EF%BC%81%E5%8F%B0%E8%82%A1%E3%80%8C%E5%8F%B2%E8%A9%A9%E7%B4%9A%E3%80%8D%E7%8B%82%E5%99%B4%E3%80%81%E4%BB%96%E8%B6%85%E7%8B%82%E7%8D%B2%E5%88%A9%E6%9B%9D%E5%85%89+-+%E8%87%AA%E7%94%B1%E8%B2%A1%E7%B6%93%22+%E8%87%AA%E7%94%B1%E8%B2%A1%E7%B6%93",
-      "original_link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBmNEVCeE05YTNjNV9lak12Sl9oR1dpQWhfSGNvQ1pNdW9QYkJNTDcxWlBsa1ZrTm56aS1rOUNIS2o5emFYa3NkYmJmaGZpdzM2aVlrdXhaZngxZUplako0?oc=5",
-      "source": "自由財經",
-      "query_source": "自由財經",
-      "summary": "分析師狂砸1億買0050！台股「史詩級」狂噴、他超狂獲利曝光 自由財經",
-      "published_at": "2026-07-31T14:39:55+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "自由財經"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "11bc9b762475b060",
-      "title": "台股史詩級噴出！台積電領202家飆漲停 指數暴漲3186點",
-      "link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E5%8F%B2%E8%A9%A9%E7%B4%9A%E5%99%B4%E5%87%BA%EF%BC%81%E5%8F%B0%E7%A9%8D%E9%9B%BB%E9%A0%98202%E5%AE%B6%E9%A3%86%E6%BC%B2%E5%81%9C+%E6%8C%87%E6%95%B8%E6%9A%B4%E6%BC%B23186%E9%BB%9E+-+%E8%87%AA%E7%94%B1%E8%B2%A1%E7%B6%93%22+%E8%87%AA%E7%94%B1%E8%B2%A1%E7%B6%93",
-      "original_link": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1ybG5oWjNGVU5MVVVkdWVEMTRCUndzWFFldUtUQ0FqYm13aDU3QktTYlA5RFk4T2RydWRacG11dlVTaDNGSURyVlRhWEhxb2IxTV9mczJaZDM0Slp6T2ZJ?oc=5",
-      "source": "自由財經",
-      "query_source": "自由財經",
-      "summary": "台股史詩級噴出！台積電領202家飆漲停 指數暴漲3186點 自由財經",
-      "published_at": "2026-07-31T13:49:00+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "自由財經"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "2d094ebacc57acc8",
-      "title": "異動股丨美圖升近一成 料中期經調整多賺逾36% - 信報網站",
-      "link": "https://www.google.com/search?q=%22%E7%95%B0%E5%8B%95%E8%82%A1%E4%B8%A8%E7%BE%8E%E5%9C%96%E5%8D%87%E8%BF%91%E4%B8%80%E6%88%90+%E6%96%99%E4%B8%AD%E6%9C%9F%E7%B6%93%E8%AA%BF%E6%95%B4%E5%A4%9A%E8%B3%BA%E9%80%BE36%25+-+%E4%BF%A1%E5%A0%B1%E7%B6%B2%E7%AB%99%22+%E4%BF%A1%E5%A0%B1%E7%B6%B2%E7%AB%99",
-      "original_link": "https://news.google.com/rss/articles/CBMi0gJBVV95cUxQamRWb3BXaGFFQ1BuQ0pCTHc0UjQxRHJQamk5YmNEWVhRUGtYNE92T1REZURYeW1DS3IwWkpTMGdyTi1yTy1yS3ItWGJvMHF1OVFKcmRvR1ZTZTRVQTVrdml2NXBENno2Z2VINDRIQnd4TUhMN2p5TjhWNG94b3lSTTkzSVhFN3lsWGtFMEk3blQ4VlFhdlFMcExQZWhzWDc3VERJd25wS2FkTmNOb2tQZ0tXR0hXdmdmMWczVjFqS1o5Q1NNaWU4MkNlQU92M3VXRU0yOElkZGdOTmFEbmZNSzlqS0doWmo4eW80bjFlTm03SlpFOHhXVlhwVkNUdXNubzhMTkQxMHZzSzI3S2FiUmxudEkxRU82c0ZSUlNWMWZPdEMzbWxFMVBOY19rWDdaejZUUzhpd0J2cVJQZUVDT2ZkY1JBcm5oblN6LUtrU1d6dw?oc=5",
-      "source": "信報網站",
-      "query_source": "信報財經新聞",
-      "summary": "異動股丨美圖升近一成 料中期經調整多賺逾36% 信報網站",
-      "published_at": "2026-07-31T13:20:28+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "信報網站"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "ffae73be51f124a3",
-      "title": "異動股丨普拉達績後炒高12% - 信報網站",
-      "link": "https://www.google.com/search?q=%22%E7%95%B0%E5%8B%95%E8%82%A1%E4%B8%A8%E6%99%AE%E6%8B%89%E9%81%94%E7%B8%BE%E5%BE%8C%E7%82%92%E9%AB%9812%25+-+%E4%BF%A1%E5%A0%B1%E7%B6%B2%E7%AB%99%22+%E4%BF%A1%E5%A0%B1%E7%B6%B2%E7%AB%99",
-      "original_link": "https://news.google.com/rss/articles/CBMi5wFBVV95cUxPM2I0MkFnRWxpT1BTTnp0T0ZUVzNlV1RwSkhnV3dyRWxTQV9NckdTcE1VQU5kM1R0VkNCOFNWclhnemx3WFV5Qy1LaDVTeHhKVVRhQjVsaVo0NGQ0NEZPa1RPdGVXVlpJQmNacnhsQUhtNjZRNkZvc2RCMU54MkdmekdrUnNXaXFfdUFYbV96TEJJQUxXUlljdk9XLUxNdFowdjJMMURjOTNuR1dlTGdPMUNRZ1FEWEJ4aHNQNV9TeXZPT0JrRDRXeFdBYWVoc3l3NTJPOV8zVWx2Smg5Y2VxNzNaYmRjcUk?oc=5",
-      "source": "信報網站",
-      "query_source": "信報財經新聞",
-      "summary": "異動股丨普拉達績後炒高12% 信報網站",
-      "published_at": "2026-07-31T11:46:16+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "信報網站"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "c1c289fa8a9fbe96",
-      "title": "中國經濟丨7月製造業PMI再陷收縮 降至49.2 - 信報網站",
-      "link": "https://www.google.com/search?q=%22%E4%B8%AD%E5%9C%8B%E7%B6%93%E6%BF%9F%E4%B8%A87%E6%9C%88%E8%A3%BD%E9%80%A0%E6%A5%ADPMI%E5%86%8D%E9%99%B7%E6%94%B6%E7%B8%AE+%E9%99%8D%E8%87%B349.2+-+%E4%BF%A1%E5%A0%B1%E7%B6%B2%E7%AB%99%22+%E4%BF%A1%E5%A0%B1%E7%B6%B2%E7%AB%99",
-      "original_link": "https://news.google.com/rss/articles/CBMipgJBVV95cUxOMkhjNWlDaEY4Z000V2o2MkIyMTctekV2S0hsMURVLVEzTUE4V19PSzI5TVFJbS1hVy0yRGdpbEpZVG1yam1vMW42WlQwTDY4Wk9hcnRSdktDVklvLVdneXJGdWlOQ1ZIR0pSdzVrbXg4OTZ2NmQxUUM0QTdEM08wdzEycGF3b3pJd1FIblhveGpEZGU2b1VTTXBrU0xlVDVyNmdiaWxadkNTU3ROYXkxNVZBRzNnSlI3cXBnanJDTEw2emlsc2l0UG9GR04yWFJFZGwwVlBJUnNfNlc1TFl4TFZoVlNKcV9PWklwd1pjRDdVWS1lek1FbVduV0pzVF8yM0tCc3VGWXZHM2VRcmlRWlFvQVNLY0RSMkRPZ0E3d0phbUtPWXc?oc=5",
-      "source": "信報網站",
-      "query_source": "信報財經新聞",
-      "summary": "中國經濟丨7月製造業PMI再陷收縮 降至49.2 信報網站",
-      "published_at": "2026-07-31T09:57:27+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "industrial",
-        "macro-policy"
-      ],
-      "primary_industry": "industrial",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "機械工業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "信報網站"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "1e5154aef4d44674",
-      "title": "異動股丨新股中際旭創彈逾一成 - 信報網站",
-      "link": "https://www.google.com/search?q=%22%E7%95%B0%E5%8B%95%E8%82%A1%E4%B8%A8%E6%96%B0%E8%82%A1%E4%B8%AD%E9%9A%9B%E6%97%AD%E5%89%B5%E5%BD%88%E9%80%BE%E4%B8%80%E6%88%90+-+%E4%BF%A1%E5%A0%B1%E7%B6%B2%E7%AB%99%22+%E4%BF%A1%E5%A0%B1%E7%B6%B2%E7%AB%99",
-      "original_link": "https://news.google.com/rss/articles/CBMijgJBVV95cUxObmx3YXNxVnhnaV81SlBET2F3VFQxTzVVR2RiSHJVZU1EN3g3YlBSOHNLYm1VSjlFQ2xGbDByUkNEdEozMEtyMG1ZS3I1UEZCcWdRV3J5WWt4UzZwb3U1TWJ4QVlwdGQyRFJSOGkyTjJvTjJRX2dWQzE5bHF6UWdwbGRpMzgxVlZteXllVWs5MU9mTVlRSElrTE9pOTB3ZHl3bFZJWXR4ckFIWXhHRGg3UnhDSVM4dUxpX0ZhcHZPT0NjNTZ2cXBraWpfLXVkWEFvaUtwdUc1MU5Qa3VCd2FCNXZmVjRKcjhFM3pQMEExQnRSSTlLa1hqY2JrTWtHM2pUdFVSTUYtdXV2NTR0N2c?oc=5",
-      "source": "信報網站",
-      "query_source": "信報財經新聞",
-      "summary": "異動股丨新股中際旭創彈逾一成 信報網站",
-      "published_at": "2026-07-31T09:44:43+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "信報網站"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "2ae3d7213cb25dc5",
-      "title": "SpaceX據報要求供應商排除中國籍員工及設備 - 信報網站",
-      "link": "https://www.google.com/search?q=%22SpaceX%E6%93%9A%E5%A0%B1%E8%A6%81%E6%B1%82%E4%BE%9B%E6%87%89%E5%95%86%E6%8E%92%E9%99%A4%E4%B8%AD%E5%9C%8B%E7%B1%8D%E5%93%A1%E5%B7%A5%E5%8F%8A%E8%A8%AD%E5%82%99+-+%E4%BF%A1%E5%A0%B1%E7%B6%B2%E7%AB%99%22+%E4%BF%A1%E5%A0%B1%E7%B6%B2%E7%AB%99",
-      "original_link": "https://news.google.com/rss/articles/CBMixAJBVV95cUxOZnlQZE9wc0pGZHhSa1JVOWJaQkF1V3lXeWhWUG5yZ1FMZUpNVV9jaXl6dnB4RXRCUGhhZlVHUnoxcWlmSmpobXF0UUlEVTdSSHZQSXN0UGYxalZVdEdYMmI4anJZY0p4cXVNMWlJU3otWHpPZkNYRC03d1NlWTRUdkdhTUREUWNSVWg1RThVMFl6VW5PUExEOHVOa0hFb0J5SEs5eWhCUXl1VUpZQjlJNm9Ealo4Wnl3N3FBUEsxUzB1YUpTTHY4Rnh4eW9VWGo3T3B0bV9pbDE3bmM1aDZPQlFhQUtOUE03eXR4d000dkp0T0dVenlCREtFOVU5bVNveGZkYXVxTTNSQXRJdVlXNFBEM1dDcE8xQ3RLVG1GdWtuSF8zTTlHQ1M2R0k4Z3Rxa240TUVqZDg1M0hKcFctSmZCWFU?oc=5",
-      "source": "信報網站",
-      "query_source": "信報財經新聞",
-      "summary": "SpaceX據報要求供應商排除中國籍員工及設備 信報網站",
-      "published_at": "2026-07-30T15:35:34+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "industrial"
-      ],
-      "primary_industry": "industrial",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "機械工業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "信報網站"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "a0232ad9ad73c167",
-      "title": "字節跳動丨重組AI業務架構 涉豆包火山引擎等 - 信報網站",
-      "link": "https://www.google.com/search?q=%22%E5%AD%97%E7%AF%80%E8%B7%B3%E5%8B%95%E4%B8%A8%E9%87%8D%E7%B5%84AI%E6%A5%AD%E5%8B%99%E6%9E%B6%E6%A7%8B+%E6%B6%89%E8%B1%86%E5%8C%85%E7%81%AB%E5%B1%B1%E5%BC%95%E6%93%8E%E7%AD%89+-+%E4%BF%A1%E5%A0%B1%E7%B6%B2%E7%AB%99%22+%E4%BF%A1%E5%A0%B1%E7%B6%B2%E7%AB%99",
-      "original_link": "https://news.google.com/rss/articles/CBMizgJBVV95cUxQSEVQQkplNHdPcHYwSHBBbGFiYVBQcnRJMGd5U3k2Q0hHZnd0SGNNR3lsOWR2SURZYVp0WE5pbFNyNmRsRTBvSHlnY005TmxPSGlpLUlodFJCdDNXbFFaNm9yei1XeGs2bVk5N3hQS2s3RVBxU2JFRnNSUUNVTmNUUm1BbUd2cC1ubTRseVdlZU5uTXBnaWRPal9acWZNbzROcUhYeGZBYmhxRjM5aHJyOE1sVmM3U256NWcwTUFPd2JOc1g5TllZVFp4Q2dCUXpVU3hxWXI2Zkkzd0dpVGx0OTd5TXljeU9RVGxsdmF2ay1FLUpfMzJyN0pqSVNsTzQ1MThqajJJNS1KUUtUOWJHdnFFUmRDRDJvSDhILV9DbmQzamx3MUlKTERIaW91Q3lkYjNpR3dnbFlKVkI4Y0NOQUhQcDd4U0Zsa1JrazVB?oc=5",
-      "source": "信報網站",
-      "query_source": "信報財經新聞",
-      "summary": "字節跳動丨重組AI業務架構 涉豆包火山引擎等 信報網站",
-      "published_at": "2026-07-30T13:24:41+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "信報網站"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "c621a5914435b5a4",
-      "title": "信報財經新聞 - 信報網站",
-      "link": "https://www.google.com/search?q=%22%E4%BF%A1%E5%A0%B1%E8%B2%A1%E7%B6%93%E6%96%B0%E8%81%9E+-+%E4%BF%A1%E5%A0%B1%E7%B6%B2%E7%AB%99%22+%E4%BF%A1%E5%A0%B1%E7%B6%B2%E7%AB%99",
-      "original_link": "https://news.google.com/rss/articles/CBMi7wFBVV95cUxNZlJIV2xHZUtmVldxX3FkODZQdXdieXVOd3dON01VWGlkbU84QW91T0NqdFJvNE43bEVuN29zS3JUeXJLcEphb1ZCQjBHMGVSUlZNM1lFNnpldHJtaUFMLXZ3LTRINVMyQkFjT29aTmdsLWd1cXBaejQ0U29ITFVLQktnUTEtZlFubmd0MmdRQ0N6LXV1ejNKa2pZcXBuTzY2U0ZQYURNUUZ6d3ZVcEtMLWFXbVctdDZvb2RxNHpoalJrZHhnY2RQZFY1NGwxY251X1BTcFdIbjZKT3M0Nmw2VlZyUlZuXzVRejYycWFaVQ?oc=5",
-      "source": "信報網站",
-      "query_source": "信報財經新聞",
-      "summary": "信報財經新聞 信報網站",
-      "published_at": "2026-07-30T02:55:23+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 79,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "信報網站"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "b00e520eec0c9bf2",
-      "title": "長飛光纖光纜(06869)為港股通（滬）十大成交活躍股榜首 | 即時新聞 - 新聞 - etnet 經濟通",
-      "link": "https://www.google.com/search?q=%22%E9%95%B7%E9%A3%9B%E5%85%89%E7%BA%96%E5%85%89%E7%BA%9C%2806869%29%E7%82%BA%E6%B8%AF%E8%82%A1%E9%80%9A%EF%BC%88%E6%BB%AC%EF%BC%89%E5%8D%81%E5%A4%A7%E6%88%90%E4%BA%A4%E6%B4%BB%E8%BA%8D%E8%82%A1%E6%A6%9C%E9%A6%96+%7C+%E5%8D%B3%E6%99%82%E6%96%B0%E8%81%9E+-+%E6%96%B0%E8%81%9E+-+etnet+%E7%B6%93%E6%BF%9F%E9%80%9A%22+etnet+%E7%B6%93%E6%BF%9F%E9%80%9A",
-      "original_link": "https://news.google.com/rss/articles/CBMirgFBVV95cUxNM2tTb3FpQ0lvWnFjcHpqak4zSUFNNzZvX2lIemYtNVJVcWRfQjVQS1luakM1VUVKRkxFVzdKQlhkSEZaYUhicmxndjl6MkZjY0lFOW5vYkpDWUM5WUYyTmtqYlNHRGc5elVrZmhxblpLWlpWYUt1VGZiMXpDbDRDZTc3TUhuV1JwY0hGZDEtTlNKR3NlWFNndURZeXg0M2cwWWNfU2hYWVFSMVZNcmc?oc=5",
-      "source": "etnet 經濟通",
-      "query_source": "經濟通 ET Net",
-      "summary": "長飛光纖光纜(06869)為港股通（滬）十大成交活躍股榜首 | 即時新聞 - 新聞 etnet 經濟通",
-      "published_at": "2026-08-01T09:24:45+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 78,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "etnet 經濟通"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "8cd7c4d7dbf5652d",
-      "title": "美股動向 | 蜆殼同意向匈牙利MOL出售賽普勒斯資產，涉資7.2億美元 | 全部 - 新聞 - 美股 - etnet 經濟通",
-      "link": "https://www.google.com/search?q=%22%E7%BE%8E%E8%82%A1%E5%8B%95%E5%90%91+%7C+%E8%9C%86%E6%AE%BC%E5%90%8C%E6%84%8F%E5%90%91%E5%8C%88%E7%89%99%E5%88%A9MOL%E5%87%BA%E5%94%AE%E8%B3%BD%E6%99%AE%E5%8B%92%E6%96%AF%E8%B3%87%E7%94%A2%EF%BC%8C%E6%B6%89%E8%B3%877.2%E5%84%84%E7%BE%8E%E5%85%83+%7C+%E5%85%A8%E9%83%A8+-+%E6%96%B0%E8%81%9E+-+%E7%BE%8E%E8%82%A1+-+etnet+%E7%B6%93%E6%BF%9F%E9%80%9A%22+etnet+%E7%B6%93%E6%BF%9F%E9%80%9A",
-      "original_link": "https://news.google.com/rss/articles/CBMitgNBVV95cUxQUnNBWDRyUW1lMjdzUUhUTXdwMnV1Y1lDZEhZRGlKdlc3T1dhOFl2Njl5eW1tV2pBODhkbVljREVjTjM3WWNJQmFnZkRUUmlyWElQRlR1TkdMSUdGUGRmR1lOUzRHWVpyNWRzdDA0TGR0VXc4OFVFaWMyd0xHWnVEU0xhdzBXRGVSMV9NVXQyOWlNY04yYmdUY1I0MGVpaTBPV0tZUTBmWEh3Xy1wa2J3WExUaVpfVEFQc19BejFNbGlCNE5sR09rWFVPYU5relNwUnpEWkhfdFhCN1EtRFNZeEZxMURWRDRyeU4wWWs5QnYtcTdqeFh1MktWSlNhXzNSSTZFRDdLQXdCRXdFOUMtdDg5OU1qWklmTXlZdFRRQ3hRZXBEeTljSGhJTjNlY0YxaE95X195c0YxUXQwUzdFeW5nbHF4Y1ExX29tMlNqNXlrcnU1dHN0UFR5T3ZyOUUyWWYyV3lNdTgzajhJd19uNTgwcm5wN0p6Y2owRzdNUUs1NEprWTJHb0hUTDI3dm9HM0tIMjYzYllNUVdEWjk4R3RWbUFyZm1lU3R1UnQ0LWE4WC1NQmc?oc=5",
-      "source": "etnet 經濟通",
-      "query_source": "經濟通 ET Net",
-      "summary": "美股動向 | 蜆殼同意向匈牙利MOL出售賽普勒斯資產，涉資7.2億美元 | 全部 - 新聞 - 美股 etnet 經濟通",
-      "published_at": "2026-08-01T02:00:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 78,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "etnet 經濟通"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "5400229c8090ed41",
-      "title": "AASTOCKS 財經新聞Financial News - secure.aastocks.com",
-      "link": "https://www.google.com/search?q=%22AASTOCKS+%E8%B2%A1%E7%B6%93%E6%96%B0%E8%81%9EFinancial+News+-+secure.aastocks.com%22+secure.aastocks.com",
-      "original_link": "https://news.google.com/rss/articles/CBMilgFBVV95cUxNM2ZzWGtLT2JUeTdBZjllUkxMZGVDdG54eDNFU3pmVlItNVhhVzBpeDlXaEcwTGFWMWZNY2hVWWZDMnJtVV9xN1I0aV9ja29Hdm5kQ2ozMDZBaExEV2M4ZENrdTNPUUczTGo4X0k5UUdnZWtqeE4zOHpVR1hOaWVza09IRTRGM255WnpzRzQ4SDJXVW1XX0E?oc=5",
-      "source": "secure.aastocks.com",
-      "query_source": "AASTOCKS",
-      "summary": "AASTOCKS 財經新聞Financial News secure.aastocks.com",
-      "published_at": "2026-07-31T18:57:47+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 78,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "secure.aastocks.com"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "25dc7efa452b3847",
-      "title": "亞洲資金輪動流向港股；基金買盤吸納中際旭創 | 即時新聞 - 新聞 - etnet 經濟通",
-      "link": "https://www.google.com/search?q=%22%E4%BA%9E%E6%B4%B2%E8%B3%87%E9%87%91%E8%BC%AA%E5%8B%95%E6%B5%81%E5%90%91%E6%B8%AF%E8%82%A1%EF%BC%9B%E5%9F%BA%E9%87%91%E8%B2%B7%E7%9B%A4%E5%90%B8%E7%B4%8D%E4%B8%AD%E9%9A%9B%E6%97%AD%E5%89%B5+%7C+%E5%8D%B3%E6%99%82%E6%96%B0%E8%81%9E+-+%E6%96%B0%E8%81%9E+-+etnet+%E7%B6%93%E6%BF%9F%E9%80%9A%22+etnet+%E7%B6%93%E6%BF%9F%E9%80%9A",
-      "original_link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxOZnUzRWF1alRjNWlzMEJaS2kxVVZtNmhUR3Njc0x4QUhTYkNaMUx4cm8yVEdTcFJnODdndGRBdWd0eE9helRpYWNvY1A2alYxSzRuMzVFTURoNEdRZHJYbUhCTjlNclc4MUFIR09tZGlNN2JkZGZ6OWQ0WjdsVjBxeEg1RWkxOWM4czdQZ3hlZmVEZw?oc=5",
-      "source": "etnet 經濟通",
-      "query_source": "經濟通 ET Net",
-      "summary": "亞洲資金輪動流向港股；基金買盤吸納中際旭創 | 即時新聞 - 新聞 etnet 經濟通",
-      "published_at": "2026-07-31T09:01:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "fund",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 78,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "etnet 經濟通"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "53f13ef091506767",
-      "title": "淨流出85.71億元，買騰訊沽盈富基金 | 即時新聞 - 新聞 - etnet 經濟通",
-      "link": "https://www.google.com/search?q=%22%E6%B7%A8%E6%B5%81%E5%87%BA85.71%E5%84%84%E5%85%83%EF%BC%8C%E8%B2%B7%E9%A8%B0%E8%A8%8A%E6%B2%BD%E7%9B%88%E5%AF%8C%E5%9F%BA%E9%87%91+%7C+%E5%8D%B3%E6%99%82%E6%96%B0%E8%81%9E+-+%E6%96%B0%E8%81%9E+-+etnet+%E7%B6%93%E6%BF%9F%E9%80%9A%22+etnet+%E7%B6%93%E6%BF%9F%E9%80%9A",
-      "original_link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxQYk1MSlNwWkhGWFE3di1kampQbE5yb3JSRFpfNFZMZldKb1RVODJzVTNXeUxaVkF1bkNSNWQtMHlhZmZnNU5PQUhERi1PYWhMelY1MGxMeTVpalBVZV9FRTlJTklaTnY5OFpwYUtabDBlbHZ5Sk9wV0J6SzlTUllaOC1qMVdZMFZXRllpMjZTV3A5dw?oc=5",
-      "source": "etnet 經濟通",
-      "query_source": "經濟通 ET Net",
-      "summary": "淨流出85.71億元，買騰訊沽盈富基金 | 即時新聞 - 新聞 etnet 經濟通",
-      "published_at": "2026-07-30T17:39:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "fund",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 78,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "etnet 經濟通"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "b9d89f4594a828c9",
-      "title": "金融時報：OpenAI原員工Aschenbrenner的對沖基金尋求新資金，因AI股大跌 | 即時新聞 - 新聞 - etnet 經濟通",
-      "link": "https://www.google.com/search?q=%22%E9%87%91%E8%9E%8D%E6%99%82%E5%A0%B1%EF%BC%9AOpenAI%E5%8E%9F%E5%93%A1%E5%B7%A5Aschenbrenner%E7%9A%84%E5%B0%8D%E6%B2%96%E5%9F%BA%E9%87%91%E5%B0%8B%E6%B1%82%E6%96%B0%E8%B3%87%E9%87%91%EF%BC%8C%E5%9B%A0AI%E8%82%A1%E5%A4%A7%E8%B7%8C+%7C+%E5%8D%B3%E6%99%82%E6%96%B0%E8%81%9E+-+%E6%96%B0%E8%81%9E+-+etnet+%E7%B6%93%E6%BF%9F%E9%80%9A%22+etnet+%E7%B6%93%E6%BF%9F%E9%80%9A",
-      "original_link": "https://news.google.com/rss/articles/CBMikgFBVV95cUxPRndGQ1lUVm95eHNjcmRRLVdDNk1SZE1fNVMzdVY0VXFpc3Mzb0dIaGtpX0doZlFaaE1fVDBBaFdVSFN0cTJZUUtpbTlkaUFuckhpbGZETDJlTWloc0tQTHo4NXN1MEhtcl95aWJOdHZQUUNmb19WVmUyOFhqVTZfTUljS1JxNzIzTmQ3VGR1dXBlZw?oc=5",
-      "source": "etnet 經濟通",
-      "query_source": "經濟通 ET Net",
-      "summary": "金融時報：OpenAI原員工Aschenbrenner的對沖基金尋求新資金，因AI股大跌 | 即時新聞 - 新聞 etnet 經濟通",
-      "published_at": "2026-07-30T13:41:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "finance",
-        "technology"
-      ],
-      "primary_industry": "finance",
-      "asset_class": "fund",
-      "crypto_categories": [],
-      "industry_label": "金融保險",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 78,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "etnet 經濟通"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "ad39afd4d6295fa8",
-      "title": "日股早市初段上升，新報61888升454點，圓匯163.68 | 即時新聞 - 新聞 - etnet 經濟通",
-      "link": "https://www.google.com/search?q=%22%E6%97%A5%E8%82%A1%E6%97%A9%E5%B8%82%E5%88%9D%E6%AE%B5%E4%B8%8A%E5%8D%87%EF%BC%8C%E6%96%B0%E5%A0%B161888%E5%8D%87454%E9%BB%9E%EF%BC%8C%E5%9C%93%E5%8C%AF163.68+%7C+%E5%8D%B3%E6%99%82%E6%96%B0%E8%81%9E+-+%E6%96%B0%E8%81%9E+-+etnet+%E7%B6%93%E6%BF%9F%E9%80%9A%22+etnet+%E7%B6%93%E6%BF%9F%E9%80%9A",
-      "original_link": "https://news.google.com/rss/articles/CBMiswFBVV95cUxOcGctU3JrYTVlajAwZktjcmxUNW95WFkzN1R3STVvS3l2NWJ2VW1hR25lTGQ1dXl2QWdhcEZiUnUxWlVINUhtZlhVRmo3bzFMXzhuVkNPOGhxQWlwM3ZSR0xFSG5VUXhBWWVTeHhoakdpUERVWnlDMFlvSVhoc3UyYjBwNEVLdkdoX01xX3lSa0YzZF92OWd1YUVpcnVfOEU4TVN0OGxjUkJna3B4U054bmtUWQ?oc=5",
-      "source": "etnet 經濟通",
-      "query_source": "經濟通 ET Net",
-      "summary": "日股早市初段上升，新報61888升454點，圓匯163.68 | 即時新聞 - 新聞 etnet 經濟通",
-      "published_at": "2026-07-30T08:48:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 78,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "etnet 經濟通"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "b7a3d6f162343ec7",
-      "title": "新聞 - AASTOCKS.com",
-      "link": "https://www.google.com/search?q=%22%E6%96%B0%E8%81%9E+-+AASTOCKS.com%22+AASTOCKS.com",
-      "original_link": "https://news.google.com/rss/articles/CBMixAFBVV95cUxPbjh3cWo2WjVqQ1hpNnhqRGVJTkkweGV0aExFQWtJRWVWbERDaU9BSEhxXzk0UWhTNUVOaTkwdnhHU1FvUHN6ZU52RGlOdXFSelBKa3hHd2RDWWhfY1NSNi1GTUZKeEt3NVhfTnNRQmF6ZHlkWG5aYlIyWnB4cENrZXd2ZlkxcjZJMWw0QTVTZzlvbS1sZFg3REhlZHJiMzhHVGFtSWp6b3FvZjlRelkwSmtSdEF5OUZfbTZKM2M3QzZyQXFp?oc=5",
-      "source": "AASTOCKS.com",
-      "query_source": "AASTOCKS",
-      "summary": "新聞 AASTOCKS.com",
-      "published_at": "2026-07-29T06:33:39+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 78,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "AASTOCKS.com"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "96d63f73569e0e44",
-      "title": "美股動向｜AI憂慮加劇市場波動，關鍵周聚焦科技巨頭業績及聯儲局議息 | 專題透視 - 新聞 - etnet 經濟通",
-      "link": "https://www.google.com/search?q=%22%E7%BE%8E%E8%82%A1%E5%8B%95%E5%90%91%EF%BD%9CAI%E6%86%82%E6%85%AE%E5%8A%A0%E5%8A%87%E5%B8%82%E5%A0%B4%E6%B3%A2%E5%8B%95%EF%BC%8C%E9%97%9C%E9%8D%B5%E5%91%A8%E8%81%9A%E7%84%A6%E7%A7%91%E6%8A%80%E5%B7%A8%E9%A0%AD%E6%A5%AD%E7%B8%BE%E5%8F%8A%E8%81%AF%E5%84%B2%E5%B1%80%E8%AD%B0%E6%81%AF+%7C+%E5%B0%88%E9%A1%8C%E9%80%8F%E8%A6%96+-+%E6%96%B0%E8%81%9E+-+etnet+%E7%B6%93%E6%BF%9F%E9%80%9A%22+etnet+%E7%B6%93%E6%BF%9F%E9%80%9A",
-      "original_link": "https://news.google.com/rss/articles/CBMilwFBVV95cUxPWnkyWkpGUDJWT1U4MWhDVUZUT193WVRHdUJPc1JKSXlLUU1qWGN1ZXJTd0E5cmwzZXlQMS1PZ0ZwVWxwSmNrS0ExMUs5YjdRM282OExhUG96RTlpVXpINndSN2JseHhnUjg1SmhPbWJtSHBfZGdTZmo3MVBPWVdVS3RuNXdDTXFvNUlJTm1NVFJXMXpTcjhN?oc=5",
-      "source": "etnet 經濟通",
-      "query_source": "經濟通 ET Net",
-      "summary": "美股動向｜AI憂慮加劇市場波動，關鍵周聚焦科技巨頭業績及聯儲局議息 | 專題透視 - 新聞 etnet 經濟通",
-      "published_at": "2026-07-28T21:25:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 78,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "etnet 經濟通"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "650496348bf6f693",
-      "title": "《盤前攻略》中國生產光刻機震懾外圍晶片股，港股逍遙料試破區間 - etnet 經濟通",
-      "link": "https://www.google.com/search?q=%22%E3%80%8A%E7%9B%A4%E5%89%8D%E6%94%BB%E7%95%A5%E3%80%8B%E4%B8%AD%E5%9C%8B%E7%94%9F%E7%94%A2%E5%85%89%E5%88%BB%E6%A9%9F%E9%9C%87%E6%87%BE%E5%A4%96%E5%9C%8D%E6%99%B6%E7%89%87%E8%82%A1%EF%BC%8C%E6%B8%AF%E8%82%A1%E9%80%8D%E9%81%99%E6%96%99%E8%A9%A6%E7%A0%B4%E5%8D%80%E9%96%93+-+etnet+%E7%B6%93%E6%BF%9F%E9%80%9A%22+etnet+%E7%B6%93%E6%BF%9F%E9%80%9A",
-      "original_link": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxPWXV2a3ZPQTRSaWgySV9PeVpDaFpJREJqX0x6R1pqZkFFbFp1cmpuSzRnbzNYaHlYUjlYdVJNY1BtOFExenktbWZ5X05ERlBhMXNfbFMwWXpXNkZncjZpX3laeERuOUFqb0hpNV9qRnBURTZ4Y3pMVHREYy1yODlzX3lPdDBVZlRaMjlhcFl5NUlNRk1RaUNEVmliLXJwTkpTNGJxcnAxYnpoQQ?oc=5",
-      "source": "etnet 經濟通",
-      "query_source": "經濟通 ET Net",
-      "summary": "《盤前攻略》中國生產光刻機震懾外圍晶片股，港股逍遙料試破區間 etnet 經濟通",
-      "published_at": "2026-07-28T09:10:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 78,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "etnet 經濟通"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "b4d4c580baba7f5e",
-      "title": "美股動向｜Evercore報告：AI投資未現過度投機跡象 | 即時新聞 - 新聞 - etnet 經濟通",
-      "link": "https://www.google.com/search?q=%22%E7%BE%8E%E8%82%A1%E5%8B%95%E5%90%91%EF%BD%9CEvercore%E5%A0%B1%E5%91%8A%EF%BC%9AAI%E6%8A%95%E8%B3%87%E6%9C%AA%E7%8F%BE%E9%81%8E%E5%BA%A6%E6%8A%95%E6%A9%9F%E8%B7%A1%E8%B1%A1+%7C+%E5%8D%B3%E6%99%82%E6%96%B0%E8%81%9E+-+%E6%96%B0%E8%81%9E+-+etnet+%E7%B6%93%E6%BF%9F%E9%80%9A%22+etnet+%E7%B6%93%E6%BF%9F%E9%80%9A",
-      "original_link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxPU244ejdxWGYzb09jcE9DTkdwMUM4Q0g5Znd1Q1BnS2g2X19OZk1wTklPaThEUnZ0UlNJY2xFRFByRElsaVFXOGQ3aHhOdnM1WnFLQkhodWRHOE04eDFGRTZEd2xRb3JFZHdwVzF5c0Z3VndyNWFJNVI3b2RnUXBrVzYxR1BnWWFYUkFMMEpSMGVOMUJ3N3RQMUNkX0RlX1VT?oc=5",
-      "source": "etnet 經濟通",
-      "query_source": "經濟通 ET Net",
-      "summary": "美股動向｜Evercore報告：AI投資未現過度投機跡象 | 即時新聞 - 新聞 etnet 經濟通",
-      "published_at": "2026-07-28T03:30:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 78,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "etnet 經濟通"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "52007b2d11a26ee0",
-      "title": "美股收盤 | 道指收市升235點，科技股遭拋售，納指跌0.6% | 專題透視 - 新聞 - etnet 經濟通",
-      "link": "https://www.google.com/search?q=%22%E7%BE%8E%E8%82%A1%E6%94%B6%E7%9B%A4+%7C+%E9%81%93%E6%8C%87%E6%94%B6%E5%B8%82%E5%8D%87235%E9%BB%9E%EF%BC%8C%E7%A7%91%E6%8A%80%E8%82%A1%E9%81%AD%E6%8B%8B%E5%94%AE%EF%BC%8C%E7%B4%8D%E6%8C%87%E8%B7%8C0.6%25+%7C+%E5%B0%88%E9%A1%8C%E9%80%8F%E8%A6%96+-+%E6%96%B0%E8%81%9E+-+etnet+%E7%B6%93%E6%BF%9F%E9%80%9A%22+etnet+%E7%B6%93%E6%BF%9F%E9%80%9A",
-      "original_link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxNTUdXcVl6dFpPekpUbExyVllfdU8wS1VFWU1EZklKdnhZV3Y2QUY0LUlDSVN1V0tHWGRFNVZwSjA1VUI5RXBaaFgyNzBzQ2VDMDBUZWxsNC0ydWJpVUVGUFhFMGdnTndTSHJYZDhsTkF2ZU5JN0RFS1BadGdaWHR0Q0JUS2NKYXhmdWpzZ3pDaERxOFNnVzlvYTlXdVQwUk9i?oc=5",
-      "source": "etnet 經濟通",
-      "query_source": "經濟通 ET Net",
-      "summary": "美股收盤 | 道指收市升235點，科技股遭拋售，納指跌0.6% | 專題透視 - 新聞 etnet 經濟通",
-      "published_at": "2026-07-25T08:40:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 78,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "etnet 經濟通"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "1e09ad988cb15d45",
-      "title": "開市Go | AI支出憂慮再累美股，油價重上100美元，騰訊雲大手筆投海外基建 | 專題透視 - 新聞 - etnet 經濟通",
-      "link": "https://www.google.com/search?q=%22%E9%96%8B%E5%B8%82Go+%7C+AI%E6%94%AF%E5%87%BA%E6%86%82%E6%85%AE%E5%86%8D%E7%B4%AF%E7%BE%8E%E8%82%A1%EF%BC%8C%E6%B2%B9%E5%83%B9%E9%87%8D%E4%B8%8A100%E7%BE%8E%E5%85%83%EF%BC%8C%E9%A8%B0%E8%A8%8A%E9%9B%B2%E5%A4%A7%E6%89%8B%E7%AD%86%E6%8A%95%E6%B5%B7%E5%A4%96%E5%9F%BA%E5%BB%BA+%7C+%E5%B0%88%E9%A1%8C%E9%80%8F%E8%A6%96+-+%E6%96%B0%E8%81%9E+-+etnet+%E7%B6%93%E6%BF%9F%E9%80%9A%22+etnet+%E7%B6%93%E6%BF%9F%E9%80%9A",
-      "original_link": "https://news.google.com/rss/articles/CBMioAFBVV95cUxNb25KMlpGcFRHdU85UEd4T3NOZC1lSEpZNXhRbWdQZ2tzSEZCbHR4clhLbFF6ai1fNFIzUUgyYXN4UzV2LVhWZC1YdTVYeHZRQ2hvWElpemI4ZFZOc3FoMk1zOThBOUVWYTdQVnRWWTR3RVZiRHVVa1ptanRoUzlWUWNIbnNqUkduV2hNQllDaUN6ME1rUFlESTBDSHVDX2RU?oc=5",
-      "source": "etnet 經濟通",
-      "query_source": "經濟通 ET Net",
-      "summary": "開市Go | AI支出憂慮再累美股，油價重上100美元，騰訊雲大手筆投海外基建 | 專題透視 - 新聞 etnet 經濟通",
-      "published_at": "2026-07-24T08:42:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 78,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "etnet 經濟通"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "19fccee878aae986",
-      "title": "夜期成交資料——恒生科技指數|香港經濟日報 - 香港經濟日報HKET",
-      "link": "https://www.google.com/search?q=%22%E5%A4%9C%E6%9C%9F%E6%88%90%E4%BA%A4%E8%B3%87%E6%96%99%E2%80%94%E2%80%94%E6%81%92%E7%94%9F%E7%A7%91%E6%8A%80%E6%8C%87%E6%95%B8%7C%E9%A6%99%E6%B8%AF%E7%B6%93%E6%BF%9F%E6%97%A5%E5%A0%B1+-+%E9%A6%99%E6%B8%AF%E7%B6%93%E6%BF%9F%E6%97%A5%E5%A0%B1HKET%22+%E9%A6%99%E6%B8%AF%E7%B6%93%E6%BF%9F%E6%97%A5%E5%A0%B1HKET",
-      "original_link": "https://news.google.com/rss/articles/CBMi-gFBVV95cUxNenMtUTU2SExFRTlnNGRhTWlEQmNoWEJsNG1pWjlqaWpWSE1kVTk4MG93U3ZFOEdheHM2SXFiM0RSOS0zRzdKZnJlYVJuWko4dm1IWGFyY3kzaXhJUzdGd2RKbndVV1RxZ3VCZDFCclZReVBwcUpyYlNPQXlsdFdmS28tV0ZaYnNOVHZzMGM1VE9kOXplNmF2d1FVSGRqMlk4WEVyQjFPQzhYbnNSVHQwZGxpc21oLUl6SlBkVzl2UzlQUnItM3g5cFZrWUpzQ2F1TlFiQmJfZWxTMDRGcVRKRlBJc1JuTFN6WjJZb3FOUkY0VjlTbEttSG93?oc=5",
-      "source": "香港經濟日報HKET",
-      "query_source": "香港經濟日報",
-      "summary": "夜期成交資料——恒生科技指數|香港經濟日報 香港經濟日報HKET",
-      "published_at": "2026-08-01T04:32:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 77,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "香港經濟日報HKET"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "004b02fcc17f8aaf",
-      "title": "【RBLX】Roblox急瀉近三成 改演算法拖累遊戲消費 - 香港經濟日報HKET",
-      "link": "https://www.google.com/search?q=%22%E3%80%90RBLX%E3%80%91Roblox%E6%80%A5%E7%80%89%E8%BF%91%E4%B8%89%E6%88%90+%E6%94%B9%E6%BC%94%E7%AE%97%E6%B3%95%E6%8B%96%E7%B4%AF%E9%81%8A%E6%88%B2%E6%B6%88%E8%B2%BB+-+%E9%A6%99%E6%B8%AF%E7%B6%93%E6%BF%9F%E6%97%A5%E5%A0%B1HKET%22+%E9%A6%99%E6%B8%AF%E7%B6%93%E6%BF%9F%E6%97%A5%E5%A0%B1HKET",
-      "original_link": "https://news.google.com/rss/articles/CBMiwgJBVV95cUxNb0U0d2xmQzF0ZWdoMElUdEZTZ0RBNWhWS29wZVBucFFIS05FZnM3NDdfUEVDQzJSQVpLREQyOFhFVjh5dHJNQ29vZndaNVZfbDVLWUZyQXZuNzhuNHRXVFZLMmp4eF9ZaG1KRXRrcm1teG9WTzBpaWpZVF93czRUVnVsdk1ZMXB3ZVk5a1dZM3AtVy1zVmFGZ1BlcVozbnJiYm1ma0hEc1RuUERJc3FjaElaQ2tIZUxoWXRPRTRJZjFLQ21vNmxXTzZKUGRZMFdNanRSQVlCU0NpRkpZVDMyRUN6UTBUSVRFS0Nra25mcExRWHQ3VklTdHNhR1kwWjZNR0g5Q0tlUUZab3VBRlhDS0pHelNYMXp3a3RNRjNnMEM0X3hqTmx4R01FUnZhclh5ZHNXM3A0YnJESGZ1LU1tbUFn?oc=5",
-      "source": "香港經濟日報HKET",
-      "query_source": "香港經濟日報",
-      "summary": "【RBLX】Roblox急瀉近三成 改演算法拖累遊戲消費 香港經濟日報HKET",
-      "published_at": "2026-08-01T01:32:41+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "consumer",
-        "tourism"
-      ],
-      "primary_industry": "consumer",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "消費零售",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 77,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "香港經濟日報HKET"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "600f115eda615708",
-      "title": "韓擬設千億主權基金救市 專攻AI產業|香港經濟日報 - 香港經濟日報HKET",
-      "link": "https://www.google.com/search?q=%22%E9%9F%93%E6%93%AC%E8%A8%AD%E5%8D%83%E5%84%84%E4%B8%BB%E6%AC%8A%E5%9F%BA%E9%87%91%E6%95%91%E5%B8%82+%E5%B0%88%E6%94%BBAI%E7%94%A2%E6%A5%AD%7C%E9%A6%99%E6%B8%AF%E7%B6%93%E6%BF%9F%E6%97%A5%E5%A0%B1+-+%E9%A6%99%E6%B8%AF%E7%B6%93%E6%BF%9F%E6%97%A5%E5%A0%B1HKET%22+%E9%A6%99%E6%B8%AF%E7%B6%93%E6%BF%9F%E6%97%A5%E5%A0%B1HKET",
-      "original_link": "https://news.google.com/rss/articles/CBMitwJBVV95cUxOLUlobFZ4TEFiRUVxQkR6bEJUemk0bGdtWDdiUm9rdDFXSnUyYWVReVB2T2UtRHhydHF6c0FENkdXQkhJOXRPUEV5ZHJVT3owSnJWdTF2SXBnR0huY2cxRkVJOEsxWUFkMmtpcnV5b1RKS1lvQ2RXREs0Vmw1SkhQaDNmMXY5cnBPWHZ0SnlTRTVDN2dZM3oyUHlnbEY3UFdZYWVfUS1QUmxOR1FFQkNUbkJybW0tV0ZuQTQtbUQtLVZtby1SVm1JREZhZjUwbHh2bEpVS2Jma3dPUXpGeldnWlJqSWN6ODlPeWVybVgzWGZNQW9vS28tb3FPZmZIYjN5Tk9XNWV4M045U0ZvMVBKbVJWdjdJWl9lTUFPXzJoQ0QzSndIcFRYUHc1bzJsb18xWm5iUjlXTQ?oc=5",
-      "source": "香港經濟日報HKET",
-      "query_source": "香港經濟日報",
-      "summary": "韓擬設千億主權基金救市 專攻AI產業|香港經濟日報 香港經濟日報HKET",
-      "published_at": "2026-08-01T00:29:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "fund",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 77,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "香港經濟日報HKET"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "e6674d9a605482e1",
-      "title": "有圖有勢｜半導體股帶領美股急彈 HSI夜期率先破26000關（持續更新）|香港經濟日報 - 香港經濟日報HKET",
-      "link": "https://www.google.com/search?q=%22%E6%9C%89%E5%9C%96%E6%9C%89%E5%8B%A2%EF%BD%9C%E5%8D%8A%E5%B0%8E%E9%AB%94%E8%82%A1%E5%B8%B6%E9%A0%98%E7%BE%8E%E8%82%A1%E6%80%A5%E5%BD%88+HSI%E5%A4%9C%E6%9C%9F%E7%8E%87%E5%85%88%E7%A0%B426000%E9%97%9C%EF%BC%88%E6%8C%81%E7%BA%8C%E6%9B%B4%E6%96%B0%EF%BC%89%7C%E9%A6%99%E6%B8%AF%E7%B6%93%E6%BF%9F%E6%97%A5%E5%A0%B1+-+%E9%A6%99%E6%B8%AF%E7%B6%93%E6%BF%9F%E6%97%A5%E5%A0%B1HKET%22+%E9%A6%99%E6%B8%AF%E7%B6%93%E6%BF%9F%E6%97%A5%E5%A0%B1HKET",
-      "original_link": "https://news.google.com/rss/articles/CBMiiANBVV95cUxQNlpTN1NnLUx6bUlEal9WZHR6RGx6SFc2ZEQ4OUtnRWxPNGMyNzVLejRYblZxVjJpWmN5cGN1eDVpNzl3QUhNWjZEQWFYZEFTSVpnRUkwRHpVU21NbVB1OE5XajlpY29wLUo1dnZRMXNDeTNSZ0RNS3JmdXVVYzRHNnc1OU5YRTE2d1JORG9iZE9fd0Z5ODRPeUloa0lrMjVYZERZT1hyWVl0ZXJPR1JfMDQ1Y2V3LTliS2VMUUNDVlBteVJuMm5KRUFyV3BWaU9RVWNIaEF3dFpZYU00akJxVFFrcl8xMlMweUw5bmpPWWExRVF3S0JtYk9fZmN3cVVFZWt0Z2FyQUhoM3ExbG1oU0JDZ01IQ1c1LVRkM1hvQ1lfR2ZXMFdLaTBJOVg2cDNsZ0s0b2xSLUFRelpEY1V4YnlHRDVwejJEVUpJdHl6V2w5WEthVUcyZGdnMk5Ba3prdWI1MldSZ3VCT3RlTUlmOWNyV2xkTHkwczlMNE0wV2k0aEsyVDJWSQ?oc=5",
-      "source": "香港經濟日報HKET",
-      "query_source": "香港經濟日報",
-      "summary": "有圖有勢｜半導體股帶領美股急彈 HSI夜期率先破26000關（持續更新）|香港經濟日報 香港經濟日報HKET",
-      "published_at": "2026-07-31T23:33:11+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 77,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "香港經濟日報HKET"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "e2e38aaad8bdd4fd",
-      "title": "口碑極端撕裂！周星馳靠食老本賺到幾多？拆解《功夫女足》拆賬密碼！星爺部署「元宇宙+AI」IP棋局？︱投資撈過界 - 香港經濟日報HKET",
-      "link": "https://www.google.com/search?q=%22%E5%8F%A3%E7%A2%91%E6%A5%B5%E7%AB%AF%E6%92%95%E8%A3%82%EF%BC%81%E5%91%A8%E6%98%9F%E9%A6%B3%E9%9D%A0%E9%A3%9F%E8%80%81%E6%9C%AC%E8%B3%BA%E5%88%B0%E5%B9%BE%E5%A4%9A%EF%BC%9F%E6%8B%86%E8%A7%A3%E3%80%8A%E5%8A%9F%E5%A4%AB%E5%A5%B3%E8%B6%B3%E3%80%8B%E6%8B%86%E8%B3%AC%E5%AF%86%E7%A2%BC%EF%BC%81%E6%98%9F%E7%88%BA%E9%83%A8%E7%BD%B2%E3%80%8C%E5%85%83%E5%AE%87%E5%AE%99%2BAI%E3%80%8DIP%E6%A3%8B%E5%B1%80%EF%BC%9F%EF%B8%B1%E6%8A%95%E8%B3%87%E6%92%88%E9%81%8E%E7%95%8C+-+%E9%A6%99%E6%B8%AF%E7%B6%93%E6%BF%9F%E6%97%A5%E5%A0%B1HKET%22+%E9%A6%99%E6%B8%AF%E7%B6%93%E6%BF%9F%E6%97%A5%E5%A0%B1HKET",
-      "original_link": "https://news.google.com/rss/articles/CBMirwVBVV95cUxPZEVpbFV4NG51d1JGZlBEbFVGUTRzdkpwNTlUd2dFNGRqTF9sTy1Id3lEZ2poTjV5TFdPOWRIUHBnTWZJODFQVmtPQVpyVGoxSS1hWWQxZU5WbHotM3JuZlNpWmZxbWVZUmtkUlN6LTdOX2ZpLVhweW4yWnI4cG81ejBSTnkxOEM5Mi1NTlJrbmd1UFpLM3dObTBtZUFGMmJfaTRvcFk0bkoyQzRYYm1mUzN0VWs4bTFRUXVrcjVDZElCYjJYVE40cS1OQjV5ZnhmQjdMME9oX3hSUU50VjE5NXVYemxaeFV4RHVROTZZQXNSelNGdEN5RHE5NTNTQjhmMU9zRVV3RDZyempwNHdoVWlKU0pSbnVZMnY5M2FxTnNHOUFHNFd0NEE5ZG9oWHgzbUFtUnY4U1BZd01HWVNDaWZHT1RtcHMwaUhWT3AtamI2Zm50cGpjNUVLcVNwQ2JRWFplbVFNZ05HNG5lMVRhZ3JycmJOdEk2Ui12STJyekY4MXhtbVk2bUphQVNQRTNzdUZnWWs4aU5TS0tfT2c0Y01SXzVCRE4xTjJ0alluWnpOak9kSmozNWhYS2pkaVV0TkJ3QUxjZWZSamo4OTFyakRCU2JYMmtaYWo4OVFBWEF2Rnh2SkdHZ0lyUWdaeF90WkNUUE5Id2t5eWlnTjc2WEhFZEUxU1BoWmRBTmFTOEhDVWtkb1ZSb0lPMzVlYUROUkN6VnpMZjFlcGJJb29tcU40YjM1a3JqV3VXaXZuSVJ0dWUwRzZ5aHd6X2pjR2tNSmpPMERzX01jYVBuMXpITmd6c0hvWEE4eC1uU3p0WnpycHJnTGgyRUttajlhaWZpNnE1WHdjWUZibEVpajgtMGF0NGlaSlpsV3hJcnBwSFV0cEV0eXNuVVlxeU5fV00?oc=5",
-      "source": "香港經濟日報HKET",
-      "query_source": "香港經濟日報",
-      "summary": "口碑極端撕裂！周星馳靠食老本賺到幾多？拆解《功夫女足》拆賬密碼！星爺部署「元宇宙+AI」IP棋局？︱投資撈過界 香港經濟日報HKET",
-      "published_at": "2026-07-31T21:00:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 77,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "香港經濟日報HKET"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "d594bfa7092d9b4a",
-      "title": "Leopold槓桿爆倉 「笑到最後」的 為何總是巴菲特？ - 香港經濟日報HKET",
-      "link": "https://www.google.com/search?q=%22Leopold%E6%A7%93%E6%A1%BF%E7%88%86%E5%80%89+%E3%80%8C%E7%AC%91%E5%88%B0%E6%9C%80%E5%BE%8C%E3%80%8D%E7%9A%84+%E7%82%BA%E4%BD%95%E7%B8%BD%E6%98%AF%E5%B7%B4%E8%8F%B2%E7%89%B9%EF%BC%9F+-+%E9%A6%99%E6%B8%AF%E7%B6%93%E6%BF%9F%E6%97%A5%E5%A0%B1HKET%22+%E9%A6%99%E6%B8%AF%E7%B6%93%E6%BF%9F%E6%97%A5%E5%A0%B1HKET",
-      "original_link": "https://news.google.com/rss/articles/CBMizwJBVV95cUxQZElQSTIxcGJrcXlpQjdIWHRxWnNSZ3dUZno2clIwNkFfZllDMnFRM3VXQ0lmMzhYbUJpc3A4OGhYc0l5R0ZyMURRQ0gzSk5yYXk3UXluOFFrTWEwMUhVVmRQdGFQRVkzVG5Ub2taUUVqeUFLcFA4dWl1dnRvMUxRY1N2RVRvejZTYlZFMWk2UDNiYWJpc3o5Mm9XN3ZwVDRKaUsxaTZnZnBkanhoM1ZEdnFKMDBDYzR4ZjdTZWRzVTNmWUJvbkE1M1g3VWVyOW44ME5BeFplMnBDOTJJUTNTSGN4elFDSXlrX29JeEdySjU4QlBJS3ZnczdoUkprNkNybkYxZWJvQ252UHRyLWdGZVNqekRXdHczQnp2X2FheUdJVjk2U2s5N2NvdFI2RjA3SGhBc0daczZoX2M2YWoxeERMdUpGeHBHUGFxOTJhZw?oc=5",
-      "source": "香港經濟日報HKET",
-      "query_source": "香港經濟日報",
-      "summary": "Leopold槓桿爆倉 「笑到最後」的 為何總是巴菲特？ 香港經濟日報HKET",
-      "published_at": "2026-07-31T18:12:14+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 77,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "香港經濟日報HKET"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "6342640f4e33577e",
-      "title": "港股通｜智譜（02513）為港股通（滬）10大活躍成交股榜首|香港經濟日報 - 香港經濟日報HKET",
-      "link": "https://www.google.com/search?q=%22%E6%B8%AF%E8%82%A1%E9%80%9A%EF%BD%9C%E6%99%BA%E8%AD%9C%EF%BC%8802513%EF%BC%89%E7%82%BA%E6%B8%AF%E8%82%A1%E9%80%9A%EF%BC%88%E6%BB%AC%EF%BC%8910%E5%A4%A7%E6%B4%BB%E8%BA%8D%E6%88%90%E4%BA%A4%E8%82%A1%E6%A6%9C%E9%A6%96%7C%E9%A6%99%E6%B8%AF%E7%B6%93%E6%BF%9F%E6%97%A5%E5%A0%B1+-+%E9%A6%99%E6%B8%AF%E7%B6%93%E6%BF%9F%E6%97%A5%E5%A0%B1HKET%22+%E9%A6%99%E6%B8%AF%E7%B6%93%E6%BF%9F%E6%97%A5%E5%A0%B1HKET",
-      "original_link": "https://news.google.com/rss/articles/CBMi7wJBVV95cUxQbmZMalgySy1VTGdMaTBvXzdrXzJ1ZmlJVGlvcU8tMk82a3lDdHZQZ1ZUajdua3NlQUpHZ29mNDB3RHZxaFk3a0gyOUpld050emtHX2I4bE1yUFhrNEJKeHZjb1hSQ1BwRzJCSkJRXzQ2cUQ5dVJSY0x3VDR3cE5sSlFwaXVkUmpWWHl4cTRoUVl1T2NRLThVeWxwaTM3UjdfRTlGM0lwaDNHb2JzUjd6VzVuUXlqZzI3bEdCQXhzZjNBcTRpVFRfZFJuVWdScEhta25MNm1GOVVZSDZfSm82bFJpTnhJeFo0OTZ0WTN3alg5d0Z2ZDNMdWZpVF9kSUFnYkJTaVMtTWJ4QkZzVk9BaTdVcHlldEkta0JsQ090eTExQV95MUxCcTVmVHR2OG5BTHNMVzVtQjBvMUo5dUVPWkxfQUNlb2pzZ0hleWdSVFQ2d2d2LTNudTFmTkZyNkwybEdudUNRVHA4ajF4SThV?oc=5",
-      "source": "香港經濟日報HKET",
-      "query_source": "香港經濟日報",
-      "summary": "港股通｜智譜（02513）為港股通（滬）10大活躍成交股榜首|香港經濟日報 香港經濟日報HKET",
-      "published_at": "2026-07-31T17:33:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 77,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "香港經濟日報HKET"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "aedef28f04147b5e",
-      "title": "少年AI股神慘遭清算！被嘲「撐不過黎明」 旗下對沖基金爆倉、老牌基金接手後急反彈 - 香港經濟日報HKET",
-      "link": "https://www.google.com/search?q=%22%E5%B0%91%E5%B9%B4AI%E8%82%A1%E7%A5%9E%E6%85%98%E9%81%AD%E6%B8%85%E7%AE%97%EF%BC%81%E8%A2%AB%E5%98%B2%E3%80%8C%E6%92%90%E4%B8%8D%E9%81%8E%E9%BB%8E%E6%98%8E%E3%80%8D+%E6%97%97%E4%B8%8B%E5%B0%8D%E6%B2%96%E5%9F%BA%E9%87%91%E7%88%86%E5%80%89%E3%80%81%E8%80%81%E7%89%8C%E5%9F%BA%E9%87%91%E6%8E%A5%E6%89%8B%E5%BE%8C%E6%80%A5%E5%8F%8D%E5%BD%88+-+%E9%A6%99%E6%B8%AF%E7%B6%93%E6%BF%9F%E6%97%A5%E5%A0%B1HKET%22+%E9%A6%99%E6%B8%AF%E7%B6%93%E6%BF%9F%E6%97%A5%E5%A0%B1HKET",
-      "original_link": "https://news.google.com/rss/articles/CBMimARBVV95cUxNLXhyNVBja0hpZ3Z3UWV0Tks0RE5fVVgxUXFleTRFd3BLRG1KVDVUZDVTbDd4ZG45UktOWG96RGVFcWVwUzlxd2hlOGlqNGFnMXRIMHM1ZmUydDYzdG1PMWdieUNoVVhzbldOTWlPbnZiWUZQNWk2SzI1Qk82eFBYbGRIbjU0Y3VKckF5QV85Yjh4LXFESU9GTHJDcGdmbC1kNTk3QTdOX3JvbzhGYlJBbl9UeHFjazRPb1ctNGhOelk0M2c1RVM5d3R2OFJaYWJLQTRmb0lGNFNGSVdYWU5nQ0VPNzcxekE4YWNydkJxakJnSW5YSjhubjVId1V5bXBBdnh0Q1VJNFQ5UlJ0a3IzV1R4MmFXUDNFdDMwUDBsV0FsM2NMT1k2aHBaR2tYdlJBUzFDRE1VbmE4d012M1p5MlFEQmZZSV91X0RnWkg4X1V0MkNQNk8xcVJmQ1d4OGgza2RwenctZW9MUmtVcWNldG9OOGdwWnJSTTF0anBFdG1iYnNIOTBZUFFWRFpSZkV1Q3hZelI2bzI4QjA2WWJIaFhBcDRyQXp6enU3b0ZxTlN2U3luQ1JJLWxlZFlqa09BQWd3MTFpal8ybi01WVVNWTMzWXJaVkJQTjZMem9mRjI0TDY3U2NHYzQ0cy1BZFhwZUJjTmlYSS1CdDNUaDBrRTJsWFExSWQ2eFZUR2tqejlnWGlVajFvVg?oc=5",
-      "source": "香港經濟日報HKET",
-      "query_source": "香港經濟日報",
-      "summary": "少年AI股神慘遭清算！被嘲「撐不過黎明」 旗下對沖基金爆倉、老牌基金接手後急反彈 香港經濟日報HKET",
-      "published_at": "2026-07-31T11:07:38+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "fund",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 77,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "香港經濟日報HKET"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "48880d00b71dae46",
-      "title": "港股評論｜恒指或面臨調整，高息領展可關注|香港經濟日報 - 香港經濟日報HKET",
-      "link": "https://www.google.com/search?q=%22%E6%B8%AF%E8%82%A1%E8%A9%95%E8%AB%96%EF%BD%9C%E6%81%92%E6%8C%87%E6%88%96%E9%9D%A2%E8%87%A8%E8%AA%BF%E6%95%B4%EF%BC%8C%E9%AB%98%E6%81%AF%E9%A0%98%E5%B1%95%E5%8F%AF%E9%97%9C%E6%B3%A8%7C%E9%A6%99%E6%B8%AF%E7%B6%93%E6%BF%9F%E6%97%A5%E5%A0%B1+-+%E9%A6%99%E6%B8%AF%E7%B6%93%E6%BF%9F%E6%97%A5%E5%A0%B1HKET%22+%E9%A6%99%E6%B8%AF%E7%B6%93%E6%BF%9F%E6%97%A5%E5%A0%B1HKET",
-      "original_link": "https://news.google.com/rss/articles/CBMiwgJBVV95cUxOVVQxSnU2eGJraEl6MFEzZnloRlkzdVNsazBuallpakowOWxUd1hicEhtVDgxTldyTkVZa21DZkszbVJiR1REWFVKbE5faGsxVG1ZVExvZWZidDM1SGJDVTVPV1NBV1V2UEFsVk5JMmEweXZVZlFFdlRUcnRnbkFiTlJsUW5feEhKR2ViR3dXWFFzaFdsMzdWTWg1ekY4REMwUDY5M0RJQ09xdXZhOXBuSzRnNWdQN2luNXByekZHeU1Zbi12alVqTnh2SERsT3U0YmRVT20zSTFYdHp3c3VmQXlkZ1Y0akpMZHc1T3M4OEs1aE1LbHdaOE1EYXMzTFBzS0h2Zjd6ZkcxN280X3ByVXRqX3d4TkZLU0RGZlhxZ01OZXN2X3FROVN2dTJ2elhvUWtuX1RIWGtQdFlrS3lmRFN3?oc=5",
-      "source": "香港經濟日報HKET",
-      "query_source": "香港經濟日報",
-      "summary": "港股評論｜恒指或面臨調整，高息領展可關注|香港經濟日報 香港經濟日報HKET",
-      "published_at": "2026-07-31T09:45:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "other"
-      ],
-      "primary_industry": "other",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "其他產業",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 77,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "香港經濟日報HKET"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "4fbe67b48fcecc8a",
-      "title": "劍橋科技（06166）：市盈率和市淨率顯著高於行業水平|香港經濟日報 - 香港經濟日報HKET",
-      "link": "https://www.google.com/search?q=%22%E5%8A%8D%E6%A9%8B%E7%A7%91%E6%8A%80%EF%BC%8806166%EF%BC%89%EF%BC%9A%E5%B8%82%E7%9B%88%E7%8E%87%E5%92%8C%E5%B8%82%E6%B7%A8%E7%8E%87%E9%A1%AF%E8%91%97%E9%AB%98%E6%96%BC%E8%A1%8C%E6%A5%AD%E6%B0%B4%E5%B9%B3%7C%E9%A6%99%E6%B8%AF%E7%B6%93%E6%BF%9F%E6%97%A5%E5%A0%B1+-+%E9%A6%99%E6%B8%AF%E7%B6%93%E6%BF%9F%E6%97%A5%E5%A0%B1HKET%22+%E9%A6%99%E6%B8%AF%E7%B6%93%E6%BF%9F%E6%97%A5%E5%A0%B1HKET",
-      "original_link": "https://news.google.com/rss/articles/CBMi4AJBVV95cUxPWlRKVkVjUk10LUtHdTJrNVNTN1U2bEdnTjVjV3JFQUtMMnZfa29WNHBSell1WWhycXI2aFR3c1BCX1BLTmpvQmNpZUEwSEIzWkJkYUt3TnZta2h2aklQWWZ4bzlSQ19ON2s2aFlqTWNsMk9GNWFhaGRfY0prRnVEbDdmX2NERnJkQTZjc081VzVpNV9YNUFJVWJMVmFvUlp0WFI2NnZNZ0wzOWNtTG5McUk1YmJzT0E4Q0pEMG44Y0RScFdkSGd3M0EwTDlOVm0wdV9SSTN4MjJEaGVZRXY3ckY1UmFPYVZNS0RCb1lZWFB3UnpGdFNtcEZHREttRmVEQzhXcG1FaUVMbFZ2Rm1ISUJRMWlHV1pWNm8tQWZsUjExbUtJeENfNy13WnJIay1mYVpxcGNBRGQtaWxlOWd5TjJzQjlBQ1JmOFdBVlRkNFY4b013RTQ0aXU3VndsemNv?oc=5",
-      "source": "香港經濟日報HKET",
-      "query_source": "香港經濟日報",
-      "summary": "劍橋科技（06166）：市盈率和市淨率顯著高於行業水平|香港經濟日報 香港經濟日報HKET",
-      "published_at": "2026-07-31T08:29:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 77,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "香港經濟日報HKET"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "6bd0812f96f6a29d",
-      "title": "赤子城科技（09911）今註銷266.4萬股|香港經濟日報 - 香港經濟日報HKET",
-      "link": "https://www.google.com/search?q=%22%E8%B5%A4%E5%AD%90%E5%9F%8E%E7%A7%91%E6%8A%80%EF%BC%8809911%EF%BC%89%E4%BB%8A%E8%A8%BB%E9%8A%B7266.4%E8%90%AC%E8%82%A1%7C%E9%A6%99%E6%B8%AF%E7%B6%93%E6%BF%9F%E6%97%A5%E5%A0%B1+-+%E9%A6%99%E6%B8%AF%E7%B6%93%E6%BF%9F%E6%97%A5%E5%A0%B1HKET%22+%E9%A6%99%E6%B8%AF%E7%B6%93%E6%BF%9F%E6%97%A5%E5%A0%B1HKET",
-      "original_link": "https://news.google.com/rss/articles/CBMi7wFBVV95cUxOcHVIaTVzXzlwSzFRa1draFFxN0phbHpXaDZSYTdZVWRPLXlQRk9Tc3VGZFVGUUhVRDdEX2J3blJKSWVfakQybWRYOUNiRUkycDNIajNGMm9PWHFtT1ZsWDRrd1p4Z2lMcTA5ZUpmUF9CS3ZMcllCMkZZdEExbVJlMnM0czdKbkZRME04OFlhQXhCalNoXzBlY08yRU51MWFlSTlQVjhabXpGUG8tSHBKRjctSGZRUW9yQVVsVGo0SFFIM0d3cnNCTmNuSXBsQzljWjQzeU9PUGxJckNEdGlJakx3Mzg3UlRTRFNEcnZhdw?oc=5",
-      "source": "香港經濟日報HKET",
-      "query_source": "香港經濟日報",
-      "summary": "赤子城科技（09911）今註銷266.4萬股|香港經濟日報 香港經濟日報HKET",
-      "published_at": "2026-07-30T16:46:00+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "technology"
-      ],
-      "primary_industry": "technology",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "科技電子",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 77,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "香港經濟日報HKET"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "8a6bfe3fe15752e4",
-      "title": "銀行股發威 港股成交縮動力唔夠？韓股等「去槓桿」後重拾升勢？ - 香港經濟日報HKET",
-      "link": "https://www.google.com/search?q=%22%E9%8A%80%E8%A1%8C%E8%82%A1%E7%99%BC%E5%A8%81+%E6%B8%AF%E8%82%A1%E6%88%90%E4%BA%A4%E7%B8%AE%E5%8B%95%E5%8A%9B%E5%94%94%E5%A4%A0%EF%BC%9F%E9%9F%93%E8%82%A1%E7%AD%89%E3%80%8C%E5%8E%BB%E6%A7%93%E6%A1%BF%E3%80%8D%E5%BE%8C%E9%87%8D%E6%8B%BE%E5%8D%87%E5%8B%A2%EF%BC%9F+-+%E9%A6%99%E6%B8%AF%E7%B6%93%E6%BF%9F%E6%97%A5%E5%A0%B1HKET%22+%E9%A6%99%E6%B8%AF%E7%B6%93%E6%BF%9F%E6%97%A5%E5%A0%B1HKET",
-      "original_link": "https://news.google.com/rss/articles/CBMitgNBVV95cUxPcjhjYm5GSGdOMVNuV082ZVo3Mm5fUE9pZ3JwX3VFWGZtOHI4TWItNmVwX2RBeUdXZFJEZjZJN1JrUE5hMVl2bU8xUHBHQ0pBTEcxa19XUmw0dF80ZUhxb0NQTlRJXy14RTRwQlBTWnduSXFIUDU1Z2d3TUMtdWdKek85UVg5UUFIR05jY3JkZDZNZTNLSFhBYTY3eVZXUjVRdmJ5eUZVQm1KNjRNMEtMNXJRVHFRbzVWODZ4dF9aWWk2Z2hXZ010VWp3blBQcVRzd1AwT3dJMTNrclVzVjQ5SzBnUm5abHQtYk1vc1ZtVkx4NTJiMDQwVmhsMEx4N203S0FqclBKMVp1M2tjNUwzaHFKUklTdWwybE5VSXJDVWVpUXZRZ1hSYXRoZ1pENDZuVU9ONFlhQjg5bGtsNWVoaFdzNDlTdXVNSnhZcXdqNTA4ZmVUb1hqODB3alZtSmpOVmM3c2VMdjJrRWJkeXRkbjhDbUVSVmx5NEllSnpQZUR1a3pmTEd2X2VHVlMzWDM1Z1BEQmFFZHdxYXRBOGhWN2xPTnZIQ1JFZUI2b0pTV09qdU5sQWc?oc=5",
-      "source": "香港經濟日報HKET",
-      "query_source": "香港經濟日報",
-      "summary": "銀行股發威 港股成交縮動力唔夠？韓股等「去槓桿」後重拾升勢？ 香港經濟日報HKET",
-      "published_at": "2026-07-28T06:38:21+08:00",
-      "region": "HK",
-      "topic": "market",
-      "industries": [
-        "finance"
-      ],
-      "primary_industry": "finance",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "金融保險",
-      "language": "zh-Hant",
-      "source_group": "hk-media",
-      "origin": "publisher-search",
-      "quality_score": 77,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T07:51:59+08:00",
-      "duplicate_sources": [
-        "香港經濟日報HKET"
-      ],
-      "duplicate_count": 0
-    },
-    {
-      "id": "c6a6ce8c6d8bbe52",
-      "title": "當年疫情股災人人逃命 他卻逆勢重押大型銀行股！日本傳奇投資人：最大的機會來了",
-      "link": "https://www.google.com/search?q=%22%E7%95%B6%E5%B9%B4%E7%96%AB%E6%83%85%E8%82%A1%E7%81%BD%E4%BA%BA%E4%BA%BA%E9%80%83%E5%91%BD+%E4%BB%96%E5%8D%BB%E9%80%86%E5%8B%A2%E9%87%8D%E6%8A%BC%E5%A4%A7%E5%9E%8B%E9%8A%80%E8%A1%8C%E8%82%A1%EF%BC%81%E6%97%A5%E6%9C%AC%E5%82%B3%E5%A5%87%E6%8A%95%E8%B3%87%E4%BA%BA%EF%BC%9A%E6%9C%80%E5%A4%A7%E7%9A%84%E6%A9%9F%E6%9C%83%E4%BE%86%E4%BA%86%22+%E8%B2%A1%E8%A8%8A",
-      "source": "財訊",
-      "query_source": "財訊",
-      "summary": "當年疫情股災人人逃命 他卻逆勢重押大型銀行股！日本傳奇投資人：最大的機會來了 財訊",
-      "published_at": "2026-07-31T16:47:45+08:00",
-      "region": "TW",
-      "topic": "market",
-      "industries": [
-        "finance"
-      ],
-      "primary_industry": "finance",
-      "asset_class": "stock",
-      "crypto_categories": [],
-      "industry_label": "金融保險",
-      "language": "zh-Hant",
-      "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 76,
-      "is_breaking": false,
-      "fetched_at": "2026-08-02T04:13:27+08:00",
-      "duplicate_sources": [
-        "財訊"
+        "Yahoo 股市"
       ],
       "duplicate_count": 0,
-      "stale": true,
-      "original_link": "https://news.google.com/rss/articles/CBMie0FVX3lxTE42SUUyLVZCVkZGN3VoajFhLU1lNHlENkRGMGo2a3JwbDE3TGVPWUhxT3pZMTY5UmZodm4zTVc4dFluRmpUV3l5N2J3RnRYVmE5ejRmZ0pSZjhabzFOQmFvLW1yajhNMXM4X1NCb3p5bUROam9yaEQzQ094OA?oc=5"
+      "fallback_link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E8%A1%80%E5%B4%A9%E5%8F%88%E9%A3%86%E6%BC%B23186%E9%BB%9E%EF%BC%81%E6%96%BD%E6%98%87%E8%BC%9D%E8%AA%8D%E4%BA%86%E3%80%8C%E6%B2%92%E8%BF%BD%E8%B2%B70050%E3%80%8D%E8%A6%AA%E6%8F%AD%E6%8A%95%E8%B3%87%E5%BF%83%E6%B3%95%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     },
     {
-      "id": "6ffae6e12cf70e13",
-      "title": "勞退新制五大改革8月上路！30天猶豫期可改一次領",
-      "link": "https://www.google.com/search?q=%22%E5%8B%9E%E9%80%80%E6%96%B0%E5%88%B6%E4%BA%94%E5%A4%A7%E6%94%B9%E9%9D%A98%E6%9C%88%E4%B8%8A%E8%B7%AF%EF%BC%8130%E5%A4%A9%E7%8C%B6%E8%B1%AB%E6%9C%9F%E5%8F%AF%E6%94%B9%E4%B8%80%E6%AC%A1%E9%A0%98%22+%E8%B2%A1%E8%A8%8A",
-      "source": "財訊",
-      "query_source": "財訊",
-      "summary": "勞退新制五大改革8月上路！30天猶豫期可改一次領 財訊",
-      "published_at": "2026-07-31T16:46:21+08:00",
+      "id": "be3f3bc0fdf9bc63",
+      "title": "台股最快10月重啟攻勢？杜金龍逆勢加碼2檔AI權值股 曝「危機布局」關鍵時機",
+      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E6%9C%80%E5%BF%AB10%E6%9C%88%E9%87%8D%E5%95%9F%E6%94%BB%E5%8B%A2-%E6%9D%9C%E9%87%91%E9%BE%8D%E9%80%86%E5%8B%A2%E5%8A%A0%E7%A2%BC2%E6%AA%94ai%E6%AC%8A%E5%80%BC%E8%82%A1-%E6%9B%9D-%E5%8D%B1%E6%A9%9F%E5%B8%83%E5%B1%80-%E9%97%9C%E9%8D%B5%E6%99%82%E6%A9%9F-082500293.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E6%9C%80%E5%BF%AB10%E6%9C%88%E9%87%8D%E5%95%9F%E6%94%BB%E5%8B%A2-%E6%9D%9C%E9%87%91%E9%BE%8D%E9%80%86%E5%8B%A2%E5%8A%A0%E7%A2%BC2%E6%AA%94ai%E6%AC%8A%E5%80%BC%E8%82%A1-%E6%9B%9D-%E5%8D%B1%E6%A9%9F%E5%B8%83%E5%B1%80-%E9%97%9C%E9%8D%B5%E6%99%82%E6%A9%9F-082500293.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E6%9C%80%E5%BF%AB10%E6%9C%88%E9%87%8D%E5%95%9F%E6%94%BB%E5%8B%A2-%E6%9D%9C%E9%87%91%E9%BE%8D%E9%80%86%E5%8B%A2%E5%8A%A0%E7%A2%BC2%E6%AA%94ai%E6%AC%8A%E5%80%BC%E8%82%A1-%E6%9B%9D-%E5%8D%B1%E6%A9%9F%E5%B8%83%E5%B1%80-%E9%97%9C%E9%8D%B5%E6%99%82%E6%A9%9F-082500293.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/tw-market/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市台股動態",
+      "summary": "[FTNN新聞網]記者莊蕙如／綜合報導台積電（2330）、聯發科（2454）近期股價隨大盤劇烈震盪，不過有「股市老先覺」之稱的資深分析師杜金龍認為，目前台股仍屬...",
+      "published_at": "2026-08-01T16:25:00+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "technology"
+      ],
+      "primary_industry": "technology",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "科技電子",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E6%9C%80%E5%BF%AB10%E6%9C%88%E9%87%8D%E5%95%9F%E6%94%BB%E5%8B%A2%EF%BC%9F%E6%9D%9C%E9%87%91%E9%BE%8D%E9%80%86%E5%8B%A2%E5%8A%A0%E7%A2%BC2%E6%AA%94AI%E6%AC%8A%E5%80%BC%E8%82%A1+%E6%9B%9D%E3%80%8C%E5%8D%B1%E6%A9%9F%E5%B8%83%E5%B1%80%E3%80%8D%E9%97%9C%E9%8D%B5%E6%99%82%E6%A9%9F%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "ffd8108f1bff6c44",
+      "title": "台股危機四伏？阿斯匹靈：六貸同堂風險爆衝 留意這訊號",
+      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E5%8D%B1%E6%A9%9F%E5%9B%9B%E4%BC%8F-%E9%98%BF%E6%96%AF%E5%8C%B9%E9%9D%88-%E5%85%AD%E8%B2%B8%E5%90%8C%E5%A0%82%E9%A2%A8%E9%9A%AA%E7%88%86%E8%A1%9D-%E7%95%99%E6%84%8F%E9%80%99%E8%A8%8A%E8%99%9F-105259833.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E5%8D%B1%E6%A9%9F%E5%9B%9B%E4%BC%8F-%E9%98%BF%E6%96%AF%E5%8C%B9%E9%9D%88-%E5%85%AD%E8%B2%B8%E5%90%8C%E5%A0%82%E9%A2%A8%E9%9A%AA%E7%88%86%E8%A1%9D-%E7%95%99%E6%84%8F%E9%80%99%E8%A8%8A%E8%99%9F-105259833.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E5%8D%B1%E6%A9%9F%E5%9B%9B%E4%BC%8F-%E9%98%BF%E6%96%AF%E5%8C%B9%E9%9D%88-%E5%85%AD%E8%B2%B8%E5%90%8C%E5%A0%82%E9%A2%A8%E9%9A%AA%E7%88%86%E8%A1%9D-%E7%95%99%E6%84%8F%E9%80%99%E8%A8%8A%E8%99%9F-105259833.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/tw-market/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市台股動態",
+      "summary": "論壇中心／綜合報導台股交易人數狂飆至618萬創歷史新高，籌碼專家阿斯匹靈在《財經週日趴》中指出，當前市場過熱程度已超越歷次修正前夕，從權證月成交突破1000億、融資槓桿倍增、開戶排隊人潮不斷，多項指標",
+      "published_at": "2026-08-01T16:03:59+08:00",
       "region": "TW",
       "topic": "market",
       "industries": [
@@ -6888,16 +8119,157 @@ window.__MARKET_NEWS_SEED__ = {
       "industry_label": "其他產業",
       "language": "zh-Hant",
       "source_group": "tw-media",
-      "origin": "publisher-search",
-      "quality_score": 76,
+      "origin": "direct-rss",
+      "quality_score": 84,
       "is_breaking": false,
-      "fetched_at": "2026-08-02T04:13:27+08:00",
+      "fetched_at": "2026-08-02T08:12:50+08:00",
       "duplicate_sources": [
-        "財訊"
+        "Yahoo 股市"
       ],
       "duplicate_count": 0,
-      "stale": true,
-      "original_link": "https://news.google.com/rss/articles/CBMie0FVX3lxTE1mOThFeGVfRFdKQmRKczNUYzZrUHM4RnZNTFVMYjZ5VlZnSDAxMFNGU3dTYkpWNnhkVHNtOHFjUHhoZHdCS3pTeGI2VUZMMzlwN095ZTBmbUJBNTQ0VmVnd2hOWnQ3VW95TlJiLVFDLUtWZlVCTHgtd0JLYw?oc=5"
+      "fallback_link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E5%8D%B1%E6%A9%9F%E5%9B%9B%E4%BC%8F%EF%BC%9F%E9%98%BF%E6%96%AF%E5%8C%B9%E9%9D%88%EF%BC%9A%E5%85%AD%E8%B2%B8%E5%90%8C%E5%A0%82%E9%A2%A8%E9%9A%AA%E7%88%86%E8%A1%9D+%E7%95%99%E6%84%8F%E9%80%99%E8%A8%8A%E8%99%9F%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "59ab233a93c738c9",
+      "title": "AI晶片爆單、手機需求卻轉冷？台積電、聯電齊喊產能吃緊 晶片廠掀漲價潮",
+      "link": "https://tw.stock.yahoo.com/news/ai%E6%99%B6%E7%89%87%E7%88%86%E5%96%AE-%E6%89%8B%E6%A9%9F%E9%9C%80%E6%B1%82%E5%8D%BB%E8%BD%89%E5%86%B7-%E5%8F%B0%E7%A9%8D%E9%9B%BB-%E8%81%AF%E9%9B%BB%E9%BD%8A%E5%96%8A%E7%94%A2%E8%83%BD%E5%90%83%E7%B7%8A-%E6%99%B6%E7%89%87%E5%BB%A0%E6%8E%80%E6%BC%B2%E5%83%B9%E6%BD%AE-075000885.html",
+      "original_link": "https://tw.stock.yahoo.com/news/ai%E6%99%B6%E7%89%87%E7%88%86%E5%96%AE-%E6%89%8B%E6%A9%9F%E9%9C%80%E6%B1%82%E5%8D%BB%E8%BD%89%E5%86%B7-%E5%8F%B0%E7%A9%8D%E9%9B%BB-%E8%81%AF%E9%9B%BB%E9%BD%8A%E5%96%8A%E7%94%A2%E8%83%BD%E5%90%83%E7%B7%8A-%E6%99%B6%E7%89%87%E5%BB%A0%E6%8E%80%E6%BC%B2%E5%83%B9%E6%BD%AE-075000885.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/ai%E6%99%B6%E7%89%87%E7%88%86%E5%96%AE-%E6%89%8B%E6%A9%9F%E9%9C%80%E6%B1%82%E5%8D%BB%E8%BD%89%E5%86%B7-%E5%8F%B0%E7%A9%8D%E9%9B%BB-%E8%81%AF%E9%9B%BB%E9%BD%8A%E5%96%8A%E7%94%A2%E8%83%BD%E5%90%83%E7%B7%8A-%E6%99%B6%E7%89%87%E5%BB%A0%E6%8E%80%E6%BC%B2%E5%83%B9%E6%BD%AE-075000885.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/tw-market/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市台股動態",
+      "summary": "[FTNN新聞網]實習記者藍彥欣／綜合報導人工智慧（AI）需求持續升溫，讓半導體第3季旺季呈現明顯冷熱差。台積電（2330）、聯電（2303）在最新法說會中均指出，...",
+      "published_at": "2026-08-01T15:50:00+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "technology"
+      ],
+      "primary_industry": "technology",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "科技電子",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22AI%E6%99%B6%E7%89%87%E7%88%86%E5%96%AE%E3%80%81%E6%89%8B%E6%A9%9F%E9%9C%80%E6%B1%82%E5%8D%BB%E8%BD%89%E5%86%B7%EF%BC%9F%E5%8F%B0%E7%A9%8D%E9%9B%BB%E3%80%81%E8%81%AF%E9%9B%BB%E9%BD%8A%E5%96%8A%E7%94%A2%E8%83%BD%E5%90%83%E7%B7%8A+%E6%99%B6%E7%89%87%E5%BB%A0%E6%8E%80%E6%BC%B2%E5%83%B9%E6%BD%AE%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "68f1e2d44492a4b0",
+      "title": "台股兩天狂瀉3609點，驚險守住4萬點！「3大訊號」觀察何時落底",
+      "link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E5%85%A9%E5%A4%A9%E7%8B%82%E7%80%893609%E9%BB%9E-%E9%A9%9A%E9%9A%AA%E5%AE%88%E4%BD%8F4%E8%90%AC%E9%BB%9E-3%E5%A4%A7%E8%A8%8A%E8%99%9F-%E8%A7%80%E5%AF%9F%E4%BD%95%E6%99%82%E8%90%BD%E5%BA%95-074900383.html",
+      "original_link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E5%85%A9%E5%A4%A9%E7%8B%82%E7%80%893609%E9%BB%9E-%E9%A9%9A%E9%9A%AA%E5%AE%88%E4%BD%8F4%E8%90%AC%E9%BB%9E-3%E5%A4%A7%E8%A8%8A%E8%99%9F-%E8%A7%80%E5%AF%9F%E4%BD%95%E6%99%82%E8%90%BD%E5%BA%95-074900383.html",
+      "direct_link": "https://tw.news.yahoo.com/%E5%8F%B0%E8%82%A1%E5%85%A9%E5%A4%A9%E7%8B%82%E7%80%893609%E9%BB%9E-%E9%A9%9A%E9%9A%AA%E5%AE%88%E4%BD%8F4%E8%90%AC%E9%BB%9E-3%E5%A4%A7%E8%A8%8A%E8%99%9F-%E8%A7%80%E5%AF%9F%E4%BD%95%E6%99%82%E8%90%BD%E5%BA%95-074900383.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/tw-market/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市台股動態",
+      "summary": "台股29日再遭重挫，盤中跌破4萬點、一度見到「三字頭」，終場驚險收在40,025.12點，兩個交易日合計狂瀉3,609.07點。AI股估值修正、美元強勢上漲，加上市場重新押注聯準會可能升息，讓亞洲股市",
+      "published_at": "2026-08-01T15:49:00+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "technology"
+      ],
+      "primary_industry": "technology",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "科技電子",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E5%85%A9%E5%A4%A9%E7%8B%82%E7%80%893609%E9%BB%9E%EF%BC%8C%E9%A9%9A%E9%9A%AA%E5%AE%88%E4%BD%8F4%E8%90%AC%E9%BB%9E%EF%BC%81%E3%80%8C3%E5%A4%A7%E8%A8%8A%E8%99%9F%E3%80%8D%E8%A7%80%E5%AF%9F%E4%BD%95%E6%99%82%E8%90%BD%E5%BA%95%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "79ca51a0d4004536",
+      "title": "台積電套在2445元高點！ 他失眠求救想停損 內行人：放著吧",
+      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E7%A9%8D%E9%9B%BB%E5%A5%97%E5%9C%A82445%E5%85%83%E9%AB%98%E9%BB%9E-%E4%BB%96%E5%A4%B1%E7%9C%A0%E6%B1%82%E6%95%91%E6%83%B3%E5%81%9C%E6%90%8D-%E5%85%A7%E8%A1%8C%E4%BA%BA-%E6%94%BE%E8%91%97%E5%90%A7-073400561.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E7%A9%8D%E9%9B%BB%E5%A5%97%E5%9C%A82445%E5%85%83%E9%AB%98%E9%BB%9E-%E4%BB%96%E5%A4%B1%E7%9C%A0%E6%B1%82%E6%95%91%E6%83%B3%E5%81%9C%E6%90%8D-%E5%85%A7%E8%A1%8C%E4%BA%BA-%E6%94%BE%E8%91%97%E5%90%A7-073400561.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E7%A9%8D%E9%9B%BB%E5%A5%97%E5%9C%A82445%E5%85%83%E9%AB%98%E9%BB%9E-%E4%BB%96%E5%A4%B1%E7%9C%A0%E6%B1%82%E6%95%91%E6%83%B3%E5%81%9C%E6%90%8D-%E5%85%A7%E8%A1%8C%E4%BA%BA-%E6%94%BE%E8%91%97%E5%90%A7-073400561.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/tw-market/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市台股動態",
+      "summary": "在股市的狂熱浪潮中，許多投資人往往抱持著「買好股就能高枕無憂」的信仰進場，但當所謂的「護國神山」也面臨市場無情的劇烈修正時，散戶的心理防線往往會受到最嚴峻的考驗。日前就有一名網友發文分享，自己因為看好",
+      "published_at": "2026-08-01T15:34:00+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "stock",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市"
+      ],
+      "duplicate_count": 0,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%8F%B0%E7%A9%8D%E9%9B%BB%E5%A5%97%E5%9C%A82445%E5%85%83%E9%AB%98%E9%BB%9E%EF%BC%81+%E4%BB%96%E5%A4%B1%E7%9C%A0%E6%B1%82%E6%95%91%E6%83%B3%E5%81%9C%E6%90%8D+%E5%85%A7%E8%A1%8C%E4%BA%BA%EF%BC%9A%E6%94%BE%E8%91%97%E5%90%A7%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
+    },
+    {
+      "id": "54cde87592c95fcc",
+      "title": "台股史上最狂反彈！一表看18檔主被動ETF齊亮紅燈 0050、00981A入列",
+      "link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E5%8F%B2%E4%B8%8A%E6%9C%80%E7%8B%82%E5%8F%8D%E5%BD%88-%E8%A1%A8%E7%9C%8B18%E6%AA%94%E4%B8%BB%E8%A2%AB%E5%8B%95etf%E9%BD%8A%E4%BA%AE%E7%B4%85%E7%87%88-0050-00981a%E5%85%A5%E5%88%97-070634247.html",
+      "original_link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E5%8F%B2%E4%B8%8A%E6%9C%80%E7%8B%82%E5%8F%8D%E5%BD%88-%E8%A1%A8%E7%9C%8B18%E6%AA%94%E4%B8%BB%E8%A2%AB%E5%8B%95etf%E9%BD%8A%E4%BA%AE%E7%B4%85%E7%87%88-0050-00981a%E5%85%A5%E5%88%97-070634247.html",
+      "direct_link": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E8%82%A1%E5%8F%B2%E4%B8%8A%E6%9C%80%E7%8B%82%E5%8F%8D%E5%BD%88-%E8%A1%A8%E7%9C%8B18%E6%AA%94%E4%B8%BB%E8%A2%AB%E5%8B%95etf%E9%BD%8A%E4%BA%AE%E7%B4%85%E7%87%88-0050-00981a%E5%85%A5%E5%88%97-070634247.html",
+      "link_status": "direct",
+      "link_type": "direct-feed",
+      "source_home": "https://tw.stock.yahoo.com/tw-market/",
+      "source": "Yahoo 股市",
+      "query_source": "Yahoo 股市台股動態",
+      "summary": "台股在經歷近一周的連續拉回與洗盤震撼後，於 7 月最後一個交易日展現驚人反彈力道！在權王台積電 (2330-TW) 飆出歷史第 3 次漲停的強勁引領下，大盤同步走高，創下台股史上最大單日漲點紀錄",
+      "published_at": "2026-08-01T15:06:34+08:00",
+      "region": "TW",
+      "topic": "market",
+      "industries": [
+        "other"
+      ],
+      "primary_industry": "other",
+      "asset_class": "fund",
+      "crypto_categories": [],
+      "industry_label": "其他產業",
+      "language": "zh-Hant",
+      "source_group": "tw-media",
+      "origin": "direct-rss",
+      "quality_score": 84,
+      "is_breaking": false,
+      "fetched_at": "2026-08-02T08:12:50+08:00",
+      "duplicate_sources": [
+        "Yahoo 股市",
+        "鉅亨網"
+      ],
+      "duplicate_count": 1,
+      "fallback_link": "https://www.google.com/search?q=%22%E5%8F%B0%E8%82%A1%E5%8F%B2%E4%B8%8A%E6%9C%80%E7%8B%82%E5%8F%8D%E5%BD%88%EF%BC%81%E4%B8%80%E8%A1%A8%E7%9C%8B18%E6%AA%94%E4%B8%BB%E8%A2%AB%E5%8B%95ETF%E9%BD%8A%E4%BA%AE%E7%B4%85%E7%87%88+0050%E3%80%8100981A%E5%85%A5%E5%88%97%22+site%3Atw.stock.yahoo.com",
+      "link_checked_at": "2026-08-02T08:12:50+08:00"
     }
   ]
 };
