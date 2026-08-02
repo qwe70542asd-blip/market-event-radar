@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Market Event Radar v10.4.3 multi-source finance-news updater.
+"""Market Event Radar v10.6.0 multi-source finance-news updater.
 
 v10.1 priorities:
 - Traditional-Chinese financial coverage first.
@@ -114,6 +114,18 @@ CORE_SEARCH_SOURCES = [
     {"name":"自由財經","query":"site:ec.ltn.com.tw (台股 OR 國際財經 OR 證券 OR 基金 OR 政策)","region":"TW","topic":"market","language":"zh-Hant","source_group":"tw-media","quality_score":79},
     {"name":"中央銀行","query":"site:cbc.gov.tw (新聞稿 OR 利率 OR 匯率 OR 貨幣政策 OR 理監事會)","region":"TW","topic":"official","language":"zh-Hant","source_group":"official-tw","quality_score":100},
     {"name":"公開資訊觀測站","query":"site:mops.twse.com.tw (重大訊息 OR 法說會 OR 財務報告 OR 股東會)","region":"TW","topic":"official","language":"zh-Hant","source_group":"official-tw","quality_score":100},
+ ]
+
+# Public broker / investment-advisory commentary. Only public article metadata is stored.
+BROKER_SEARCH_SOURCES = [
+    {"rotation_group":0,"name":"凱基證券／凱基投顧","query":"(site:kgi.com.tw OR site:kgifund.com.tw) (投資展望 OR 盤勢 OR 產業 OR 台股 OR 美股)","region":"TW","topic":"broker","language":"zh-Hant","source_group":"broker-public","quality_score":86},
+    {"rotation_group":0,"name":"元大證券／元大投顧","query":"site:yuanta.com.tw (投資展望 OR 市場評論 OR 產業 OR 台股 OR 美股)","region":"TW","topic":"broker","language":"zh-Hant","source_group":"broker-public","quality_score":85},
+    {"rotation_group":1,"name":"永豐金證券","query":"site:sinotrade.com.tw (市場快訊 OR 研究 OR 產業 OR 台股 OR 美股)","region":"TW","topic":"broker","language":"zh-Hant","source_group":"broker-public","quality_score":84},
+    {"rotation_group":1,"name":"富邦證券","query":"site:fbs.com.tw (投資展望 OR 市場評論 OR 產業 OR 台股 OR 美股)","region":"TW","topic":"broker","language":"zh-Hant","source_group":"broker-public","quality_score":83},
+    {"rotation_group":2,"name":"國泰證券","query":"site:cathaysec.com.tw (市場觀點 OR 投資展望 OR 產業 OR 台股 OR 美股)","region":"TW","topic":"broker","language":"zh-Hant","source_group":"broker-public","quality_score":82},
+    {"rotation_group":2,"name":"群益證券","query":"site:capital.com.tw (研究報告 OR 市場評論 OR 產業 OR 台股 OR 美股)","region":"TW","topic":"broker","language":"zh-Hant","source_group":"broker-public","quality_score":82},
+    {"rotation_group":3,"name":"統一證券","query":"site:pscnet.com.tw (研究 OR 盤勢 OR 產業 OR 台股 OR 美股)","region":"TW","topic":"broker","language":"zh-Hant","source_group":"broker-public","quality_score":81},
+    {"rotation_group":3,"name":"元富證券","query":"site:masterlink.com.tw (研究 OR 市場評論 OR 產業 OR 台股 OR 美股)","region":"TW","topic":"broker","language":"zh-Hant","source_group":"broker-public","quality_score":81},
 ]
 
 # One bucket is fetched per run. Cron minutes 07/22/37/52 naturally cycle buckets.
@@ -208,7 +220,7 @@ BREAKING_TERMS = [
 ]
 
 SOURCE_META = {}
-for source in DIRECT_RSS + CORE_SEARCH_SOURCES + ROTATING_SEARCH_SOURCES + SECTOR_SEARCH_SOURCES + CRYPTO_SEARCH_SOURCES + BREAKING_SEARCH_SOURCES + ENGLISH_SEARCH_SOURCES:
+for source in DIRECT_RSS + CORE_SEARCH_SOURCES + BROKER_SEARCH_SOURCES + ROTATING_SEARCH_SOURCES + SECTOR_SEARCH_SOURCES + CRYPTO_SEARCH_SOURCES + BREAKING_SEARCH_SOURCES + ENGLISH_SEARCH_SOURCES:
     SOURCE_META[source["name"]] = source
 
 def clean(value):
@@ -219,7 +231,7 @@ def is_google_news_url(value):
 
 def safe_search_url(title, source=""):
     query = " ".join(part for part in [f'"{clean(title)}"', clean(source)] if part)
-    return "https://www.google.com/search?q=" + quote_plus(query)
+    return ""
 
 def safe_article_url(link, title, source=""):
     value = clean(link)
@@ -267,6 +279,14 @@ SOURCE_LINK_RULES = [
     (("Cointelegraph",), ("cointelegraph.com",), "https://cointelegraph.com/"),
     (("BlockTempo", "動區動趨"), ("blocktempo.com",), "https://www.blocktempo.com/"),
     (("鏈新聞", "ABMedia"), ("abmedia.io",), "https://abmedia.io/"),
+    (("凱基證券", "凱基投顧"), ("kgi.com.tw", "kgifund.com.tw"), "https://www.kgi.com.tw/"),
+    (("元大證券", "元大投顧"), ("yuanta.com.tw",), "https://www.yuanta.com.tw/"),
+    (("永豐金證券",), ("sinotrade.com.tw",), "https://www.sinotrade.com.tw/"),
+    (("富邦證券",), ("fbs.com.tw",), "https://www.fbs.com.tw/"),
+    (("國泰證券",), ("cathaysec.com.tw",), "https://www.cathaysec.com.tw/"),
+    (("群益證券",), ("capital.com.tw",), "https://www.capital.com.tw/"),
+    (("統一證券",), ("pscnet.com.tw",), "https://www.pscnet.com.tw/"),
+    (("元富證券",), ("masterlink.com.tw",), "https://www.masterlink.com.tw/"),
     (("臺灣證券交易所", "證交所"), ("twse.com.tw",), "https://www.twse.com.tw/zh/about/news/news/list.html"),
     (("櫃買中心", "TPEx"), ("tpex.org.tw",), "https://www.tpex.org.tw/"),
     (("中央銀行",), ("cbc.gov.tw",), "https://www.cbc.gov.tw/"),
@@ -431,7 +451,7 @@ def source_search_url(title, source="", source_home=""):
         query_parts.append(f"site:{domain}")
     elif source:
         query_parts.append(clean(source))
-    return "https://www.google.com/search?q=" + quote_plus(" ".join(query_parts))
+    return ""
 
 def cache_fresh(entry):
     value = clean((entry or {}).get("checked_at"))
@@ -460,6 +480,8 @@ def attach_article_links(session, items, cache):
         item["source_home"] = source_home
 
         original = clean(item.get("original_link") or item.get("link"))
+        if original and source_home and not urlparse(original).scheme:
+            original = urljoin(source_home, original)
         existing_direct = clean(item.get("direct_link"))
         if valid_direct_candidate(existing_direct):
             chosen, link_type = existing_direct, item.get("link_type") or "direct"
@@ -485,7 +507,6 @@ def attach_article_links(session, items, cache):
                     "checked_at": iso(NOW),
                 }
 
-        fallback_url = source_search_url(item.get("title"), source, source_home)
         if chosen:
             item["direct_link"] = chosen
             item["link"] = chosen
@@ -495,11 +516,11 @@ def attach_article_links(session, items, cache):
             direct += 1
         else:
             item["direct_link"] = ""
-            item["link"] = fallback_url
-            item["link_type"] = "search-fallback"
-            item["link_status"] = "fallback"
+            item["link"] = ""
+            item["link_type"] = "unresolved"
+            item["link_status"] = "unresolved"
             fallback += 1
-        item["fallback_link"] = fallback_url
+        item["fallback_link"] = ""
         item["link_checked_at"] = iso(NOW)
 
     return {
@@ -908,7 +929,8 @@ def active_search_sources():
     rotating = [x for x in ROTATING_SEARCH_SOURCES if x["rotation_group"] == bucket]
     sectors = [x for x in SECTOR_SEARCH_SOURCES if x["rotation_group"] == bucket]
     crypto = [x for x in CRYPTO_SEARCH_SOURCES if x["rotation_group"] == bucket]
-    return CORE_SEARCH_SOURCES + rotating + sectors + crypto + BREAKING_SEARCH_SOURCES + ENGLISH_SEARCH_SOURCES, bucket
+    brokers = [x for x in BROKER_SEARCH_SOURCES if x["rotation_group"] == bucket]
+    return CORE_SEARCH_SOURCES + brokers + rotating + sectors + crypto + BREAKING_SEARCH_SOURCES + ENGLISH_SEARCH_SOURCES, bucket
 
 def event_queries(events):
     rows = []
@@ -981,7 +1003,7 @@ def main():
 
     # Preserve non-active rotating sources so the combined feed remains broad.
     active_names = {x["name"] for x in DIRECT_RSS + sources}
-    for source in ROTATING_SEARCH_SOURCES + SECTOR_SEARCH_SOURCES + CRYPTO_SEARCH_SOURCES:
+    for source in BROKER_SEARCH_SOURCES + ROTATING_SEARCH_SOURCES + SECTOR_SEARCH_SOURCES + CRYPTO_SEARCH_SOURCES:
         if source["name"] in active_names:
             continue
         stale = preserve_previous(source["name"], previous_map, items, days=20)
@@ -1035,7 +1057,8 @@ def main():
         final = [enrich_previous(x) for x in previous.get("items", []) if still_recent(x, days=20)]
 
     link_result = attach_article_links(session, final, link_cache)
-    final = link_result["items"]
+    unresolved_count = sum(1 for item in link_result["items"] if item.get("link_status") != "direct")
+    final = [item for item in link_result["items"] if item.get("link_status") == "direct" and valid_direct_candidate(item.get("link"))]
     LINK_CACHE_PATH.write_text(
         json.dumps(link_result["cache"], ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
@@ -1056,14 +1079,14 @@ def main():
             "healthy_sources": source_ok,
             "source_count": len(statuses),
             "rotation_bucket": bucket,
-            "version": "v10.4.3",
+            "version": "v10.6.0",
             "industry_counts": industry_counts,
             "duplicate_titles_removed": duplicate_title_count,
             "direct_link_count": link_result["direct"],
             "resolved_google_link_count": link_result["resolved"],
-            "fallback_link_count": link_result["fallback"],
+            "unresolved_link_count": unresolved_count,
             "link_resolution_attempts": link_result["attempts"],
-            "note": "Publisher article URLs are preferred. Search links are used only when an original article URL cannot be resolved.",
+            "note": "Only verified publisher article URLs are published. Unresolved links are withheld instead of using Google Search or a source homepage.",
         },
         "source": {
             "name": "多來源財經新聞",
@@ -1084,7 +1107,7 @@ def main():
         f"({chinese_items} Traditional Chinese); "
         f"healthy sources {source_ok}/{len(statuses)}; "
         f"removed duplicate titles {duplicate_title_count}; "
-        f"direct links {link_result['direct']}, fallbacks {link_result['fallback']}; "
+        f"direct links {link_result['direct']}, withheld {unresolved_count}; "
         f"rotation bucket {bucket}"
     )
 

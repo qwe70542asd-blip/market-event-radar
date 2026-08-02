@@ -28,13 +28,13 @@
   };
 
   async function load() {
-    let payload = window.__INSTITUTIONAL_HISTORY_SEED__ || {metadata:{},daily:[],rankings:{}};
+    const seed = window.__INSTITUTIONAL_HISTORY_SEED__ || {metadata:{},daily:[],rankings:{}};
+    let payload = seed;
     try {
-      const response = await fetch(`data/institutional-history.json?t=${Date.now()}`, {cache:"no-store"});
-      if (response.ok) {
-        const live = await response.json();
-        if ((live.daily || []).length) payload = live;
-      }
+      const live = window.MarketDataSource?.loadJson
+        ? await window.MarketDataSource.loadJson("data/institutional-history.json", seed)
+        : seed;
+      if ((live.daily || []).length) payload = live;
     } catch {}
     state.payload = payload;
     const params = new URLSearchParams(location.search);
@@ -238,7 +238,7 @@
   }
 
   function rankMarkup(items,kind) {
-    if (!items?.length) return '<div class="ranking-empty">第一次執行「Update v10.5.0 institutional analytics」後，會由 TWSE T86 補上官方個股排行。</div>';
+    if (!items?.length) return '<div class="ranking-empty">第一次執行「Update v10.6.0 integrated live data」後，會由 TWSE T86 補上官方個股排行。</div>';
     const max = Math.max(...items.map(item => Math.abs(num(item.net))),1);
     return items.slice(0,10).map((item,index) => `<a href="asset.html?id=TW:${encodeURIComponent(item.symbol)}" class="flow-rank-row"><b>${index+1}</b><div><strong>${escapeHtml(item.symbol)} ${escapeHtml(item.name)}</strong><small>買 ${shares(item.buy)}｜賣 ${shares(item.sell)}</small></div><span class="rank-bar"><i style="width:${Math.abs(num(item.net))/max*100}%"></i></span><em class="${kind==='buy'?'positive':'negative'}">${item.net>=0?'+':''}${shares(item.net)}</em></a>`).join('');
   }

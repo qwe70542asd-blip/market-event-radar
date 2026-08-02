@@ -1,102 +1,144 @@
 (() => {
   "use strict";
-  const $ = id => document.getElementById(id);
-  const rail = $("headlineRail");
-  const breakingLink = $("breakingNewsLink");
-  const breakingSource = $("breakingNewsSource");
-  const breakingTitle = $("breakingNewsTitle");
-  const breakingCounter = $("breakingCounter");
-  const health = $("newsLoadState");
-  const retry = $("newsRetryBtn");
-  const escapeHtml = value => String(value ?? "").replace(/[&<>\"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const $=selector=>document.querySelector(selector);
+  const $$=selector=>[...document.querySelectorAll(selector)];
+  const escapeHtml=value=>String(value??"").replace(/[&<>\"]/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[char]));
 
-  let items=[];
-  let current=0;
-  let timer=null;
-  let lastSignature="";
+  const breakingLink=$("#breakingNewsLink");
+  const breakingSource=$("#breakingNewsSource");
+  const breakingTitle=$("#breakingNewsTitle");
+  const breakingCounter=$("#breakingCounter");
+  const health=$("#newsLoadState");
+  const todayList=$("#todayNewsList");
+
+  const state={items:[],breaking:[],breakingIndex:0,breakingTimer:null,filter:"all",newsOffset:0,newsTimer:null};
+
+  function fmt(value) {
+    const date=new Date(value || 0);
+    if (Number.isNaN(date.getTime())) return "—";
+    return date.toLocaleString("zh-TW",{month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit",hour12:false});
+  }
+
+  function category(item) {
+    if (item.is_breaking) return "breaking";
+    if (String(item.source_group || "").includes("broker") || /投顧|證券|券商|研究/i.test(`${item.source||""} ${item.query_source||""}`)) return "broker";
+    if (String(item.source_group || "").startsWith("official") || item.topic === "official") return "official";
+    if (item.region === "TW") return "TW";
+    if (item.region === "US") return "US";
+    return "GLOBAL";
+  }
+
+  function categoryLabel(item) {
+    return {breaking:"突發",broker:"券商",official:"官方",TW:"台股",US:"美股",GLOBAL:"國際"}[category(item)] || "市場";
+  }
 
   function score(item) {
-    let value=Number(item.quality_score||0);
-    if (item.language === "zh-Hant") value += 18;
-    if (["official-tw","official-global"].includes(item.source_group)) value += 18;
-    if (item.is_breaking) value += 38;
-    if (["direct-rss","official","direct-page"].includes(item.origin)) value += 18;
-    const age=item.published_at ? Date.now()-new Date(item.published_at).getTime() : Infinity;
-    if (age<6*3600e3) value+=25; else if (age<24*3600e3) value+=12;
+    let value=Number(item.quality_score || 0);
+    const age=Date.now()-new Date(item.published_at || 0).getTime();
+    if (item.is_breaking) value+=50;
+    if (category(item)==="broker") value+=14;
+    if (category(item)==="official") value+=12;
+    if (item.language==="zh-Hant") value+=15;
+    if (age<3*3600e3) value+=35;
+    else if (age<12*3600e3) value+=22;
+    else if (age<36*3600e3) value+=10;
     return value;
   }
 
-  function linkFor(item) {
-    return window.MarketNewsLink?.safeLink?.(item) || item.source_home || "news.html";
-  }
-  function modeFor(item) {
-    return window.MarketNewsLink?.linkMode?.(item) || "source";
+  function directLink(item) {
+    return window.MarketNewsLink?.safeLink?.(item) || "";
   }
 
-  function show(index) {
-    if (!items.length || !breakingTitle || !breakingLink) return;
-    current=(index+items.length)%items.length;
-    const item=items[current];
-    breakingSource.textContent=item.source||"財經新聞";
-    breakingTitle.textContent=item.title||"查看最新財經新聞";
-    breakingLink.href=linkFor(item);
-    breakingLink.target=/^https?:/i.test(breakingLink.href)?"_blank":"_self";
+  function visibleNews() {
+    const filtered=state.items.filter(item=>state.filter==="all" || category(item)===state.filter);
+    const recent=filtered.filter(item=>Date.now()-new Date(item.published_at || 0).getTime()<48*3600e3);
+    return (recent.length>=4?recent:filtered).sort((a,b)=>new Date(b.published_at||0)-new Date(a.published_at||0) || score(b)-score(a));
+  }
+
+  function renderToday() {
+    if (!todayList) return;
+    const rows=visibleNews();
+    if (!rows.length) {
+      todayList.innerHTML='<div class="today-news-empty"><strong>等待新聞排程</strong><span>目前沒有可直接開啟原文的新聞；GitHub Action 更新後會自動補入。</span></div>';
+      return;
+    }
+    const count=Math.min(6,rows.length);
+    const selected=Array.from({length:count},(_,index)=>rows[(state.newsOffset+index)%rows.length]);
+    todayList.innerHTML=selected.map(item=>`
+      <a class="today-news-row type-${category(item)}" href="${escapeHtml(directLink(item))}" target="_blank" rel="noreferrer noopener">
+        <time>${escapeHtml(fmt(item.published_at))}</time>
+        <span class="today-news-badge">${escapeHtml(categoryLabel(item))}</span>
+        <strong>${escapeHtml(item.title)}</strong>
+        <em>${escapeHtml(item.source || "新聞來源")}</em>
+      </a>`).join("");
+    todayList.classList.remove("news-swap");
+    void todayList.offsetWidth;
+    todayList.classList.add("news-swap");
+  }
+
+  function restartNewsTimer() {
+    clearInterval(state.newsTimer);
+    state.newsTimer=setInterval(()=>{
+      const rows=visibleNews();
+      if (rows.length>6) {
+        state.newsOffset=(state.newsOffset+1)%rows.length;
+        renderToday();
+      }
+    },5000);
+  }
+
+  function showBreaking(index) {
+    if (!state.breaking.length || !breakingLink) {
+      if (breakingTitle) breakingTitle.textContent="等待可直接開啟原文的重要新聞…";
+      if (breakingCounter) breakingCounter.textContent="0/0";
+      return;
+    }
+    state.breakingIndex=(index+state.breaking.length)%state.breaking.length;
+    const item=state.breaking[state.breakingIndex];
+    breakingSource.textContent=item.source || categoryLabel(item);
+    breakingTitle.textContent=item.title;
+    breakingLink.href=directLink(item);
+    breakingLink.target="_blank";
     breakingLink.rel="noreferrer noopener";
-    if (breakingCounter) breakingCounter.textContent=`${current+1}/${items.length}`;
+    breakingCounter.textContent=`${state.breakingIndex+1}/${state.breaking.length}`;
     breakingTitle.classList.remove("ticker-swap");
     void breakingTitle.offsetWidth;
     breakingTitle.classList.add("ticker-swap");
   }
 
-  function resetTimer() {
-    clearInterval(timer);
-    if (items.length>1) timer=setInterval(()=>show(current+1),12000);
-  }
-
-  function pickDiverse(all,limit=4) {
-    const selected=[]; const sources=new Set(); const industries=new Set();
-    for (const item of all) {
-      const source=item.source||""; const industry=item.primary_industry||item.industry_label||"other";
-      if (!sources.has(source) && !industries.has(industry)) { selected.push(item); sources.add(source); industries.add(industry); }
-      if (selected.length>=limit) break;
-    }
-    for (const item of all) { if (selected.length>=limit) break; if (!selected.includes(item)) selected.push(item); }
-    return selected;
-  }
-
-  function renderRail() {
-    if (!rail) return;
-    const visible=pickDiverse(items,4);
-    rail.innerHTML=visible.length ? visible.map(item=>`
-      <a class="headline-card" href="${escapeHtml(linkFor(item))}" target="_blank" rel="noreferrer noopener">
-        <div><span>${escapeHtml(item.source||"財經新聞")}</span><small>${escapeHtml(item.industry_label||item.region||"市場")} · ${modeFor(item)==="direct"?"原文":"來源"}</small></div>
-        <h3>${escapeHtml(item.title)}</h3>
-        <p>${escapeHtml(item.summary||item.event_title||"點擊前往新聞來源")}</p>
-      </a>`).join("") : '<div class="headline-empty">新聞來源正在同步；目前不顯示無法驗證出處的連結。</div>';
+  function restartBreakingTimer() {
+    clearInterval(state.breakingTimer);
+    state.breakingTimer=setInterval(()=>showBreaking(state.breakingIndex+1),10000);
   }
 
   function updateState(detail) {
     if (!health) return;
-    const labels={live:"即時資料",cached:"上次成功資料",fallback:"備援來源",loading:"同步中"};
-    health.textContent=labels[detail.status]||"資料狀態";
-    health.dataset.state=detail.status||"loading";
+    const map={live:"直接原文",cached:"上次成功資料",empty:"等待資料",loading:"同步中"};
+    health.textContent=map[detail.status] || "資料狀態";
+    health.dataset.state=detail.status;
   }
 
-  function applyDetail(detail) {
-    if (!detail) return;
-    const signature=`${detail.status}|${detail.items?.length||0}|${detail.payload?.metadata?.updated_at||""}`;
-    if (signature===lastSignature && items.length) return;
-    lastSignature=signature;
-    const all=[...(detail.items||[])].sort((a,b)=>score(b)-score(a));
-    const verified=all.filter(item=>["direct","source"].includes(modeFor(item)));
-    const direct=verified.filter(item=>modeFor(item)==="direct");
-    items=direct.length>=4 ? direct : verified;
-    renderRail(); show(0); resetTimer(); updateState(detail);
-  }
+  window.addEventListener("market-news-loaded",event=>{
+    const detail=event.detail || {};
+    state.items=(detail.items || []).filter(item=>directLink(item)).sort((a,b)=>score(b)-score(a));
+    state.breaking=state.items.filter(item=>item.is_breaking || ["policy","macro","market"].includes(item.topic)).slice(0,30);
+    if (!state.breaking.length) state.breaking=state.items.slice(0,20);
+    state.newsOffset=0;
+    renderToday();
+    showBreaking(0);
+    restartNewsTimer();
+    restartBreakingTimer();
+    updateState(detail);
+  });
 
-  window.addEventListener("market-news-loaded", event=>applyDetail(event.detail));
-  $("breakingPrev")?.addEventListener("click",()=>{show(current-1);resetTimer();});
-  $("breakingNext")?.addEventListener("click",()=>{show(current+1);resetTimer();});
-  retry?.addEventListener("click",async()=>{ if(health) health.textContent="重新同步中"; await window.MarketNewsLoader?.load(); });
-  setTimeout(()=>{ if(window.MarketNews) applyDetail(window.MarketNews); },0);
+  $("#breakingPrev")?.addEventListener("click",()=>{showBreaking(state.breakingIndex-1);restartBreakingTimer();});
+  $("#breakingNext")?.addEventListener("click",()=>{showBreaking(state.breakingIndex+1);restartBreakingTimer();});
+  $("#newsRetryBtn")?.addEventListener("click",()=>window.MarketNewsLoader?.load?.());
+  $$("[data-news-filter]").forEach(button=>button.addEventListener("click",()=>{
+    state.filter=button.dataset.newsFilter;
+    state.newsOffset=0;
+    $$("[data-news-filter]").forEach(node=>node.classList.toggle("active",node===button));
+    renderToday();
+    restartNewsTimer();
+  }));
 })();

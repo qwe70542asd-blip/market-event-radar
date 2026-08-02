@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const PREF_KEY = "market-event-radar-v10-4-1";
+  const PREF_KEY = "market-event-radar-v10-6-0";
   const state = {
     payload: { metadata: {}, sources: [], events: [] },
     newsPayload: { metadata: {}, source: {}, items: [] },
@@ -77,12 +77,15 @@
       search: $("#searchInput")?.value || "",
       month: state.calendarDate.toISOString(),
     };
-    try { localStorage.setItem(PREF_KEY, JSON.stringify(prefs)); } catch {}
+    localStorage.setItem(PREF_KEY, JSON.stringify(prefs));
   }
 
   async function loadJson(path, fallback) {
+    if (window.MarketDataSource?.loadJson) {
+      return window.MarketDataSource.loadJson(path, fallback);
+    }
     try {
-      const response = await fetch(path, { cache: "no-store" });
+      const response = await fetch(`${path}${path.includes("?") ? "&" : "?"}t=${Date.now()}`, { cache: "no-store" });
       if (!response.ok) throw new Error(path);
       return response.json();
     } catch {
@@ -103,21 +106,19 @@
   ];
 
   function safeNewsHref(item) {
-    const candidates = [item?.direct_link, item?.publisher_link, item?.safe_link, item?.link, item?.source_home];
-    for (const value of candidates) {
-      try {
-        const url = new URL(value, location.href);
-        const google = /(^|\.)google\./i.test(url.hostname) || url.hostname === "news.google.com";
-        if (!google && ["http:","https:"].includes(url.protocol)) return url.href;
-      } catch {}
-    }
-    return "news.html";
+    const value = window.MarketNewsLink?.safeLink?.(item) || item?.direct_link || item?.link || "";
+    try {
+      const url = new URL(value, location.href);
+      if (["http:","https:"].includes(url.protocol) && !/(^|\.)google\./i.test(url.hostname) && url.hostname !== "news.google.com") return url.href;
+    } catch {}
+    return "";
   }
 
   function breakingNewsToEvents(payload) {
     const now = Date.now();
     const seen = new Set();
     return (payload?.items || [])
+      .filter(item => Boolean(safeNewsHref(item)))
       .filter(item => {
         const published = new Date(item.published_at || 0).getTime();
         if (!Number.isFinite(published) || now - published > 96 * 3600000 || published > now + 3600000) return false;
@@ -319,31 +320,24 @@
       .filter(event => event.impact === "high" && event.timestamp >= now.getTime())
       .sort((a,b) => a.timestamp - b.timestamp)[0];
 
-    $("#todayCount").textContent = String(todayEvents.length);
-    $("#todayRisk").textContent = todayEvents.some(event => event.impact === "high")
-      ? "今天有高影響事件"
-      : (todayEvents.length ? `今天另有 ${todayEvents.length} 件公司／市場事件` : "今天暫無事件");
-    $("#weekCount").textContent = String(weekEvents.length);
-    $("#highCount").textContent = String(highEvents.length);
-    $("#nextTitle").textContent = nextHigh ? nextHigh.title : "近期沒有高影響事件";
+    const setText = (selector, value) => { const node = $(selector); if (node) node.textContent = String(value ?? ""); };
+    setText("#todayCount", todayEvents.length);
+    setText("#todayRisk", todayEvents.some(event => event.impact === "high") ? "今天有高影響事件" : (todayEvents.length ? `今天另有 ${todayEvents.length} 件事件` : "今天暫無事件"));
+    setText("#weekCount", weekEvents.length);
+    setText("#highCount", highEvents.length);
+    setText("#nextTitle", nextHigh ? nextHigh.title : "近期沒有高影響事件");
     const nextLink = $("#nextEventLink");
     if (nextLink) nextLink.href = nextHigh ? `event.html?id=${encodeURIComponent(nextHigh.id)}` : "#calendarSection";
-    $("#nextCountdown").textContent = nextHigh ? formatRelative(nextHigh.timestamp - now.getTime()) : "—";
-
-    let hintTitle = "穩定", hintText = "本週事件壓力偏低";
-    if (highEvents.length >= 5) { hintTitle = "高波動"; hintText = "高影響事件偏多，留意倉位與夜盤"; }
-    else if (highEvents.length >= 2) { hintTitle = "偏熱"; hintText = "未來 30 天有多個關鍵催化"; }
-    $("#marketHintValue").textContent = hintTitle;
-    $("#marketHintText").textContent = hintText;
-    $("#updatedAt").textContent = state.payload.metadata.updated_at ? formatDateTime(state.payload.metadata.updated_at) : "—";
-    $("#newsUpdatedAt").textContent = state.newsPayload.metadata.updated_at ? formatDateTime(state.newsPayload.metadata.updated_at) : "尚未更新";
+    setText("#nextCountdown", nextHigh ? formatRelative(nextHigh.timestamp - now.getTime()) : "—");
+    setText("#marketHintValue", highEvents.length >= 5 ? "高波動" : highEvents.length >= 2 ? "偏熱" : "穩定");
+    setText("#marketHintText", highEvents.length >= 5 ? "高影響事件偏多" : highEvents.length >= 2 ? "未來 30 天有多個催化" : "本週事件壓力偏低");
+    setText("#updatedAt", state.payload.metadata.updated_at ? formatDateTime(state.payload.metadata.updated_at) : "—");
+    setText("#newsUpdatedAt", state.newsPayload.metadata.updated_at ? formatDateTime(state.newsPayload.metadata.updated_at) : "尚未更新");
 
     const health = $("#calendarDataState");
     if (health) {
       const offline = state.payload.metadata.generation_mode === "offline";
-      health.textContent = offline
-        ? "目前顯示安裝包資料；執行 GitHub Actions 後會補入完整公司事件。"
-        : `已同步 ${state.payload.metadata.event_count || state.events.length} 件事件`;
+      health.textContent = offline ? "目前顯示安裝包資料；執行資料更新 Action 後會補入完整公司事件。" : `已同步 ${state.payload.metadata.event_count || state.events.length} 件事件`;
       health.classList.toggle("warning", offline);
     }
   }
@@ -515,27 +509,34 @@
       const href = event.external_href || `event.html?id=${encodeURIComponent(event.id)}`;
       const target = event.external_href ? ' target="_blank" rel="noreferrer noopener"' : "";
       return `<a class="agenda-mini-row impact-${event.impact} group-${eventGroup(event)}" href="${escapeHtml(href)}"${target}>
-        <time>${event.startDate.getMonth()+1}/${event.startDate.getDate()}<small>${event.all_day ? "全天" : `${pad(event.startDate.getHours())}:${pad(event.startDate.getMinutes())}`}</small></time>
-        <div><strong>${escapeHtml(event.title)}</strong><small>${REGION_MAP[event.region] || event.region} · ${eventTypeShort(event)}${event.source_name ? ` · ${escapeHtml(event.source_name)}` : ""}</small></div>
-        <b>${event.impact === "high" ? "高" : "中"}</b>
+        <time>${formatDate(event.startDate)}${event.all_day ? "" : ` ${pad(event.startDate.getHours())}:${pad(event.startDate.getMinutes())}`}</time>
+        <div><strong>${escapeHtml(event.title)}</strong><small>${escapeHtml(event.source_name || CATEGORY_MAP[event.category] || event.category)} · ${IMPACT_MAP[event.impact]}</small></div>
+        <span>›</span>
       </a>`;
     }).join("");
   }
 
   function renderSources() {
-    const sources = [...(state.payload.sources || []), state.newsPayload.source?.name ? { ...state.newsPayload.source, last_success: state.newsPayload.metadata.updated_at } : null].filter(Boolean);
-    const ok = sources.filter(source => source.status === "ok" || source.status === "live").length;
-    const warning = sources.length - ok;
+    const eventSources = (state.payload.sources || []).map(source => ({...source, kind:"事件"}));
+    const newsSources = (state.newsPayload.sources || []).map(source => ({...source, kind:"新聞"}));
+    const sources = [...eventSources, ...newsSources];
+    const unique = [];
+    const seen = new Set();
+    for (const source of sources) {
+      const key = source.name || source.source || "";
+      if (!key || seen.has(key)) continue;
+      seen.add(key); unique.push(source);
+    }
+    const normal = unique.filter(source => source.status === "ok").length;
+    const warning = unique.length - normal;
     const count = $("#sourceCount");
-    if (count) count.textContent = `${ok}/${sources.length}`;
+    if (count) count.textContent = `${unique.length} 個來源`;
     const summary = $("#sourceHealthSummary");
-    if (summary) summary.textContent = warning ? `${ok} 正常 · ${warning} 備援／待更新` : `${ok} 個來源正常`;
+    if (summary) summary.textContent = `${normal} 正常${warning ? ` · ${warning} 備援／待更新` : ""}`;
     const wrapper = $("#sourceStatus");
     if (!wrapper) return;
-    wrapper.innerHTML = sources.map(source => `<div class="source-row">
-      <div><strong>${escapeHtml(source.name || "資料來源")}</strong><small>${escapeHtml(source.message || (source.last_success ? formatDateTime(source.last_success) : "等待第一次同步"))}</small></div>
-      <span class="source-pill ${source.status === "ok" || source.status === "live" ? "ok" : "warning"}">${source.status === "ok" || source.status === "live" ? "正常" : "備援"}</span>
-    </div>`).join("");
+    wrapper.innerHTML = unique.length ? unique.map(source => `
+      <div class="source-row"><div><strong>${escapeHtml(source.name || source.source)}</strong><small>${escapeHtml(source.message || source.kind || (source.last_success ? formatDateTime(source.last_success) : "—"))}</small></div><span class="source-pill ${source.status === "ok" ? "ok" : "warning"}">${source.status === "ok" ? "正常" : "備援中"}</span></div>`).join("") : '<div class="portfolio-empty-mini">資料來源狀態等待第一次更新。</div>';
   }
 
   function showPreview(target, event) {
@@ -552,8 +553,10 @@
 
   function updateClock() {
     const now = new Date();
-    $("#todayLabel").textContent = `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日（週${DAY_NAMES[now.getDay()]}）`;
-    $("#clockLabel").textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+    const today = $("#todayLabel");
+    const clock = $("#clockLabel");
+    if (today) today.textContent = `${now.getFullYear()}年${now.getMonth() + 1}月${now.getDate()}日（週${DAY_NAMES[now.getDay()]}）`;
+    if (clock) clock.textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
   }
 
   function restorePrefs() {
@@ -572,7 +575,7 @@
   }
 
   function bind() {
-    $("#refreshBtn").addEventListener("click", () => window.location.reload());
+    $("#refreshBtn")?.addEventListener("click", () => window.location.reload());
     $("#closeDayEventsBtn")?.addEventListener("click", () => $("#dayEventsDialog")?.close());
     $("#dayEventsDialog")?.addEventListener("click", (event) => {
       if (event.target === $("#dayEventsDialog")) $("#dayEventsDialog").close();
@@ -580,7 +583,7 @@
     $("#prevMonth").addEventListener("click", () => { state.calendarDate = new Date(state.calendarDate.getFullYear(), state.calendarDate.getMonth() - 1, 1); renderCalendar(); renderMonthSummary(); savePrefs(); });
     $("#nextMonth").addEventListener("click", () => { state.calendarDate = new Date(state.calendarDate.getFullYear(), state.calendarDate.getMonth() + 1, 1); renderCalendar(); renderMonthSummary(); savePrefs(); });
     $("#todayMonth").addEventListener("click", () => { const now = new Date(); state.calendarDate = new Date(now.getFullYear(), now.getMonth(), 1); renderCalendar(); renderMonthSummary(); savePrefs(); });
-    ["#searchInput", "#rangeFilter", "#regionFilter", "#categoryFilter", "#highOnly"].forEach((selector) => $(selector).addEventListener(selector === "#searchInput" ? "input" : "change", applyFilters));
+    ["#searchInput", "#rangeFilter", "#regionFilter", "#categoryFilter", "#highOnly"].forEach((selector) => $(selector)?.addEventListener(selector === "#searchInput" ? "input" : "change", applyFilters));
     $$(".focus-chip").forEach((button) => button.addEventListener("click", () => {
       state.focus = button.dataset.focus;
       $$(".focus-chip").forEach((node) => node.classList.toggle("active", node === button));
@@ -788,7 +791,12 @@
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(renderCalendar, 120);
     });
-    $("#yearLabel").textContent = String(new Date().getFullYear());
+    window.addEventListener("market-news-loaded", event => {
+      state.newsPayload = event.detail?.payload || state.newsPayload;
+      renderSources();
+      renderStats();
+    });
+    if ($("#yearLabel")) $("#yearLabel").textContent = String(new Date().getFullYear());
   }
 
   bootstrap();

@@ -2,13 +2,13 @@ window.__MARKET_SNAPSHOT_SEED__ = {
   "metadata": {
     "updated_at": "2026-08-02T10:19:00+08:00",
     "timezone": "Asia/Taipei",
-    "version": "v10.5.2",
+    "version": "v10.6.0",
     "item_count": 33,
     "healthy_count": 1,
     "status": "seed",
     "display_policy": "delayed-or-last-close",
     "tw_etf_ranking": "daily-trading-value",
-    "note": "v10.5.2 grouped indices and vertical ETF rails; delayed/last-close policy."
+    "note": "Clean v10.6.0 seed. Run the market ticker workflow to fill grouped index and ETF data."
   },
   "sources": [],
   "items": [

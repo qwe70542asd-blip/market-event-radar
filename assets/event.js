@@ -27,10 +27,12 @@
     const m = min % 60;
     return [d ? `${d}天` : "", h ? `${h}小時` : "", !d && m ? `${m}分` : ""].filter(Boolean).join(" ") || "即將公布";
   }
-  function querySearchURL(query) { return `news.html?q=${encodeURIComponent(query)}`; }
   async function loadJson(path, fallback) {
+    if (window.MarketDataSource?.loadJson) {
+      return window.MarketDataSource.loadJson(path, fallback);
+    }
     try {
-      const response = await fetch(path, { cache: "no-store" });
+      const response = await fetch(`${path}${path.includes("?") ? "&" : "?"}t=${Date.now()}`, { cache: "no-store" });
       if (!response.ok) throw new Error(path);
       return response.json();
     } catch {
@@ -81,7 +83,7 @@
       : "";
     const newsCards = relatedNews.length
       ? relatedNews.map((item) => `<a class="news-card detail-news-card" href="${item.link}" target="_blank" rel="noreferrer noopener"><div class="news-meta"><span>${escapeHtml(item.source || '新聞')}</span><span>${item.published_at ? formatDateTime(item.published_at) : '即時搜尋'}</span></div><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.event_title || event.title)}</p></a>`).join("")
-      : `<div class="news-empty-block"><h3>目前尚未抓到這個事件的報導</h3><p>你可以先用搜尋入口查看最新新聞；等 GitHub Actions 的「Update related news」執行後，這裡會自動補上新聞卡片。</p><a class="mini-btn ghost-link" href="${querySearchURL(event.title)}" target="_blank" rel="noreferrer noopener">搜尋 Google 新聞</a></div>`;
+      : `<div class="news-empty-block"><h3>目前尚未抓到可直接開啟原文的報導</h3><p>資料更新後會自動補上原始新聞連結；不使用搜尋頁或來源首頁冒充文章。</p></div>`;
     document.getElementById("detailRoot").innerHTML = `
       <section class="detail-hero">
         <div class="detail-main-card">

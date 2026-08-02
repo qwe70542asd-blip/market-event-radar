@@ -67,7 +67,8 @@
     return `<a class="market-etf-row ${direction(item)}" href="${escapeHtml(href)}" target="_blank" rel="noreferrer noopener"
       title="${escapeHtml(`${item.source || "行情來源"}｜${item.delay || ""}｜${formatTime(item.as_of)}`)}">
       <span class="market-etf-rank">${rank}</span>
-      <div><strong>${escapeHtml(item.symbol || item.id)}</strong><small>${escapeHtml(item.name || "ETF")}</small></div>
+      <strong class="market-etf-symbol">${escapeHtml(item.symbol || item.id)}</strong>
+      <small class="market-etf-name">${escapeHtml(item.name || "ETF")}</small>
       <b>${formatNumber(item.value,item)}</b>
       <em>${pctText(item)}</em>
     </a>`;
@@ -80,7 +81,7 @@
         <div><strong>${label}</strong><small>${note}</small></div>
         <span>${countLabel}</span>
       </header>
-      <div class="market-etf-viewport" id="${id}" data-visible="5">
+      <div class="market-etf-viewport" id="${id}" data-visible="4">
         <div class="market-etf-track">
           ${safeRows.length ? safeRows.map(etfRow).join("") : '<div class="market-etf-empty">ETF 行情等待第一次排程</div>'}
         </div>
@@ -118,7 +119,7 @@
       }
     };
 
-    const play = () => { clearInterval(timer); timer = setInterval(step, 2800); };
+    const play = () => { clearInterval(timer); timer = setInterval(step, 3000); };
     viewport.addEventListener("mouseenter", () => { paused = true; });
     viewport.addEventListener("mouseleave", () => { paused = false; });
     viewport.addEventListener("focusin", () => { paused = true; });
@@ -146,8 +147,8 @@
     root.innerHTML = `
       <div class="market-index-groups">${INDEX_GROUPS.map(group => indexGroup(group,map)).join("")}</div>
       <div class="market-etf-groups">
-        ${etfPanel("twEtfRail","台股主流 ETF","依證交所成交值排行，最多 15 檔",twEtfs,"前 15")}
-        ${etfPanel("usEtfRail","美股 ETF","核心指數、產業與債券代表 ETF",usEtfs,`${usEtfs.length || 10} 檔`)}
+        ${etfPanel("twEtfRail","台股主流 ETF","成交值排行前 15；一次顯示 4 檔向上輪播",twEtfs,"前 15")}
+        ${etfPanel("usEtfRail","美股 ETF","大盤、科技、半導體與債券；一次顯示 4 檔",usEtfs,`${usEtfs.length || 10} 檔`)}
       </div>`;
 
     startVerticalRail(document.querySelector("#twEtfRail"));
@@ -157,11 +158,10 @@
   async function load() {
     let payload = seed;
     try {
-      const response = await fetch(`data/market-snapshot.json?t=${Date.now()}`, { cache:"no-store" });
-      if (response.ok) {
-        const live = await response.json();
-        if ((live.items || []).length || (live.taiwan_etfs || []).length) payload = live;
-      }
+      const live = window.MarketDataSource?.loadJson
+        ? await window.MarketDataSource.loadJson("data/market-snapshot.json", seed)
+        : seed;
+      if ((live.items || []).length || (live.taiwan_etfs || []).length) payload = live;
     } catch {}
     render(payload);
   }

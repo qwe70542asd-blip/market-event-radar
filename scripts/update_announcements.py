@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Refresh official announcements and institutional flow for v10.4.1.
+"""Refresh official announcements and institutional flow for v10.6.0.
 
 Key fixes:
 - Weekend/holiday runs show the latest available trading day instead of today's empty date.
-- Google News RSS redirect URLs are never exposed as the primary link; a stable exact-title
-  search is used when no direct official URL is available.
+- Google Search and Google News redirect URLs are never published.
+- Unresolved items are withheld; official open-data rows may use the official department page.
 - Previous successful institutional figures and announcements are retained on partial failure.
 - Official sources are clearly separated from licensed broker-branch data, which is not guessed.
 """
@@ -32,7 +32,7 @@ TAIPEI = ZoneInfo("Asia/Taipei")
 NOW = datetime.now(TAIPEI)
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/10.4.1; +https://github.com/qwe70542asd-blip/market-event-radar)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/10.6.0; +https://github.com/qwe70542asd-blip/market-event-radar)",
     "Accept-Language": "zh-TW,zh;q=0.95,en-US;q=0.75,en;q=0.65,ja;q=0.55",
 }
 
@@ -140,7 +140,7 @@ def latest_weekday(day: date) -> date:
 
 def search_url(title: str, source: str = "") -> str:
     query = " ".join(part for part in [f'"{clean(title)}"', clean(source)] if part)
-    return "https://www.google.com/search?q=" + quote_plus(query)
+    return ""
 
 
 def is_google_news_url(value: str) -> bool:
@@ -151,7 +151,7 @@ def stable_link(link: str, title: str, source: str) -> str:
     value = clean(link)
     if value and not is_google_news_url(value):
         return value
-    return search_url(title, source)
+    return ""
 
 
 def translate_rule(title: str) -> str:
@@ -328,6 +328,8 @@ def main():
     for source, region, category, query, hl, gl, ceid in SEARCHES:
         try:
             for title, link, original_link, published in google_feed(query, hl, gl, ceid):
+                if not link:
+                    continue
                 chinese = title if region == "TW" else translate_rule(title)
                 items.append({
                     "id": hashlib.sha1((source + title).encode()).hexdigest()[:16],
@@ -342,7 +344,7 @@ def main():
                     "published_at": published,
                     "importance": "high",
                     "translation_status": "official-zh" if region == "TW" else "rule-based",
-                    "link_status": "stable-search" if is_google_news_url(original_link) else "direct",
+                    "link_status": "direct",
                 })
         except Exception as exc:
             print("warning search", source, exc)

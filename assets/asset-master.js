@@ -23,13 +23,14 @@
   }
 
   async function load() {
-    const seed = window.__MARKET_ASSET_SEED__?.assets || [];
+    const seedPayload = window.__MARKET_ASSET_SEED__ || { assets: [] };
+    const seed = seedPayload.assets || [];
     try {
-      const response = await fetch(`data/assets.json?t=${Date.now()}`, { cache: "no-store" });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const payload = await response.json();
+      const payload = window.MarketDataSource?.loadJson
+        ? await window.MarketDataSource.loadJson("data/assets.json", seedPayload)
+        : seedPayload;
       state.assets = merge(payload.assets || [], seed);
-      state.status = "live";
+      state.status = payload.__data_source === "live-data" ? "live" : "seed";
     } catch (error) {
       state.assets = merge([], seed);
       state.status = "seed";

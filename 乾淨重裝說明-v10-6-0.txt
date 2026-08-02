@@ -1,0 +1,71 @@
+市場事件雷達 v10.6.0｜首頁完整整合乾淨版
+
+這一版不是覆蓋更新包。
+請用完整乾淨重裝，避免 v10.4／v10.5 舊檔、舊 Workflow 與新檔混用。
+
+一、先解除目前合併狀態
+1. GitHub Desktop 若顯示 Resolve conflicts，先按 Abort merge。
+2. 按 Fetch origin。
+3. 若出現 Pull origin，先完成 Pull。
+4. 確認畫面上不再顯示正在 Merge。
+
+二、清除舊網站
+1. GitHub Desktop：Repository → Show in Explorer。
+2. 打開 market-event-radar 專案資料夾。
+3. Windows 檔案總管開啟「顯示隱藏的項目」。
+4. 只保留隱藏的 .git 資料夾。
+5. 其他網站檔案與資料夾全部刪除，包括舊的 .github、assets、data、scripts、HTML 與舊說明檔。
+6. 不要刪除 .git，否則 GitHub Desktop 會失去專案紀錄。
+
+三、放入 v10.6.0
+1. 將本資料夾內的全部內容複製到原本 market-event-radar 根目錄。
+2. 根目錄應直接看到：
+   index.html
+   assets
+   data
+   scripts
+   .github
+3. 不要再多包一層 market-event-radar-v10-6-0-integrated-clean 資料夾。
+
+四、提交網站程式
+GitHub Desktop Summary：
+Clean integrated market homepage v10.6.0
+
+依序按：
+Commit to main
+Push origin
+
+五、建立獨立即時資料分支
+1. 開啟 GitHub 網站 → Actions。
+2. 選擇「Update v10.6.0 integrated live data」。
+3. 按 Run workflow。
+4. mode 選 all。
+5. 等待綠色勾勾完成。
+
+Action 第一次執行會自動建立 live-data 分支。
+往後行情、新聞、公告、事件與法人資料只更新 live-data，不再自動修改 main。
+這樣 GitHub Desktop 更新網站程式時，不會再和排程資料檔發生 market-snapshot.json 等合併衝突。
+
+首頁整合內容
+- 台股／美股四大／日韓分類指數。
+- 台股主流 ETF 與美股 ETF 向上輪播。
+- 重要新聞單行跑馬燈。
+- 個人投資組合漲跌與迷你走勢。
+- 五組虛擬貨幣排行與市場狀態。
+- 外資、投信、自營商、三大法人摘要與圖表入口。
+- 官方公告單行輪播。
+- 篩選器直接併入事件月曆。
+- 月曆右側只保留 4 筆近期高影響事件。
+- 今日財經快訊顯示實際文章標題、時間、分類、來源與原始文章連結。
+- 資料健康移到最下方並預設收合。
+
+新聞連結規則
+- 首頁只顯示可直接開啟的文章網址。
+- 不使用 Google 搜尋結果當成新聞網址。
+- 不使用 Google News 中轉網址。
+- 無法確認原始文章時，該筆先不顯示在首頁。
+
+資料更新說明
+- GitHub 排程可能延遲，網站會顯示資料時間與狀態。
+- 虛擬貨幣畫面價格會嘗試連接公開市場串流；中斷時使用最近成功資料。
+- 台股與美股免費公開行情可能是延遲、收盤或最近成交資料，不冒充交易所授權即時報價。

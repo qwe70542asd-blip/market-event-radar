@@ -80,15 +80,22 @@
     $("#modelNotice").textContent="穩健度是資料型比較模型，會受到資料缺漏與產業差異影響，不是信用評等、目標價或買賣建議。";
   }
   async function load(){
-    let seed=window.__MARKET_ASSET_SEED__||{assets:[]};
-    try{const r=await fetch(`data/assets.json?t=${Date.now()}`,{cache:"no-store"});if(r.ok)seed=await r.json();}catch{}
-    let asset=(seed.assets||[]).find(x=>x.id===assetId);
+    const seedPayload=window.__MARKET_ASSET_SEED__||{assets:[]};
+    let payload=seedPayload;
+    try{
+      payload=window.MarketDataSource?.loadJson
+        ? await window.MarketDataSource.loadJson("data/assets.json",seedPayload)
+        : seedPayload;
+    }catch{}
+    let asset=(payload.assets||[]).find(x=>x.id===assetId);
     if(!asset&&window.MarketAssets) asset=window.MarketAssets.byId(assetId);
     if(!asset){$("#assetName").textContent="找不到標的";return;}
     try{
       const safeId=String(asset.id).replace(/:/g,"__");
-      const r=await fetch(`data/asset-details/${encodeURIComponent(safeId)}.json?t=${Date.now()}`,{cache:"no-store"});
-      if(r.ok) asset={...asset,...await r.json()};
+      const detail=window.MarketDataSource?.loadJson
+        ? await window.MarketDataSource.loadJson(`data/asset-details/${encodeURIComponent(safeId)}.json`,{})
+        : {};
+      if(detail && Object.keys(detail).some(key=>key!=="__data_source")) asset={...asset,...detail};
     }catch{}
     render(asset);
   }

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build grouped index and ETF market snapshots for Market Event Radar v10.5.2.
+"""Build grouped index and ETF market snapshots for Market Event Radar v10.6.0.
 
 Visible groups:
 - Taiwan indices: TAIEX and TPEx.
@@ -34,7 +34,7 @@ UTC = ZoneInfo("UTC")
 NOW = datetime.now(TAIPEI)
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/10.5.2; +https://github.com/qwe70542asd-blip/market-event-radar)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/10.6.0; +https://github.com/qwe70542asd-blip/market-event-radar)",
     "Accept-Language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
     "Accept": "application/json,text/html,text/plain,*/*",
 }
@@ -361,7 +361,7 @@ def main() -> int:
     healthy = sum(1 for row in all_rows if row.get("status") in {"ok","fallback"} and row.get("value") is not None)
     payload = {
         "metadata": {
-            "updated_at":iso(NOW), "timezone":"Asia/Taipei", "version":"v10.5.2",
+            "updated_at":iso(NOW), "timezone":"Asia/Taipei", "version":"v10.6.0",
             "item_count":len(all_rows), "healthy_count":healthy,
             "status":"ok" if healthy >= 20 else "partial",
             "display_policy":"delayed-or-last-close",
