@@ -32,6 +32,7 @@
   }
 
   function amount(value) {
+    if (value === null || value === undefined || value === "") return "等待更新";
     const number=Number(value);
     return Number.isFinite(number)?`${number>=0?"+":""}${number.toFixed(1)} 億`:"—";
   }
@@ -78,7 +79,8 @@
       const twse=institutional.twse||{},tpex=institutional.tpex||{};
       const twseDate=formatTradingDate(institutional.twse_date||institutional.date);
       const tpexDate=formatTradingDate(institutional.tpex_date||institutional.date);
-      const lag=institutional.is_previous_trading_day?"最近交易日":"當日盤後";
+      const hasData=[twse.foreign,twse.investment_trust,twse.dealer,tpex.total].some(value=>value!==null&&value!==undefined&&value!=="");
+      const lag=hasData?(institutional.is_previous_trading_day?"最近交易日":"當日盤後"):"等待官方盤後資料";
       cards.innerHTML=[
         institutionalCard("上市外資",twse.foreign,twseDate,"institutional.html?market=twse&type=foreign",`${lag} · 查看圖表`),
         institutionalCard("上市投信",twse.investment_trust,twseDate,"institutional.html?market=twse&type=investment_trust","官方彙總 · 查看圖表"),

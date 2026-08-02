@@ -1,13 +1,13 @@
-const CACHE_NAME = "market-event-radar-v10-6-2-integrated";
+const CACHE_NAME = "market-event-radar-v10-7-0-integrated";
 const STATIC_ASSETS = [
   "./", "index.html", "404.html", "event.html", "news.html", "portfolio.html", "asset.html", "institutional.html", "manifest.webmanifest",
-  "assets/styles.css?v=10.6.2", "assets/data-source.js?v=10.6.2", "assets/app.js?v=10.6.0",
-  "assets/market-ticker.js?v=10.6.1", "assets/crypto-live.js?v=10.6.0", "assets/event.js?v=10.6.0",
+  "assets/styles.css?v=10.7.0", "assets/data-source.js?v=10.7.0", "assets/app.js?v=10.7.0",
+  "assets/market-ticker.js?v=10.7.0", "assets/crypto-live.js?v=10.7.0", "assets/event.js?v=10.6.0",
   "assets/auth.js?v=10.6.0", "assets/firebase-config.js",
-  "assets/news-core.js?v=10.6.2", "assets/news-ui.js?v=10.6.1",
-  "assets/news-page.js?v=10.6.2", "assets/portfolio.js?v=10.6.0", "assets/asset-master.js?v=10.6.0", "assets/asset-detail.js?v=10.6.0", "assets/announcements.js?v=10.6.0",
-  "assets/institutional.js?v=10.6.0", "assets/sw-register.js?v=10.6.0", "assets/favicon.svg",
-  "data/seed.js", "data/news-seed.js?v=10.6.2", "data/assets-seed.js", "data/announcements-seed.js", "data/institutional-history-seed.js"
+  "assets/news-core.js?v=10.7.0", "assets/news-ui.js?v=10.7.0",
+  "assets/news-page.js?v=10.7.0", "assets/portfolio.js?v=10.6.0", "assets/asset-master.js?v=10.6.0", "assets/asset-detail.js?v=10.6.0", "assets/announcements.js?v=10.7.0",
+  "assets/institutional.js?v=10.6.0", "assets/sw-register.js?v=10.7.0", "assets/favicon.svg",
+  "data/seed.js", "data/news-seed.js?v=10.7.0", "data/assets-seed.js", "data/announcements-seed.js", "data/institutional-history-seed.js"
 ];
 
 self.addEventListener("install", event => {

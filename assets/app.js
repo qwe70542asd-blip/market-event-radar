@@ -783,6 +783,12 @@
     renderSources();
     bind();
     bindPersonalTools();
+    document.querySelectorAll("[data-radar-search],[data-radar-focus]").forEach(button => button.addEventListener("click", () => {
+      const input=$("#searchInput");
+      if (input) { input.value=button.dataset.radarSearch || ""; input.dispatchEvent(new Event("input",{bubbles:true})); }
+      if (button.dataset.radarFocus) document.querySelector(`[data-focus="${button.dataset.radarFocus}"]`)?.click();
+      $("#calendarSection")?.scrollIntoView({behavior:"smooth",block:"start"});
+    }));
     applyFilters();
     updateClock();
     setInterval(updateClock, 1000);

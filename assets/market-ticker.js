@@ -31,12 +31,14 @@
   }
 
   function direction(item) {
+    if (item?.change_percent === null || item?.change_percent === undefined || item?.change_percent === "") return "pending";
     const pct = Number(item?.change_percent);
     if (!Number.isFinite(pct) || pct === 0) return "flat";
     return pct > 0 ? "up" : "down";
   }
 
   function pctText(item) {
+    if (item?.change_percent === null || item?.change_percent === undefined || item?.change_percent === "") return "待更新";
     const pct = Number(item?.change_percent);
     if (!Number.isFinite(pct)) return "待更新";
     return `${pct > 0 ? "+" : ""}${pct.toFixed(2)}%`;
@@ -119,7 +121,7 @@
       }
     };
 
-    const play = () => { clearInterval(timer); timer = setInterval(step, 3000); };
+    const play = () => { clearInterval(timer); timer = setInterval(step, 8000); };
     viewport.addEventListener("mouseenter", () => { paused = true; });
     viewport.addEventListener("mouseleave", () => { paused = false; });
     viewport.addEventListener("focusin", () => { paused = true; });

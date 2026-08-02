@@ -134,7 +134,7 @@
   function restartRotation() {
     clearInterval(state.rotationTimer);
     if (state.paused) return;
-    state.rotationTimer = setInterval(() => setGroup(state.groupIndex + 1), 7000);
+    state.rotationTimer = setInterval(() => setGroup(state.groupIndex + 1), 15000);
   }
 
   function fallbackBurst(markets) {
@@ -310,5 +310,5 @@
   connectBinance();
   refreshRankings();
   restartRotation();
-  state.refreshTimer=setInterval(refreshRankings,60_000);
+  state.refreshTimer=setInterval(refreshRankings,120_000);
 })();

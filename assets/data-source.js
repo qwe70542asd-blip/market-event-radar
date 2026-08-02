@@ -2,8 +2,10 @@
   "use strict";
   const OWNER="qwe70542asd-blip";
   const REPO="market-event-radar";
-  const BRANCH="main";
-  const REMOTE_BASE=`https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/`;
+  const LIVE_BRANCH="live-data";
+  const MAIN_BRANCH="main";
+  const REMOTE_BASE=`https://raw.githubusercontent.com/${OWNER}/${REPO}/${LIVE_BRANCH}/`;
+  const MAIN_BASE=`https://raw.githubusercontent.com/${OWNER}/${REPO}/${MAIN_BRANCH}/`;
 
   function remotePath(path) {
     return REMOTE_BASE + String(path || "").replace(/^\.\//,"");
@@ -25,11 +27,15 @@
       return {...payload,__data_source:"live-data"};
     } catch {}
     try {
+      const payload=await fetchJsonUrl(MAIN_BASE + String(path || "").replace(/^\.\//,""));
+      return {...payload,__data_source:"main"};
+    } catch {}
+    try {
       const payload=await fetchJsonUrl(path);
       return {...payload,__data_source:"local"};
     } catch {}
     return fallback;
   }
 
-  window.MarketDataSource={REMOTE_BASE,remotePath,fetchJsonUrl,loadJson};
+  window.MarketDataSource={REMOTE_BASE,MAIN_BASE,remotePath,fetchJsonUrl,loadJson};
 })();

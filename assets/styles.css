@@ -1850,6 +1850,44 @@ body { font-size: 16px; line-height: 1.55; }
 .section-copy, .source-footnote { font-size: 15px; }
 input, select, button { font-size: 15px; }
 
+/* v10.7.0 large-type and decision-radar pass */
+.decision-radar-section { margin-top:14px; padding:18px; border:1px solid rgba(121,240,183,.16); border-radius:18px; background:var(--panel); box-shadow:var(--shadow); }
+.decision-radar-head { display:flex; align-items:flex-end; justify-content:space-between; gap:16px; margin-bottom:12px; }
+.decision-radar-head h2 { margin:0; font-size:24px; }
+.decision-radar-head>span { color:var(--muted); font-size:14px; }
+.decision-radar-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.decision-radar-card { display:grid; grid-template-columns:38px minmax(0,1fr) auto; align-items:center; gap:12px; min-height:92px; padding:16px; border:1px solid rgba(255,255,255,.08); border-radius:14px; background:rgba(255,255,255,.025); color:inherit; text-align:left; text-decoration:none; cursor:pointer; }
+.decision-radar-card:hover { border-color:rgba(121,240,183,.28); background:rgba(121,240,183,.04); }
+.decision-radar-card>b { display:grid; place-items:center; width:36px; height:36px; border-radius:10px; background:rgba(121,240,183,.09); color:var(--green); font-size:14px; }
+.decision-radar-card span strong,.decision-radar-card span small { display:block; }
+.decision-radar-card span strong { font-size:18px; }
+.decision-radar-card span small { margin-top:5px; color:#9fb2bf; font-size:14px; line-height:1.45; }
+.decision-radar-card em { color:#8ee3bd; font-size:14px; font-style:normal; white-space:nowrap; }
+.eyebrow { font-size:14px; }
+.brand strong { font-size:19px; }.brand small { font-size:12px; }
+.live-dot,.mini-btn,.account-btn { font-size:15px; }
+.crypto-live-head .eyebrow,.announcement-compact-head .eyebrow,.today-news-head .eyebrow,.portfolio-live-head .eyebrow { font-size:12px; }
+.crypto-live-head h2,.announcement-compact-head h2,.today-news-head h2,.portfolio-live-title-line h2 { font-size:24px; }
+.crypto-live-status,.announcement-compact-head>span,.portfolio-live-title-line>span,.portfolio-page-link { font-size:14px; }
+.crypto-group-head { min-height:46px; padding:9px 11px; }
+.crypto-group-head strong { font-size:15px; }.crypto-group-head small { font-size:12px; }.crypto-controls { font-size:12px; }
+.crypto-controls button { width:32px; height:32px; }
+.crypto-rank-symbol,.crypto-rank-row strong,.crypto-rank-row>b { font-size:14px; }
+.crypto-rank-row small,.crypto-rank-row>em { font-size:12px; }
+.crypto-global-line { font-size:12px; }.crypto-global-line b { font-size:13px; }
+.institutional-card span,.institutional-card small,.announcement-note { font-size:13px; }
+.announcement-ticker-label,.announcement-ticker>a b,.announcement-ticker>a small,.announcement-ticker-controls { font-size:12px; }
+.announcement-ticker>a strong { font-size:14px; }
+.calendar-focus-chips .focus-chip { min-height:36px; font-size:14px; }
+.calendar-sync-line { font-size:13px; }
+.agenda-mini-row time,.agenda-mini-row small { font-size:12px; }.agenda-mini-row strong { font-size:14px; }
+.today-news-head p:not(.eyebrow),.today-news-head-actions a,.today-news-tabs button { font-size:14px; }
+.today-news-row time,.today-news-badge,.today-news-row em { font-size:13px; }.today-news-row strong { font-size:16px; }
+.health-details summary .eyebrow { font-size:11px; }.health-details summary strong { font-size:17px; }.health-details summary small,.health-details summary>b { font-size:13px; }
+.news-hero-compact h1 { font-size:38px; }.news-hero-compact p { font-size:16px; }
+.asset-class-tab { font-size:17px; }.news-filter-bar input,.news-filter-bar select { font-size:16px; }
+.news-page-card h2 { font-size:22px; }.news-page-card p { font-size:16px; }.news-card-top,.news-card-tags,.news-card-actions { font-size:13px; }
+
 @media (max-width: 760px) {
   body { font-size: 16px; }
   .market-board-shell, .breaking-news-bar, .shell { width: min(100% - 16px, 1280px); }
@@ -1863,4 +1901,7 @@ input, select, button { font-size: 15px; }
   .market-etf-row { grid-template-columns: 26px 62px minmax(96px,1fr) 68px 58px; gap:6px; }
   .portfolio-live-title-line h2, .crypto-live-head h2, .today-news-head h2 { font-size: 21px; }
   .today-news-list { grid-template-columns: 1fr; }
+  .decision-radar-grid { grid-template-columns:1fr; }
+  .decision-radar-card { grid-template-columns:38px minmax(0,1fr); }
+  .decision-radar-card em { grid-column:2; }
 }
