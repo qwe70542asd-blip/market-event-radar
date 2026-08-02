@@ -1821,3 +1821,46 @@ select option:checked { color:#07111f !important; background:#79f0b7 !important;
   .today-news-row { grid-template-columns:62px 34px minmax(0,1fr); }
   .today-news-row em { grid-column:3; margin-top:-3px; text-align:left; }
 }
+/* v10.6.1 readability pass: financial dashboard baseline */
+html { font-size: 16px; }
+body { font-size: 16px; line-height: 1.55; }
+.market-board-head { min-height: 42px; padding: 8px 16px; font-size: 13px; }
+.market-board-head > span { font-size: 14px; }
+.market-board-head small { font-size: 12px; }
+.market-index-group > header, .market-etf-panel > header { min-height: 52px; padding: 10px 14px; }
+.market-index-group header strong, .market-etf-panel header strong { font-size: 16px; }
+.market-index-group header small, .market-etf-panel header small,
+.market-index-group header > span, .market-etf-panel header > span { font-size: 12px; }
+.market-index-row { min-height: 54px; padding: 8px 12px; }
+.market-index-row > span { font-size: 12px; }
+.market-index-row > strong { font-size: 15px; }
+.market-index-row > b, .market-index-row > em { font-size: 14px; }
+.market-etf-row { height: 52px; padding: 7px 13px; }
+.market-etf-viewport { height: 208px; }
+.market-etf-rank, .market-etf-symbol, .market-etf-row > b, .market-etf-row > em { font-size: 13px; }
+.market-etf-name { font-size: 14px; }
+.market-etf-empty { font-size: 14px; }
+.breaking-news-bar { min-height: 52px; }
+.breaking-label, .breaking-viewport a, .breaking-controls { font-size: 14px; }
+.portfolio-live-title-line h2, .crypto-live-head h2, .today-news-head h2 { font-size: 22px; }
+.portfolio-live-title-line > span, .portfolio-page-link, .crypto-live-status,
+.today-news-head p:not(.eyebrow), .today-news-head-actions a, .today-news-tabs button { font-size: 13px; }
+.today-news-row time, .today-news-badge, .today-news-row em { font-size: 12px; }
+.today-news-row strong { font-size: 15px; line-height: 1.45; }
+.section-copy, .source-footnote { font-size: 15px; }
+input, select, button { font-size: 15px; }
+
+@media (max-width: 760px) {
+  body { font-size: 16px; }
+  .market-board-shell, .breaking-news-bar, .shell { width: min(100% - 16px, 1280px); }
+  .market-board-head { align-items:flex-start; gap:6px; }
+  .market-board-head small { text-align:right; line-height:1.35; }
+  .market-index-groups, .market-etf-groups { grid-template-columns: 1fr; }
+  .market-index-us > div { grid-template-columns: 1fr; }
+  .market-index-row, .market-index-tw .market-index-row, .market-index-asia .market-index-row {
+    grid-template-columns: 34px minmax(100px,1fr) 82px 68px;
+  }
+  .market-etf-row { grid-template-columns: 26px 62px minmax(96px,1fr) 68px 58px; gap:6px; }
+  .portfolio-live-title-line h2, .crypto-live-head h2, .today-news-head h2 { font-size: 21px; }
+  .today-news-list { grid-template-columns: 1fr; }
+}

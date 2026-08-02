@@ -155,13 +155,39 @@
     startVerticalRail(document.querySelector("#usEtfRail"));
   }
 
+  function mergeRows(seedRows = [], liveRows = []) {
+    const merged = new Map((Array.isArray(seedRows) ? seedRows : []).map(item => [item.id || item.symbol, {...item}]));
+    for (const live of (Array.isArray(liveRows) ? liveRows : [])) {
+      const key = live?.id || live?.symbol;
+      if (!key) continue;
+      const base = merged.get(key) || {};
+      const next = {...base, ...live};
+      ["value","previous","change","change_percent"].forEach(field => {
+        if (live[field] === null || live[field] === undefined || live[field] === "") next[field] = base[field] ?? null;
+      });
+      merged.set(key, next);
+    }
+    return [...merged.values()];
+  }
+
+  function mergePayload(base, live) {
+    return {
+      ...base,
+      ...live,
+      metadata: {...(base?.metadata || {}), ...(live?.metadata || {})},
+      items: mergeRows(base?.items, live?.items),
+      taiwan_etfs: mergeRows(base?.taiwan_etfs, live?.taiwan_etfs),
+      us_etfs: mergeRows(base?.us_etfs, live?.us_etfs),
+    };
+  }
+
   async function load() {
     let payload = seed;
     try {
       const live = window.MarketDataSource?.loadJson
         ? await window.MarketDataSource.loadJson("data/market-snapshot.json", seed)
         : seed;
-      if ((live.items || []).length || (live.taiwan_etfs || []).length) payload = live;
+      payload = mergePayload(seed, live);
     } catch {}
     render(payload);
   }

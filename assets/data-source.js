@@ -2,11 +2,11 @@
   "use strict";
   const OWNER="qwe70542asd-blip";
   const REPO="market-event-radar";
-  const BRANCH="live-data";
+  const BRANCH="main";
   const REMOTE_BASE=`https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/`;
 
   function remotePath(path) {
-    return REMOTE_BASE + String(path || "").replace(/^\.\//,"").replace(/^data\//,"");
+    return REMOTE_BASE + String(path || "").replace(/^\.\//,"");
   }
 
   async function fetchJsonUrl(url,timeout=9000) {
