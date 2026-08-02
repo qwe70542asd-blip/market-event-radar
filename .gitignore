@@ -1,5 +1,3 @@
 __pycache__/
-*.py[cod]
-*.zip
+*.pyc
 .DS_Store
-Thumbs.db

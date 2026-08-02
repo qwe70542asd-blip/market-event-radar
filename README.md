@@ -1,64 +1,67 @@
-# 市場事件雷達｜v11.0.0 完整整合版
+# 市場事件雷達｜v11.1.0 完整整合版
 
-這個資料夾是目前唯一應繼續修改的網站原始碼基準。
+這個資料夾可直接覆蓋 GitHub Pages 倉庫根目錄。網站不需要另外架設資料庫：靜態備援資料放在 `data/`，GitHub Actions 會把最新動態資料發布到既有的 `live-data` 分支，前端再自動選擇最新且內容最完整的來源。
 
-- 目前版本：`v11.0.0-complete-integration`
+## 本版整合內容
 
-## v11.0.0 整合內容
+- 修正 `00403A` 為「主動統一升級50」。
+- 正式收錄 `009816`「凱基台灣TOP50」。
+- 舊投資組合會依正式代碼重新解析，不必刪除後重加。
+- 首頁台股／ETF 卡片優先讀取 `tw-market.json` 官方行情，不再只依賴 Yahoo。
+- 缺值顯示 `—`、`官方資料待更新` 或 `排程待更新`，不以假 `NT$0.00` 冒充。
+- 股票詳情頁：行情、穩健度雷達圖、產業排名、財務、法人／當沖／融資券、股利與相關新聞。
+- ETF 詳情頁：淨值／折溢價狀態、發行公司、標的指數、槓桿型態、策略、配息、產業配置與關聯持股圖。
+- 新聞改為多來源：Yahoo、鉅亨、MoneyDJ，並以限定網域的 RSS 搜尋補充永豐、元大、國泰、凱基與富邦等券商／投顧來源。
+- 新聞保留 20 天、標題去重、失敗來源不會用空白檔覆蓋上次成功資料。
+- 月曆依實際週數平均分配高度：5 週月份平均拉高每一列，6 週月份維持合理高度。
+- PWA 快取版本更新為 `v11.1.0`。
 
-- `tw-market.html`：上市／上櫃漲幅榜、跌幅榜與市場家數。
-- 使用者可建立只存在瀏覽器的台股組合，股數與成本為選填。
-- `.github/workflows/update-news.yml`：新聞改為完全獨立發布；公告失敗不再阻擋新聞。
-- 新聞先由排程抓取、規則分類與去重；設定 `OPENAI_API_KEY` 後才啟用 AI 摘要、分類與同事件合併，AI 失敗仍照常發布。
-- 虛擬貨幣分組只由暫停按鈕控制，不會因手機觸控或滑入狀態卡在 `1/5`。
-- 首頁「最新官方公告」卡已移除，改為上市／上櫃當沖、融資與融券摘要。
-- `asset.html` 會辨識一般個股或 ETF：個股顯示財報與籌碼；ETF 才顯示成分股、淨值與折溢價。
-- 個股籌碼包含三大法人、當沖與融資券；券商分點沒有授權資料時只提供官方查詢入口，不填假排行。
-- `.github/workflows/update-tw-market.yml`：台股行情與盤後籌碼資料獨立更新。
-- `data/tw-market.json`：全市場股票與 ETF 行情；休市時保留最後交易日。
-- 專案網址：`https://qwe70542asd-blip.github.io/market-event-radar/`
-- 顯示時區：`Asia/Taipei`（台灣時間）
-- 目前狀態：本機語法、資料結構與解析測試完成；首次上傳後仍需由 GitHub Actions 取得真實新聞、籌碼與全市場行情。
-- 舊版 `v10.6.1`、`v10.6.2`、`v10.7.0` 壓縮包不再使用
+## 上傳方式
 
-## 先看哪裡
+1. 解壓縮本檔案。
+2. 進入 `market-event-radar-v11.1.0-complete` 資料夾。
+3. 將資料夾「裡面的全部檔案與資料夾」上傳到 GitHub 倉庫根目錄。
+4. 選擇覆蓋同名檔案並提交。
+5. 不要刪除既有 `live-data` 分支；網站會沿用上次成功的事件、新聞與市場資料。
+6. 到 **Actions** 手動執行一次：
+   - `Update v11.1.0 daily data`
+   - `Update v11.1.0 Taiwan market`
+   - `Update v11.1.0 multi-source news`
+7. GitHub Pages 發布完成後，使用 `Ctrl + F5` 重新整理一次。
 
-1. `docs/01-LATEST-REQUIREMENTS.md`：最新且唯一有效的完整需求。
-2. `docs/02-KNOWN-ISSUES.md`：目前已確認的問題與證據。
-3. `docs/03-TEST-ORDER.md`：一次只測一項的檢查順序。
-4. `docs/04-FILE-MAP-AND-DEPLOY.md`：檔案用途與之後的 GitHub 上傳方式。
-5. `docs/05-STATIC-VALIDATION.md`：本次整理包已完成與尚未完成的檢查。
+## 資料更新架構
 
-## 目前最重要的原則
+- `.github/workflows/update-news.yml`
+  - 每 10 分鐘更新多來源財經新聞。
+- `.github/workflows/update-tw-market.yml`
+  - 台灣交易時段每 5 分鐘更新台股／ETF 行情。
+  - 盤後嘗試更新三大法人、融資與融券。
+- `.github/workflows/update-daily.yml`
+  - 更新正式證券主檔、事件封存與全球市場行情。
+- `live-data`
+  - 只存動態 JSON 與 seed 檔。
+  - 前端會優先讀取此分支；失敗時退回主分支或安裝包備援。
 
-- 新聞與官方公告各自獨立；任何一邊失敗都不得發布空白檔案，也不得阻擋另一邊成功資料。
-- 新聞相同標題只保留一列，其他來源合併為「另有 N 個來源」。
-- 首次完整更新回補最近 20 天；其後超過 20 天才移除。
-- 資料失敗時不得顯示假 `0.00%`、假 `+0.0 億` 或假的即時時間。
-- 所有時間都要明確使用台灣時間。
-- 未完成四市場證券主檔前，不得宣稱「所有股票完整收錄」。
-- 上傳後先檢查完整資料流程，再依畫面逐項確認。
+## 重要資料原則
 
-## 資料夾結構
+- 代碼輸入若像正式證券代碼，必須完全相符，避免錯字被模糊配對。
+- `009816` 是正式 ETF 代碼，不可誤判為 `00981A`。
+- ETF 不顯示個股 EPS／本益比；個股不顯示 ETF 內扣費用。
+- 沒有可驗證數值時保留 `null`，前端顯示資料狀態。
+- 券商分點沒有授權資料時只提供官方查詢入口，不建立猜測排行。
+
+## 主要檔案
 
 ```text
-.
-├── .github/workflows/       GitHub Actions 自動更新
-├── assets/                  前端 JavaScript、CSS 與圖示
-├── data/                    安裝包資料與離線備援
-├── docs/                    最新規格、問題與測試文件
-├── scripts/                 市場資料更新程式
-├── index.html               首頁
-├── tw-market.html           台股漲跌榜與本機自訂組合頁
-├── news.html                財經新聞頁
-├── institutional.html       法人籌碼頁
-├── portfolio.html           投資組合頁
-├── asset.html               個股／ETF／基金分析頁
-├── event.html               事件詳情頁
-├── service-worker.js        離線快取與更新控制
-└── manifest.webmanifest     網站安裝資訊
+index.html                  首頁與月曆
+portfolio.html              投資組合
+tw-market.html              台股漲跌排行
+asset.html                  股票／ETF 詳情
+news.html                   多來源財經新聞
+institutional.html          法人、當沖與融資券
+event.html                  事件詳情
+assets/                     前端程式與樣式
+data/                       安裝包備援資料
+scripts/                    更新資料的 Python 程式
+.github/workflows/          GitHub Actions
 ```
-
-## 注意
-
-這個基準包的用途是避免版本再次混亂。它保留目前程式狀態與已知問題，不能因為語法檢查通過就當成線上資料已正常。正式上傳前，必須依 `docs/03-TEST-ORDER.md` 完成線上 Actions 與頁面實測。

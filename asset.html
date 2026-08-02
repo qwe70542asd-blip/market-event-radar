@@ -1,76 +1,35 @@
-<!DOCTYPE html>
-
-<html lang="zh-Hant">
-<head>
-<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
-<meta content="#07111f" name="theme-color"/>
-<title>標的詳情｜市場雷達</title>
-<link href="manifest.webmanifest" rel="manifest"/>
-<link href="assets/favicon.svg" rel="icon" type="image/svg+xml"/>
-<link href="assets/styles.css?v=11.0.0" rel="stylesheet"/>
-</head>
-<body>
-<div aria-hidden="true" class="noise"></div>
+<!doctype html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#061120">
+<title>標的詳情｜市場事件雷達</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="assets/favicon.svg"><link rel="stylesheet" href="assets/styles.css?v=11.1.0">
+</head><body>
+<div class="noise" aria-hidden="true"></div>
 <header class="topbar">
-<a class="brand" href="index.html"><span class="brand-mark"><svg viewbox="0 0 48 48"><path d="M7 34 16 24l7 6 10-16 8 6"></path><path d="M7 40h34"></path></svg></span>
-<span><strong>標的分析 <em class="version-badge">v11.0.0</em></strong><small>FINANCIAL QUALITY &amp; INDUSTRY MODEL</small></span></a>
-<div class="top-actions"><a class="mini-btn nav-link" href="tw-market.html">台股排行</a><a class="mini-btn nav-link" href="portfolio.html">投資組合</a><a class="mini-btn nav-link" href="news.html">新聞</a></div>
+  <a class="brand" href="index.html">
+    <span class="brand-mark"><svg viewBox="0 0 48 48"><path d="M7 34 16 24l7 6 10-16 8 6"></path><path d="M7 40h34"></path></svg></span>
+    <span><strong>市場事件雷達 <em class="version">v11.1.0</em></strong><small>PERSONAL MARKET & EVENT RADAR</small></span>
+  </a>
+  <nav class="topnav">
+    <span class="live-pill"><i></i> 自動更新</span>
+    <a href="news.html">財經新聞</a>
+    <a href="tw-market.html">台股排行</a>
+    <a href="institutional.html">法人籌碼</a>
+    <a class="keep-mobile" href="portfolio.html">我的組合</a>
+  </nav>
 </header>
-<main class="shell asset-detail-shell">
-<section class="asset-detail-hero">
-<div><span class="asset-class-badge stock" id="assetTypeBadge">股票</span><h1><span id="assetName">讀取中</span> <small id="assetSymbol"></small></h1><p id="assetMeta">—</p></div>
-<div class="stability-score"><span>資料型穩健度</span><strong id="stabilityScore">—</strong><small id="dataCoverage">資料覆蓋 —</small></div>
-</section>
-<nav aria-label="標的資料分頁" class="asset-tab-bar" id="assetTabBar">
-<button class="active" data-asset-tab="overview" type="button">總覽</button>
-<button data-asset-tab="returns" type="button">歷史報酬</button>
-<button data-applicable="stock" data-asset-tab="financials" type="button">財務</button>
-<button data-applicable="etf" data-asset-tab="etf" type="button">成分股／淨值</button>
-<button data-applicable="tw" data-asset-tab="chips" type="button">法人／當沖／融資券</button>
-<button data-asset-tab="dividends" type="button">股利／配息</button>
-<button data-asset-tab="news" type="button">相關新聞</button>
-</nav>
-<section data-asset-panel="overview">
-<section class="asset-metric-grid" id="assetMetricGrid"></section>
-<section class="asset-analysis-grid" id="stockAnalysisGrid">
-<article class="analysis-card"><div class="section-heading section-heading-tight"><div><p class="eyebrow">MODEL</p><h2>穩健度模型</h2></div></div><div id="stabilityRadar"></div><p class="model-notice" id="modelNotice"></p></article>
-<article class="analysis-card"><div class="section-heading section-heading-tight"><div><p class="eyebrow">INDUSTRY</p><h2>行業排名</h2></div></div><div class="ranking-grid" id="rankingGrid"></div></article>
-</section>
-<section class="analysis-card"><div class="section-heading section-heading-tight"><div><p class="eyebrow">KEY METRICS</p><h2>重要指標與產業比較</h2></div></div><div class="comparison-bars" id="comparisonBars"></div></section>
-</section>
-<section data-asset-panel="returns" hidden>
-<section class="analysis-card"><div class="section-heading section-heading-tight"><div><p class="eyebrow">PERFORMANCE</p><h2>歷史報酬率</h2></div><small id="returnDataDate">等待歷史行情</small></div><div class="return-period-grid" id="returnPeriodGrid"></div><p class="model-notice">歷史報酬不含交易成本；ETF 配息是否納入依資料來源標示。</p></section>
-</section>
-<section data-asset-panel="financials" hidden>
-<section class="analysis-card"><div class="section-heading section-heading-tight"><div><p class="eyebrow">FINANCIALS</p><h2>個股財報</h2></div></div>
-<div class="table-scroll"><table class="financial-table"><thead><tr><th>期間</th><th>營收</th><th>營業利益</th><th>淨利</th><th>EPS</th></tr></thead><tbody id="financialTable"></tbody></table></div>
-</section>
-</section>
-<section data-asset-panel="etf" hidden>
-<section class="analysis-card"><div class="section-heading section-heading-tight"><div><p class="eyebrow">ETF PROFILE</p><h2>ETF 基本資料與淨值</h2></div></div><div class="etf-profile-grid" id="etfProfileGrid"></div></section>
-<section class="analysis-card"><div class="section-heading section-heading-tight"><div><p class="eyebrow">HOLDINGS</p><h2>成分股與權重</h2></div><small id="holdingDataDate">等待資料</small></div><div class="table-scroll"><table class="financial-table"><thead><tr><th>代號</th><th>名稱</th><th>產業</th><th>權重</th></tr></thead><tbody id="holdingTable"></tbody></table></div></section>
-</section>
-<section data-asset-panel="chips" hidden>
-<section class="asset-analysis-grid">
-<article class="analysis-card"><div class="section-heading section-heading-tight"><div><p class="eyebrow">INSTITUTIONAL</p><h2>三大法人</h2></div><small id="assetInstitutionalDate">等待資料</small></div><div class="asset-chip-grid" id="assetInstitutionalGrid"></div></article>
-<article class="analysis-card"><div class="section-heading section-heading-tight"><div><p class="eyebrow">TRADING &amp; CREDIT</p><h2>當沖與融資券</h2></div><small id="assetChipDate">等待資料</small></div><div class="asset-chip-grid" id="assetChipGrid"></div></article>
-</section>
-<section class="analysis-card"><div class="section-heading section-heading-tight"><div><p class="eyebrow">BROKER BRANCHES</p><h2>券商分點買賣超</h2></div></div><div id="brokerBranchContent"></div></section>
-</section>
-<section data-asset-panel="dividends" hidden>
-<section class="analysis-card"><div class="section-heading section-heading-tight"><div><p class="eyebrow">DIVIDENDS</p><h2 id="dividendTitle">股利紀錄</h2></div></div><div class="table-scroll"><table class="financial-table"><thead><tr><th>年度／日期</th><th>現金</th><th>股票</th><th>殖利率</th></tr></thead><tbody id="dividendTable"></tbody></table></div></section>
-</section>
-<section data-asset-panel="news" hidden>
-<section class="analysis-card"><div class="section-heading section-heading-tight"><div><p class="eyebrow">RELATED NEWS</p><h2>相關新聞與重大消息</h2></div><small id="assetNewsCount">同步中</small></div><div class="asset-news-list" id="assetNewsList"></div></section>
-</section>
-<section class="analysis-card"><div class="section-heading section-heading-tight"><div><p class="eyebrow">OFFICIAL</p><h2>官方資料</h2></div></div><div class="official-links" id="officialLinks"></div></section>
+<main class="shell">
+<section class="panel asset-hero"><div><span class="asset-badge" id="assetClassBadge">標的</span><h1><span id="assetName" style="margin-left:0;color:inherit;font-size:inherit">讀取中</span> <span id="assetSymbol"></span></h1><div class="asset-meta" id="assetMeta">正在解析正式名稱與交易所…</div></div><div class="score-card"><small id="scoreLabel">資料型態</small><strong id="scoreValue">—</strong><small id="scoreNote">等待資料</small></div></section>
+<nav class="tabbar" id="assetTabs"><button class="active" data-tab="overview">總覽</button><button data-tab="history">歷史報酬</button><button data-tab="fundamentals">財務／ETF資料</button><button data-tab="chips">法人／當沖／融資券</button><button data-tab="dividend">股利／配息</button><button data-tab="news">相關新聞</button></nav>
+<div class="metric-grid" id="metricGrid"></div>
+<section class="asset-section panel" data-panel="overview"><div class="analysis-grid"><article class="chart-card" id="primaryChart"></article><article class="chart-card" id="secondaryChart"></article></div></section>
+<section class="asset-section panel" data-panel="history" hidden><div class="section-head"><div><p class="eyebrow">RETURN</p><h2>歷史報酬與行情</h2></div></div><div class="profile-grid" id="returnGrid"></div></section>
+<section class="asset-section panel" data-panel="fundamentals" hidden><div class="section-head"><div><p class="eyebrow">PROFILE</p><h2 id="fundamentalTitle">基本資料</h2></div></div><div class="profile-grid" id="profileGrid"></div><div class="bar-list" id="holdingBars" style="margin-top:14px"></div></section>
+<section class="asset-section panel" data-panel="chips" hidden><div class="section-head"><div><p class="eyebrow">FLOW</p><h2>法人、當沖與融資券</h2></div></div><div class="profile-grid" id="chipsGrid"></div><div class="official-links" style="margin-top:12px"><a href="https://www.twse.com.tw/zh/trading/foreign/t86.html" target="_blank" rel="noreferrer">三大法人官方資料 ↗</a><a href="https://www.twse.com.tw/zh/trading/margin/mi-margn.html" target="_blank" rel="noreferrer">融資融券官方資料 ↗</a></div></section>
+<section class="asset-section panel" data-panel="dividend" hidden><div class="section-head"><div><p class="eyebrow">DISTRIBUTION</p><h2>股利／配息</h2></div></div><div class="profile-grid" id="dividendGrid"></div></section>
+<section class="asset-section panel" data-panel="news" hidden><div class="section-head"><div><p class="eyebrow">RELATED NEWS</p><h2>相關新聞</h2></div><a class="btn" href="news.html">全部新聞 →</a></div><div class="asset-news" id="assetNews"></div></section>
+<section class="asset-section panel"><div class="section-head"><div><p class="eyebrow">OFFICIAL</p><h2>官方資料</h2></div></div><div class="official-links" id="officialLinks"></div></section>
+
+<footer><span>資料僅供市場觀察，不構成投資建議。盤中數值可能延遲。</span><span>Asia/Taipei · v11.1.0</span></footer>
+<nav class="mobile-nav"><a href="index.html">首頁</a><a href="tw-market.html">台股</a><a href="news.html">新聞</a><a href="portfolio.html">組合</a></nav>
 </main>
-<script src="data/assets-seed.js"></script>
-<script src="data/tw-market-seed.js"></script>
-<script src="data/institutional-history-seed.js"></script>
-<script src="data/tw-chips-seed.js"></script>
-<script src="data/news-seed.js"></script>
-<script defer="" src="assets/data-source.js?v=11.0.0"></script><script defer="" src="assets/asset-master.js?v=11.0.0"></script>
-<script defer="" src="assets/asset-detail.js?v=11.0.0"></script>
-<script defer="" src="assets/sw-register.js?v=11.0.0"></script>
-</body></html>
+<script src="data/assets-seed.js?v=11.1.0"></script><script src="data/tw-market-seed.js?v=11.1.0"></script><script src="data/tw-chips-seed.js?v=11.1.0"></script><script src="data/news-seed.js?v=11.1.0"></script>
+<script src="assets/shared.js?v=11.1.0"></script><script src="assets/asset.js?v=11.1.0"></script><script src="assets/sw-register.js?v=11.1.0"></script></body></html>

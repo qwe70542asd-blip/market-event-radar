@@ -1,0 +1,15 @@
+市場事件雷達 v11.1.0 上傳步驟
+
+1. 解壓縮 market-event-radar-v11.1.0-complete.zip。
+2. 打開解壓後的 market-event-radar-v11.1.0-complete 資料夾。
+3. 全選資料夾「內部」所有檔案，拖曳到 GitHub 倉庫根目錄。
+4. 覆蓋同名檔案並 Commit changes。
+5. 不要刪除 live-data 分支。
+6. GitHub → Actions 依序手動執行：
+   - Update v11.1.0 daily data
+   - Update v11.1.0 Taiwan market
+   - Update v11.1.0 multi-source news
+7. Pages 完成部署後按 Ctrl + F5。
+
+本版不需要另外找資料庫。
+data/ 是離線備援，live-data 是自動更新資料層。

@@ -1,17 +1,1 @@
-window.__MARKET_NEWS_SEED__ = {
-  metadata: {
-    updated_at: null,
-    timezone: "Asia/Taipei",
-    item_count: 0,
-    version: "v11.0.0",
-    retention_days: 20,
-    note: "等待獨立新聞排程第一次成功更新；不載入示範新聞。"
-  },
-  source: {
-    name: "多來源財經新聞",
-    status: "warning",
-    message: "等待 GitHub Actions 第一次執行"
-  },
-  sources: [],
-  items: []
-};
+window.__NEWS_SEED__ = {"metadata": {"version": "v11.1.0", "updated_at": null, "timezone": "Asia/Taipei", "retention_days": 20, "item_count": 0, "note": "等待第一次多來源新聞排程。"}, "sources": [{"name": "Yahoo 股市", "status": "pending", "group": "portal"}, {"name": "鉅亨網", "status": "pending", "group": "publisher"}, {"name": "MoneyDJ", "status": "pending", "group": "publisher"}, {"name": "豐雲學堂／永豐金證券", "status": "pending", "group": "broker"}, {"name": "元大投顧／元大證券", "status": "pending", "group": "broker"}, {"name": "國泰證券", "status": "pending", "group": "broker"}], "items": []};

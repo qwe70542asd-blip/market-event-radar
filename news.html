@@ -1,178 +1,28 @@
-<!DOCTYPE html>
-
-<html lang="zh-Hant">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<meta content="#07111f" name="theme-color"/>
-<meta content="台灣與國際全產業財經新聞，涵蓋金融、傳產、航運、科技、生技、消費、能源、營建與總經政策。" name="description"/>
-<title>財經新聞｜全球市場即時雷達</title>
-<link href="manifest.webmanifest" rel="manifest"/>
-<link href="assets/favicon.svg" rel="icon" type="image/svg+xml"/>
-<link href="assets/styles.css?v=11.0.0" rel="stylesheet"/>
-</head>
-<body>
-<div aria-hidden="true" class="noise"></div>
+<!doctype html><html lang="zh-Hant"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#061120">
+<title>多來源財經新聞｜市場事件雷達</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="assets/favicon.svg"><link rel="stylesheet" href="assets/styles.css?v=11.1.0">
+</head><body>
+<div class="noise" aria-hidden="true"></div>
 <header class="topbar">
-<a class="brand" href="index.html">
-<span class="brand-mark"><svg viewbox="0 0 48 48"><path d="M7 34 16 24l7 6 10-16 8 6"></path><path d="M7 40h34"></path></svg></span>
-<span><strong>財經新聞雷達 <em class="version-badge">v11.0.0</em></strong><small>MULTI-SOURCE MARKET NEWS</small></span>
-</a>
-<div class="top-actions">
-<a class="mini-btn nav-link" href="index.html">事件月曆</a>
-<button class="account-btn" id="accountBtn" type="button">
-<span class="account-avatar" id="accountAvatar">訪</span><span id="accountLabel">登入／訪客</span>
-</button>
-</div>
+  <a class="brand" href="index.html">
+    <span class="brand-mark"><svg viewBox="0 0 48 48"><path d="M7 34 16 24l7 6 10-16 8 6"></path><path d="M7 40h34"></path></svg></span>
+    <span><strong>市場事件雷達 <em class="version">v11.1.0</em></strong><small>PERSONAL MARKET & EVENT RADAR</small></span>
+  </a>
+  <nav class="topnav">
+    <span class="live-pill"><i></i> 自動更新</span>
+    <a href="news.html">財經新聞</a>
+    <a href="tw-market.html">台股排行</a>
+    <a href="institutional.html">法人籌碼</a>
+    <a class="keep-mobile" href="portfolio.html">我的組合</a>
+  </nav>
 </header>
-<main class="shell news-shell">
-<section class="news-hero-compact">
-<div>
-<p class="eyebrow">MULTI-SOURCE COVERAGE</p>
-<h1>台灣與國際財經新聞</h1>
-<p>涵蓋金融、傳產、航運、科技、生技、消費、能源、營建、汽車、觀光與總經政策。相同標題自動合併，新聞滾動保留最近 20 天。</p>
-</div>
-<div class="news-update-box"><span>資料時間（台灣）</span><strong id="newsPageUpdatedAt">讀取中</strong><small id="newsPageCount">0 則</small><span class="news-load-state" id="newsPageState">同步中</span><small class="news-refresh-note">保留最近 20 天・頁面每 30 秒檢查・資料最快每 5 分鐘更新</small></div>
-</section>
-<section aria-label="新聞資產分類" class="asset-class-tabs">
-<button class="asset-class-tab active" data-news-class="stock" type="button">股票新聞</button>
-<button class="asset-class-tab" data-news-class="fund" type="button">基金／ETF</button>
-<button class="asset-class-tab" data-news-class="crypto" type="button">虛擬貨幣</button>
-<button class="asset-class-tab" data-news-class="all" type="button">全部新聞</button>
-</section>
-<section class="news-filter-bar">
-<input id="newsSearchInput" placeholder="搜尋新聞、公司、產業或幣種…" type="search"/>
-<select aria-label="資產分類" id="newsAssetClassFilter">
-<option selected="" value="stock">股票新聞</option><option value="fund">基金／ETF</option>
-<option value="crypto">虛擬貨幣</option><option value="all">全部新聞</option>
-</select>
-<label class="crypto-filter-wrap" hidden="" id="cryptoCategoryWrap"><span>幣類</span>
-<select id="cryptoCategoryFilter">
-<option value="all">全部幣類</option><option value="bitcoin">比特幣</option>
-<option value="ethereum">以太坊</option><option value="stablecoin">穩定幣</option>
-<option value="defi">DeFi</option><option value="exchange">交易所</option>
-<option value="regulation">監管政策</option><option value="layer1">公鏈／Layer 1</option>
-<option value="meme">迷因幣</option><option value="nft-gaming">NFT／鏈遊</option>
-<option value="mining">挖礦</option>
-</select>
-</label>
-<select id="newsLanguageFilter">
-<option selected="" value="zh-Hant">中文優先</option><option value="all">全部語言</option><option value="en">英文</option>
-</select>
-<select id="newsGroupFilter">
-<option value="all">全部來源群組</option><option value="tw-media">台灣媒體</option>
-<option value="official-tw">台灣官方</option><option value="hk-media">香港中文</option>
-<option value="international">國際媒體</option><option value="official-global">國際官方</option>
-</select>
-<select id="newsRegionFilter">
-<option value="all">全部地區</option><option value="TW">台灣</option><option value="US">美國</option>
-<option value="ASIA">亞洲</option><option value="GLOBAL">全球</option>
-</select>
-<select id="newsIndustryFilter">
-<option value="all">全部產業</option>
-<option value="finance">金融保險</option><option value="shipping">航運運輸</option>
-<option value="industrial">機械工業</option><option value="materials">原物料傳產</option>
-<option value="real-estate">營建房市</option><option value="consumer">消費零售</option>
-<option value="healthcare">生技醫療</option><option value="energy">能源公用</option>
-<option value="telecom">電信媒體</option><option value="tourism">觀光休閒</option>
-<option value="automotive">汽車零組件</option><option value="agriculture">農業食品</option>
-<option value="technology">科技電子</option><option value="macro-policy">總經政策</option>
-<option value="other">其他產業</option>
-</select>
-<select id="newsTopicFilter">
-<option value="all">全部內容</option><option value="market">市場新聞</option>
-<option value="industry">產業消息</option><option value="tech">科技內容</option>
-<option value="macro">總經／央行</option><option value="earnings">財報</option>
-<option value="official">官方公告</option><option value="policy">政策</option>
-</select>
-<select id="newsSourceFilter"><option value="all">全部來源</option></select>
-</section>
-<section>
-<div class="news-page-grid" id="newsPageGrid"></div>
-<div class="empty-state" hidden="" id="newsPageEmpty"><h3>目前沒有符合條件的新聞</h3><p>更換篩選條件，或稍後等待排程更新。</p></div>
-</section>
-<details class="news-source-directory source-directory-compact">
-<summary class="source-directory-summary">
-<span>
-<b>中文財經來源</b>
-<small>台灣媒體、官方資訊與香港繁體中文來源</small>
-</span>
-<span class="source-directory-count">30 個來源 · 點擊展開</span>
-</summary>
-<div class="source-directory-body">
-<div class="source-group-block">
-<h3>台灣即時財經與產業</h3>
-<div class="source-link-grid source-link-grid-expanded">
-<a href="https://www.cna.com.tw/list/aie.aspx" rel="noreferrer noopener" target="_blank"><b>中央社產經</b><small>產經、證券與科技</small></a>
-<a href="https://money.udn.com/" rel="noreferrer noopener" target="_blank"><b>經濟日報</b><small>台股、產業、國際財經</small></a>
-<a href="https://www.cnyes.com/" rel="noreferrer noopener" target="_blank"><b>鉅亨網</b><small>快訊、行情與總經</small></a>
-<a href="https://www.moneydj.com/" rel="noreferrer noopener" target="_blank"><b>MoneyDJ</b><small>台美股、產業與基金</small></a>
-<a href="https://ctee.com.tw/" rel="noreferrer noopener" target="_blank"><b>工商時報</b><small>企業、政策與產業</small></a>
-<a href="https://tw.stock.yahoo.com/" rel="noreferrer noopener" target="_blank"><b>Yahoo 股市</b><small>台股新聞與自選行情</small></a>
-<a href="https://finance.technews.tw/" rel="noreferrer noopener" target="_blank"><b>財經新報</b><small>科技、半導體與全球市場</small></a>
-<a href="https://ec.ltn.com.tw/" rel="noreferrer noopener" target="_blank"><b>自由財經</b><small>財經即時、政策、證券與基金</small></a>
-<a href="https://www.businesstoday.com.tw/" rel="noreferrer noopener" target="_blank"><b>今周刊</b><small>財經時事與投資理財</small></a>
-<a href="https://www.businessweekly.com.tw/" rel="noreferrer noopener" target="_blank"><b>商業周刊</b><small>產業趨勢與企業分析</small></a>
-<a href="https://www.wealth.com.tw/" rel="noreferrer noopener" target="_blank"><b>財訊</b><small>投資、產業與政經</small></a>
-<a href="https://finance.ettoday.net/" rel="noreferrer noopener" target="_blank"><b>ETtoday 財經雲</b><small>即時財經與房市</small></a>
-<a href="https://www.bnext.com.tw/" rel="noreferrer noopener" target="_blank"><b>數位時代</b><small>AI、新創與數位經濟</small></a>
-<a href="https://www.ithome.com.tw/" rel="noreferrer noopener" target="_blank"><b>iThome</b><small>企業科技、雲端與資安</small></a>
-<a href="https://www.inside.com.tw/" rel="noreferrer noopener" target="_blank"><b>INSIDE</b><small>科技商業與新創</small></a>
-<a href="https://www.storm.mg/category/118" rel="noreferrer noopener" target="_blank"><b>風傳媒財經</b><small>政策、產業與投資</small></a>
-</div>
-</div>
-<div class="source-group-block">
-<h3>台灣官方市場與總經</h3>
-<div class="source-link-grid source-link-grid-expanded official-source-links">
-<a href="https://www.twse.com.tw/zh/" rel="noreferrer noopener" target="_blank"><b>臺灣證券交易所</b><small>市場公告、上市公司資訊</small></a>
-<a href="https://www.tpex.org.tw/zh-tw/" rel="noreferrer noopener" target="_blank"><b>櫃買中心</b><small>上櫃、興櫃與債券市場</small></a>
-<a href="https://mops.twse.com.tw/" rel="noreferrer noopener" target="_blank"><b>公開資訊觀測站</b><small>重大訊息、財報與法說會</small></a>
-<a href="https://www.cbc.gov.tw/" rel="noreferrer noopener" target="_blank"><b>中央銀行</b><small>利率、匯率與貨幣政策</small></a>
-<a href="https://www.fsc.gov.tw/" rel="noreferrer noopener" target="_blank"><b>金融監督管理委員會</b><small>證券、銀行與保險政策</small></a>
-<a href="https://www.dgbas.gov.tw/" rel="noreferrer noopener" target="_blank"><b>主計總處</b><small>CPI、GDP、薪資與就業</small></a>
-<a href="https://www.mof.gov.tw/" rel="noreferrer noopener" target="_blank"><b>財政部</b><small>進出口、稅收與關稅</small></a>
-<a href="https://www.moea.gov.tw/" rel="noreferrer noopener" target="_blank"><b>經濟部</b><small>外銷訂單與工業生產</small></a>
-</div>
-</div>
-<div class="source-group-block">
-<h3>香港繁體中文市場</h3>
-<div class="source-link-grid source-link-grid-expanded">
-<a href="https://www.aastocks.com/tc/" rel="noreferrer noopener" target="_blank"><b>AASTOCKS</b><small>港股、美股與公司業績</small></a>
-<a href="https://www.etnet.com.hk/" rel="noreferrer noopener" target="_blank"><b>經濟通 ET Net</b><small>港股、基金與國際市場</small></a>
-<a href="https://inews.hket.com/" rel="noreferrer noopener" target="_blank"><b>香港經濟日報</b><small>港股、國際與科技</small></a>
-<a href="https://www.hkej.com/" rel="noreferrer noopener" target="_blank"><b>信報財經新聞</b><small>港股與宏觀市場</small></a>
-<a href="https://finance.mingpao.com/" rel="noreferrer noopener" target="_blank"><b>明報財經</b><small>港股、中國與國際財經</small></a>
-<a href="https://www.hk01.com/channel/財經快訊" rel="noreferrer noopener" target="_blank"><b>香港01 財經</b><small>市場與企業快訊</small></a>
-</div>
-</div>
-</div>
-</details>
+<main class="shell">
+<section class="panel page-hero"><div><p class="eyebrow">FINANCE NEWS</p><h1>多來源財經新聞</h1><p>Yahoo、鉅亨、MoneyDJ、官方與券商／投顧來源；同事件去重後保留原始文章連結。</p></div><div class="stats"><article class="stat"><span>新聞數</span><strong id="newsCount">0</strong></article><article class="stat"><span>來源數</span><strong id="sourceCount">0</strong></article><article class="stat"><span>保留天數</span><strong>20</strong></article><article class="stat"><span>更新</span><strong id="newsUpdated" style="font-size:13px">等待</strong></article></div></section>
+<section class="panel news-toolbar"><input class="form-control" id="newsSearch" placeholder="搜尋標題、摘要、來源…"><select class="form-control" id="newsRegion"><option value="all">全部地區</option><option value="TW">台灣</option><option value="US">美國</option><option value="GLOBAL">全球</option></select><select class="form-control" id="newsTopic"><option value="all">全部主題</option><option value="market">市場</option><option value="earnings">財報</option><option value="policy">政策</option><option value="fund">ETF／基金</option></select><select class="form-control" id="newsSource"><option value="all">全部來源</option></select></section>
+<section class="panel panel-pad" style="margin-top:10px"><div class="section-head"><div><p class="eyebrow">SOURCE HEALTH</p><h2>資料來源</h2></div><span class="section-note">抓取失敗不會用空白檔覆蓋上次成功資料</span></div><div class="source-grid" id="sourceGrid"></div></section>
+<section class="news-list" id="newsList"></section>
+
+<footer><span>資料僅供市場觀察，不構成投資建議。盤中數值可能延遲。</span><span>Asia/Taipei · v11.1.0</span></footer>
+<nav class="mobile-nav"><a href="index.html">首頁</a><a href="tw-market.html">台股</a><a href="news.html">新聞</a><a href="portfolio.html">組合</a></nav>
 </main>
-<dialog class="account-dialog" id="accountDialog">
-<form class="account-panel" method="dialog">
-<button class="dialog-x" value="cancel">×</button>
-<p class="eyebrow">ACCOUNT &amp; SYNC</p><h2>帳號與同步</h2>
-<p class="dialog-intro">不登入也能使用；登入 Google 後，自選與偏好可跨裝置同步。</p>
-<div class="login-options">
-<button class="login-option" id="guestModeBtn" type="button"><span class="login-icon">訪</span><span><strong>訪客模式</strong><small>資料只存在目前裝置</small></span></button>
-<button class="login-option google-option" id="googleLoginBtn" type="button"><span class="google-g">G</span><span><strong>Google 登入</strong><small>跨裝置同步</small></span></button>
-</div>
-<div class="auth-status" id="authStatus"></div>
-<button class="text-btn danger" hidden="" id="logoutBtn" type="button">登出目前帳號</button>
-</form>
-</dialog>
-<nav class="mobile-bottom-nav">
-<a href="index.html"><span>⌂</span><b>首頁</b></a>
-<a href="index.html#calendarSection"><span>▦</span><b>日曆</b></a>
-<a class="active" href="news.html"><span>▤</span><b>快訊</b></a>
-<a href="tw-market.html"><span>↕</span><b>台股排行</b></a>
-</nav>
-<script src="data/news-seed.js?v=11.0.0"></script>
-<script src="data/assets-seed.js?v=11.0.0"></script>
-<script defer="" src="assets/data-source.js?v=11.0.0"></script><script src="assets/auth.js?v=11.0.0" type="module"></script>
-<script defer="" src="assets/news-core.js?v=11.0.0"></script>
-<script defer="" src="assets/asset-master.js?v=11.0.0"></script>
-<script defer="" src="assets/news-page.js?v=11.0.0"></script>
-<script defer="" src="assets/sw-register.js?v=11.0.0"></script>
-</body>
-</html>
+<script src="data/news-seed.js?v=11.1.0"></script><script src="assets/shared.js?v=11.1.0"></script><script src="assets/news.js?v=11.1.0"></script><script src="assets/sw-register.js?v=11.1.0"></script></body></html>

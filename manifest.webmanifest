@@ -1,30 +1,18 @@
 {
-  "name": "全球市場即時雷達",
+  "name": "市場事件雷達",
   "short_name": "市場雷達",
+  "description": "市場事件、台股行情、多來源財經新聞與個人投資組合。",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#07111f",
-  "theme_color": "#07111f",
-  "description": "多來源財經新聞、原始文章連結、個人投資組合與市場事件日曆。",
-  "icons": [],
-  "shortcuts": [
+  "background_color": "#061120",
+  "theme_color": "#061120",
+  "icons": [
     {
-      "name": "財經新聞",
-      "short_name": "新聞",
-      "url": "./news.html",
-      "icons": []
-    },
-    {
-      "name": "我的投資組合",
-      "short_name": "投資組合",
-      "url": "./portfolio.html",
-      "icons": []
-    },
-    {
-      "name": "股票／資產搜尋",
-      "short_name": "資產",
-      "url": "./portfolio.html",
-      "icons": []
+      "src": "assets/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
     }
   ]
 }

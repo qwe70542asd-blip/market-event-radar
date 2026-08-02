@@ -1,14 +1,18 @@
-name: Update v11.1.0 multi-source news
+name: Update v11.1.0 daily data
 
 on:
   push:
     branches: [main]
     paths:
-      - ".github/workflows/update-news.yml"
-      - "scripts/update_news.py"
+      - ".github/workflows/update-daily.yml"
+      - "scripts/update_assets.py"
+      - "scripts/update_events.py"
+      - "scripts/update_market_snapshot.py"
+      - "data/manual-events.json"
       - "requirements.txt"
   schedule:
-    - cron: "*/10 * * * *"
+    - cron: "10 22 * * *"
+    - cron: "30 10 * * 1-5"
   workflow_dispatch:
 
 permissions:
@@ -19,7 +23,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  news:
+  daily:
     runs-on: ubuntu-latest
     timeout-minutes: 35
     env:
@@ -33,31 +37,33 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: pip install -r requirements.txt
-      - name: Restore last successful archive
+      - name: Restore last successful dynamic files
         shell: bash
         run: |
           set -euo pipefail
           if git ls-remote --exit-code --heads origin "$LIVE_BRANCH" >/dev/null 2>&1; then
             git fetch --depth=1 origin "$LIVE_BRANCH"
-            for file in news.json news-seed.js news-link-cache.json; do
-              if git cat-file -e "FETCH_HEAD:$file" 2>/dev/null; then
-                git show "FETCH_HEAD:$file" > "data/$file"
-              fi
+            for pair in \
+              "assets.json:data/assets.json" "assets-seed.js:data/assets-seed.js" \
+              "events.json:data/events.json" "events-seed.js:data/events-seed.js" \
+              "market-snapshot.json:data/market-snapshot.json" "market-snapshot-seed.js:data/market-snapshot-seed.js"; do
+              src="${pair%%:*}"; dst="${pair#*:}"
+              if git cat-file -e "FETCH_HEAD:$src" 2>/dev/null; then git show "FETCH_HEAD:$src" > "$dst"; fi
             done
           fi
-      - run: python scripts/update_news.py
-      - name: Validate
+      - run: python scripts/update_assets.py
+      - run: python scripts/update_events.py
+      - run: python scripts/update_market_snapshot.py
+      - name: Validate JSON
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
-          p=json.loads(Path("data/news.json").read_text(encoding="utf-8"))
-          assert p.get("items"), "empty news"
-          assert p.get("metadata",{}).get("retention_days")==20
-          assert all(str(x.get("link","")).startswith(("http://","https://")) for x in p["items"])
-          print("OK",len(p["items"]),"news")
+          for name in ("assets.json","events.json","market-snapshot.json"):
+            p=json.loads((Path("data")/name).read_text(encoding="utf-8"))
+            print("OK",name)
           PY
-      - name: Publish news files to live-data
+      - name: Publish daily files to live-data
         shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -75,10 +81,10 @@ jobs:
           else
             git checkout --orphan "$LIVE_BRANCH"
           fi
-          cp "$GITHUB_WORKSPACE/data/news.json" news.json
-          cp "$GITHUB_WORKSPACE/data/news-seed.js" news-seed.js
-          cp "$GITHUB_WORKSPACE/data/news-link-cache.json" news-link-cache.json
-          git add news.json news-seed.js news-link-cache.json
+          for name in assets.json assets-seed.js events.json events-seed.js market-snapshot.json market-snapshot-seed.js; do
+            cp "$GITHUB_WORKSPACE/data/$name" "$name"
+          done
+          git add .
           if git diff --cached --quiet; then exit 0; fi
-          git commit -m "chore: refresh multi-source news v11.1.0"
+          git commit -m "chore: refresh daily data v11.1.0"
           git push origin "HEAD:$LIVE_BRANCH"

@@ -1,511 +1,70 @@
 #!/usr/bin/env python3
-"""Build last-trading-day index and ETF snapshots for Market Event Radar v11.0.0.
-
-Visible groups:
-- Taiwan indices: TAIEX and TPEx.
-- U.S. four major indices: S&P 500, NASDAQ Composite, Dow Jones, Philadelphia Semiconductor.
-- Japan/Korea: Nikkei 225 and KOSPI.
-- Taiwan ETF top 15: ranked by TWSE ETF e添富 daily trading value when available.
-- U.S. ETF watch group: fixed liquid benchmark/sector ETF set.
-
-Every row keeps the newest trading date returned by its own market. Taiwan,
-the U.S., Japan and Korea are never forced onto one calendar date. A newer
-date, or a correction to the same date, replaces the saved row as soon as the
-five-minute market workflow sees it.
-
-Quotes are public daily data. This script does not claim licensed real-time exchange data.
-"""
+"""Refresh compact global index, ETF and U.S. equity snapshot using Yahoo chart data."""
 from __future__ import annotations
 
 import json
-import math
-import re
-import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any
-from urllib.parse import quote
 from zoneinfo import ZoneInfo
 
 import requests
-from bs4 import BeautifulSoup
 
-ROOT = Path(__file__).resolve().parents[1]
-DATA = ROOT / "data"
-OUTPUT = DATA / "market-snapshot.json"
-SEED = DATA / "market-snapshot-seed.js"
-TAIPEI = ZoneInfo("Asia/Taipei")
-UTC = ZoneInfo("UTC")
-NOW = datetime.now(TAIPEI)
-VERSION = "v11.0.0"
-
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/150.0 Safari/537.36",
-    "Accept-Language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
-    "Accept": "application/json,text/html,text/plain,*/*",
-}
-
-INDEX_ORDER = ["TAIEX","TPEX","SP500","NASDAQ","DJIA","SOX","NIKKEI","KOSPI"]
-INDEX_META = {
-    "TAIEX":{"name":"台股加權","kind":"index","currency":"點","region":"TW","link":"https://www.twse.com.tw/zh/trading/historical/fmtqik.html"},
-    "TPEX":{"name":"櫃買指數","kind":"index","currency":"點","region":"TW","link":"https://www.tpex.org.tw/zh-tw/mainboard/trading/info/daily-indices.html"},
-    "SP500":{"name":"S&P 500","kind":"index","currency":"點","region":"US","link":"https://finance.yahoo.com/quote/%5EGSPC/"},
-    "NASDAQ":{"name":"NASDAQ","kind":"index","currency":"點","region":"US","link":"https://finance.yahoo.com/quote/%5EIXIC/"},
-    "DJIA":{"name":"道瓊工業","kind":"index","currency":"點","region":"US","link":"https://finance.yahoo.com/quote/%5EDJI/"},
-    "SOX":{"name":"費城半導體","kind":"index","currency":"點","region":"US","link":"https://finance.yahoo.com/quote/%5ESOX/"},
-    "NIKKEI":{"name":"日經 225","kind":"index","currency":"點","region":"JP","link":"https://finance.yahoo.com/quote/%5EN225/"},
-    "KOSPI":{"name":"韓國 KOSPI","kind":"index","currency":"點","region":"KR","link":"https://finance.yahoo.com/quote/%5EKS11/"},
-}
-YAHOO_INDEX = {
-    "TPEX":"^TWOII","SP500":"^GSPC","NASDAQ":"^IXIC","DJIA":"^DJI",
-    "SOX":"^SOX","NIKKEI":"^N225","KOSPI":"^KS11",
-}
-YAHOO_HOSTS = ("query1.finance.yahoo.com", "query2.finance.yahoo.com")
-
-# Used only if the official TWSE ranking page cannot be parsed on a run.
-TW_ETF_FALLBACK = [
-    ("0050","元大台灣50"),("00631L","元大台灣50正2"),("00981A","主動統一台股增長"),
-    ("0056","元大高股息"),("00685L","群益臺灣加權正2"),("00403A","主動統一升級50"),
-    ("00632R","元大台灣50反1"),("00991A","主動復華未來50"),("009816","凱基台灣TOP50"),
-    ("00406A","主動中信台灣收益"),("00919","群益台灣精選高息"),("00878","國泰永續高股息"),
-    ("006208","富邦台50"),("0052","富邦科技"),("00929","復華台灣科技優息"),
-]
-
-US_ETFS = [
-    ("SPY","SPDR S&P 500 ETF"),("QQQ","Invesco QQQ"),("DIA","SPDR Dow Jones ETF"),
-    ("IWM","iShares Russell 2000 ETF"),("VOO","Vanguard S&P 500 ETF"),("VTI","Vanguard Total Stock Market ETF"),
-    ("SMH","VanEck Semiconductor ETF"),("SOXX","iShares Semiconductor ETF"),("XLK","Technology Select Sector SPDR"),
-    ("TLT","iShares 20+ Year Treasury Bond ETF"),
+ROOT=Path(__file__).resolve().parents[1]
+DATA=ROOT/"data"
+OUT=DATA/"market-snapshot.json"
+SEED=DATA/"market-snapshot-seed.js"
+NOW=datetime.now(ZoneInfo("Asia/Taipei"))
+HEADERS={"User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.1)","Accept":"application/json"}
+SYMBOLS=[
+ ("^TWII","台灣加權","TW",""),
+ ("^GSPC","S&P 500","US",""),
+ ("^DJI","道瓊工業","US",""),
+ ("^IXIC","NASDAQ","US",""),
+ ("^SOX","費城半導體","US",""),
+ ("^N225","日經 225","JP",""),
+ ("^KS11","韓國 KOSPI","KR",""),
+ ("NVDA","NVIDIA","US","USD"),
+ ("AAPL","Apple","US","USD"),
+ ("MSFT","Microsoft","US","USD"),
 ]
 
 
-def read_json(path: Path, default: Any) -> Any:
+def fetch_one(session:requests.Session,symbol:str,name:str,market:str,currency_hint:str)->dict|None:
+    url=f"https://query1.finance.yahoo.com/v8/finance/chart/{requests.utils.quote(symbol,safe='')}?range=5d&interval=5m&includePrePost=false"
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
-    except (FileNotFoundError, json.JSONDecodeError):
-        return default
-
-
-def clean_number(value: Any) -> float | None:
-    if value is None:
-        return None
-    text = str(value).replace(",", "").replace("+", "").strip()
-    if not text or text in {"--", "---", "-"}:
-        return None
-    try:
-        number = float(text)
-        return number if math.isfinite(number) else None
-    except (TypeError, ValueError):
-        return None
-
-
-def iso(value: datetime) -> str:
-    if value.tzinfo is None:
-        value = value.replace(tzinfo=TAIPEI)
-    return value.astimezone(TAIPEI).isoformat(timespec="seconds")
-
-
-def roc_to_iso(value: str) -> str:
-    text = re.sub(r"\D", "", str(value or ""))
-    if len(text) == 7:
-        return f"{int(text[:3]) + 1911:04d}-{text[3:5]}-{text[5:7]}"
-    if len(text) == 8:
-        return f"{text[:4]}-{text[4:6]}-{text[6:8]}"
-    return str(value or "")
-
-
-def trading_date(value: Any) -> str:
-    """Return YYYY-MM-DD without converting the date to Taiwan's timezone."""
-    text = str(value or "").strip()
-    if not text:
-        return ""
-    normalized = roc_to_iso(text)
-    match = re.match(r"^(\d{4})-(\d{2})-(\d{2})", normalized)
-    if match:
-        return match.group(0)
-    try:
-        parsed = datetime.fromisoformat(text.replace("Z", "+00:00"))
-        return parsed.date().isoformat()
-    except ValueError:
-        return ""
-
-
-def row_trading_date(row: dict[str, Any]) -> str:
-    for key in ("Date", "TradeDate", "日期", "date"):
-        if row.get(key):
-            parsed = trading_date(row[key])
-            if parsed:
-                return parsed
-    return ""
-
-
-def request(session: requests.Session, url: str, *, timeout: int = 18, attempts: int = 3, **kwargs: Any) -> requests.Response:
-    last_error: Exception | None = None
-    extra_headers = kwargs.pop("headers", {})
-    for attempt in range(attempts):
-        try:
-            response = session.get(url, headers={**HEADERS, **extra_headers}, timeout=timeout, **kwargs)
-            response.raise_for_status()
-            return response
-        except Exception as exc:
-            last_error = exc
-            if attempt + 1 < attempts:
-                time.sleep(1.2 * (attempt + 1))
-    assert last_error is not None
-    raise last_error
-
-
-def make_item(item_id: str, meta: dict[str, Any], *, value: float, previous: float | None, as_of: str,
-              source: str, source_url: str, delay: str, status: str = "ok", note: str = "",
-              symbol: str = "", rank: int | None = None) -> dict[str, Any]:
-    change = value - previous if previous is not None else None
-    change_percent = (change / previous * 100) if previous not in (None, 0) else None
-    trade_day = trading_date(as_of)
-    return {
-        "id": item_id, **meta, "symbol": symbol or item_id, "rank": rank,
-        "value": value, "previous": previous, "change": change, "change_percent": change_percent,
-        "as_of": trade_day or as_of, "trading_date": trade_day,
-        "source": source, "source_url": source_url, "delay": delay,
-        "status": status, "note": note, "updated_at": iso(NOW),
-    }
-
-
-def fetch_twse_index(session: requests.Session) -> dict[str, Any]:
-    url = "https://openapi.twse.com.tw/v1/exchangeReport/FMTQIK"
-    rows = request(session, url).json()
-    rows = [row for row in rows if clean_number(row.get("TAIEX")) is not None]
-    if not rows:
-        raise ValueError("TWSE returned no index rows")
-    latest = rows[-1]
-    value = clean_number(latest.get("TAIEX"))
-    change = clean_number(latest.get("Change"))
-    previous = value - change if value is not None and change is not None else None
-    assert value is not None
-    return make_item("TAIEX", INDEX_META["TAIEX"], value=value, previous=previous,
-                     as_of=roc_to_iso(latest.get("Date", "")), source="TWSE 官方 OpenAPI",
-                     source_url=url, delay="盤後")
-
-
-def fetch_tpex_index(session: requests.Session) -> dict[str, Any]:
-    url = "https://www.tpex.org.tw/openapi/v1/tpex_index"
-    rows = request(session, url, headers={"Referer":"https://www.tpex.org.tw/"}).json()
-    if not isinstance(rows, list) or not rows:
-        raise ValueError("TPEx returned no rows")
-    parsed: list[tuple[dict[str, Any], float]] = []
-    for row in rows:
-        for key in ("Close","ClosingIndex","Index","收盤指數","櫃買指數"):
-            if key in row and clean_number(row.get(key)) is not None:
-                parsed.append((row, clean_number(row.get(key))))
-                break
-    if not parsed:
-        raise ValueError("TPEx fields not recognized")
-    preferred = []
-    for candidate in parsed:
-        label = " ".join(str(candidate[0].get(key) or "") for key in ("IndexName", "Name", "指數名稱", "名稱"))
-        if "櫃買指數" in label or label.strip().upper() in {"TPEX", "OTC INDEX"}:
-            preferred.append(candidate)
-    pool = preferred or parsed
-    pool.sort(key=lambda pair: row_trading_date(pair[0]))
-    latest, value = pool[-1]
-    latest_day = row_trading_date(latest)
-    history = [pair for pair in pool[:-1] if row_trading_date(pair[0]) < latest_day]
-    previous = history[-1][1] if history else None
-    change = next((clean_number(latest.get(key)) for key in ("Change","漲跌","漲跌點數") if clean_number(latest.get(key)) is not None), None)
-    if change is not None:
-        previous = value - change
-    date_text = next((str(latest.get(key)) for key in ("Date","日期","TradeDate") if latest.get(key)), "")
-    return make_item("TPEX", INDEX_META["TPEX"], value=value, previous=previous,
-                     as_of=roc_to_iso(date_text), source="TPEx 官方 OpenAPI", source_url=url, delay="盤後")
-
-
-def fetch_yahoo(session: requests.Session, item_id: str, symbol: str, meta: dict[str, Any], *, rank: int | None = None) -> dict[str, Any]:
-    payload = None
-    last_error: Exception | None = None
-    for host in YAHOO_HOSTS:
-        url = f"https://{host}/v8/finance/chart/{quote(symbol, safe='')}?range=10d&interval=1d&includePrePost=false&events=div%2Csplits"
-        try:
-            payload = request(session, url, headers={"Referer":"https://finance.yahoo.com/"}, attempts=2).json()
-            result = (((payload or {}).get("chart") or {}).get("result") or [None])[0]
-            if result:
-                break
-            raise ValueError(f"Yahoo returned no result for {symbol}")
-        except Exception as exc:
-            last_error = exc
-            payload = None
-    if payload is None:
-        raise last_error or ValueError(f"Yahoo unavailable for {symbol}")
-    result = (((payload or {}).get("chart") or {}).get("result") or [None])[0]
-    if not result:
-        raise ValueError(f"Yahoo returned no result for {symbol}")
-    info = result.get("meta") or {}
-    timestamps = result.get("timestamp") or []
-    closes = (((result.get("indicators") or {}).get("quote") or [{}])[0].get("close") or [])
-    exchange_timezone = info.get("exchangeTimezoneName") or {
-        "TW":"Asia/Taipei", "US":"America/New_York", "JP":"Asia/Tokyo", "KR":"Asia/Seoul",
-    }.get(meta.get("region"), "UTC")
-    try:
-        market_zone = ZoneInfo(exchange_timezone)
-    except Exception:
-        market_zone = UTC
-    bars: list[tuple[int, float, str]] = []
-    for timestamp, close in zip(timestamps, closes):
-        value = clean_number(close)
-        if value is None:
-            continue
-        day = datetime.fromtimestamp(int(timestamp), tz=UTC).astimezone(market_zone).date().isoformat()
-        bars.append((int(timestamp), value, day))
-    bars.sort(key=lambda bar: bar[0])
-    if not bars:
-        raise ValueError(f"Yahoo daily close missing for {symbol}")
-    _, value, as_of = bars[-1]
-    previous = bars[-2][1] if len(bars) >= 2 else clean_number(info.get("chartPreviousClose"))
-    return make_item(item_id, meta, value=value, previous=previous, as_of=as_of,
-                     source="Yahoo Finance chart", source_url=meta.get("link", "https://finance.yahoo.com/"),
-                     delay="最後交易日日線", symbol=symbol, rank=rank)
-
-
-def fetch_twse_daily_quote_map(session: requests.Session) -> dict[str, dict[str, Any]]:
-    url = "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL"
-    rows = request(session, url).json()
-    result = {}
-    for row in rows if isinstance(rows, list) else []:
-        code = str(row.get("Code") or row.get("證券代號") or "").strip()
-        if code:
-            result[code] = row
-    return result
-
-
-def rank_tw_etfs_from_quotes(quotes: dict[str, dict[str, Any]], fallback_day: str = "") -> tuple[list[tuple[str, str]], str]:
-    """Rank listed ETFs by official last-trading-day trading value."""
-    candidates: list[tuple[float, str, str, str]] = []
-    for code, row in quotes.items():
-        if not re.fullmatch(r"00[0-9A-Z]{2,5}", code):
-            continue
-        close = clean_number(row.get("ClosingPrice") or row.get("收盤價"))
-        trade_value = clean_number(row.get("TradeValue") or row.get("成交金額") or row.get("成交值"))
-        if close is None or trade_value is None:
-            continue
-        name = str(row.get("Name") or row.get("證券名稱") or code).strip()
-        candidates.append((trade_value, code, name, row_trading_date(row) or fallback_day))
-    if len(candidates) < 15:
-        raise ValueError("TWSE daily quote list did not contain 15 rankable ETFs")
-    candidates.sort(reverse=True)
-    latest_day = max((row[3] for row in candidates if row[3]), default="")
-    return [(code, name) for _, code, name, _ in candidates[:15]], latest_day
-
-
-def parse_tw_etf_ranking(session: requests.Session) -> tuple[list[tuple[str,str]], str]:
-    urls = [
-        "https://www.twse.com.tw/rwd/zh/ETFortune-institute/index",
-        "https://www.twse.com.tw/zh/ETFortune-institute/index",
-    ]
-    last_error: Exception | None = None
-    for url in urls:
-        try:
-            text = request(session, url, headers={"Accept":"text/html"}).text
-            soup = BeautifulSoup(text, "html.parser")
-            date_match = re.search(r"資料更新時間[:：]?\s*(\d{4}[./-]\d{1,2}[./-]\d{1,2})", soup.get_text(" ", strip=True))
-            rank_date = date_match.group(1).replace(".", "-").replace("/", "-") if date_match else ""
-            for table in soup.find_all("table"):
-                headers = [cell.get_text(" ", strip=True) for cell in table.find_all("th")]
-                joined = " ".join(headers)
-                if "股票代號" not in joined or not ("今日成交值" in joined or "成交金額" in joined):
-                    continue
-                ranked = []
-                for row in table.find_all("tr"):
-                    cells = [cell.get_text(" ", strip=True) for cell in row.find_all(["td","th"])]
-                    if len(cells) < 3:
-                        continue
-                    code = next((c for c in cells if re.fullmatch(r"\d{4,6}[A-Z]?", c)), "")
-                    if not code:
-                        continue
-                    idx = cells.index(code)
-                    name = cells[idx + 1] if idx + 1 < len(cells) else code
-                    if code not in {x[0] for x in ranked}:
-                        ranked.append((code, name))
-                    if len(ranked) >= 15:
-                        return ranked, rank_date
-            raise ValueError("TWSE ETF ranking table not found")
-        except Exception as exc:
-            last_error = exc
-    raise last_error or ValueError("TWSE ETF ranking unavailable")
-
-
-def tw_etf_item_from_official(code: str, name: str, rank: int, row: dict[str, Any], fallback_day: str = "") -> dict[str, Any] | None:
-    close = clean_number(row.get("ClosingPrice") or row.get("收盤價"))
-    change = clean_number(row.get("Change") or row.get("漲跌價差"))
-    if close is None:
-        return None
-    previous = close - change if change is not None else None
-    meta = {
-        "name": name or str(row.get("Name") or row.get("證券名稱") or code),
-        "kind":"etf","currency":"TWD","region":"TW","market":"TW","exchange":"TWSE",
-        "link":f"https://www.twse.com.tw/zh/ETFortune/products?query={code}",
-    }
-    item = make_item(f"TWETF:{code}", meta, value=close, previous=previous,
-                     as_of=row_trading_date(row) or fallback_day, source="TWSE 官方最後交易日成交資訊",
-                     source_url="https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL",
-                     delay="最後交易日", symbol=code, rank=rank)
-    item["trading_value"] = clean_number(row.get("TradeValue") or row.get("成交金額") or row.get("成交值"))
-    return item
-
-
-def retain(old: dict[str, dict[str, Any]], item_id: str, meta: dict[str, Any], *, symbol: str = "", rank: int | None = None, note: str = "") -> dict[str, Any]:
-    previous = old.get(item_id)
-    if previous and clean_number(previous.get("value")) is not None:
-        row = dict(previous)
-        row.update({"status":"stale","delay":"前次成功資料","note":note})
-        row["trading_date"] = trading_date(row.get("trading_date") or row.get("as_of"))
-        if rank is not None:
-            row["rank"] = rank
-        return row
-    return {"id":item_id, **meta, "symbol":symbol or item_id, "rank":rank, "value":None, "previous":None,
-            "change":None, "change_percent":None, "as_of":"", "trading_date":"", "source":"", "source_url":meta.get("link",""),
-            "delay":"等待更新", "status":"pending", "note":note, "updated_at":iso(NOW)}
-
-
-def use_latest(old: dict[str, dict[str, Any]], row: dict[str, Any]) -> dict[str, Any]:
-    """Keep the newest market-local trading date and accept same-day corrections."""
-    item_id = row.get("id")
-    previous = old.get(item_id) if item_id else None
-    if not previous or clean_number(previous.get("value")) is None:
-        return row
-    old_day = trading_date(previous.get("trading_date") or previous.get("as_of"))
-    new_day = trading_date(row.get("trading_date") or row.get("as_of"))
-    if old_day and (not new_day or new_day < old_day):
-        kept = dict(previous)
-        kept.update({"status":"stale", "delay":"前次較新交易日", "note":f"來源僅回傳 {new_day or '無日期'}，保留 {old_day}"})
-        kept["trading_date"] = old_day
-        return kept
-
-    identity = ("value", "previous", "change", "change_percent", "trading_date", "source", "status", "trading_value")
-
-    def comparable(value: Any) -> Any:
-        number = clean_number(value)
-        return round(number, 8) if number is not None else value or None
-
-    if all(comparable(previous.get(key)) == comparable(row.get(key)) for key in identity):
-        row["updated_at"] = previous.get("updated_at") or row.get("updated_at")
-    return row
-
-
-def old_items(payload: dict[str, Any]) -> dict[str, dict[str, Any]]:
-    rows = list(payload.get("items", [])) + list(payload.get("taiwan_etfs", [])) + list(payload.get("us_etfs", []))
-    return {row.get("id"):row for row in rows if row.get("id")}
-
-
-def main() -> int:
-    DATA.mkdir(parents=True, exist_ok=True)
-    previous_payload = read_json(OUTPUT, {})
-    old = old_items(previous_payload)
-    session = requests.Session()
-    items: dict[str, dict[str, Any]] = {}
-    statuses: list[dict[str, Any]] = []
-
-    def run_index(item_id: str, label: str, fn) -> None:
-        try:
-            row = use_latest(old, fn())
-            items[item_id] = row
-            statuses.append({"id":item_id,"source":label,"status":"ok","message":row.get("source","")})
-        except Exception as exc:
-            items[item_id] = retain(old, item_id, INDEX_META[item_id], note=f"{label} 暫時失敗：{type(exc).__name__}")
-            statuses.append({"id":item_id,"source":label,"status":"warning","message":str(exc)[:180]})
-
-    run_index("TAIEX","TWSE",lambda:fetch_twse_index(session))
-    try:
-        row = use_latest(old, fetch_tpex_index(session))
-        items["TPEX"] = row
-        statuses.append({"id":"TPEX","source":"TPEx","status":"ok","message":row["source"]})
-    except Exception as official_exc:
-        try:
-            row = fetch_yahoo(session,"TPEX",YAHOO_INDEX["TPEX"],INDEX_META["TPEX"])
-            row["status"] = "fallback"
-            row["note"] = "TPEx 官方資料暫時不可用，改用延遲行情"
-            items["TPEX"] = use_latest(old, row)
-            statuses.append({"id":"TPEX","source":"TPEx→Yahoo","status":"warning","message":str(official_exc)[:150]})
-        except Exception as exc:
-            items["TPEX"] = retain(old,"TPEX",INDEX_META["TPEX"],note="TPEx 與 Yahoo 皆暫時不可用")
-            statuses.append({"id":"TPEX","source":"TPEx→Yahoo","status":"warning","message":str(exc)[:180]})
-
-    for item_id in ("SP500","NASDAQ","DJIA","SOX","NIKKEI","KOSPI"):
-        run_index(item_id,"Yahoo",lambda item_id=item_id: fetch_yahoo(session,item_id,YAHOO_INDEX[item_id],INDEX_META[item_id]))
-
-    # Taiwan ETF ranking + official last-trading-day quote map.
-    try:
-        official_quotes = fetch_twse_daily_quote_map(session)
+        response=session.get(url,headers=HEADERS,timeout=18)
+        response.raise_for_status()
+        payload=response.json()
+        result=payload.get("chart",{}).get("result",[None])[0]
+        if not result:return None
+        meta=result.get("meta") or {}
+        closes=(result.get("indicators",{}).get("quote") or [{}])[0].get("close") or []
+        points=[value for value in closes if isinstance(value,(int,float))]
+        price=meta.get("regularMarketPrice")
+        if price is None and points:price=points[-1]
+        previous=meta.get("chartPreviousClose") or meta.get("previousClose")
+        if price is None:return None
+        change=price-previous if previous not in (None,0) else None
+        pct=change/previous*100 if change is not None else None
+        return {"symbol":symbol,"name":name,"market":market,"currency":meta.get("currency") or currency_hint,
+            "price":price,"previous_close":previous,"change":change,"change_percent":pct,
+            "market_at":meta.get("regularMarketTime"),"source":"Yahoo 公開行情"}
     except Exception as exc:
-        official_quotes = {}
-        statuses.append({"id":"TW_ETF_QUOTES","source":"TWSE STOCK_DAY_ALL","status":"warning","message":str(exc)[:180]})
-
-    taiwan_trade_day = trading_date(items.get("TAIEX", {}).get("trading_date") or items.get("TAIEX", {}).get("as_of"))
-    try:
-        ranking, ranking_date = rank_tw_etfs_from_quotes(official_quotes, taiwan_trade_day)
-        ranking_source = "TWSE 官方最後交易日成交值排行"
-    except Exception as official_rank_exc:
-        try:
-            ranking, ranking_date = parse_tw_etf_ranking(session)
-            ranking_source = "TWSE ETF e添富成交值排行"
-        except Exception as page_rank_exc:
-            ranking, ranking_date = TW_ETF_FALLBACK, ""
-            ranking_source = "固定備援清單"
-            statuses.append({"id":"TW_ETF_RANK","source":"TWSE 成交值排行","status":"warning","message":f"{official_rank_exc}; {page_rank_exc}"[:180]})
-
-    taiwan_etfs = []
-    for rank, (code, name) in enumerate(ranking[:15], start=1):
-        item_id = f"TWETF:{code}"
-        row = tw_etf_item_from_official(code,name,rank,official_quotes.get(code,{}),taiwan_trade_day) if code in official_quotes else None
-        if row is None:
-            meta = {"name":name,"kind":"etf","currency":"TWD","region":"TW","market":"TW","exchange":"TWSE","link":f"https://tw.stock.yahoo.com/quote/{code}.TW"}
-            try:
-                row = fetch_yahoo(session,item_id,f"{code}.TW",meta,rank=rank)
-                row["symbol"] = code
-            except Exception as exc:
-                row = retain(old,item_id,meta,symbol=code,rank=rank,note=f"ETF 行情暫時失敗：{type(exc).__name__}")
-        row["ranking_source"] = ranking_source
-        row["ranking_date"] = ranking_date
-        taiwan_etfs.append(use_latest(old, row))
-
-    us_etfs = []
-    for rank, (symbol, name) in enumerate(US_ETFS, start=1):
-        item_id = f"USETF:{symbol}"
-        meta = {"name":name,"kind":"etf","currency":"USD","region":"US","market":"US","exchange":"NYSE/NASDAQ","link":f"https://finance.yahoo.com/quote/{symbol}/"}
-        try:
-            row = fetch_yahoo(session,item_id,symbol,meta,rank=rank)
-            row["symbol"] = symbol
-        except Exception as exc:
-            row = retain(old,item_id,meta,symbol=symbol,rank=rank,note=f"ETF 行情暫時失敗：{type(exc).__name__}")
-        us_etfs.append(use_latest(old, row))
-
-    ordered = [items[item_id] for item_id in INDEX_ORDER]
-    all_rows = ordered + taiwan_etfs + us_etfs
-    healthy = sum(1 for row in all_rows if row.get("status") in {"ok","fallback"} and row.get("value") is not None)
-    market_updates = [row.get("updated_at") for row in all_rows if clean_number(row.get("value")) is not None and row.get("updated_at")]
-    latest_by_region = {
-        region:max((trading_date(row.get("trading_date") or row.get("as_of")) for row in all_rows if row.get("region") == region), default="")
-        for region in ("TW", "US", "JP", "KR")
-    }
-    payload = {
-        "metadata": {
-            "updated_at":max(market_updates, default=previous_payload.get("metadata", {}).get("updated_at") or iso(NOW)),
-            "timezone":"Asia/Taipei", "version":VERSION,
-            "item_count":len(all_rows), "healthy_count":healthy,
-            "status":"ok" if healthy >= 20 else "partial",
-            "display_policy":"latest-trading-day-per-market",
-            "refresh_policy":"workflow-5m-browser-30s",
-            "latest_trading_days":latest_by_region,
-            "tw_etf_ranking":"daily-trading-value",
-            "note":"Each market keeps its own newest trading date. Same-day source corrections replace saved values.",
-        },
-        "sources":statuses,
-        "items":ordered,
-        "taiwan_etfs":taiwan_etfs,
-        "us_etfs":us_etfs,
-    }
-    OUTPUT.write_text(json.dumps(payload,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-    SEED.write_text("window.__MARKET_SNAPSHOT_SEED__ = "+json.dumps(payload,ensure_ascii=False,indent=2)+";\n",encoding="utf-8")
-    print(f"indices={len(ordered)} tw_etfs={len(taiwan_etfs)} us_etfs={len(us_etfs)} healthy={healthy}")
-    return 0
+        print("warning",symbol,exc)
+        return None
 
 
-if __name__ == "__main__":
-    raise SystemExit(main())
+def main()->None:
+    session=requests.Session()
+    items=[row for args in SYMBOLS if (row:=fetch_one(session,*args))]
+    if len(items)<4:
+        raise SystemExit(f"Only {len(items)} market rows; previous snapshot was not replaced.")
+    payload={"metadata":{"version":"v11.1.0","updated_at":NOW.isoformat(timespec="seconds"),
+        "source":"Yahoo 公開行情","note":"公開行情可能延遲；失敗時保留上次成功資料。"},"items":items}
+    OUT.write_text(json.dumps(payload,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+    SEED.write_text("window.__MARKET_SNAPSHOT_SEED__ = "+json.dumps(payload,ensure_ascii=False)+";\n",encoding="utf-8")
+    print("market snapshot",len(items))
+
+
+if __name__=="__main__":
+    main()
