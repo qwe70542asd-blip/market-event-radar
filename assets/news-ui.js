@@ -11,7 +11,7 @@
   const health=$("#newsLoadState");
   const todayList=$("#todayNewsList");
 
-  const state={items:[],breaking:[],breakingIndex:0,breakingTimer:null,filter:"all",newsOffset:0,newsTimer:null};
+  const state={items:[],breaking:[],breakingIndex:0,breakingTimer:null,filter:"all"};
 
   function fmt(value, precision="minute") {
     if (!value) return "—";
@@ -66,29 +66,17 @@
       todayList.innerHTML='<div class="today-news-empty"><strong>等待新聞排程</strong><span>目前沒有可直接開啟原文的新聞；GitHub Action 更新後會自動補入。</span></div>';
       return;
     }
-    const count=Math.min(6,rows.length);
-    const selected=Array.from({length:count},(_,index)=>rows[(state.newsOffset+index)%rows.length]);
+    const selected=rows.slice(0,10);
     todayList.innerHTML=selected.map(item=>`
       <a class="today-news-row type-${category(item)}" href="${escapeHtml(directLink(item))}" target="_blank" rel="noreferrer noopener">
         <time>${escapeHtml(fmt(item.published_at,item.published_precision))}</time>
         <span class="today-news-badge">${escapeHtml(categoryLabel(item))}</span>
         <strong>${escapeHtml(item.title)}</strong>
-        <em>${escapeHtml(item.source || "新聞來源")}</em>
+        <em>${escapeHtml(item.source || "新聞來源")}${Number(item.duplicate_count||0)>0?` · 另有 ${Number(item.duplicate_count)} 個來源`:""}</em>
       </a>`).join("");
     todayList.classList.remove("news-swap");
     void todayList.offsetWidth;
     todayList.classList.add("news-swap");
-  }
-
-  function restartNewsTimer() {
-    clearInterval(state.newsTimer);
-    state.newsTimer=setInterval(()=>{
-      const rows=visibleNews();
-      if (rows.length>6) {
-        state.newsOffset=(state.newsOffset+1)%rows.length;
-        renderToday();
-      }
-    },5000);
   }
 
   function showBreaking(index) {
@@ -127,10 +115,8 @@
     state.items=(detail.items || []).filter(item=>directLink(item)).sort((a,b)=>score(b)-score(a));
     state.breaking=state.items.filter(item=>item.is_breaking || ["policy","macro","market"].includes(item.topic)).slice(0,30);
     if (!state.breaking.length) state.breaking=state.items.slice(0,20);
-    state.newsOffset=0;
     renderToday();
     showBreaking(0);
-    restartNewsTimer();
     restartBreakingTimer();
     updateState(detail);
   });
@@ -140,9 +126,7 @@
   $("#newsRetryBtn")?.addEventListener("click",()=>window.MarketNewsLoader?.load?.());
   $$("[data-news-filter]").forEach(button=>button.addEventListener("click",()=>{
     state.filter=button.dataset.newsFilter;
-    state.newsOffset=0;
     $$("[data-news-filter]").forEach(node=>node.classList.toggle("active",node===button));
     renderToday();
-    restartNewsTimer();
   }));
 })();

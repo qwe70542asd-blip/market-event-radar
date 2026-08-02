@@ -1,4 +1,4 @@
-name: Update v10.8.3 live data
+name: Update v10.8.4 live data
 
 on:
   push:
@@ -10,7 +10,6 @@ on:
       - "data/manual_events.json"
   schedule:
     - cron: "*/5 * * * *"
-    - cron: "2,17,32,47 * * * *"
     - cron: "25 10 * * 1-5"
     - cron: "40 3 * * *"
   workflow_dispatch:
@@ -20,7 +19,7 @@ on:
         required: true
         default: all
         type: choice
-        options: [all, market, news, daily]
+        options: [all, frequent, market, news, daily]
 
 permissions:
   contents: write
@@ -32,7 +31,7 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 40
     env:
       LIVE_BRANCH: live-data
     steps:
@@ -60,8 +59,7 @@ jobs:
               MODE="all"
             else
               case "${{ github.event.schedule }}" in
-                "*/5 * * * *") MODE="market" ;;
-                "2,17,32,47 * * * *") MODE="news" ;;
+                "*/5 * * * *") MODE="frequent" ;;
                 *) MODE="daily" ;;
               esac
             fi
@@ -99,17 +97,17 @@ jobs:
           fi
 
       - name: Update last-trading-day market data
-        if: steps.mode.outputs.mode == 'market' || steps.mode.outputs.mode == 'all'
+        if: steps.mode.outputs.mode == 'frequent' || steps.mode.outputs.mode == 'market' || steps.mode.outputs.mode == 'all'
         run: python scripts/update_market_snapshot.py
 
       - name: Update finance news
-        if: steps.mode.outputs.mode == 'news' || steps.mode.outputs.mode == 'all'
-        continue-on-error: true
+        if: steps.mode.outputs.mode == 'frequent' || steps.mode.outputs.mode == 'news' || steps.mode.outputs.mode == 'all'
+        env:
+          NEWS_FULL_REFRESH: ${{ steps.mode.outputs.mode == 'all' && '1' || '0' }}
         run: python scripts/update_news.py
 
       - name: Update announcements
-        if: steps.mode.outputs.mode == 'news' || steps.mode.outputs.mode == 'daily' || steps.mode.outputs.mode == 'all'
-        continue-on-error: true
+        if: steps.mode.outputs.mode == 'frequent' || steps.mode.outputs.mode == 'news' || steps.mode.outputs.mode == 'daily' || steps.mode.outputs.mode == 'all'
         run: python scripts/update_announcements.py
 
       - name: Update asset master
@@ -128,10 +126,13 @@ jobs:
         run: python scripts/update_institutional_history.py
 
       - name: Validate generated data
+        env:
+          UPDATE_MODE: ${{ steps.mode.outputs.mode }}
         shell: bash
         run: |
           python - <<'PY'
           import json
+          import os
           from pathlib import Path
 
           required = [
@@ -144,6 +145,18 @@ jobs:
                   raise SystemExit(f"Missing required file: {path}")
               json.loads(path.read_text(encoding="utf-8"))
               print("OK", path)
+
+          mode = os.environ.get("UPDATE_MODE", "")
+          if mode in {"all", "frequent", "news"}:
+              news = json.loads(Path("data/news.json").read_text(encoding="utf-8"))
+              announcements = json.loads(Path("data/announcements.json").read_text(encoding="utf-8"))
+              if not news.get("items"):
+                  raise SystemExit("News update produced no usable items; live-data was not published.")
+              if not announcements.get("items"):
+                  raise SystemExit("Announcement update produced no usable items; live-data was not published.")
+              if int(news.get("metadata", {}).get("retention_days", 0)) != 20:
+                  raise SystemExit("News retention metadata is not 20 days.")
+              print("OK live news and announcements")
 
           for path in Path("data/asset-details").glob("*.json") if Path("data/asset-details").exists() else []:
               json.loads(path.read_text(encoding="utf-8"))
@@ -205,5 +218,5 @@ jobs:
             echo "No live data changes."
             exit 0
           fi
-          git commit -m "chore: refresh last-trading-day data v10.8.3"
+          git commit -m "chore: refresh live data v10.8.4"
           git push origin "HEAD:$LIVE_BRANCH"

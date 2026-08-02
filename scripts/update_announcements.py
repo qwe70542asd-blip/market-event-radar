@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Refresh official announcements and institutional flow for v10.8.3.
+"""Refresh official announcements and institutional flow for v10.8.4.
 
 Key fixes:
 - Weekend/holiday runs show the latest available trading day instead of today's empty date.
@@ -23,6 +23,7 @@ from urllib.parse import quote_plus
 from zoneinfo import ZoneInfo
 
 import requests
+from update_news import resolve_google_news_url, valid_direct_candidate
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
@@ -30,9 +31,10 @@ OUT = DATA / "announcements.json"
 SEED = DATA / "announcements-seed.js"
 TAIPEI = ZoneInfo("Asia/Taipei")
 NOW = datetime.now(TAIPEI)
+ANNOUNCEMENT_RETENTION_DAYS = 30
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/10.8.3; +https://github.com/qwe70542asd-blip/market-event-radar)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/10.8.4; +https://github.com/qwe70542asd-blip/market-event-radar)",
     "Accept-Language": "zh-TW,zh;q=0.95,en-US;q=0.75,en;q=0.65,ja;q=0.55",
 }
 
@@ -101,7 +103,18 @@ def parse_date(value):
             parsed = parsed.replace(tzinfo=TAIPEI)
         return parsed.astimezone(TAIPEI).isoformat(timespec="seconds")
     except Exception:
-        return None
+        pass
+    try:
+        parsed = datetime.fromisoformat(clean(value).replace("Z", "+00:00"))
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=TAIPEI)
+        return parsed.astimezone(TAIPEI).isoformat(timespec="seconds")
+    except Exception:
+        pass
+    parsed_day = parse_any_market_date(value)
+    if parsed_day:
+        return datetime.combine(parsed_day, datetime.min.time(), TAIPEI).isoformat(timespec="seconds")
+    return None
 
 
 def parse_any_market_date(value) -> date | None:
@@ -174,12 +187,12 @@ def text(node, names):
 
 
 def google_feed(query: str, hl: str, gl: str, ceid: str):
-    url = f"https://news.google.com/rss/search?q={quote_plus(query)}&hl={hl}&gl={gl}&ceid={ceid}"
+    url = f"https://news.google.com/rss/search?q={quote_plus(query + ' when:30d')}&hl={hl}&gl={gl}&ceid={ceid}"
     response = requests.get(url, headers=HEADERS, timeout=25)
     response.raise_for_status()
     root = ET.fromstring(response.content)
     rows = []
-    for item in root.findall(".//item")[:8]:
+    for item in root.findall(".//item")[:12]:
         title = text(item, ["title"])
         link = text(item, ["link"])
         published = text(item, ["pubDate"])
@@ -321,15 +334,39 @@ def official_open_data_items():
     return items
 
 
+def still_recent(item, days: int = ANNOUNCEMENT_RETENTION_DAYS) -> bool:
+    value = item.get("published_at")
+    if not value:
+        return True
+    try:
+        parsed = datetime.fromisoformat(value)
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=TAIPEI)
+        return parsed.astimezone(TAIPEI) >= NOW - timedelta(days=days)
+    except Exception:
+        return True
+
+
+def announcement_rank(item) -> tuple[int, float]:
+    direct = item.get("link_status") in {"direct", "direct-official"}
+    try:
+        published = datetime.fromisoformat(item.get("published_at") or "").timestamp()
+    except Exception:
+        published = 0.0
+    return int(direct), published
+
+
 def main():
     previous = read_json(OUT, {"items": [], "institutional": {}})
     items = official_open_data_items()
+    session = requests.Session()
 
     for source, region, category, query, hl, gl, ceid in SEARCHES:
         try:
-            for title, link, original_link, published in google_feed(query, hl, gl, ceid):
-                if not link:
-                    continue
+            for title, _link, original_link, published in google_feed(query, hl, gl, ceid):
+                source_home = STABLE_SOURCE_URLS.get(source, "")
+                direct, method = resolve_google_news_url(session, original_link, source, source_home)
+                link = direct if valid_direct_candidate(direct) else source_home
                 chinese = title if region == "TW" else translate_rule(title)
                 items.append({
                     "id": hashlib.sha1((source + title).encode()).hexdigest()[:16],
@@ -338,25 +375,33 @@ def main():
                     "source": source,
                     "title_zh": chinese,
                     "title_original": title,
-                    "link": stable_link(link, title, source),
+                    "link": link,
+                    "direct_link": direct if valid_direct_candidate(direct) else "",
                     "original_link": original_link,
-                    "source_home": STABLE_SOURCE_URLS.get(source),
+                    "source_home": source_home,
                     "published_at": published,
                     "importance": "high",
                     "translation_status": "official-zh" if region == "TW" else "rule-based",
-                    "link_status": "direct",
+                    "link_status": "direct" if valid_direct_candidate(direct) else "official-homepage",
+                    "link_type": method or "official-homepage",
                 })
         except Exception as exc:
             print("warning search", source, exc)
         time.sleep(0.08)
 
+    # Keep every still-valid official item from the previous successful run.
+    # This avoids an empty/short list when an official feed only returns the
+    # latest page or one source has a temporary outage.
+    if previous.get("metadata", {}).get("updated_at"):
+        items.extend(item for item in previous.get("items", []) if still_recent(item))
+
     deduplicated = {}
     for item in items:
         key = re.sub(r"\W+", "", clean(item["title_original"]).lower())
-        if key not in deduplicated:
+        if key not in deduplicated or announcement_rank(item) > announcement_rank(deduplicated[key]):
             deduplicated[key] = item
-    if not deduplicated:
-        deduplicated = {item.get("id", str(index)): item for index, item in enumerate(previous.get("items", []))}
+    if not deduplicated and previous.get("metadata", {}).get("updated_at"):
+        deduplicated = {item.get("id", str(index)): item for index, item in enumerate(previous.get("items", [])) if still_recent(item)}
 
     previous_inst = previous.get("institutional", {})
     institutional_status = "ok"
@@ -384,11 +429,12 @@ def main():
 
     payload = {
         "metadata": {
-            "version": "v10.4.1",
+            "version": "v10.8.4",
             "updated_at": NOW.isoformat(timespec="seconds"),
             "status": "ok" if deduplicated else "warning",
+            "retention_days": ANNOUNCEMENT_RETENTION_DAYS,
             "translation_note": "Known official phrases use rule-based Chinese translation; original title is preserved.",
-            "link_note": "Google News RSS redirect URLs are replaced with stable exact-title searches to avoid 404 pages.",
+            "link_note": "Official article links are resolved when possible; otherwise the row opens the source's official announcement page.",
         },
         "institutional": {
             "date": data_date,

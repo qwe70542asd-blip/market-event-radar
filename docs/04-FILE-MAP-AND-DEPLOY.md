@@ -2,7 +2,7 @@
 
 ## 唯一修改來源
 
-只使用資料夾：`market-event-radar-current-v10.8.3-full-integration`
+只使用資料夾：`market-event-radar-current-v10.8.4-full-integration`
 
 以下舊檔不再使用：
 
@@ -44,7 +44,7 @@
 整理基準第一次提交可使用：
 
 ```text
-v10.8.3：整合 live-data 路徑、完整首次更新與首頁區塊排序
+v10.8.4：整合 live-data 路徑、完整首次更新與首頁區塊排序
 ```
 
 後續每次只提交一個問題，例如：

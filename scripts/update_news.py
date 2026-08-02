@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Market Event Radar v10.8.3 multi-source finance-news updater.
+"""Market Event Radar v10.8.4 multi-source finance-news updater.
 
 v10.1 priorities:
 - Traditional-Chinese financial coverage first.
@@ -16,6 +16,7 @@ import base64
 import hashlib
 import html
 import json
+import os
 import re
 import time
 import unicodedata
@@ -38,9 +39,11 @@ SEED_PATH = DATA / "news-seed.js"
 LINK_CACHE_PATH = DATA / "news-link-cache.json"
 TAIPEI = ZoneInfo("Asia/Taipei")
 NOW = datetime.now(TAIPEI)
+NEWS_RETENTION_DAYS = 20
+FULL_REFRESH = os.getenv("NEWS_FULL_REFRESH", "").strip().lower() in {"1", "true", "yes", "on"}
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/10.4.3; +https://github.com/qwe70542asd-blip/market-event-radar)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/10.8.4; +https://github.com/qwe70542asd-blip/market-event-radar)",
     "Accept-Language": "zh-TW,zh;q=0.95,en-US;q=0.75,en;q=0.65",
 }
 
@@ -243,7 +246,7 @@ def safe_article_url(link, title, source=""):
 
 GOOGLE_NEWS_HOSTS = {"news.google.com", "google.com", "www.google.com"}
 DIRECT_LINK_CACHE_DAYS = 21
-MAX_NEW_LINK_RESOLUTIONS = 90
+MAX_NEW_LINK_RESOLUTIONS = 180 if FULL_REFRESH else 90
 
 SOURCE_LINK_RULES = [
     (("Yahoo 股市", "Yahoo奇摩股市"), ("tw.stock.yahoo.com",), "https://tw.stock.yahoo.com/news/"),
@@ -275,6 +278,14 @@ SOURCE_LINK_RULES = [
     (("CNBC",), ("cnbc.com",), "https://www.cnbc.com/markets/"),
     (("Nikkei Asia",), ("asia.nikkei.com",), "https://asia.nikkei.com/"),
     (("White House",), ("whitehouse.gov",), "https://www.whitehouse.gov/news/"),
+    (("Federal Reserve", "聯準會"), ("federalreserve.gov",), "https://www.federalreserve.gov/newsevents/pressreleases.htm"),
+    (("U.S. SEC", "SEC"), ("sec.gov",), "https://www.sec.gov/newsroom/press-releases"),
+    (("U.S. Treasury",), ("treasury.gov",), "https://home.treasury.gov/news/press-releases"),
+    (("Bank of Japan", "日本銀行"), ("boj.or.jp",), "https://www.boj.or.jp/en/whatsnew/"),
+    (("Japan Exchange Group", "JPX"), ("jpx.co.jp",), "https://www.jpx.co.jp/english/news/"),
+    (("Japan MOF",), ("mof.go.jp",), "https://www.mof.go.jp/english/"),
+    (("Japan METI",), ("meti.go.jp",), "https://www.meti.go.jp/english/press/"),
+    (("Japan FSA",), ("fsa.go.jp",), "https://www.fsa.go.jp/en/news/"),
     (("CoinDesk",), ("coindesk.com",), "https://www.coindesk.com/"),
     (("Cointelegraph",), ("cointelegraph.com",), "https://cointelegraph.com/"),
     (("BlockTempo", "動區動趨"), ("blocktempo.com",), "https://www.blocktempo.com/"),
@@ -896,8 +907,11 @@ def google_url(source):
     hl = source.get("hl", "zh-TW")
     gl = source.get("gl", "TW")
     ceid = source.get("ceid", "TW:zh-Hant")
+    query = clean(source["query"])
+    if not re.search(r"(?:^|\s)(?:when:|after:|before:)", query, re.I):
+        query = f"{query} when:{NEWS_RETENTION_DAYS}d"
     return "https://news.google.com/rss/search?" + (
-        f"q={quote_plus(source['query'])}&hl={hl}&gl={gl}&ceid={ceid}"
+        f"q={quote_plus(query)}&hl={hl}&gl={gl}&ceid={ceid}"
     )
 
 def previous_by_source(previous):
@@ -916,7 +930,7 @@ def still_recent(item, days=12):
     except Exception:
         return True
 
-def preserve_previous(source_name, previous_map, items, days=12):
+def preserve_previous(source_name, previous_map, items, days=NEWS_RETENTION_DAYS):
     stale = [x for x in previous_map.get(source_name, []) if still_recent(x, days)]
     for row in stale:
         row = dict(row)
@@ -925,7 +939,14 @@ def preserve_previous(source_name, previous_map, items, days=12):
     return stale
 
 def active_search_sources():
-    bucket = (NOW.minute // 15) % 4
+    if FULL_REFRESH:
+        return (
+            CORE_SEARCH_SOURCES + BROKER_SEARCH_SOURCES + ROTATING_SEARCH_SOURCES +
+            SECTOR_SEARCH_SOURCES + CRYPTO_SEARCH_SOURCES + BREAKING_SEARCH_SOURCES +
+            ENGLISH_SEARCH_SOURCES,
+            "all",
+        )
+    bucket = (NOW.minute // 5) % 4
     rotating = [x for x in ROTATING_SEARCH_SOURCES if x["rotation_group"] == bucket]
     sectors = [x for x in SECTOR_SEARCH_SOURCES if x["rotation_group"] == bucket]
     crypto = [x for x in CRYPTO_SEARCH_SOURCES if x["rotation_group"] == bucket]
@@ -950,7 +971,10 @@ def main():
     link_cache = read_json(LINK_CACHE_PATH, {})
     previous_map = previous_by_source(previous)
     session = requests.Session()
-    items = []
+    # Always begin with every still-valid historical item. This makes the
+    # archive a true rolling 20-day window even when a source feed only exposes
+    # its newest few rows or a supplemental source is not in this run's bucket.
+    items = [enrich_previous(row) for row in previous.get("items", []) if still_recent(row, NEWS_RETENTION_DAYS)]
     statuses = []
 
     for source in DIRECT_RSS:
@@ -977,7 +1001,7 @@ def main():
     for source in sources:
         try:
             response = get_with_retry(session, google_url(source))
-            rows = parse_feed(response.content, source, "publisher-search")[:12]
+            rows = parse_feed(response.content, source, "publisher-search")[:20]
             if rows:
                 items.extend(rows)
                 status = "ok"
@@ -1006,7 +1030,7 @@ def main():
     for source in BROKER_SEARCH_SOURCES + ROTATING_SEARCH_SOURCES + SECTOR_SEARCH_SOURCES + CRYPTO_SEARCH_SOURCES:
         if source["name"] in active_names:
             continue
-        stale = preserve_previous(source["name"], previous_map, items, days=20)
+        stale = preserve_previous(source["name"], previous_map, items, days=NEWS_RETENTION_DAYS)
         statuses.append({
             "name": source["name"], "status": "rotating-cache" if stale else "scheduled",
             "count": len(stale), "mode": f"rotation-{source['rotation_group']}",
@@ -1045,16 +1069,16 @@ def main():
             link_dedup[key] = item
 
     headline_dedup, duplicate_title_count = deduplicate_headlines(link_dedup.values())
-    final = [x for x in headline_dedup if still_recent(x, days=20)]
+    final = [x for x in headline_dedup if still_recent(x, days=NEWS_RETENTION_DAYS)]
     final.sort(key=lambda x: (
+        x.get("published_at") or "",
         x.get("language") == "zh-Hant",
         bool(x.get("is_breaking")),
         int(x.get("quality_score") or 0),
-        x.get("published_at") or "",
     ), reverse=True)
 
     if not final:
-        final = [enrich_previous(x) for x in previous.get("items", []) if still_recent(x, days=20)]
+        final = [enrich_previous(x) for x in previous.get("items", []) if still_recent(x, days=NEWS_RETENTION_DAYS)]
 
     link_result = attach_article_links(session, final, link_cache)
     unresolved_count = sum(1 for item in link_result["items"] if item.get("link_status") != "direct")
@@ -1074,12 +1098,15 @@ def main():
         "metadata": {
             "updated_at": iso(NOW),
             "timezone": "Asia/Taipei",
-            "item_count": len(final[:220]),
+            "item_count": len(final),
             "chinese_item_count": chinese_items,
             "healthy_sources": source_ok,
             "source_count": len(statuses),
             "rotation_bucket": bucket,
-            "version": "v10.8.3",
+            "version": "v10.8.4",
+            "retention_days": NEWS_RETENTION_DAYS,
+            "retention_cutoff": iso(NOW - timedelta(days=NEWS_RETENTION_DAYS)),
+            "full_refresh": FULL_REFRESH,
             "industry_counts": industry_counts,
             "duplicate_titles_removed": duplicate_title_count,
             "direct_link_count": link_result["direct"],
@@ -1094,7 +1121,7 @@ def main():
             "message": "" if final else "No new or cached headlines were available.",
         },
         "sources": statuses,
-        "items": final[:220],
+        "items": final,
     }
     NEWS_PATH.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     SEED_PATH.write_text(

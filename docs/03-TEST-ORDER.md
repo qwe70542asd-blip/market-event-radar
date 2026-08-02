@@ -6,7 +6,7 @@
 
 目的：先確認資料更新管線真的能寫出資料。
 
-1. 上傳後確認 `.github/workflows/update-live-data.yml` 顯示 `Update v10.8.3 live data`。
+1. 上傳後確認 `.github/workflows/update-live-data.yml` 顯示 `Update v10.8.4 live data`。
 2. 這次 push 會自動跑 `all`，一次建立行情、新聞、公告、法人、事件與標的資料。
 3. 若沒有自動執行，到 GitHub → Actions 手動執行，`mode` 選 `all`。
 4. 等待完成，確認各更新步驟與發布步驟為綠色；允許標示為可略過的來源顯示警告，但輸出 JSON 必須存在。

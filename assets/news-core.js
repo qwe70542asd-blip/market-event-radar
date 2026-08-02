@@ -7,6 +7,7 @@
     error: null,
     timer: null,
   };
+  const RETENTION_MS=20*24*60*60*1000;
 
   function isHttpUrl(value) {
     try {
@@ -52,6 +53,8 @@
   function normalizeItem(raw) {
     const link = directCandidate(raw);
     if (!raw?.title || !link) return null;
+    const published=new Date(raw.published_at||0).getTime();
+    if (Number.isFinite(published) && published>0 && published<Date.now()-RETENTION_MS) return null;
     return {
       ...raw,
       link,

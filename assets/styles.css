@@ -1906,7 +1906,7 @@ input, select, button { font-size: 15px; }
   .decision-radar-card em { grid-column:2; }
 }
 
-/* v10.8.3 unified version, Taiwan-time status and final readability pass */
+/* v10.8.4 unified version, Taiwan-time status and final readability pass */
 html { font-size:17px; }
 body { font-size:17px; }
 .version-badge { padding:3px 7px; font-size:11px; }
@@ -1938,7 +1938,7 @@ body { font-size:17px; }
   .market-board-head small { font-size:12px; }
 }
 
-/* v10.8.3 approved desktop/mobile homepage layout */
+/* v10.8.4 approved desktop/mobile homepage layout */
 html { scroll-behavior:smooth; }
 #calendarSection,#marketSection,#homeFeatureStrip,#todayNewsSection { scroll-margin-top:86px; }
 
@@ -2212,4 +2212,188 @@ html { scroll-behavior:smooth; }
     gap:4px;
     padding-inline:7px;
   }
+}
+
+/* v10.8.4 calendar heading, official announcements and 20-day news archive */
+.calendar-heading-redesign {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:end;
+  gap:16px;
+  margin-bottom:12px;
+}
+.calendar-heading-copy h2 { margin:0; font-size:25px; }
+.calendar-heading-copy .eyebrow { margin-bottom:4px; }
+.calendar-title-tags {
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:9px;
+}
+.calendar-title-tags span {
+  padding:4px 9px;
+  border:1px solid rgba(106,169,255,.14);
+  border-radius:999px;
+  background:rgba(106,169,255,.055);
+  color:#9fc8f6;
+  font-size:12px;
+  line-height:1;
+  white-space:nowrap;
+}
+.calendar-title-tags span:nth-child(2),.calendar-title-tags span:nth-child(3) { border-color:rgba(255,120,136,.14); background:rgba(255,120,136,.05); color:#ffa1ac; }
+.calendar-title-tags span:nth-child(4) { border-color:rgba(210,163,255,.15); background:rgba(210,163,255,.05); color:#d9baff; }
+.calendar-title-tags span:nth-child(5),.calendar-title-tags span:nth-child(6) { border-color:rgba(121,240,183,.15); background:rgba(121,240,183,.05); color:#94e7c1; }
+.calendar-title-tags span.breaking { border-color:rgba(255,174,91,.18); background:rgba(255,174,91,.07); color:#ffc181; }
+.month-switcher {
+  display:grid;
+  grid-template-columns:auto minmax(148px,auto) auto auto;
+  gap:6px;
+  align-items:center;
+  padding:5px;
+  border:1px solid rgba(255,255,255,.075);
+  border-radius:13px;
+  background:rgba(255,255,255,.022);
+}
+.month-switcher h3 { min-width:148px; padding:0 8px; font-size:18px; white-space:nowrap; }
+.month-switcher .mini-btn { min-width:72px; min-height:36px; padding:0 10px; white-space:nowrap; }
+.month-switcher .current-month-btn { min-width:58px; border-color:rgba(121,240,183,.16); color:#94e6c2; }
+.month-summary-pills {
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin:0 0 10px;
+}
+.month-summary-pills button {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-height:34px;
+  padding:5px 10px;
+  border-radius:999px;
+  background:rgba(255,255,255,.018);
+}
+.month-summary-pills span { font-size:12px; }
+.month-summary-pills strong { font-size:14px; }
+
+.announcement-dashboard { padding:15px; }
+.announcement-dashboard-grid {
+  display:grid;
+  grid-template-columns:minmax(330px,.9fr) minmax(0,1.1fr);
+  gap:12px;
+  margin-top:12px;
+}
+.institutional-summary-panel,.official-announcement-panel {
+  min-width:0;
+  padding:12px;
+  border:1px solid rgba(255,255,255,.065);
+  border-radius:14px;
+  background:rgba(255,255,255,.018);
+}
+.announcement-subhead { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:9px; }
+.announcement-subhead>div { min-width:0; }
+.announcement-subhead strong,.announcement-subhead small { display:block; }
+.announcement-subhead strong { font-size:16px; }
+.announcement-subhead small { margin-top:2px; color:#8197a5; font-size:12px; }
+.institutional-market-tabs {
+  display:flex;
+  gap:3px;
+  padding:3px;
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:10px;
+  background:rgba(4,14,25,.55);
+}
+.institutional-market-tabs button {
+  min-width:54px;
+  height:30px;
+  border:0;
+  border-radius:7px;
+  background:transparent;
+  color:#8ca1ae;
+  font-size:12px;
+  cursor:pointer;
+}
+.institutional-market-tabs button.active { background:rgba(121,240,183,.1); color:#94e8c3; }
+.announcement-dashboard .institutional-cards { display:grid; grid-template-columns:1fr 1fr; gap:7px; margin:0; }
+.announcement-dashboard .institutional-card {
+  min-height:84px;
+  padding:10px 11px;
+  border-color:rgba(255,255,255,.065);
+  background:rgba(5,17,30,.55);
+}
+.announcement-dashboard .institutional-card::after { content:"›"; top:11px; color:#718896; font-size:13px; }
+.announcement-dashboard .institutional-card span { color:#9eb1bd; font-size:12px; }
+.announcement-dashboard .institutional-card strong { margin:6px 0 4px; font-size:19px; }
+.announcement-dashboard .institutional-card small { color:#748a98; font-size:11px; }
+.announcement-dashboard .institutional-card.positive strong { color:#ff8c9a; }
+.announcement-dashboard .institutional-card.negative strong { color:#72dfb4; }
+.announcement-dashboard .institutional-card.flat strong { color:#c8d5dc; }
+.institutional-detail-link { display:flex; justify-content:space-between; margin-top:8px; padding:7px 2px 0; color:#8fe2bf; font-size:12px; text-decoration:none; }
+.official-source-badge { padding:5px 8px; border-radius:999px; background:rgba(255,211,109,.08); color:#ffda8a; font-size:11px; white-space:nowrap; }
+.official-announcement-list { display:grid; gap:6px; }
+.official-announcement-row {
+  display:grid;
+  grid-template-columns:48px minmax(0,1fr) 14px;
+  align-items:center;
+  gap:9px;
+  min-height:54px;
+  padding:7px 8px;
+  border:1px solid rgba(255,255,255,.05);
+  border-radius:10px;
+  background:rgba(5,17,30,.48);
+  color:inherit;
+  text-decoration:none;
+}
+.official-announcement-row:hover { border-color:rgba(255,211,109,.17); background:rgba(255,211,109,.025); }
+.official-announcement-row time { color:#7d929f; font-size:11px; white-space:nowrap; }
+.official-announcement-row>span { min-width:0; }
+.official-announcement-row b,.official-announcement-row strong { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.official-announcement-row b { color:#ffd98b; font-size:10px; font-weight:700; }
+.official-announcement-row strong { margin-top:2px; font-size:13px; }
+.official-announcement-row em { color:#7e95a3; font-size:12px; font-style:normal; }
+.announcement-unified-empty {
+  display:grid;
+  place-content:center;
+  gap:4px;
+  min-height:120px;
+  padding:15px;
+  border:1px dashed rgba(255,255,255,.085);
+  border-radius:11px;
+  color:#8096a4;
+  font-size:12px;
+  text-align:center;
+}
+.announcement-unified-empty strong { color:#bdcbd3; font-size:14px; }
+.announcement-unified-empty.institutional-empty { grid-column:1/-1; min-height:175px; }
+.announcement-note { margin-top:9px; color:#7f94a2; }
+
+.today-news-list { grid-template-columns:1fr; }
+.today-news-row { grid-template-columns:104px 48px minmax(0,1fr) minmax(120px,220px); min-height:48px; padding:7px 10px; }
+.today-news-row time,.today-news-badge,.today-news-row em { font-size:12px; }
+.today-news-row strong { font-size:15px; }
+
+@media (max-width:900px) {
+  .calendar-heading-redesign { grid-template-columns:1fr; align-items:start; }
+  .month-switcher { width:100%; grid-template-columns:auto minmax(130px,1fr) auto auto; }
+  .announcement-dashboard-grid { grid-template-columns:1fr; }
+}
+
+@media (max-width:760px) {
+  .calendar-heading-redesign { gap:10px; }
+  .calendar-title-tags { flex-wrap:nowrap; overflow-x:auto; padding-bottom:3px; scrollbar-width:none; }
+  .calendar-title-tags::-webkit-scrollbar { display:none; }
+  .month-switcher { grid-template-columns:44px minmax(110px,1fr) 54px 44px; padding:4px; }
+  .month-switcher .mini-btn { min-width:0; width:100%; padding:0 5px; font-size:14px; }
+  .month-switcher .mini-btn span { display:none; }
+  .month-switcher h3 { min-width:0; font-size:16px; }
+  .month-summary-pills { flex-wrap:nowrap; overflow-x:auto; padding-bottom:3px; scrollbar-width:none; }
+  .month-summary-pills::-webkit-scrollbar { display:none; }
+  .month-summary-pills button { flex:0 0 auto; }
+  .announcement-dashboard { padding:12px 10px; }
+  .announcement-compact-head { align-items:flex-start; }
+  .announcement-compact-head h2 { font-size:20px; }
+  .announcement-dashboard-grid { gap:8px; }
+  .institutional-summary-panel,.official-announcement-panel { padding:10px; }
+  .official-announcement-row { grid-template-columns:44px minmax(0,1fr) 12px; }
+  .today-news-row { grid-template-columns:72px 42px minmax(0,1fr); }
+  .today-news-row em { grid-column:3; margin-top:-3px; text-align:left; }
 }
