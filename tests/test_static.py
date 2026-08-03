@@ -2,6 +2,9 @@
 import importlib.util
 import json
 import unittest
+import subprocess
+import shutil
+import re
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -160,10 +163,33 @@ class StaticTests(unittest.TestCase):
         shared=(ROOT/"assets/shared.js").read_text(encoding="utf-8")
         for branch in ("live-assets","live-events","live-tw-market","live-tw-chips","live-global-market","live-news"):
             self.assertIn(branch,shared)
-        self.assertIn("const dedicated = available.find",shared)
+        self.assertIn("Dedicated data channel unavailable",shared)
+        self.assertIn("LEGACY_LIVE_BASE",shared)
+        self.assertNotIn("REPO, LIVE_BASE, MAIN_BASE",shared)
         self.assertIn("loadChannelManifest",shared)
         self.assertTrue((ROOT/"data-status.html").exists())
         self.assertTrue((ROOT/"assets/data-status.js").exists())
+
+    def test_shared_runtime_boots_without_reference_errors(self):
+        node=shutil.which("node")
+        if not node:self.skipTest("node unavailable")
+        script=r"""
+const fs=require('fs'),vm=require('vm');
+const context={window:{},console,URL,AbortController,setTimeout,clearTimeout,setInterval,clearInterval,Intl,Date,Number,Object,String,Array,Map,Set,Promise,JSON,Math,RegExp,Error,fetch:async()=>{throw new Error('offline')}};
+vm.createContext(context);
+vm.runInContext(fs.readFileSync(process.argv[1],'utf8'),context,{filename:'shared.js'});
+if(!context.window.MR)throw new Error('MR was not initialized');
+if(context.window.MR.VERSION!=='11.2.3')throw new Error('wrong version');
+"""
+        result=subprocess.run([node,"-e",script,str(ROOT/"assets/shared.js")],capture_output=True,text=True)
+        self.assertEqual(result.returncode,0,result.stderr)
+
+    def test_all_workflows_finish_before_fifteen_minute_limit(self):
+        for path in (ROOT/".github/workflows").glob("*.yml"):
+            body=path.read_text(encoding="utf-8")
+            values=[int(value) for value in re.findall(r"timeout-minutes:\s*(\d+)",body)]
+            self.assertTrue(values,f"{path.name} has no timeout")
+            self.assertTrue(all(value<=14 for value in values),f"{path.name}: {values}")
 
     def test_isolated_publish_helpers(self):
         publish=(ROOT/"scripts/publish_data_branch.sh").read_text(encoding="utf-8")

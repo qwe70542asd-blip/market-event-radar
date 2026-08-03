@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const VERSION = "11.2.2";
+  const VERSION = "11.2.3";
   const OWNER = "qwe70542asd-blip";
   const REPO = "market-event-radar";
   const LEGACY_LIVE_BASE = `https://raw.githubusercontent.com/${OWNER}/${REPO}/live-data/`;
@@ -36,7 +36,7 @@
     Object.values(DATA_CHANNELS).flatMap(channel => channel.files.map(file => [file, channel.branch]))
   );
   const PORTFOLIO_KEY = "market-radar-portfolio-v11-1";
-  const LEGACY_PORTFOLIO_KEYS = ["market-radar-portfolio-v10-3", "market-radar-portfolio-v10"];
+  const LEGACY_PORTFOLIO_KEYS = ["market-radar-portfolio-v11", "market-radar-portfolio-v11-0", "market-radar-portfolio-v10-3", "market-radar-portfolio-v10", "market-event-radar-portfolio", "market-radar-portfolio"];
   const QUOTE_CACHE_KEY = "market-radar-quote-cache-v11-1";
 
   const OFFICIAL_OVERRIDES = {
@@ -505,34 +505,40 @@
     const clean = String(path || "").replace(/^\.?\//,"").replace(/^data\//,"");
     const local = String(path || "").startsWith("data/") ? String(path) : `data/${clean}`;
     const dedicatedUrl = dataChannelUrl(clean);
-    const candidates = [
-      ...(dedicatedUrl ? [["channel", dedicatedUrl, dataBranchFor(clean), 4]] : []),
-      ["legacy", `${LEGACY_LIVE_BASE}${clean}`, "live-data", 3],
-      ["local", local, "main-pages", 2],
-      ["main", `${MAIN_BASE}data/${clean}`, "main", 1]
-    ];
+    const annotate = (payload, source, branch) => ({...payload,__source:source,__branch:branch});
 
-    const results = await Promise.allSettled(
-      candidates.map(([,url]) => fetchJson(url))
-    );
+    // The dedicated branch is the source of truth, but a blocked raw GitHub
+    // request must not leave the whole page blank.  Give it a short head start,
+    // then fall back to the bundled seed immediately.
+    if (dedicatedUrl) {
+      try {
+        const payload = await fetchJson(dedicatedUrl, 6000);
+        if (isUsablePayload(payload)) return annotate(payload,"channel",dataBranchFor(clean));
+      } catch (error) {
+        console.warn(`Dedicated data channel unavailable: ${clean}`, error);
+      }
+    }
+
+    try {
+      const payload = await fetchJson(local, 2500);
+      if (isUsablePayload(payload)) return annotate(payload,"local","main-pages");
+    } catch (error) {
+      console.warn(`Bundled data unavailable: ${clean}`, error);
+    }
+
+    // Migration fallbacks are attempted concurrently and capped at six seconds.
+    const fallbacks = [
+      ["legacy", `${LEGACY_LIVE_BASE}${clean}`, "live-data"],
+      ["main", `${MAIN_BASE}data/${clean}`, "main"]
+    ];
+    const results = await Promise.allSettled(fallbacks.map(([,url]) => fetchJson(url,6000)));
     const available = results.flatMap((result,index) => {
       if (result.status !== "fulfilled" || !isUsablePayload(result.value)) return [];
-      const [source,,branch,priority] = candidates[index];
-      return [{...result.value, __source:source, __branch:branch, __priority:priority}];
+      const [source,,branch] = fallbacks[index];
+      return [annotate(result.value,source,branch)];
     });
-    if (!available.length) return {...fallback, __source:"fallback", __branch:null};
-
-    // A valid dedicated channel is authoritative. Other candidates are only
-    // migration/offline fallbacks and must never win merely because they contain
-    // more historical rows.
-    const dedicated = available.find(row => row.__source === "channel");
-    const selected = {...(dedicated || available.sort((a,b) =>
-      payloadTime(b)-payloadTime(a) ||
-      scorePayload(b)-scorePayload(a) ||
-      b.__priority-a.__priority
-    )[0])};
-    delete selected.__priority;
-    return selected;
+    if (available.length) return available.sort((a,b) => payloadTime(b)-payloadTime(a)||scorePayload(b)-scorePayload(a))[0];
+    return {...fallback, __source:"fallback", __branch:null};
   }
 
   async function loadChannelManifest(channel) {
@@ -843,7 +849,7 @@
   }
 
   window.MR = {
-    VERSION, OWNER, REPO, LIVE_BASE, MAIN_BASE, PORTFOLIO_KEY, OFFICIAL_OVERRIDES,
+    VERSION, OWNER, REPO, LEGACY_LIVE_BASE, MAIN_BASE, PORTFOLIO_KEY, OFFICIAL_OVERRIDES,
     $, $$, normalize, escapeHtml, finite, taipeiClockParts, isTaiwanQuoteWindow,
     taiwanQuoteRefreshDelay, scheduleAdaptiveRefresh, startCryptoTickerStream,
     fetchJson, fetchTaiwanLiveQuotes, fetchTaiwanIndicesLive, fetchYahooChart,

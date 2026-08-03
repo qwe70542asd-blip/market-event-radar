@@ -23,8 +23,8 @@ for attempt in 1 2 3 4; do
   git config user.email "actions@users.noreply.github.com"
   git remote add origin "$REMOTE"
 
-  if git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1; then
-    git fetch --depth=1 origin "$BRANCH"
+  if timeout 45s git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1; then
+    timeout 90s git fetch --depth=1 origin "$BRANCH"
     git checkout -q -B "$BRANCH" FETCH_HEAD
   else
     git checkout -q --orphan "$BRANCH"
@@ -77,7 +77,7 @@ for name in files:
     entries.append(row)
 
 manifest = {
-    "version": "v11.2.2",
+    "version": "v11.2.3",
     "channel": channel,
     "branch": branch,
     "published_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -98,8 +98,8 @@ PY
     exit 0
   fi
 
-  git commit -q -m "chore: refresh ${CHANNEL} v11.2.2"
-  if git push origin "HEAD:${BRANCH}"; then
+  git commit -q -m "chore: refresh ${CHANNEL} v11.2.3"
+  if timeout 90s git push origin "HEAD:${BRANCH}"; then
     echo "${BRANCH}: publish complete"
     exit 0
   fi

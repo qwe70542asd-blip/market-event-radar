@@ -1,25 +1,20 @@
-市場事件雷達 v11.2.2 驗證
+市場事件雷達 v11.2.3 最終驗證
 
-- JSON：通過
-- Python：通過
-- JavaScript：通過
-- Shell：通過
-- Workflow YAML：通過
-- HTML references：通過
-- Unit tests：通過
-- Event legacy bootstrap：通過
-- Chip latest-date lookback：通過
-- Portfolio legacy recovery：通過
-- Version consistency：通過
+總結果：PASS
+總耗時：5.2 秒（硬性上限 900 秒）
 
-已修正：
-- Taiwan chips 盤中執行時，自動向前尋找最近有資料的官方交易日。
-- 官方籌碼來源暫時失敗時，保留上一筆，不再讓整個分支失敗。
-- live-events 尚未建立時，自動從舊 live-data 搬移最後已驗證事件。
-- 投資組合額外搜尋未知舊版 localStorage key。
-- 虛擬貨幣 WebSocket 7 秒未連線時自動啟用備援。
+- JSON：通過（0.001 秒）
+- Python compile：通過（0.674 秒）
+- JavaScript syntax：通過（0.237 秒）
+- Shell syntax：通過（0.004 秒）
+- Workflow YAML and <15m ceiling：通過（0.014 秒）
+- HTML references：通過（0.002 秒）
+- Version and no audio：通過（0.003 秒）
+- Unit tests：通過（0.822 秒）
+- Workflow parser smoke：通過（0.737 秒）
+- Browser E2E：通過（2.696 秒）
 
-單元測試：24 項通過。
-
-詳細錯誤：
-old version in README.md
+瀏覽器端到端頁面：首頁、台股排行、法人籌碼、財經新聞、資料狀態。
+根本修正：shared.js 不再輸出未宣告的 LIVE_BASE；改用 LEGACY_LIVE_BASE。
+Workflow：六個工作全部 timeout-minutes 14。
+音訊檔：無。

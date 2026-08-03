@@ -1,4 +1,4 @@
-name: Update v11.2.2 Taiwan chips
+name: Update v11.2.3 Taiwan chips
 
 on:
   push:
@@ -23,7 +23,7 @@ concurrency:
 jobs:
   taiwan-chips:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 14
     env:
       DATA_BRANCH: live-tw-chips
     steps:

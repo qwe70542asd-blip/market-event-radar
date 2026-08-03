@@ -62,7 +62,7 @@ footer{display:flex;justify-content:space-between;gap:12px;margin-top:16px;paddi
 }
 
 
-/* v11.2.2 compact layout and clean background */
+/* v11.2.3 compact layout and clean background */
 .noise { display:none !important; }
 body {
   background:
@@ -185,7 +185,7 @@ th,td { padding:9px 7px; }
 }
 
 
-/* v11.2.2 homepage hierarchy, index rail and natural-height side panels */
+/* v11.2.3 homepage hierarchy, index rail and natural-height side panels */
 .feature-strip {
   margin:0 0 9px;
   gap:8px;
@@ -418,7 +418,7 @@ th,td { padding:9px 7px; }
 }
 
 
-/* v11.2.2 independent data-channel status */
+/* v11.2.3 independent data-channel status */
 .channel-grid{
   display:grid;
   grid-template-columns:repeat(3,minmax(0,1fr));

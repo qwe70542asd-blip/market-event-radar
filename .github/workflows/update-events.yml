@@ -1,4 +1,4 @@
-name: Update v11.2.2 event calendar
+name: Update v11.2.3 event calendar
 
 on:
   push:
@@ -30,7 +30,7 @@ concurrency:
 jobs:
   events:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 14
     env:
       DATA_BRANCH: live-events
     steps:

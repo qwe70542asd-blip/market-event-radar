@@ -21,7 +21,7 @@ OUT=DATA/"tw-chips.json"
 SEED=DATA/"tw-chips-seed.js"
 NOW=datetime.now(ZoneInfo("Asia/Taipei"))
 HEADERS={
-    "User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.2.2)",
+    "User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.2.3)",
     "Accept-Language":"zh-TW,zh;q=0.9",
 }
 TWSE_T86="https://www.twse.com.tw/rwd/zh/fund/T86"
@@ -36,7 +36,7 @@ def number(value):
         return None
 
 
-def candidate_trade_dates(days: int=14):
+def candidate_trade_dates(days: int=7):
     date=NOW.date()
     output=[]
     while len(output)<days:
@@ -81,7 +81,7 @@ def fetch_twse(session: requests.Session, date: str):
             TWSE_T86,
             params={"date":date,"selectType":"ALLBUT0999","response":"json"},
             headers=HEADERS,
-            timeout=35,
+            timeout=10,
         )
         response.raise_for_status()
         payload=response.json()
@@ -122,7 +122,7 @@ def fetch_twse(session: requests.Session, date: str):
             TWSE_MARGIN,
             params={"date":date,"selectType":"MS","response":"json"},
             headers=HEADERS,
-            timeout=35,
+            timeout=10,
         )
         response.raise_for_status()
         payload=response.json()
@@ -175,7 +175,7 @@ def main()->None:
             market=current
             items=current_items
             break
-        time.sleep(.3)
+        time.sleep(.1)
 
     previous_markets=previous.get("markets") or {}
     previous_items=previous.get("items") or {}
@@ -184,7 +184,7 @@ def main()->None:
         markets={**previous_markets,"twse":market}
         payload={
             "metadata":{
-                "version":"v11.2.2",
+                "version":"v11.2.3",
                 "updated_at":NOW.isoformat(timespec="seconds"),
                 "trading_date":chosen_date,
                 "source":"TWSE 官方盤後資料",
@@ -202,7 +202,7 @@ def main()->None:
             **previous,
             "metadata":{
                 **(previous.get("metadata") or {}),
-                "version":"v11.2.2",
+                "version":"v11.2.3",
                 "updated_at":(previous.get("metadata") or {}).get("updated_at") or NOW.isoformat(timespec="seconds"),
                 "last_attempt_at":NOW.isoformat(timespec="seconds"),
                 "status":"warning",

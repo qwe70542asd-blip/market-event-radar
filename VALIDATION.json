@@ -1,0 +1,47 @@
+{
+  "status": "PASS",
+  "results": {
+    "JSON": {
+      "ok": true,
+      "seconds": 0.001
+    },
+    "Python compile": {
+      "ok": true,
+      "seconds": 0.674
+    },
+    "JavaScript syntax": {
+      "ok": true,
+      "seconds": 0.237
+    },
+    "Shell syntax": {
+      "ok": true,
+      "seconds": 0.004
+    },
+    "Workflow YAML and <15m ceiling": {
+      "ok": true,
+      "seconds": 0.014
+    },
+    "HTML references": {
+      "ok": true,
+      "seconds": 0.002
+    },
+    "Version and no audio": {
+      "ok": true,
+      "seconds": 0.003
+    },
+    "Unit tests": {
+      "ok": true,
+      "seconds": 0.822
+    },
+    "Workflow parser smoke": {
+      "ok": true,
+      "seconds": 0.737
+    },
+    "Browser E2E": {
+      "ok": true,
+      "seconds": 2.696
+    },
+    "total_seconds": 5.2
+  },
+  "details": []
+}

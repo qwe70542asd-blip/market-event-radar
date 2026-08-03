@@ -34,7 +34,7 @@ SEED = DATA / "assets-seed.js"
 COVERAGE_OUT = DATA / "asset-coverage.json"
 NOW = datetime.now(ZoneInfo("Asia/Taipei"))
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.2.2)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.2.3)",
     "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.7",
     "Accept": "application/json,text/plain,*/*",
 }
@@ -196,7 +196,7 @@ def load_previous() -> dict:
         return {"assets": []}
 
 
-def get_json(session: requests.Session, url: str, timeout=45):
+def get_json(session: requests.Session, url: str, timeout=18):
     response = session.get(url, headers=HEADERS, timeout=timeout)
     response.raise_for_status()
     payload = response.json()
@@ -265,7 +265,7 @@ def normalize_master(row: dict, exchange: str, cls: str) -> dict | None:
 
 def swagger_info(session: requests.Session):
     try:
-        response = session.get(TPEX_SWAGGER, headers=HEADERS, timeout=30)
+        response = session.get(TPEX_SWAGGER, headers=HEADERS, timeout=15)
         response.raise_for_status()
         spec = response.json()
         scheme = (spec.get("schemes") or ["https"])[0]
@@ -334,7 +334,7 @@ def fetch_mops_history(session: requests.Session, endpoint: str, market: str, qu
     if endpoint.startswith("ajax_"):
         endpoints.append(endpoint.removeprefix("ajax_"))
     try:
-        session.get("https://mops.twse.com.tw/mops/web/index", headers=HEADERS, timeout=20)
+        session.get("https://mops.twse.com.tw/mops/web/index", headers=HEADERS, timeout=12)
     except Exception:
         pass
 
@@ -349,7 +349,7 @@ def fetch_mops_history(session: requests.Session, endpoint: str, market: str, qu
                         "encodeURIComponent":"1","step":"1","firstin":"1","off":"1","isQuery":"Y",
                         "TYPEK":market,"year":str(roc_year),"season":f"{quarter:02d}"
                     }, headers={**HEADERS, "Content-Type":"application/x-www-form-urlencoded",
-                                "Referer":f"https://mops.twse.com.tw/mops/web/{endpoint_name.removeprefix('ajax_')}"}, timeout=70)
+                                "Referer":f"https://mops.twse.com.tw/mops/web/{endpoint_name.removeprefix('ajax_')}"}, timeout=18)
                     response.raise_for_status()
                     response.encoding = "utf-8"
                     tables = read_html_tables(response.text)
@@ -384,10 +384,10 @@ def fetch_mops_history(session: requests.Session, endpoint: str, market: str, qu
                 except Exception as exc:
                     if attempt == 1:
                         print("warning MOPS history", endpoint_name, market, year, quarter, exc)
-                    time.sleep(.8)
+                    time.sleep(.15)
             if parsed_this_period:
                 break
-        time.sleep(.25)
+        time.sleep(.08)
     return rows
 
 def fetch_financial_rows(session: requests.Session, urls: list[str]) -> list[dict]:
@@ -800,7 +800,7 @@ def main() -> None:
     }
     coverage_payload = {
         "metadata": {
-            "version":"v11.2.2","updated_at":NOW.isoformat(timespec="seconds"),
+            "version":"v11.2.3","updated_at":NOW.isoformat(timespec="seconds"),
             "source":"TWSE／TPEx official OpenAPI coverage audit"
         },
         "summary": {
@@ -849,7 +849,7 @@ def main() -> None:
 
     payload = {
         "metadata": {
-            "version": "v11.2.2", "updated_at": NOW.isoformat(timespec="seconds"),
+            "version": "v11.2.3", "updated_at": NOW.isoformat(timespec="seconds"),
             "asset_count": len(rows), "official_rows": official_rows,
             "financially_enriched_stocks": enriched,
             "income_rows": len(income_rows), "balance_rows": len(balance_rows),

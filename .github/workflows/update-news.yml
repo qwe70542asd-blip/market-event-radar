@@ -1,4 +1,4 @@
-name: Update v11.2.2 multi-source news
+name: Update v11.2.3 multi-source news
 
 on:
   push:
@@ -29,7 +29,7 @@ concurrency:
 jobs:
   news:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 14
     env:
       DATA_BRANCH: live-news
     steps:
@@ -52,7 +52,7 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.clean_rebuild }}
         run: |
           cat > data/news.json <<'JSON'
-          {"metadata":{"version":"v11.2.2"},"items":[],"sources":[]}
+          {"metadata":{"version":"v11.2.3"},"items":[],"sources":[]}
           JSON
           printf '{}\n' > data/news-link-cache.json
       - run: python scripts/update_news.py

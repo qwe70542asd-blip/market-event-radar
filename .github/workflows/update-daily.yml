@@ -1,4 +1,4 @@
-name: Update v11.2.2 assets and financials
+name: Update v11.2.3 assets and financials
 
 on:
   push:
@@ -30,7 +30,7 @@ concurrency:
 jobs:
   assets:
     runs-on: ubuntu-latest
-    timeout-minutes: 55
+    timeout-minutes: 14
     env:
       DATA_BRANCH: live-assets
     steps:

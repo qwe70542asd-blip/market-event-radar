@@ -54,7 +54,7 @@ def main()->None:
     events=sorted(merged.values(),key=lambda row:row["start"])
     if not events and previous.get("events"):
         raise SystemExit("No events after merge; previous archive was not replaced.")
-    payload={"metadata":{"version":"v11.2.2","updated_at":NOW.isoformat(timespec="seconds"),
+    payload={"metadata":{"version":"v11.2.3","updated_at":NOW.isoformat(timespec="seconds"),
         "timezone":"Asia/Taipei","event_count":len(events),
         "note":"Verified previous archive plus manual official-source events; no guessed dates."},
         "sources":previous.get("sources") or [],"events":events}
