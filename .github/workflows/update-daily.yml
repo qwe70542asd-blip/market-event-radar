@@ -1,4 +1,4 @@
-name: Update v11.1.3 daily data
+name: Update v11.1.4 daily data
 
 on:
   push:
@@ -37,6 +37,14 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: pip install -r requirements.txt
+      - name: Verify HTML parser dependencies
+        run: |
+          python - <<'PY'
+          import pandas, lxml, html5lib
+          print("pandas", pandas.__version__)
+          print("lxml", lxml.__version__)
+          print("html5lib", html5lib.__version__)
+          PY
       - name: Restore last successful dynamic files
         shell: bash
         run: |
@@ -94,5 +102,5 @@ jobs:
           done
           git add .
           if git diff --cached --quiet; then exit 0; fi
-          git commit -m "chore: refresh daily data v11.1.3"
+          git commit -m "chore: refresh daily data v11.1.4"
           git push origin "HEAD:$LIVE_BRANCH"

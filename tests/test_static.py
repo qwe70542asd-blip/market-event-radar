@@ -73,6 +73,16 @@ class StaticTests(unittest.TestCase):
         self.assertAlmostEqual(metrics["current_ratio"],2.0)
 
 
+
+    def test_mops_parser_dependencies(self):
+        requirements=(ROOT/"requirements.txt").read_text(encoding="utf-8")
+        updater=(ROOT/"scripts/update_assets.py").read_text(encoding="utf-8")
+        workflow=(ROOT/".github/workflows/update-daily.yml").read_text(encoding="utf-8")
+        self.assertIn("html5lib>=1.1,<2", requirements)
+        self.assertIn("def read_html_tables", updater)
+        self.assertIn('for flavor in ("lxml", "html5lib")', updater)
+        self.assertIn("Verify HTML parser dependencies", workflow)
+
     def test_one_minute_live_refresh(self):
         shared=(ROOT/"assets/shared.js").read_text(encoding="utf-8")
         home=(ROOT/"assets/home.js").read_text(encoding="utf-8")

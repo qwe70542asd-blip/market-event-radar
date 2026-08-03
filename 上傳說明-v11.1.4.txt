@@ -1,0 +1,20 @@
+市場事件雷達 v11.1.4 修正版
+
+這版只修正 daily data 的 MOPS 財報解析依賴錯誤。
+
+錯誤原因：
+Missing optional dependency 'html5lib'
+
+修正內容：
+- requirements.txt 新增 html5lib。
+- MOPS 表格先用 lxml，失敗時自動改用 html5lib。
+- Workflow 執行前驗證三個解析套件。
+- 1595 EPS 驗證仍保留。
+
+上傳步驟：
+1. 取消仍在排隊的舊版 daily data。
+2. 解壓縮 market-event-radar-v11.1.4-complete.zip。
+3. 將資料夾內全部檔案覆蓋到 GitHub Desktop 的倉庫根目錄。
+4. Commit to main，再 Push origin。
+5. 到 Actions 只執行一次 Update v11.1.4 daily data。
+6. daily data 成功後，再執行 Taiwan market 與 multi-source news。

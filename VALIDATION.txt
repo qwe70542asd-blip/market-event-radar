@@ -1,4 +1,4 @@
-市場事件雷達 v11.1.3 驗證
+市場事件雷達 v11.1.4 驗證
 
 - JSON：通過
 - Python：通過
@@ -7,24 +7,14 @@
 - GitHub Actions YAML：通過
 - Unit tests：通過
 - Version consistency：通過
-- Coverage workflow：通過
+- Parser dependency fix：通過
 
-單元測試：13 項通過
+本版修正的錯誤：
+Missing optional dependency 'html5lib'
 
-重點檢查：
-1. 所有 JSON 可解析。
-2. Python 更新程式可編譯。
-3. JavaScript 與 Service Worker 語法正確。
-4. HTML 本機檔案引用完整。
-5. GitHub Actions YAML 可解析。
-6. 台灣加權與櫃買指數有 TWSE MIS 每 60 秒刷新。
-7. 首頁、投資組合與單一股票頁有每分鐘行情刷新。
-8. TWSE MIS 失敗時保留 GitHub live-data 備援。
-9. 最近四季 MOPS 損益表、資產負債表與營益分析回補。
-10. 上市／上櫃 EPS、估值、月營收與股利整合。
-11. 全市場 asset-coverage.json 覆蓋稽核。
-12. coverage.html 缺漏查詢頁。
-13. 1595 官方 EPS 回歸驗證；失敗時停止發布。
-
-外部來源的實際連線需在 GitHub Actions 執行後驗證。
-瀏覽器直連 TWSE MIS 若遭來源端限制，會自動退回每 5 分鐘更新的 live-data，不顯示假值。
+修正驗證：
+- requirements.txt 已包含 html5lib。
+- MOPS HTML 先以 lxml 解析。
+- lxml 失敗時改用 html5lib。
+- Workflow 執行前檢查 pandas、lxml、html5lib。
+- 1595 EPS 回歸驗證仍保留。

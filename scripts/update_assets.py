@@ -34,7 +34,7 @@ SEED = DATA / "assets-seed.js"
 COVERAGE_OUT = DATA / "asset-coverage.json"
 NOW = datetime.now(ZoneInfo("Asia/Taipei"))
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.1.3)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.1.4)",
     "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.7",
     "Accept": "application/json,text/plain,*/*",
 }
@@ -313,6 +313,21 @@ def flatten_columns(columns) -> list[str]:
     return output
 
 
+def read_html_tables(html_text: str):
+    """Parse MOPS HTML with an explicit fallback chain.
+
+    MOPS occasionally returns malformed HTML that lxml rejects. Pandas then
+    needs html5lib for the fallback parser, so both engines are supported.
+    """
+    errors = []
+    for flavor in ("lxml", "html5lib"):
+        try:
+            return pd.read_html(StringIO(html_text), header=None, flavor=flavor)
+        except Exception as exc:
+            errors.append(f"{flavor}: {exc}")
+    raise RuntimeError("Unable to parse MOPS HTML; " + " | ".join(errors))
+
+
 def fetch_mops_history(session: requests.Session, endpoint: str, market: str, quarters: list[tuple[int,int]]) -> list[dict]:
     rows: list[dict] = []
     endpoints = [endpoint]
@@ -337,7 +352,7 @@ def fetch_mops_history(session: requests.Session, endpoint: str, market: str, qu
                                 "Referer":f"https://mops.twse.com.tw/mops/web/{endpoint_name.removeprefix('ajax_')}"}, timeout=70)
                     response.raise_for_status()
                     response.encoding = "utf-8"
-                    tables = pd.read_html(StringIO(response.text), header=None)
+                    tables = read_html_tables(response.text)
                     period_rows = []
                     for table in tables:
                         if table.empty:
@@ -617,7 +632,22 @@ def rank_assets(assets: list[dict]) -> None:
             asset.setdefault("rankings", {})["industry_total"] = total
 
 
+def dependency_preflight() -> None:
+    missing = []
+    for module_name in ("pandas", "lxml", "html5lib"):
+        try:
+            __import__(module_name)
+        except Exception:
+            missing.append(module_name)
+    if missing:
+        raise SystemExit(
+            "Missing HTML parser dependencies: " + ", ".join(missing) +
+            ". Run pip install -r requirements.txt."
+        )
+
+
 def main() -> None:
+    dependency_preflight()
     previous = load_previous()
     previous_map = {row.get("id"): row for row in previous.get("assets", []) if row.get("id")}
     session = requests.Session()
@@ -770,7 +800,7 @@ def main() -> None:
     }
     coverage_payload = {
         "metadata": {
-            "version":"v11.1.3","updated_at":NOW.isoformat(timespec="seconds"),
+            "version":"v11.1.4","updated_at":NOW.isoformat(timespec="seconds"),
             "source":"TWSE／TPEx official OpenAPI coverage audit"
         },
         "summary": {
@@ -801,7 +831,7 @@ def main() -> None:
         raise SystemExit("Coverage regression: TPEx stock 1595 has no official EPS.")
     payload = {
         "metadata": {
-            "version": "v11.1.3", "updated_at": NOW.isoformat(timespec="seconds"),
+            "version": "v11.1.4", "updated_at": NOW.isoformat(timespec="seconds"),
             "asset_count": len(rows), "official_rows": official_rows,
             "financially_enriched_stocks": enriched,
             "income_rows": len(income_rows), "balance_rows": len(balance_rows),

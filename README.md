@@ -1,6 +1,11 @@
-# 市場事件雷達｜v11.1.3 完整整合版
+# 市場事件雷達｜v11.1.4 完整整合版
 
-## v11.1.3 修正
+## v11.1.4 修正
+
+- 修正 GitHub Actions 的 MOPS 財報解析錯誤：補上 `html5lib` 依賴。
+- MOPS HTML 解析改為先使用 `lxml`，失敗時自動改用 `html5lib`。
+- `daily data` 在抓資料前會先檢查 pandas、lxml、html5lib，依賴缺少時會直接顯示明確錯誤。
+- 保留 1595 EPS 回歸驗證；解析器正常後仍會阻止不完整資料發布。
 
 - 台灣加權、櫃買指數與首頁／個股／投資組合行情，瀏覽器每 60 秒主動向 TWSE MIS 重新抓取；失敗時退回 GitHub `live-data` 備援。
 - GitHub Actions 仍以每 5 分鐘更新完整台股行情，因 GitHub 排程無法保證每分鐘執行。
@@ -35,19 +40,19 @@
 - 新聞改為多來源：Yahoo、鉅亨、MoneyDJ，並以限定網域的 RSS 搜尋補充永豐、元大、國泰、凱基與富邦等券商／投顧來源。
 - 新聞保留 20 天、標題去重、失敗來源不會用空白檔覆蓋上次成功資料。
 - 月曆依實際週數平均分配高度：5 週月份平均拉高每一列，6 週月份維持合理高度。
-- PWA 快取版本更新為 `v11.1.3`。
+- PWA 快取版本更新為 `v11.1.4`。
 
 ## 上傳方式
 
 1. 解壓縮本檔案。
-2. 進入 `market-event-radar-v11.1.3-complete` 資料夾。
+2. 進入 `market-event-radar-v11.1.4-complete` 資料夾。
 3. 將資料夾「裡面的全部檔案與資料夾」上傳到 GitHub 倉庫根目錄。
 4. 選擇覆蓋同名檔案並提交。
 5. 不要刪除既有 `live-data` 分支；網站會沿用上次成功的事件、新聞與市場資料。
 6. 到 **Actions** 手動執行一次：
-   - `Update v11.1.3 daily data`
-   - `Update v11.1.3 Taiwan market`
-   - `Update v11.1.3 multi-source news`
+   - `Update v11.1.4 daily data`
+   - `Update v11.1.4 Taiwan market`
+   - `Update v11.1.4 multi-source news`
 7. GitHub Pages 發布完成後，使用 `Ctrl + F5` 重新整理一次。
 
 ## 資料更新架構

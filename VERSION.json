@@ -1,16 +1,14 @@
 {
   "project": "market-event-radar",
-  "baseline_version": "11.1.3",
-  "label": "v11.1.3-complete-integration",
-  "updated_at": "2026-08-03T09:20:00+08:00",
+  "baseline_version": "11.1.4",
+  "label": "v11.1.4-complete-integration",
+  "updated_at": "2026-08-03T09:38:00+08:00",
   "features": [
+    "MOPS html5lib dependency fix",
+    "lxml to html5lib parser fallback",
+    "workflow parser dependency preflight",
+    "1595 EPS regression validation",
     "browser-side 60-second TWSE MIS quote refresh",
-    "five-minute GitHub live-data fallback",
-    "official TAIEX and TPEx index refresh",
-    "market-wide stock financial coverage audit",
-    "four-quarter MOPS historical backfill",
-    "official EPS valuation revenue dividend integration",
-    "coverage dashboard and 1595 regression validation",
-    "news clustering and ETF manager metadata"
+    "market-wide stock financial coverage audit"
   ]
 }
