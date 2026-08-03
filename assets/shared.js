@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const VERSION = "11.2.4";
+  const VERSION = "11.2.5";
   const OWNER = "qwe70542asd-blip";
   const REPO = "market-event-radar";
   const LEGACY_LIVE_BASE = `https://raw.githubusercontent.com/${OWNER}/${REPO}/live-data/`;
@@ -342,6 +342,12 @@
     return Number.isFinite(number) ? number : null;
   }
 
+  function quoteLevelList(value) {
+    return String(value ?? "").split("_")
+      .map(item => quoteNumber(item))
+      .filter(item => item !== null);
+  }
+
   function quotePrice(row) {
     for (const key of ["z","b","a","y"]) {
       const value = quoteNumber(row?.[key]);
@@ -375,14 +381,22 @@
           const previous = quoteNumber(row.y);
           const price = quotePrice(row);
           const change = price !== null && previous !== null ? price - previous : null;
+          const askPrices=quoteLevelList(row.a);
+          const bidPrices=quoteLevelList(row.b);
+          const askVolumes=quoteLevelList(row.f);
+          const bidVolumes=quoteLevelList(row.g);
           output.push({
             symbol, exchange, name:String(row.n || symbol).trim(),
+            full_name:String(row.nf || row.n || symbol).trim(),
             price, previous_close:previous, change,
             change_percent:change !== null && previous ? change / previous * 100 : null,
             open:quoteNumber(row.o), high:quoteNumber(row.h), low:quoteNumber(row.l),
-            volume:quoteNumber(row.v), quote_date:String(row.d || ""),
-            quote_time:String(row.t || row.ot || ""), status:"mis-browser",
-            market_at:quoteNumber(row.tlong), source:"TWSE MIS"
+            upper_limit:quoteNumber(row.u), lower_limit:quoteNumber(row.w),
+            volume:quoteNumber(row.v), last_trade_volume:quoteNumber(row.tv ?? row.s),
+            bid_prices:bidPrices, bid_volumes:bidVolumes,
+            ask_prices:askPrices, ask_volumes:askVolumes,
+            quote_date:String(row.d || ""), quote_time:String(row.t || row.ot || ""),
+            status:"mis-browser", market_at:quoteNumber(row.tlong), source:"TWSE MIS"
           });
         }
       } catch (error) {
@@ -451,6 +465,81 @@
       }
     }
     return null;
+  }
+
+  function yahooTaiwanSymbol(asset) {
+    const symbol=String(asset?.symbol||asset||"").toUpperCase();
+    const exchange=String(asset?.exchange||"").toUpperCase();
+    if(!symbol)return"";
+    return `${symbol}.${exchange.includes("TPEX")||exchange.includes("OTC")?"TWO":"TW"}`;
+  }
+
+  async function fetchTaiwanSeries(asset,{range="1d",interval="1m",timeout=9000}={}) {
+    const yahooSymbol=yahooTaiwanSymbol(asset);
+    if(!yahooSymbol)return null;
+    const encoded=encodeURIComponent(yahooSymbol);
+    const endpoints=[
+      `https://query1.finance.yahoo.com/v8/finance/chart/${encoded}?range=${encodeURIComponent(range)}&interval=${encodeURIComponent(interval)}&includePrePost=false&events=div%2Csplits`,
+      `https://query2.finance.yahoo.com/v8/finance/chart/${encoded}?range=${encodeURIComponent(range)}&interval=${encodeURIComponent(interval)}&includePrePost=false&events=div%2Csplits`
+    ];
+    for(const url of endpoints){
+      try{
+        const payload=await fetchJson(url,timeout);
+        const result=payload?.chart?.result?.[0];
+        if(!result)continue;
+        const quote=result?.indicators?.quote?.[0]||{};
+        const timestamps=result.timestamp||[];
+        const rows=timestamps.map((timestamp,index)=>({
+          timestamp:Number(timestamp)*1000,
+          open:finite(quote.open?.[index]),
+          high:finite(quote.high?.[index]),
+          low:finite(quote.low?.[index]),
+          close:finite(quote.close?.[index]),
+          volume:finite(quote.volume?.[index])
+        })).filter(row=>row.close!==null);
+        return {
+          symbol:yahooSymbol,
+          meta:result.meta||{},
+          rows,
+          source:"Yahoo chart",
+          fetched_at:new Date().toISOString()
+        };
+      }catch(error){
+        console.warn("Taiwan series fetch failed:",yahooSymbol,error);
+      }
+    }
+    return null;
+  }
+
+  function seriesReturn(rows,days){
+    const usable=(rows||[]).filter(row=>finite(row.close)!==null);
+    if(usable.length<2)return null;
+    const latest=usable[usable.length-1];
+    const target=latest.timestamp-days*86400000;
+    let previous=usable[0];
+    for(const row of usable){
+      if(row.timestamp<=target)previous=row;
+      else break;
+    }
+    return previous.close ? (latest.close-previous.close)/previous.close*100 : null;
+  }
+
+  function buildPriceDistribution(rows,{buckets=12}={}) {
+    const usable=(rows||[]).filter(row=>finite(row.close)!==null&&finite(row.volume)!==null&&row.volume>0);
+    if(!usable.length)return[];
+    const prices=usable.map(row=>row.close);
+    const min=Math.min(...prices),max=Math.max(...prices);
+    const step=max>min?(max-min)/Math.max(1,buckets-1):Math.max(min*.001,0.01);
+    const map=new Map();
+    for(const row of usable){
+      const index=max>min?Math.min(buckets-1,Math.max(0,Math.round((row.close-min)/step))):0;
+      const key=min+index*step;
+      const current=map.get(index)||{price:key,volume:0,count:0};
+      current.volume+=row.volume||0;
+      current.count+=1;
+      map.set(index,current);
+    }
+    return [...map.values()].sort((a,b)=>b.price-a.price);
   }
 
   function mergeQuoteItems(baseItems=[], updates=[]) {
@@ -853,6 +942,7 @@
     $, $$, normalize, escapeHtml, finite, taipeiClockParts, isTaiwanQuoteWindow,
     taiwanQuoteRefreshDelay, scheduleAdaptiveRefresh, startCryptoTickerStream,
     fetchJson, fetchTaiwanLiveQuotes, fetchTaiwanIndicesLive, fetchYahooChart,
+    fetchTaiwanSeries, yahooTaiwanSymbol, seriesReturn, buildPriceDistribution,
     mergeQuoteItems, loadData, loadChannelManifest, dataBranchFor, dataChannelUrl, DATA_CHANNELS,
     canonicalAsset, mergeAssets,
     searchAssets, resolveAsset, loadPortfolio, migratePortfolio, savePortfolio,

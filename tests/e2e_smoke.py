@@ -10,7 +10,15 @@ NOW='2026-08-03T11:40:00+08:00'
 def assets():
     rows=[]
     for i,sym in enumerate(['00403A','0050','006208','00631L','009816','00981A','2330','2382','3231','2317','2454','2603']):
-        rows.append({'id':f'TW:{sym}','symbol':sym,'name':{'2330':'台積電','2382':'廣達','3231':'緯創','2317':'鴻海','2454':'聯發科','2603':'長榮','00403A':'主動統一升級50','0050':'元大台灣50','006208':'富邦台50','00631L':'元大台灣50正2','009816':'凱基台灣TOP50','00981A':'主動統一台股增長'}[sym], 'market':'TW','exchange':'TWSE','asset_class':'etf' if sym.startswith('00') else 'stock','currency':'TWD'})
+        row={'id':f'TW:{sym}','symbol':sym,'name':{'2330':'台積電','2382':'廣達','3231':'緯創','2317':'鴻海','2454':'聯發科','2603':'長榮','00403A':'主動統一升級50','0050':'元大台灣50','006208':'富邦台50','00631L':'元大台灣50正2','009816':'凱基台灣TOP50','00981A':'主動統一台股增長'}[sym], 'market':'TW','exchange':'TWSE','asset_class':'etf' if sym.startswith('00') else 'stock','currency':'TWD'}
+        if sym=='2330':
+            row.update({'official_industry':'半導體業','sub_industry':'晶圓代工',
+              'metrics':{'eps':42.3,'pe':23.6,'pb':7.1,'dividend_yield':1.7,'roe':31.2,'debt_ratio':22.5,'current_ratio':2.1,'net_margin':39.4},
+              'profile':{'full_name':'台灣積體電路製造股份有限公司','issued_shares':25930380458,'paid_in_capital':259303804580,'listing_date':'1994/09/05'},
+              'financials':[{'year':2026,'quarter':2,'revenue':900000000000,'operating_income':450000000000,'net_income':350000000000,'eps':13.5,'total_assets':7000000000000,'total_liabilities':1600000000000,'equity':5400000000000}],
+              'dividend':{'cash_dividend':6,'stock_dividend':0,'ex_dividend_date':'2026/09/01','announcement_date':'2026/07/15'},
+              'analysis_coverage':{'count':8,'missing':[]}})
+        rows.append(row)
     return {'metadata':{'updated_at':NOW},'assets':rows}
 
 def tw_market():
@@ -21,7 +29,7 @@ def tw_market():
         rows.append({'symbol':sym,'name':f'測試股票{i}','exchange':'TWSE' if i%2==0 else 'TPEx','asset_class':'stock','price':50+i,'previous_close':50+i-pct/100*(50+i),'change_percent':pct,'change':pct/100*(50+i),'volume':1000+i*100})
     # ensure portfolio names too
     rows.extend([
-      {'symbol':'2330','name':'台積電','exchange':'TWSE','asset_class':'stock','price':1000,'previous_close':990,'change_percent':1.01,'change':10,'volume':100000},
+      {'symbol':'2330','name':'台積電','exchange':'TWSE','asset_class':'stock','price':1000,'previous_close':990,'change_percent':1.01,'change':10,'open':995,'high':1010,'low':992,'volume':100000},
       {'symbol':'00631L','name':'元大台灣50正2','exchange':'TWSE','asset_class':'etf','price':35,'previous_close':34.5,'change_percent':1.45,'change':.5,'volume':50000},
     ])
     return {'metadata':{'updated_at':NOW,'trading_date':'20260803'},'items':rows}
@@ -44,6 +52,7 @@ def chips():
             'total_net':1150000-i*100000,
             'margin':{'previous_balance':1000+i*10,'buy':100,'sell':80,'cash_repayment':2,'balance':1018+i*10,'limit':5000,'utilization_percent':20.36},
             'short':{'previous_balance':100,'sell':20,'buy':10,'repayment':0,'balance':110,'limit':5000,'utilization_percent':2.2},
+            'day_trading':{'eligible':True,'volume':500000,'buy_amount':250000000,'sell_amount':252000000,'volume_ratio_percent':12.5,'amount_ratio_percent':13.2},
             'offset_shares':5,'note':''
         }
     tpex={
@@ -53,16 +62,19 @@ def chips():
         'dealer_buy':20000,'dealer_sell':15000,'dealer_net':5000,'total_net':245000,
         'margin':{'previous_balance':600,'buy':40,'sell':20,'cash_repayment':0,'balance':620,'limit':3000,'utilization_percent':20.67},
         'short':{'previous_balance':20,'sell':5,'buy':2,'repayment':0,'balance':23,'limit':3000,'utilization_percent':0.77},
+        'day_trading':{'eligible':True,'volume':120000,'buy_amount':30000000,'sell_amount':30100000,'volume_ratio_percent':8.1,'amount_ratio_percent':8.4},
         'offset_shares':1,'note':''
     }
     items['tpex:6488']=tpex
     markets={
       'twse':{'institutional':{'foreign_net':4000000,'trust_net':1000000,'dealer_net':-250000,'total_net':4750000},
               'margin':{'previous_balance':5100,'balance':5190,'change':90},
-              'short':{'previous_balance':500,'balance':550,'change':50},'stock_count':5},
+              'short':{'previous_balance':500,'balance':550,'change':50},
+              'day_trading':{'volume':500000,'buy_amount':250000000,'sell_amount':252000000,'stock_count':1},'stock_count':5},
       'tpex':{'institutional':{'foreign_net':200000,'trust_net':40000,'dealer_net':5000,'total_net':245000},
               'margin':{'previous_balance':600,'balance':620,'change':20},
-              'short':{'previous_balance':20,'balance':23,'change':3},'stock_count':1}
+              'short':{'previous_balance':20,'balance':23,'change':3},
+              'day_trading':{'volume':120000,'buy_amount':30000000,'sell_amount':30100000,'stock_count':1},'stock_count':1}
     }
     snapshot={'date':'20260801','markets':markets,'items':items}
     return {'metadata':{'updated_at':NOW,'trading_date':'20260801','status':'ok'},
@@ -70,9 +82,13 @@ def chips():
 
 
 def news():
-    return {'metadata':{'updated_at':NOW,'retention_days':20},'items':[{'id':f'n{i}','title':f'財經新聞 {i}','source':['鉅亨網','MoneyDJ','Yahoo股市'][i%3],'published_at':NOW,'link':'https://example.org/news'} for i in range(12)]}
+    items=[{'id':f'n{i}','title':f'財經新聞 {i}','source':['鉅亨網','MoneyDJ','Yahoo股市'][i%3],'published_at':NOW,'link':'https://example.org/news'} for i in range(12)]
+    items.append({'id':'tsmc','title':'台積電 2330 最新營運消息','summary':'測試個股新聞','source':'臺灣證券交易所','published_at':NOW,'link':'https://example.org/tsmc'})
+    return {'metadata':{'updated_at':NOW,'retention_days':20},'items':items}
 
-PAYLOADS={'assets.json':assets(),'tw-market.json':tw_market(),'events.json':events(),'market-snapshot.json':market(),'tw-chips.json':chips(),'news.json':news(),'asset-coverage.json':{'summary':{'total_stocks':1200},'metadata':{'updated_at':NOW}}}
+PAYLOADS={'assets.json':assets(),'tw-market.json':tw_market(),'events.json':events(),'market-snapshot.json':market(),'tw-chips.json':chips(),'news.json':news(),
+'asset-coverage.json':{'summary':{'total_stocks':1200,'complete':100,'partial_or_basic':1099,'missing':1,'field_counts':{'eps':1000,'pe':1100}},
+'metadata':{'updated_at':NOW},'missing_stocks':[{'symbol':'2330','name':'台積電','exchange':'TWSE','industry':'半導體業','missing':['eps','roe']}],'partial_stocks':[]}}
 
 PRELUDE='''<script>
 const __ls={"market-radar-portfolio-v11-1":JSON.stringify([{id:"p1",asset_id:"TW:2330",symbol:"2330",name:"台積電",market:"TW",exchange:"TWSE",asset_class:"stock",shares:10,avg_cost:900,currency:"TWD"}])};
@@ -104,9 +120,25 @@ def run_page(page,name,assertions):
             file=ROOT/'data'/filename
             route.fulfill(status=200,content_type='application/json',body=file.read_bytes() if file.exists() else b'{}')
         elif 'mis.twse.com.tw' in clean:
-            route.fulfill(status=200,content_type='application/json',body=json.dumps({'msgArray':[]}))
+            route.fulfill(status=200,content_type='application/json',body=json.dumps({'msgArray':[{
+              'c':'2330','n':'台積電','nf':'台灣積體電路製造股份有限公司','ex':'tse',
+              'z':'1000','y':'990','o':'995','h':'1010','l':'992','v':'100000','tv':'200',
+              'u':'1085','w':'895','d':'20260803','t':'13:20:00','tlong':'1785744000000',
+              'a':'1001_1002_1003_1004_1005_','b':'1000_999_998_997_996_',
+              'f':'10_20_30_40_50_','g':'15_25_35_45_55_'
+            }]}))
         elif 'query1.finance.yahoo.com' in clean or 'query2.finance.yahoo.com' in clean:
-            route.fulfill(status=503,body='')
+            is_daily='interval=1d' in url
+            count=260 if is_daily else 60
+            base=900 if is_daily else 990
+            timestamps=[1780000000+i*(86400 if is_daily else 60) for i in range(count)]
+            closes=[base+i*(.4 if is_daily else .15) for i in range(count)]
+            chart={'chart':{'result':[{'meta':{'regularMarketPrice':closes[-1],'chartPreviousClose':closes[-2]},
+              'timestamp':timestamps,'indicators':{'quote':[{
+                'open':[v-1 for v in closes],'high':[v+2 for v in closes],
+                'low':[v-2 for v in closes],'close':closes,'volume':[1000+i*10 for i in range(count)]
+              }]}}],'error':None}}
+            route.fulfill(status=200,content_type='application/json',body=json.dumps(chart))
         elif 'api.coingecko.com' in clean:
             route.fulfill(status=503,body='')
         else:
@@ -119,7 +151,14 @@ def run_page(page,name,assertions):
     if name=="institutional.html":
         page.fill("#stockQueryInput","2330")
         page.click("#stockQueryButton")
-        page.wait_for_function('()=>!document.querySelector("#stockQueryResult").hidden && document.querySelectorAll("#stockQueryResult .stock-detail-metric").length>=8',timeout=12000)
+        page.wait_for_function('()=>!document.querySelector("#stockQueryResult").hidden && document.querySelectorAll("[data-stock-tab]").length===12',timeout=12000)
+        page.click('[data-stock-tab="orderbook"]')
+        page.wait_for_function('()=>document.querySelectorAll(".orderbook-table tbody tr").length===5',timeout=12000)
+        page.click('[data-stock-tab="financials"]')
+        page.wait_for_function('()=>document.querySelectorAll(".financial-inline-table tbody tr").length>=1',timeout=12000)
+    if name=="coverage.html":
+        page.click('[data-coverage-symbol="2330"]')
+        page.wait_for_function('()=>!document.querySelector("#coverageDetail").hidden && document.querySelectorAll(".coverage-metric-grid>div").length===8',timeout=12000)
     elapsed=time.monotonic()-started
     if errors: raise AssertionError(f'{name} page errors: {errors}')
     if elapsed>15: raise AssertionError(f'{name} exceeded 15 seconds: {elapsed:.2f}')
@@ -135,6 +174,7 @@ def main():
           'institutional.html':[('#institutionalGrid .info-card',4),('#marginGrid .info-card',4),('#stockQueryInput',1)],
           'news.html':[('#newsList .news-card',3)],
           'data-status.html':[('#channelGrid .channel-card',7)],
+          'coverage.html':[('#coverageRows tr',1)],
         }
         for name,assertions in tests.items():
             page=browser.new_page()

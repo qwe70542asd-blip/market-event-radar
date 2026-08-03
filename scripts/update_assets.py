@@ -34,7 +34,7 @@ SEED = DATA / "assets-seed.js"
 COVERAGE_OUT = DATA / "asset-coverage.json"
 NOW = datetime.now(ZoneInfo("Asia/Taipei"))
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.2.4)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.2.5)",
     "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.7",
     "Accept": "application/json,text/plain,*/*",
 }
@@ -120,19 +120,19 @@ KEY_ALIASES = {
     "industry": ["產業別","產業類別","industry"],
     "year": ["年度","年","year"],
     "quarter": ["季別","季","quarter"],
-    "revenue": ["營業收入","收入合計","收益合計","淨收益","利息淨收益"],
-    "gross_profit": ["營業毛利（毛損）淨額","營業毛利(毛損)淨額","營業毛利"],
-    "operating_income": ["營業利益（損失）","營業利益(損失)","營業淨利","繼續營業單位稅前淨利"],
-    "net_income": ["歸屬於母公司業主之淨利（損）","歸屬於母公司業主之淨利(損)","本期淨利（淨損）","本期淨利(淨損)","本期稅後淨利","稅後淨利","本期淨利"],
-    "eps": ["基本每股盈餘（元）","基本每股盈餘(元)","基本每股盈餘","每股盈餘","eps"],
-    "current_assets": ["流動資產"],
-    "total_assets": ["資產總額","資產合計"],
-    "current_liabilities": ["流動負債"],
-    "total_liabilities": ["負債總額","負債合計"],
-    "equity": ["權益總額","權益合計","歸屬於母公司業主之權益合計","歸屬於母公司業主之權益"],
-    "pe": ["本益比","peratio","peratio"],
-    "pb": ["股價淨值比","pbratio"],
-    "yield": ["殖利率(%)","殖利率","dividendyield"],
+    "revenue": ["營業收入","營業收入合計","收入合計","收益合計","淨收益","利息淨收益","Revenue","OperatingRevenue","TotalRevenue"],
+    "gross_profit": ["營業毛利（毛損）淨額","營業毛利(毛損)淨額","營業毛利","GrossProfit","GrossProfitLoss"],
+    "operating_income": ["營業利益（損失）","營業利益(損失)","營業淨利","繼續營業單位稅前淨利","OperatingIncome","OperatingIncomeLoss"],
+    "net_income": ["歸屬於母公司業主之淨利（損）","歸屬於母公司業主之淨利(損)","本期淨利（淨損）","本期淨利(淨損)","本期稅後淨利","稅後淨利","本期淨利","NetIncome","ProfitLoss","NetIncomeLoss"],
+    "eps": ["基本每股盈餘（元）","基本每股盈餘(元)","基本每股盈餘","每股盈餘","eps","EarningsPerShare","BasicEarningsPerShare"],
+    "current_assets": ["流動資產","流動資產合計","CurrentAssets"],
+    "total_assets": ["資產總額","資產合計","資產總計","TotalAssets"],
+    "current_liabilities": ["流動負債","流動負債合計","CurrentLiabilities"],
+    "total_liabilities": ["負債總額","負債合計","負債總計","TotalLiabilities"],
+    "equity": ["權益總額","權益合計","權益總計","歸屬於母公司業主之權益合計","歸屬於母公司業主之權益","TotalEquity","Equity"],
+    "pe": ["本益比","peratio","PERatio","PriceEarningsRatio"],
+    "pb": ["股價淨值比","pbratio","PBRatio","PriceBookRatio"],
+    "yield": ["殖利率(%)","殖利率","dividendyield","DividendYield"],
     "fund_type": ["基金類型","證券類別"],
     "fund_full_name": ["基金中文名稱","基金名稱"],
     "benchmark": ["標的指數/追蹤指數名稱","標的指數","追蹤指數名稱","績效指標中文名稱"],
@@ -147,6 +147,10 @@ KEY_ALIASES = {
     "chairman": ["經理公司董事長"],
     "spokesperson": ["經理公司發言人"],
     "general_manager": ["經理公司總經理"],
+    "issued_shares": ["已發行普通股數或TDR原發行股數","已發行普通股數","發行股數","IssuedShares","SharesOutstanding"],
+    "paid_in_capital": ["實收資本額","資本額","PaidInCapital"],
+    "company_full_name": ["公司名稱","公司全名","CompanyFullName","CompanyName"],
+    "listing_date_stock": ["上市日期","上櫃日期","掛牌日期","ListingDate"],
 }
 
 
@@ -239,6 +243,13 @@ def normalize_master(row: dict, exchange: str, cls: str) -> dict | None:
         "sub_industry": "台灣 ETF" if cls == "etf" else industry, "official_industry": industry,
         "currency": "TWD", "aliases": [], "listing_status": "active",
     }
+    if cls == "stock":
+        asset["profile"] = {
+            "full_name": str(pick(row, "company_full_name") or name).strip(),
+            "issued_shares": number(pick(row, "issued_shares")),
+            "paid_in_capital": number(pick(row, "paid_in_capital")),
+            "listing_date": str(pick(row, "listing_date_stock") or "").strip() or None,
+        }
     if cls == "etf":
         full_name = str(pick(row, "fund_full_name") or name).strip()
         issuer = str(pick(row, "issuer") or "").strip() or infer_issuer(name, full_name)
@@ -800,7 +811,7 @@ def main() -> None:
     }
     coverage_payload = {
         "metadata": {
-            "version":"v11.2.4","updated_at":NOW.isoformat(timespec="seconds"),
+            "version":"v11.2.5","updated_at":NOW.isoformat(timespec="seconds"),
             "source":"TWSE／TPEx official OpenAPI coverage audit"
         },
         "summary": {
@@ -849,7 +860,7 @@ def main() -> None:
 
     payload = {
         "metadata": {
-            "version": "v11.2.4", "updated_at": NOW.isoformat(timespec="seconds"),
+            "version": "v11.2.5", "updated_at": NOW.isoformat(timespec="seconds"),
             "asset_count": len(rows), "official_rows": official_rows,
             "financially_enriched_stocks": enriched,
             "income_rows": len(income_rows), "balance_rows": len(balance_rows),

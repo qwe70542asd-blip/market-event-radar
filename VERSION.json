@@ -1,8 +1,8 @@
 {
   "project": "market-event-radar",
-  "baseline_version": "11.2.4",
-  "label": "v11.2.4-institutional-query",
-  "updated_at": "2026-08-03T13:20:00+08:00",
+  "baseline_version": "11.2.5",
+  "label": "v11.2.5-inline-stock-intelligence",
+  "updated_at": "2026-08-03T13:45:00+08:00",
   "data_channels": {
     "assets": "live-assets",
     "events": "live-events",
@@ -12,13 +12,14 @@
     "news": "live-news"
   },
   "features": [
-    "institutional market/date query interface",
-    "individual stock institutional and margin query",
-    "TWSE T86 and MI_MARGN detail parsing",
-    "TPEx institutional and margin OpenAPI parsing",
-    "twenty trading-date chip history",
-    "explicit return-to-home navigation",
-    "renamed all-instruments market filter"
+    "inline twelve-tab stock intelligence panel",
+    "TWSE MIS five-level order book",
+    "minute-volume approximate price distribution",
+    "official TWSE and TPEx day-trading statistics",
+    "inline institutional, margin and short query",
+    "inline coverage diagnostics without page navigation",
+    "expanded official financial field aliases",
+    "issued shares and paid-in-capital profile fields"
   ],
   "realtime": {
     "taiwan_visible_quotes_seconds": 5,

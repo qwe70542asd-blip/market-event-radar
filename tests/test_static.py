@@ -179,7 +179,7 @@ const context={window:{},console,URL,AbortController,setTimeout,clearTimeout,set
 vm.createContext(context);
 vm.runInContext(fs.readFileSync(process.argv[1],'utf8'),context,{filename:'shared.js'});
 if(!context.window.MR)throw new Error('MR was not initialized');
-if(context.window.MR.VERSION!=='11.2.4')throw new Error('wrong version');
+if(context.window.MR.VERSION!=='11.2.5')throw new Error('wrong version');
 """
         result=subprocess.run([node,"-e",script,str(ROOT/"assets/shared.js")],capture_output=True,text=True)
         self.assertEqual(result.returncode,0,result.stderr)
@@ -240,9 +240,14 @@ if(context.window.MR.VERSION!=='11.2.4')throw new Error('wrong version');
         self.assertIn('id="marketQueryButton"',page)
         self.assertIn('id="stockQueryInput"',page)
         self.assertIn('id="stockQueryResult"',page)
-        self.assertIn("renderStockResult",script)
+        self.assertIn("renderSelectedAsset",script)
         self.assertIn("financingTable",script)
         self.assertIn("searchAssets",script)
+        self.assertIn('["orderbook","五檔"]',script)
+        self.assertIn('["distribution","分價"]',script)
+        self.assertIn('["daytrade","當沖"]',script)
+        self.assertIn("fetchTaiwanSeries",script)
+        self.assertNotIn("查看個股完整頁",script)
         self.assertNotIn("股票與 ETF",market)
         self.assertIn("全部標的",market)
 
@@ -251,9 +256,24 @@ if(context.window.MR.VERSION!=='11.2.4')throw new Error('wrong version');
         self.assertIn("TWSE_MARGIN",updater)
         self.assertIn("TPEX_MARGIN",updater)
         self.assertIn("TPEX_INST",updater)
+        self.assertIn("TWSE_DAY_TRADE",updater)
+        self.assertIn("TPEX_DAY_TRADE",updater)
         self.assertIn("def margin_values",updater)
+        self.assertIn("def day_trading_values",updater)
         self.assertIn('"history":history',updater)
         self.assertIn("HISTORY_LIMIT=20",updater)
+
+    def test_five_level_and_inline_coverage(self):
+        shared=(ROOT/"assets/shared.js").read_text(encoding="utf-8")
+        coverage=(ROOT/"assets/coverage.js").read_text(encoding="utf-8")
+        page=(ROOT/"coverage.html").read_text(encoding="utf-8")
+        self.assertIn("bid_prices",shared)
+        self.assertIn("ask_prices",shared)
+        self.assertIn("fetchTaiwanSeries",shared)
+        self.assertIn("buildPriceDistribution",shared)
+        self.assertIn("coverageDetail",page)
+        self.assertIn("showDetail",coverage)
+        self.assertNotIn('href="asset.html?id=TW:',coverage)
 
     def test_portfolio_unknown_legacy_key_recovery(self):
         shared=(ROOT/"assets/shared.js").read_text(encoding="utf-8")

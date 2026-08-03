@@ -1,12 +1,12 @@
-const CACHE_NAME="market-event-radar-v11-2-4";
+const CACHE_NAME="market-event-radar-v11-2-5";
 const STATIC=[
   "./","index.html","404.html","portfolio.html","tw-market.html","asset.html","news.html","institutional.html","coverage.html","data-status.html","event.html",
-  "manifest.webmanifest","assets/styles.css?v=11.2.4","assets/shared.js?v=11.2.4","assets/home.js?v=11.2.4",
-  "assets/portfolio.js?v=11.2.4","assets/tw-market.js?v=11.2.4","assets/asset.js?v=11.2.4",
-  "assets/news.js?v=11.2.4","assets/institutional.js?v=11.2.4","assets/coverage.js?v=11.2.4","assets/data-status.js?v=11.2.4","assets/event.js?v=11.2.4",
-  "assets/sw-register.js?v=11.2.4","assets/favicon.svg",
-  "data/assets-seed.js?v=11.2.4","data/events-seed.js?v=11.2.4","data/news-seed.js?v=11.2.4",
-  "data/tw-market-seed.js?v=11.2.4","data/tw-chips-seed.js?v=11.2.4","data/market-snapshot-seed.js?v=11.2.4",
+  "manifest.webmanifest","assets/styles.css?v=11.2.5","assets/shared.js?v=11.2.5","assets/home.js?v=11.2.5",
+  "assets/portfolio.js?v=11.2.5","assets/tw-market.js?v=11.2.5","assets/asset.js?v=11.2.5",
+  "assets/news.js?v=11.2.5","assets/institutional.js?v=11.2.5","assets/coverage.js?v=11.2.5","assets/data-status.js?v=11.2.5","assets/event.js?v=11.2.5",
+  "assets/sw-register.js?v=11.2.5","assets/favicon.svg",
+  "data/assets-seed.js?v=11.2.5","data/events-seed.js?v=11.2.5","data/news-seed.js?v=11.2.5",
+  "data/tw-market-seed.js?v=11.2.5","data/tw-chips-seed.js?v=11.2.5","data/market-snapshot-seed.js?v=11.2.5",
   "data/asset-coverage.json"
 ];
 self.addEventListener("install",event=>event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(STATIC)).then(()=>self.skipWaiting())));

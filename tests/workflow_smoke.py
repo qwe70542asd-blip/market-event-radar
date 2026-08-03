@@ -38,6 +38,17 @@ class ChipSession:
                     ]
                 }]
             })
+        if 'TWTB4U' in url:
+            return Response([{
+                '證券代號':'2330','證券名稱':'台積電','現股當沖交易標的註記':'是',
+                '當日沖銷交易成交股數':'500000','當日沖銷交易買進成交金額':'250000000',
+                '當日沖銷交易賣出成交金額':'252000000'
+            }])
+        if 'tpex_intraday_trading_statistics' in url:
+            return Response([{
+                'SecuritiesCompanyCode':'6488','CompanyName':'環球晶','DayTradingEligible':'Y',
+                'DayTradingVolume':'120000','DayTradingBuyAmount':'30000000','DayTradingSellAmount':'30100000'
+            }])
         if 'tpex_3insti' in url:
             return Response([{
                 'Date':'115/08/03','SecuritiesCompanyCode':'6488','CompanyName':'環球晶',
@@ -66,6 +77,8 @@ def test_chips(tmp):
     assert payload['items']['twse:2330']['margin']['balance']==1018
     assert payload['items']['tpex:6488']['short']['balance']==23
     assert payload['markets']['twse']['margin']['balance']==1837
+    assert payload['items']['twse:2330']['day_trading']['volume']==500000
+    assert payload['items']['tpex:6488']['day_trading']['volume']==120000
     assert payload['history'][payload['metadata']['trading_date']]
 
 

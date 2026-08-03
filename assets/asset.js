@@ -22,7 +22,10 @@
   const metrics={...(asset.metrics||{})};
   const financials=asset.financials||[];
   const latest=financials[0]||{};
-  const chip=(chipsPayload.items||{})[asset.symbol]||{};
+  const chip=Object.values(chipsPayload.items||{}).find(row=>
+    String(row.symbol||"").toUpperCase()===String(asset.symbol||"").toUpperCase() &&
+    (row.market||"twse")===(String(asset.exchange||"").toUpperCase().includes("TPEX")?"tpex":"twse")
+  )||{};
   $("#assetName").textContent=asset.name;$("#assetSymbol").textContent=asset.symbol;
   $("#assetClassBadge").textContent=isEtf?"ETF／基金":asset.asset_class==="crypto"?"虛擬貨幣":"股票";
   $("#assetMeta").textContent=`${asset.exchange||asset.market} · ${asset.official_industry||asset.sub_industry||"待分類"} · ${asset.currency||""}`;
@@ -123,7 +126,12 @@
     $("#returnGrid").innerHTML=[info("一日",formatPercent(pct)),info("一週","排程待更新"),info("一個月","排程待更新"),info("一年","排程待更新")].join("");
     $("#dividendGrid").innerHTML=[info("殖利率",finite(metrics.dividend_yield)!==null?`${metrics.dividend_yield.toFixed(2)}%`:"資料不足"),info("最近股利","官方公告待更新"),info("除權息日","官方公告待更新"),info("現金股利","官方公告待更新")].join("");
   }
-  $("#chipsGrid").innerHTML=[info("外資買賣超",finite(chip.foreign_net)!==null?`${chip.foreign_net.toLocaleString("zh-TW")} 股`:"官方資料待更新"),info("投信買賣超",finite(chip.trust_net)!==null?`${chip.trust_net.toLocaleString("zh-TW")} 股`:"官方資料待更新"),info("當沖比",finite(chip.day_trading_ratio)!==null?`${chip.day_trading_ratio.toFixed(2)}%`:"官方資料待更新"),info("融資餘額",finite(chip.margin_balance)!==null?`${chip.margin_balance.toLocaleString("zh-TW")} 股`:"官方資料待更新")].join("");
+  $("#chipsGrid").innerHTML=[
+    info("外資買賣超",finite(chip.foreign_net)!==null?`${Number(chip.foreign_net).toLocaleString("zh-TW")} 股`:"官方資料待更新"),
+    info("投信買賣超",finite(chip.trust_net)!==null?`${Number(chip.trust_net).toLocaleString("zh-TW")} 股`:"官方資料待更新"),
+    info("當沖成交股數",finite(chip.day_trading?.volume)!==null?`${Number(chip.day_trading.volume).toLocaleString("zh-TW")} 股`:"官方資料待更新"),
+    info("融資餘額",finite(chip.margin?.balance)!==null?`${Number(chip.margin.balance).toLocaleString("zh-TW")} 股`:"非信用交易標的或官方待更新")
+  ].join("");
 
   const news=(newsPayload.items||[]).map(item=>({item,score:newsScore(item,asset)})).filter(r=>r.score>0).sort((a,b)=>b.score-a.score||new Date(b.item.published_at)-new Date(a.item.published_at)).slice(0,14);
   $("#assetNews").innerHTML=news.length?news.map(({item})=>`<a href="${escapeHtml(safeNewsLink(item))}" target="_blank" rel="noreferrer noopener"><time>${formatTime(item.published_at)}</time><span><b>${escapeHtml(item.source||"財經新聞")}</b><strong>${escapeHtml(item.title)}</strong><small>${escapeHtml(item.summary||"點擊閱讀原文")}</small></span><span>↗</span></a>`).join(""):'<div class="empty">新聞排程完成後，會用正式名稱、代碼、指數、產業與 ETF 成分股關聯。</div>';

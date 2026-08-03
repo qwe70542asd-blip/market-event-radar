@@ -7,15 +7,15 @@
     },
     "Python compile": {
       "ok": true,
-      "seconds": 3.523
+      "seconds": 2.686
     },
     "JavaScript syntax": {
       "ok": true,
-      "seconds": 0.224
+      "seconds": 0.183
     },
     "Shell syntax": {
       "ok": true,
-      "seconds": 0.039
+      "seconds": 0.043
     },
     "Workflow YAML and <15m ceiling": {
       "ok": true,
@@ -31,17 +31,17 @@
     },
     "Unit tests": {
       "ok": true,
-      "seconds": 3.402
+      "seconds": 2.788
     },
     "Workflow parser smoke": {
       "ok": true,
-      "seconds": 3.615
+      "seconds": 2.786
     },
     "Browser E2E": {
       "ok": true,
-      "seconds": 5.969
+      "seconds": 6.808
     },
-    "total_seconds": 16.8
+    "total_seconds": 15.322
   },
   "details": []
 }

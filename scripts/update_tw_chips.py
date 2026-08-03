@@ -27,7 +27,7 @@ OUT=DATA/"tw-chips.json"
 SEED=DATA/"tw-chips-seed.js"
 NOW=datetime.now(ZoneInfo("Asia/Taipei"))
 HEADERS={
-    "User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.2.4)",
+    "User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.2.5)",
     "Accept":"application/json,text/plain,*/*",
     "Accept-Language":"zh-TW,zh;q=0.9",
 }
@@ -35,6 +35,8 @@ TWSE_T86="https://www.twse.com.tw/rwd/zh/fund/T86"
 TWSE_MARGIN="https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN"
 TPEX_INST="https://www.tpex.org.tw/openapi/v1/tpex_3insti_daily_trading"
 TPEX_MARGIN="https://www.tpex.org.tw/openapi/v1/tpex_mainboard_margin_balance"
+TWSE_DAY_TRADE="https://openapi.twse.com.tw/v1/exchangeReport/TWTB4U"
+TPEX_DAY_TRADE="https://www.tpex.org.tw/openapi/v1/tpex_intraday_trading_statistics"
 REQUEST_TIMEOUT=10
 HISTORY_LIMIT=20
 
@@ -113,6 +115,7 @@ def empty_market():
         "institutional":{"foreign_net":None,"trust_net":None,"dealer_net":None,"total_net":None},
         "margin":{"previous_balance":None,"balance":None,"change":None},
         "short":{"previous_balance":None,"balance":None,"change":None},
+        "day_trading":{"volume":None,"buy_amount":None,"sell_amount":None,"stock_count":0},
         "stock_count":0,
     }
 
@@ -141,6 +144,10 @@ def empty_item(symbol="",name="",market="twse"):
             "balance":None,"limit":None,"utilization_percent":None,
         },
         "offset_shares":None,
+        "day_trading":{
+            "eligible":None,"volume":None,"buy_amount":None,"sell_amount":None,
+            "volume_ratio_percent":None,"amount_ratio_percent":None,
+        },
         "note":"",
     }
 
@@ -198,6 +205,49 @@ def margin_values(row):
     }
 
 
+def day_trading_values(row):
+    eligible_raw=first(
+        row,"現股當沖交易標的註記","現股當沖交易標的","當沖交易標的",
+        "DayTradingFlag","DayTradingEligible","暫停現股賣出後現款買進當沖註記"
+    )
+    eligible=None
+    if eligible_raw not in (None,""):
+        text=str(eligible_raw).strip().upper()
+        eligible=text not in {"N","NO","否","不適用","-","0"}
+    return {
+        "eligible":eligible,
+        "volume":integer(first(
+            row,"當日沖銷交易成交股數","當沖成交股數","現股當沖成交股數",
+            "DayTradingVolume","TradingVolume"
+        )),
+        "buy_amount":integer(first(
+            row,"當日沖銷交易買進成交金額","當沖買進成交金額",
+            "DayTradingBuyAmount","BuyAmount"
+        )),
+        "sell_amount":integer(first(
+            row,"當日沖銷交易賣出成交金額","當沖賣出成交金額",
+            "DayTradingSellAmount","SellAmount"
+        )),
+        "volume_ratio_percent":number(first(
+            row,"當日沖銷交易成交股數占市場比重","當沖成交股數占比(%)",
+            "DayTradingVolumeRatio","VolumeRatio"
+        )),
+        "amount_ratio_percent":number(first(
+            row,"當日沖銷交易成交金額占市場比重","當沖成交金額占比(%)",
+            "DayTradingAmountRatio","AmountRatio"
+        )),
+    }
+
+
+def fetch_openapi_rows(session,url):
+    response=session.get(url,headers=HEADERS,timeout=REQUEST_TIMEOUT)
+    response.raise_for_status()
+    payload=response.json()
+    if isinstance(payload,list):
+        return [row for row in payload if isinstance(row,dict)]
+    return [row for row in (payload.get("data") or payload.get("items") or payload.get("aaData") or []) if isinstance(row,dict)]
+
+
 def symbol_name(row):
     symbol=str(first(row,
         "證券代號","股票代號","代號","公司代號","SecuritiesCompanyCode",
@@ -212,7 +262,7 @@ def item_key(market,symbol):
     return f"{market}:{symbol}"
 
 
-def merge_item(items,market,symbol,name="",institutional=None,margin=None):
+def merge_item(items,market,symbol,name="",institutional=None,margin=None,day_trading=None):
     if not symbol:
         return
     key=item_key(market,symbol)
@@ -232,6 +282,10 @@ def merge_item(items,market,symbol,name="",institutional=None,margin=None):
             row["offset_shares"]=margin["offset_shares"]
         if margin.get("note"):
             row["note"]=margin["note"]
+    if day_trading:
+        for field,value in day_trading.items():
+            if value is not None:
+                row["day_trading"][field]=value
     if row.get("total_net") is None:
         values=[row.get("foreign_net"),row.get("trust_net"),row.get("dealer_net")]
         if any(value is not None for value in values):
@@ -246,6 +300,11 @@ def summarize(items,market):
     for field in ("foreign_net","trust_net","dealer_net","total_net"):
         values=[row.get(field) for row in rows if row.get(field) is not None]
         result["institutional"][field]=sum(values) if values else None
+    day_rows=[row.get("day_trading") or {} for row in rows]
+    for field in ("volume","buy_amount","sell_amount"):
+        values=[row.get(field) for row in day_rows if row.get(field) is not None]
+        result["day_trading"][field]=sum(values) if values else None
+    result["day_trading"]["stock_count"]=sum(1 for row in day_rows if row.get("volume") is not None)
     for section in ("margin","short"):
         current=[row.get(section,{}).get("balance") for row in rows]
         previous=[row.get(section,{}).get("previous_balance") for row in rows]
@@ -350,6 +409,29 @@ def fetch_tpex(session):
     return items,bool(items),source_date,messages
 
 
+def fetch_day_trading(session):
+    items={}
+    messages=[]
+    for market,url in (("twse",TWSE_DAY_TRADE),("tpex",TPEX_DAY_TRADE)):
+        try:
+            rows=fetch_openapi_rows(session,url)
+            count=0
+            for row in rows:
+                symbol,name=symbol_name(row)
+                if not symbol:
+                    continue
+                values=day_trading_values(row)
+                if not any(value is not None for value in values.values()):
+                    continue
+                merge_item(items,market,symbol,name,day_trading=values)
+                count+=1
+            if not count:
+                messages.append(f"{market} day trading empty")
+        except Exception as exc:
+            messages.append(f"{market} day trading error: {exc}")
+    return items,messages
+
+
 def write_payload(payload):
     OUT.write_text(json.dumps(payload,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     SEED.write_text(
@@ -381,6 +463,19 @@ def main():
         current_items.update(tpex_rows)
         chosen_date=chosen_date or tpex_date
 
+    day_rows,day_messages=fetch_day_trading(session)
+    attempts.append({"market":"twse+tpex","date":chosen_date,"verified":bool(day_rows),"messages":day_messages})
+    for key,row in day_rows.items():
+        existing=current_items.get(key)
+        if existing:
+            merge_item(
+                current_items,row.get("market") or key.split(":",1)[0],
+                row.get("symbol") or key.split(":",1)[-1],row.get("name") or "",
+                day_trading=row.get("day_trading") or {}
+            )
+        else:
+            current_items[key]=row
+
     # If an official source is temporarily unavailable, retain that market's
     # latest verified rows rather than replacing them with empty data.
     previous_items=previous.get("items") or {}
@@ -394,7 +489,7 @@ def main():
             **previous,
             "metadata":{
                 **(previous.get("metadata") or {}),
-                "version":"v11.2.4",
+                "version":"v11.2.5",
                 "last_attempt_at":NOW.isoformat(timespec="seconds"),
                 "status":"warning",
                 "note":"本次官方來源未回傳可驗證資料，保留上一筆成功快照。",
@@ -420,7 +515,7 @@ def main():
 
     payload={
         "metadata":{
-            "version":"v11.2.4",
+            "version":"v11.2.5",
             "updated_at":NOW.isoformat(timespec="seconds"),
             "trading_date":chosen_date,
             "source":"TWSE T86／MI_MARGN、TPEx OpenAPI",
