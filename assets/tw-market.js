@@ -12,15 +12,19 @@
   const entries=migratePortfolio(loadPortfolio(),assets).filter(e=>e.market==="TW");
   const state={exchange:"ALL",assetClass:"all"};
   let payload=initialPayload;
-  let items=(payload.items||[]).filter(item=>finite(item.price)!==null&&finite(item.change_percent)!==null);
+  function validQuote(item){
+    const price=finite(item?.price),previous=finite(item?.previous_close),pct=finite(item?.change_percent);
+    return price!==null&&price>0&&previous!==null&&previous>0&&pct!==null&&Math.abs(pct)<=50;
+  }
+  let items=(payload.items||[]).filter(validQuote);
   let visibleRefreshBusy=false;
   let fullRefreshBusy=false;
   function filtered(){return items.filter(i=>state.exchange==="ALL"||i.exchange===state.exchange).filter(i=>state.assetClass==="all"||i.asset_class===state.assetClass)}
   function row(item,index){return `<tr><td>${index+1}</td><td><a href="asset.html?id=${encodeURIComponent(`TW:${item.symbol}`)}"><strong>${escapeHtml(item.symbol)} ${escapeHtml(item.name)}</strong><small>${item.exchange==="TPEx"?"上櫃":"上市"}${item.asset_class==="etf"?" · ETF":""}</small></a></td><td><strong>${formatPrice(item.price,"TWD")}</strong><small>${formatPrice(item.change,"TWD")}</small></td><td><strong class="${direction(item.change_percent)}">${formatPercent(item.change_percent)}</strong></td><td>${formatVolume(item.volume)} 張</td></tr>`}
   function renderRanks(){
     const rows=filtered();
-    const gainers=rows.filter(i=>finite(i.change_percent)>0).sort((a,b)=>b.change_percent-a.change_percent||(b.volume||0)-(a.volume||0)).slice(0,20);
-    const losers=rows.filter(i=>finite(i.change_percent)<0).sort((a,b)=>a.change_percent-b.change_percent||(b.volume||0)-(a.volume||0)).slice(0,20);
+    const gainers=rows.filter(i=>validQuote(i)&&finite(i.change_percent)>0).sort((a,b)=>b.change_percent-a.change_percent||(b.volume||0)-(a.volume||0)).slice(0,20);
+    const losers=rows.filter(i=>validQuote(i)&&finite(i.change_percent)<0).sort((a,b)=>a.change_percent-b.change_percent||(b.volume||0)-(a.volume||0)).slice(0,20);
     $("#gainers").innerHTML=gainers.length?gainers.map(row).join(""):'<tr><td colspan="5"><div class="empty">此篩選沒有上漲資料。</div></td></tr>';
     $("#losers").innerHTML=losers.length?losers.map(row).join(""):'<tr><td colspan="5"><div class="empty">此篩選沒有下跌資料。</div></td></tr>';
   }
@@ -42,8 +46,8 @@
   }
   function liveTargets(){
     const rows=filtered();
-    const gainers=rows.filter(item=>finite(item.change_percent)>0).sort((a,b)=>b.change_percent-a.change_percent||(b.volume||0)-(a.volume||0)).slice(0,20);
-    const losers=rows.filter(item=>finite(item.change_percent)<0).sort((a,b)=>a.change_percent-b.change_percent||(b.volume||0)-(a.volume||0)).slice(0,20);
+    const gainers=rows.filter(item=>validQuote(item)&&finite(item.change_percent)>0).sort((a,b)=>b.change_percent-a.change_percent||(b.volume||0)-(a.volume||0)).slice(0,20);
+    const losers=rows.filter(item=>validQuote(item)&&finite(item.change_percent)<0).sort((a,b)=>a.change_percent-b.change_percent||(b.volume||0)-(a.volume||0)).slice(0,20);
     const holdings=entries.map(entry=>({
       symbol:entry.symbol,
       exchange:entry.exchange,
@@ -69,7 +73,7 @@
           metadata:{...(payload.metadata||{}),updated_at:new Date().toISOString(),source:"TWSE MIS 5 秒快照"},
           items:mergeQuoteItems(payload.items||[],rows)
         };
-        items=(payload.items||[]).filter(item=>finite(item.price)!==null&&finite(item.change_percent)!==null);
+        items=(payload.items||[]).filter(validQuote);
         renderMeta();renderRanks();renderPortfolio();
       }
     }catch(error){
@@ -88,7 +92,7 @@
       const newTime=Date.parse(latest?.metadata?.updated_at||0);
       if(latest?.items?.length&&newTime>oldTime){
         payload=latest;
-        items=(payload.items||[]).filter(item=>finite(item.price)!==null&&finite(item.change_percent)!==null);
+        items=(payload.items||[]).filter(validQuote);
         renderMeta();renderRanks();renderPortfolio();
       }
     }catch(error){

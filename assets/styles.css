@@ -62,7 +62,7 @@ footer{display:flex;justify-content:space-between;gap:12px;margin-top:16px;paddi
 }
 
 
-/* v11.2.5 compact layout and clean background */
+/* v11.2.6 compact layout and clean background */
 .noise { display:none !important; }
 body {
   background:
@@ -185,7 +185,7 @@ th,td { padding:9px 7px; }
 }
 
 
-/* v11.2.5 homepage hierarchy, index rail and natural-height side panels */
+/* v11.2.6 homepage hierarchy, index rail and natural-height side panels */
 .feature-strip {
   margin:0 0 9px;
   gap:8px;
@@ -418,7 +418,7 @@ th,td { padding:9px 7px; }
 }
 
 
-/* v11.2.5 independent data-channel status */
+/* v11.2.6 independent data-channel status */
 .channel-grid{
   display:grid;
   grid-template-columns:repeat(3,minmax(0,1fr));
@@ -494,7 +494,7 @@ th,td { padding:9px 7px; }
 }
 
 
-/* v11.2.5 institutional query interface */
+/* v11.2.6 institutional query interface */
 .home-link{
   border-color:rgba(120,240,192,.34)!important;
   background:rgba(120,240,192,.08)!important;
@@ -786,7 +786,7 @@ th,td { padding:9px 7px; }
 }
 
 
-/* v11.2.5 expanded inline stock intelligence */
+/* v11.2.6 expanded inline stock intelligence */
 .expanded-stock-card{
   scroll-margin-top:92px;
 }
@@ -998,7 +998,7 @@ th,td { padding:9px 7px; }
 }
 
 
-/* v11.2.5 coverage inline diagnostics */
+/* v11.2.6 coverage inline diagnostics */
 .coverage-stock-button{
   padding:0;
   border:0;
@@ -1080,4 +1080,358 @@ th,td { padding:9px 7px; }
 }
 @media(max-width:800px){
   .coverage-metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+
+/* v11.2.6 notebook-readable typography and market detail scale */
+:root{
+  --readable-xs:12px;
+  --readable-sm:13px;
+  --readable-md:15px;
+  --readable-lg:18px;
+}
+body{
+  font-size:16px;
+  text-rendering:optimizeLegibility;
+  -webkit-font-smoothing:antialiased;
+}
+.section-note,
+.section-head p{
+  font-size:13px;
+}
+.form-status{
+  font-size:13px;
+  line-height:1.55;
+}
+
+/* Taiwan ranking: readable from normal notebook distance */
+#gainers td,
+#losers td,
+#twHoldings td{
+  padding:14px 10px;
+  font-size:15px;
+  line-height:1.35;
+}
+#gainers tr,
+#losers tr,
+#twHoldings tr{
+  min-height:64px;
+}
+#gainers td:first-child,
+#losers td:first-child{
+  width:42px;
+  font-size:15px;
+  font-weight:800;
+}
+#gainers td:nth-child(2) strong,
+#losers td:nth-child(2) strong,
+#twHoldings td:first-child strong{
+  font-size:18px;
+  line-height:1.35;
+}
+#gainers td:nth-child(2) small,
+#losers td:nth-child(2) small,
+#twHoldings small{
+  margin-top:4px;
+  font-size:12px;
+  line-height:1.4;
+}
+#gainers td:nth-child(3)>strong,
+#losers td:nth-child(3)>strong,
+#twHoldings td:nth-child(2)>strong{
+  font-size:20px;
+}
+#gainers td:nth-child(3)>small,
+#losers td:nth-child(3)>small{
+  font-size:12px;
+}
+#gainers td:nth-child(4)>strong,
+#losers td:nth-child(4)>strong{
+  font-size:18px;
+}
+#gainers td:nth-child(5),
+#losers td:nth-child(5){
+  font-size:16px;
+  font-weight:700;
+}
+.rank-layout .table-card .section-head h2{
+  font-size:24px;
+}
+.rank-layout .table-card th,
+#twHoldings~* th,
+.table-card th{
+  font-size:12px;
+  letter-spacing:.02em;
+}
+
+/* Calendar is the primary information surface */
+.calendar-card{
+  min-height:760px;
+  padding:15px;
+}
+.calendar-toolbar h3{
+  font-size:21px;
+}
+.calendar-meta{
+  margin:8px 3px 10px;
+  font-size:13px;
+}
+.calendar-weekdays{
+  gap:8px;
+  margin-bottom:8px;
+  font-size:14px;
+  font-weight:800;
+}
+.calendar-weekdays span{
+  padding-left:8px;
+}
+.calendar-grid{
+  grid-template-rows:repeat(var(--calendar-rows),minmax(124px,1fr));
+  gap:8px;
+}
+.calendar-day{
+  padding:9px;
+  border-radius:12px;
+}
+.day-head{
+  margin-bottom:7px;
+}
+.day-head strong{
+  font-size:21px;
+  line-height:1;
+}
+.day-head small{
+  font-size:13px;
+  font-weight:700;
+}
+.day-events{
+  gap:5px;
+}
+.event-dot{
+  grid-template-columns:9px minmax(0,1fr) auto;
+  gap:7px;
+  min-height:27px;
+  padding:3px 5px;
+  border-radius:7px;
+}
+.event-dot i{
+  width:9px;
+  height:9px;
+}
+.event-dot span,
+.event-dot b{
+  font-size:14px;
+  font-weight:800;
+  line-height:1.2;
+}
+.event-dot b{
+  min-width:18px;
+  text-align:right;
+}
+
+/* Inline stock intelligence: larger labels and values */
+.stock-query-heading h2{
+  font-size:28px;
+}
+.stock-query-heading h2 em{
+  font-size:19px;
+}
+.stock-query-heading p{
+  font-size:13px;
+}
+.stock-query-price span{
+  font-size:12px;
+}
+.stock-query-price strong{
+  font-size:31px;
+}
+.stock-query-price em{
+  font-size:16px;
+}
+.stock-query-price small{
+  font-size:11px;
+}
+.stock-detail-tabs button{
+  min-width:76px;
+  min-height:42px;
+  padding:0 14px;
+  font-size:14px;
+}
+.stock-tab-content{
+  min-height:330px;
+  padding:18px;
+}
+.stock-app-grid{
+  gap:10px;
+}
+.stock-detail-metric{
+  min-height:108px;
+  padding:14px;
+}
+.stock-detail-metric span{
+  font-size:14px;
+}
+.stock-detail-metric strong{
+  margin-top:9px;
+  font-size:21px;
+  line-height:1.25;
+}
+.stock-detail-metric small{
+  margin-top:7px;
+  font-size:11px;
+  line-height:1.5;
+}
+.stock-detail-block-head h3{
+  font-size:20px;
+}
+.stock-detail-block-head span{
+  font-size:12px;
+}
+.stock-data-status,
+.data-source-banner,
+.data-loading-banner,
+.data-warning-banner{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:13px;
+  padding:11px 13px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:rgba(255,255,255,.018);
+  color:#adc1cf;
+  font-size:12px;
+}
+.stock-data-status strong,
+.data-source-banner{
+  color:var(--green);
+}
+.data-loading-banner{
+  color:var(--blue);
+}
+.data-warning-banner{
+  color:var(--amber);
+}
+.technical-card-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+  margin-bottom:14px;
+}
+.tv-widget-shell{
+  position:relative;
+  width:100%;
+  min-height:540px;
+  overflow:hidden;
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:#081629;
+}
+.tv-widget-shell[data-tv-widget="technical"]{
+  min-height:470px;
+}
+.tv-widget-shell .tradingview-widget-container,
+.tv-widget-shell .tradingview-widget-container__widget{
+  width:100%;
+  height:100%;
+  min-height:inherit;
+}
+.tv-widget-loading{
+  position:absolute;
+  inset:0;
+  z-index:2;
+  display:grid;
+  place-items:center;
+  color:#a8bdcb;
+  font-size:15px;
+  pointer-events:none;
+}
+.fallback-chart-details{
+  margin-top:12px;
+  padding:10px;
+  border:1px solid var(--line);
+  border-radius:11px;
+}
+.fallback-chart-details summary{
+  cursor:pointer;
+  color:#bcd0dc;
+  font-size:14px;
+  font-weight:800;
+}
+.tv-technical-wrap{
+  margin-top:14px;
+}
+.inline-chart-labels{
+  font-size:13px;
+}
+.inline-chart-labels strong{
+  font-size:18px;
+}
+.orderbook-table th{
+  font-size:13px;
+}
+.orderbook-table td{
+  padding:15px 10px;
+  font-size:18px;
+}
+.price-volume-row strong,
+.price-volume-row b{
+  font-size:15px;
+}
+.financial-inline-table th{
+  font-size:12px;
+}
+.financial-inline-table td{
+  font-size:14px;
+}
+
+/* Portfolio forms and supporting copy */
+.form-card label,
+.query-toolbar label>span{
+  font-size:13px;
+}
+.form-control,
+.query-toolbar select,
+.stock-query-bar input{
+  font-size:16px;
+}
+.chip{
+  min-height:32px;
+  padding:0 11px;
+  font-size:12px;
+}
+.empty{
+  font-size:14px;
+  line-height:1.6;
+}
+
+@media(max-width:1100px){
+  .calendar-card{
+    height:auto!important;
+    min-height:0;
+  }
+  .calendar-grid{
+    grid-template-rows:repeat(var(--calendar-rows),124px);
+  }
+  .technical-card-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+}
+@media(max-width:760px){
+  #gainers td,
+  #losers td,
+  #twHoldings td{
+    padding:12px 8px;
+  }
+  .calendar-grid{
+    min-width:820px;
+    grid-template-rows:repeat(var(--calendar-rows),128px);
+  }
+  .technical-card-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .stock-app-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
 }

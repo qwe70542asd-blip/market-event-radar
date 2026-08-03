@@ -141,10 +141,15 @@
       const key = `${day.getFullYear()}-${String(day.getMonth()+1).padStart(2,"0")}-${String(day.getDate()).padStart(2,"0")}`;
       const events = map.get(key) || [];
       const groups = {};
-      events.forEach(event => groups[eventGroup(event)] = (groups[eventGroup(event)] || 0)+1);
+      const groupTitles = {};
+      events.forEach(event => {
+        const group=eventGroup(event);
+        groups[group]=(groups[group]||0)+1;
+        if(!groupTitles[group])groupTitles[group]=event.title||"";
+      });
       return `<article class="calendar-day ${day.getMonth() !== state.month.getMonth() ? "muted" : ""} ${day.toDateString() === today.toDateString() ? "today" : ""}" data-day="${key}">
         <div class="day-head"><strong>${day.getDate()}</strong><small>${events.length ? `${events.length} 件` : ""}</small></div>
-        <div class="day-events">${Object.entries(groups).map(([group,count]) => `<button class="event-dot ${group}" data-group="${group}"><i></i><span>${{breaking:"突發",macro:"總經",earnings:"財報",dividend:"股利",corporate:"公司"}[group] || group}</span><b>${count}</b></button>`).join("")}</div>
+        <div class="day-events">${Object.entries(groups).map(([group,count]) => `<button class="event-dot ${group}" data-group="${group}" title="${escapeHtml(groupTitles[group]||"")}"><i></i><span>${{breaking:"重大",macro:"經濟",earnings:"財報",dividend:"股利",corporate:"公司"}[group] || group}</span><b>${count}</b></button>`).join("")}</div>
       </article>`;
     }).join("");
     $$(".calendar-day").forEach((cell,index) => cell.addEventListener("click", event => {
@@ -336,7 +341,7 @@
     }
     requestAnimationFrame(() => {
       const sideHeight = Math.ceil(side.scrollHeight);
-      if (sideHeight > 0) calendar.style.height = `${sideHeight}px`;
+      if (sideHeight > 0) calendar.style.height = `${Math.max(sideHeight,760)}px`;
     });
   }
 

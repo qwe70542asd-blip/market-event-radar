@@ -55,16 +55,19 @@ results['HTML references']={'ok':not bad,'seconds':round(time.monotonic()-st,3)}
 st=time.monotonic();bad=[]
 for p in ROOT.rglob('*'):
     if p.is_file():
+        if p.name in {'VALIDATION.json','VALIDATION.txt'}:continue
         if p.suffix.lower() in {'.m4a','.mp3','.wav'}:bad.append(f'audio: {p.relative_to(ROOT)}')
         if p.suffix.lower() in {'.html','.js','.css','.py','.md','.txt','.json','.yml','.yaml','.webmanifest','.sh'}:
             try:t=p.read_text(encoding='utf-8')
             except:continue
-            old_a='11.2.'+'2'; old_b='v11-2-'+'2'
-            if old_a in t or old_b in t:bad.append(f'old version: {p.relative_to(ROOT)}')
+            old_versions=[('11.2.'+'2','v11-2-'+'2'),('11.2.'+'5','v11-2-'+'5')]
+            for old_a,old_b in old_versions:
+                if old_a in t or old_b in t:bad.append(f'old version {old_a}: {p.relative_to(ROOT)}')
 results['Version and no audio']={'ok':not bad,'seconds':round(time.monotonic()-st,3)};details.extend(bad)
 run('Unit tests',[sys.executable,'-m','unittest','discover','-s','tests'],timeout=120)
 run('Workflow parser smoke',[sys.executable,'tests/workflow_smoke.py'],timeout=60)
 run('Browser E2E',[sys.executable,'tests/e2e_smoke.py'],timeout=120)
+run('Visual readability',[sys.executable,'tests/visual_readability.py'],timeout=120)
 results['total_seconds']=round(time.monotonic()-started,3)
 all_ok=all(row.get('ok',True) for row in results.values() if isinstance(row,dict)) and results['total_seconds']<900
 output={'status':'PASS' if all_ok else 'FAIL','results':results,'details':details}

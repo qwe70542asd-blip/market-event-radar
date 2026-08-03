@@ -9,8 +9,8 @@ NOW='2026-08-03T11:40:00+08:00'
 
 def assets():
     rows=[]
-    for i,sym in enumerate(['00403A','0050','006208','00631L','009816','00981A','2330','2382','3231','2317','2454','2603']):
-        row={'id':f'TW:{sym}','symbol':sym,'name':{'2330':'台積電','2382':'廣達','3231':'緯創','2317':'鴻海','2454':'聯發科','2603':'長榮','00403A':'主動統一升級50','0050':'元大台灣50','006208':'富邦台50','00631L':'元大台灣50正2','009816':'凱基台灣TOP50','00981A':'主動統一台股增長'}[sym], 'market':'TW','exchange':'TWSE','asset_class':'etf' if sym.startswith('00') else 'stock','currency':'TWD'}
+    for i,sym in enumerate(['00403A','0050','0056','006208','00631L','009816','00981A','2330','2382','3231','2317','2454','2603','6488']):
+        row={'id':f'TW:{sym}','symbol':sym,'name':{'2330':'台積電','2382':'廣達','3231':'緯創','2317':'鴻海','2454':'聯發科','2603':'長榮','00403A':'主動統一升級50','0050':'元大台灣50','0056':'元大高股息','006208':'富邦台50','00631L':'元大台灣50正2','009816':'凱基台灣TOP50','00981A':'主動統一台股增長','6488':'環球晶'}[sym], 'market':'TW','exchange':'TPEx' if sym=='6488' else 'TWSE','asset_class':'etf' if sym.startswith('00') else 'stock','currency':'TWD'}
         if sym=='2330':
             row.update({'official_industry':'半導體業','sub_industry':'晶圓代工',
               'metrics':{'eps':42.3,'pe':23.6,'pb':7.1,'dividend_yield':1.7,'roe':31.2,'debt_ratio':22.5,'current_ratio':2.1,'net_margin':39.4},
@@ -18,6 +18,10 @@ def assets():
               'financials':[{'year':2026,'quarter':2,'revenue':900000000000,'operating_income':450000000000,'net_income':350000000000,'eps':13.5,'total_assets':7000000000000,'total_liabilities':1600000000000,'equity':5400000000000}],
               'dividend':{'cash_dividend':6,'stock_dividend':0,'ex_dividend_date':'2026/09/01','announcement_date':'2026/07/15'},
               'analysis_coverage':{'count':8,'missing':[]}})
+        if sym=='0056':
+            row.update({'etf':{'issuer':'元大投信','manager':'測試經理人','category':'高股息ETF','benchmark':'臺灣高股息指數','strategy':'追蹤高股息指數','inception_date':'2007/12/13','listing_date':'2007/12/26','custodian':'中國信託','distribution':'季配','expense_ratio':'依公開說明書'},'analysis_coverage':{'count':8,'missing':[]}})
+        if sym=='6488':
+            row.update({'official_industry':'半導體業','sub_industry':'矽晶圓','metrics':{'eps':25.1,'pe':18.2,'pb':3.2,'dividend_yield':2.1},'profile':{'full_name':'環球晶圓股份有限公司','issued_shares':437250000,'paid_in_capital':4372500000,'listing_date':'2011/09/23'}})
         rows.append(row)
     return {'metadata':{'updated_at':NOW},'assets':rows}
 
@@ -29,8 +33,13 @@ def tw_market():
         rows.append({'symbol':sym,'name':f'測試股票{i}','exchange':'TWSE' if i%2==0 else 'TPEx','asset_class':'stock','price':50+i,'previous_close':50+i-pct/100*(50+i),'change_percent':pct,'change':pct/100*(50+i),'volume':1000+i*100})
     # ensure portfolio names too
     rows.extend([
-      {'symbol':'2330','name':'台積電','exchange':'TWSE','asset_class':'stock','price':1000,'previous_close':990,'change_percent':1.01,'change':10,'open':995,'high':1010,'low':992,'volume':100000},
+      {'symbol':'2330','name':'台積電','exchange':'TWSE','asset_class':'stock','price':1000,'previous_close':990,'change_percent':1.01,'change':10,'open':995,'high':1010,'low':992,'upper_limit':1085,'lower_limit':895,'volume':100000,
+       'bid_prices':[1000,999,998,997,996],'bid_volumes':[15,25,35,45,55],
+       'ask_prices':[1001,1002,1003,1004,1005],'ask_volumes':[10,20,30,40,50]},
+      {'symbol':'0056','name':'元大高股息','exchange':'TWSE','asset_class':'etf','price':49.89,'previous_close':49.48,'change_percent':.83,'change':.41,'open':49.5,'high':50.1,'low':48.85,'volume':33000},
       {'symbol':'00631L','name':'元大台灣50正2','exchange':'TWSE','asset_class':'etf','price':35,'previous_close':34.5,'change_percent':1.45,'change':.5,'volume':50000},
+      {'symbol':'6488','name':'環球晶','exchange':'TPEx','asset_class':'stock','price':390,'previous_close':386,'change_percent':1.04,'change':4,'open':387,'high':394,'low':385,'volume':12000},
+      {'symbol':'BAD0','name':'錯誤零價資料','exchange':'TWSE','asset_class':'stock','price':0,'previous_close':100,'change_percent':-100,'change':-100,'volume':999999},
     ])
     return {'metadata':{'updated_at':NOW,'trading_date':'20260803'},'items':rows}
 
@@ -119,6 +128,16 @@ def run_page(page,name,assertions):
         elif clean.startswith('https://example.com/data/'):
             file=ROOT/'data'/filename
             route.fulfill(status=200,content_type='application/json',body=file.read_bytes() if file.exists() else b'{}')
+        elif 'openapi.twse.com.tw/v1/exchangeReport/BWIBBU_ALL' in clean:
+            route.fulfill(status=200,content_type='application/json',body=json.dumps([{'Code':'2330','PEratio':'23.6','PBratio':'7.1','DividendYield':'1.7','Date':'20260803'}]))
+        elif 'openapi.twse.com.tw/v1/opendata/t187ap03_L' in clean:
+            route.fulfill(status=200,content_type='application/json',body=json.dumps([{'公司代號':'2330','公司名稱':'台灣積體電路製造股份有限公司','已發行普通股數或TDR原發行股數':'25930380458','實收資本額':'259303804580','上市日期':'1994/09/05'}]))
+        elif 'openapi.twse.com.tw/v1/opendata/t187ap47_L' in clean:
+            route.fulfill(status=200,content_type='application/json',body=json.dumps([{'基金代號':'0056','基金中文名稱':'元大台灣高股息證券投資信託基金','經理公司名稱':'元大投信','基金經理人':'測試經理人','基金類型':'高股息ETF','標的指數/追蹤指數名稱':'臺灣高股息指數','成立日期':'2007/12/13','上市日期':'2007/12/26','保管機構':'中國信託'}]))
+        elif 'www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O' in clean:
+            route.fulfill(status=200,content_type='application/json',body=json.dumps([{'公司代號':'6488','公司名稱':'環球晶圓股份有限公司','已發行普通股數':'437250000','實收資本額':'4372500000','上櫃日期':'2011/09/23'}]))
+        elif 'www.tpex.org.tw/openapi/v1/tpex_mainboard_peratio_analysis' in clean:
+            route.fulfill(status=200,content_type='application/json',body=json.dumps([{'SecuritiesCompanyCode':'6488','PERatio':'18.2','PBRatio':'3.2','DividendYield':'2.1','Date':'20260803'}]))
         elif 'mis.twse.com.tw' in clean:
             route.fulfill(status=200,content_type='application/json',body=json.dumps({'msgArray':[{
               'c':'2330','n':'台積電','nf':'台灣積體電路製造股份有限公司','ex':'tse',
@@ -127,6 +146,17 @@ def run_page(page,name,assertions):
               'a':'1001_1002_1003_1004_1005_','b':'1000_999_998_997_996_',
               'f':'10_20_30_40_50_','g':'15_25_35_45_55_'
             }]}))
+        elif 'www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY' in clean:
+            rows=[]
+            for i in range(22):
+                day=f'115/07/{i+1:02d}'
+                close=900+i*2
+                rows.append([day,'1,000,000','900,000,000',str(close-1),str(close+3),str(close-3),str(close),'+2','100'])
+            route.fulfill(status=200,content_type='application/json',body=json.dumps({
+              'stat':'OK','fields':['日期','成交股數','成交金額','開盤價','最高價','最低價','收盤價','漲跌價差','成交筆數'],'data':rows
+            }))
+        elif 's3.tradingview.com' in clean or 'widgets.tradingview-widget.com' in clean:
+            route.fulfill(status=200,content_type='application/javascript',body='document.currentScript?.parentElement?.setAttribute("data-widget-loaded","1");')
         elif 'query1.finance.yahoo.com' in clean or 'query2.finance.yahoo.com' in clean:
             is_daily='interval=1d' in url
             count=260 if is_daily else 60
@@ -151,11 +181,23 @@ def run_page(page,name,assertions):
     if name=="institutional.html":
         page.fill("#stockQueryInput","2330")
         page.click("#stockQueryButton")
-        page.wait_for_function('()=>!document.querySelector("#stockQueryResult").hidden && document.querySelectorAll("[data-stock-tab]").length===12',timeout=12000)
+        page.wait_for_function('()=>!document.querySelector("#stockQueryResult").hidden && document.querySelectorAll("[data-stock-tab]").length===13',timeout=12000)
         page.click('[data-stock-tab="orderbook"]')
         page.wait_for_function('()=>document.querySelectorAll(".orderbook-table tbody tr").length===5',timeout=12000)
+        page.click('[data-stock-tab="technical"]')
+        page.wait_for_function('()=>document.querySelectorAll(".technical-card-grid .stock-detail-metric").length>=10',timeout=12000)
         page.click('[data-stock-tab="financials"]')
         page.wait_for_function('()=>document.querySelectorAll(".financial-inline-table tbody tr").length>=1',timeout=12000)
+        page.fill('#stockQueryInput','0056')
+        page.click('#stockQueryButton')
+        page.wait_for_function('()=>document.querySelector("#stockQueryResult").textContent.includes("基金經理人")',timeout=12000)
+        page.fill('#stockQueryInput','6488')
+        page.click('#stockQueryButton')
+        page.click('[data-stock-tab="margin"]')
+        page.wait_for_function('()=>document.querySelector("#stockQueryResult").textContent.includes("620 股")',timeout=12000)
+    if name=="tw-market.html":
+        if 'BAD0' in page.locator('body').inner_text():
+            raise AssertionError('invalid NT$0 / -100% quote leaked into rankings')
     if name=="coverage.html":
         page.click('[data-coverage-symbol="2330"]')
         page.wait_for_function('()=>!document.querySelector("#coverageDetail").hidden && document.querySelectorAll(".coverage-metric-grid>div").length===8',timeout=12000)

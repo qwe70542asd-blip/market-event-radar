@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const VERSION = "11.2.5";
+  const VERSION = "11.2.6";
   const OWNER = "qwe70542asd-blip";
   const REPO = "market-event-radar";
   const LEGACY_LIVE_BASE = `https://raw.githubusercontent.com/${OWNER}/${REPO}/live-data/`;
@@ -465,6 +465,356 @@
       }
     }
     return null;
+  }
+
+  function parseRocDate(value) {
+    const text=String(value||"").trim().replace(/[.\-]/g,"/");
+    const parts=text.split("/").map(part=>Number(part));
+    if(parts.length!==3||parts.some(part=>!Number.isFinite(part)))return null;
+    let [year,month,day]=parts;
+    if(year<1911)year+=1911;
+    const date=new Date(Date.UTC(year,month-1,day));
+    return Number.isNaN(date.getTime())?null:date.getTime();
+  }
+
+  function monthStarts(count=13,date=new Date()) {
+    const rows=[];
+    for(let index=0;index<count;index++){
+      const row=new Date(date.getFullYear(),date.getMonth()-index,1);
+      rows.push({
+        compact:`${row.getFullYear()}${String(row.getMonth()+1).padStart(2,"0")}01`,
+        slash:`${row.getFullYear()}/${String(row.getMonth()+1).padStart(2,"0")}/01`
+      });
+    }
+    return rows;
+  }
+
+  function extractTablePayload(payload) {
+    const tables=[];
+    if(Array.isArray(payload?.data)&&Array.isArray(payload?.fields)){
+      tables.push({fields:payload.fields,data:payload.data});
+    }
+    for(const table of payload?.tables||[]){
+      if(Array.isArray(table?.data)&&Array.isArray(table?.fields))tables.push(table);
+    }
+    if(Array.isArray(payload?.aaData)){
+      const fields=payload?.fields||payload?.columnNames||[];
+      tables.push({fields,data:payload.aaData});
+    }
+    return tables;
+  }
+
+  function parseOfficialHistoryPayload(payload) {
+    const output=[];
+    for(const table of extractTablePayload(payload)){
+      const fields=(table.fields||[]).map(field=>String(field||"").replace(/\s+/g,""));
+      const indexOf=(...names)=>fields.findIndex(field=>names.some(name=>field.includes(name)));
+      const dateIndex=indexOf("日期","Date");
+      const volumeIndex=indexOf("成交股數","成交量","TradeVolume");
+      const valueIndex=indexOf("成交金額","TradeValue");
+      const openIndex=indexOf("開盤價","OpeningPrice","Open");
+      const highIndex=indexOf("最高價","HighestPrice","High");
+      const lowIndex=indexOf("最低價","LowestPrice","Low");
+      const closeIndex=indexOf("收盤價","ClosingPrice","Close");
+      for(const raw of table.data||[]){
+        if(!Array.isArray(raw))continue;
+        const timestamp=parseRocDate(raw[dateIndex]);
+        const close=finite(raw[closeIndex]);
+        if(timestamp===null||close===null)continue;
+        output.push({
+          timestamp,
+          open:finite(raw[openIndex]),
+          high:finite(raw[highIndex]),
+          low:finite(raw[lowIndex]),
+          close,
+          volume:finite(String(raw[volumeIndex]??"").replace(/,/g,"")),
+          trade_value:finite(String(raw[valueIndex]??"").replace(/,/g,""))
+        });
+      }
+    }
+    return output;
+  }
+
+  function officialHistoryUrls(asset,month) {
+    const symbol=encodeURIComponent(String(asset?.symbol||"").toUpperCase());
+    const exchange=String(asset?.exchange||"").toUpperCase();
+    const isTpex=exchange.includes("TPEX")||exchange.includes("OTC");
+    if(isTpex){
+      return [
+        `https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock?code=${symbol}&date=${encodeURIComponent(month.slash)}&id=&response=json`,
+        `https://www.tpex.org.tw/web/stock/aftertrading/daily_trading_info/st43_result.php?l=zh-tw&d=${encodeURIComponent(month.slash.slice(0,7))}&stkno=${symbol}`
+      ];
+    }
+    return [
+      `https://www.twse.com.tw/rwd/zh/afterTrading/STOCK_DAY?date=${month.compact}&stockNo=${symbol}&response=json`
+    ];
+  }
+
+  function cacheKeyForSeries(asset,kind) {
+    return `market-radar-series-v2:${kind}:${String(asset?.exchange||"TWSE")}:${String(asset?.symbol||"")}`;
+  }
+
+  function readSeriesCache(asset,kind,maxAgeMs) {
+    try{
+      const payload=JSON.parse(localStorage.getItem(cacheKeyForSeries(asset,kind))||"null");
+      if(!payload||!Array.isArray(payload.rows)||Date.now()-Number(payload.cached_at||0)>maxAgeMs)return null;
+      return payload;
+    }catch{return null}
+  }
+
+  function writeSeriesCache(asset,kind,payload) {
+    try{
+      localStorage.setItem(cacheKeyForSeries(asset,kind),JSON.stringify({...payload,cached_at:Date.now()}));
+    }catch{}
+  }
+
+  function normalizedRow(row) {
+    const output={};
+    for(const [key,value] of Object.entries(row||{})){
+      output[String(key||"").normalize("NFKC").replace(/[\s_（）()％%:/\-]+/g,"").toLowerCase()]=value;
+    }
+    return output;
+  }
+
+  function rowValue(row,...aliases) {
+    const normalized=normalizedRow(row);
+    for(const alias of aliases){
+      const key=String(alias||"").normalize("NFKC").replace(/[\s_（）()％%:/\-]+/g,"").toLowerCase();
+      if(normalized[key]!==undefined&&normalized[key]!==null&&normalized[key]!=="")return normalized[key];
+    }
+    for(const alias of aliases){
+      const key=String(alias||"").normalize("NFKC").replace(/[\s_（）()％%:/\-]+/g,"").toLowerCase();
+      const match=Object.entries(normalized).find(([candidate,value])=>candidate.includes(key)&&value!==null&&value!=="");
+      if(match)return match[1];
+    }
+    return null;
+  }
+
+  async function fetchCachedOfficialList(cacheKey,url,timeout=9000,maxAgeMs=6*60*60*1000) {
+    try{
+      const cached=JSON.parse(localStorage.getItem(cacheKey)||"null");
+      if(cached&&Array.isArray(cached.rows)&&Date.now()-Number(cached.cached_at||0)<maxAgeMs)return cached.rows;
+    }catch{}
+    const payload=await fetchJson(url,timeout);
+    const rows=Array.isArray(payload)?payload:(payload?.data||payload?.aaData||[]);
+    if(!Array.isArray(rows))return[];
+    try{localStorage.setItem(cacheKey,JSON.stringify({cached_at:Date.now(),rows}))}catch{}
+    return rows;
+  }
+
+  async function fetchOfficialValuation(asset,{timeout=9000}={}) {
+    if(asset?.asset_class==="etf")return null;
+    const symbol=String(asset?.symbol||"").toUpperCase();
+    const isTpex=String(asset?.exchange||"").toUpperCase().includes("TPEX");
+    const url=isTpex
+      ?"https://www.tpex.org.tw/openapi/v1/tpex_mainboard_peratio_analysis"
+      :"https://openapi.twse.com.tw/v1/exchangeReport/BWIBBU_ALL";
+    try{
+      const rows=await fetchCachedOfficialList(
+        `market-radar-official-valuation:${isTpex?"tpex":"twse"}`,url,timeout
+      );
+      const row=rows.find(item=>String(rowValue(item,"Code","證券代號","股票代號","SecuritiesCompanyCode")||"").trim().toUpperCase()===symbol);
+      if(!row)return null;
+      return {
+        pe:finite(rowValue(row,"PEratio","PERatio","本益比","PriceEarningsRatio")),
+        pb:finite(rowValue(row,"PBratio","PBRatio","股價淨值比","PriceBookRatio")),
+        dividend_yield:finite(rowValue(row,"DividendYield","殖利率","殖利率%")),
+        source:isTpex?"TPEx peratio analysis":"TWSE BWIBBU_ALL",
+        updated_at:String(rowValue(row,"Date","資料日期","日期")||"")
+      };
+    }catch(error){
+      console.warn("Official valuation fetch failed:",symbol,error);
+      return null;
+    }
+  }
+
+  async function fetchOfficialAssetProfile(asset,{timeout=9000}={}) {
+    const symbol=String(asset?.symbol||"").toUpperCase();
+    const isTpex=String(asset?.exchange||"").toUpperCase().includes("TPEX");
+    if(asset?.asset_class==="etf"){
+      const url="https://openapi.twse.com.tw/v1/opendata/t187ap47_L";
+      try{
+        const rows=await fetchCachedOfficialList("market-radar-official-etf-master",url,timeout,12*60*60*1000);
+        const row=rows.find(item=>String(rowValue(item,"基金代號","證券代號","Code")||"").trim().toUpperCase()===symbol);
+        if(!row)return null;
+        return {
+          etf:{
+            issuer:String(rowValue(row,"經理公司名稱","發行公司","證券投資信託事業")||"").trim()||null,
+            manager:String(rowValue(row,"基金經理人","經理人")||"").trim()||null,
+            category:String(rowValue(row,"基金類型","證券類別")||"").trim()||null,
+            benchmark:String(rowValue(row,"標的指數/追蹤指數名稱","績效指標中文名稱","追蹤指數名稱")||"").trim()||null,
+            strategy:String(rowValue(row,"股票及債券投資比例說明","投資比例說明")||"").trim()||null,
+            inception_date:String(rowValue(row,"成立日期")||"").trim()||null,
+            listing_date:String(rowValue(row,"上市日期")||"").trim()||null,
+            custodian:String(rowValue(row,"保管機構")||"").trim()||null,
+            full_name:String(rowValue(row,"基金中文名稱","基金名稱")||"").trim()||null
+          },
+          source:"TWSE fund master"
+        };
+      }catch(error){
+        console.warn("Official ETF profile fetch failed:",symbol,error);
+        return null;
+      }
+    }
+    const url=isTpex
+      ?"https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O"
+      :"https://openapi.twse.com.tw/v1/opendata/t187ap03_L";
+    try{
+      const rows=await fetchCachedOfficialList(
+        `market-radar-official-company-master:${isTpex?"tpex":"twse"}`,url,timeout,12*60*60*1000
+      );
+      const row=rows.find(item=>String(rowValue(item,"公司代號","證券代號","Code","SecuritiesCompanyCode")||"").trim().toUpperCase()===symbol);
+      if(!row)return null;
+      return {
+        profile:{
+          full_name:String(rowValue(row,"公司名稱","公司全名","CompanyName")||"").trim()||null,
+          issued_shares:finite(rowValue(row,"已發行普通股數或TDR原發行股數","已發行普通股數","發行股數","IssuedShares")),
+          paid_in_capital:finite(rowValue(row,"實收資本額","資本額","PaidInCapital")),
+          listing_date:String(rowValue(row,"上市日期","上櫃日期","掛牌日期","ListingDate")||"").trim()||null
+        },
+        source:isTpex?"TPEx company master":"TWSE company master"
+      };
+    }catch(error){
+      console.warn("Official company profile fetch failed:",symbol,error);
+      return null;
+    }
+  }
+
+  async function fetchOfficialTaiwanHistory(asset,{months=13,timeout=8500}={}) {
+    const cached=readSeriesCache(asset,`official-${months}`,6*60*60*1000);
+    if(cached?.rows?.length>=20)return cached;
+    const requests=monthStarts(months).map(async month=>{
+      for(const url of officialHistoryUrls(asset,month)){
+        try{
+          const payload=await fetchJson(url,timeout);
+          const rows=parseOfficialHistoryPayload(payload);
+          if(rows.length)return rows;
+        }catch(error){
+          console.warn("Official Taiwan history source failed:",asset?.symbol,url,error);
+        }
+      }
+      return[];
+    });
+    const settled=await Promise.allSettled(requests);
+    const map=new Map();
+    for(const result of settled){
+      if(result.status!=="fulfilled")continue;
+      for(const row of result.value||[])map.set(row.timestamp,row);
+    }
+    const rows=[...map.values()].sort((a,b)=>a.timestamp-b.timestamp);
+    if(!rows.length)return null;
+    const payload={
+      symbol:String(asset?.symbol||""),
+      rows,
+      source:String(asset?.exchange||"").toUpperCase().includes("TPEX")?"TPEx official history":"TWSE STOCK_DAY",
+      fetched_at:new Date().toISOString()
+    };
+    writeSeriesCache(asset,`official-${months}`,payload);
+    return payload;
+  }
+
+  async function fetchBestTaiwanHistory(asset,{months=13,timeout=9000}={}) {
+    const results=await Promise.allSettled([
+      fetchOfficialTaiwanHistory(asset,{months,timeout}),
+      fetchTaiwanSeries(asset,{range:"1y",interval:"1d",timeout})
+    ]);
+    const official=results[0].status==="fulfilled"?results[0].value:null;
+    const yahoo=results[1].status==="fulfilled"?results[1].value:null;
+    if(official?.rows?.length>=20)return official;
+    if(yahoo?.rows?.length)return yahoo;
+    return official?.rows?.length?official:null;
+  }
+
+  function average(values) {
+    const rows=(values||[]).filter(value=>finite(value)!==null).map(Number);
+    return rows.length?rows.reduce((sum,value)=>sum+value,0)/rows.length:null;
+  }
+
+  function sma(values,period) {
+    if(!Array.isArray(values)||values.length<period)return null;
+    return average(values.slice(-period));
+  }
+
+  function emaSeries(values,period) {
+    const rows=(values||[]).map(finite).filter(value=>value!==null);
+    if(!rows.length)return[];
+    const multiplier=2/(period+1);
+    const output=[rows[0]];
+    for(let index=1;index<rows.length;index++){
+      output.push((rows[index]-output[index-1])*multiplier+output[index-1]);
+    }
+    return output;
+  }
+
+  function standardDeviation(values) {
+    const mean=average(values);
+    if(mean===null)return null;
+    const rows=values.map(Number);
+    return Math.sqrt(rows.reduce((sum,value)=>sum+(value-mean)**2,0)/rows.length);
+  }
+
+  function calculateTechnicalIndicators(rows) {
+    const usable=(rows||[]).filter(row=>finite(row.close)!==null)
+      .sort((a,b)=>Number(a.timestamp)-Number(b.timestamp));
+    const closes=usable.map(row=>Number(row.close));
+    const highs=usable.map(row=>finite(row.high)??Number(row.close));
+    const lows=usable.map(row=>finite(row.low)??Number(row.close));
+    const volumes=usable.map(row=>finite(row.volume)??0);
+    const latest=closes.at(-1)??null;
+    const ma5=sma(closes,5),ma10=sma(closes,10),ma20=sma(closes,20),ma60=sma(closes,60);
+
+    let rsi14=null;
+    if(closes.length>=15){
+      const changes=closes.slice(-15).map((value,index,array)=>index?value-array[index-1]:0).slice(1);
+      const gains=changes.map(value=>Math.max(value,0));
+      const losses=changes.map(value=>Math.max(-value,0));
+      const avgGain=average(gains),avgLoss=average(losses);
+      rsi14=avgLoss===0?100:avgGain===null||avgLoss===null?null:100-(100/(1+avgGain/avgLoss));
+    }
+
+    const ema12=emaSeries(closes,12),ema26=emaSeries(closes,26);
+    const macdSeries=ema12.map((value,index)=>value-(ema26[index]??value));
+    const signalSeries=emaSeries(macdSeries,9);
+    const macd=macdSeries.at(-1)??null;
+    const signal=signalSeries.at(-1)??null;
+    const histogram=macd!==null&&signal!==null?macd-signal:null;
+
+    let k=null,d=null;
+    if(usable.length>=9){
+      const high9=Math.max(...highs.slice(-9));
+      const low9=Math.min(...lows.slice(-9));
+      const raw=high9===low9?50:(latest-low9)/(high9-low9)*100;
+      k=raw;
+      const previousK=usable.length>=10?(()=>{
+        const prevClose=closes.at(-2),prevHigh=Math.max(...highs.slice(-10,-1)),prevLow=Math.min(...lows.slice(-10,-1));
+        return prevHigh===prevLow?50:(prevClose-prevLow)/(prevHigh-prevLow)*100;
+      })():raw;
+      d=(raw+previousK*2)/3;
+    }
+
+    const bollingerRows=closes.slice(-20);
+    const bollingerMid=bollingerRows.length>=20?average(bollingerRows):null;
+    const bollingerStd=bollingerRows.length>=20?standardDeviation(bollingerRows):null;
+    const bollingerUpper=bollingerMid!==null&&bollingerStd!==null?bollingerMid+2*bollingerStd:null;
+    const bollingerLower=bollingerMid!==null&&bollingerStd!==null?bollingerMid-2*bollingerStd:null;
+    const volumeMa5=sma(volumes,5),volumeMa20=sma(volumes,20);
+
+    const recentHigh=usable.length?Math.max(...highs.slice(-20)):null;
+    const recentLow=usable.length?Math.min(...lows.slice(-20)):null;
+    const signals=[];
+    if(latest!==null&&ma20!==null)signals.push(latest>=ma20?1:-1);
+    if(ma5!==null&&ma20!==null)signals.push(ma5>=ma20?1:-1);
+    if(rsi14!==null)signals.push(rsi14>=55?1:rsi14<=45?-1:0);
+    if(histogram!==null)signals.push(histogram>=0?1:-1);
+    if(k!==null&&d!==null)signals.push(k>=d?1:-1);
+    const score=signals.length?signals.reduce((sum,value)=>sum+value,0):0;
+    const rating=score>=3?"偏多":score<=-3?"偏空":"中性";
+
+    return {
+      count:usable.length,latest,ma5,ma10,ma20,ma60,rsi14,macd,signal,histogram,
+      k,d,bollingerMid,bollingerUpper,bollingerLower,volumeMa5,volumeMa20,
+      recentHigh,recentLow,score,rating
+    };
   }
 
   function yahooTaiwanSymbol(asset) {
@@ -942,7 +1292,9 @@
     $, $$, normalize, escapeHtml, finite, taipeiClockParts, isTaiwanQuoteWindow,
     taiwanQuoteRefreshDelay, scheduleAdaptiveRefresh, startCryptoTickerStream,
     fetchJson, fetchTaiwanLiveQuotes, fetchTaiwanIndicesLive, fetchYahooChart,
-    fetchTaiwanSeries, yahooTaiwanSymbol, seriesReturn, buildPriceDistribution,
+    fetchTaiwanSeries, fetchOfficialTaiwanHistory, fetchBestTaiwanHistory,
+    fetchOfficialValuation, fetchOfficialAssetProfile,
+    yahooTaiwanSymbol, seriesReturn, buildPriceDistribution, calculateTechnicalIndicators,
     mergeQuoteItems, loadData, loadChannelManifest, dataBranchFor, dataChannelUrl, DATA_CHANNELS,
     canonicalAsset, mergeAssets,
     searchAssets, resolveAsset, loadPortfolio, migratePortfolio, savePortfolio,

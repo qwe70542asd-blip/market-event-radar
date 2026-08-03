@@ -1,8 +1,8 @@
 {
   "project": "market-event-radar",
-  "baseline_version": "11.2.5",
-  "label": "v11.2.5-inline-stock-intelligence",
-  "updated_at": "2026-08-03T13:45:00+08:00",
+  "baseline_version": "11.2.6",
+  "label": "v11.2.6-readable-complete-stock-data",
+  "updated_at": "2026-08-03T14:05:00+08:00",
   "data_channels": {
     "assets": "live-assets",
     "events": "live-events",
@@ -12,14 +12,15 @@
     "news": "live-news"
   },
   "features": [
-    "inline twelve-tab stock intelligence panel",
-    "TWSE MIS five-level order book",
-    "minute-volume approximate price distribution",
-    "official TWSE and TPEx day-trading statistics",
-    "inline institutional, margin and short query",
-    "inline coverage diagnostics without page navigation",
-    "expanded official financial field aliases",
-    "issued shares and paid-in-capital profile fields"
+    "thirteen-tab inline stock and ETF intelligence",
+    "TradingView interactive chart and technical analysis",
+    "official TWSE and TPEx historical-data-first fallback",
+    "MA RSI MACD KD Bollinger support and resistance calculations",
+    "TWSE MIS five-level order-book persistence",
+    "official on-demand valuation company and ETF profiles",
+    "invalid zero-price and extreme-change ranking exclusion",
+    "1366x768 notebook readability typography validation",
+    "representative TWSE stock ETF and TPEx stock browser tests"
   ],
   "realtime": {
     "taiwan_visible_quotes_seconds": 5,

@@ -4,7 +4,9 @@
   const {
     $,escapeHtml,finite,loadData,mergeAssets,searchAssets,resolveAsset,findTwQuote,
     formatPrice,formatPercent,formatTime,direction,formatVolume,safeNewsLink,
-    fetchTaiwanLiveQuotes,fetchTaiwanSeries,seriesReturn,buildPriceDistribution,
+    fetchTaiwanLiveQuotes,fetchTaiwanSeries,fetchBestTaiwanHistory,
+    fetchOfficialValuation,fetchOfficialAssetProfile,
+    seriesReturn,buildPriceDistribution,calculateTechnicalIndicators,
     scheduleAdaptiveRefresh,taiwanQuoteRefreshDelay
   }=MR;
 
@@ -25,6 +27,11 @@
     liveQuote:null,
     intradaySeries:null,
     historySeries:null,
+    historyLoading:false,
+    officialValuation:null,
+    officialProfile:null,
+    officialEtf:null,
+    officialBasicsLoading:false,
     refreshStop:null,
     requestToken:0
   };
@@ -43,7 +50,7 @@
   state.date=dates[0]||latestDate;
 
   const tabs=[
-    ["overview","總覽"],["trend","走勢"],["orderbook","五檔"],["distribution","分價"],
+    ["overview","總覽"],["trend","走勢"],["technical","技術"],["orderbook","五檔"],["distribution","分價"],
     ["institutional","法人"],["margin","融資券"],["daytrade","當沖"],["basic","基本"],
     ["financials","財報"],["dividend","股利"],["news","新聞"],["announcements","公告"]
   ];
@@ -53,6 +60,73 @@
   function marketForAsset(asset){
     return String(asset?.exchange||"").toUpperCase().includes("TPEX")?"tpex":"twse";
   }
+  function tradingViewSymbol(asset){
+    return`${marketForAsset(asset)==="tpex"?"TPEX":"TWSE"}:${String(asset?.symbol||"").toUpperCase()}`;
+  }
+
+  function tradingViewShell(kind){
+    return`<div class="tv-widget-shell" data-tv-widget="${kind}">
+      <div class="tv-widget-loading">正在載入 ${kind==="chart"?"互動走勢圖":"技術分析"}…</div>
+      <div class="tradingview-widget-container"><div class="tradingview-widget-container__widget"></div></div>
+    </div>`;
+  }
+
+  function mountTradingViewWidget(asset,kind){
+    const shell=document.querySelector(`[data-tv-widget="${kind}"]`);
+    if(!shell||shell.dataset.mounted==="1")return;
+    shell.dataset.mounted="1";
+    const container=shell.querySelector(".tradingview-widget-container");
+    const script=document.createElement("script");
+    script.type="text/javascript";
+    script.async=true;
+    if(kind==="chart"){
+      script.src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+      script.text=JSON.stringify({
+        autosize:true,
+        symbol:tradingViewSymbol(asset),
+        interval:"D",
+        timezone:"Asia/Taipei",
+        theme:"dark",
+        backgroundColor:"#081629",
+        gridColor:"rgba(130,165,194,0.12)",
+        style:"1",
+        locale:"zh_TW",
+        withdateranges:true,
+        hide_side_toolbar:false,
+        hide_top_toolbar:false,
+        hide_legend:false,
+        hide_volume:false,
+        allow_symbol_change:false,
+        save_image:false,
+        studies:[
+          "MASimple@tv-basicstudies",
+          "MAExp@tv-basicstudies",
+          "RSI@tv-basicstudies",
+          "MACD@tv-basicstudies"
+        ],
+        support_host:"https://www.tradingview.com"
+      });
+    }else{
+      script.src="https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js";
+      script.text=JSON.stringify({
+        interval:"1D",
+        width:"100%",
+        height:"100%",
+        isTransparent:true,
+        symbol:tradingViewSymbol(asset),
+        showIntervalTabs:true,
+        displayMode:"multiple",
+        locale:"zh_TW",
+        colorTheme:"dark"
+      });
+    }
+    container.appendChild(script);
+    setTimeout(()=>{
+      const loading=shell.querySelector(".tv-widget-loading");
+      if(loading)loading.hidden=true;
+    },3500);
+  }
+
   function numberText(value,unit="股"){
     const parsed=finite(value);
     return parsed===null?"官方未回傳":`${Math.round(parsed).toLocaleString("zh-TW")} ${unit}`;
@@ -97,7 +171,17 @@
     )||null;
   }
   function quoteFor(asset){
-    return state.liveQuote||findTwQuote(asset,marketPayload)||null;
+    const fallback=findTwQuote(asset,marketPayload)||null;
+    if(!state.liveQuote)return fallback;
+    const live=state.liveQuote;
+    return{
+      ...(fallback||{}),
+      ...live,
+      bid_prices:live.bid_prices?.length?live.bid_prices:(fallback?.bid_prices||[]),
+      bid_volumes:live.bid_volumes?.length?live.bid_volumes:(fallback?.bid_volumes||[]),
+      ask_prices:live.ask_prices?.length?live.ask_prices:(fallback?.ask_prices||[]),
+      ask_volumes:live.ask_volumes?.length?live.ask_volumes:(fallback?.ask_volumes||[])
+    };
   }
   function stockNews(asset,officialOnly=false){
     const terms=[String(asset.symbol||"").toLowerCase(),String(asset.name||"").toLowerCase()]
@@ -184,6 +268,33 @@
       </svg><div class="inline-chart-labels"><span>${formatPrice(first,"TWD")}</span><strong>${formatPrice(last,"TWD")}</strong><span>${usable.length} 個資料點</span></div></div>`;
   }
 
+  function technicalContent(asset){
+    const indicator=calculateTechnicalIndicators(state.historySeries?.rows||[]);
+    const rows=state.historySeries?.rows||[];
+    const dataStatus=state.historyLoading
+      ?'<div class="data-loading-banner">正在從官方歷史行情與備援來源讀取資料…</div>'
+      :rows.length?`<div class="data-source-banner">技術指標使用 ${escapeHtml(state.historySeries?.source||"日線資料")}，共 ${rows.length} 筆。</div>`
+      :'<div class="data-warning-banner">官方歷史資料暫時無法取得；下方 TradingView 技術分析仍可使用。</div>';
+    const signalClass=(value,reference)=>value===null||reference===null?"":value>=reference?"up":"down";
+    const cards=[
+      ["綜合判讀",indicator.count?indicator.rating:"等待資料",indicator.score>0?"up":indicator.score<0?"down":"flat",`有效日線 ${indicator.count} 筆／訊號分數 ${indicator.score}`],
+      ["MA5",formatPrice(indicator.ma5,"TWD"),signalClass(indicator.latest,indicator.ma5),"至少 5 筆日線"],
+      ["MA20",formatPrice(indicator.ma20,"TWD"),signalClass(indicator.latest,indicator.ma20),"至少 20 筆日線"],
+      ["MA60",formatPrice(indicator.ma60,"TWD"),signalClass(indicator.latest,indicator.ma60),"至少 60 筆日線"],
+      ["RSI 14",indicator.rsi14===null?"—":indicator.rsi14.toFixed(1),indicator.rsi14===null?"":indicator.rsi14>=70?"up":indicator.rsi14<=30?"down":"flat","70 以上偏熱／30 以下偏弱"],
+      ["MACD",indicator.macd===null?"—":indicator.macd.toFixed(2),direction(indicator.histogram),`柱狀 ${indicator.histogram===null?"—":indicator.histogram.toFixed(2)}`],
+      ["KD-K",indicator.k===null?"—":indicator.k.toFixed(1),indicator.k===null||indicator.d===null?"":indicator.k>=indicator.d?"up":"down",`D ${indicator.d===null?"—":indicator.d.toFixed(1)}`],
+      ["布林上軌",formatPrice(indicator.bollingerUpper,"TWD"),"","20 日＋2σ"],
+      ["布林中軌",formatPrice(indicator.bollingerMid,"TWD"),"","20 日均線"],
+      ["布林下軌",formatPrice(indicator.bollingerLower,"TWD"),"","20 日－2σ"],
+      ["20日壓力",formatPrice(indicator.recentHigh,"TWD"),"","可用日線範圍最高"],
+      ["20日支撐",formatPrice(indicator.recentLow,"TWD"),"","可用日線範圍最低"]
+    ];
+    return`${dataStatus}
+      <div class="technical-card-grid">${cards.map(([label,value,cls,note])=>detailMetric(label,value,cls,note)).join("")}</div>
+      <div class="tv-technical-wrap">${tradingViewShell("technical")}</div>`;
+  }
+
   function financingTable(title,section,type){
     const row=section||{};
     const fields=type==="margin"
@@ -200,19 +311,44 @@
   }
 
   function overviewContent(asset,chip,quote){
-    const metrics=asset.metrics||{};
+    const metrics={...(asset.metrics||{}),...(state.officialValuation||{})};
+    const etf={...(asset.etf||{}),...(state.officialEtf||{})};
     const rows=state.historySeries?.rows||[];
-    const high52=rows.length?Math.max(...rows.map(row=>finite(row.high)).filter(value=>value!==null)):null;
-    const low52=rows.length?Math.min(...rows.map(row=>finite(row.low)).filter(value=>value!==null)):null;
+    const validHighs=rows.map(row=>finite(row.high)).filter(value=>value!==null);
+    const validLows=rows.map(row=>finite(row.low)).filter(value=>value!==null);
+    const high52=validHighs.length?Math.max(...validHighs):null;
+    const low52=validLows.length?Math.min(...validLows):null;
     const amplitude=finite(quote?.high)!==null&&finite(quote?.low)!==null&&finite(quote?.previous_close)
       ?(quote.high-quote.low)/quote.previous_close*100:null;
     const estimatedValue=finite(quote?.price)!==null&&finite(quote?.volume)!==null
       ?quote.price*quote.volume*1000:null;
-    const issuedShares=finite(asset.profile?.issued_shares);
+    const profile={...(asset.profile||{}),...(state.officialProfile||{})};
+    const issuedShares=finite(profile.issued_shares);
     const marketCap=finite(quote?.price)!==null&&issuedShares!==null?quote.price*issuedShares:null;
     const turnover=finite(quote?.volume)!==null&&issuedShares
       ?quote.volume*1000/issuedShares*100:null;
-    return`<div class="stock-app-grid">
+    const isEtf=asset.asset_class==="etf";
+    const historyStatus=state.historyLoading
+      ?"歷史資料讀取中"
+      :rows.length?`${state.historySeries?.source||"歷史資料"} · ${rows.length} 筆`:"歷史資料尚未取得";
+    const valuationCards=isEtf?[
+      detailMetric("基金淨值",finite(etf.nav)===null?"官方基金資料待更新":formatPrice(etf.nav,"TWD")),
+      detailMetric("折溢價",finite(etf.premium_discount)===null?"官方基金資料待更新":formatPercent(etf.premium_discount)),
+      detailMetric("基金規模",etf.aum||"官方基金資料待更新"),
+      detailMetric("內扣費用",etf.expense_ratio||"公開說明書"),
+      detailMetric("配息頻率",etf.distribution||"依官方公告"),
+      detailMetric("基金經理人",etf.manager||"官方基金資料待更新")
+    ]:[
+      detailMetric("本益比",finite(metrics.pe)===null?"官方未回傳":Number(metrics.pe).toFixed(2)),
+      detailMetric("股價淨值比",finite(metrics.pb)===null?"官方未回傳":Number(metrics.pb).toFixed(2)),
+      detailMetric("殖利率",finite(metrics.dividend_yield)===null?"官方未回傳":`${Number(metrics.dividend_yield).toFixed(2)}%`),
+      detailMetric("EPS",finite(metrics.eps)===null?"官方未回傳":Number(metrics.eps).toFixed(2)),
+      detailMetric("市值",marketCap===null?"官方未回傳發行股數":compactNumber(marketCap,"元")),
+      detailMetric("發行股數",issuedShares===null?"官方未回傳":compactNumber(issuedShares,"股"))
+    ];
+    return`<div class="stock-data-status"><strong>${escapeHtml(historyStatus)}</strong>
+      <span>即時行情：${escapeHtml(quote?.source||"備援資料")}</span></div>
+    <div class="stock-app-grid">
       ${detailMetric("最高",formatPrice(quote?.high,"TWD"))}
       ${detailMetric("最低",formatPrice(quote?.low,"TWD"))}
       ${detailMetric("昨收",formatPrice(quote?.previous_close,"TWD"))}
@@ -221,14 +357,9 @@
       ${detailMetric("振幅",amplitude===null?"—":`${amplitude.toFixed(2)}%`)}
       ${detailMetric("漲停",formatPrice(quote?.upper_limit,"TWD"))}
       ${detailMetric("跌停",formatPrice(quote?.lower_limit,"TWD"))}
-      ${detailMetric("本益比",finite(metrics.pe)===null?"官方未回傳":Number(metrics.pe).toFixed(2))}
-      ${detailMetric("股價淨值比",finite(metrics.pb)===null?"官方未回傳":Number(metrics.pb).toFixed(2))}
-      ${detailMetric("殖利率",finite(metrics.dividend_yield)===null?"官方未回傳":`${Number(metrics.dividend_yield).toFixed(2)}%`)}
-      ${detailMetric("EPS",finite(metrics.eps)===null?"官方未回傳":Number(metrics.eps).toFixed(2))}
+      ${valuationCards.join("")}
       ${detailMetric("52週最高",formatPrice(high52,"TWD"))}
       ${detailMetric("52週最低",formatPrice(low52,"TWD"))}
-      ${detailMetric("市值",marketCap===null?"官方未回傳發行股數":compactNumber(marketCap,"元"))}
-      ${detailMetric("發行股數",issuedShares===null?"官方未回傳":compactNumber(issuedShares,"股"))}
       ${detailMetric("週轉率",turnover===null?"—":`${turnover.toFixed(2)}%`)}
       ${detailMetric("當沖成交",numberText(chip?.day_trading?.volume))}
       ${detailMetric("融資餘額",numberText(chip?.margin?.balance))}
@@ -303,16 +434,18 @@
   }
 
   function basicContent(asset,quote){
-    const etf=asset.etf||{},metrics=asset.metrics||{};
+    const etf={...(asset.etf||{}),...(state.officialEtf||{})};
+    const profile={...(asset.profile||{}),...(state.officialProfile||{})};
+    const metrics={...(asset.metrics||{}),...(state.officialValuation||{})};
     const fields=asset.asset_class==="etf"?[
       ["標的類型","ETF"],["發行公司",etf.issuer],["基金經理人",etf.manager],
       ["基金類型",etf.category],["追蹤指數／績效指標",etf.benchmark],["投資策略",etf.strategy],
       ["成立日期",etf.inception_date],["上市日期",etf.listing_date],["保管機構",etf.custodian]
     ]:[
       ["市場",marketLabel(marketForAsset(asset))],["產業",asset.official_industry||asset.sub_industry],
-      ["子產業",asset.sub_industry],["公司全名",asset.profile?.full_name||quote?.full_name||asset.name],
-      ["上市／上櫃日期",asset.profile?.listing_date],["實收資本額",finite(asset.profile?.paid_in_capital)===null?null:compactNumber(asset.profile.paid_in_capital,"元")],
-      ["發行股數",finite(asset.profile?.issued_shares)===null?null:compactNumber(asset.profile.issued_shares,"股")],
+      ["子產業",asset.sub_industry],["公司全名",profile.full_name||quote?.full_name||asset.name],
+      ["上市／上櫃日期",profile.listing_date],["實收資本額",finite(profile.paid_in_capital)===null?null:compactNumber(profile.paid_in_capital,"元")],
+      ["發行股數",finite(profile.issued_shares)===null?null:compactNumber(profile.issued_shares,"股")],
       ["幣別",asset.currency||"TWD"],["分析覆蓋",`${asset.analysis_coverage?.count||0} / 8`],
       ["本益比",finite(metrics.pe)===null?null:Number(metrics.pe).toFixed(2)],
       ["股價淨值比",finite(metrics.pb)===null?null:Number(metrics.pb).toFixed(2)],
@@ -362,8 +495,11 @@
 
   function tabContent(asset,chip,quote){
     switch(state.activeTab){
-      case"trend":return`${lineChart(state.historySeries?.rows||state.intradaySeries?.rows||[])}
-        <p class="section-note">一日盤中使用分鐘資料；長期區間使用日線資料。</p>`;
+      case"trend":return`${tradingViewShell("chart")}
+        <details class="fallback-chart-details" ${state.historySeries?.rows?.length?"":"open"}><summary>本站歷史資料備援</summary>
+        ${state.historyLoading?'<div class="data-loading-banner">正在讀取官方歷史行情…</div>':lineChart(state.historySeries?.rows||state.intradaySeries?.rows||[])}
+        <p class="section-note">主圖由 TradingView 提供；本站同時嘗試 TWSE／TPEx 官方歷史行情，失敗時再使用 Yahoo 備援。</p></details>`;
+      case"technical":return technicalContent(asset);
       case"orderbook":return orderbookContent(quote);
       case"distribution":return distributionContent();
       case"institutional":return institutionalContent(chip);
@@ -414,6 +550,8 @@
       </div>
     </article>`;
     bindTabs();
+    if(state.activeTab==="trend")mountTradingViewWidget(asset,"chart");
+    if(state.activeTab==="technical")mountTradingViewWidget(asset,"technical");
   }
 
   async function refreshSelectedQuote(){
@@ -428,14 +566,32 @@
     }catch(error){console.warn("Selected stock live quote failed:",error)}
   }
 
-  async function loadSelectedSeries(asset,token){
-    const [intraday,historyRows]=await Promise.all([
-      fetchTaiwanSeries(asset,{range:"1d",interval:"1m",timeout:9000}),
-      fetchTaiwanSeries(asset,{range:"1y",interval:"1d",timeout:9000})
+  async function loadSelectedOfficialBasics(asset,token){
+    state.officialBasicsLoading=true;
+    const [valuation,profile]=await Promise.allSettled([
+      fetchOfficialValuation(asset,{timeout:8500}),
+      fetchOfficialAssetProfile(asset,{timeout:8500})
     ]);
     if(token!==state.requestToken)return;
-    state.intradaySeries=intraday;
-    state.historySeries=historyRows;
+    state.officialValuation=valuation.status==="fulfilled"?(valuation.value||null):null;
+    const profileValue=profile.status==="fulfilled"?(profile.value||null):null;
+    state.officialProfile=profileValue?.profile||null;
+    state.officialEtf=profileValue?.etf||null;
+    state.officialBasicsLoading=false;
+    renderSelectedAsset();
+  }
+
+  async function loadSelectedSeries(asset,token){
+    state.historyLoading=true;
+    renderSelectedAsset();
+    const [intraday,historyRows]=await Promise.allSettled([
+      fetchTaiwanSeries(asset,{range:"1d",interval:"1m",timeout:8500}),
+      fetchBestTaiwanHistory(asset,{months:13,timeout:8500})
+    ]);
+    if(token!==state.requestToken)return;
+    state.intradaySeries=intraday.status==="fulfilled"?intraday.value:null;
+    state.historySeries=historyRows.status==="fulfilled"?historyRows.value:null;
+    state.historyLoading=false;
     renderSelectedAsset();
   }
 
@@ -445,11 +601,17 @@
     state.liveQuote=null;
     state.intradaySeries=null;
     state.historySeries=null;
+    state.historyLoading=true;
+    state.officialValuation=null;
+    state.officialProfile=null;
+    state.officialEtf=null;
+    state.officialBasicsLoading=true;
     state.requestToken+=1;
     if(state.refreshStop)state.refreshStop();
     renderSelectedAsset();
     refreshSelectedQuote();
     loadSelectedSeries(asset,state.requestToken);
+    loadSelectedOfficialBasics(asset,state.requestToken);
     state.refreshStop=scheduleAdaptiveRefresh(refreshSelectedQuote,taiwanQuoteRefreshDelay,5000);
     $("#stockQueryResult").scrollIntoView({behavior:"smooth",block:"start"});
   }

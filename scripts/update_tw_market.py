@@ -18,7 +18,7 @@ OUT = DATA / "tw-market.json"
 SEED = DATA / "tw-market-seed.js"
 NOW = datetime.now(ZoneInfo("Asia/Taipei"))
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.1)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.2.6)",
     "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.7",
     "Referer": "https://mis.twse.com.tw/stock/fibest.jsp?stock=2330",
 }
@@ -37,6 +37,29 @@ def number(value):
         return value if math.isfinite(value) else None
     except Exception:
         return None
+
+
+def number_list(value):
+    output=[]
+    for item in str(value or "").split("_"):
+        parsed=number(item)
+        if parsed is not None:
+            output.append(parsed)
+    return output
+
+
+def load_previous() -> dict[tuple[str,str],dict]:
+    try:
+        payload=json.loads(OUT.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+    output={}
+    for row in payload.get("items",[]):
+        code=valid_code(row.get("symbol"))
+        exchange="TPEx" if "TPEX" in str(row.get("exchange","")).upper() else "TWSE"
+        if code:
+            output[(exchange,code)]=row
+    return output
 
 
 def first(row: dict, *keys):
@@ -150,7 +173,11 @@ def fetch_mis(session: requests.Session, universe: dict[tuple[str,str],dict]) ->
                     "price":price, "previous_close":previous, "change":change,
                     "change_percent":change/previous*100 if change is not None and previous not in (None,0) else None,
                     "open":number(row.get("o")), "high":number(row.get("h")), "low":number(row.get("l")),
-                    "volume":number(row.get("v")), "trade_value":None,
+                    "upper_limit":number(row.get("u")), "lower_limit":number(row.get("w")),
+                    "volume":number(row.get("v")), "last_trade_volume":number(row.get("tv") or row.get("s")),
+                    "trade_value":None,
+                    "bid_prices":number_list(row.get("b")), "bid_volumes":number_list(row.get("g")),
+                    "ask_prices":number_list(row.get("a")), "ask_volumes":number_list(row.get("f")),
                     "quote_date":str(row.get("d") or ""), "quote_time":str(row.get("t") or row.get("ot") or ""),
                     "market_at":number(row.get("tlong")), "status":"mis",
                 }
@@ -174,18 +201,24 @@ def market_status() -> str:
 def main() -> None:
     session = requests.Session()
     known = load_assets()
+    previous = load_previous()
     daily = fetch_daily(session)
     universe = {**known}
     for key, row in daily.items():
         universe[key] = {**universe.get(key,{}), **{k:row.get(k) for k in ("symbol","name","exchange","asset_class")}}
     live = fetch_mis(session, universe)
-    merged = {**daily}
+    merged = {**previous}
+    for key,row in daily.items():
+        merged[key] = {**merged.get(key,{}), **{k:v for k,v in row.items() if v is not None and v != ""}}
     for key, row in live.items():
-        fallback = daily.get(key,{})
-        merged[key] = {**fallback, **{k:v for k,v in row.items() if v is not None and v != ""}}
+        fallback = merged.get(key,{})
+        merged[key] = {**fallback, **{k:v for k,v in row.items() if v is not None and v != "" and v != []}}
     for key, base in universe.items():
         merged.setdefault(key, {**base, "price":None,"previous_close":None,"change":None,"change_percent":None,
-            "open":None,"high":None,"low":None,"volume":None,"trade_value":None,"quote_date":"","quote_time":"","status":"pending"})
+            "open":None,"high":None,"low":None,"upper_limit":None,"lower_limit":None,
+            "volume":None,"last_trade_volume":None,"trade_value":None,
+            "bid_prices":[],"bid_volumes":[],"ask_prices":[],"ask_volumes":[],
+            "quote_date":"","quote_time":"","status":"pending"})
     items = sorted(merged.values(), key=lambda row:(row.get("exchange",""),row.get("symbol","")))
     usable = [row for row in items if number(row.get("price")) is not None and number(row.get("previous_close")) is not None]
     if len(usable) < 25:
@@ -195,9 +228,9 @@ def main() -> None:
     up = sum(1 for row in usable if (number(row.get("change_percent")) or 0)>0)
     down = sum(1 for row in usable if (number(row.get("change_percent")) or 0)<0)
     payload = {
-        "metadata":{"version":"v11.2.5","updated_at":NOW.isoformat(timespec="seconds"),
+        "metadata":{"version":"v11.2.6","updated_at":NOW.isoformat(timespec="seconds"),
             "trading_date":trading_date,"market_status":market_status(),"quote_count":len(usable),
-            "source":"TWSE MIS、TWSE／TPEx OpenAPI","note":"盤中行情可能延遲；休市時保留最後交易日。"},
+            "source":"TWSE MIS、TWSE／TPEx OpenAPI","note":"盤中行情及最佳五檔；休市後保留最後成功五檔與最後交易日。"},
         "breadth":{"up":up,"down":down,"flat":len(usable)-up-down},"items":items,
     }
     OUT.write_text(json.dumps(payload,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")

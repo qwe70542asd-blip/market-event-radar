@@ -27,7 +27,7 @@ OUT=DATA/"tw-chips.json"
 SEED=DATA/"tw-chips-seed.js"
 NOW=datetime.now(ZoneInfo("Asia/Taipei"))
 HEADERS={
-    "User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.2.5)",
+    "User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.2.6)",
     "Accept":"application/json,text/plain,*/*",
     "Accept-Language":"zh-TW,zh;q=0.9",
 }
@@ -489,7 +489,7 @@ def main():
             **previous,
             "metadata":{
                 **(previous.get("metadata") or {}),
-                "version":"v11.2.5",
+                "version":"v11.2.6",
                 "last_attempt_at":NOW.isoformat(timespec="seconds"),
                 "status":"warning",
                 "note":"本次官方來源未回傳可驗證資料，保留上一筆成功快照。",
@@ -515,7 +515,7 @@ def main():
 
     payload={
         "metadata":{
-            "version":"v11.2.5",
+            "version":"v11.2.6",
             "updated_at":NOW.isoformat(timespec="seconds"),
             "trading_date":chosen_date,
             "source":"TWSE T86／MI_MARGN、TPEx OpenAPI",

@@ -179,7 +179,7 @@ const context={window:{},console,URL,AbortController,setTimeout,clearTimeout,set
 vm.createContext(context);
 vm.runInContext(fs.readFileSync(process.argv[1],'utf8'),context,{filename:'shared.js'});
 if(!context.window.MR)throw new Error('MR was not initialized');
-if(context.window.MR.VERSION!=='11.2.5')throw new Error('wrong version');
+if(context.window.MR.VERSION!=='11.2.6')throw new Error('wrong version');
 """
         result=subprocess.run([node,"-e",script,str(ROOT/"assets/shared.js")],capture_output=True,text=True)
         self.assertEqual(result.returncode,0,result.stderr)
@@ -246,7 +246,11 @@ if(context.window.MR.VERSION!=='11.2.5')throw new Error('wrong version');
         self.assertIn('["orderbook","五檔"]',script)
         self.assertIn('["distribution","分價"]',script)
         self.assertIn('["daytrade","當沖"]',script)
-        self.assertIn("fetchTaiwanSeries",script)
+        self.assertIn('["technical","技術"]',script)
+        self.assertIn("fetchBestTaiwanHistory",script)
+        self.assertIn("calculateTechnicalIndicators",script)
+        self.assertIn("embed-widget-advanced-chart.js",script)
+        self.assertIn("embed-widget-technical-analysis.js",script)
         self.assertNotIn("查看個股完整頁",script)
         self.assertNotIn("股票與 ETF",market)
         self.assertIn("全部標的",market)
@@ -270,10 +274,38 @@ if(context.window.MR.VERSION!=='11.2.5')throw new Error('wrong version');
         self.assertIn("bid_prices",shared)
         self.assertIn("ask_prices",shared)
         self.assertIn("fetchTaiwanSeries",shared)
+        self.assertIn("fetchOfficialTaiwanHistory",shared)
+        self.assertIn("fetchBestTaiwanHistory",shared)
+        self.assertIn("fetchOfficialValuation",shared)
+        self.assertIn("fetchOfficialAssetProfile",shared)
+        self.assertIn("BWIBBU_ALL",shared)
+        self.assertIn("t187ap47_L",shared)
+        self.assertIn("calculateTechnicalIndicators",shared)
         self.assertIn("buildPriceDistribution",shared)
         self.assertIn("coverageDetail",page)
         self.assertIn("showDetail",coverage)
         self.assertNotIn('href="asset.html?id=TW:',coverage)
+
+    def test_readable_notebook_typography_and_rank_guard(self):
+        css=(ROOT/"assets/styles.css").read_text(encoding="utf-8")
+        market=(ROOT/"assets/tw-market.js").read_text(encoding="utf-8")
+        home=(ROOT/"assets/home.js").read_text(encoding="utf-8")
+        self.assertIn("v11.2.6 notebook-readable typography",css)
+        self.assertIn("#gainers td:nth-child(2) strong",css)
+        self.assertIn("font-size:18px",css)
+        self.assertIn(".event-dot span",css)
+        self.assertIn("font-size:14px",css)
+        self.assertIn("Math.abs(pct)<=50",market)
+        self.assertIn("price>0",market)
+        self.assertIn("Math.max(sideHeight,760)",home)
+        self.assertIn('macro:"經濟"',home)
+
+    def test_market_workflow_persists_five_level(self):
+        updater=(ROOT/"scripts/update_tw_market.py").read_text(encoding="utf-8")
+        self.assertIn("def load_previous",updater)
+        self.assertIn('"bid_prices":number_list(row.get("b"))',updater)
+        self.assertIn('"ask_prices":number_list(row.get("a"))',updater)
+        self.assertIn("merged = {**previous}",updater)
 
     def test_portfolio_unknown_legacy_key_recovery(self):
         shared=(ROOT/"assets/shared.js").read_text(encoding="utf-8")
