@@ -1,4 +1,4 @@
-name: Update v11.2.1 event calendar
+name: Update v11.2.2 event calendar
 
 on:
   push:
@@ -15,7 +15,7 @@ on:
   workflow_dispatch:
     inputs:
       clean_rebuild:
-        description: "Ignore the previous live-events archive and rebuild from manual events"
+        description: "Ignore live-events and rebuild from the verified legacy bootstrap plus manual events"
         required: false
         default: false
         type: boolean
@@ -30,7 +30,7 @@ concurrency:
 jobs:
   events:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
     env:
       DATA_BRANCH: live-events
     steps:
@@ -45,15 +45,25 @@ jobs:
       - name: Restore previous verified event archive
         if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.clean_rebuild) }}
         run: |
-          bash scripts/restore_data_branch.sh "$DATA_BRANCH" \
-            "events.json:data/events.json" \
-            "events-seed.js:data/events-seed.js"
-      - name: Reset event archive for clean rebuild
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.clean_rebuild }}
+          bash scripts/restore_data_branch.sh "$DATA_BRANCH"             "events.json:data/events.json"             "events-seed.js:data/events-seed.js"
+      - name: Bootstrap verified events when the new channel is empty
+        shell: bash
         run: |
-          cat > data/events.json <<'JSON'
-          {"metadata":{"version":"v11.2.1"},"events":[],"sources":[]}
-          JSON
+          set -euo pipefail
+          EVENT_COUNT="$(python - <<'PY'
+          import json
+          from pathlib import Path
+          try:
+              payload=json.loads(Path("data/events.json").read_text(encoding="utf-8"))
+              print(len(payload.get("events") or []))
+          except Exception:
+              print(0)
+          PY
+          )"
+          if [ "$EVENT_COUNT" -eq 0 ]; then
+            echo "Migrating the last verified event archive from legacy live-data."
+            bash scripts/restore_data_branch.sh "live-data"               "events.json:data/events.json"               "events-seed.js:data/events-seed.js"
+          fi
       - run: python scripts/update_events.py
       - name: Validate events
         run: |
@@ -61,12 +71,13 @@ jobs:
           import json
           from pathlib import Path
           payload=json.loads(Path("data/events.json").read_text(encoding="utf-8"))
-          assert payload.get("events"), "empty event calendar"
-          print("events",len(payload["events"]))
+          events=payload.get("events") or []
+          assert events, "empty event calendar after legacy bootstrap"
+          print("events",len(events))
+          print("updated",payload.get("metadata",{}).get("updated_at"))
           PY
       - name: Publish isolated event channel
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          bash scripts/publish_data_branch.sh "$DATA_BRANCH" "event-calendar" \
-            data/events.json data/events-seed.js
+          bash scripts/publish_data_branch.sh "$DATA_BRANCH" "event-calendar"             data/events.json data/events-seed.js

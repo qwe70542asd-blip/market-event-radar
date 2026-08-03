@@ -193,6 +193,24 @@ class StaticTests(unittest.TestCase):
         self.assertIn("setInterval(refreshFullSnapshot,60_000)",market)
         self.assertNotIn("fetchTaiwanLiveQuotes(items)",market)
 
+    def test_event_channel_legacy_bootstrap(self):
+        workflow=(ROOT/".github/workflows/update-events.yml").read_text(encoding="utf-8")
+        self.assertIn('"live-data"',workflow)
+        self.assertIn("empty event calendar after legacy bootstrap",workflow)
+        self.assertIn("events.json:data/events.json",workflow)
+
+    def test_chip_channel_uses_latest_available_trade_date(self):
+        updater=(ROOT/"scripts/update_tw_chips.py").read_text(encoding="utf-8")
+        self.assertIn("def candidate_trade_dates",updater)
+        self.assertIn("for date in candidate_trade_dates()",updater)
+        self.assertIn('"status":"warning"',updater)
+        self.assertNotIn('raise SystemExit("No verified official chip values',updater)
+
+    def test_portfolio_unknown_legacy_key_recovery(self):
+        shared=(ROOT/"assets/shared.js").read_text(encoding="utf-8")
+        self.assertIn("localStorage.length",shared)
+        self.assertIn("market.*portfolio|portfolio.*market",shared)
+
     def test_etf_official_parser(self):
         spec=importlib.util.spec_from_file_location("update_assets_etf",ROOT/"scripts/update_assets.py")
         module=importlib.util.module_from_spec(spec)

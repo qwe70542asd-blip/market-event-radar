@@ -1,0 +1,19 @@
+市場事件雷達 v11.2.2
+
+本版修正：
+- 法人籌碼在盤中只查今天，導致無資料失敗。
+- 事件月曆第一次建立分支時沒有初始事件。
+- 投資組合舊 localStorage 名稱未被識別。
+- 虛擬貨幣 WebSocket 長時間停在連線中。
+
+操作：
+1. 解壓 ZIP。
+2. 覆蓋倉庫全部檔案。
+3. Commit：修正首次資料分支建立 v11.2.2
+4. Push origin。
+5. 等 assets、event calendar、Taiwan chips 完成。
+6. Pages 完成後 Ctrl + F5。
+7. 開啟 data-status.html。
+
+Taiwan chips 會自動查最近 14 個平日，不會再因盤中沒有今日盤後資料而失敗。
+event calendar 會從舊 live-data 自動搬移最後已驗證的 140 筆事件。

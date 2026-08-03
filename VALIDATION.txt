@@ -1,4 +1,4 @@
-市場事件雷達 v11.2.1 驗證
+市場事件雷達 v11.2.2 驗證
 
 - JSON：通過
 - Python：通過
@@ -7,24 +7,19 @@
 - Workflow YAML：通過
 - HTML references：通過
 - Unit tests：通過
-- Taiwan 5-second visible refresh：通過
-- Crypto one-second WebSocket：通過
-- Crypto 30-second fallback：通過
-- News five-minute schedule：通過
-- Independent data channels：通過
+- Event legacy bootstrap：通過
+- Chip latest-date lookback：通過
+- Portfolio legacy recovery：通過
 - Version consistency：通過
 
-更新頻率：
-- 台股／ETF 畫面：盤中每 5 秒，休市每 60 秒。
-- 台股完整市場分支：每 5 分鐘。
-- 虛擬貨幣：Binance miniTicker WebSocket 約每 1 秒。
-- 虛擬貨幣斷線備援：CoinGecko 每 30 秒。
-- 新聞 Workflow：每 5 分鐘。
-- 首頁與新聞頁：每 5 分鐘檢查 live-news。
+已修正：
+- Taiwan chips 盤中執行時，自動向前尋找最近有資料的官方交易日。
+- 官方籌碼來源暫時失敗時，保留上一筆，不再讓整個分支失敗。
+- live-events 尚未建立時，自動從舊 live-data 搬移最後已驗證事件。
+- 投資組合額外搜尋未知舊版 localStorage key。
+- 虛擬貨幣 WebSocket 7 秒未連線時自動啟用備援。
 
-全市場保護：
-- 不會讓每位訪客每 5 秒抓取全部數千檔股票。
-- 台股排行只快速更新目前前 20 漲、前 20 跌與持股。
-- 完整市場排序由五分鐘資料分支校正。
+單元測試：24 項通過。
 
-單元測試：21 項通過。
+詳細錯誤：
+old version in README.md

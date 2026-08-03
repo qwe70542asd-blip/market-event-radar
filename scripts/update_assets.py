@@ -34,7 +34,7 @@ SEED = DATA / "assets-seed.js"
 COVERAGE_OUT = DATA / "asset-coverage.json"
 NOW = datetime.now(ZoneInfo("Asia/Taipei"))
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.2.1)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.2.2)",
     "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.7",
     "Accept": "application/json,text/plain,*/*",
 }
@@ -800,7 +800,7 @@ def main() -> None:
     }
     coverage_payload = {
         "metadata": {
-            "version":"v11.2.1","updated_at":NOW.isoformat(timespec="seconds"),
+            "version":"v11.2.2","updated_at":NOW.isoformat(timespec="seconds"),
             "source":"TWSE／TPEx official OpenAPI coverage audit"
         },
         "summary": {
@@ -849,7 +849,7 @@ def main() -> None:
 
     payload = {
         "metadata": {
-            "version": "v11.2.1", "updated_at": NOW.isoformat(timespec="seconds"),
+            "version": "v11.2.2", "updated_at": NOW.isoformat(timespec="seconds"),
             "asset_count": len(rows), "official_rows": official_rows,
             "financially_enriched_stocks": enriched,
             "income_rows": len(income_rows), "balance_rows": len(balance_rows),

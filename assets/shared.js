@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const VERSION = "11.2.1";
+  const VERSION = "11.2.2";
   const OWNER = "qwe70542asd-blip";
   const REPO = "market-event-radar";
   const LEGACY_LIVE_BASE = `https://raw.githubusercontent.com/${OWNER}/${REPO}/live-data/`;
@@ -189,6 +189,7 @@
     let reconnectAttempt=0;
     let reconnectTimer=null;
     let fallbackTimer=null;
+    let connectTimer=null;
     const rows=new Map();
 
     const emit=()=>onUpdate([...rows.values()].sort((a,b)=>normalized.indexOf(a.symbol)-normalized.indexOf(b.symbol)));
@@ -272,7 +273,16 @@
         return;
       }
       onStatus("connecting");
+      clearTimeout(connectTimer);
+      connectTimer=setTimeout(()=>{
+        if(socket && socket.readyState!==WebSocket.OPEN){
+          onStatus("fallback");
+          fallbackFetch();
+          try{socket.close()}catch{}
+        }
+      },7000);
       socket.addEventListener("open",()=>{
+        clearTimeout(connectTimer);
         reconnectAttempt=0;
         onStatus("live");
       });
@@ -285,6 +295,7 @@
         }
       });
       socket.addEventListener("close",()=>{
+        clearTimeout(connectTimer);
         if(stopped)return;
         onStatus("reconnecting");
         fallbackFetch();
@@ -302,6 +313,7 @@
     return ()=>{
       stopped=true;
       clearTimeout(reconnectTimer);
+      clearTimeout(connectTimer);
       clearInterval(fallbackTimer);
       try{socket?.close()}catch{}
     };
@@ -614,6 +626,23 @@
       for (const key of LEGACY_PORTFOLIO_KEYS) {
         raw = localStorage.getItem(key);
         if (raw) break;
+      }
+    }
+    // Older experimental builds used several unversioned portfolio keys. Scan
+    // only keys that clearly belong to this project so an upgrade does not make
+    // a user's holdings appear to vanish.
+    if (!raw) {
+      for (let index=0; index<localStorage.length; index++) {
+        const key=localStorage.key(index) || "";
+        if (!/market.*portfolio|portfolio.*market/i.test(key)) continue;
+        const candidate=localStorage.getItem(key);
+        try {
+          const parsed=JSON.parse(candidate || "[]");
+          if (Array.isArray(parsed) && parsed.length) {
+            raw=candidate;
+            break;
+          }
+        } catch {}
       }
     }
     let rows = [];
