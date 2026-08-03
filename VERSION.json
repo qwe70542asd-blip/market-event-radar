@@ -1,7 +1,7 @@
 {
   "project": "market-event-radar",
-  "baseline_version": "11.1.4",
-  "label": "v11.1.4-complete-integration",
+  "baseline_version": "11.1.5",
+  "label": "v11.1.5-complete-integration",
   "updated_at": "2026-08-03T09:38:00+08:00",
   "features": [
     "MOPS html5lib dependency fix",

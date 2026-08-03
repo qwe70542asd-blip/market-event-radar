@@ -534,7 +534,7 @@ def main() -> None:
     status_by_name.update({row["name"]: row for row in statuses})
     payload = {
         "metadata": {
-            "version": "v11.1.4",
+            "version": "v11.1.5",
             "updated_at": NOW.isoformat(timespec="seconds"),
             "timezone": "Asia/Taipei",
             "retention_days": RETENTION_DAYS,

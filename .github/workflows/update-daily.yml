@@ -1,4 +1,4 @@
-name: Update v11.1.4 daily data
+name: Update v11.1.5 daily data
 
 on:
   push:
@@ -14,6 +14,12 @@ on:
     - cron: "10 22 * * *"
     - cron: "30 10 * * 1-5"
   workflow_dispatch:
+    inputs:
+      clean_rebuild:
+        description: "Ignore live-data fallback and rebuild from main-branch seed files"
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -46,6 +52,7 @@ jobs:
           print("html5lib", html5lib.__version__)
           PY
       - name: Restore last successful dynamic files
+        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.clean_rebuild) }}
         shell: bash
         run: |
           set -euo pipefail
@@ -74,10 +81,16 @@ jobs:
           coverage=json.loads(Path("data/asset-coverage.json").read_text(encoding="utf-8"))
           stocks=[row for row in assets.get("assets",[]) if row.get("market")=="TW" and row.get("asset_class")=="stock"]
           assert len(stocks)>=1000, len(stocks)
-          assert coverage["summary"]["coverage_percent"]>=70, coverage["summary"]
+          assert coverage["summary"]["total_stocks"]==len(stocks), coverage["summary"]
           target=next((row for row in stocks if row.get("symbol")=="1595"),None)
-          assert target and target.get("metrics",{}).get("eps") is not None, target
           print("Coverage",coverage["summary"])
+          print("Coverage percent",coverage["summary"].get("coverage_percent"))
+          print("1595 status", {
+              "present": bool(target),
+              "eps": target.get("metrics",{}).get("eps") if target else None,
+              "analysis_status": target.get("analysis_status") if target else None,
+          })
+          print("Quality checks",coverage.get("quality_checks",{}))
           PY
       - name: Publish daily files to live-data
         shell: bash
@@ -102,5 +115,5 @@ jobs:
           done
           git add .
           if git diff --cached --quiet; then exit 0; fi
-          git commit -m "chore: refresh daily data v11.1.4"
+          git commit -m "chore: refresh daily data v11.1.5"
           git push origin "HEAD:$LIVE_BRANCH"

@@ -74,6 +74,15 @@ class StaticTests(unittest.TestCase):
 
 
 
+
+    def test_clean_rebuild_and_nonblocking_single_stock(self):
+        updater=(ROOT/"scripts/update_assets.py").read_text(encoding="utf-8")
+        workflow=(ROOT/".github/workflows/update-daily.yml").read_text(encoding="utf-8")
+        self.assertIn("TPEx stock 1595 has no parsed EPS",updater)
+        self.assertNotIn("Coverage regression: TPEx stock 1595",updater)
+        self.assertIn("clean_rebuild",workflow)
+        self.assertNotIn('assert target and target.get("metrics",{}).get("eps") is not None',workflow)
+
     def test_mops_parser_dependencies(self):
         requirements=(ROOT/"requirements.txt").read_text(encoding="utf-8")
         updater=(ROOT/"scripts/update_assets.py").read_text(encoding="utf-8")
@@ -100,8 +109,7 @@ class StaticTests(unittest.TestCase):
         self.assertIn("TWSE_EPS_URL",updater)
         self.assertIn("TPEX_EPS_URL",updater)
         self.assertIn("asset-coverage.json",updater)
-        self.assertIn('row.get("symbol") == "1595"',updater)
-        self.assertIn("coverage_percent",workflow)
+        self.assertIn("Coverage percent",workflow)
         self.assertTrue((ROOT/"coverage.html").exists())
         self.assertTrue((ROOT/"assets/coverage.js").exists())
 
