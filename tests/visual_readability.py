@@ -114,7 +114,11 @@ def main():
         require(day_font>=21,f"calendar day font {day_font}px")
         require(weekday_font>=14,f"calendar weekday font {weekday_font}px")
         page.locator(".calendar-card").screenshot(path=str(OUT/"calendar-readable.png"))
-        results["calendar"]={"event_px":event_font,"day_px":day_font,"weekday_px":weekday_font}
+        page.click('[data-day="2026-08-03"]')
+        page.wait_for_function('()=>document.querySelectorAll("#dayDialogBody .day-event").length>=1')
+        decoration=page.eval_on_selector("#dayDialogBody .day-event strong","el=>getComputedStyle(el).textDecorationLine")
+        require(decoration=="none",f"day event underline remains: {decoration}")
+        results["calendar"]={"event_px":event_font,"day_px":day_font,"weekday_px":weekday_font,"event_text_decoration":decoration}
         page.close()
 
         page=context.new_page()
@@ -134,15 +138,24 @@ def main():
 
         page=context.new_page()
         load(page,"news.html")
-        page.wait_for_function('()=>document.querySelectorAll("#sourceGrid .source-card").length>=5 && document.querySelectorAll("#newsList .news-card").length>=3')
-        source_name=px(page,"#sourceGrid .source-card-head strong")
+        page.wait_for_function('()=>document.querySelectorAll("#newsList .news-card").length>=3 && document.querySelector("#sourceHealthPanel").hidden===true')
         news_title=px(page,"#newsList .news-card h3")
-        source_message=px(page,"#sourceGrid .source-card p")
-        require(source_name>=14,f"source name font {source_name}px")
+        news_summary=px(page,"#newsList .news-card p")
         require(news_title>=18,f"news title font {news_title}px")
-        require(source_message>=11,f"source message font {source_message}px")
-        page.screenshot(path=str(OUT/"news-sources-readable.png"),full_page=True)
-        results["news"]={"source_name_px":source_name,"title_px":news_title,"source_message_px":source_message}
+        require(news_summary>=12,f"news summary font {news_summary}px")
+        page.screenshot(path=str(OUT/"news-readable.png"),full_page=True)
+        results["news"]={"title_px":news_title,"summary_px":news_summary}
+        page.close()
+
+        page=context.new_page()
+        load(page,"coverage.html")
+        page.wait_for_function('()=>document.querySelectorAll("#coverageRows tr").length>=1')
+        audit_code=px(page,"#coverageRows td:first-child strong")
+        audit_pct=px(page,"#coverageRows .audit-status")
+        require(audit_code>=13,f"audit code font {audit_code}px")
+        require(audit_pct>=13,f"audit percent font {audit_pct}px")
+        page.screenshot(path=str(OUT/"full-audit-readable.png"),full_page=True)
+        results["full-audit"]={"code_px":audit_code,"percent_px":audit_pct}
         page.close()
 
         context.close()

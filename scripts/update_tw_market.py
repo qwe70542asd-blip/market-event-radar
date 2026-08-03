@@ -18,7 +18,7 @@ OUT = DATA / "tw-market.json"
 SEED = DATA / "tw-market-seed.js"
 NOW = datetime.now(ZoneInfo("Asia/Taipei"))
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.2.7)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.2.8)",
     "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.7",
     "Referer": "https://mis.twse.com.tw/stock/fibest.jsp?stock=2330",
 }
@@ -228,7 +228,7 @@ def main() -> None:
     up = sum(1 for row in usable if (number(row.get("change_percent")) or 0)>0)
     down = sum(1 for row in usable if (number(row.get("change_percent")) or 0)<0)
     payload = {
-        "metadata":{"version":"v11.2.7","updated_at":NOW.isoformat(timespec="seconds"),
+        "metadata":{"version":"v11.2.8","updated_at":NOW.isoformat(timespec="seconds"),
             "trading_date":trading_date,"market_status":market_status(),"quote_count":len(usable),
             "source":"TWSE MIS、TWSE／TPEx OpenAPI","note":"盤中行情及最佳五檔；休市後保留最後成功五檔與最後交易日。"},
         "breadth":{"up":up,"down":down,"flat":len(usable)-up-down},"items":items,

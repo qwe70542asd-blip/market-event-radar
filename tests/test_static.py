@@ -74,14 +74,15 @@ class StaticTests(unittest.TestCase):
         for name in ("上市公司重大訊息","上櫃公司重大訊息","臺灣證券交易所新聞","金融監督管理委員會","中央銀行","經濟日報","工商時報","中央通訊社","科技新報","永豐金證券","元大投信"):
             self.assertIn(name,names)
 
-    def test_news_source_health_uses_configured_sources(self):
+    def test_news_source_health_is_hidden_from_regular_users(self):
         page=(ROOT/"news.html").read_text(encoding="utf-8")
         script=(ROOT/"assets/news.js").read_text(encoding="utf-8")
         workflow=(ROOT/".github/workflows/update-news.yml").read_text(encoding="utf-8")
-        self.assertIn('id="configuredSourceCount"',page)
-        self.assertIn('id="sourceHealthGroup"',page)
-        self.assertIn('id="sourceHealthStatus"',page)
-        self.assertIn("metadata.configured_source_count",script)
+        self.assertIn('id="sourceHealthPanel" hidden',page)
+        self.assertIn('id="todayNewsCount"',page)
+        self.assertNotIn('id="configuredSourceCount"',page)
+        self.assertIn('get("admin")==="1"',script)
+        self.assertIn('$("#sourceHealthPanel").hidden=false',script)
         self.assertIn("sourceRows=payload.sources",script)
         self.assertIn("data/news-sources.json",workflow)
         self.assertIn("cancel-in-progress: false",workflow)
@@ -147,13 +148,34 @@ class StaticTests(unittest.TestCase):
 
     def test_market_wide_coverage_audit(self):
         updater=(ROOT/"scripts/update_assets.py").read_text(encoding="utf-8")
+        audit=(ROOT/"scripts/audit_all_assets.py").read_text(encoding="utf-8")
         workflow=(ROOT/".github/workflows/update-daily.yml").read_text(encoding="utf-8")
         self.assertIn("TWSE_EPS_URL",updater)
         self.assertIn("TPEX_EPS_URL",updater)
-        self.assertIn("asset-coverage.json",updater)
-        self.assertIn("coverage",workflow)
+        self.assertIn("recent_quarters(12)",updater)
+        spec=importlib.util.spec_from_file_location("update_assets_quarters",ROOT/"scripts/update_assets.py")
+        module=importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        self.assertEqual(module.recent_quarters(1),[(2026,2)])
+        self.assertIn("fetch_mops_history_parallel",updater)
+        self.assertIn("parse_dividend_history",updater)
+        self.assertIn("audit_mode",audit)
+        self.assertIn("all-assets-no-sampling",audit)
+        self.assertIn("audited_assets",audit)
+        self.assertIn("asset-audit.json",workflow)
+        self.assertIn("asset-audit-failures.csv",workflow)
+        self.assertIn("Audit every Taiwan stock and ETF",workflow)
+        self.assertIn('summary.get("audited_assets")==len(tw_assets)',workflow)
+        self.assertIn("run_assets_with_retry.sh",workflow)
         self.assertTrue((ROOT/"coverage.html").exists())
         self.assertTrue((ROOT/"assets/coverage.js").exists())
+
+    def test_asset_audit_seed_and_failure_report(self):
+        audit=json.loads((ROOT/"data/asset-audit.json").read_text(encoding="utf-8"))
+        self.assertEqual(audit.get("metadata",{}).get("audit_mode"),"all-assets-no-sampling")
+        self.assertEqual(audit.get("summary",{}).get("audited_assets"),len(audit.get("assets") or []))
+        self.assertTrue((ROOT/"data/asset-audit-seed.js").exists())
+        self.assertTrue((ROOT/"data/asset-audit-failures.csv").exists())
 
     def test_tpex_1595_eps_fallback_parser(self):
         spec=importlib.util.spec_from_file_location("update_assets_1595",ROOT/"scripts/update_assets.py")
@@ -208,7 +230,7 @@ const context={window:{},console,URL,AbortController,setTimeout,clearTimeout,set
 vm.createContext(context);
 vm.runInContext(fs.readFileSync(process.argv[1],'utf8'),context,{filename:'shared.js'});
 if(!context.window.MR)throw new Error('MR was not initialized');
-if(context.window.MR.VERSION!=='11.2.7')throw new Error('wrong version');
+if(context.window.MR.VERSION!=='11.2.8')throw new Error('wrong version');
 """
         result=subprocess.run([node,"-e",script,str(ROOT/"assets/shared.js")],capture_output=True,text=True)
         self.assertEqual(result.returncode,0,result.stderr)
@@ -312,14 +334,16 @@ if(context.window.MR.VERSION!=='11.2.7')throw new Error('wrong version');
         self.assertIn("calculateTechnicalIndicators",shared)
         self.assertIn("buildPriceDistribution",shared)
         self.assertIn("coverageDetail",page)
+        self.assertIn("逐檔完整檢查結果",page)
         self.assertIn("showDetail",coverage)
+        self.assertIn("audit_coverage_percent",coverage)
         self.assertNotIn('href="asset.html?id=TW:',coverage)
 
     def test_readable_notebook_typography_and_rank_guard(self):
         css=(ROOT/"assets/styles.css").read_text(encoding="utf-8")
         market=(ROOT/"assets/tw-market.js").read_text(encoding="utf-8")
         home=(ROOT/"assets/home.js").read_text(encoding="utf-8")
-        self.assertIn("v11.2.7 notebook-readable typography",css)
+        self.assertIn("v11.2.8 notebook-readable typography",css)
         self.assertIn("#gainers td:nth-child(2) strong",css)
         self.assertIn("font-size:18px",css)
         self.assertIn(".event-dot span",css)
@@ -328,6 +352,20 @@ if(context.window.MR.VERSION!=='11.2.7')throw new Error('wrong version');
         self.assertIn("price>0",market)
         self.assertIn("Math.max(sideHeight,760)",home)
         self.assertIn('macro:"經濟"',home)
+
+    def test_event_dialog_has_no_underlines(self):
+        css=(ROOT/"assets/styles.css").read_text(encoding="utf-8")
+        home=(ROOT/"assets/home.js").read_text(encoding="utf-8")
+        self.assertIn("v11.2.8 event dialog links without underlines",css)
+        self.assertIn("text-decoration:none!important",css)
+        self.assertIn('class="day-event"',home)
+
+    def test_public_navigation_hides_data_status(self):
+        for page in ROOT.glob("*.html"):
+            if page.name=="data-status.html":
+                continue
+            self.assertNotIn('<a href="data-status.html">資料狀態</a>',page.read_text(encoding="utf-8"))
+        self.assertTrue((ROOT/"data-status.html").exists())
 
     def test_market_workflow_persists_five_level(self):
         updater=(ROOT/"scripts/update_tw_market.py").read_text(encoding="utf-8")

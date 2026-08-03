@@ -1,4 +1,4 @@
-name: Update v11.2.7 Taiwan news and material information
+name: Update v11.2.8 Taiwan news and material information
 
 on:
   push:
@@ -57,7 +57,7 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.clean_rebuild }}
         run: |
           cat > data/news.json <<'JSON'
-          {"metadata":{"version":"v11.2.7"},"items":[],"sources":[]}
+          {"metadata":{"version":"v11.2.8"},"items":[],"sources":[]}
           JSON
           printf '{}\n' > data/news-link-cache.json
 

@@ -140,7 +140,7 @@ def test_news(tmp):
     module.OUT.write_text(json.dumps({"items":[],"sources":[]}),encoding="utf-8")
     module.main()
     payload=json.loads(module.OUT.read_text(encoding="utf-8"))
-    assert payload["metadata"]["version"]=="v11.2.7"
+    assert payload["metadata"]["version"]=="v11.2.8"
     assert payload["metadata"]["configured_source_count"]==8
     assert payload["metadata"]["checked_source_count"]==8
     assert payload["metadata"]["material_item_count"]>=2
@@ -148,6 +148,39 @@ def test_news(tmp):
     assert len(payload["items"])>=5
     assert all(row.get("link","").startswith("http") for row in payload["items"])
     assert "window.__NEWS_SEED__" in module.SEED.read_text(encoding="utf-8")
+
+def test_asset_audit(tmp):
+    module=load_module("asset_audit_smoke",ROOT/"scripts/audit_all_assets.py")
+    module.ASSETS=tmp/"assets.json"
+    module.MARKET=tmp/"tw-market.json"
+    module.CHIPS=tmp/"tw-chips.json"
+    module.NEWS=tmp/"news.json"
+    module.UPDATE_STATUS=tmp/"asset-update-status.json"
+    module.OUT=tmp/"asset-audit.json"
+    module.SEED=tmp/"asset-audit-seed.js"
+    module.FAILURES_CSV=tmp/"asset-audit-failures.csv"
+    assets={"metadata":{"updated_at":"2026-08-03T12:00:00+08:00"},"assets":[
+      {"id":"TW:2330","market":"TW","exchange":"TWSE","asset_class":"stock","symbol":"2330","name":"台積電","official_industry":"半導體業","profile":{"full_name":"台灣積體電路製造股份有限公司","listing_date":"1994/09/05","issued_shares":25930380458},"metrics":{"eps":42.3,"pe":23.6,"pb":7.1,"dividend_yield":1.7,"roe":31.2,"debt_ratio":22.5,"current_ratio":2.1,"net_margin":39.4},"financials":[{"year":2026,"quarter":2},{"year":2026,"quarter":1},{"year":2025,"quarter":4},{"year":2025,"quarter":3}]},
+      {"id":"TW:0056","market":"TW","exchange":"TWSE","asset_class":"etf","symbol":"0056","name":"元大高股息","etf":{"issuer":"元大投信","manager":"測試經理人","category":"高股息ETF","benchmark":"臺灣高股息指數","strategy":"追蹤指數","inception_date":"2007/12/13","listing_date":"2007/12/26","custodian":"中國信託","full_name":"元大台灣高股息ETF"}}
+    ]}
+    market={"metadata":{"updated_at":"2026-08-03T13:30:00+08:00"},"items":[
+      {"symbol":"2330","exchange":"TWSE","price":1000},{"symbol":"0056","exchange":"TWSE","price":49.8}
+    ]}
+    chips={"metadata":{"updated_at":"2026-08-03T15:00:00+08:00"},"items":{"twse:2330":{"symbol":"2330","market":"twse","foreign_net":1000,"margin":{"balance":100},"short":{"balance":10},"day_trading":{"volume":500}}}}
+    news={"metadata":{"updated_at":"2026-08-03T13:00:00+08:00"},"items":[{"title":"台積電 2330 重大訊息","asset_symbols":["2330"]}]}
+    status={"metadata":{"status":"ok","message":"fixture"}}
+    for path,payload in ((module.ASSETS,assets),(module.MARKET,market),(module.CHIPS,chips),(module.NEWS,news),(module.UPDATE_STATUS,status)):
+        path.write_text(json.dumps(payload,ensure_ascii=False),encoding="utf-8")
+    module.main()
+    payload=json.loads(module.OUT.read_text(encoding="utf-8"))
+    assert payload["metadata"]["audit_mode"]=="all-assets-no-sampling"
+    assert payload["summary"]["audited_assets"]==2
+    assert payload["summary"]["audit_coverage_percent"]==100.0
+    assert len(payload["assets"])==2
+    assert any(row["symbol"]=="0056" for row in payload["assets"])
+    assert "window.__ASSET_AUDIT_SEED__" in module.SEED.read_text(encoding="utf-8")
+    assert module.FAILURES_CSV.exists()
+
 
 def test_events(tmp):
     module=load_module('events_smoke',ROOT/'scripts/update_events.py')
@@ -166,9 +199,10 @@ def main():
         tmp=Path(directory)
         test_chips(tmp)
         test_news(tmp)
+        test_asset_audit(tmp)
         test_events(tmp)
     elapsed=time.monotonic()-started
     assert elapsed<15,elapsed
-    print(json.dumps({'status':'PASS','seconds':round(elapsed,3),'checks':['Taiwan chips official-shape parser','Taiwan news multi-source pipeline','event archive merge']},ensure_ascii=False,indent=2))
+    print(json.dumps({'status':'PASS','seconds':round(elapsed,3),'checks':['Taiwan chips official-shape parser','Taiwan news multi-source pipeline','full-universe asset audit','event archive merge']},ensure_ascii=False,indent=2))
 
 if __name__=='__main__': main()

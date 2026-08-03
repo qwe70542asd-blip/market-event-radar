@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "version": "v11.2.7",
+    "version": "v11.2.8",
     "updated_at": null,
     "timezone": "Asia/Taipei",
     "retention_days": 20,
@@ -17,7 +17,7 @@
     "rotation_bucket": 1,
     "rotation_buckets": 4,
     "elapsed_seconds": 0,
-    "note": "等待第一次 v11.2.7 台灣新聞與重大資訊排程。"
+    "note": "等待第一次 v11.2.8 台灣新聞與重大資訊排程。"
   },
   "sources": [
     {
@@ -27,7 +27,7 @@
       "homepage": "https://tw.stock.yahoo.com/",
       "priority": 5,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -39,7 +39,7 @@
       "homepage": "https://tw.stock.yahoo.com/tw-market",
       "priority": 5,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -51,7 +51,7 @@
       "homepage": "https://tw.stock.yahoo.com/world-markets",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -63,7 +63,7 @@
       "homepage": "https://tw.stock.yahoo.com/personal-finance",
       "priority": 3,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -75,7 +75,7 @@
       "homepage": "https://tw.stock.yahoo.com/funds",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -87,7 +87,7 @@
       "homepage": "https://tw.stock.yahoo.com/column",
       "priority": 3,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -99,7 +99,7 @@
       "homepage": "https://tw.stock.yahoo.com/research",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -111,7 +111,7 @@
       "homepage": "https://news.cnyes.com/news/cat/tw_stock_news",
       "priority": 5,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -123,7 +123,7 @@
       "homepage": "https://news.cnyes.com/news/cat/wd_stock",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -135,7 +135,7 @@
       "homepage": "https://www.moneydj.com/",
       "priority": 5,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -147,7 +147,7 @@
       "homepage": "https://www.twse.com.tw/zh/about/news/news/list.html",
       "priority": 5,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -159,7 +159,7 @@
       "homepage": "https://mops.twse.com.tw/mops/web/t05st01",
       "priority": 5,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -171,7 +171,7 @@
       "homepage": "https://mops.twse.com.tw/mops/web/t05st01",
       "priority": 5,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -183,7 +183,7 @@
       "homepage": "https://www.tpex.org.tw/",
       "priority": 5,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -195,7 +195,7 @@
       "homepage": "https://www.fsc.gov.tw/",
       "priority": 5,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -207,7 +207,7 @@
       "homepage": "https://www.cbc.gov.tw/",
       "priority": 5,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -219,7 +219,7 @@
       "homepage": "https://www.moea.gov.tw/",
       "priority": 5,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -231,7 +231,7 @@
       "homepage": "https://www.ndc.gov.tw/",
       "priority": 5,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -243,7 +243,7 @@
       "homepage": "https://www.dgbas.gov.tw/",
       "priority": 5,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -255,7 +255,7 @@
       "homepage": "https://www.mof.gov.tw/",
       "priority": 5,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -267,7 +267,7 @@
       "homepage": "https://www.ey.gov.tw/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -279,7 +279,7 @@
       "homepage": "https://www.mol.gov.tw/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -291,7 +291,7 @@
       "homepage": "https://moda.gov.tw/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -303,7 +303,7 @@
       "homepage": "https://www.nstc.gov.tw/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -315,7 +315,7 @@
       "homepage": "https://www.ida.gov.tw/",
       "priority": 5,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -327,7 +327,7 @@
       "homepage": "https://www.trade.gov.tw/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -339,7 +339,7 @@
       "homepage": "https://www.moeaea.gov.tw/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -351,7 +351,7 @@
       "homepage": "https://www.ftc.gov.tw/",
       "priority": 3,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -363,7 +363,7 @@
       "homepage": "https://www.taifex.com.tw/",
       "priority": 5,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -375,7 +375,7 @@
       "homepage": "https://www.tdcc.com.tw/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -387,7 +387,7 @@
       "homepage": "https://www.taiwanindex.com.tw/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -399,7 +399,7 @@
       "homepage": "https://www.nta.gov.tw/",
       "priority": 3,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -411,7 +411,7 @@
       "homepage": "https://www.fia.gov.tw/",
       "priority": 3,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -423,7 +423,7 @@
       "homepage": "https://www.cna.com.tw/list/afe.aspx",
       "priority": 5,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -435,7 +435,7 @@
       "homepage": "https://money.udn.com/",
       "priority": 5,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -447,7 +447,7 @@
       "homepage": "https://www.ctee.com.tw/",
       "priority": 5,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -459,7 +459,7 @@
       "homepage": "https://www.chinatimes.com/money/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -471,7 +471,7 @@
       "homepage": "https://ec.ltn.com.tw/",
       "priority": 5,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -483,7 +483,7 @@
       "homepage": "https://finance.ettoday.net/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -495,7 +495,7 @@
       "homepage": "https://www.setn.com/ViewAll.aspx?PageGroupID=2",
       "priority": 3,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -507,7 +507,7 @@
       "homepage": "https://www.ftvnews.com.tw/",
       "priority": 3,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -519,7 +519,7 @@
       "homepage": "https://news.tvbs.com.tw/money",
       "priority": 3,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -531,7 +531,7 @@
       "homepage": "https://news.ebc.net.tw/News/Business",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -543,7 +543,7 @@
       "homepage": "https://news.pts.org.tw/",
       "priority": 3,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -555,7 +555,7 @@
       "homepage": "https://udn.com/news/cate/2/6644",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -567,7 +567,7 @@
       "homepage": "https://www.businesstoday.com.tw/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -579,7 +579,7 @@
       "homepage": "https://www.businessweekly.com.tw/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -591,7 +591,7 @@
       "homepage": "https://www.cw.com.tw/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -603,7 +603,7 @@
       "homepage": "https://www.wealth.com.tw/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -615,7 +615,7 @@
       "homepage": "https://www.money.com.tw/",
       "priority": 3,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -627,7 +627,7 @@
       "homepage": "https://smart.businessweekly.com.tw/",
       "priority": 3,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -639,7 +639,7 @@
       "homepage": "https://www.storm.mg/category/118",
       "priority": 3,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -651,7 +651,7 @@
       "homepage": "https://www.cmmedia.com.tw/",
       "priority": 3,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -663,7 +663,7 @@
       "homepage": "https://newtalk.tw/",
       "priority": 3,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -675,7 +675,7 @@
       "homepage": "https://www.nownews.com/cat/finance/",
       "priority": 3,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -687,7 +687,7 @@
       "homepage": "https://www.mirrormedia.mg/",
       "priority": 3,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -699,7 +699,7 @@
       "homepage": "https://www.thenewslens.com/",
       "priority": 3,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -711,7 +711,7 @@
       "homepage": "https://www.cmoney.tw/notes/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -723,7 +723,7 @@
       "homepage": "https://www.wantgoo.com/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -735,7 +735,7 @@
       "homepage": "https://www.stockfeel.com.tw/",
       "priority": 3,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -747,7 +747,7 @@
       "homepage": "https://technews.tw/",
       "priority": 5,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -759,7 +759,7 @@
       "homepage": "https://finance.technews.tw/",
       "priority": 5,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -771,7 +771,7 @@
       "homepage": "https://www.bnext.com.tw/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -783,7 +783,7 @@
       "homepage": "https://www.ithome.com.tw/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -795,7 +795,7 @@
       "homepage": "https://www.digitimes.com.tw/",
       "priority": 5,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -807,7 +807,7 @@
       "homepage": "https://www.inside.com.tw/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -819,7 +819,7 @@
       "homepage": "https://buzzorange.com/techorange/",
       "priority": 3,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -831,7 +831,7 @@
       "homepage": "https://www.techbang.com/",
       "priority": 3,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -843,7 +843,7 @@
       "homepage": "https://www.cool3c.com/",
       "priority": 3,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -855,7 +855,7 @@
       "homepage": "https://www.sinotrade.com.tw/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -867,7 +867,7 @@
       "homepage": "https://www.yuanta-consulting.com.tw/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -879,7 +879,7 @@
       "homepage": "https://www.cathaysec.com.tw/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -891,7 +891,7 @@
       "homepage": "https://www.kgieworld.com.tw/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -903,7 +903,7 @@
       "homepage": "https://www.fubon.com/securities/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -915,7 +915,7 @@
       "homepage": "https://www.capital.com.tw/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -927,7 +927,7 @@
       "homepage": "https://www.uni-psg.com/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -939,7 +939,7 @@
       "homepage": "https://www.masterlink.com.tw/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -951,7 +951,7 @@
       "homepage": "https://www.emega.com.tw/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -963,7 +963,7 @@
       "homepage": "https://www.tssco.com.tw/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -975,7 +975,7 @@
       "homepage": "https://www.ctbcsec.com/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -987,7 +987,7 @@
       "homepage": "https://www.firstsec.com.tw/",
       "priority": 3,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -999,7 +999,7 @@
       "homepage": "https://www.entrust.com.tw/",
       "priority": 3,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -1011,7 +1011,7 @@
       "homepage": "https://www.tcfhc-sec.com.tw/",
       "priority": 3,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -1023,7 +1023,7 @@
       "homepage": "https://www.esunsec.com.tw/",
       "priority": 3,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -1035,7 +1035,7 @@
       "homepage": "https://www.concords.com.tw/",
       "priority": 3,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -1047,7 +1047,7 @@
       "homepage": "https://www.yuantaetfs.com/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -1059,7 +1059,7 @@
       "homepage": "https://www.cathaysite.com.tw/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -1071,7 +1071,7 @@
       "homepage": "https://www.fubon.com/asset-management/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -1083,7 +1083,7 @@
       "homepage": "https://www.kgi.com.tw/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -1095,7 +1095,7 @@
       "homepage": "https://www.capitalfund.com.tw/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -1107,7 +1107,7 @@
       "homepage": "https://www.uni-president.com.tw/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -1119,7 +1119,7 @@
       "homepage": "https://www.nomurafunds.com.tw/",
       "priority": 3,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -1131,7 +1131,7 @@
       "homepage": "https://tw.allianzgi.com/",
       "priority": 3,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -1143,7 +1143,7 @@
       "homepage": "https://am.jpmorgan.com/tw/zh/asset-management/per/",
       "priority": 3,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -1155,7 +1155,7 @@
       "homepage": "https://www.schroders.com/zh-tw/tw/",
       "priority": 3,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -1167,7 +1167,7 @@
       "homepage": "https://news.google.com/",
       "priority": 5,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -1179,7 +1179,7 @@
       "homepage": "https://news.google.com/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -1191,7 +1191,7 @@
       "homepage": "https://news.google.com/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null
@@ -1203,7 +1203,7 @@
       "homepage": "https://news.google.com/",
       "priority": 4,
       "status": "scheduled",
-      "message": "等待第一次 v11.2.7 新聞排程",
+      "message": "等待第一次 v11.2.8 新聞排程",
       "item_count": 0,
       "last_checked_at": null,
       "last_success_at": null

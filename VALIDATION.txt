@@ -1,36 +1,55 @@
-市場事件雷達 v11.2.7｜台灣新聞與重大資訊來源修正版
+市場事件雷達 v11.2.8｜全市場完整資料稽核版
 
 總結果：PASS
-完整驗證耗時：32.656 秒
+完整驗證耗時：28.771 秒
 
 - JSON：通過（0.003 秒）
-- Python compile：通過（1.463 秒）
-- JavaScript syntax：通過（1.114 秒）
-- Shell syntax：通過（0.013 秒）
-- Workflow YAML and <15m ceiling：通過（0.025 秒）
-- HTML references：通過（0.003 秒）
+- Python compile：通過（3.985 秒）
+- JavaScript syntax：通過（0.22 秒）
+- Shell syntax：通過（0.062 秒）
+- Workflow YAML and <15m ceiling：通過（0.015 秒）
+- HTML references：通過（0.002 秒）
 - Version and no audio：通過（0.007 秒）
-- Unit tests：通過（1.593 秒）
-- Workflow parser smoke：通過（1.491 秒）
-- Browser E2E：通過（16.021 秒）
-- Visual readability：通過（10.905 秒）
+- Unit tests：通過（3.414 秒）
+- Workflow parser smoke：通過（3.35 秒）
+- Browser E2E：通過（10.705 秒）
+- Visual readability：通過（6.998 秒）
 
-新聞系統專項檢查：
-- 99 個設定來源，涵蓋重大訊息、官方、財經媒體、科技媒體、券商與投信。
-- RSS 改用 feedparser.parse；feedparser 不可用時使用內建 XML 備援。
-- 上市與上櫃重大訊息解析測試通過。
-- Yahoo／一般 RSS、Google News RSS、MoneyDJ HTML 與 TWSE 新聞模擬測試通過。
-- 四組輪替與來源健康狀態合併測試通過。
-- 單一來源失敗時保留上一筆成功資料。
-- 新聞頁顯示設定來源、活躍媒體、重大資訊與來源健康狀態。
-- 重大優先、最新優先及主題／地區／來源篩選通過。
-- 新聞來源名稱 14px、新聞標題 18px 可讀性檢查通過。
-- 新聞頁 Chromium 端到端測試通過。
-- Workflow 14 分鐘上限。
+日曆顯示：
+- 彈出視窗的事件代碼、標題、摘要與時間均取消底線。
+- hover、focus、visited 狀態不會重新顯示底線。
+- Chromium 計算樣式檢查：text-decoration = none。
 
-注意：
-- 本地環境無外網，因此真實 99 個來源的成功數需在上傳後由 GitHub Actions 實際執行確認。
-- 第一次完整四組輪替約需 20 分鐘。
-- 來源暫時失敗不會清空既有新聞。
+全市場稽核：
+- 稽核模式：all-assets-no-sampling。
+- 稽核程式逐筆巡覽 assets.json 內全部台灣股票與 ETF。
+- 稽核筆數必須等於完整主檔筆數，覆蓋率必須為 100%。
+- 每個標的都記錄必要欄位、選用欄位、缺漏欄位與原因。
+- 每個欄位使用自己的適用分母。
+- 產出 asset-audit.json、asset-audit-seed.js 及 asset-audit-failures.csv。
+
+資料更新與失敗處理：
+- 財報目標為最近 12 個已完成季度。
+- 上市與上櫃歷季資料平行處理。
+- 官方請求具有逾時及有限次重試。
+- 資產更新最多嘗試兩次。
+- 失敗後恢復上一版成功資料，不清空其他股票。
+- GitHub Workflow 總上限 14 分鐘。
+- 尚未解決的股票與欄位集中輸出 CSV。
+
+本地完整巡覽測試：
+- 內建種子標的：17 檔。
+- 股票：10 檔；ETF：7 檔。
+- 巡覽覆蓋率：100.0%。
+- 36 項單元測試通過。
+- Workflow 模擬資料流程通過。
+- 六個頁面 Chromium 端到端測試通過。
+- 1366 × 768 可讀性與日曆無底線檢查通過。
+
+限制與實際執行：
+- 本地封裝環境無法取得 GitHub live-assets 的完整線上市場檔。
+- 因此本地數量只是壓縮包內建種子，不代表台股完整檔數。
+- 上傳後 GitHub Actions 會以完整 live-assets 主檔執行相同的逐筆稽核。
+- Workflow 會驗證股票主檔至少 1,000 檔、稽核筆數等於完整股票與 ETF 數量，且覆蓋率為 100%。
 
 音訊檔：無。

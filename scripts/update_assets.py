@@ -17,6 +17,7 @@ import math
 import re
 import time
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from io import StringIO
 from pathlib import Path
@@ -34,7 +35,7 @@ SEED = DATA / "assets-seed.js"
 COVERAGE_OUT = DATA / "asset-coverage.json"
 NOW = datetime.now(ZoneInfo("Asia/Taipei"))
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.2.7)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.2.8)",
     "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.7",
     "Accept": "application/json,text/plain,*/*",
 }
@@ -200,11 +201,19 @@ def load_previous() -> dict:
         return {"assets": []}
 
 
-def get_json(session: requests.Session, url: str, timeout=18):
-    response = session.get(url, headers=HEADERS, timeout=timeout)
-    response.raise_for_status()
-    payload = response.json()
-    return payload if isinstance(payload, list) else payload.get("data") or payload.get("aaData") or []
+def get_json(session: requests.Session, url: str, timeout=15, attempts=3):
+    last_error = None
+    for attempt in range(1, attempts + 1):
+        try:
+            response = session.get(url, headers=HEADERS, timeout=timeout)
+            response.raise_for_status()
+            payload = response.json()
+            return payload if isinstance(payload, list) else payload.get("data") or payload.get("aaData") or []
+        except Exception as exc:
+            last_error = exc
+            if attempt < attempts:
+                time.sleep(.4 * attempt)
+    raise RuntimeError(f"GET failed after {attempts} attempts: {url}: {last_error}")
 
 
 ISSUER_PREFIXES = {
@@ -299,8 +308,13 @@ def discover_paths(spec: dict, required: tuple[str, ...]) -> list[str]:
 
 
 def recent_quarters(count=4) -> list[tuple[int, int]]:
+    """Return the latest completed fiscal quarters, not the quarter in progress."""
     year = NOW.year
     quarter = (NOW.month - 1) // 3 + 1
+    quarter -= 1
+    if quarter == 0:
+        quarter = 4
+        year -= 1
     output = []
     for _ in range(count):
         output.append((year, quarter))
@@ -400,6 +414,29 @@ def fetch_mops_history(session: requests.Session, endpoint: str, market: str, qu
                 break
         time.sleep(.08)
     return rows
+
+def fetch_mops_history_parallel(endpoint: str, markets: tuple[str, ...], quarters: list[tuple[int, int]], max_workers=8) -> list[dict]:
+    """Fetch every requested market/quarter with bounded parallelism.
+
+    Each task owns its own Session so one stalled request cannot block the
+    complete history. Failed periods are reported and the remaining periods
+    continue, allowing the exhaustive audit to list unresolved companies.
+    """
+    rows: list[dict] = []
+    tasks = [(market, period) for market in markets for period in quarters]
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        futures = {
+            executor.submit(fetch_mops_history, requests.Session(), endpoint, market, [period]): (market, period)
+            for market, period in tasks
+        }
+        for future in as_completed(futures):
+            market, period = futures[future]
+            try:
+                rows.extend(future.result())
+            except Exception as exc:
+                print("warning MOPS parallel", endpoint, market, period, exc)
+    return rows
+
 
 def fetch_financial_rows(session: requests.Session, urls: list[str]) -> list[dict]:
     rows = []
@@ -568,6 +605,32 @@ def parse_dividends(rows: list[dict]) -> dict[str, dict]:
     return output
 
 
+def parse_dividend_history(rows: list[dict], limit=20) -> dict[str, list[dict]]:
+    output: dict[str, list[dict]] = defaultdict(list)
+    seen = set()
+    for row in rows:
+        code = valid_code(pick(row, "code"))
+        if not code:
+            continue
+        item = {
+            "year": int(number(pick(row, "year")) or 0) or None,
+            "cash_dividend": number(row.get("盈餘分配之現金股利(元/股)") or row.get("現金股利") or row.get("股東配發-盈餘分配之現金股利(元/股)")),
+            "stock_dividend": number(row.get("盈餘轉增資配股(元/股)") or row.get("股票股利") or row.get("股東配發-盈餘轉增資配股(元/股)")),
+            "ex_dividend_date": str(row.get("除息交易日") or row.get("除權息交易日") or "").strip() or None,
+            "ex_right_date": str(row.get("除權交易日") or "").strip() or None,
+            "announcement_date": str(row.get("董事會決議日期") or row.get("資料日期") or "").strip() or None,
+        }
+        key = (code, item["year"], item["ex_dividend_date"], item["announcement_date"], item["cash_dividend"], item["stock_dividend"])
+        if key in seen or not any(value is not None for value in item.values()):
+            continue
+        seen.add(key)
+        output[code].append(item)
+    for code in output:
+        output[code].sort(key=lambda row: (row.get("year") or 0, row.get("ex_dividend_date") or "", row.get("announcement_date") or ""), reverse=True)
+        output[code] = output[code][:limit]
+    return output
+
+
 def analysis_for(code: str, income_map, balance_map, valuation_map) -> tuple[dict, list[dict], str]:
     incomes = income_map.get(code, [])
     balances = balance_map.get(code, [])
@@ -714,14 +777,10 @@ def main() -> None:
     # Current-quarter OpenAPI tables only contain companies that have already
     # filed. Pull the latest four official MOPS quarters so a company that has
     # not filed the newest quarter still uses its most recent published report.
-    quarters = recent_quarters(4)
-    mops_income_rows: list[dict] = []
-    mops_balance_rows: list[dict] = []
-    mops_operating_rows: list[dict] = []
-    for market in ("sii", "otc"):
-        mops_income_rows.extend(fetch_mops_history(session, "ajax_t163sb04", market, quarters))
-        mops_balance_rows.extend(fetch_mops_history(session, "ajax_t163sb05", market, quarters))
-        mops_operating_rows.extend(fetch_mops_history(session, "ajax_t163sb06", market, quarters))
+    quarters = recent_quarters(12)
+    mops_income_rows = fetch_mops_history_parallel("ajax_t163sb04", ("sii", "otc"), quarters)
+    mops_balance_rows = fetch_mops_history_parallel("ajax_t163sb05", ("sii", "otc"), quarters)
+    mops_operating_rows = fetch_mops_history_parallel("ajax_t163sb06", ("sii", "otc"), quarters)
 
     income_rows.extend(eps_rows)
     income_rows.extend(operating_rows)
@@ -743,6 +802,7 @@ def main() -> None:
     valuation_map = parse_valuation(valuation_rows)
     revenue_map = parse_monthly_revenue(revenue_rows)
     dividend_map = parse_dividends(dividend_rows)
+    dividend_history_map = parse_dividend_history(dividend_rows)
 
     enriched = 0
     coverage_fields = ("eps","pe","pb","dividend_yield","roe","debt_ratio","current_ratio","net_margin")
@@ -757,6 +817,8 @@ def main() -> None:
             asset["monthly_revenue"] = revenue_map[symbol]
         if symbol in dividend_map:
             asset["dividend"] = dividend_map[symbol]
+        if symbol in dividend_history_map:
+            asset["dividend_history"] = dividend_history_map[symbol]
         score = stability_score(asset["metrics"])
         if score is not None:
             asset["metrics"]["stability_score"] = round(score, 2)
@@ -811,8 +873,8 @@ def main() -> None:
     }
     coverage_payload = {
         "metadata": {
-            "version":"v11.2.7","updated_at":NOW.isoformat(timespec="seconds"),
-            "source":"TWSE／TPEx official OpenAPI coverage audit"
+            "version":"v11.2.8","updated_at":NOW.isoformat(timespec="seconds"),
+            "source":"TWSE／TPEx official OpenAPI and 12-quarter MOPS coverage audit"
         },
         "summary": {
             "total_stocks":len(stocks),"complete":len(complete),"partial_or_basic":len(partial),
@@ -860,7 +922,7 @@ def main() -> None:
 
     payload = {
         "metadata": {
-            "version": "v11.2.7", "updated_at": NOW.isoformat(timespec="seconds"),
+            "version": "v11.2.8", "updated_at": NOW.isoformat(timespec="seconds"),
             "asset_count": len(rows), "official_rows": official_rows,
             "financially_enriched_stocks": enriched,
             "income_rows": len(income_rows), "balance_rows": len(balance_rows),
@@ -869,7 +931,7 @@ def main() -> None:
             "mops_operating_rows": len(mops_operating_rows),
             "revenue_rows": len(revenue_rows), "dividend_rows": len(dividend_rows),
             "coverage_percent": coverage_payload["summary"]["coverage_percent"],
-            "note": "Official master, EPS, operating analysis, valuation, financial statements, monthly revenue, dividends and coverage audit.",
+            "note": "Official master, 12-quarter financial statements, EPS, operating analysis, valuation, monthly revenue, dividend history and exhaustive audit preparation.",
         },
         "assets": rows,
     }

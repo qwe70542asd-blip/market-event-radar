@@ -28,8 +28,9 @@
 
   $("#newsCount").textContent=Number(metadata.item_count??items.length).toLocaleString("zh-TW");
   $("#materialCount").textContent=Number(metadata.material_item_count??items.filter(item=>item.topic==="material").length).toLocaleString("zh-TW");
-  $("#activeSourceCount").textContent=Number(metadata.active_source_count??itemSources.length).toLocaleString("zh-TW");
-  $("#configuredSourceCount").textContent=Number(metadata.configured_source_count??sourceRows.length).toLocaleString("zh-TW");
+  const todayKey=new Date().toLocaleDateString("sv-SE",{timeZone:"Asia/Taipei"});
+  const todayCount=items.filter(item=>String(item.published_at||"").slice(0,10)===todayKey).length;
+  $("#todayNewsCount").textContent=Number(todayCount).toLocaleString("zh-TW");
   $("#newsUpdated").textContent=`更新 ${formatTime(metadata.updated_at)} · 本輪檢查 ${Number(metadata.checked_source_count||0)} 個來源 · 輪替 ${metadata.rotation_bucket||"—"}/${metadata.rotation_buckets||"—"}`;
 
   function renderSourceSummary(){
@@ -127,16 +128,22 @@
     }).join(""):'<div class="empty" style="grid-column:1/-1">目前沒有符合篩選的新聞。</div>';
   }
 
-  renderSourceSummary();
-  renderSourceHealth();
+  const adminMode=new URLSearchParams(location.search).get("admin")==="1";
+  if(adminMode){
+    $("#sourceHealthPanel").hidden=false;
+    renderSourceSummary();
+    renderSourceHealth();
+  }
   renderNews();
 
   ["newsSearch","newsRegion","newsTopic","newsSource","newsSort"].forEach(id=>{
     $("#"+id).addEventListener(id==="newsSearch"?"input":"change",renderNews);
   });
-  ["sourceHealthSearch","sourceHealthGroup","sourceHealthStatus"].forEach(id=>{
-    $("#"+id).addEventListener(id==="sourceHealthSearch"?"input":"change",renderSourceHealth);
-  });
+  if(adminMode){
+    ["sourceHealthSearch","sourceHealthGroup","sourceHealthStatus"].forEach(id=>{
+      $("#"+id).addEventListener(id==="sourceHealthSearch"?"input":"change",renderSourceHealth);
+    });
+  }
 
   let refreshBusy=false;
   async function refreshNews(){

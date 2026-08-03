@@ -90,6 +90,32 @@ def chips():
             'available_dates':['20260801'],'markets':markets,'items':items,'history':{'20260801':snapshot}}
 
 
+def asset_audit():
+    rows=[]
+    checks=[
+      {'field':'master.full_name','label':'公司／基金全名','required':True,'available':True,'reason':None,'value':'台灣積體電路製造股份有限公司'},
+      {'field':'master.listing_date','label':'上市／上櫃日期','required':True,'available':True,'reason':None,'value':'1994/09/05'},
+      {'field':'metrics.eps','label':'EPS','required':True,'available':True,'reason':None,'value':42.3},
+      {'field':'metrics.pe','label':'本益比','required':True,'available':True,'reason':None,'value':23.6},
+      {'field':'metrics.pb','label':'股價淨值比','required':True,'available':True,'reason':None,'value':7.1},
+      {'field':'metrics.roe','label':'ROE','required':True,'available':True,'reason':None,'value':31.2},
+      {'field':'metrics.debt_ratio','label':'負債比','required':True,'available':True,'reason':None,'value':22.5},
+      {'field':'financials.latest','label':'最近財報','required':True,'available':True,'reason':None,'value':{'year':2026,'quarter':2}},
+      {'field':'financials.history','label':'歷季財報','required':True,'available':False,'reason':'quarter_history_incomplete','value':None},
+      {'field':'market.quote','label':'最近行情','required':False,'available':True,'reason':None,'value':{'price':1000}},
+    ]
+    rows.append({'id':'TW:2330','symbol':'2330','name':'台積電','exchange':'TWSE','asset_class':'stock','industry':'半導體業','status':'partial','required_count':9,'available_required_count':8,'coverage_percent':88.89,'missing_required':[{'field':'financials.history','label':'歷季財報','reason':'quarter_history_incomplete'}],'missing_optional':[],'checks':checks})
+    rows.append({'id':'TW:0056','symbol':'0056','name':'元大高股息','exchange':'TWSE','asset_class':'etf','industry':'ETF','status':'complete','required_count':8,'available_required_count':8,'coverage_percent':100,'missing_required':[],'missing_optional':[],'checks':[
+      {'field':'etf.issuer','label':'ETF 發行公司','required':True,'available':True,'reason':None,'value':'元大投信'},
+      {'field':'etf.manager','label':'ETF 基金經理人','required':True,'available':True,'reason':None,'value':'測試經理人'}
+    ]})
+    field_stats={
+      'metrics.eps':{'label':'EPS','applicable':1,'available':1,'missing':0,'not_applicable':1,'coverage_percent':100},
+      'financials.history':{'label':'歷季財報','applicable':1,'available':0,'missing':1,'not_applicable':1,'coverage_percent':0},
+      'etf.manager':{'label':'ETF 基金經理人','applicable':1,'available':1,'missing':0,'not_applicable':1,'coverage_percent':100}
+    }
+    return {'metadata':{'version':'v11.2.8','updated_at':NOW,'asset_update_status':'ok','asset_update_message':'fixture'},'summary':{'audited_assets':2,'stock_count':1,'etf_count':1,'complete':1,'partial':1,'unresolved':0,'audit_coverage_percent':100,'field_stats':field_stats,'reason_counts':{'quarter_history_incomplete':1}},'assets':rows,'unresolved_assets':[rows[0]]}
+
 def news():
     items=[{'id':f'n{i}','title':f'財經新聞 {i}','summary':'市場與產業測試內容','source':['鉅亨網','MoneyDJ','Yahoo股市'][i%3],'source_group':'publisher','published_at':NOW,'link':'https://example.org/news','topic':'market','region':'TW','importance_score':40+i} for i in range(12)]
     items.append({'id':'tsmc','title':'台積電（2330）重大訊息公告','summary':'測試個股重大資訊','source':'公開資訊觀測站','source_group':'official-company','published_at':NOW,'link':'https://example.org/tsmc','topic':'material','region':'TW','importance_score':100,'asset_symbols':['2330']})
@@ -102,7 +128,7 @@ def news():
     ]
     return {'metadata':{'updated_at':NOW,'retention_days':20,'item_count':len(items),'material_item_count':1,'configured_source_count':99,'checked_source_count':45,'healthy_source_count':3,'warning_source_count':1,'active_source_count':4,'discovered_source_count':0,'rotation_bucket':1,'rotation_buckets':4},'sources':sources,'items':items}
 
-PAYLOADS={'assets.json':assets(),'tw-market.json':tw_market(),'events.json':events(),'market-snapshot.json':market(),'tw-chips.json':chips(),'news.json':news(),
+PAYLOADS={'assets.json':assets(),'tw-market.json':tw_market(),'events.json':events(),'market-snapshot.json':market(),'tw-chips.json':chips(),'news.json':news(),'asset-audit.json':asset_audit(),
 'asset-coverage.json':{'summary':{'total_stocks':1200,'complete':100,'partial_or_basic':1099,'missing':1,'field_counts':{'eps':1000,'pe':1100}},
 'metadata':{'updated_at':NOW},'missing_stocks':[{'symbol':'2330','name':'台積電','exchange':'TWSE','industry':'半導體業','missing':['eps','roe']}],'partial_stocks':[]}}
 
@@ -206,8 +232,10 @@ def run_page(page,name,assertions):
         if 'BAD0' in page.locator('body').inner_text():
             raise AssertionError('invalid NT$0 / -100% quote leaked into rankings')
     if name=="coverage.html":
-        page.click('[data-coverage-symbol="2330"]')
-        page.wait_for_function('()=>!document.querySelector("#coverageDetail").hidden && document.querySelectorAll(".coverage-metric-grid>div").length===8',timeout=12000)
+        page.click('[data-audit-id="TW:2330"]')
+        page.wait_for_function('()=>!document.querySelector("#coverageDetail").hidden && document.querySelectorAll(".audit-check-grid .audit-check").length>=8',timeout=12000)
+    if name=="news.html":
+        page.wait_for_function('()=>document.querySelector("#sourceHealthPanel").hidden===true',timeout=12000)
     elapsed=time.monotonic()-started
     if errors: raise AssertionError(f'{name} page errors: {errors}')
     if elapsed>15: raise AssertionError(f'{name} exceeded 15 seconds: {elapsed:.2f}')
@@ -221,7 +249,7 @@ def main():
           'index.html':[('#calendarGrid .calendar-day',35),('#marketList .market-row',4),('#cryptoList .crypto-row',5),('#portfolioStrip .quote-card',1),('#homeNews .news-card',3)],
           'tw-market.html':[('#gainers tr',3),('#losers tr',3),('#twHoldings tr',1)],
           'institutional.html':[('#institutionalGrid .info-card',4),('#marginGrid .info-card',4),('#stockQueryInput',1)],
-          'news.html':[('#newsList .news-card',3),('#sourceGrid .source-card',5),('#sourceHealthStats article',5)],
+          'news.html':[('#newsList .news-card',3)],
           'data-status.html':[('#channelGrid .channel-card',7)],
           'coverage.html':[('#coverageRows tr',1)],
         }

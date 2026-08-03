@@ -1,4 +1,4 @@
-name: Update v11.2.7 assets and financials
+name: Update v11.2.8 assets financials and full audit
 
 on:
   push:
@@ -6,6 +6,8 @@ on:
     paths:
       - ".github/workflows/update-daily.yml"
       - "scripts/update_assets.py"
+      - "scripts/audit_all_assets.py"
+      - "scripts/run_assets_with_retry.sh"
       - "scripts/publish_data_branch.sh"
       - "scripts/restore_data_branch.sh"
       - "requirements.txt"
@@ -37,11 +39,14 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
           cache: pip
+
       - run: pip install -r requirements.txt
+
       - name: Verify financial parser dependencies
         run: |
           python - <<'PY'
@@ -50,30 +55,76 @@ jobs:
           print("lxml", lxml.__version__)
           print("html5lib", html5lib.__version__)
           PY
+
       - name: Restore previous asset payload
         if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.clean_rebuild) }}
         run: |
           bash scripts/restore_data_branch.sh "$DATA_BRANCH" \
             "assets.json:data/assets.json" \
             "assets-seed.js:data/assets-seed.js" \
-            "asset-coverage.json:data/asset-coverage.json"
-      - run: python scripts/update_assets.py
-      - name: Validate assets and coverage
+            "asset-coverage.json:data/asset-coverage.json" \
+            "asset-audit.json:data/asset-audit.json" \
+            "asset-audit-seed.js:data/asset-audit-seed.js" \
+            "asset-audit-failures.csv:data/asset-audit-failures.csv" \
+            "asset-update-status.json:data/asset-update-status.json"
+
+      - name: Restore latest related channels for exhaustive audit
+        run: |
+          bash scripts/restore_data_branch.sh "live-tw-market" \
+            "tw-market.json:data/tw-market.json"
+          bash scripts/restore_data_branch.sh "live-tw-chips" \
+            "tw-chips.json:data/tw-chips.json"
+          bash scripts/restore_data_branch.sh "live-news" \
+            "news.json:data/news.json"
+
+      - name: Update official assets with bounded retry
+        run: bash scripts/run_assets_with_retry.sh
+
+      - name: Audit every Taiwan stock and ETF
+        run: python scripts/audit_all_assets.py
+
+      - name: Validate exhaustive audit
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
+
           assets=json.loads(Path("data/assets.json").read_text(encoding="utf-8"))
           coverage=json.loads(Path("data/asset-coverage.json").read_text(encoding="utf-8"))
-          stocks=[row for row in assets.get("assets",[]) if row.get("market")=="TW" and row.get("asset_class")=="stock"]
+          audit=json.loads(Path("data/asset-audit.json").read_text(encoding="utf-8"))
+          update_status=json.loads(Path("data/asset-update-status.json").read_text(encoding="utf-8"))
+
+          tw_assets=[row for row in assets.get("assets",[]) if row.get("market")=="TW" and row.get("asset_class") in {"stock","etf"}]
+          stocks=[row for row in tw_assets if row.get("asset_class")=="stock"]
+          summary=audit.get("summary",{})
+
           assert len(stocks)>=1000, f"stock master too small: {len(stocks)}"
+          assert summary.get("audited_assets")==len(tw_assets), (summary,len(tw_assets))
+          assert summary.get("audit_coverage_percent")==100.0, summary
+          assert len(audit.get("assets") or [])==len(tw_assets)
           assert coverage.get("summary",{}).get("total_stocks")==len(stocks), coverage.get("summary")
+          assert audit.get("metadata",{}).get("elapsed_seconds",999)<60, audit.get("metadata")
+          assert Path("data/asset-audit-failures.csv").exists()
+
+          print("update status",update_status.get("metadata",{}).get("status"))
+          print("all assets",len(tw_assets))
           print("stocks",len(stocks))
-          print("coverage",coverage.get("summary"))
+          print("ETFs",summary.get("etf_count"))
+          print("complete",summary.get("complete"))
+          print("partial",summary.get("partial"))
+          print("unresolved",summary.get("unresolved"))
+          print("audit seconds",audit.get("metadata",{}).get("elapsed_seconds"))
           PY
-      - name: Publish isolated asset channel
+
+      - name: Publish isolated asset and audit channel
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          bash scripts/publish_data_branch.sh "$DATA_BRANCH" "assets-financials" \
-            data/assets.json data/assets-seed.js data/asset-coverage.json
+          bash scripts/publish_data_branch.sh "$DATA_BRANCH" "assets-financials-full-audit" \
+            data/assets.json \
+            data/assets-seed.js \
+            data/asset-coverage.json \
+            data/asset-audit.json \
+            data/asset-audit-seed.js \
+            data/asset-audit-failures.csv \
+            data/asset-update-status.json

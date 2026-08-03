@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const VERSION = "11.2.7";
+  const VERSION = "11.2.8";
   const OWNER = "qwe70542asd-blip";
   const REPO = "market-event-radar";
   const LEGACY_LIVE_BASE = `https://raw.githubusercontent.com/${OWNER}/${REPO}/live-data/`;
@@ -9,7 +9,7 @@
   const DATA_CHANNELS = Object.freeze({
     assets: {
       branch:"live-assets", label:"股票主檔／財務／ETF",
-      files:["assets.json","asset-coverage.json"]
+      files:["assets.json","asset-coverage.json","asset-audit.json"]
     },
     events: {
       branch:"live-events", label:"市場事件月曆",

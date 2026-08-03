@@ -49,7 +49,7 @@ ROTATION_BUCKETS = 4
 
 HEADERS = {
     "User-Agent": (
-        "Mozilla/5.0 (compatible; MarketEventRadar/11.2.7; "
+        "Mozilla/5.0 (compatible; MarketEventRadar/11.2.8; "
         "+https://github.com/qwe70542asd-blip/market-event-radar)"
     ),
     "Accept": "application/json,application/rss+xml,application/atom+xml,text/xml,text/html,*/*",
@@ -812,7 +812,7 @@ def main() -> None:
 
     payload = {
         "metadata": {
-            "version": "v11.2.7",
+            "version": "v11.2.8",
             "updated_at": NOW.isoformat(timespec="seconds"),
             "timezone": "Asia/Taipei",
             "retention_days": RETENTION_DAYS,
