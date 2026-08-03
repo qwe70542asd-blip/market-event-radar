@@ -1,21 +1,43 @@
 {
   "metadata": {
-    "version": "v11.1.1",
-    "updated_at": "2026-08-03T08:18:06+08:00",
+    "version": "v11.1.5",
+    "updated_at": "2026-08-03T10:28:34+08:00",
     "source": "Yahoo 公開行情",
     "note": "公開行情可能延遲；失敗時保留上次成功資料。"
   },
   "items": [
     {
       "symbol": "^TWII",
-      "name": "台灣加權",
+      "name": "台灣加權指數",
       "market": "TW",
       "currency": "TWD",
-      "price": 43119.75,
-      "previous_close": 43634.19,
-      "change": -514.4400000000023,
-      "change_percent": -1.1789837281269626,
-      "market_at": 1785476005,
+      "price": 43528.78,
+      "previous_close": 41603.36,
+      "change": 1925.4199999999983,
+      "change_percent": 4.628039658335284,
+      "open": null,
+      "high": 43587.09,
+      "low": 42780.42,
+      "volume": 0,
+      "market_at": 1785722910,
+      "market_state": null,
+      "source": "Yahoo 公開行情"
+    },
+    {
+      "symbol": "^TWOII",
+      "name": "台灣櫃買指數",
+      "market": "TW",
+      "currency": "TWD",
+      "price": 269.45,
+      "previous_close": 267.72,
+      "change": 1.7299999999999613,
+      "change_percent": 0.6461975197967882,
+      "open": null,
+      "high": 273.81,
+      "low": 269.6,
+      "volume": 0,
+      "market_at": 1728676800,
+      "market_state": null,
       "source": "Yahoo 公開行情"
     },
     {
@@ -27,7 +49,12 @@
       "previous_close": 7411.98,
       "change": 77.74000000000069,
       "change_percent": 1.0488425494942066,
+      "open": null,
+      "high": 7512.04,
+      "low": 7399.83,
+      "volume": 3472292000,
       "market_at": 1785532932,
+      "market_state": null,
       "source": "Yahoo 公開行情"
     },
     {
@@ -39,7 +66,12 @@
       "previous_close": 51947.25,
       "change": 537.7799999999988,
       "change_percent": 1.0352424815558068,
+      "open": null,
+      "high": 52623.14,
+      "low": 51996.32,
+      "volume": 703442636,
       "market_at": 1785532938,
+      "market_state": null,
       "source": "Yahoo 公開行情"
     },
     {
@@ -51,7 +83,12 @@
       "previous_close": 24975.82,
       "change": 398.03399999999965,
       "change_percent": 1.5936774047859075,
+      "open": null,
+      "high": 25460.863,
+      "low": 25004.33,
+      "volume": 10729502000,
       "market_at": 1785532559,
+      "market_state": null,
       "source": "Yahoo 公開行情"
     },
     {
@@ -63,7 +100,12 @@
       "previous_close": 11818.88,
       "change": -507.8049999999985,
       "change_percent": -4.2965577110521345,
+      "open": null,
+      "high": 11885.74,
+      "low": 11231.787,
+      "volume": 0,
       "market_at": 1785532559,
+      "market_state": null,
       "source": "Yahoo 公開行情"
     },
     {
@@ -71,11 +113,16 @@
       "name": "日經 225",
       "market": "JP",
       "currency": "JPY",
-      "price": 63430.18,
+      "price": 63472.82,
       "previous_close": 62364.92,
-      "change": 1065.260000000002,
-      "change_percent": 1.7081076990077146,
-      "market_at": 1785715385,
+      "change": 1107.9000000000015,
+      "change_percent": 1.7764794695479469,
+      "open": null,
+      "high": 63834.95,
+      "low": 62703.47,
+      "volume": 0,
+      "market_at": 1785723210,
+      "market_state": null,
       "source": "Yahoo 公開行情"
     },
     {
@@ -83,11 +130,16 @@
       "name": "韓國 KOSPI",
       "market": "KR",
       "currency": "KRW",
-      "price": 6595.45,
+      "price": 6365.22,
       "previous_close": 6755.75,
-      "change": -160.30000000000018,
-      "change_percent": -2.372793546238392,
-      "market_at": 1785488730,
+      "change": -390.52999999999975,
+      "change_percent": -5.780705325093435,
+      "open": null,
+      "high": 6393.0,
+      "low": 6231.66,
+      "volume": 148314,
+      "market_at": 1785722910,
+      "market_state": null,
       "source": "Yahoo 公開行情"
     },
     {
@@ -99,7 +151,12 @@
       "previous_close": 206.84,
       "change": -6.090000000000003,
       "change_percent": -2.94430477663895,
+      "open": null,
+      "high": 201.97,
+      "low": 194.95,
+      "volume": 139961152,
       "market_at": 1785528001,
+      "market_state": null,
       "source": "Yahoo 公開行情"
     },
     {
@@ -111,7 +168,12 @@
       "previous_close": 333.02,
       "change": -24.109999999999957,
       "change_percent": -7.239805417092055,
+      "open": null,
+      "high": 310.69,
+      "low": 300.0,
+      "volume": 132489137,
       "market_at": 1785528001,
+      "market_state": null,
       "source": "Yahoo 公開行情"
     },
     {
@@ -123,7 +185,12 @@
       "previous_close": 381.7,
       "change": 83.02000000000004,
       "change_percent": 21.750065496463204,
+      "open": null,
+      "high": 466.84,
+      "low": 449.552,
+      "volume": 60845971,
       "market_at": 1785528001,
+      "market_state": null,
       "source": "Yahoo 公開行情"
     }
   ]
