@@ -1,44 +1,36 @@
-市場事件雷達 v11.2.6 最終驗證
+市場事件雷達 v11.2.7｜台灣新聞與重大資訊來源修正版
 
 總結果：PASS
-完整驗證耗時：12.8 秒
+完整驗證耗時：32.656 秒
 
-- JSON：通過（0.001 秒）
-- Python compile：通過（0.648 秒）
-- JavaScript syntax：通過（0.205 秒）
-- Shell syntax：通過（0.003 秒）
-- Workflow YAML and <15m ceiling：通過（0.014 秒）
-- HTML references：通過（0.002 秒）
-- Version and no audio：通過（0.003 秒）
-- Unit tests：通過（0.606 秒）
-- Workflow parser smoke：通過（0.575 秒）
-- Browser E2E：通過（6.137 秒）
-- Visual readability：通過（4.597 秒）
+- JSON：通過（0.003 秒）
+- Python compile：通過（1.463 秒）
+- JavaScript syntax：通過（1.114 秒）
+- Shell syntax：通過（0.013 秒）
+- Workflow YAML and <15m ceiling：通過（0.025 秒）
+- HTML references：通過（0.003 秒）
+- Version and no audio：通過（0.007 秒）
+- Unit tests：通過（1.593 秒）
+- Workflow parser smoke：通過（1.491 秒）
+- Browser E2E：通過（16.021 秒）
+- Visual readability：通過（10.905 秒）
 
-代表性個股與 ETF：
-- 2330 台積電：走勢、五檔、技術、財報與官方估值。
-- 0056 元大高股息：ETF 基本資料與基金經理人顯示。
-- 6488 環球晶：上櫃代碼、法人與融資融券。
+新聞系統專項檢查：
+- 99 個設定來源，涵蓋重大訊息、官方、財經媒體、科技媒體、券商與投信。
+- RSS 改用 feedparser.parse；feedparser 不可用時使用內建 XML 備援。
+- 上市與上櫃重大訊息解析測試通過。
+- Yahoo／一般 RSS、Google News RSS、MoneyDJ HTML 與 TWSE 新聞模擬測試通過。
+- 四組輪替與來源健康狀態合併測試通過。
+- 單一來源失敗時保留上一筆成功資料。
+- 新聞頁顯示設定來源、活躍媒體、重大資訊與來源健康狀態。
+- 重大優先、最新優先及主題／地區／來源篩選通過。
+- 新聞來源名稱 14px、新聞標題 18px 可讀性檢查通過。
+- 新聞頁 Chromium 端到端測試通過。
+- Workflow 14 分鐘上限。
 
-資料與功能檢查：
-- 個股結果共 13 個頁籤，留在原頁面顯示。
-- TradingView 走勢及技術分析嵌入設定通過。
-- TWSE／TPEx 官方歷史行情優先，Yahoo 為備援。
-- MA、RSI、MACD、KD、布林、支撐壓力計算通過。
-- TWSE MIS 五檔解析及最後成功五檔保存通過。
-- 排除價格 0、昨收 0、漲跌幅超過 ±50% 的異常排行資料。
-- 31 項單元測試通過。
-- 六個頁面的 Chromium 端到端測試通過。
-- 每個頁面測試均低於 15 秒。
-- 六個 GitHub Workflow 均設定 14 分鐘上限。
-
-1366 × 768、100% 縮放可讀性檢查：
-- 股票名稱／代碼：18px。
-- 股票價格：20px。
-- 漲跌幅：18px。
-- 日曆日期：21px。
-- 日曆星期、分類及數量：14px。
-- 技術指標標籤：14px。
-- 技術指標數值：21px。
+注意：
+- 本地環境無外網，因此真實 99 個來源的成功數需在上傳後由 GitHub Actions 實際執行確認。
+- 第一次完整四組輪替約需 20 分鐘。
+- 來源暫時失敗不會清空既有新聞。
 
 音訊檔：無。

@@ -132,6 +132,19 @@ def main():
         results["stock-technical"]={"label_px":metric_label,"value_px":metric_value}
         page.close()
 
+        page=context.new_page()
+        load(page,"news.html")
+        page.wait_for_function('()=>document.querySelectorAll("#sourceGrid .source-card").length>=5 && document.querySelectorAll("#newsList .news-card").length>=3')
+        source_name=px(page,"#sourceGrid .source-card-head strong")
+        news_title=px(page,"#newsList .news-card h3")
+        source_message=px(page,"#sourceGrid .source-card p")
+        require(source_name>=14,f"source name font {source_name}px")
+        require(news_title>=18,f"news title font {news_title}px")
+        require(source_message>=11,f"source message font {source_message}px")
+        page.screenshot(path=str(OUT/"news-sources-readable.png"),full_page=True)
+        results["news"]={"source_name_px":source_name,"title_px":news_title,"source_message_px":source_message}
+        page.close()
+
         context.close()
         browser.close()
 

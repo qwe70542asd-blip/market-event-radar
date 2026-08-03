@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const VERSION = "11.2.6";
+  const VERSION = "11.2.7";
   const OWNER = "qwe70542asd-blip";
   const REPO = "market-event-radar";
   const LEGACY_LIVE_BASE = `https://raw.githubusercontent.com/${OWNER}/${REPO}/live-data/`;

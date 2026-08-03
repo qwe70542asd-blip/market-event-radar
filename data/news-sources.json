@@ -1,0 +1,980 @@
+{
+  "version": "11.2.7",
+  "updated_at": "2026-08-03T16:25:00+08:00",
+  "description": "台灣財經、官方、媒體、科技、券商與投信新聞來源登錄表。",
+  "sources": [
+    {
+      "name": "Yahoo 股市－最新新聞",
+      "group": "portal",
+      "method": "rss",
+      "url": "https://tw.stock.yahoo.com/rss?category=news",
+      "homepage": "https://tw.stock.yahoo.com/",
+      "priority": 5,
+      "enabled": true
+    },
+    {
+      "name": "Yahoo 股市－台股動態",
+      "group": "portal",
+      "method": "rss",
+      "url": "https://tw.stock.yahoo.com/rss?category=tw-market",
+      "homepage": "https://tw.stock.yahoo.com/tw-market",
+      "priority": 5,
+      "enabled": true
+    },
+    {
+      "name": "Yahoo 股市－國際財經",
+      "group": "portal",
+      "method": "rss",
+      "url": "https://tw.stock.yahoo.com/rss?category=intl-markets",
+      "homepage": "https://tw.stock.yahoo.com/world-markets",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "Yahoo 股市－小資理財",
+      "group": "portal",
+      "method": "rss",
+      "url": "https://tw.stock.yahoo.com/rss?category=personal-finance",
+      "homepage": "https://tw.stock.yahoo.com/personal-finance",
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "name": "Yahoo 股市－基金動態",
+      "group": "portal",
+      "method": "rss",
+      "url": "https://tw.stock.yahoo.com/rss?category=funds-news",
+      "homepage": "https://tw.stock.yahoo.com/funds",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "Yahoo 股市－專家專欄",
+      "group": "portal",
+      "method": "rss",
+      "url": "https://tw.stock.yahoo.com/rss?category=column",
+      "homepage": "https://tw.stock.yahoo.com/column",
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "name": "Yahoo 股市－研究報導",
+      "group": "portal",
+      "method": "rss",
+      "url": "https://tw.stock.yahoo.com/rss?category=research",
+      "homepage": "https://tw.stock.yahoo.com/research",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "鉅亨網－台股",
+      "group": "publisher",
+      "method": "rss",
+      "url": "https://m.cnyes.com/news/cat/tw_stock_news?type=rss",
+      "homepage": "https://news.cnyes.com/news/cat/tw_stock_news",
+      "priority": 5,
+      "enabled": true
+    },
+    {
+      "name": "鉅亨網－國際",
+      "group": "publisher",
+      "method": "rss",
+      "url": "https://m.cnyes.com/news/cat/wd_stock?type=rss",
+      "homepage": "https://news.cnyes.com/news/cat/wd_stock",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "MoneyDJ",
+      "group": "publisher",
+      "method": "moneydj",
+      "homepage": "https://www.moneydj.com/",
+      "priority": 5,
+      "enabled": true
+    },
+    {
+      "name": "臺灣證券交易所新聞",
+      "group": "official",
+      "method": "twse_news",
+      "homepage": "https://www.twse.com.tw/zh/about/news/news/list.html",
+      "priority": 5,
+      "enabled": true
+    },
+    {
+      "name": "上市公司重大訊息",
+      "group": "official-company",
+      "method": "mops_listed",
+      "homepage": "https://mops.twse.com.tw/mops/web/t05st01",
+      "priority": 5,
+      "enabled": true
+    },
+    {
+      "name": "上櫃公司重大訊息",
+      "group": "official-company",
+      "method": "mops_otc",
+      "homepage": "https://mops.twse.com.tw/mops/web/t05st01",
+      "priority": 5,
+      "enabled": true
+    },
+    {
+      "name": "櫃買中心",
+      "group": "official",
+      "method": "google",
+      "query": "site:tpex.org.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "tpex.org.tw",
+      "homepage": "https://www.tpex.org.tw/",
+      "priority": 5,
+      "enabled": true
+    },
+    {
+      "name": "金融監督管理委員會",
+      "group": "official",
+      "method": "google",
+      "query": "site:fsc.gov.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "fsc.gov.tw",
+      "homepage": "https://www.fsc.gov.tw/",
+      "priority": 5,
+      "enabled": true
+    },
+    {
+      "name": "中央銀行",
+      "group": "official",
+      "method": "google",
+      "query": "site:cbc.gov.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "cbc.gov.tw",
+      "homepage": "https://www.cbc.gov.tw/",
+      "priority": 5,
+      "enabled": true
+    },
+    {
+      "name": "經濟部",
+      "group": "official",
+      "method": "google",
+      "query": "site:moea.gov.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "moea.gov.tw",
+      "homepage": "https://www.moea.gov.tw/",
+      "priority": 5,
+      "enabled": true
+    },
+    {
+      "name": "國家發展委員會",
+      "group": "official",
+      "method": "google",
+      "query": "site:ndc.gov.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "ndc.gov.tw",
+      "homepage": "https://www.ndc.gov.tw/",
+      "priority": 5,
+      "enabled": true
+    },
+    {
+      "name": "行政院主計總處",
+      "group": "official",
+      "method": "google",
+      "query": "site:dgbas.gov.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "dgbas.gov.tw",
+      "homepage": "https://www.dgbas.gov.tw/",
+      "priority": 5,
+      "enabled": true
+    },
+    {
+      "name": "財政部",
+      "group": "official",
+      "method": "google",
+      "query": "site:mof.gov.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "mof.gov.tw",
+      "homepage": "https://www.mof.gov.tw/",
+      "priority": 5,
+      "enabled": true
+    },
+    {
+      "name": "行政院",
+      "group": "official",
+      "method": "google",
+      "query": "site:ey.gov.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "ey.gov.tw",
+      "homepage": "https://www.ey.gov.tw/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "勞動部",
+      "group": "official",
+      "method": "google",
+      "query": "site:mol.gov.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "mol.gov.tw",
+      "homepage": "https://www.mol.gov.tw/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "數位發展部",
+      "group": "official",
+      "method": "google",
+      "query": "site:moda.gov.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "moda.gov.tw",
+      "homepage": "https://moda.gov.tw/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "國家科學及技術委員會",
+      "group": "official",
+      "method": "google",
+      "query": "site:nstc.gov.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "nstc.gov.tw",
+      "homepage": "https://www.nstc.gov.tw/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "經濟部產業發展署",
+      "group": "official",
+      "method": "google",
+      "query": "site:ida.gov.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "ida.gov.tw",
+      "homepage": "https://www.ida.gov.tw/",
+      "priority": 5,
+      "enabled": true
+    },
+    {
+      "name": "經濟部國際貿易署",
+      "group": "official",
+      "method": "google",
+      "query": "site:trade.gov.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "trade.gov.tw",
+      "homepage": "https://www.trade.gov.tw/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "經濟部能源署",
+      "group": "official",
+      "method": "google",
+      "query": "site:moeaea.gov.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "moeaea.gov.tw",
+      "homepage": "https://www.moeaea.gov.tw/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "公平交易委員會",
+      "group": "official",
+      "method": "google",
+      "query": "site:ftc.gov.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "ftc.gov.tw",
+      "homepage": "https://www.ftc.gov.tw/",
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "name": "臺灣期貨交易所",
+      "group": "official",
+      "method": "google",
+      "query": "site:taifex.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "taifex.com.tw",
+      "homepage": "https://www.taifex.com.tw/",
+      "priority": 5,
+      "enabled": true
+    },
+    {
+      "name": "臺灣集中保管結算所",
+      "group": "official",
+      "method": "google",
+      "query": "site:tdcc.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "tdcc.com.tw",
+      "homepage": "https://www.tdcc.com.tw/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "臺灣指數公司",
+      "group": "official",
+      "method": "google",
+      "query": "site:taiwanindex.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "taiwanindex.com.tw",
+      "homepage": "https://www.taiwanindex.com.tw/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "財政部國庫署",
+      "group": "official",
+      "method": "google",
+      "query": "site:nta.gov.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "nta.gov.tw",
+      "homepage": "https://www.nta.gov.tw/",
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "name": "財政部財政資訊中心",
+      "group": "official",
+      "method": "google",
+      "query": "site:fia.gov.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "fia.gov.tw",
+      "homepage": "https://www.fia.gov.tw/",
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "name": "中央通訊社",
+      "group": "publisher",
+      "method": "google",
+      "query": "site:cna.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "cna.com.tw",
+      "homepage": "https://www.cna.com.tw/list/afe.aspx",
+      "priority": 5,
+      "enabled": true
+    },
+    {
+      "name": "經濟日報",
+      "group": "publisher",
+      "method": "google",
+      "query": "site:money.udn.com (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "money.udn.com",
+      "homepage": "https://money.udn.com/",
+      "priority": 5,
+      "enabled": true
+    },
+    {
+      "name": "工商時報",
+      "group": "publisher",
+      "method": "google",
+      "query": "site:ctee.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "ctee.com.tw",
+      "homepage": "https://www.ctee.com.tw/",
+      "priority": 5,
+      "enabled": true
+    },
+    {
+      "name": "中時新聞網財經",
+      "group": "publisher",
+      "method": "google",
+      "query": "site:chinatimes.com (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "chinatimes.com",
+      "homepage": "https://www.chinatimes.com/money/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "自由財經",
+      "group": "publisher",
+      "method": "google",
+      "query": "site:ec.ltn.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "ec.ltn.com.tw",
+      "homepage": "https://ec.ltn.com.tw/",
+      "priority": 5,
+      "enabled": true
+    },
+    {
+      "name": "ETtoday財經雲",
+      "group": "publisher",
+      "method": "google",
+      "query": "site:finance.ettoday.net (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "finance.ettoday.net",
+      "homepage": "https://finance.ettoday.net/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "三立財經",
+      "group": "publisher",
+      "method": "google",
+      "query": "site:setn.com (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "setn.com",
+      "homepage": "https://www.setn.com/ViewAll.aspx?PageGroupID=2",
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "name": "民視財經",
+      "group": "publisher",
+      "method": "google",
+      "query": "site:ftvnews.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "ftvnews.com.tw",
+      "homepage": "https://www.ftvnews.com.tw/",
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "name": "TVBS財經",
+      "group": "publisher",
+      "method": "google",
+      "query": "site:news.tvbs.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "news.tvbs.com.tw",
+      "homepage": "https://news.tvbs.com.tw/money",
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "name": "東森財經",
+      "group": "publisher",
+      "method": "google",
+      "query": "site:news.ebc.net.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "news.ebc.net.tw",
+      "homepage": "https://news.ebc.net.tw/News/Business",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "公視新聞網",
+      "group": "publisher",
+      "method": "google",
+      "query": "site:news.pts.org.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "news.pts.org.tw",
+      "homepage": "https://news.pts.org.tw/",
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "name": "聯合新聞網財經",
+      "group": "publisher",
+      "method": "google",
+      "query": "site:udn.com (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "udn.com",
+      "homepage": "https://udn.com/news/cate/2/6644",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "今周刊",
+      "group": "publisher",
+      "method": "google",
+      "query": "site:businesstoday.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "businesstoday.com.tw",
+      "homepage": "https://www.businesstoday.com.tw/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "商業周刊",
+      "group": "publisher",
+      "method": "google",
+      "query": "site:businessweekly.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "businessweekly.com.tw",
+      "homepage": "https://www.businessweekly.com.tw/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "天下雜誌",
+      "group": "publisher",
+      "method": "google",
+      "query": "site:cw.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "cw.com.tw",
+      "homepage": "https://www.cw.com.tw/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "財訊",
+      "group": "publisher",
+      "method": "google",
+      "query": "site:wealth.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "wealth.com.tw",
+      "homepage": "https://www.wealth.com.tw/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "Money錢",
+      "group": "publisher",
+      "method": "google",
+      "query": "site:money.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "money.com.tw",
+      "homepage": "https://www.money.com.tw/",
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "name": "Smart智富",
+      "group": "publisher",
+      "method": "google",
+      "query": "site:smart.businessweekly.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "smart.businessweekly.com.tw",
+      "homepage": "https://smart.businessweekly.com.tw/",
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "name": "風傳媒財經",
+      "group": "publisher",
+      "method": "google",
+      "query": "site:storm.mg (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "storm.mg",
+      "homepage": "https://www.storm.mg/category/118",
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "name": "信傳媒",
+      "group": "publisher",
+      "method": "google",
+      "query": "site:cmmedia.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "cmmedia.com.tw",
+      "homepage": "https://www.cmmedia.com.tw/",
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "name": "Newtalk新聞",
+      "group": "publisher",
+      "method": "google",
+      "query": "site:newtalk.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "newtalk.tw",
+      "homepage": "https://newtalk.tw/",
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "name": "NOWnews今日新聞",
+      "group": "publisher",
+      "method": "google",
+      "query": "site:nownews.com (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "nownews.com",
+      "homepage": "https://www.nownews.com/cat/finance/",
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "name": "鏡週刊",
+      "group": "publisher",
+      "method": "google",
+      "query": "site:mirrormedia.mg (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "mirrormedia.mg",
+      "homepage": "https://www.mirrormedia.mg/",
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "name": "關鍵評論網",
+      "group": "publisher",
+      "method": "google",
+      "query": "site:thenewslens.com (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "thenewslens.com",
+      "homepage": "https://www.thenewslens.com/",
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "name": "CMoney理財寶",
+      "group": "publisher",
+      "method": "google",
+      "query": "site:cmoney.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "cmoney.tw",
+      "homepage": "https://www.cmoney.tw/notes/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "玩股網",
+      "group": "publisher",
+      "method": "google",
+      "query": "site:wantgoo.com (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "wantgoo.com",
+      "homepage": "https://www.wantgoo.com/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "StockFeel股感",
+      "group": "publisher",
+      "method": "google",
+      "query": "site:stockfeel.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "stockfeel.com.tw",
+      "homepage": "https://www.stockfeel.com.tw/",
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "name": "科技新報",
+      "group": "technology",
+      "method": "google",
+      "query": "site:technews.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "technews.tw",
+      "homepage": "https://technews.tw/",
+      "priority": 5,
+      "enabled": true
+    },
+    {
+      "name": "財經新報",
+      "group": "technology",
+      "method": "google",
+      "query": "site:finance.technews.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "finance.technews.tw",
+      "homepage": "https://finance.technews.tw/",
+      "priority": 5,
+      "enabled": true
+    },
+    {
+      "name": "數位時代",
+      "group": "technology",
+      "method": "google",
+      "query": "site:bnext.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "bnext.com.tw",
+      "homepage": "https://www.bnext.com.tw/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "iThome",
+      "group": "technology",
+      "method": "google",
+      "query": "site:ithome.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "ithome.com.tw",
+      "homepage": "https://www.ithome.com.tw/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "DIGITIMES",
+      "group": "technology",
+      "method": "google",
+      "query": "site:digitimes.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "digitimes.com.tw",
+      "homepage": "https://www.digitimes.com.tw/",
+      "priority": 5,
+      "enabled": true
+    },
+    {
+      "name": "INSIDE",
+      "group": "technology",
+      "method": "google",
+      "query": "site:inside.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "inside.com.tw",
+      "homepage": "https://www.inside.com.tw/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "TechOrange科技報橘",
+      "group": "technology",
+      "method": "google",
+      "query": "site:buzzorange.com (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "buzzorange.com",
+      "homepage": "https://buzzorange.com/techorange/",
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "name": "T客邦",
+      "group": "technology",
+      "method": "google",
+      "query": "site:techbang.com (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "techbang.com",
+      "homepage": "https://www.techbang.com/",
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "name": "Cool3C",
+      "group": "technology",
+      "method": "google",
+      "query": "site:cool3c.com (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "cool3c.com",
+      "homepage": "https://www.cool3c.com/",
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "name": "永豐金證券",
+      "group": "broker",
+      "method": "google",
+      "query": "site:sinotrade.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "sinotrade.com.tw",
+      "homepage": "https://www.sinotrade.com.tw/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "元大投顧／元大證券",
+      "group": "broker",
+      "method": "google",
+      "query": "site:yuanta-consulting.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "yuanta-consulting.com.tw",
+      "homepage": "https://www.yuanta-consulting.com.tw/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "國泰證券",
+      "group": "broker",
+      "method": "google",
+      "query": "site:cathaysec.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "cathaysec.com.tw",
+      "homepage": "https://www.cathaysec.com.tw/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "凱基證券",
+      "group": "broker",
+      "method": "google",
+      "query": "site:kgieworld.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "kgieworld.com.tw",
+      "homepage": "https://www.kgieworld.com.tw/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "富邦證券",
+      "group": "broker",
+      "method": "google",
+      "query": "site:fubon.com (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "fubon.com",
+      "homepage": "https://www.fubon.com/securities/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "群益證券",
+      "group": "broker",
+      "method": "google",
+      "query": "site:capital.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "capital.com.tw",
+      "homepage": "https://www.capital.com.tw/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "統一證券",
+      "group": "broker",
+      "method": "google",
+      "query": "site:uni-psg.com (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "uni-psg.com",
+      "homepage": "https://www.uni-psg.com/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "元富證券",
+      "group": "broker",
+      "method": "google",
+      "query": "site:masterlink.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "masterlink.com.tw",
+      "homepage": "https://www.masterlink.com.tw/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "兆豐證券",
+      "group": "broker",
+      "method": "google",
+      "query": "site:emega.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "emega.com.tw",
+      "homepage": "https://www.emega.com.tw/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "台新證券",
+      "group": "broker",
+      "method": "google",
+      "query": "site:tssco.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "tssco.com.tw",
+      "homepage": "https://www.tssco.com.tw/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "中國信託證券",
+      "group": "broker",
+      "method": "google",
+      "query": "site:ctbcsec.com (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "ctbcsec.com",
+      "homepage": "https://www.ctbcsec.com/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "第一金證券",
+      "group": "broker",
+      "method": "google",
+      "query": "site:firstsec.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "firstsec.com.tw",
+      "homepage": "https://www.firstsec.com.tw/",
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "name": "華南永昌證券",
+      "group": "broker",
+      "method": "google",
+      "query": "site:entrust.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "entrust.com.tw",
+      "homepage": "https://www.entrust.com.tw/",
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "name": "合作金庫證券",
+      "group": "broker",
+      "method": "google",
+      "query": "site:tcfhc-sec.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "tcfhc-sec.com.tw",
+      "homepage": "https://www.tcfhc-sec.com.tw/",
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "name": "玉山證券",
+      "group": "broker",
+      "method": "google",
+      "query": "site:esunsec.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "esunsec.com.tw",
+      "homepage": "https://www.esunsec.com.tw/",
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "name": "康和證券",
+      "group": "broker",
+      "method": "google",
+      "query": "site:concords.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "concords.com.tw",
+      "homepage": "https://www.concords.com.tw/",
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "name": "元大投信",
+      "group": "fund-house",
+      "method": "google",
+      "query": "site:yuantaetfs.com (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "yuantaetfs.com",
+      "homepage": "https://www.yuantaetfs.com/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "國泰投信",
+      "group": "fund-house",
+      "method": "google",
+      "query": "site:cathaysite.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "cathaysite.com.tw",
+      "homepage": "https://www.cathaysite.com.tw/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "富邦投信",
+      "group": "fund-house",
+      "method": "google",
+      "query": "site:fubon.com/asset-management (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "fubon.com/asset-management",
+      "homepage": "https://www.fubon.com/asset-management/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "凱基投信",
+      "group": "fund-house",
+      "method": "google",
+      "query": "site:kgi.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "kgi.com.tw",
+      "homepage": "https://www.kgi.com.tw/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "群益投信",
+      "group": "fund-house",
+      "method": "google",
+      "query": "site:capitalfund.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "capitalfund.com.tw",
+      "homepage": "https://www.capitalfund.com.tw/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "統一投信",
+      "group": "fund-house",
+      "method": "google",
+      "query": "site:uni-president.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "uni-president.com.tw",
+      "homepage": "https://www.uni-president.com.tw/",
+      "priority": 4,
+      "enabled": true
+    },
+    {
+      "name": "野村投信",
+      "group": "fund-house",
+      "method": "google",
+      "query": "site:nomurafunds.com.tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "nomurafunds.com.tw",
+      "homepage": "https://www.nomurafunds.com.tw/",
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "name": "安聯投信",
+      "group": "fund-house",
+      "method": "google",
+      "query": "site:tw.allianzgi.com (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "tw.allianzgi.com",
+      "homepage": "https://tw.allianzgi.com/",
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "name": "摩根投信",
+      "group": "fund-house",
+      "method": "google",
+      "query": "site:am.jpmorgan.com/tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "am.jpmorgan.com/tw",
+      "homepage": "https://am.jpmorgan.com/tw/zh/asset-management/per/",
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "name": "施羅德投信",
+      "group": "fund-house",
+      "method": "google",
+      "query": "site:schroders.com/zh-tw/tw (台股 OR 上市 OR 上櫃 OR ETF OR 財報 OR 法說 OR 重大訊息 OR 股利 OR 經濟 OR 產業 OR 半導體 OR 金融) when:7d",
+      "domain": "schroders.com/zh-tw/tw",
+      "homepage": "https://www.schroders.com/zh-tw/tw/",
+      "priority": 3,
+      "enabled": true
+    },
+    {
+      "name": "台灣市場重大資訊總覽",
+      "group": "broad",
+      "method": "google",
+      "query": "(台股 OR 上市 OR 上櫃 OR ETF) (重大訊息 OR 公告 OR 法說 OR 財報 OR 股利) when:3d",
+      "homepage": "https://news.google.com/",
+      "priority": 5,
+      "enabled": true,
+      "dynamic_source": true
+    },
+    {
+      "name": "台灣產業與科技總覽",
+      "group": "broad",
+      "method": "google",
+      "query": "(台灣 OR 台廠) (半導體 OR AI OR 電子 OR 航運 OR 金融 OR 生技 OR 軍工 OR 能源) when:3d",
+      "homepage": "https://news.google.com/",
+      "priority": 4,
+      "enabled": true,
+      "dynamic_source": true
+    },
+    {
+      "name": "台灣總體經濟總覽",
+      "group": "broad",
+      "method": "google",
+      "query": "(台灣 OR 新台幣) (央行 OR 利率 OR CPI OR PMI OR 出口 OR 景氣 OR GDP) when:7d",
+      "homepage": "https://news.google.com/",
+      "priority": 4,
+      "enabled": true,
+      "dynamic_source": true
+    },
+    {
+      "name": "全球市場影響台灣",
+      "group": "broad",
+      "method": "google",
+      "query": "(美股 OR 聯準會 OR 關稅 OR 日圓 OR 原油 OR 黃金) (台股 OR 台灣) when:3d",
+      "homepage": "https://news.google.com/",
+      "priority": 4,
+      "enabled": true,
+      "dynamic_source": true
+    }
+  ]
+}

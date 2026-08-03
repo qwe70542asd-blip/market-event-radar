@@ -12,8 +12,13 @@ def load_module(name,path):
     return module
 
 class Response:
-    def __init__(self,payload): self.payload=payload
-    def raise_for_status(self): return None
+    def __init__(self,payload=None,content=None,text=None,status_code=200):
+        self.payload=payload
+        self.content=content if content is not None else (json.dumps(payload,ensure_ascii=False).encode("utf-8") if payload is not None else b"")
+        self.text=text if text is not None else self.content.decode("utf-8","ignore")
+        self.status_code=status_code
+    def raise_for_status(self):
+        if self.status_code>=400: raise RuntimeError(f"HTTP {self.status_code}")
     def json(self): return self.payload
 
 class ChipSession:
@@ -82,6 +87,68 @@ def test_chips(tmp):
     assert payload['history'][payload['metadata']['trading_date']]
 
 
+
+class NewsSession:
+    def __init__(self):
+        self.headers={}
+    def get(self,url,**kwargs):
+        if "newsList" in url:
+            return Response([{
+                "id":"1","title":"證交所重大市場公告","summary":"市場制度調整",
+                "date":"2026-08-03T10:00:00+08:00"
+            }])
+        if "t187ap04_L" in url:
+            return Response([{
+                "公司代號":"2330","公司簡稱":"台積電","主旨":"公告第二季財務報告",
+                "說明":"董事會通過第二季財報","發言日期":"1150803","發言時間":"101500"
+            }])
+        if "t187ap04_O" in url:
+            return Response([{
+                "公司代號":"6488","公司簡稱":"環球晶","主旨":"重大訊息說明",
+                "說明":"公司營運說明","發言日期":"1150803","發言時間":"102000"
+            }])
+        if "moneydj" in url.lower() or "listnewarticles" in url:
+            html_body = '<html><body><a href="/KMDJ/News/NewsViewer.aspx?a=1">台股重要產業新聞測試</a></body></html>'
+            return Response(content=html_body.encode("utf-8"))
+        rss = """<?xml version="1.0" encoding="UTF-8"?>
+        <rss version="2.0"><channel><title>fixture</title>
+        <item><title>台灣財經重大消息測試</title>
+        <link>https://example.org/news/1</link>
+        <description>財報、股利與市場政策</description>
+        <pubDate>Mon, 03 Aug 2026 08:00:00 +0800</pubDate>
+        <source>測試媒體</source></item>
+        </channel></rss>"""
+        return Response(content=rss.encode("utf-8"))
+
+def test_news(tmp):
+    module=load_module("news_smoke",ROOT/"scripts/update_news.py")
+    module.OUT=tmp/"news.json"
+    module.SEED=tmp/"news-seed.js"
+    module.REGISTRY=tmp/"news-sources.json"
+    module.requests.Session=lambda:NewsSession()
+    registry={"sources":[
+        {"name":"Yahoo測試","group":"portal","method":"rss","url":"https://example.org/rss","homepage":"https://example.org","priority":5},
+        {"name":"MoneyDJ","group":"publisher","method":"moneydj","homepage":"https://www.moneydj.com","priority":5},
+        {"name":"臺灣證券交易所新聞","group":"official","method":"twse_news","homepage":"https://www.twse.com.tw","priority":5},
+        {"name":"上市公司重大訊息","group":"official-company","method":"mops_listed","homepage":"https://mops.twse.com.tw","priority":5},
+        {"name":"上櫃公司重大訊息","group":"official-company","method":"mops_otc","homepage":"https://mops.twse.com.tw","priority":5},
+        {"name":"經濟日報","group":"publisher","method":"google","query":"site:money.udn.com 台股 when:7d","homepage":"https://money.udn.com","priority":5},
+        {"name":"中央銀行","group":"official","method":"google","query":"site:cbc.gov.tw 利率 when:7d","homepage":"https://www.cbc.gov.tw","priority":5},
+        {"name":"廣域測試","group":"broad","method":"google","query":"台股 重大訊息 when:3d","homepage":"https://news.google.com","priority":5,"dynamic_source":True}
+    ]}
+    module.REGISTRY.write_text(json.dumps(registry,ensure_ascii=False),encoding="utf-8")
+    module.OUT.write_text(json.dumps({"items":[],"sources":[]}),encoding="utf-8")
+    module.main()
+    payload=json.loads(module.OUT.read_text(encoding="utf-8"))
+    assert payload["metadata"]["version"]=="v11.2.7"
+    assert payload["metadata"]["configured_source_count"]==8
+    assert payload["metadata"]["checked_source_count"]==8
+    assert payload["metadata"]["material_item_count"]>=2
+    assert len(payload["sources"])>=8
+    assert len(payload["items"])>=5
+    assert all(row.get("link","").startswith("http") for row in payload["items"])
+    assert "window.__NEWS_SEED__" in module.SEED.read_text(encoding="utf-8")
+
 def test_events(tmp):
     module=load_module('events_smoke',ROOT/'scripts/update_events.py')
     module.OUT=tmp/'events.json';module.SEED=tmp/'events-seed.js';module.MANUAL=tmp/'manual-events.json'
@@ -98,9 +165,10 @@ def main():
     with tempfile.TemporaryDirectory() as directory:
         tmp=Path(directory)
         test_chips(tmp)
+        test_news(tmp)
         test_events(tmp)
     elapsed=time.monotonic()-started
     assert elapsed<15,elapsed
-    print(json.dumps({'status':'PASS','seconds':round(elapsed,3),'checks':['Taiwan chips official-shape parser','event archive merge']},ensure_ascii=False,indent=2))
+    print(json.dumps({'status':'PASS','seconds':round(elapsed,3),'checks':['Taiwan chips official-shape parser','Taiwan news multi-source pipeline','event archive merge']},ensure_ascii=False,indent=2))
 
 if __name__=='__main__': main()

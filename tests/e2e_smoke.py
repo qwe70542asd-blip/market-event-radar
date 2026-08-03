@@ -91,9 +91,16 @@ def chips():
 
 
 def news():
-    items=[{'id':f'n{i}','title':f'財經新聞 {i}','source':['鉅亨網','MoneyDJ','Yahoo股市'][i%3],'published_at':NOW,'link':'https://example.org/news'} for i in range(12)]
-    items.append({'id':'tsmc','title':'台積電 2330 最新營運消息','summary':'測試個股新聞','source':'臺灣證券交易所','published_at':NOW,'link':'https://example.org/tsmc'})
-    return {'metadata':{'updated_at':NOW,'retention_days':20},'items':items}
+    items=[{'id':f'n{i}','title':f'財經新聞 {i}','summary':'市場與產業測試內容','source':['鉅亨網','MoneyDJ','Yahoo股市'][i%3],'source_group':'publisher','published_at':NOW,'link':'https://example.org/news','topic':'market','region':'TW','importance_score':40+i} for i in range(12)]
+    items.append({'id':'tsmc','title':'台積電（2330）重大訊息公告','summary':'測試個股重大資訊','source':'公開資訊觀測站','source_group':'official-company','published_at':NOW,'link':'https://example.org/tsmc','topic':'material','region':'TW','importance_score':100,'asset_symbols':['2330']})
+    sources=[
+      {'name':'上市公司重大訊息','group':'official-company','method':'mops_listed','status':'ok','message':'100 筆','item_count':100,'last_checked_at':NOW,'last_success_at':NOW},
+      {'name':'臺灣證券交易所新聞','group':'official','method':'twse_news','status':'ok','message':'20 筆','item_count':20,'last_checked_at':NOW,'last_success_at':NOW},
+      {'name':'經濟日報','group':'publisher','method':'google','status':'empty','message':'本輪沒有符合新聞','item_count':0,'last_checked_at':NOW,'last_success_at':NOW},
+      {'name':'工商時報','group':'publisher','method':'google','status':'warning','message':'暫時失敗','item_count':0,'last_checked_at':NOW,'last_success_at':None},
+      {'name':'科技新報','group':'technology','method':'google','status':'scheduled','message':'輪替待檢','item_count':0,'last_checked_at':None,'last_success_at':None}
+    ]
+    return {'metadata':{'updated_at':NOW,'retention_days':20,'item_count':len(items),'material_item_count':1,'configured_source_count':99,'checked_source_count':45,'healthy_source_count':3,'warning_source_count':1,'active_source_count':4,'discovered_source_count':0,'rotation_bucket':1,'rotation_buckets':4},'sources':sources,'items':items}
 
 PAYLOADS={'assets.json':assets(),'tw-market.json':tw_market(),'events.json':events(),'market-snapshot.json':market(),'tw-chips.json':chips(),'news.json':news(),
 'asset-coverage.json':{'summary':{'total_stocks':1200,'complete':100,'partial_or_basic':1099,'missing':1,'field_counts':{'eps':1000,'pe':1100}},
@@ -214,7 +221,7 @@ def main():
           'index.html':[('#calendarGrid .calendar-day',35),('#marketList .market-row',4),('#cryptoList .crypto-row',5),('#portfolioStrip .quote-card',1),('#homeNews .news-card',3)],
           'tw-market.html':[('#gainers tr',3),('#losers tr',3),('#twHoldings tr',1)],
           'institutional.html':[('#institutionalGrid .info-card',4),('#marginGrid .info-card',4),('#stockQueryInput',1)],
-          'news.html':[('#newsList .news-card',3)],
+          'news.html':[('#newsList .news-card',3),('#sourceGrid .source-card',5),('#sourceHealthStats article',5)],
           'data-status.html':[('#channelGrid .channel-card',7)],
           'coverage.html':[('#coverageRows tr',1)],
         }

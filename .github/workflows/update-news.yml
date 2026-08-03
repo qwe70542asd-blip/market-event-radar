@@ -1,4 +1,4 @@
-name: Update v11.2.6 multi-source news
+name: Update v11.2.7 Taiwan news and material information
 
 on:
   push:
@@ -6,6 +6,7 @@ on:
     paths:
       - ".github/workflows/update-news.yml"
       - "scripts/update_news.py"
+      - "data/news-sources.json"
       - "scripts/publish_data_branch.sh"
       - "scripts/restore_data_branch.sh"
       - "requirements.txt"
@@ -24,7 +25,7 @@ permissions:
 
 concurrency:
   group: market-radar-news
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   news:
@@ -36,11 +37,14 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
           cache: pip
+
       - run: pip install -r requirements.txt
+
       - name: Restore previous news archive
         if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.clean_rebuild) }}
         run: |
@@ -48,29 +52,52 @@ jobs:
             "news.json:data/news.json" \
             "news-seed.js:data/news-seed.js" \
             "news-link-cache.json:data/news-link-cache.json"
+
       - name: Reset news archive for clean rebuild
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.clean_rebuild }}
         run: |
           cat > data/news.json <<'JSON'
-          {"metadata":{"version":"v11.2.6"},"items":[],"sources":[]}
+          {"metadata":{"version":"v11.2.7"},"items":[],"sources":[]}
           JSON
           printf '{}\n' > data/news-link-cache.json
-      - run: python scripts/update_news.py
-      - name: Validate news
+
+      - name: Update Taiwan news archive
+        run: python scripts/update_news.py
+
+      - name: Validate news archive and source registry
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
+
           payload=json.loads(Path("data/news.json").read_text(encoding="utf-8"))
-          assert payload.get("items"), "empty news archive"
-          assert payload.get("metadata",{}).get("retention_days")==20
-          assert all(str(row.get("link","")).startswith(("http://","https://")) for row in payload["items"])
-          print("news",len(payload["items"]))
-          print("updated",payload.get("metadata",{}).get("updated_at"))
+          registry=json.loads(Path("data/news-sources.json").read_text(encoding="utf-8"))
+          metadata=payload.get("metadata",{})
+          items=payload.get("items") or []
+          sources=payload.get("sources") or []
+
+          assert items, "empty news archive"
+          assert metadata.get("retention_days")==20
+          assert metadata.get("configured_source_count",0)>=90, metadata
+          assert metadata.get("checked_source_count",0)>=20, metadata
+          assert len(registry.get("sources") or [])>=90
+          assert len(sources)>=metadata.get("configured_source_count",0)
+          assert all(str(row.get("link","")).startswith(("http://","https://")) for row in items)
+          assert all(row.get("name") for row in sources)
+          assert metadata.get("elapsed_seconds",999)<780, metadata
+
+          print("news",len(items))
+          print("material",metadata.get("material_item_count"))
+          print("configured",metadata.get("configured_source_count"))
+          print("checked",metadata.get("checked_source_count"))
+          print("active",metadata.get("active_source_count"))
+          print("warnings",metadata.get("warning_source_count"))
+          print("seconds",metadata.get("elapsed_seconds"))
           PY
+
       - name: Publish isolated news channel
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          bash scripts/publish_data_branch.sh "$DATA_BRANCH" "multi-source-news" \
+          bash scripts/publish_data_branch.sh "$DATA_BRANCH" "taiwan-news-and-material-information" \
             data/news.json data/news-seed.js data/news-link-cache.json

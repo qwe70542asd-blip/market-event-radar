@@ -57,6 +57,35 @@ class StaticTests(unittest.TestCase):
         self.assertIn("fetch_company_announcements",updater)
         self.assertIn("function diversifyNews",shared)
         self.assertIn("template:",shared)
+        self.assertIn("feedparser.parse(content)",updater)
+        self.assertNotIn("feedparser.loads",updater)
+        self.assertIn("ThreadPoolExecutor",updater)
+        self.assertIn("ROTATION_BUCKETS = 4",updater)
+        self.assertIn("configured_source_count",updater)
+        self.assertIn("discovered_source_count",updater)
+
+    def test_large_taiwan_news_source_registry(self):
+        registry=json.loads((ROOT/"data/news-sources.json").read_text(encoding="utf-8"))
+        rows=registry.get("sources") or []
+        groups={row.get("group") for row in rows}
+        self.assertGreaterEqual(len(rows),90)
+        self.assertTrue({"official-company","official","publisher","technology","broker","fund-house","portal","broad"}.issubset(groups))
+        names={row.get("name") for row in rows}
+        for name in ("上市公司重大訊息","上櫃公司重大訊息","臺灣證券交易所新聞","金融監督管理委員會","中央銀行","經濟日報","工商時報","中央通訊社","科技新報","永豐金證券","元大投信"):
+            self.assertIn(name,names)
+
+    def test_news_source_health_uses_configured_sources(self):
+        page=(ROOT/"news.html").read_text(encoding="utf-8")
+        script=(ROOT/"assets/news.js").read_text(encoding="utf-8")
+        workflow=(ROOT/".github/workflows/update-news.yml").read_text(encoding="utf-8")
+        self.assertIn('id="configuredSourceCount"',page)
+        self.assertIn('id="sourceHealthGroup"',page)
+        self.assertIn('id="sourceHealthStatus"',page)
+        self.assertIn("metadata.configured_source_count",script)
+        self.assertIn("sourceRows=payload.sources",script)
+        self.assertIn("data/news-sources.json",workflow)
+        self.assertIn("cancel-in-progress: false",workflow)
+        self.assertIn("configured_source_count",workflow)
 
     def test_twse_readable_news_route(self):
         shared=(ROOT/"assets/shared.js").read_text(encoding="utf-8")
@@ -179,7 +208,7 @@ const context={window:{},console,URL,AbortController,setTimeout,clearTimeout,set
 vm.createContext(context);
 vm.runInContext(fs.readFileSync(process.argv[1],'utf8'),context,{filename:'shared.js'});
 if(!context.window.MR)throw new Error('MR was not initialized');
-if(context.window.MR.VERSION!=='11.2.6')throw new Error('wrong version');
+if(context.window.MR.VERSION!=='11.2.7')throw new Error('wrong version');
 """
         result=subprocess.run([node,"-e",script,str(ROOT/"assets/shared.js")],capture_output=True,text=True)
         self.assertEqual(result.returncode,0,result.stderr)
@@ -290,7 +319,7 @@ if(context.window.MR.VERSION!=='11.2.6')throw new Error('wrong version');
         css=(ROOT/"assets/styles.css").read_text(encoding="utf-8")
         market=(ROOT/"assets/tw-market.js").read_text(encoding="utf-8")
         home=(ROOT/"assets/home.js").read_text(encoding="utf-8")
-        self.assertIn("v11.2.6 notebook-readable typography",css)
+        self.assertIn("v11.2.7 notebook-readable typography",css)
         self.assertIn("#gainers td:nth-child(2) strong",css)
         self.assertIn("font-size:18px",css)
         self.assertIn(".event-dot span",css)

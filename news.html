@@ -1,28 +1,126 @@
-<!doctype html><html lang="zh-Hant"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#061120">
-<title>多來源財經新聞｜市場事件雷達</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="assets/favicon.svg"><link rel="stylesheet" href="assets/styles.css?v=11.2.6">
-</head><body>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#061120">
+  <title>台灣重大資訊與財經新聞｜市場事件雷達</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/favicon.svg">
+  <link rel="stylesheet" href="assets/styles.css?v=11.2.7">
+</head>
+<body>
 <div class="noise" aria-hidden="true"></div>
 <header class="topbar">
   <a class="brand" href="index.html">
     <span class="brand-mark"><svg viewBox="0 0 48 48"><path d="M7 34 16 24l7 6 10-16 8 6"></path><path d="M7 40h34"></path></svg></span>
-    <span><strong>市場事件雷達 <em class="version">v11.2.6</em></strong><small>PERSONAL MARKET & EVENT RADAR</small></span>
+    <span><strong>市場事件雷達 <em class="version">v11.2.7</em></strong><small>PERSONAL MARKET & EVENT RADAR</small></span>
   </a>
   <nav class="topnav">
-    <span class="live-pill"><i></i> 自動更新</span>
-    <a href="news.html">財經新聞</a>
+    <a class="home-link" href="index.html">← 回到首頁</a>
+    <span class="live-pill"><i></i> 每 5 分鐘檢查</span>
+    <a href="news.html">重大資訊</a>
     <a href="tw-market.html">台股排行</a>
-    <a href="institutional.html">法人籌碼</a><a href="coverage.html">資料覆蓋</a><a href="data-status.html">資料狀態</a>
+    <a href="institutional.html">法人籌碼</a>
+    <a href="coverage.html">資料覆蓋</a>
+    <a href="data-status.html">資料狀態</a>
     <a class="keep-mobile" href="portfolio.html">我的組合</a>
   </nav>
 </header>
-<main class="shell">
-<section class="panel page-hero"><div><p class="eyebrow">FINANCE NEWS</p><h1>多來源財經新聞</h1><p>Yahoo、鉅亨、MoneyDJ、官方與券商／投顧來源；同事件合併、相同模板收斂並交錯不同媒體。</p></div><div class="stats"><article class="stat"><span>新聞數</span><strong id="newsCount">0</strong></article><article class="stat"><span>來源數</span><strong id="sourceCount">0</strong></article><article class="stat"><span>保留天數</span><strong>20</strong></article><article class="stat"><span>更新</span><strong id="newsUpdated" style="font-size:13px">等待</strong></article></div></section>
-<section class="panel news-toolbar"><input class="form-control" id="newsSearch" placeholder="搜尋標題、摘要、來源…"><select class="form-control" id="newsRegion"><option value="all">全部地區</option><option value="TW">台灣</option><option value="US">美國</option><option value="GLOBAL">全球</option></select><select class="form-control" id="newsTopic"><option value="all">全部主題</option><option value="market">市場</option><option value="earnings">財報</option><option value="policy">政策</option><option value="fund">ETF／基金</option></select><select class="form-control" id="newsSource"><option value="all">全部來源</option></select></section>
-<section class="panel panel-pad" style="margin-top:10px"><div class="section-head"><div><p class="eyebrow">SOURCE HEALTH</p><h2>資料來源</h2></div><span class="section-note">抓取失敗不會用空白檔覆蓋上次成功資料</span></div><div class="source-grid" id="sourceGrid"></div></section>
-<section class="news-list" id="newsList"></section>
 
-<footer><span>資料僅供市場觀察，不構成投資建議。盤中數值可能延遲。</span><span>Asia/Taipei · v11.2.6</span></footer>
-<nav class="mobile-nav"><a href="index.html">首頁</a><a href="tw-market.html">台股</a><a href="news.html">新聞</a><a href="portfolio.html">組合</a></nav>
+<main class="shell">
+  <section class="panel page-hero news-hero">
+    <div>
+      <p class="eyebrow">TAIWAN MATERIAL INFORMATION & FINANCE NEWS</p>
+      <h1>台灣重大資訊與財經新聞</h1>
+      <p>上市櫃重大訊息、官方機關、主要媒體、科技媒體、券商與投信來源集中彙整；同事件合併並保留原始來源。</p>
+    </div>
+    <div class="stats news-stats">
+      <article class="stat"><span>新聞與公告</span><strong id="newsCount">0</strong></article>
+      <article class="stat"><span>重大資訊</span><strong id="materialCount">0</strong></article>
+      <article class="stat"><span>活躍媒體</span><strong id="activeSourceCount">0</strong></article>
+      <article class="stat"><span>設定來源</span><strong id="configuredSourceCount">0</strong></article>
+    </div>
+  </section>
+
+  <section class="panel news-toolbar">
+    <input class="form-control" id="newsSearch" placeholder="搜尋公司代碼、標題、摘要或來源…">
+    <select class="form-control" id="newsRegion">
+      <option value="all">全部地區</option>
+      <option value="TW">台灣</option>
+      <option value="US">美國</option>
+      <option value="JP">日本</option>
+      <option value="CN">中國／香港</option>
+      <option value="EU">歐洲</option>
+      <option value="GLOBAL">全球</option>
+    </select>
+    <select class="form-control" id="newsTopic">
+      <option value="all">全部主題</option>
+      <option value="material">重大訊息</option>
+      <option value="earnings">財報／營收</option>
+      <option value="dividend">股利／除權息</option>
+      <option value="fund">ETF／基金</option>
+      <option value="policy">政策／總經</option>
+      <option value="industry">產業</option>
+      <option value="market">市場</option>
+      <option value="crypto">虛擬貨幣</option>
+    </select>
+    <select class="form-control" id="newsSource">
+      <option value="all">全部來源</option>
+    </select>
+    <select class="form-control" id="newsSort">
+      <option value="importance">重大優先</option>
+      <option value="latest">最新優先</option>
+    </select>
+  </section>
+
+  <section class="panel panel-pad source-health-panel">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">SOURCE HEALTH</p>
+        <h2>新聞資料來源</h2>
+      </div>
+      <span class="section-note" id="newsUpdated">等待更新</span>
+    </div>
+    <div class="source-health-summary" id="sourceHealthStats"></div>
+    <div class="source-health-toolbar">
+      <input class="form-control" id="sourceHealthSearch" placeholder="搜尋來源名稱…">
+      <select class="form-control" id="sourceHealthGroup">
+        <option value="all">全部類型</option>
+        <option value="official-company">上市櫃重大訊息</option>
+        <option value="official">官方機關</option>
+        <option value="publisher">財經／一般媒體</option>
+        <option value="technology">科技媒體</option>
+        <option value="portal">入口網站</option>
+        <option value="broker">券商／投顧</option>
+        <option value="fund-house">投信</option>
+        <option value="broad">廣域搜尋</option>
+        <option value="discovered">額外發現媒體</option>
+      </select>
+      <select class="form-control" id="sourceHealthStatus">
+        <option value="all">全部狀態</option>
+        <option value="ok">正常</option>
+        <option value="empty">正常但無新文</option>
+        <option value="warning">暫時失敗</option>
+        <option value="scheduled">輪替待檢</option>
+        <option value="discovered">廣域發現</option>
+      </select>
+    </div>
+    <div class="source-grid expanded-source-grid" id="sourceGrid"></div>
+  </section>
+
+  <section class="news-list" id="newsList"></section>
+
+  <footer>
+    <span>只保存標題、摘要、時間與原文連結；不複製新聞全文。來源失敗時保留上次成功資料。</span>
+    <span>Asia/Taipei · v11.2.7</span>
+  </footer>
+  <nav class="mobile-nav"><a href="index.html">首頁</a><a href="tw-market.html">台股</a><a href="news.html">新聞</a><a href="portfolio.html">組合</a></nav>
 </main>
-<script src="data/news-seed.js?v=11.2.6"></script><script src="assets/shared.js?v=11.2.6"></script><script src="assets/news.js?v=11.2.6"></script><script src="assets/sw-register.js?v=11.2.6"></script></body></html>
+
+<script src="data/news-seed.js?v=11.2.7"></script>
+<script src="assets/shared.js?v=11.2.7"></script>
+<script src="assets/news.js?v=11.2.7"></script>
+<script src="assets/sw-register.js?v=11.2.7"></script>
+</body>
+</html>

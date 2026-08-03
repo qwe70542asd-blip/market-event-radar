@@ -1,8 +1,8 @@
 {
   "project": "market-event-radar",
-  "baseline_version": "11.2.6",
-  "label": "v11.2.6-readable-complete-stock-data",
-  "updated_at": "2026-08-03T14:05:00+08:00",
+  "baseline_version": "11.2.7",
+  "label": "v11.2.7-taiwan-news-source-overhaul",
+  "updated_at": "2026-08-03T16:40:00+08:00",
   "data_channels": {
     "assets": "live-assets",
     "events": "live-events",
@@ -12,15 +12,14 @@
     "news": "live-news"
   },
   "features": [
-    "thirteen-tab inline stock and ETF intelligence",
-    "TradingView interactive chart and technical analysis",
-    "official TWSE and TPEx historical-data-first fallback",
-    "MA RSI MACD KD Bollinger support and resistance calculations",
-    "TWSE MIS five-level order-book persistence",
-    "official on-demand valuation company and ETF profiles",
-    "invalid zero-price and extreme-change ranking exclusion",
-    "1366x768 notebook readability typography validation",
-    "representative TWSE stock ETF and TPEx stock browser tests"
+    "99 configured Taiwan finance and official news sources",
+    "feedparser.parse RSS fix with XML fallback",
+    "listed and OTC material-information priority archive",
+    "official, publisher, technology, broker and fund-house source registry",
+    "four-bucket long-tail source rotation",
+    "concurrent source fetching with last-success preservation",
+    "configured and discovered source health dashboard",
+    "material-information priority sorting and filters"
   ],
   "realtime": {
     "taiwan_visible_quotes_seconds": 5,
