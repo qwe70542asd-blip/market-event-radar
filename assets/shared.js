@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const VERSION = "11.1.0";
+  const VERSION = "11.1.1";
   const OWNER = "qwe70542asd-blip";
   const REPO = "market-event-radar";
   const LIVE_BASE = `https://raw.githubusercontent.com/${OWNER}/${REPO}/live-data/`;
@@ -305,10 +305,16 @@
   }
 
   function safeNewsLink(item) {
-    const value = item?.direct_link || item?.link || item?.url || "";
+    const value = item?.pdf_link || item?.article_link || item?.direct_link || item?.link || item?.url || "";
     try {
       const url = new URL(value, location.href);
-      return ["http:","https:"].includes(url.protocol) ? url.href : "#";
+      if (!["http:","https:"].includes(url.protocol)) return "#";
+      // TWSE /rwd/ newsDetail is a JSON API. Convert legacy live-data
+      // links to the readable article route before opening a new tab.
+      if (/(^|\.)twse\.com\.tw$/i.test(url.hostname) && /\/rwd\/(?:zh|en)\/news\/newsDetail\//i.test(url.pathname)) {
+        url.pathname = url.pathname.replace(/\/rwd\/(zh|en)\/news\/newsDetail\//i, "/$1/news/newsDetail/");
+      }
+      return url.href;
     } catch { return "#"; }
   }
 

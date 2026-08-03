@@ -152,6 +152,32 @@ def resolve_google_link(session: requests.Session, link: str) -> str:
     return link
 
 
+def resolve_official_article(session: requests.Session, link: str) -> tuple[str, str | None]:
+    """Turn official JSON-detail endpoints into readable article/PDF links."""
+    parsed = urlparse(link)
+    host = (parsed.hostname or "").lower()
+    if host.endswith("twse.com.tw") and re.search(r"/rwd/(?:zh|en)/news/newsDetail/", parsed.path, re.I):
+        human = re.sub(r"/rwd/(zh|en)/news/newsDetail/", r"/\1/news/newsDetail/", link, flags=re.I)
+        try:
+            response = session.get(link, headers=HEADERS, timeout=15)
+            response.raise_for_status()
+            payload = response.json()
+            for table in payload.get("tables") or []:
+                fields = table.get("fields") or []
+                for data in table.get("data") or []:
+                    row = dict(zip(fields, data))
+                    pdf = str(row.get("pdf") or "").strip()
+                    html_path = str(row.get("html") or "").strip()
+                    if pdf:
+                        return human, requests.compat.urljoin("https://www.twse.com.tw", pdf)
+                    if html_path and html_path.startswith(("http://", "https://")):
+                        return html_path, None
+        except Exception:
+            pass
+        return human, None
+    return link, None
+
+
 def entry_to_item(entry: dict, source: str, group: str, session: requests.Session, resolve_links: bool = False) -> dict | None:
     title = clean_text(entry.get("title"))
     link = str(entry.get("link") or "").strip()
@@ -160,17 +186,20 @@ def entry_to_item(entry: dict, source: str, group: str, session: requests.Sessio
         return None
     if resolve_links:
         link = resolve_google_link(session, link)
+    article_link, pdf_link = resolve_official_article(session, link)
     published = parsed_time(entry)
     topic, region = classify(title, summary)
-    actual_source = publisher_from_link(link, source)
+    actual_source = publisher_from_link(article_link, source)
     return {
         "id": stable_id(actual_source, title, link),
         "title": title,
         "summary": summary[:700],
         "source": actual_source,
         "source_group": group,
-        "link": link,
-        "direct_link": link,
+        "link": article_link,
+        "direct_link": article_link,
+        "article_link": article_link,
+        "pdf_link": pdf_link,
         "published_at": published.isoformat(timespec="seconds"),
         "topic": topic,
         "region": region,
@@ -229,6 +258,67 @@ def fetch_moneydj(session: requests.Session) -> tuple[list[dict], dict]:
         return [], status
 
 
+def row_value(row: dict, *needles: str):
+    normalized = {re.sub(r"[\s_\\-]+", "", str(key)).lower(): value for key, value in row.items()}
+    for needle in needles:
+        target = re.sub(r"[\s_\\-]+", "", needle).lower()
+        if target in normalized and normalized[target] not in (None, ""):
+            return normalized[target]
+    for key, value in normalized.items():
+        if value not in (None, "") and any(re.sub(r"[\s_\\-]+", "", needle).lower() in key for needle in needles):
+            return value
+    return None
+
+
+def fetch_twse_news(session: requests.Session) -> tuple[list[dict], dict]:
+    name, group = "臺灣證券交易所", "official-tw"
+    status = {"name": name, "group": group, "status": "warning", "message": "抓取失敗"}
+    try:
+        response = session.get("https://openapi.twse.com.tw/v1/news/newsList", headers=HEADERS, timeout=25)
+        response.raise_for_status()
+        payload = response.json()
+        rows = payload if isinstance(payload, list) else payload.get("data") or []
+        items = []
+        for row in rows[:100]:
+            if not isinstance(row, dict):
+                continue
+            title = clean_text(row_value(row, "title", "subject", "head_text", "標題", "主旨"))
+            uid = str(row_value(row, "id", "uuid", "seqno", "編號") or "").strip()
+            summary = clean_text(row_value(row, "summary", "content", "text", "說明") or "")
+            date_value = str(row_value(row, "date", "datetime", "發布時間", "時間") or "")
+            if not title:
+                continue
+            published = NOW
+            try:
+                digits = re.sub(r"\D", "", date_value)
+                if len(digits) >= 12:
+                    published = datetime.strptime(digits[:12], "%Y%m%d%H%M").replace(tzinfo=TAIPEI)
+                elif date_value:
+                    parsed = dateparser.parse(date_value)
+                    if not parsed.tzinfo:
+                        parsed = parsed.replace(tzinfo=TAIPEI)
+                    published = parsed.astimezone(TAIPEI)
+            except Exception:
+                pass
+            api_link = f"https://www.twse.com.tw/rwd/zh/news/newsDetail/{uid}" if uid else "https://www.twse.com.tw/zh/about/news/news/list.html"
+            article_link, pdf_link = resolve_official_article(session, api_link)
+            topic, region = classify(title, summary)
+            items.append({
+                "id": stable_id(name, title, article_link),
+                "title": title, "summary": summary[:700], "source": name,
+                "source_group": group, "link": article_link, "direct_link": article_link,
+                "article_link": article_link, "pdf_link": pdf_link,
+                "published_at": published.isoformat(timespec="seconds"),
+                "topic": topic, "region": region if region != "GLOBAL" else "TW",
+                "asset_class": "fund" if topic == "fund" else "stock", "tags": ["official", "official-tw"],
+            })
+        status.update(status="ok" if items else "warning", message=f"{len(items)} 筆")
+        return items, status
+    except Exception as exc:
+        status["message"] = str(exc)[:120]
+        return [], status
+
+
 def google_news_url(query_text: str) -> str:
     return f"https://news.google.com/rss/search?q={quote(query_text)}&hl=zh-TW&gl=TW&ceid=TW:zh-Hant"
 
@@ -254,6 +344,10 @@ def main() -> None:
         time.sleep(0.25)
 
     items, status = fetch_moneydj(session)
+    collected.extend(items)
+    statuses.append(status)
+
+    items, status = fetch_twse_news(session)
     collected.extend(items)
     statuses.append(status)
 
@@ -293,7 +387,7 @@ def main() -> None:
     status_by_name.update({row["name"]: row for row in statuses})
     payload = {
         "metadata": {
-            "version": "v11.1.0",
+            "version": "v11.1.1",
             "updated_at": NOW.isoformat(timespec="seconds"),
             "timezone": "Asia/Taipei",
             "retention_days": RETENTION_DAYS,

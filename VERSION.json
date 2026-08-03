@@ -1,13 +1,15 @@
 {
   "project": "market-event-radar",
-  "baseline_version": "11.1.0",
-  "label": "v11.1.0-complete-integration",
-  "updated_at": "2026-08-03T07:35:00+08:00",
+  "baseline_version": "11.1.1",
+  "label": "v11.1.1-complete-integration",
+  "updated_at": "2026-08-03T08:15:00+08:00",
   "features": [
-    "official ETF identity fixes",
+    "compact no-horizontal-scroll layout",
+    "removed dotted noise overlay",
+    "readable TWSE news links and official PDF resolution",
+    "official all-listed-stock financial enrichment",
+    "official valuation and industry rankings",
     "portfolio official Taiwan quotes",
-    "multi-source news",
-    "stock/ETF detail charts",
-    "equal-height calendar rows"
+    "multi-source news"
   ]
 }

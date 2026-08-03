@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const VERSION="11.1.0";
+  const VERSION="11.1.1";
   const KEY="market-radar-version";
   if(!("serviceWorker" in navigator))return;
   window.addEventListener("load",async()=>{
@@ -17,7 +17,7 @@
         worker?.addEventListener("statechange",()=>{if(worker.state==="installed"&&navigator.serviceWorker.controller)worker.postMessage({type:"SKIP_WAITING"})});
       });
       if(previous!==VERSION&&"caches" in window){
-        const keep="market-event-radar-v11-1-0";
+        const keep="market-event-radar-v11-1-1";
         const keys=await caches.keys();
         await Promise.all(keys.filter(key=>key.startsWith("market-event-radar-")&&key!==keep).map(key=>caches.delete(key)));
       }

@@ -23,8 +23,12 @@
   $("#assetName").textContent=asset.name;$("#assetSymbol").textContent=asset.symbol;
   $("#assetClassBadge").textContent=isEtf?"ETF／基金":asset.asset_class==="crypto"?"虛擬貨幣":"股票";
   $("#assetMeta").textContent=`${asset.exchange||asset.market} · ${asset.official_industry||asset.sub_industry||"待分類"} · ${asset.currency||""}`;
-  $("#scoreLabel").textContent=isEtf?"資料型態健康度":"資料型態健康度";
-  $("#scoreValue").textContent=isEtf?"ETF":"STOCK";$("#scoreNote").textContent=`資料覆蓋 ${quote?60:35}%`;
+  const analysisKeys=["eps","pe","pb","dividend_yield","roe","debt_ratio","current_ratio","net_margin"];
+  const analysisCount=analysisKeys.filter(key=>finite(metrics[key])!==null).length;
+  const analysisLabel={complete:"完整",partial:"部分",basic:"待更新"}[asset.analysis_status] || (analysisCount>=6?"完整":analysisCount>=2?"部分":"待更新");
+  $("#scoreLabel").textContent=isEtf?"ETF 官方資料":"官方分析覆蓋";
+  $("#scoreValue").textContent=isEtf?"ETF":`${analysisCount}/8`;
+  $("#scoreNote").textContent=isEtf?(asset.etf?.category||"基金資料"): `${analysisLabel} · ${asset.analysis_source||"TWSE／TPEx"}`;
 
   function metric(label,value,cls=""){return `<article class="metric"><span>${label}</span><strong class="${cls}">${value}</strong></article>`}
   const price=finite(quote?.price??metrics.price),pct=finite(quote?.change_percent);
@@ -35,8 +39,8 @@
     metric(isEtf?"折溢價":"最高",isEtf?(finite(asset.etf?.premium_discount)!==null?formatPercent(asset.etf.premium_discount):"排程待更新"):formatPrice(quote?.high,asset.currency)),
     metric("最低",formatPrice(quote?.low,asset.currency)),
     metric("成交量",`${formatVolume(quote?.volume)} 張`),
-    metric(isEtf?"基金規模":"本益比",isEtf?(asset.etf?.aum||"官方排程待更新"):(finite(metrics.pe)!==null?metrics.pe.toFixed(2):"資料不足")),
-    metric(isEtf?"內扣費用":"EPS",isEtf?(asset.etf?.expense_ratio||"公開說明書"):(finite(metrics.eps??latest.eps)!==null?Number(metrics.eps??latest.eps).toFixed(2):"資料不足"))
+    metric(isEtf?"基金規模":"本益比",isEtf?(asset.etf?.aum||"官方排程待更新"):(finite(metrics.pe)!==null?metrics.pe.toFixed(2):"財報排程待更新")),
+    metric(isEtf?"內扣費用":"EPS",isEtf?(asset.etf?.expense_ratio||"公開說明書"):(finite(metrics.eps??latest.eps)!==null?Number(metrics.eps??latest.eps).toFixed(2):"財報排程待更新"))
   ];
   $("#metricGrid").innerHTML=common.join("");
 
@@ -70,8 +74,8 @@
   }else{
     const values=[metrics.net_margin?Math.min(100,50+metrics.net_margin):55,metrics.debt_ratio?Math.max(10,100-metrics.debt_ratio):55,metrics.current_ratio?Math.min(100,metrics.current_ratio*45):55,metrics.pe?Math.max(10,100-Math.min(80,metrics.pe*2)):55,metrics.roe?Math.min(100,40+metrics.roe*2):55];
     $("#primaryChart").innerHTML=`<h2>穩健度模型</h2>${radar(values,["獲利","負債","流動","估值","收益"])}<p class="section-note">模型依官方財報可取得欄位計算；缺值以中性分數顯示。</p>`;
-    $("#secondaryChart").innerHTML=`<h2>行業排名</h2><div class="rank-grid">${info("產業 EPS 排名",asset.rankings?.eps||"資料不足")}${info("產業 ROE 排名",asset.rankings?.roe||"資料不足")}${info("產業估值分位",asset.rankings?.valuation||"資料不足")}${info("產業穩健度排名",asset.rankings?.stability||"資料不足")}</div>`;
-    $("#profileGrid").innerHTML=[info("官方產業",asset.official_industry),info("子產業",asset.sub_industry),info("本益比",finite(metrics.pe)!==null?metrics.pe.toFixed(2):"資料不足"),info("股價淨值比",finite(metrics.pb)!==null?metrics.pb.toFixed(2):"資料不足"),info("ROE",finite(metrics.roe)!==null?`${metrics.roe.toFixed(2)}%`:"資料不足"),info("負債比",finite(metrics.debt_ratio)!==null?`${metrics.debt_ratio.toFixed(2)}%`:"資料不足")].join("");
+    $("#secondaryChart").innerHTML=`<h2>行業排名</h2><div class="rank-grid">${info("產業 EPS 排名",asset.rankings?.eps||"財報排程待更新")}${info("產業 ROE 排名",asset.rankings?.roe||"財報排程待更新")}${info("產業估值分位",asset.rankings?.valuation||"估值排程待更新")}${info("產業穩健度排名",asset.rankings?.stability||"財報排程待更新")}</div>`;
+    $("#profileGrid").innerHTML=[info("官方產業",asset.official_industry),info("子產業",asset.sub_industry),info("本益比",finite(metrics.pe)!==null?metrics.pe.toFixed(2):"估值排程待更新"),info("股價淨值比",finite(metrics.pb)!==null?metrics.pb.toFixed(2):"估值排程待更新"),info("ROE",finite(metrics.roe)!==null?`${metrics.roe.toFixed(2)}%`:"財報排程待更新"),info("負債比",finite(metrics.debt_ratio)!==null?`${metrics.debt_ratio.toFixed(2)}%`:"財報排程待更新")].join("");
     $("#returnGrid").innerHTML=[info("一日",formatPercent(pct)),info("一週","排程待更新"),info("一個月","排程待更新"),info("一年","排程待更新")].join("");
     $("#dividendGrid").innerHTML=[info("殖利率",finite(metrics.dividend_yield)!==null?`${metrics.dividend_yield.toFixed(2)}%`:"資料不足"),info("最近股利","官方公告待更新"),info("除權息日","官方公告待更新"),info("現金股利","官方公告待更新")].join("");
   }

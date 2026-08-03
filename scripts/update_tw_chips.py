@@ -96,7 +96,7 @@ def main()->None:
         if previous.get("metadata",{}).get("updated_at"):
             raise SystemExit("No verified official chip values; previous payload was not replaced.")
     markets={**(previous.get("markets") or {}),"twse":market}
-    payload={"metadata":{"version":"v11.1.0","updated_at":NOW.isoformat(timespec="seconds") if verified else None,
+    payload={"metadata":{"version":"v11.1.1","updated_at":NOW.isoformat(timespec="seconds") if verified else None,
         "trading_date":date,"source":"TWSE／TPEx 官方盤後資料",
         "note":"缺值保留 null，不以 0 冒充。"},"markets":markets,"items":{**(previous.get("items") or {}),**items}}
     OUT.write_text(json.dumps(payload,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
