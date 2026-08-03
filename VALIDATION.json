@@ -7,19 +7,19 @@
     },
     "Python compile": {
       "ok": true,
-      "seconds": 0.674
+      "seconds": 3.523
     },
     "JavaScript syntax": {
       "ok": true,
-      "seconds": 0.237
+      "seconds": 0.224
     },
     "Shell syntax": {
       "ok": true,
-      "seconds": 0.004
+      "seconds": 0.039
     },
     "Workflow YAML and <15m ceiling": {
       "ok": true,
-      "seconds": 0.014
+      "seconds": 0.013
     },
     "HTML references": {
       "ok": true,
@@ -27,21 +27,21 @@
     },
     "Version and no audio": {
       "ok": true,
-      "seconds": 0.003
+      "seconds": 0.002
     },
     "Unit tests": {
       "ok": true,
-      "seconds": 0.822
+      "seconds": 3.402
     },
     "Workflow parser smoke": {
       "ok": true,
-      "seconds": 0.737
+      "seconds": 3.615
     },
     "Browser E2E": {
       "ok": true,
-      "seconds": 2.696
+      "seconds": 5.969
     },
-    "total_seconds": 5.2
+    "total_seconds": 16.8
   },
   "details": []
 }

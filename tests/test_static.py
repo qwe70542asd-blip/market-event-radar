@@ -179,7 +179,7 @@ const context={window:{},console,URL,AbortController,setTimeout,clearTimeout,set
 vm.createContext(context);
 vm.runInContext(fs.readFileSync(process.argv[1],'utf8'),context,{filename:'shared.js'});
 if(!context.window.MR)throw new Error('MR was not initialized');
-if(context.window.MR.VERSION!=='11.2.3')throw new Error('wrong version');
+if(context.window.MR.VERSION!=='11.2.4')throw new Error('wrong version');
 """
         result=subprocess.run([node,"-e",script,str(ROOT/"assets/shared.js")],capture_output=True,text=True)
         self.assertEqual(result.returncode,0,result.stderr)
@@ -228,9 +228,32 @@ if(context.window.MR.VERSION!=='11.2.3')throw new Error('wrong version');
     def test_chip_channel_uses_latest_available_trade_date(self):
         updater=(ROOT/"scripts/update_tw_chips.py").read_text(encoding="utf-8")
         self.assertIn("def candidate_trade_dates",updater)
-        self.assertIn("for date in candidate_trade_dates()",updater)
+        self.assertIn("for trade_date in candidate_trade_dates()",updater)
         self.assertIn('"status":"warning"',updater)
         self.assertNotIn('raise SystemExit("No verified official chip values',updater)
+
+    def test_institutional_query_interface(self):
+        page=(ROOT/"institutional.html").read_text(encoding="utf-8")
+        script=(ROOT/"assets/institutional.js").read_text(encoding="utf-8")
+        market=(ROOT/"tw-market.html").read_text(encoding="utf-8")
+        self.assertIn("← 回到首頁",page)
+        self.assertIn('id="marketQueryButton"',page)
+        self.assertIn('id="stockQueryInput"',page)
+        self.assertIn('id="stockQueryResult"',page)
+        self.assertIn("renderStockResult",script)
+        self.assertIn("financingTable",script)
+        self.assertIn("searchAssets",script)
+        self.assertNotIn("股票與 ETF",market)
+        self.assertIn("全部標的",market)
+
+    def test_chip_parser_collects_margin_and_tpex(self):
+        updater=(ROOT/"scripts/update_tw_chips.py").read_text(encoding="utf-8")
+        self.assertIn("TWSE_MARGIN",updater)
+        self.assertIn("TPEX_MARGIN",updater)
+        self.assertIn("TPEX_INST",updater)
+        self.assertIn("def margin_values",updater)
+        self.assertIn('"history":history',updater)
+        self.assertIn("HISTORY_LIMIT=20",updater)
 
     def test_portfolio_unknown_legacy_key_recovery(self):
         shared=(ROOT/"assets/shared.js").read_text(encoding="utf-8")

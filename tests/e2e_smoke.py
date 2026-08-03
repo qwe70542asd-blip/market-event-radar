@@ -36,9 +36,38 @@ def market():
 def chips():
     items={}
     for i,s in enumerate(['2330','2317','2382','3231','2454']):
-        items[s]={'symbol':s,'name':f'股票{s}','market':'twse','foreign_net':1000000-i*100000,'trust_net':200000+i*10000,'dealer_net':-50000,'total_net':1150000-i*90000}
-    section={'institutional':{'foreign_net':5000000,'trust_net':1000000,'dealer_net':-250000,'total_net':5750000},'day_trading':{'ratio_percent':22.5,'trade_value':50000000000},'margin':{'balance_shares':3000000000},'short':{'balance_shares':120000000}}
-    return {'metadata':{'updated_at':NOW,'trading_date':'20260801'},'markets':{'twse':section,'tpex':section},'items':items}
+        items[f'twse:{s}']={
+            'symbol':s,'name':f'股票{s}','market':'twse',
+            'foreign_buy':1200000-i*100000,'foreign_sell':200000,'foreign_net':1000000-i*100000,
+            'trust_buy':250000,'trust_sell':50000,'trust_net':200000,
+            'dealer_buy':20000,'dealer_sell':70000,'dealer_net':-50000,
+            'total_net':1150000-i*100000,
+            'margin':{'previous_balance':1000+i*10,'buy':100,'sell':80,'cash_repayment':2,'balance':1018+i*10,'limit':5000,'utilization_percent':20.36},
+            'short':{'previous_balance':100,'sell':20,'buy':10,'repayment':0,'balance':110,'limit':5000,'utilization_percent':2.2},
+            'offset_shares':5,'note':''
+        }
+    tpex={
+        'symbol':'6488','name':'環球晶','market':'tpex',
+        'foreign_buy':500000,'foreign_sell':300000,'foreign_net':200000,
+        'trust_buy':50000,'trust_sell':10000,'trust_net':40000,
+        'dealer_buy':20000,'dealer_sell':15000,'dealer_net':5000,'total_net':245000,
+        'margin':{'previous_balance':600,'buy':40,'sell':20,'cash_repayment':0,'balance':620,'limit':3000,'utilization_percent':20.67},
+        'short':{'previous_balance':20,'sell':5,'buy':2,'repayment':0,'balance':23,'limit':3000,'utilization_percent':0.77},
+        'offset_shares':1,'note':''
+    }
+    items['tpex:6488']=tpex
+    markets={
+      'twse':{'institutional':{'foreign_net':4000000,'trust_net':1000000,'dealer_net':-250000,'total_net':4750000},
+              'margin':{'previous_balance':5100,'balance':5190,'change':90},
+              'short':{'previous_balance':500,'balance':550,'change':50},'stock_count':5},
+      'tpex':{'institutional':{'foreign_net':200000,'trust_net':40000,'dealer_net':5000,'total_net':245000},
+              'margin':{'previous_balance':600,'balance':620,'change':20},
+              'short':{'previous_balance':20,'balance':23,'change':3},'stock_count':1}
+    }
+    snapshot={'date':'20260801','markets':markets,'items':items}
+    return {'metadata':{'updated_at':NOW,'trading_date':'20260801','status':'ok'},
+            'available_dates':['20260801'],'markets':markets,'items':items,'history':{'20260801':snapshot}}
+
 
 def news():
     return {'metadata':{'updated_at':NOW,'retention_days':20},'items':[{'id':f'n{i}','title':f'財經新聞 {i}','source':['鉅亨網','MoneyDJ','Yahoo股市'][i%3],'published_at':NOW,'link':'https://example.org/news'} for i in range(12)]}
@@ -87,6 +116,10 @@ def run_page(page,name,assertions):
     page.set_content(inline_html(name),wait_until='domcontentloaded')
     for selector,minimum in assertions:
         page.wait_for_function('(args)=>document.querySelectorAll(args[0]).length>=args[1]',arg=[selector,minimum],timeout=12000)
+    if name=="institutional.html":
+        page.fill("#stockQueryInput","2330")
+        page.click("#stockQueryButton")
+        page.wait_for_function('()=>!document.querySelector("#stockQueryResult").hidden && document.querySelectorAll("#stockQueryResult .stock-detail-metric").length>=8',timeout=12000)
     elapsed=time.monotonic()-started
     if errors: raise AssertionError(f'{name} page errors: {errors}')
     if elapsed>15: raise AssertionError(f'{name} exceeded 15 seconds: {elapsed:.2f}')
@@ -99,7 +132,7 @@ def main():
         tests={
           'index.html':[('#calendarGrid .calendar-day',35),('#marketList .market-row',4),('#cryptoList .crypto-row',5),('#portfolioStrip .quote-card',1),('#homeNews .news-card',3)],
           'tw-market.html':[('#gainers tr',3),('#losers tr',3),('#twHoldings tr',1)],
-          'institutional.html':[('#institutionalGrid .info-card',4),('#marginGrid .info-card',4),('#flowRows tr',3)],
+          'institutional.html':[('#institutionalGrid .info-card',4),('#marginGrid .info-card',4),('#stockQueryInput',1)],
           'news.html':[('#newsList .news-card',3)],
           'data-status.html':[('#channelGrid .channel-card',7)],
         }

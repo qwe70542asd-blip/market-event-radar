@@ -1,28 +1,129 @@
-<!doctype html><html lang="zh-Hant"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#061120">
-<title>法人與籌碼｜市場事件雷達</title><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="assets/favicon.svg"><link rel="stylesheet" href="assets/styles.css?v=11.2.3">
-</head><body>
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#061120">
+  <title>法人與籌碼查詢｜市場事件雷達</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/favicon.svg">
+  <link rel="stylesheet" href="assets/styles.css?v=11.2.4">
+</head>
+<body>
 <div class="noise" aria-hidden="true"></div>
 <header class="topbar">
   <a class="brand" href="index.html">
     <span class="brand-mark"><svg viewBox="0 0 48 48"><path d="M7 34 16 24l7 6 10-16 8 6"></path><path d="M7 40h34"></path></svg></span>
-    <span><strong>市場事件雷達 <em class="version">v11.2.3</em></strong><small>PERSONAL MARKET & EVENT RADAR</small></span>
+    <span><strong>市場事件雷達 <em class="version">v11.2.4</em></strong><small>PERSONAL MARKET & EVENT RADAR</small></span>
   </a>
   <nav class="topnav">
-    <span class="live-pill"><i></i> 自動更新</span>
+    <a class="home-link" href="index.html">← 回到首頁</a>
+    <span class="live-pill"><i></i> 官方盤後資料</span>
     <a href="news.html">財經新聞</a>
     <a href="tw-market.html">台股排行</a>
-    <a href="institutional.html">法人籌碼</a><a href="coverage.html">資料覆蓋</a><a href="data-status.html">資料狀態</a>
+    <a href="institutional.html">法人籌碼</a>
+    <a href="coverage.html">資料覆蓋</a>
+    <a href="data-status.html">資料狀態</a>
     <a class="keep-mobile" href="portfolio.html">我的組合</a>
   </nav>
 </header>
-<main class="shell">
-<section class="panel page-hero"><div><p class="eyebrow">TAIWAN MARKET FLOW</p><h1>法人、當沖與融資券</h1><p>只呈現官方可驗證資料；沒有有效數值時顯示待更新，不以 0 冒充。</p></div><div class="stats"><article class="stat"><span>交易日</span><strong id="chipDate" style="font-size:15px">—</strong></article><article class="stat"><span>上市來源</span><strong>TWSE</strong></article><article class="stat"><span>上櫃來源</span><strong>TPEx</strong></article><article class="stat"><span>更新</span><strong id="chipUpdated" style="font-size:13px">—</strong></article></div></section>
-<section class="rank-layout"><section class="panel panel-pad"><div class="section-head"><div><p class="eyebrow">INSTITUTIONAL</p><h2>三大法人</h2></div><div class="focus-chips"><button class="chip active" data-market="twse">上市</button><button class="chip" data-market="tpex">上櫃</button></div></div><div class="profile-grid" id="institutionalGrid"></div></section><section class="panel panel-pad"><div class="section-head"><div><p class="eyebrow">MARGIN</p><h2>當沖與融資券</h2></div></div><div class="profile-grid" id="marginGrid"></div></section></section>
-<section class="panel table-card"><div class="section-head"><div><p class="eyebrow">STOCK FLOW</p><h2>個股法人買賣超</h2></div><span class="section-note">依官方資料排序</span></div><div class="table-wrap"><table><thead><tr><th>代碼</th><th>名稱</th><th>外資</th><th>投信</th><th>自營商</th><th>合計</th></tr></thead><tbody id="flowRows"></tbody></table></div></section>
-<section class="panel panel-pad"><div class="section-head"><div><p class="eyebrow">OFFICIAL</p><h2>官方查詢入口</h2></div></div><div class="official-links"><a href="https://www.twse.com.tw/zh/trading/foreign/t86.html" target="_blank" rel="noreferrer">證交所三大法人 ↗</a><a href="https://www.tpex.org.tw/zh-tw/mainboard/trading/major-institutional.html" target="_blank" rel="noreferrer">櫃買中心法人 ↗</a><a href="https://www.twse.com.tw/zh/trading/margin/mi-margn.html" target="_blank" rel="noreferrer">融資融券 ↗</a></div></section>
 
-<footer><span>資料僅供市場觀察，不構成投資建議。盤中數值可能延遲。</span><span>Asia/Taipei · v11.2.3</span></footer>
-<nav class="mobile-nav"><a href="index.html">首頁</a><a href="tw-market.html">台股</a><a href="news.html">新聞</a><a href="portfolio.html">組合</a></nav>
+<main class="shell">
+  <section class="panel page-hero institutional-hero">
+    <div>
+      <p class="eyebrow">TAIWAN MARKET QUERY</p>
+      <h1>法人、融資融券查詢</h1>
+      <p>依交易日與市場查詢三大法人、融資、融券；再輸入個股代碼或名稱查看個股明細。</p>
+    </div>
+    <div class="stats">
+      <article class="stat"><span>資料日期</span><strong id="chipDate">—</strong></article>
+      <article class="stat"><span>目前市場</span><strong id="chipMarket">上市</strong></article>
+      <article class="stat"><span>個股筆數</span><strong id="chipCount">—</strong></article>
+      <article class="stat"><span>更新時間</span><strong id="chipUpdated">—</strong></article>
+    </div>
+  </section>
+
+  <section class="panel query-panel">
+    <div class="section-head">
+      <div><p class="eyebrow">MARKET QUERY</p><h2>市場籌碼查詢</h2></div>
+      <span class="section-note" id="marketQueryStatus">讀取官方資料中</span>
+    </div>
+    <div class="query-toolbar">
+      <label>
+        <span>交易市場</span>
+        <select id="marketSelect">
+          <option value="twse">上市 TWSE</option>
+          <option value="tpex">上櫃 TPEx</option>
+        </select>
+      </label>
+      <label>
+        <span>交易日期</span>
+        <select id="dateSelect"></select>
+      </label>
+      <button class="primary-btn query-submit" id="marketQueryButton" type="button">查詢市場資料</button>
+    </div>
+  </section>
+
+  <section class="rank-layout query-results">
+    <section class="panel panel-pad">
+      <div class="section-head">
+        <div><p class="eyebrow">INSTITUTIONAL</p><h2>三大法人買賣超</h2></div>
+        <span class="section-note">單位：股</span>
+      </div>
+      <div class="profile-grid large-info-grid" id="institutionalGrid"></div>
+    </section>
+    <section class="panel panel-pad">
+      <div class="section-head">
+        <div><p class="eyebrow">MARGIN & SHORT</p><h2>融資融券餘額</h2></div>
+        <span class="section-note">官方盤後彙整</span>
+      </div>
+      <div class="profile-grid large-info-grid" id="marginGrid"></div>
+    </section>
+  </section>
+
+  <section class="panel stock-query-panel">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">STOCK QUERY</p>
+        <h2>查詢個股法人與信用交易</h2>
+      </div>
+      <span class="section-note">輸入代碼或名稱，例如 2330、台積電</span>
+    </div>
+    <div class="stock-query-bar">
+      <div class="stock-search-box">
+        <input id="stockQueryInput" type="search" autocomplete="off" placeholder="輸入股票／ETF 代碼或名稱">
+        <div class="suggestions stock-query-suggestions" id="stockQuerySuggestions" hidden></div>
+      </div>
+      <button class="primary-btn query-submit" id="stockQueryButton" type="button">查詢個股</button>
+    </div>
+    <p class="form-status" id="stockQueryStatus">請先輸入個股代碼或名稱。</p>
+    <div id="stockQueryResult" class="stock-query-result" hidden></div>
+  </section>
+
+  <section class="panel panel-pad">
+    <div class="section-head">
+      <div><p class="eyebrow">OFFICIAL</p><h2>官方查詢入口</h2></div>
+    </div>
+    <div class="official-links">
+      <a href="https://www.twse.com.tw/zh/trading/foreign/t86.html" target="_blank" rel="noreferrer">證交所三大法人 ↗</a>
+      <a href="https://www.tpex.org.tw/zh-tw/mainboard/trading/major-institutional.html" target="_blank" rel="noreferrer">櫃買中心三大法人 ↗</a>
+      <a href="https://www.twse.com.tw/zh/trading/margin/mi-margn.html" target="_blank" rel="noreferrer">上市融資融券 ↗</a>
+      <a href="https://www.tpex.org.tw/zh-tw/mainboard/trading/margin-trading/transactions.html" target="_blank" rel="noreferrer">上櫃融資融券 ↗</a>
+    </div>
+  </section>
+
+  <footer>
+    <span>資料為官方盤後資料；非信用交易標的可能沒有融資融券數值。</span>
+    <span>Asia/Taipei · v11.2.4</span>
+  </footer>
+  <nav class="mobile-nav"><a href="index.html">首頁</a><a href="tw-market.html">台股</a><a href="news.html">新聞</a><a href="portfolio.html">組合</a></nav>
 </main>
-<script src="data/tw-chips-seed.js?v=11.2.3"></script><script src="assets/shared.js?v=11.2.3"></script><script src="assets/institutional.js?v=11.2.3"></script><script src="assets/sw-register.js?v=11.2.3"></script></body></html>
+
+<script src="data/assets-seed.js?v=11.2.4"></script>
+<script src="data/tw-market-seed.js?v=11.2.4"></script>
+<script src="data/tw-chips-seed.js?v=11.2.4"></script>
+<script src="assets/shared.js?v=11.2.4"></script>
+<script src="assets/institutional.js?v=11.2.4"></script>
+<script src="assets/sw-register.js?v=11.2.4"></script>
+</body>
+</html>

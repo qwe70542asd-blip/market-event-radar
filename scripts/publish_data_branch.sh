@@ -77,7 +77,7 @@ for name in files:
     entries.append(row)
 
 manifest = {
-    "version": "v11.2.3",
+    "version": "v11.2.4",
     "channel": channel,
     "branch": branch,
     "published_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -98,7 +98,7 @@ PY
     exit 0
   fi
 
-  git commit -q -m "chore: refresh ${CHANNEL} v11.2.3"
+  git commit -q -m "chore: refresh ${CHANNEL} v11.2.4"
   if timeout 90s git push origin "HEAD:${BRANCH}"; then
     echo "${BRANCH}: publish complete"
     exit 0

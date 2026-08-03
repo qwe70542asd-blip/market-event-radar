@@ -1,8 +1,8 @@
 {
   "project": "market-event-radar",
-  "baseline_version": "11.2.3",
-  "label": "v11.2.3-runtime-boot-fix",
-  "updated_at": "2026-08-03T11:50:00+08:00",
+  "baseline_version": "11.2.4",
+  "label": "v11.2.4-institutional-query",
+  "updated_at": "2026-08-03T13:20:00+08:00",
   "data_channels": {
     "assets": "live-assets",
     "events": "live-events",
@@ -12,12 +12,13 @@
     "news": "live-news"
   },
   "features": [
-    "TWSE MIS five-second visible quote refresh",
-    "adaptive Taiwan market-hours polling",
-    "Binance one-second crypto WebSocket",
-    "CoinGecko thirty-second crypto fallback",
-    "five-minute news workflow and browser refresh",
-    "six isolated data branches plus direct crypto stream"
+    "institutional market/date query interface",
+    "individual stock institutional and margin query",
+    "TWSE T86 and MI_MARGN detail parsing",
+    "TPEx institutional and margin OpenAPI parsing",
+    "twenty trading-date chip history",
+    "explicit return-to-home navigation",
+    "renamed all-instruments market filter"
   ],
   "realtime": {
     "taiwan_visible_quotes_seconds": 5,

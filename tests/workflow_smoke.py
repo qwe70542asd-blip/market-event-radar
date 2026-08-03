@@ -19,8 +19,41 @@ class Response:
 class ChipSession:
     def get(self,url,**kwargs):
         if 'T86' in url:
-            return Response({'stat':'OK','fields':['證券代號','證券名稱','外陸資買賣超股數(不含外資自營商)','投信買賣超股數','自營商買賣超股數','三大法人買賣超股數'],'data':[['2330','台積電','1000000','200000','-50000','1150000'],['2317','鴻海','-100000','50000','10000','-40000']]})
-        return Response({'stat':'OK','fields':['項目','買進','賣出','餘額'],'data':[['融資(交易單位)','1','2','3000000'],['融券(交易單位)','1','2','120000']]})
+            return Response({
+                'stat':'OK',
+                'fields':['證券代號','證券名稱','外陸資買進股數(不含外資自營商)','外陸資賣出股數(不含外資自營商)','外陸資買賣超股數(不含外資自營商)','投信買進股數','投信賣出股數','投信買賣超股數','自營商買賣超股數','三大法人買賣超股數'],
+                'data':[
+                    ['2330','台積電','1200000','200000','1000000','300000','100000','200000','-50000','1150000'],
+                    ['2317','鴻海','100000','200000','-100000','80000','30000','50000','10000','-40000']
+                ]
+            })
+        if 'MI_MARGN' in url:
+            return Response({
+                'stat':'OK',
+                'tables':[{
+                    'fields':['股票代號','股票名稱','融資買進','融資賣出','融資現金償還','融資前日餘額','融資今日餘額','融資限額','融券賣出','融券買進','融券現券償還','融券前日餘額','融券今日餘額','融券限額','資券互抵'],
+                    'data':[
+                        ['2330','台積電','100','80','2','1000','1018','5000','20','10','0','100','110','5000','5'],
+                        ['2317','鴻海','90','70','1','800','819','4000','15','12','1','80','82','4000','3']
+                    ]
+                }]
+            })
+        if 'tpex_3insti' in url:
+            return Response([{
+                'Date':'115/08/03','SecuritiesCompanyCode':'6488','CompanyName':'環球晶',
+                'ForeignInvestorsBuy':'500000','ForeignInvestorsSell':'300000','ForeignInvestorsDifference':'200000',
+                'InvestmentTrustBuy':'50000','InvestmentTrustSell':'10000','InvestmentTrustDifference':'40000',
+                'DealerBuy':'20000','DealerSell':'15000','DealerDifference':'5000','TotalDifference':'245000'
+            }])
+        if 'tpex_mainboard_margin_balance' in url:
+            return Response([{
+                'Date':'115/08/03','SecuritiesCompanyCode':'6488','CompanyName':'環球晶',
+                'PreviousMarginBalance':'600','MarginBuy':'40','MarginSell':'20','CashRepayment':'0','TodayMarginBalance':'620',
+                'MarginLimit':'3000','MarginUtilization':'20.67',
+                'PreviousShortBalance':'20','ShortSell':'5','ShortBuy':'2','ShortRepayment':'0','TodayShortBalance':'23',
+                'ShortLimit':'3000','ShortUtilization':'0.77','OffsetShares':'1'
+            }])
+        return Response([])
 
 def test_chips(tmp):
     module=load_module('chips_smoke',ROOT/'scripts/update_tw_chips.py')
@@ -29,8 +62,12 @@ def test_chips(tmp):
     module.main()
     payload=json.loads(module.OUT.read_text(encoding='utf-8'))
     assert payload['metadata']['status']=='ok'
-    assert len(payload['items'])==2
-    assert payload['markets']['twse']['margin']['balance_shares']==3000000
+    assert len(payload['items'])==3
+    assert payload['items']['twse:2330']['margin']['balance']==1018
+    assert payload['items']['tpex:6488']['short']['balance']==23
+    assert payload['markets']['twse']['margin']['balance']==1837
+    assert payload['history'][payload['metadata']['trading_date']]
+
 
 def test_events(tmp):
     module=load_module('events_smoke',ROOT/'scripts/update_events.py')

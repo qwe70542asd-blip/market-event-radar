@@ -1,20 +1,27 @@
-市場事件雷達 v11.2.3 最終驗證
+市場事件雷達 v11.2.4 最終驗證
 
 總結果：PASS
-總耗時：5.2 秒（硬性上限 900 秒）
+驗證總耗時：16.8 秒
 
 - JSON：通過（0.001 秒）
-- Python compile：通過（0.674 秒）
-- JavaScript syntax：通過（0.237 秒）
-- Shell syntax：通過（0.004 秒）
-- Workflow YAML and <15m ceiling：通過（0.014 秒）
+- Python compile：通過（3.523 秒）
+- JavaScript syntax：通過（0.224 秒）
+- Shell syntax：通過（0.039 秒）
+- Workflow YAML and <15m ceiling：通過（0.013 秒）
 - HTML references：通過（0.002 秒）
-- Version and no audio：通過（0.003 秒）
-- Unit tests：通過（0.822 秒）
-- Workflow parser smoke：通過（0.737 秒）
-- Browser E2E：通過（2.696 秒）
+- Version and no audio：通過（0.002 秒）
+- Unit tests：通過（3.402 秒）
+- Workflow parser smoke：通過（3.615 秒）
+- Browser E2E：通過（5.969 秒）
 
-瀏覽器端到端頁面：首頁、台股排行、法人籌碼、財經新聞、資料狀態。
-根本修正：shared.js 不再輸出未宣告的 LIVE_BASE；改用 LEGACY_LIVE_BASE。
-Workflow：六個工作全部 timeout-minutes 14。
-音訊檔：無。
+本版重點檢查：
+- 法人頁市場／日期查詢介面可正常渲染。
+- 個股代碼與名稱搜尋可顯示法人、融資及融券明細。
+- TWSE T86、MI_MARGN 與 TPEx OpenAPI 模擬解析通過。
+- 保存最近 20 個交易日的資料結構。
+- 台股排行已移除「股票與 ETF」字樣，改為「全部標的」。
+- 最上方「回到首頁」連結可用。
+- 28 項單元測試通過。
+- Chromium 瀏覽器端到端測試通過。
+- 六個 Workflow 仍維持 14 分鐘上限。
+- 音訊檔：無。
