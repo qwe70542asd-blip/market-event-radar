@@ -1,0 +1,18 @@
+{
+  "metadata": {
+    "version": "v11.1.3",
+    "updated_at": null,
+    "source": "等待 GitHub Actions 官方資料覆蓋稽核"
+  },
+  "summary": {
+    "total_stocks": 0,
+    "complete": 0,
+    "partial_or_basic": 0,
+    "missing": 0,
+    "with_any_analysis": 0,
+    "coverage_percent": 0,
+    "field_counts": {}
+  },
+  "missing_stocks": [],
+  "partial_stocks": []
+}

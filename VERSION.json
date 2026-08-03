@@ -1,16 +1,16 @@
 {
   "project": "market-event-radar",
-  "baseline_version": "11.1.2",
-  "label": "v11.1.2-complete-integration",
-  "updated_at": "2026-08-03T08:40:00+08:00",
+  "baseline_version": "11.1.3",
+  "label": "v11.1.3-complete-integration",
+  "updated_at": "2026-08-03T09:20:00+08:00",
   "features": [
-    "top homepage navigation cards",
-    "live TAIEX and TPEx index cards",
-    "portfolio top seven by market value",
-    "natural-height crypto and synchronized calendar",
-    "news event clustering and source interleaving",
-    "official company material information",
-    "ETF manager and official fund metadata",
-    "official all-listed-stock financial enrichment"
+    "browser-side 60-second TWSE MIS quote refresh",
+    "five-minute GitHub live-data fallback",
+    "official TAIEX and TPEx index refresh",
+    "market-wide stock financial coverage audit",
+    "four-quarter MOPS historical backfill",
+    "official EPS valuation revenue dividend integration",
+    "coverage dashboard and 1595 regression validation",
+    "news clustering and ETF manager metadata"
   ]
 }

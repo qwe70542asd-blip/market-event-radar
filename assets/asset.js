@@ -1,7 +1,8 @@
 (async () => {
   "use strict";
-  const { $, $$, escapeHtml, finite, loadData, mergeAssets, canonicalAsset, findTwQuote,
-    formatPrice, formatPercent, formatVolume, direction, safeNewsLink, newsScore, formatTime } = MR;
+  const { $, $$, escapeHtml, finite, loadData, fetchTaiwanLiveQuotes, mergeAssets,
+    canonicalAsset, findTwQuote, formatPrice, formatPercent, formatVolume, direction,
+    safeNewsLink, newsScore, formatTime } = MR;
   const id = decodeURIComponent(new URLSearchParams(location.search).get("id") || "").toUpperCase();
   const [assetPayload,twPayload,chipsPayload,newsPayload] = await Promise.all([
     loadData("assets.json",window.__ASSET_SEED__||{assets:[]}),
@@ -14,7 +15,7 @@
   if(!asset&&id){const [market,symbol]=id.split(":");asset=canonicalAsset({id,market,symbol,name:symbol,asset_class:symbol?.startsWith("00")?"etf":"stock",exchange:market==="TW"?"TWSE":"US",currency:market==="TW"?"TWD":"USD"})}
   if(!asset){$("#assetName").textContent="查無標的";$("#assetMeta").textContent="請從投資組合或台股排行重新開啟。";return}
   document.title=`${asset.name}（${asset.symbol}）｜市場事件雷達`;
-  const quote=asset.market==="TW"?findTwQuote(asset,twPayload):null;
+  let quote=asset.market==="TW"?findTwQuote(asset,twPayload):null;
   const isEtf=asset.asset_class==="etf";
   const metrics={...(asset.metrics||{})};
   const financials=asset.financials||[];
@@ -25,12 +26,20 @@
   $("#assetMeta").textContent=`${asset.exchange||asset.market} · ${asset.official_industry||asset.sub_industry||"待分類"} · ${asset.currency||""}`;
   const analysisKeys=["eps","pe","pb","dividend_yield","roe","debt_ratio","current_ratio","net_margin"];
   const analysisCount=analysisKeys.filter(key=>finite(metrics[key])!==null).length;
-  const analysisLabel={complete:"完整",partial:"部分",basic:"待更新"}[asset.analysis_status] || (analysisCount>=6?"完整":analysisCount>=2?"部分":"待更新");
+  const analysisLabel={complete:"完整",partial:"部分",basic:"少量",missing:"缺漏"}[asset.analysis_status] || (analysisCount>=6?"完整":analysisCount>=2?"部分":"缺漏");
   $("#scoreLabel").textContent=isEtf?"ETF 官方資料":"官方分析覆蓋";
   $("#scoreValue").textContent=isEtf?"ETF":`${analysisCount}/8`;
-  $("#scoreNote").textContent=isEtf?(asset.etf?.category||"基金資料"): `${analysisLabel} · ${asset.analysis_source||"TWSE／TPEx"}`;
+  $("#scoreNote").textContent=isEtf?(asset.etf?.category||"基金資料"): `${analysisLabel} · 全市場自動稽核`;
+  $("#scoreNote").title=asset.analysis_note||asset.analysis_source||"TWSE／TPEx 官方資料";
 
-  function metric(label,value,cls=""){return `<article class="metric"><span>${label}</span><strong class="${cls}">${value}</strong></article>`}
+  function metric(label,value,cls=""){return `<article class="metric" data-metric-label="${escapeHtml(label)}"><span>${label}</span><strong class="${cls}">${value}</strong></article>`}
+  function updateMetric(label,value,cls=""){
+    const node=[...document.querySelectorAll("[data-metric-label]")].find(item=>item.dataset.metricLabel===label);
+    if(!node)return;
+    const strong=node.querySelector("strong");
+    strong.textContent=value;
+    strong.className=cls;
+  }
   const price=finite(quote?.price??metrics.price),pct=finite(quote?.change_percent);
   const common=[
     metric("最新價格",formatPrice(price,asset.currency)),
@@ -96,7 +105,19 @@
     const values=[metrics.net_margin?Math.min(100,50+metrics.net_margin):55,metrics.debt_ratio?Math.max(10,100-metrics.debt_ratio):55,metrics.current_ratio?Math.min(100,metrics.current_ratio*45):55,metrics.pe?Math.max(10,100-Math.min(80,metrics.pe*2)):55,metrics.roe?Math.min(100,40+metrics.roe*2):55];
     $("#primaryChart").innerHTML=`<h2>穩健度模型</h2>${radar(values,["獲利","負債","流動","估值","收益"])}<p class="section-note">模型依官方財報可取得欄位計算；缺值以中性分數顯示。</p>`;
     $("#secondaryChart").innerHTML=`<h2>行業排名</h2><div class="rank-grid">${info("產業 EPS 排名",asset.rankings?.eps||"財報排程待更新")}${info("產業 ROE 排名",asset.rankings?.roe||"財報排程待更新")}${info("產業估值分位",asset.rankings?.valuation||"估值排程待更新")}${info("產業穩健度排名",asset.rankings?.stability||"財報排程待更新")}</div>`;
-    $("#profileGrid").innerHTML=[info("官方產業",asset.official_industry),info("子產業",asset.sub_industry),info("本益比",finite(metrics.pe)!==null?metrics.pe.toFixed(2):"估值排程待更新"),info("股價淨值比",finite(metrics.pb)!==null?metrics.pb.toFixed(2):"估值排程待更新"),info("ROE",finite(metrics.roe)!==null?`${metrics.roe.toFixed(2)}%`:"財報排程待更新"),info("負債比",finite(metrics.debt_ratio)!==null?`${metrics.debt_ratio.toFixed(2)}%`:"財報排程待更新")].join("");
+    const monthly=asset.monthly_revenue||{};
+    const dividend=asset.dividend||{};
+    $("#profileGrid").innerHTML=[
+      info("官方產業",asset.official_industry),info("子產業",asset.sub_industry),
+      info("本益比",finite(metrics.pe)!==null?metrics.pe.toFixed(2):"估值排程待更新"),
+      info("股價淨值比",finite(metrics.pb)!==null?metrics.pb.toFixed(2):"估值排程待更新"),
+      info("ROE",finite(metrics.roe)!==null?`${metrics.roe.toFixed(2)}%`:"財報排程待更新"),
+      info("負債比",finite(metrics.debt_ratio)!==null?`${metrics.debt_ratio.toFixed(2)}%`:"財報排程待更新"),
+      info("最新月營收",finite(monthly.revenue)!==null?Number(monthly.revenue).toLocaleString("zh-TW"):"月營收排程待更新"),
+      info("月營收年增",finite(monthly.monthly_yoy_percent)!==null?`${Number(monthly.monthly_yoy_percent).toFixed(2)}%`:"月營收排程待更新"),
+      info("現金股利",finite(dividend.cash_dividend)!==null?`${Number(dividend.cash_dividend).toFixed(2)} 元`:"股利公告待更新"),
+      info("資料狀態",asset.analysis_note||"全市場自動稽核")
+    ].join("");
     $("#returnGrid").innerHTML=[info("一日",formatPercent(pct)),info("一週","排程待更新"),info("一個月","排程待更新"),info("一年","排程待更新")].join("");
     $("#dividendGrid").innerHTML=[info("殖利率",finite(metrics.dividend_yield)!==null?`${metrics.dividend_yield.toFixed(2)}%`:"資料不足"),info("最近股利","官方公告待更新"),info("除權息日","官方公告待更新"),info("現金股利","官方公告待更新")].join("");
   }
@@ -109,7 +130,40 @@
   if(asset.market==="TW")official.push(`<a href="https://mis.twse.com.tw/stock/fibest.jsp?stock=${encodeURIComponent(asset.symbol)}" target="_blank" rel="noreferrer">證交所即時行情 ↗</a>`);
   if(isEtf&&asset.etf?.official_url)official.push(`<a href="${asset.etf.official_url}" target="_blank" rel="noreferrer">ETF e添富官方頁 ↗</a>`);
   official.push('<a href="https://mops.twse.com.tw/mops/web/index" target="_blank" rel="noreferrer">公開資訊觀測站 ↗</a>');
+  official.push('<a href="coverage.html">全市場資料覆蓋稽核 →</a>');
   $("#officialLinks").innerHTML=official.join("");
 
+  let liveQuoteBusy=false;
+  async function refreshCurrentQuote(){
+    if(liveQuoteBusy||document.hidden||asset.market!=="TW")return;
+    liveQuoteBusy=true;
+    try{
+      const rows=await fetchTaiwanLiveQuotes([asset]);
+      const fresh=rows.find(row=>String(row.symbol)===String(asset.symbol));
+      if(!fresh)return;
+      quote={...(quote||{}),...fresh};
+      const freshPrice=finite(quote.price);
+      const freshPct=finite(quote.change_percent);
+      updateMetric("最新價格",formatPrice(freshPrice,asset.currency));
+      updateMetric("漲跌幅",formatPercent(freshPct),direction(freshPct));
+      if(isEtf){
+        updateMetric("最低",formatPrice(quote.low,asset.currency));
+      }else{
+        updateMetric("開盤",formatPrice(quote.open,asset.currency));
+        updateMetric("最高",formatPrice(quote.high,asset.currency));
+        updateMetric("最低",formatPrice(quote.low,asset.currency));
+      }
+      updateMetric("成交量",`${formatVolume(quote.volume)} 張`);
+      $("#assetMeta").textContent=`${asset.exchange||asset.market} · ${asset.official_industry||asset.sub_industry||"待分類"} · ${asset.currency||""} · 每分鐘更新 ${quote.quote_time||""}`;
+    }catch(error){
+      console.warn("Asset one-minute refresh failed:",error);
+    }finally{
+      liveQuoteBusy=false;
+    }
+  }
+
   $$("[data-tab]").forEach(btn=>btn.addEventListener("click",()=>{$$("[data-tab]").forEach(b=>b.classList.toggle("active",b===btn));$$("[data-panel]").forEach(panel=>panel.hidden=panel.dataset.panel!==btn.dataset.tab)}));
+  setTimeout(refreshCurrentQuote,2500);
+  setInterval(refreshCurrentQuote,60_000);
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden)refreshCurrentQuote()});
 })();

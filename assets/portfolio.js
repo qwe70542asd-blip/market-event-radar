@@ -1,15 +1,17 @@
 (async () => {
   "use strict";
-  const { $, escapeHtml, finite, loadData, mergeAssets, searchAssets, resolveAsset,
+  const { $, escapeHtml, finite, loadData, fetchTaiwanLiveQuotes, mergeQuoteItems, mergeAssets, searchAssets, resolveAsset,
     loadPortfolio, migratePortfolio, savePortfolio, findTwQuote, formatPrice, formatPercent,
     formatMoney, direction, safeNewsLink, newsScore, formatTime } = MR;
 
-  const [assetPayload,twPayload,marketPayload,newsPayload] = await Promise.all([
+  const [assetPayload,initialTwPayload,marketPayload,newsPayload] = await Promise.all([
     loadData("assets.json", window.__ASSET_SEED__ || {assets:[]}),
     loadData("tw-market.json", window.__TW_MARKET_SEED__ || {items:[]}),
     loadData("market-snapshot.json", window.__MARKET_SNAPSHOT_SEED__ || {items:[]}),
     loadData("news.json", window.__NEWS_SEED__ || {items:[]})
   ]);
+  let twPayload = initialTwPayload;
+  let quoteRefreshBusy = false;
   const assets = mergeAssets(assetPayload.assets || [], (window.__ASSET_SEED__ || {}).assets || []);
   let entries = migratePortfolio(loadPortfolio(), assets);
   let selectedId = "";
@@ -92,5 +94,24 @@
     savePortfolio(entries);form.reset();form.dataset.editId="";selectedId="";$("#formStatus").textContent=existingIndex>=0?"組合資料已更新。":"已加入投資組合。";renderAll();
   });
 
+  async function refreshPortfolioQuotes(){
+    if(quoteRefreshBusy||document.hidden)return;
+    quoteRefreshBusy=true;
+    try{
+      const rows=await fetchTaiwanLiveQuotes(entries.filter(entry=>entry.market==="TW"));
+      if(rows.length){
+        twPayload={...twPayload,metadata:{...(twPayload.metadata||{}),updated_at:new Date().toISOString(),source:"TWSE MIS 每分鐘刷新"},items:mergeQuoteItems(twPayload.items||[],rows)};
+        renderHoldings();
+      }else{
+        const latest=await loadData("tw-market.json",twPayload);
+        if(latest?.items?.length){twPayload=latest;renderHoldings()}
+      }
+    }catch(error){console.warn("Portfolio one-minute refresh failed:",error)}
+    finally{quoteRefreshBusy=false}
+  }
+
   renderAll();
+  setTimeout(refreshPortfolioQuotes,2500);
+  setInterval(refreshPortfolioQuotes,60_000);
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden)refreshPortfolioQuotes()});
 })();

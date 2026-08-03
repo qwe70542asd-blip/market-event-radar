@@ -1,17 +1,23 @@
 (async () => {
   "use strict";
-  const { $, $$, escapeHtml, finite, loadData, mergeAssets, loadPortfolio, migratePortfolio,
-    findTwQuote, formatPrice, formatPercent, direction, formatTime, safeNewsLink, diversifyNews } = MR;
+  const { $, $$, escapeHtml, finite, loadData, fetchTaiwanLiveQuotes, fetchTaiwanIndicesLive, fetchYahooChart,
+    mergeQuoteItems, mergeAssets, loadPortfolio, migratePortfolio, findTwQuote, formatPrice,
+    formatPercent, direction, formatTime, safeNewsLink, diversifyNews } = MR;
   const DAY = ["日","一","二","三","四","五","六"];
   const state = {events:[], filtered:[], month:new Date(new Date().getFullYear(),new Date().getMonth(),1), focus:"all"};
 
-  const [assetPayload,eventPayload,newsPayload,twPayload,marketPayload] = await Promise.all([
+  const [assetPayload,eventPayload,newsPayload,initialTwPayload,initialMarketPayload] = await Promise.all([
     loadData("assets.json", window.__ASSET_SEED__ || {assets:[]}),
     loadData("events.json", window.__EVENT_SEED__ || {events:[]}),
     loadData("news.json", window.__NEWS_SEED__ || {items:[]}),
     loadData("tw-market.json", window.__TW_MARKET_SEED__ || {items:[]}),
     loadData("market-snapshot.json", window.__MARKET_SNAPSHOT_SEED__ || {items:[]})
   ]);
+  let twPayload = initialTwPayload;
+  let marketPayload = initialMarketPayload;
+  let liveRefreshBusy = false;
+  let lastDirectRefresh = 0;
+
   const assets = mergeAssets(assetPayload.assets || [], (window.__ASSET_SEED__ || {}).assets || []);
   const entries = migratePortfolio(loadPortfolio(), assets);
   state.events = (eventPayload.events || []).map(event => {
@@ -219,6 +225,74 @@
     }).join("") : '<div class="empty" style="grid-column:1/-1">第一次新聞排程完成後，這裡會顯示 Yahoo、鉅亨、MoneyDJ 與券商來源。</div>';
   }
 
+  async function refreshLiveMarket() {
+    if (liveRefreshBusy || document.hidden) return;
+    liveRefreshBusy = true;
+    const refreshStarted = Date.now();
+    try {
+      const twEntries = entries.filter(entry => entry.market === "TW");
+      const [liveTwResult, officialIndexResult] = await Promise.allSettled([
+        fetchTaiwanLiveQuotes(twEntries),
+        fetchTaiwanIndicesLive()
+      ]);
+
+      const liveTw = liveTwResult.status === "fulfilled" ? liveTwResult.value : [];
+      let indexUpdates = officialIndexResult.status === "fulfilled" ? officialIndexResult.value : [];
+      if (indexUpdates.length < 2) {
+        const yahooResults = await Promise.allSettled([fetchYahooChart("^TWII"), fetchYahooChart("^TWOII")]);
+        indexUpdates = [
+          ...indexUpdates,
+          ...yahooResults.filter(result => result.status === "fulfilled" && result.value).map(result => result.value)
+        ];
+      }
+
+      if (liveTw.length) {
+        twPayload = {
+          ...twPayload,
+          metadata: {
+            ...(twPayload.metadata || {}),
+            updated_at: new Date().toISOString(),
+            source: "TWSE MIS 瀏覽器每分鐘刷新",
+            refresh_interval_seconds: 60
+          },
+          items: mergeQuoteItems(twPayload.items || [], liveTw)
+        };
+        lastDirectRefresh = refreshStarted;
+      } else {
+        const latest = await loadData("tw-market.json", twPayload);
+        if (latest?.items?.length) twPayload = latest;
+      }
+
+      if (indexUpdates.length) {
+        marketPayload = {
+          ...marketPayload,
+          metadata: {
+            ...(marketPayload.metadata || {}),
+            updated_at: new Date().toISOString(),
+            source: indexUpdates.some(row => row.source === "TWSE MIS") ? "TWSE MIS 每分鐘刷新" : "Yahoo chart 1m 瀏覽器刷新",
+            refresh_interval_seconds: 60
+          },
+          items: mergeQuoteItems(marketPayload.items || [], indexUpdates)
+        };
+        lastDirectRefresh = refreshStarted;
+      } else {
+        const latest = await loadData("market-snapshot.json", marketPayload);
+        if (latest?.items?.length) marketPayload = latest;
+      }
+
+      renderPortfolio();
+      renderTaiwanIndices();
+      renderMarket();
+      $("#portfolioStatus").title = lastDirectRefresh
+        ? `最近每分鐘刷新：${new Date(lastDirectRefresh).toLocaleTimeString("zh-TW",{hour12:false})}`
+        : "直接行情連線失敗時使用 GitHub 排程備援";
+    } catch (error) {
+      console.warn("One-minute market refresh failed:", error);
+    } finally {
+      liveRefreshBusy = false;
+    }
+  }
+
   function syncCalendarToSideRail() {
     const calendar = document.querySelector(".calendar-card");
     const side = document.querySelector(".side-rail");
@@ -250,4 +324,9 @@
   $("#eventUpdated").textContent = formatTime(eventPayload?.metadata?.updated_at);
   state.filtered = [...state.events];
   renderPortfolio(); renderCalendar(); renderTaiwanIndices(); renderMarket(); renderCrypto(); renderNews(); syncCalendarToSideRail();
+  setTimeout(refreshLiveMarket, 2500);
+  setInterval(refreshLiveMarket, 60_000);
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden && Date.now() - lastDirectRefresh > 55_000) refreshLiveMarket();
+  });
 })();

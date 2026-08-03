@@ -195,7 +195,7 @@ def main() -> None:
     up = sum(1 for row in usable if (number(row.get("change_percent")) or 0)>0)
     down = sum(1 for row in usable if (number(row.get("change_percent")) or 0)<0)
     payload = {
-        "metadata":{"version":"v11.1.2","updated_at":NOW.isoformat(timespec="seconds"),
+        "metadata":{"version":"v11.1.3","updated_at":NOW.isoformat(timespec="seconds"),
             "trading_date":trading_date,"market_status":market_status(),"quote_count":len(usable),
             "source":"TWSE MIS、TWSE／TPEx OpenAPI","note":"盤中行情可能延遲；休市時保留最後交易日。"},
         "breadth":{"up":up,"down":down,"flat":len(usable)-up-down},"items":items,

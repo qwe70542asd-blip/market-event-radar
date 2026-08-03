@@ -15,22 +15,26 @@ from __future__ import annotations
 import json
 import math
 import re
+import time
 from collections import defaultdict
 from datetime import datetime
+from io import StringIO
 from pathlib import Path
 from statistics import median
 from urllib.parse import urljoin
 from zoneinfo import ZoneInfo
 
+import pandas as pd
 import requests
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 OUT = DATA / "assets.json"
 SEED = DATA / "assets-seed.js"
+COVERAGE_OUT = DATA / "asset-coverage.json"
 NOW = datetime.now(ZoneInfo("Asia/Taipei"))
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.1.2)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.1.3)",
     "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.7",
     "Accept": "application/json,text/plain,*/*",
 }
@@ -54,6 +58,14 @@ TWSE_BALANCE_PATHS = [
     "/opendata/t187ap07_L_basi", "/opendata/t187ap07_L_bd",
     "/opendata/t187ap07_L_fh", "/opendata/t187ap07_L_ins",
 ]
+TWSE_EPS_URL = f"{TWSE_BASE}/opendata/t187ap14_L"
+TPEX_EPS_URL = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap14_O"
+TWSE_OPERATING_URL = f"{TWSE_BASE}/opendata/t187ap17_L"
+TPEX_OPERATING_URL = "https://www.tpex.org.tw/openapi/v1/mopsfin_187ap17_O"
+TWSE_REVENUE_URL = f"{TWSE_BASE}/opendata/t187ap05_L"
+TPEX_REVENUE_URL = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap05_O"
+TWSE_DIVIDEND_URL = f"{TWSE_BASE}/opendata/t187ap45_L"
+TPEX_DIVIDEND_URL = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap39_O"
 
 OVERRIDES = {
     "TW:00403A": {"name": "主動統一升級50", "asset_class": "etf", "exchange": "TWSE",
@@ -111,7 +123,7 @@ KEY_ALIASES = {
     "revenue": ["營業收入","收入合計","收益合計","淨收益","利息淨收益"],
     "gross_profit": ["營業毛利（毛損）淨額","營業毛利(毛損)淨額","營業毛利"],
     "operating_income": ["營業利益（損失）","營業利益(損失)","營業淨利","繼續營業單位稅前淨利"],
-    "net_income": ["歸屬於母公司業主之淨利（損）","歸屬於母公司業主之淨利(損)","本期淨利（淨損）","本期淨利(淨損)","本期稅後淨利","本期淨利"],
+    "net_income": ["歸屬於母公司業主之淨利（損）","歸屬於母公司業主之淨利(損)","本期淨利（淨損）","本期淨利(淨損)","本期稅後淨利","稅後淨利","本期淨利"],
     "eps": ["基本每股盈餘（元）","基本每股盈餘(元)","基本每股盈餘","每股盈餘","eps"],
     "current_assets": ["流動資產"],
     "total_assets": ["資產總額","資產合計"],
@@ -275,6 +287,94 @@ def discover_paths(spec: dict, required: tuple[str, ...]) -> list[str]:
     return found
 
 
+def recent_quarters(count=4) -> list[tuple[int, int]]:
+    year = NOW.year
+    quarter = (NOW.month - 1) // 3 + 1
+    output = []
+    for _ in range(count):
+        output.append((year, quarter))
+        quarter -= 1
+        if quarter == 0:
+            quarter = 4
+            year -= 1
+    return output
+
+
+def flatten_columns(columns) -> list[str]:
+    output = []
+    for column in columns:
+        parts = column if isinstance(column, tuple) else (column,)
+        cleaned = []
+        for part in parts:
+            text = re.sub(r"^Unnamed:.*$", "", str(part)).strip()
+            if text and text not in cleaned:
+                cleaned.append(text)
+        output.append("".join(cleaned) or "欄位")
+    return output
+
+
+def fetch_mops_history(session: requests.Session, endpoint: str, market: str, quarters: list[tuple[int,int]]) -> list[dict]:
+    rows: list[dict] = []
+    endpoints = [endpoint]
+    if endpoint.startswith("ajax_"):
+        endpoints.append(endpoint.removeprefix("ajax_"))
+    try:
+        session.get("https://mops.twse.com.tw/mops/web/index", headers=HEADERS, timeout=20)
+    except Exception:
+        pass
+
+    for year, quarter in quarters:
+        roc_year = year - 1911
+        parsed_this_period = False
+        for endpoint_name in endpoints:
+            url = f"https://mops.twse.com.tw/mops/web/{endpoint_name}"
+            for attempt in range(2):
+                try:
+                    response = session.post(url, data={
+                        "encodeURIComponent":"1","step":"1","firstin":"1","off":"1","isQuery":"Y",
+                        "TYPEK":market,"year":str(roc_year),"season":f"{quarter:02d}"
+                    }, headers={**HEADERS, "Content-Type":"application/x-www-form-urlencoded",
+                                "Referer":f"https://mops.twse.com.tw/mops/web/{endpoint_name.removeprefix('ajax_')}"}, timeout=70)
+                    response.raise_for_status()
+                    response.encoding = "utf-8"
+                    tables = pd.read_html(StringIO(response.text), header=None)
+                    period_rows = []
+                    for table in tables:
+                        if table.empty:
+                            continue
+                        header_index = None
+                        for index in range(min(8, len(table))):
+                            cells = [str(value).strip() for value in table.iloc[index].tolist()]
+                            if any("公司代號" in value or "公司代碼" in value for value in cells):
+                                header_index = index
+                                break
+                        if header_index is not None:
+                            headers = [str(value).strip() for value in table.iloc[header_index].tolist()]
+                            table = table.iloc[header_index + 1:].copy()
+                            table.columns = headers
+                        else:
+                            table.columns = flatten_columns(table.columns)
+                        for record in table.to_dict(orient="records"):
+                            code = valid_code(record.get("公司代號") or record.get("公司代碼") or record.get("證券代號"))
+                            if not code:
+                                continue
+                            record["公司代號"] = code
+                            record["年度"] = str(roc_year)
+                            record["季別"] = str(quarter)
+                            period_rows.append(record)
+                    if period_rows:
+                        rows.extend(period_rows)
+                        parsed_this_period = True
+                        break
+                except Exception as exc:
+                    if attempt == 1:
+                        print("warning MOPS history", endpoint_name, market, year, quarter, exc)
+                    time.sleep(.8)
+            if parsed_this_period:
+                break
+        time.sleep(.25)
+    return rows
+
 def fetch_financial_rows(session: requests.Session, urls: list[str]) -> list[dict]:
     rows = []
     for url in urls:
@@ -297,7 +397,7 @@ def period_key(row: dict) -> tuple[int, int]:
 
 
 def parse_income(rows: list[dict]) -> dict[str, list[dict]]:
-    out = defaultdict(list)
+    merged: dict[tuple[str, int, int], dict] = {}
     for row in rows:
         code = valid_code(pick(row, "code"))
         if not code:
@@ -311,15 +411,24 @@ def parse_income(rows: list[dict]) -> dict[str, list[dict]]:
             "net_income": number(pick(row, "net_income")),
             "eps": number(pick(row, "eps")),
         }
-        if any(value is not None for key, value in parsed.items() if key not in {"year","quarter"}):
-            out[code].append(parsed)
+        if not any(value is not None for key, value in parsed.items() if key not in {"year","quarter"}):
+            continue
+        key = (code, year, quarter)
+        current = merged.get(key, {"year": year or None, "quarter": quarter or None})
+        for field, value in parsed.items():
+            if value is not None:
+                current[field] = value
+        merged[key] = current
+
+    out = defaultdict(list)
+    for (code, _, _), row in merged.items():
+        out[code].append(row)
     for code in out:
         out[code].sort(key=lambda item: (item.get("year") or 0, item.get("quarter") or 0), reverse=True)
     return out
 
-
 def parse_balance(rows: list[dict]) -> dict[str, list[dict]]:
-    out = defaultdict(list)
+    merged: dict[tuple[str, int, int], dict] = {}
     for row in rows:
         code = valid_code(pick(row, "code"))
         if not code:
@@ -333,12 +442,21 @@ def parse_balance(rows: list[dict]) -> dict[str, list[dict]]:
             "total_liabilities": number(pick(row, "total_liabilities")),
             "equity": number(pick(row, "equity")),
         }
-        if any(value is not None for key, value in parsed.items() if key not in {"year","quarter"}):
-            out[code].append(parsed)
+        if not any(value is not None for key, value in parsed.items() if key not in {"year","quarter"}):
+            continue
+        key = (code, year, quarter)
+        current = merged.get(key, {"year": year or None, "quarter": quarter or None})
+        for field, value in parsed.items():
+            if value is not None:
+                current[field] = value
+        merged[key] = current
+
+    out = defaultdict(list)
+    for (code, _, _), row in merged.items():
+        out[code].append(row)
     for code in out:
         out[code].sort(key=lambda item: (item.get("year") or 0, item.get("quarter") or 0), reverse=True)
     return out
-
 
 def parse_valuation(rows: list[dict]) -> dict[str, dict]:
     out = {}
@@ -361,6 +479,67 @@ def safe_ratio(numerator, denominator, multiplier=1.0):
         return None
     value = numerator / denominator * multiplier
     return value if math.isfinite(value) else None
+
+
+def merge_financial_history(previous: list[dict], current: list[dict], limit=12) -> list[dict]:
+    merged: dict[tuple[int, int], dict] = {}
+    for row in [*(previous or []), *(current or [])]:
+        key = (int(row.get("year") or 0), int(row.get("quarter") or 0))
+        base = merged.get(key, {})
+        merged[key] = {**base, **{field:value for field,value in row.items() if value is not None}}
+    return sorted(merged.values(), key=lambda row:(row.get("year") or 0,row.get("quarter") or 0), reverse=True)[:limit]
+
+
+def latest_by_code(rows: list[dict]) -> dict[str, dict]:
+    output = {}
+    for row in rows:
+        code = valid_code(pick(row, "code"))
+        if not code:
+            continue
+        year, quarter = period_key(row)
+        candidate = {**row, "__period": (year, quarter)}
+        if code not in output or candidate["__period"] > output[code]["__period"]:
+            output[code] = candidate
+    return output
+
+
+def parse_monthly_revenue(rows: list[dict]) -> dict[str, dict]:
+    output: dict[str, dict] = {}
+    periods: dict[str, tuple[int, int]] = {}
+    for row in rows:
+        code = valid_code(pick(row, "code"))
+        if not code:
+            continue
+        year = int(number(pick(row, "year")) or 0)
+        if 0 < year < 1911:
+            year += 1911
+        month = int(number(row.get("月份") or row.get("月") or row.get("month")) or 0)
+        period = (year, month)
+        if code in periods and period < periods[code]:
+            continue
+        periods[code] = period
+        output[code] = {
+            "year": year or None,
+            "month": month or None,
+            "revenue": number(pick(row, "revenue")),
+            "monthly_yoy_percent": number(row.get("去年同月增減(%)") or row.get("去年同月增減％") or row.get("去年同月增減")),
+            "monthly_mom_percent": number(row.get("上月比較增減(%)") or row.get("上月比較增減％") or row.get("上月比較增減")),
+        }
+    return output
+
+def parse_dividends(rows: list[dict]) -> dict[str, dict]:
+    output = {}
+    for code, row in latest_by_code(rows).items():
+        cash = number(row.get("盈餘分配之現金股利(元/股)") or row.get("現金股利") or row.get("股東配發-盈餘分配之現金股利(元/股)"))
+        stock = number(row.get("盈餘轉增資配股(元/股)") or row.get("股票股利") or row.get("股東配發-盈餘轉增資配股(元/股)"))
+        output[code] = {
+            "cash_dividend": cash,
+            "stock_dividend": stock,
+            "ex_dividend_date": str(row.get("除息交易日") or row.get("除權息交易日") or "").strip() or None,
+            "ex_right_date": str(row.get("除權交易日") or "").strip() or None,
+            "announcement_date": str(row.get("董事會決議日期") or row.get("資料日期") or "").strip() or None,
+        }
+    return output
 
 
 def analysis_for(code: str, income_map, balance_map, valuation_map) -> tuple[dict, list[dict], str]:
@@ -488,6 +667,29 @@ def main() -> None:
     income_rows = fetch_financial_rows(session, [TWSE_BASE + path for path in TWSE_INCOME_PATHS] + tpex_income_urls)
     balance_rows = fetch_financial_rows(session, [TWSE_BASE + path for path in TWSE_BALANCE_PATHS] + tpex_balance_urls)
 
+    eps_rows = fetch_financial_rows(session, [TWSE_EPS_URL, TPEX_EPS_URL])
+    operating_rows = fetch_financial_rows(session, [TWSE_OPERATING_URL, TPEX_OPERATING_URL])
+
+    # Current-quarter OpenAPI tables only contain companies that have already
+    # filed. Pull the latest four official MOPS quarters so a company that has
+    # not filed the newest quarter still uses its most recent published report.
+    quarters = recent_quarters(4)
+    mops_income_rows: list[dict] = []
+    mops_balance_rows: list[dict] = []
+    mops_operating_rows: list[dict] = []
+    for market in ("sii", "otc"):
+        mops_income_rows.extend(fetch_mops_history(session, "ajax_t163sb04", market, quarters))
+        mops_balance_rows.extend(fetch_mops_history(session, "ajax_t163sb05", market, quarters))
+        mops_operating_rows.extend(fetch_mops_history(session, "ajax_t163sb06", market, quarters))
+
+    income_rows.extend(eps_rows)
+    income_rows.extend(operating_rows)
+    income_rows.extend(mops_income_rows)
+    income_rows.extend(mops_operating_rows)
+    balance_rows.extend(mops_balance_rows)
+    revenue_rows = fetch_financial_rows(session, [TWSE_REVENUE_URL, TPEX_REVENUE_URL])
+    dividend_rows = fetch_financial_rows(session, [TWSE_DIVIDEND_URL, TPEX_DIVIDEND_URL])
+
     valuation_rows = []
     try:
         valuation_rows.extend(get_json(session, f"{TWSE_BASE}/exchangeReport/BWIBBU_ALL"))
@@ -498,22 +700,50 @@ def main() -> None:
     income_map = parse_income(income_rows)
     balance_map = parse_balance(balance_rows)
     valuation_map = parse_valuation(valuation_rows)
+    revenue_map = parse_monthly_revenue(revenue_rows)
+    dividend_map = parse_dividends(dividend_rows)
 
     enriched = 0
+    coverage_fields = ("eps","pe","pb","dividend_yield","roe","debt_ratio","current_ratio","net_margin")
     for asset in assets.values():
         if asset.get("market") != "TW" or asset.get("asset_class") != "stock":
             continue
-        metrics, history, status = analysis_for(asset["symbol"], income_map, balance_map, valuation_map)
-        if metrics:
-            enriched += 1
+        symbol = asset["symbol"]
+        metrics, current_history, _ = analysis_for(symbol, income_map, balance_map, valuation_map)
         asset["metrics"] = {**(asset.get("metrics") or {}), **metrics}
-        asset["financials"] = history or asset.get("financials") or []
+        asset["financials"] = merge_financial_history(asset.get("financials") or [], current_history)
+        if symbol in revenue_map:
+            asset["monthly_revenue"] = revenue_map[symbol]
+        if symbol in dividend_map:
+            asset["dividend"] = dividend_map[symbol]
         score = stability_score(asset["metrics"])
         if score is not None:
             asset["metrics"]["stability_score"] = round(score, 2)
+
+        present = [field for field in coverage_fields if asset["metrics"].get(field) is not None]
+        missing = [field for field in coverage_fields if asset["metrics"].get(field) is None]
+        coverage = len(present)
+        if coverage >= 6:
+            status = "complete"
+        elif coverage >= 2:
+            status = "partial"
+        elif coverage >= 1:
+            status = "basic"
+        else:
+            status = "missing"
+        if coverage:
+            enriched += 1
         asset["analysis_status"] = status
+        asset["analysis_coverage"] = {"present": present, "missing": missing, "count": coverage, "total": len(coverage_fields)}
+        asset["analysis_note"] = (
+            "官方最新財報與估值欄位已整合"
+            if status == "complete"
+            else "部分產業欄位不適用或官方來源尚未回傳，已列入覆蓋稽核"
+            if status in {"partial","basic"}
+            else "官方來源未回傳可用欄位，已列入缺漏清單"
+        )
         asset["analysis_updated_at"] = NOW.isoformat(timespec="seconds")
-        asset["analysis_source"] = "TWSE／TPEx 官方財報與估值資料"
+        asset["analysis_source"] = "TWSE／TPEx 官方財報、EPS、營益分析、估值、月營收與股利資料"
 
     for aid, override in OVERRIDES.items():
         symbol = aid.split(":", 1)[1]
@@ -530,15 +760,57 @@ def main() -> None:
     rows = sorted(assets.values(), key=lambda row: (row.get("market",""), row.get("symbol","")))
     rank_assets(rows)
 
+    stocks = [row for row in rows if row.get("market") == "TW" and row.get("asset_class") == "stock"]
+    complete = [row for row in stocks if row.get("analysis_status") == "complete"]
+    partial = [row for row in stocks if row.get("analysis_status") in {"partial","basic"}]
+    missing = [row for row in stocks if row.get("analysis_status") == "missing"]
+    field_counts = {
+        field: sum(1 for row in stocks if row.get("metrics", {}).get(field) is not None)
+        for field in ("eps","pe","pb","dividend_yield","roe","debt_ratio","current_ratio","net_margin")
+    }
+    coverage_payload = {
+        "metadata": {
+            "version":"v11.1.3","updated_at":NOW.isoformat(timespec="seconds"),
+            "source":"TWSE／TPEx official OpenAPI coverage audit"
+        },
+        "summary": {
+            "total_stocks":len(stocks),"complete":len(complete),"partial_or_basic":len(partial),
+            "missing":len(missing),"with_any_analysis":len(stocks)-len(missing),
+            "coverage_percent":round((len(stocks)-len(missing))/len(stocks)*100,2) if stocks else 0,
+            "field_counts":field_counts
+        },
+        "missing_stocks": [
+            {"symbol":row.get("symbol"),"name":row.get("name"),"exchange":row.get("exchange"),
+             "industry":row.get("official_industry"),"missing":row.get("analysis_coverage",{}).get("missing",[])}
+            for row in missing
+        ],
+        "partial_stocks": [
+            {"symbol":row.get("symbol"),"name":row.get("name"),
+             "coverage":row.get("analysis_coverage",{}).get("count",0),
+             "missing":row.get("analysis_coverage",{}).get("missing",[])}
+            for row in partial
+        ]
+    }
+    COVERAGE_OUT.write_text(json.dumps(coverage_payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
     if len(rows) < 20:
         raise SystemExit(f"Only {len(rows)} securities; previous master was not replaced.")
+    if len(stocks) < 1000:
+        raise SystemExit(f"Only {len(stocks)} listed/OTC stocks; official master is incomplete.")
+    if not any(row.get("symbol") == "1595" and row.get("metrics", {}).get("eps") is not None for row in stocks):
+        raise SystemExit("Coverage regression: TPEx stock 1595 has no official EPS.")
     payload = {
         "metadata": {
-            "version": "v11.1.2", "updated_at": NOW.isoformat(timespec="seconds"),
+            "version": "v11.1.3", "updated_at": NOW.isoformat(timespec="seconds"),
             "asset_count": len(rows), "official_rows": official_rows,
             "financially_enriched_stocks": enriched,
             "income_rows": len(income_rows), "balance_rows": len(balance_rows),
-            "note": "Official master, valuation, income statements, balance sheets and computed industry ranks.",
+            "eps_rows": len(eps_rows), "operating_rows": len(operating_rows),
+            "mops_income_rows": len(mops_income_rows), "mops_balance_rows": len(mops_balance_rows),
+            "mops_operating_rows": len(mops_operating_rows),
+            "revenue_rows": len(revenue_rows), "dividend_rows": len(dividend_rows),
+            "coverage_percent": coverage_payload["summary"]["coverage_percent"],
+            "note": "Official master, EPS, operating analysis, valuation, financial statements, monthly revenue, dividends and coverage audit.",
         },
         "assets": rows,
     }

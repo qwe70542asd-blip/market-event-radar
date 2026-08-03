@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const VERSION = "11.1.2";
+  const VERSION = "11.1.3";
   const OWNER = "qwe70542asd-blip";
   const REPO = "market-event-radar";
   const LIVE_BASE = `https://raw.githubusercontent.com/${OWNER}/${REPO}/live-data/`;
@@ -123,6 +123,142 @@
     } finally {
       clearTimeout(timer);
     }
+  }
+
+  function quoteNumber(value) {
+    const first = String(value ?? "").split("_", 1)[0].replace(/,/g, "").trim();
+    if (!first || ["-","--","---"].includes(first)) return null;
+    const number = Number(first);
+    return Number.isFinite(number) ? number : null;
+  }
+
+  function quotePrice(row) {
+    for (const key of ["z","b","a","y"]) {
+      const value = quoteNumber(row?.[key]);
+      if (value !== null) return value;
+    }
+    return null;
+  }
+
+  async function fetchTaiwanLiveQuotes(entries, timeout=9000) {
+    const securities = (entries || []).map(entry => {
+      const symbol = String(entry?.symbol || "").trim().toUpperCase();
+      if (!/^(?:[1-9]\d{3}|00\d{2,4}[A-Z]?)$/.test(symbol)) return null;
+      const exchangeText = String(entry?.exchange || "").toUpperCase();
+      const isTpex = exchangeText.includes("TPEX") || exchangeText.includes("OTC") || entry?.market_board === "tpex";
+      return {symbol, exchange:isTpex ? "TPEx" : "TWSE", channel:`${isTpex ? "otc" : "tse"}_${symbol}.tw`};
+    }).filter(Boolean);
+    if (!securities.length) return [];
+
+    const byChannel = new Map(securities.map(row => [row.channel, row]));
+    const output = [];
+    for (let offset=0; offset<securities.length; offset+=50) {
+      const batch = securities.slice(offset, offset+50);
+      const channels = batch.map(row => row.channel).join("|");
+      const url = `https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=${encodeURIComponent(channels)}&json=1&delay=0&_=${Date.now()}`;
+      try {
+        const payload = await fetchJson(url, timeout);
+        for (const row of payload?.msgArray || []) {
+          const symbol = String(row.c || "").trim().toUpperCase();
+          if (!symbol) continue;
+          const exchange = String(row.ex || "").toLowerCase() === "otc" ? "TPEx" : "TWSE";
+          const previous = quoteNumber(row.y);
+          const price = quotePrice(row);
+          const change = price !== null && previous !== null ? price - previous : null;
+          output.push({
+            symbol, exchange, name:String(row.n || symbol).trim(),
+            price, previous_close:previous, change,
+            change_percent:change !== null && previous ? change / previous * 100 : null,
+            open:quoteNumber(row.o), high:quoteNumber(row.h), low:quoteNumber(row.l),
+            volume:quoteNumber(row.v), quote_date:String(row.d || ""),
+            quote_time:String(row.t || row.ot || ""), status:"mis-browser",
+            market_at:quoteNumber(row.tlong), source:"TWSE MIS"
+          });
+        }
+      } catch (error) {
+        console.warn("TWSE MIS browser refresh failed:", error);
+      }
+    }
+    return output;
+  }
+
+  async function fetchTaiwanIndicesLive(timeout=9000) {
+    const channels = "tse_t00.tw|otc_o00.tw";
+    const url = `https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=${encodeURIComponent(channels)}&json=1&delay=0&_=${Date.now()}`;
+    try {
+      const payload = await fetchJson(url, timeout);
+      return (payload?.msgArray || []).map(row => {
+        const isOtc = String(row.ex || "").toLowerCase() === "otc" || String(row.c || "").toLowerCase() === "o00";
+        const symbol = isOtc ? "^TWOII" : "^TWII";
+        const previous = quoteNumber(row.y);
+        const price = quotePrice(row);
+        const change = price !== null && previous !== null ? price - previous : null;
+        return {
+          symbol, name:isOtc ? "台灣櫃買指數" : "台灣加權指數",
+          market:"TW", currency:"", price, previous_close:previous, change,
+          change_percent:change !== null && previous ? change / previous * 100 : null,
+          open:quoteNumber(row.o), high:quoteNumber(row.h), low:quoteNumber(row.l),
+          volume:quoteNumber(row.v), market_at:quoteNumber(row.tlong),
+          quote_date:String(row.d || ""), quote_time:String(row.t || row.ot || ""),
+          market_state:"REGULAR", source:"TWSE MIS"
+        };
+      }).filter(row => row.price !== null);
+    } catch (error) {
+      console.warn("TWSE MIS index refresh failed:", error);
+      return [];
+    }
+  }
+
+  async function fetchYahooChart(symbol, timeout=9000) {
+    const encoded = encodeURIComponent(String(symbol || ""));
+    const endpoints = [
+      `https://query1.finance.yahoo.com/v8/finance/chart/${encoded}?range=1d&interval=1m&includePrePost=false`,
+      `https://query2.finance.yahoo.com/v8/finance/chart/${encoded}?range=1d&interval=1m&includePrePost=false`
+    ];
+    for (const url of endpoints) {
+      try {
+        const payload = await fetchJson(url, timeout);
+        const result = payload?.chart?.result?.[0];
+        if (!result) continue;
+        const meta = result.meta || {};
+        const closes = result?.indicators?.quote?.[0]?.close || [];
+        const points = closes.filter(value => Number.isFinite(Number(value))).map(Number);
+        const price = finite(meta.regularMarketPrice) ?? (points.length ? points[points.length-1] : null);
+        const previous = finite(meta.chartPreviousClose ?? meta.previousClose);
+        const change = price !== null && previous !== null ? price - previous : null;
+        return {
+          symbol:String(symbol), name:meta.shortName || meta.longName || String(symbol),
+          market:meta.exchangeName || "", currency:meta.currency || "",
+          price, previous_close:previous, change,
+          change_percent:change !== null && previous ? change / previous * 100 : null,
+          open:finite(meta.regularMarketOpen), high:finite(meta.regularMarketDayHigh),
+          low:finite(meta.regularMarketDayLow), volume:finite(meta.regularMarketVolume),
+          market_at:finite(meta.regularMarketTime), market_state:meta.marketState || "",
+          source:"Yahoo chart 1m"
+        };
+      } catch (error) {
+        console.warn("Yahoo chart browser refresh failed:", symbol, error);
+      }
+    }
+    return null;
+  }
+
+  function mergeQuoteItems(baseItems=[], updates=[]) {
+    const map = new Map((baseItems || []).map(item => [
+      `${String(item.exchange || item.market || "").toUpperCase()}:${String(item.symbol || "").toUpperCase()}`, {...item}
+    ]));
+    for (const update of updates || []) {
+      const symbol = String(update?.symbol || "").toUpperCase();
+      if (!symbol) continue;
+      const exchange = String(update.exchange || update.market || "").toUpperCase();
+      let key = `${exchange}:${symbol}`;
+      if (!map.has(key)) {
+        const existingKey = [...map.keys()].find(candidate => candidate.endsWith(`:${symbol}`));
+        if (existingKey) key = existingKey;
+      }
+      map.set(key, {...(map.get(key) || {}), ...update});
+    }
+    return [...map.values()];
   }
 
   function scorePayload(payload) {
@@ -432,7 +568,8 @@
 
   window.MR = {
     VERSION, OWNER, REPO, LIVE_BASE, MAIN_BASE, PORTFOLIO_KEY, OFFICIAL_OVERRIDES,
-    $, $$, normalize, escapeHtml, finite, fetchJson, loadData, canonicalAsset, mergeAssets,
+    $, $$, normalize, escapeHtml, finite, fetchJson, fetchTaiwanLiveQuotes, fetchTaiwanIndicesLive, fetchYahooChart,
+    mergeQuoteItems, loadData, canonicalAsset, mergeAssets,
     searchAssets, resolveAsset, loadPortfolio, migratePortfolio, savePortfolio,
     findTwQuote, loadQuoteCache, saveQuoteCache, formatPrice, formatPercent, formatMoney,
     formatVolume, direction, formatTime, safeNewsLink, diversifyNews, newsKeywords, newsScore

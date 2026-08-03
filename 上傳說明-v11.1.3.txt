@@ -1,0 +1,26 @@
+市場事件雷達 v11.1.3 上傳步驟
+
+1. 解壓縮 market-event-radar-v11.1.3-complete.zip。
+2. 將解壓資料夾「內部全部檔案與資料夾」上傳到 GitHub 倉庫根目錄。
+3. 覆蓋同名檔案並 Commit changes。
+4. 不要刪除 live-data 分支。
+5. GitHub → Actions 依序手動執行：
+   - Update v11.1.3 daily data
+   - Update v11.1.3 Taiwan market
+   - Update v11.1.3 multi-source news
+6. daily data 第一次會抓最近四季 MOPS 財報，執行時間會比舊版久。
+7. Actions 全部綠色完成後，等待 Pages 部署，再按 Ctrl + F5。
+
+本版更新頻率：
+- 台灣加權、櫃買、首頁投資組合及個股頁：瀏覽器每 60 秒直連 TWSE MIS。
+- 直連失敗：自動使用 live-data。
+- 完整台股排行榜：GitHub Actions 每 5 分鐘更新。
+- 財務資料：每日更新並做全市場覆蓋稽核。
+
+可開啟 coverage.html 查看：
+- 上市／上櫃股票總數
+- 8 個分析欄位覆蓋數
+- 完整、部分與缺漏股票
+- 缺漏代碼與欄位
+
+更新程式會檢查 1595 是否取得官方 EPS；失敗時會停止發布，避免再次出現明明有財報卻顯示 0/8。

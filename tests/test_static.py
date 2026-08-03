@@ -72,6 +72,37 @@ class StaticTests(unittest.TestCase):
         self.assertEqual(metrics["eps"],3.2)
         self.assertAlmostEqual(metrics["current_ratio"],2.0)
 
+
+    def test_one_minute_live_refresh(self):
+        shared=(ROOT/"assets/shared.js").read_text(encoding="utf-8")
+        home=(ROOT/"assets/home.js").read_text(encoding="utf-8")
+        asset=(ROOT/"assets/asset.js").read_text(encoding="utf-8")
+        self.assertIn("fetchTaiwanLiveQuotes",shared)
+        self.assertIn("fetchTaiwanIndicesLive",home)
+        self.assertIn('fetchYahooChart("^TWII")',home)
+        self.assertIn('fetchYahooChart("^TWOII")',home)
+        self.assertIn("setInterval(refreshLiveMarket, 60_000)",home)
+        self.assertIn("setInterval(refreshCurrentQuote,60_000)",asset)
+
+    def test_market_wide_coverage_audit(self):
+        updater=(ROOT/"scripts/update_assets.py").read_text(encoding="utf-8")
+        workflow=(ROOT/".github/workflows/update-daily.yml").read_text(encoding="utf-8")
+        self.assertIn("TWSE_EPS_URL",updater)
+        self.assertIn("TPEX_EPS_URL",updater)
+        self.assertIn("asset-coverage.json",updater)
+        self.assertIn('row.get("symbol") == "1595"',updater)
+        self.assertIn("coverage_percent",workflow)
+        self.assertTrue((ROOT/"coverage.html").exists())
+        self.assertTrue((ROOT/"assets/coverage.js").exists())
+
+    def test_tpex_1595_eps_fallback_parser(self):
+        spec=importlib.util.spec_from_file_location("update_assets_1595",ROOT/"scripts/update_assets.py")
+        module=importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        rows=[{"公司代號":"1595","年度":"115","季別":"2","基本每股盈餘（元）":"1.23"}]
+        parsed=module.parse_income(rows)
+        self.assertEqual(parsed["1595"][0]["eps"],1.23)
+
     def test_etf_official_parser(self):
         spec=importlib.util.spec_from_file_location("update_assets_etf",ROOT/"scripts/update_assets.py")
         module=importlib.util.module_from_spec(spec)
