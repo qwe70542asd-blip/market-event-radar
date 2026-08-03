@@ -1,4 +1,4 @@
-name: Update v11.1.1 daily data
+name: Update v11.1.2 daily data
 
 on:
   push:
@@ -86,5 +86,5 @@ jobs:
           done
           git add .
           if git diff --cached --quiet; then exit 0; fi
-          git commit -m "chore: refresh daily data v11.1.1"
+          git commit -m "chore: refresh daily data v11.1.2"
           git push origin "HEAD:$LIVE_BRANCH"

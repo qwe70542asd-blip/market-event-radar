@@ -16,7 +16,8 @@ SEED=DATA/"market-snapshot-seed.js"
 NOW=datetime.now(ZoneInfo("Asia/Taipei"))
 HEADERS={"User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.1)","Accept":"application/json"}
 SYMBOLS=[
- ("^TWII","台灣加權","TW",""),
+ ("^TWII","台灣加權指數","TW",""),
+ ("^TWOII","台灣櫃買指數","TW",""),
  ("^GSPC","S&P 500","US",""),
  ("^DJI","道瓊工業","US",""),
  ("^IXIC","NASDAQ","US",""),
@@ -48,7 +49,10 @@ def fetch_one(session:requests.Session,symbol:str,name:str,market:str,currency_h
         pct=change/previous*100 if change is not None else None
         return {"symbol":symbol,"name":name,"market":market,"currency":meta.get("currency") or currency_hint,
             "price":price,"previous_close":previous,"change":change,"change_percent":pct,
-            "market_at":meta.get("regularMarketTime"),"source":"Yahoo 公開行情"}
+            "open":meta.get("regularMarketOpen"),"high":meta.get("regularMarketDayHigh"),
+            "low":meta.get("regularMarketDayLow"),"volume":meta.get("regularMarketVolume"),
+            "market_at":meta.get("regularMarketTime"),"market_state":meta.get("marketState"),
+            "source":"Yahoo 公開行情"}
     except Exception as exc:
         print("warning",symbol,exc)
         return None
@@ -59,7 +63,7 @@ def main()->None:
     items=[row for args in SYMBOLS if (row:=fetch_one(session,*args))]
     if len(items)<4:
         raise SystemExit(f"Only {len(items)} market rows; previous snapshot was not replaced.")
-    payload={"metadata":{"version":"v11.1.1","updated_at":NOW.isoformat(timespec="seconds"),
+    payload={"metadata":{"version":"v11.1.2","updated_at":NOW.isoformat(timespec="seconds"),
         "source":"Yahoo 公開行情","note":"公開行情可能延遲；失敗時保留上次成功資料。"},"items":items}
     OUT.write_text(json.dumps(payload,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     SEED.write_text("window.__MARKET_SNAPSHOT_SEED__ = "+json.dumps(payload,ensure_ascii=False)+";\n",encoding="utf-8")

@@ -1,4 +1,4 @@
-name: Update v11.1.1 Taiwan market
+name: Update v11.1.2 Taiwan market
 
 on:
   push:
@@ -93,5 +93,5 @@ jobs:
             git add tw-chips.json tw-chips-seed.js
           fi
           if git diff --cached --quiet; then exit 0; fi
-          git commit -m "chore: refresh Taiwan market v11.1.1"
+          git commit -m "chore: refresh Taiwan market v11.1.2"
           git push origin "HEAD:$LIVE_BRANCH"

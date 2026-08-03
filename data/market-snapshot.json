@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "version": "v11.1.1",
+    "version": "v11.1.2",
     "updated_at": null,
     "source": "Yahoo 公開行情／官方備援"
   },
@@ -13,6 +13,22 @@
       "price": null,
       "previous_close": null,
       "change_percent": null
+    },
+    {
+      "symbol": "^TWOII",
+      "name": "台灣櫃買指數",
+      "market": "TW",
+      "currency": "",
+      "price": null,
+      "previous_close": null,
+      "change": null,
+      "change_percent": null,
+      "open": null,
+      "high": null,
+      "low": null,
+      "volume": null,
+      "market_at": null,
+      "market_state": null
     },
     {
       "symbol": "^GSPC",

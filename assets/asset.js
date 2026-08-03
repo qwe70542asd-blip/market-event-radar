@@ -56,21 +56,42 @@
   function info(label,value){return `<article class="info-card"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value??"資料不足")}</strong></article>`}
 
   if(isEtf){
-    $("#primaryChart").innerHTML=`<h2>ETF 結構圖</h2>${radar([85,75,65,55,80],["流動","規模","追蹤","分散","交易"])}<p class="section-note">分數僅反映資料完整度與產品結構，不代表預期報酬。</p>`;
-    const sectors=asset.etf?.sectors||[{name:"半導體",weight:45},{name:"電子",weight:23},{name:"金融",weight:14},{name:"傳產",weight:10},{name:"其他",weight:8}];
-    $("#secondaryChart").innerHTML=`<h2>產業配置</h2><div class="donut-wrap"><div class="donut"></div><div class="legend">${sectors.map((s,i)=>`<span><i style="background:${["var(--blue)","var(--green)","var(--amber)","var(--violet)","#71889b"][i%5]}"></i>${escapeHtml(s.name)} ${s.weight}%</span>`).join("")}</div></div>`;
-    $("#fundamentalTitle").textContent="ETF 核心資料";
     const etf=asset.etf||{};
+    const coverageFields=[etf.issuer,etf.manager,etf.category,etf.benchmark,etf.strategy,etf.inception_date,etf.listing_date,etf.custodian];
+    const coverage=Math.round(coverageFields.filter(Boolean).length/coverageFields.length*100);
+    $("#primaryChart").innerHTML=`<h2>ETF 官方資料覆蓋</h2>${radar([
+      etf.manager?100:20,etf.aum?100:35,etf.benchmark?100:25,
+      Array.isArray(etf.holdings)&&etf.holdings.length?100:25,quote?100:30
+    ],["經理人","規模","指數","持股","交易"])}<p class="section-note">依證交所基金基本資料與投信公告計算，目前靜態資料覆蓋 ${coverage}%；不代表投資評等。</p>`;
+    const sectors=Array.isArray(etf.sectors)?etf.sectors.filter(row=>finite(row.weight)!==null):[];
+    $("#secondaryChart").innerHTML=sectors.length
+      ? `<h2>官方產業配置</h2><div class="donut-wrap"><div class="donut"></div><div class="legend">${sectors.slice(0,6).map((s,i)=>`<span><i style="background:${["var(--blue)","var(--green)","var(--amber)","var(--violet)","#71889b","#8bdcc7"][i%6]}"></i>${escapeHtml(s.name)} ${s.weight}%</span>`).join("")}</div></div>`
+      : `<h2>官方產業配置</h2><div class="empty">投信持股／產業配置排程尚未取得資料；不使用示意成分股代替。</div>`;
+    $("#fundamentalTitle").textContent="ETF 核心資料";
+    const activeLabel=/主動/i.test(`${etf.category||""} ${asset.name||""}`)?"主動式":etf.leverage||"一般指數型";
     $("#profileGrid").innerHTML=[
-      info("發行公司",etf.issuer),info("ETF 類型",etf.category),info("標的指數",etf.benchmark),
-      info("槓桿型態",etf.leverage||"一般／主動式"),info("配息狀況",etf.distribution),
-      info("投資策略",etf.strategy),info("基金規模",etf.aum||"官方排程待更新"),info("內扣費用",etf.expense_ratio||"公開說明書")
+      info("發行／經理公司",etf.issuer||"基金基本資料排程待更新"),
+      info("基金經理人",etf.manager||"基金基本資料排程待更新"),
+      info("ETF 類型",etf.category||"基金基本資料排程待更新"),
+      info("標的指數／績效指標",etf.benchmark||(/主動/i.test(activeLabel)?"主動操作，無固定追蹤指數":"基金基本資料排程待更新")),
+      info("操作型態",activeLabel),
+      info("投資策略",etf.strategy||"公開說明書／投信公告待更新"),
+      info("成立日期",etf.inception_date||"基金基本資料排程待更新"),
+      info("上市日期",etf.listing_date||"基金基本資料排程待更新"),
+      info("保管機構",etf.custodian||"基金基本資料排程待更新"),
+      info("基金規模",etf.aum||"官方規模排程待更新"),
+      info("配息狀況",etf.distribution||"依投信與證交所公告"),
+      info("內扣費用",etf.expense_ratio||"公開說明書")
     ].join("");
-    const holdings=etf.holdings||[{symbol:"2330",name:"台積電",weight:42},{symbol:"2317",name:"鴻海",weight:7.5},{symbol:"2454",name:"聯發科",weight:6.8},{symbol:"2382",name:"廣達",weight:4.2},{symbol:"2881",name:"富邦金",weight:3.1}];
-    const max=Math.max(...holdings.map(h=>Number(h.weight)||0),1);
-    $("#holdingBars").innerHTML=`<h2 style="font-size:19px">前五大關聯持股示意</h2>${holdings.map(h=>`<div class="bar-row"><strong>${escapeHtml(h.symbol)} ${escapeHtml(h.name)}</strong><span class="bar-track"><i style="width:${(Number(h.weight)/max*100).toFixed(1)}%"></i></span><b>${h.weight}%</b></div>`).join("")}<p class="section-note">主動式 ETF 實際持股會變動，以投信每日公告為準。</p>`;
-    $("#returnGrid").innerHTML=[info("一日",formatPercent(pct)),info("一週",etf.returns?.week||"排程待更新"),info("一個月",etf.returns?.month||"排程待更新"),info("三個月",etf.returns?.quarter||"排程待更新")].join("");
-    $("#dividendGrid").innerHTML=[info("配息頻率",etf.distribution||"依官方公告"),info("最近配息",etf.last_distribution||"尚無／排程待更新"),info("配息來源註記","依基金公司公告"),info("適用欄位","ETF 不顯示個股 EPS 與本益比")].join("");
+    const holdings=Array.isArray(etf.holdings)?etf.holdings.filter(h=>finite(h.weight)!==null):[];
+    if(holdings.length){
+      const max=Math.max(...holdings.map(h=>Number(h.weight)||0),1);
+      $("#holdingBars").innerHTML=`<h2 style="font-size:19px">前十大官方持股</h2>${holdings.slice(0,10).map(h=>`<div class="bar-row"><strong>${escapeHtml(h.symbol||"")} ${escapeHtml(h.name||"")}</strong><span class="bar-track"><i style="width:${(Number(h.weight)/max*100).toFixed(1)}%"></i></span><b>${h.weight}%</b></div>`).join("")}<p class="section-note">主動式 ETF 持股可能每日變動，以經理公司最新公告為準。</p>`;
+    }else{
+      $("#holdingBars").innerHTML=`<h2 style="font-size:19px">前十大官方持股</h2><div class="empty">尚未取得投信最新持股公告；不以指數成分或猜測權重代替。</div>`;
+    }
+    $("#returnGrid").innerHTML=[info("一日",formatPercent(pct)),info("一週",etf.returns?.week||"績效排程待更新"),info("一個月",etf.returns?.month||"績效排程待更新"),info("三個月",etf.returns?.quarter||"績效排程待更新")].join("");
+    $("#dividendGrid").innerHTML=[info("配息頻率",etf.distribution||"依官方公告"),info("最近配息",etf.last_distribution||"尚無／排程待更新"),info("基金經理人",etf.manager||"基金基本資料排程待更新"),info("適用欄位","ETF 不顯示個股 EPS 與本益比")].join("");
   }else{
     const values=[metrics.net_margin?Math.min(100,50+metrics.net_margin):55,metrics.debt_ratio?Math.max(10,100-metrics.debt_ratio):55,metrics.current_ratio?Math.min(100,metrics.current_ratio*45):55,metrics.pe?Math.max(10,100-Math.min(80,metrics.pe*2)):55,metrics.roe?Math.min(100,40+metrics.roe*2):55];
     $("#primaryChart").innerHTML=`<h2>穩健度模型</h2>${radar(values,["獲利","負債","流動","估值","收益"])}<p class="section-note">模型依官方財報可取得欄位計算；缺值以中性分數顯示。</p>`;

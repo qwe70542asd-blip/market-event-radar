@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const VERSION = "11.1.1";
+  const VERSION = "11.1.2";
   const OWNER = "qwe70542asd-blip";
   const REPO = "market-event-radar";
   const LIVE_BASE = `https://raw.githubusercontent.com/${OWNER}/${REPO}/live-data/`;
@@ -51,6 +51,22 @@
         strategy:"追蹤特選臺灣 TOP 50 指數，聚焦大型權值企業。",
         distribution:"尚無配息資料",
         official_url:"https://www.twse.com.tw/zh/ETFortune/etfInfo/009816"
+      }
+    },
+    "TW:00663L": {
+      id:"TW:00663L", asset_class:"etf", market:"TW", exchange:"TWSE",
+      symbol:"00663L", name:"國泰臺灣加權正2", sector:"fund",
+      sub_industry:"台灣槓桿型 ETF", official_industry:"ETF", currency:"TWD",
+      aliases:["國泰臺指正2","國泰臺灣加權指數單日正向2倍基金"],
+      etf:{
+        issuer:"國泰證券投資信託股份有限公司",
+        manager:"蘇鼎宇",
+        category:"股票槓反ETF",
+        benchmark:"臺灣日報酬兩倍指數",
+        leverage:"單日正向 2 倍",
+        strategy:"追求臺灣加權指數單日報酬的兩倍。",
+        distribution:"尚無配息資料",
+        official_url:"https://www.twse.com.tw/zh/ETFortune/etfInfo/00663L"
       }
     },
     "TW:00631L": {
@@ -145,6 +161,9 @@
       ...raw, ...override, id:override.id || id, symbol:override.symbol || symbol, market:override.market || market
     };
     merged.aliases = [...new Set([...(raw.aliases || []), ...(override.aliases || [])].filter(Boolean))];
+    if (raw.etf || override.etf) {
+      merged.etf = {...(override.etf || {}), ...(raw.etf || {})};
+    }
     merged.search_blob = normalize([
       merged.symbol, merged.name, merged.market, merged.exchange, merged.sector,
       merged.sub_industry, merged.official_industry, ...merged.aliases
@@ -318,6 +337,64 @@
     } catch { return "#"; }
   }
 
+  function newsIdentity(item) {
+    if (item?.cluster_id) return String(item.cluster_id);
+    const raw = String(item?.title || "").normalize("NFKC");
+    const date = String(item?.published_at || "").slice(0,10);
+    if (/(?:排行|排名).*?(?:前|Top)\s*\d+\s*名/i.test(raw)) {
+      const market = raw.includes("上市") ? "上市" : raw.includes("上櫃") ? "上櫃" : "市場";
+      const family = /外資|投信|自營商|融資|融券|借券/.test(raw) ? "法人籌碼" : "市場排行";
+      return `template:${date}:${market}:${family}`;
+    }
+    const title = raw.toLowerCase()
+      .replace(/\bhttps?:\/\/\S+/g, "")
+      .replace(/[\s\p{P}\p{S}]+/gu, "");
+    return title || String(item?.id || item?.link || "");
+  }
+
+  function diversifyNews(items, limit=Infinity) {
+    const identityGroups = new Map();
+    (items || []).forEach(item => {
+      const key = newsIdentity(item);
+      if (!key) return;
+      if (!identityGroups.has(key)) identityGroups.set(key, []);
+      identityGroups.get(key).push(item);
+    });
+    const unique = [...identityGroups.values()].map(rows => {
+      rows.sort((a,b) => Date.parse(b.published_at || 0)-Date.parse(a.published_at || 0));
+      const primary = {...rows[0]};
+      const existing = Number(primary.duplicate_count || primary.related_count || 0);
+      primary.duplicate_count = existing + Math.max(0, rows.length - 1);
+      primary.related_sources = [...new Set([
+        ...(primary.related_sources || []),
+        ...rows.map(row => row.source).filter(Boolean)
+      ])];
+      return primary;
+    });
+    const groups = new Map();
+    unique
+      .sort((a,b) => Date.parse(b.published_at || 0)-Date.parse(a.published_at || 0))
+      .forEach(item => {
+        const source = String(item.source || "其他來源");
+        if (!groups.has(source)) groups.set(source, []);
+        groups.get(source).push(item);
+      });
+
+    const output = [];
+    let lastSource = "";
+    while (output.length < limit) {
+      const available = [...groups.entries()].filter(([,queue]) => queue.length);
+      if (!available.length) break;
+      let choices = available.filter(([source]) => source !== lastSource);
+      if (!choices.length) choices = available;
+      choices.sort((a,b) => Date.parse(b[1][0]?.published_at || 0)-Date.parse(a[1][0]?.published_at || 0));
+      const [source, queue] = choices[0];
+      output.push(queue.shift());
+      lastSource = source;
+    }
+    return output;
+  }
+
   const SECTOR_TERMS = {
     technology:["科技","AI","人工智慧","半導體","晶片","伺服器","軟體","雲端","電子","CoWoS","先進製程"],
     finance:["金融","金控","銀行","保險","證券","利率","房貸"],
@@ -358,6 +435,6 @@
     $, $$, normalize, escapeHtml, finite, fetchJson, loadData, canonicalAsset, mergeAssets,
     searchAssets, resolveAsset, loadPortfolio, migratePortfolio, savePortfolio,
     findTwQuote, loadQuoteCache, saveQuoteCache, formatPrice, formatPercent, formatMoney,
-    formatVolume, direction, formatTime, safeNewsLink, newsKeywords, newsScore
+    formatVolume, direction, formatTime, safeNewsLink, diversifyNews, newsKeywords, newsScore
   };
 })();

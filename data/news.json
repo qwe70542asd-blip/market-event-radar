@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "version": "v11.1.1",
+    "version": "v11.1.2",
     "updated_at": null,
     "timezone": "Asia/Taipei",
     "retention_days": 20,
@@ -37,6 +37,21 @@
       "name": "國泰證券",
       "status": "pending",
       "group": "broker"
+    },
+    {
+      "name": "上市公司重大訊息",
+      "status": "pending",
+      "group": "official-company"
+    },
+    {
+      "name": "上櫃公司重大訊息",
+      "status": "pending",
+      "group": "official-company"
+    },
+    {
+      "name": "臺灣證券交易所",
+      "status": "pending",
+      "group": "official-tw"
     }
   ],
   "items": []

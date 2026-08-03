@@ -1,7 +1,7 @@
 (async () => {
   "use strict";
   const { $, $$, escapeHtml, finite, loadData, mergeAssets, loadPortfolio, migratePortfolio,
-    findTwQuote, formatPrice, formatPercent, direction, formatTime, safeNewsLink } = MR;
+    findTwQuote, formatPrice, formatPercent, direction, formatTime, safeNewsLink, diversifyNews } = MR;
   const DAY = ["日","一","二","三","四","五","六"];
   const state = {events:[], filtered:[], month:new Date(new Date().getFullYear(),new Date().getMonth(),1), focus:"all"};
 
@@ -19,6 +19,12 @@
     return {...event,startDate:start,key:`${start.getFullYear()}-${String(start.getMonth()+1).padStart(2,"0")}-${String(start.getDate()).padStart(2,"0")}`};
   });
 
+  function quoteForEntry(entry) {
+    return entry.market === "TW"
+      ? findTwQuote(entry, twPayload)
+      : (marketPayload.items || []).find(item => String(item.symbol || "").toUpperCase() === String(entry.symbol || "").toUpperCase()) || null;
+  }
+
   function renderPortfolio() {
     const strip = $("#portfolioStrip");
     $("#portfolioCount").textContent = `${entries.length} 個標的`;
@@ -27,10 +33,23 @@
       $("#portfolioStatus").textContent = "尚無標的";
       return;
     }
-    let available = 0;
-    strip.innerHTML = entries.map(entry => {
-      const quote = entry.market === "TW" ? findTwQuote(entry, twPayload) : (marketPayload.items || []).find(item => String(item.symbol).toUpperCase() === String(entry.symbol).toUpperCase());
-      if (finite(quote?.price) !== null) available++;
+
+    const ranked = entries.map((entry, originalIndex) => {
+      const quote = quoteForEntry(entry);
+      const price = finite(quote?.price);
+      const shares = finite(entry.shares);
+      const avgCost = finite(entry.avg_cost);
+      const marketValue = shares !== null
+        ? (price !== null ? price * shares : avgCost !== null ? avgCost * shares : 0)
+        : 0;
+      return {entry, quote, marketValue, originalIndex};
+    }).sort((a, b) => b.marketValue - a.marketValue || a.originalIndex - b.originalIndex);
+
+    const visible = ranked.slice(0, 7);
+    const hiddenCount = Math.max(0, ranked.length - visible.length);
+    const available = ranked.filter(row => finite(row.quote?.price) !== null).length;
+
+    const cards = visible.map(({entry, quote}) => {
       const pct = finite(quote?.change_percent);
       const href = `asset.html?id=${encodeURIComponent(entry.asset_id || `${entry.market}:${entry.symbol}`)}`;
       return `<a class="quote-card" href="${href}">
@@ -40,7 +59,11 @@
         <div class="quote-body"><span><strong>${formatPrice(quote?.price,entry.currency)}</strong><small>前收 ${formatPrice(quote?.previous_close,entry.currency)}</small></span><span class="${direction(pct)}">${quote ? "●" : "—"}</span></div>
         <div class="quote-foot"><span>${quote?.status === "mis" ? "盤中／延遲" : quote ? "最後交易日" : "官方行情暫時不可用"}</span><span>${quote?.quote_time || ""}</span></div>
       </a>`;
-    }).join("");
+    });
+    if (hiddenCount > 0) {
+      cards.push(`<a class="quote-card portfolio-more-card" href="portfolio.html" aria-label="查看其餘 ${hiddenCount} 個標的"><strong>…</strong><span>其餘 ${hiddenCount} 個標的</span><small>依資產配置排序後未顯示</small></a>`);
+    }
+    strip.innerHTML = cards.join("");
     $("#portfolioStatus").textContent = available ? `${available} 項有行情` : "等待官方行情";
   }
 
@@ -119,8 +142,46 @@
     }));
   }
 
+  function marketClock(item) {
+    const seconds = finite(item?.market_at);
+    if (seconds !== null) {
+      return new Date(seconds * 1000).toLocaleString("zh-TW", {
+        timeZone:"Asia/Taipei", month:"numeric", day:"numeric",
+        hour:"2-digit", minute:"2-digit", hour12:false
+      });
+    }
+    return formatTime(marketPayload?.metadata?.updated_at);
+  }
+
+  function renderTaiwanIndices() {
+    const renderOne = (symbol, ids) => {
+      const item = (marketPayload.items || []).find(row => row.symbol === symbol);
+      const priceNode = $(ids.price);
+      const changeNode = $(ids.change);
+      const rangeNode = $(ids.range);
+      const timeNode = $(ids.time);
+      if (!item || finite(item.price) === null) {
+        priceNode.textContent = "等待行情";
+        changeNode.textContent = "—";
+        rangeNode.textContent = "高低 —";
+        timeNode.textContent = "排程更新中";
+        return;
+      }
+      priceNode.textContent = Number(item.price).toLocaleString("zh-TW", {maximumFractionDigits:2});
+      changeNode.className = direction(item.change_percent);
+      changeNode.textContent = `${finite(item.change) !== null ? `${item.change > 0 ? "+" : ""}${Number(item.change).toLocaleString("zh-TW",{maximumFractionDigits:2})}` : "—"}　${formatPercent(item.change_percent)}`;
+      const high = finite(item.high), low = finite(item.low);
+      rangeNode.textContent = high !== null && low !== null
+        ? `高 ${high.toLocaleString("zh-TW",{maximumFractionDigits:2})}　低 ${low.toLocaleString("zh-TW",{maximumFractionDigits:2})}`
+        : "高低資料等待更新";
+      timeNode.textContent = `${marketClock(item)} · ${item.market_state === "REGULAR" ? "盤中" : "近即時／延遲"}`;
+    };
+    renderOne("^TWII", {price:"#taiexPrice",change:"#taiexChange",range:"#taiexRange",time:"#taiexTime"});
+    renderOne("^TWOII", {price:"#tpexIndexPrice",change:"#tpexIndexChange",range:"#tpexIndexRange",time:"#tpexIndexTime"});
+  }
+
   function renderMarket() {
-    const items = (marketPayload.items || []).slice(0,9);
+    const items = (marketPayload.items || []).filter(item => !["^TWII","^TWOII"].includes(item.symbol)).slice(0,9);
     $("#marketUpdated").textContent = formatTime(marketPayload?.metadata?.updated_at);
     $("#marketSource").textContent = marketPayload?.metadata?.source || "公開行情";
     $("#marketList").innerHTML = items.length ? items.map(item => `<div class="market-row"><span><strong>${escapeHtml(item.name || item.symbol)}</strong><small>${escapeHtml(item.symbol || item.market || "")}</small></span><b>${formatPrice(item.price,item.currency || "")}</b><em class="${direction(item.change_percent)}">${formatPercent(item.change_percent)}</em></div>`).join("") : '<div class="empty">等待市場行情排程。</div>';
@@ -142,17 +203,41 @@
     } catch { $("#cryptoStatus").textContent = "備援資料"; }
     $("#cryptoList").innerHTML = rows.map(row => `<div class="crypto-row"><span><strong>${escapeHtml(row.name)}</strong><small>${String(row.symbol).toUpperCase()} · 24H量 ${(Number(row.total_volume || 0)/1e8).toFixed(1)}億</small></span><b>$${Number(row.current_price).toLocaleString("en-US",{maximumFractionDigits:row.current_price<10?4:2})}</b><em class="${direction(row.price_change_percentage_24h)}">${formatPercent(row.price_change_percentage_24h)}</em></div>`).join("");
     $("#cryptoTime").textContent = new Date().toLocaleTimeString("zh-TW",{hour:"2-digit",minute:"2-digit",hour12:false});
+    syncCalendarToSideRail();
   }
 
   function renderNews() {
-    const items = (newsPayload.items || []).slice(0,6);
+    const items = diversifyNews(newsPayload.items || [], 6);
     const first = items[0];
     if (first) {
       $("#breakingLink").textContent = first.title;
       $("#breakingLink").href = safeNewsLink(first);
     }
-    $("#homeNews").innerHTML = items.length ? items.map(item => `<a class="news-card" href="${escapeHtml(safeNewsLink(item))}" target="_blank" rel="noreferrer noopener"><div class="news-source"><span>${escapeHtml(item.source || "財經新聞")}</span><time>${formatTime(item.published_at)}</time></div><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.summary || "點擊前往原始來源閱讀全文。")}</p><div class="tag-row"><span class="tag">${escapeHtml(item.region || "GLOBAL")}</span><span class="tag">${escapeHtml(item.topic || "market")}</span><span class="tag">原始文章</span></div></a>`).join("") : '<div class="empty" style="grid-column:1/-1">第一次新聞排程完成後，這裡會顯示 Yahoo、鉅亨、MoneyDJ 與券商來源。</div>';
+    $("#homeNews").innerHTML = items.length ? items.map(item => {
+      const related = Number(item.duplicate_count || item.related_count || 0);
+      return `<a class="news-card" href="${escapeHtml(safeNewsLink(item))}" target="_blank" rel="noreferrer noopener"><div class="news-source"><span>${escapeHtml(item.source || "財經新聞")}</span><time>${formatTime(item.published_at)}</time></div><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.summary || "點擊前往原始來源閱讀全文。")}</p><div class="tag-row"><span class="tag">${escapeHtml(item.region || "GLOBAL")}</span><span class="tag">${escapeHtml(item.topic || "market")}</span>${related ? `<span class="tag">另有 ${related} 篇相關</span>` : ""}<span class="tag">原始文章</span></div></a>`;
+    }).join("") : '<div class="empty" style="grid-column:1/-1">第一次新聞排程完成後，這裡會顯示 Yahoo、鉅亨、MoneyDJ 與券商來源。</div>';
   }
+
+  function syncCalendarToSideRail() {
+    const calendar = document.querySelector(".calendar-card");
+    const side = document.querySelector(".side-rail");
+    if (!calendar || !side || window.innerWidth <= 1100) {
+      calendar?.style.removeProperty("height");
+      return;
+    }
+    requestAnimationFrame(() => {
+      const sideHeight = Math.ceil(side.scrollHeight);
+      if (sideHeight > 0) calendar.style.height = `${sideHeight}px`;
+    });
+  }
+
+  if ("ResizeObserver" in window) {
+    const observer = new ResizeObserver(syncCalendarToSideRail);
+    const side = document.querySelector(".side-rail");
+    if (side) observer.observe(side);
+  }
+  window.addEventListener("resize", syncCalendarToSideRail);
 
   $("#prevMonth").addEventListener("click",()=>{state.month=new Date(state.month.getFullYear(),state.month.getMonth()-1,1);renderCalendar()});
   $("#nextMonth").addEventListener("click",()=>{state.month=new Date(state.month.getFullYear(),state.month.getMonth()+1,1);renderCalendar()});
@@ -164,5 +249,5 @@
 
   $("#eventUpdated").textContent = formatTime(eventPayload?.metadata?.updated_at);
   state.filtered = [...state.events];
-  renderPortfolio(); renderCalendar(); renderMarket(); renderCrypto(); renderNews();
+  renderPortfolio(); renderCalendar(); renderTaiwanIndices(); renderMarket(); renderCrypto(); renderNews(); syncCalendarToSideRail();
 })();

@@ -62,7 +62,7 @@ footer{display:flex;justify-content:space-between;gap:12px;margin-top:16px;paddi
 }
 
 
-/* v11.1.1 compact layout and clean background */
+/* v11.1.2 compact layout and clean background */
 .noise { display:none !important; }
 body {
   background:
@@ -182,4 +182,237 @@ th,td { padding:9px 7px; }
   .portfolio-strip { grid-template-columns:1fr; }
   .news-list { grid-template-columns:1fr; }
   .chart-card { min-height:0; }
+}
+
+
+/* v11.1.2 homepage hierarchy, index rail and natural-height side panels */
+.feature-strip {
+  margin:0 0 9px;
+  gap:8px;
+}
+.feature-card {
+  min-height:88px;
+  padding:10px 12px;
+  align-items:center;
+}
+.feature-card>span:first-child {
+  min-width:42px;
+  height:42px;
+  font-size:15px;
+}
+.feature-card strong {
+  font-size:18px;
+  line-height:1.15;
+}
+.feature-card small {
+  margin-top:4px;
+  font-size:11px;
+  line-height:1.35;
+}
+.feature-card em {
+  margin-top:6px;
+  font-size:11px;
+}
+
+.taiwan-index-strip {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:9px;
+  margin-bottom:9px;
+}
+.taiwan-index-card {
+  display:grid;
+  grid-template-columns:minmax(180px,1fr) auto;
+  grid-template-areas:
+    "name price"
+    "meta meta";
+  align-items:center;
+  gap:8px 18px;
+  min-height:100px;
+  padding:13px 16px;
+}
+.index-name {
+  grid-area:name;
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+.index-name>span:last-child {
+  min-width:0;
+}
+.index-name small,
+.index-name strong {
+  display:block;
+}
+.index-name small {
+  margin-bottom:3px;
+  color:var(--muted);
+  font-size:11px;
+}
+.index-name strong {
+  font-size:19px;
+}
+.index-dot {
+  width:11px;
+  height:38px;
+  border-radius:99px;
+  background:linear-gradient(180deg,var(--red),var(--amber));
+  box-shadow:0 0 18px rgba(255,125,145,.2);
+}
+.index-dot.otc {
+  background:linear-gradient(180deg,var(--blue),var(--green));
+}
+.index-price {
+  grid-area:price;
+  display:flex;
+  align-items:baseline;
+  justify-content:flex-end;
+  gap:13px;
+  white-space:nowrap;
+}
+.index-price>strong {
+  font-size:28px;
+  letter-spacing:-.03em;
+}
+.index-price>span {
+  font-size:14px;
+  font-weight:800;
+}
+.index-meta {
+  grid-area:meta;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  padding-top:7px;
+  border-top:1px solid rgba(255,255,255,.055);
+  color:var(--muted);
+  font-size:10px;
+}
+
+.portfolio-strip {
+  grid-template-columns:repeat(auto-fit,minmax(155px,1fr));
+}
+.quote-card {
+  min-height:112px;
+}
+.quote-top strong {
+  font-size:14px;
+}
+.quote-top small,
+.quote-foot,
+.quote-body small {
+  font-size:9px;
+}
+.portfolio-more-card {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  min-width:110px;
+  text-align:center;
+  color:var(--muted);
+}
+.portfolio-more-card>strong {
+  color:var(--green);
+  font-size:38px;
+  line-height:.8;
+}
+.portfolio-more-card>span {
+  margin-top:10px;
+  color:var(--text);
+  font-size:12px;
+  font-weight:700;
+}
+.portfolio-more-card>small {
+  margin-top:4px;
+  font-size:9px;
+}
+
+.home-grid {
+  align-items:start;
+}
+.side-rail {
+  grid-template-rows:auto auto;
+  align-content:start;
+}
+.market-board,
+.crypto-board {
+  height:auto;
+  min-height:0;
+}
+.market-row,
+.crypto-row {
+  min-height:43px;
+  padding:6px 5px;
+}
+.market-row strong,
+.crypto-row strong {
+  font-size:13px;
+}
+.market-row b,
+.crypto-row b {
+  font-size:13px;
+}
+.market-row em,
+.crypto-row em {
+  font-size:10px;
+}
+
+.calendar-card {
+  min-height:0;
+  overflow:hidden;
+}
+.calendar-scroll {
+  display:flex;
+  flex:1;
+  min-height:0;
+  flex-direction:column;
+}
+.calendar-grid {
+  grid-template-rows:repeat(var(--calendar-rows),minmax(70px,1fr));
+}
+.calendar-day {
+  padding:7px;
+  border-radius:11px;
+}
+.day-head {
+  margin-bottom:4px;
+}
+.day-head strong {
+  font-size:15px;
+}
+.event-dot {
+  min-height:16px;
+}
+.event-dot span,
+.event-dot b {
+  font-size:8px;
+}
+
+@media(max-width:1100px){
+  .taiwan-index-card {
+    grid-template-columns:1fr;
+    grid-template-areas:"name" "price" "meta";
+  }
+  .index-price { justify-content:flex-start; }
+}
+@media(max-width:820px){
+  .taiwan-index-strip { grid-template-columns:1fr; }
+  .taiwan-index-card {
+    grid-template-columns:minmax(160px,1fr) auto;
+    grid-template-areas:"name price" "meta meta";
+  }
+  .index-price { justify-content:flex-end; }
+  .calendar-card { height:auto!important; }
+  .calendar-grid { grid-template-rows:repeat(var(--calendar-rows),94px); }
+}
+@media(max-width:560px){
+  .feature-card strong { font-size:17px; }
+  .feature-card small { font-size:11px; }
+  .taiwan-index-card {
+    grid-template-columns:1fr;
+    grid-template-areas:"name" "price" "meta";
+  }
+  .index-price { justify-content:flex-start; }
+  .index-price>strong { font-size:25px; }
 }

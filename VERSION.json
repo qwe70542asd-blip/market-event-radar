@@ -1,15 +1,16 @@
 {
   "project": "market-event-radar",
-  "baseline_version": "11.1.1",
-  "label": "v11.1.1-complete-integration",
-  "updated_at": "2026-08-03T08:15:00+08:00",
+  "baseline_version": "11.1.2",
+  "label": "v11.1.2-complete-integration",
+  "updated_at": "2026-08-03T08:40:00+08:00",
   "features": [
-    "compact no-horizontal-scroll layout",
-    "removed dotted noise overlay",
-    "readable TWSE news links and official PDF resolution",
-    "official all-listed-stock financial enrichment",
-    "official valuation and industry rankings",
-    "portfolio official Taiwan quotes",
-    "multi-source news"
+    "top homepage navigation cards",
+    "live TAIEX and TPEx index cards",
+    "portfolio top seven by market value",
+    "natural-height crypto and synchronized calendar",
+    "news event clustering and source interleaving",
+    "official company material information",
+    "ETF manager and official fund metadata",
+    "official all-listed-stock financial enrichment"
   ]
 }

@@ -8,6 +8,7 @@ replaces the last successful archive with an empty payload.
 from __future__ import annotations
 
 import hashlib
+from collections import defaultdict
 import html
 import json
 import os
@@ -74,6 +75,74 @@ def clean_text(value: object) -> str:
 
 def normalized_title(value: str) -> str:
     return re.sub(r"[^\w\u4e00-\u9fff]+", "", value.lower())
+
+
+def canonical_cluster_key(item: dict) -> str:
+    """Create a conservative event identity and collapse repeated ranking templates."""
+    title = clean_text(item.get("title"))
+    published = str(item.get("published_at") or "")[:10]
+    cleaned = re.sub(r"【[^】]{0,30}】|\\[[^\\]]{0,30}\\]", " ", title)
+    cleaned = re.sub(r"\\b(?:Yahoo|MoneyDJ|鉅亨網|證交所|臺灣證券交易所)\\b", " ", cleaned, flags=re.I)
+    # MoneyDJ and similar sites often publish many nearly identical top-20 cards
+    # at the same timestamp. Keep one representative and preserve the rest as
+    # related links rather than filling an entire screen with one template.
+    if re.search(r"(?:排行|排名).*?(?:前|Top)\\s*\\d+\\s*名", cleaned, flags=re.I):
+        market = "上市" if "上市" in cleaned else "上櫃" if "上櫃" in cleaned else "市場"
+        family = "法人籌碼" if re.search(r"外資|投信|自營商|融資|融券|借券", cleaned) else "市場排行"
+        return f"template:{published}:{market}:{family}"
+    normalized = normalized_title(cleaned)
+    return f"exact:{normalized}"
+
+
+def source_priority(item: dict) -> int:
+    group = str(item.get("source_group") or "")
+    return {"official-tw": 5, "official": 5, "publisher": 4, "broker": 3, "portal": 2}.get(group, 1)
+
+
+def cluster_news(items: list[dict]) -> list[dict]:
+    groups: dict[str, list[dict]] = defaultdict(list)
+    for item in items:
+        groups[canonical_cluster_key(item)].append(item)
+
+    clustered = []
+    for cluster_id, rows in groups.items():
+        rows.sort(key=lambda row: (
+            source_priority(row),
+            bool(row.get("summary")),
+            str(row.get("published_at") or ""),
+        ), reverse=True)
+        primary = dict(rows[0])
+        sources = []
+        links = []
+        for row in rows:
+            source = str(row.get("source") or "其他來源")
+            if source not in sources:
+                sources.append(source)
+            link = row.get("pdf_link") or row.get("article_link") or row.get("direct_link") or row.get("link")
+            if link and all(existing.get("link") != link for existing in links):
+                links.append({"source": source, "title": row.get("title"), "link": link})
+        primary["cluster_id"] = hashlib.sha1(cluster_id.encode("utf-8")).hexdigest()[:16]
+        primary["duplicate_count"] = max(0, len(rows) - 1)
+        primary["related_sources"] = sources
+        primary["related_links"] = links[:12]
+        clustered.append(primary)
+    return clustered
+
+
+def interleave_sources(items: list[dict]) -> list[dict]:
+    queues: dict[str, list[dict]] = defaultdict(list)
+    for item in sorted(items, key=lambda row: str(row.get("published_at") or ""), reverse=True):
+        queues[str(item.get("source") or "其他來源")].append(item)
+    result = []
+    last_source = None
+    while any(queues.values()):
+        candidates = [(source, queue) for source, queue in queues.items() if queue and source != last_source]
+        if not candidates:
+            candidates = [(source, queue) for source, queue in queues.items() if queue]
+        source, queue = max(candidates, key=lambda row: str(row[1][0].get("published_at") or ""))
+        result.append(queue.pop(0))
+        last_source = source
+    return result
 
 
 def parsed_time(entry: dict) -> datetime:
@@ -319,6 +388,79 @@ def fetch_twse_news(session: requests.Session) -> tuple[list[dict], dict]:
         return [], status
 
 
+def parse_roc_datetime(date_value: object, time_value: object = "") -> datetime:
+    date_digits = re.sub(r"\D", "", str(date_value or ""))
+    time_digits = re.sub(r"\D", "", str(time_value or "")).ljust(6, "0")[:6]
+    try:
+        if len(date_digits) == 7:
+            year = int(date_digits[:3]) + 1911
+            month = int(date_digits[3:5])
+            day = int(date_digits[5:7])
+        elif len(date_digits) >= 8:
+            year = int(date_digits[:4])
+            month = int(date_digits[4:6])
+            day = int(date_digits[6:8])
+        else:
+            return NOW
+        return datetime(year, month, day, int(time_digits[:2]), int(time_digits[2:4]), int(time_digits[4:6]), tzinfo=TAIPEI)
+    except Exception:
+        return NOW
+
+
+def fetch_company_announcements(session: requests.Session) -> tuple[list[dict], list[dict]]:
+    sources = [
+        ("上市公司重大訊息", "https://openapi.twse.com.tw/v1/opendata/t187ap04_L", "TWSE"),
+        ("上櫃公司重大訊息", "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap04_O", "TPEx"),
+    ]
+    items: list[dict] = []
+    statuses: list[dict] = []
+    for source_name, url, market in sources:
+        status = {"name": source_name, "group": "official-company", "status": "warning", "message": "抓取失敗"}
+        try:
+            response = session.get(url, headers=HEADERS, timeout=35)
+            response.raise_for_status()
+            payload = response.json()
+            rows = payload if isinstance(payload, list) else payload.get("data") or []
+            count = 0
+            for row in rows[:500]:
+                if not isinstance(row, dict):
+                    continue
+                code = str(row_value(row, "公司代號", "證券代號", "股票代號") or "").strip().upper()
+                company = clean_text(row_value(row, "公司簡稱", "公司名稱", "證券名稱") or "")
+                subject = clean_text(row_value(row, "主旨", "重大訊息主旨", "subject", "title") or "")
+                explanation = clean_text(row_value(row, "說明", "內容", "content") or "")
+                date_value = row_value(row, "發言日期", "發布日期", "日期", "date")
+                time_value = row_value(row, "發言時間", "發布時間", "時間", "time")
+                if not code or not subject:
+                    continue
+                published = parse_roc_datetime(date_value, time_value)
+                title = f"{company}（{code}）{subject}" if company and company not in subject else f"{code} {subject}"
+                link = "https://mops.twse.com.tw/mops/web/t05st01"
+                items.append({
+                    "id": stable_id(source_name, title, f"{date_value}-{time_value}-{code}"),
+                    "title": title,
+                    "summary": explanation[:900],
+                    "source": "公開資訊觀測站",
+                    "source_group": "official-company",
+                    "link": link,
+                    "direct_link": link,
+                    "article_link": link,
+                    "pdf_link": None,
+                    "published_at": published.isoformat(timespec="seconds"),
+                    "topic": "earnings" if re.search(r"財報|營收|獲利|股利|法說", subject) else "market",
+                    "region": "TW",
+                    "asset_class": "stock",
+                    "asset_symbols": [code],
+                    "tags": [code, company, market, "重大訊息", "official-company"],
+                })
+                count += 1
+            status.update(status="ok" if count else "warning", message=f"{count} 筆")
+        except Exception as exc:
+            status["message"] = str(exc)[:120]
+        statuses.append(status)
+    return items, statuses
+
+
 def google_news_url(query_text: str) -> str:
     return f"https://news.google.com/rss/search?q={quote(query_text)}&hl=zh-TW&gl=TW&ceid=TW:zh-Hant"
 
@@ -351,6 +493,10 @@ def main() -> None:
     collected.extend(items)
     statuses.append(status)
 
+    company_items, company_statuses = fetch_company_announcements(session)
+    collected.extend(company_items)
+    statuses.extend(company_statuses)
+
     for name, group, query_text in BROKER_QUERIES:
         items, status = fetch_feed(session, name, group, google_news_url(query_text), resolve_links=True)
         collected.extend(items)
@@ -379,7 +525,8 @@ def main() -> None:
         if not existing or published > dateparser.parse(existing["published_at"]):
             dedup[key] = item
 
-    items = sorted(dedup.values(), key=lambda row: row["published_at"], reverse=True)
+    raw_items = sorted(dedup.values(), key=lambda row: row["published_at"], reverse=True)
+    items = interleave_sources(cluster_news(raw_items))
     if not items:
         raise SystemExit("No usable news items; previous live archive was not replaced.")
 
@@ -387,13 +534,15 @@ def main() -> None:
     status_by_name.update({row["name"]: row for row in statuses})
     payload = {
         "metadata": {
-            "version": "v11.1.1",
+            "version": "v11.1.2",
             "updated_at": NOW.isoformat(timespec="seconds"),
             "timezone": "Asia/Taipei",
             "retention_days": RETENTION_DAYS,
             "item_count": len(items),
+            "raw_item_count": len(raw_items),
+            "clustered_item_count": len(items),
             "source_count": len(status_by_name),
-            "note": "Multi-source archive; direct publisher links are preferred. Failed sources keep prior successful articles.",
+            "note": "Multi-source archive with event clustering and source interleaving; repeated ranking templates are grouped.",
         },
         "sources": list(status_by_name.values()),
         "items": items,

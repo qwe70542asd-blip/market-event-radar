@@ -30,7 +30,7 @@ OUT = DATA / "assets.json"
 SEED = DATA / "assets-seed.js"
 NOW = datetime.now(ZoneInfo("Asia/Taipei"))
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.1.1)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.1.2)",
     "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.7",
     "Accept": "application/json,text/plain,*/*",
 }
@@ -77,6 +77,13 @@ OVERRIDES = {
                 "benchmark": "臺灣指數公司特選臺灣 TOP 50 指數",
                 "strategy": "追蹤臺灣大型權值企業。",
                 "official_url": "https://www.twse.com.tw/zh/ETFortune/etfInfo/009816"}},
+    "TW:00663L": {"name": "國泰臺灣加權正2", "asset_class": "etf", "exchange": "TWSE",
+        "sub_industry": "台灣槓桿型 ETF", "official_industry": "ETF",
+        "aliases": ["國泰臺指正2", "國泰臺灣加權指數單日正向2倍基金"],
+        "etf": {"issuer": "國泰證券投資信託股份有限公司", "manager": "蘇鼎宇",
+                "category": "股票槓反ETF", "benchmark": "臺灣日報酬兩倍指數",
+                "leverage": "單日正向 2 倍", "strategy": "追求臺灣加權指數單日報酬的兩倍。",
+                "official_url": "https://www.twse.com.tw/zh/ETFortune/etfInfo/00663L"}},
     "TW:00631L": {"name": "元大台灣50正2", "asset_class": "etf", "exchange": "TWSE",
         "sub_industry": "台灣槓桿型 ETF", "official_industry": "ETF",
         "aliases": ["台灣50正2", "元大台灣50單日正向2倍"],
@@ -114,6 +121,20 @@ KEY_ALIASES = {
     "pe": ["本益比","peratio","peratio"],
     "pb": ["股價淨值比","pbratio"],
     "yield": ["殖利率(%)","殖利率","dividendyield"],
+    "fund_type": ["基金類型","證券類別"],
+    "fund_full_name": ["基金中文名稱","基金名稱"],
+    "benchmark": ["標的指數/追蹤指數名稱","標的指數","追蹤指數名稱","績效指標中文名稱"],
+    "fund_manager": ["基金經理人","經理人"],
+    "issuer": ["經理公司名稱","基金經理公司","發行公司","證券投資信託事業"],
+    "investment_ratio": ["股票及債券投資比例說明","投資比例說明"],
+    "inception_date": ["成立日期"],
+    "listing_date": ["上市日期"],
+    "custodian": ["保管機構"],
+    "manager_phone": ["經理公司總機"],
+    "manager_address": ["經理公司地址"],
+    "chairman": ["經理公司董事長"],
+    "spokesperson": ["經理公司發言人"],
+    "general_manager": ["經理公司總經理"],
 }
 
 
@@ -170,6 +191,26 @@ def get_json(session: requests.Session, url: str, timeout=45):
     return payload if isinstance(payload, list) else payload.get("data") or payload.get("aaData") or []
 
 
+ISSUER_PREFIXES = {
+    "元大":"元大證券投資信託股份有限公司","富邦":"富邦證券投資信託股份有限公司",
+    "國泰":"國泰證券投資信託股份有限公司","群益":"群益證券投資信託股份有限公司",
+    "統一":"統一證券投資信託股份有限公司","野村":"野村證券投資信託股份有限公司",
+    "復華":"復華證券投資信託股份有限公司","中信":"中國信託證券投資信託股份有限公司",
+    "凱基":"凱基證券投資信託股份有限公司","永豐":"永豐證券投資信託股份有限公司",
+    "第一金":"第一金證券投資信託股份有限公司","台新":"台新證券投資信託股份有限公司",
+    "新光":"新光證券投資信託股份有限公司","兆豐":"兆豐國際證券投資信託股份有限公司",
+    "國票":"國票證券投資信託股份有限公司","大華銀":"大華銀證券投資信託股份有限公司",
+    "街口":"街口證券投資信託股份有限公司","安聯":"安聯證券投資信託股份有限公司",
+}
+
+def infer_issuer(name: str, full_name: str) -> str | None:
+    text = f"{name} {full_name}"
+    for prefix, issuer in ISSUER_PREFIXES.items():
+        if prefix in text:
+            return issuer
+    return None
+
+
 def normalize_master(row: dict, exchange: str, cls: str) -> dict | None:
     symbol = valid_code(pick(row, "code"))
     name = str(pick(row, "name") or "").strip()
@@ -180,12 +221,34 @@ def normalize_master(row: dict, exchange: str, cls: str) -> dict | None:
     if cls == "etf" and not symbol.startswith("00"):
         return None
     industry = str(pick(row, "industry") or ("ETF" if cls == "etf" else "其他")).strip()
-    return {
+    asset = {
         "id": f"TW:{symbol}", "asset_class": cls, "market": "TW", "exchange": exchange,
         "symbol": symbol, "name": name, "sector": "fund" if cls == "etf" else SECTOR_MAP.get(industry, "other"),
         "sub_industry": "台灣 ETF" if cls == "etf" else industry, "official_industry": industry,
         "currency": "TWD", "aliases": [], "listing_status": "active",
     }
+    if cls == "etf":
+        full_name = str(pick(row, "fund_full_name") or name).strip()
+        issuer = str(pick(row, "issuer") or "").strip() or infer_issuer(name, full_name)
+        asset["aliases"] = list(dict.fromkeys([value for value in [full_name] if value and value != name]))
+        asset["etf"] = {
+            "issuer": issuer,
+            "manager": str(pick(row, "fund_manager") or "").strip() or None,
+            "category": str(pick(row, "fund_type") or "ETF").strip(),
+            "benchmark": str(pick(row, "benchmark") or "").strip() or None,
+            "strategy": str(pick(row, "investment_ratio") or "").strip() or None,
+            "inception_date": str(pick(row, "inception_date") or "").strip() or None,
+            "listing_date": str(pick(row, "listing_date") or "").strip() or None,
+            "custodian": str(pick(row, "custodian") or "").strip() or None,
+            "manager_phone": str(pick(row, "manager_phone") or "").strip() or None,
+            "manager_address": str(pick(row, "manager_address") or "").strip() or None,
+            "chairman": str(pick(row, "chairman") or "").strip() or None,
+            "spokesperson": str(pick(row, "spokesperson") or "").strip() or None,
+            "general_manager": str(pick(row, "general_manager") or "").strip() or None,
+            "full_name": full_name,
+            "official_url": f"https://www.twse.com.tw/zh/ETFortune/etfInfo/{symbol}",
+        }
+    return asset
 
 
 def swagger_info(session: requests.Session):
@@ -389,12 +452,15 @@ def main() -> None:
                 if not asset:
                     continue
                 old = previous_map.get(asset["id"], {})
-                assets[asset["id"]] = {
+                merged_asset = {
                     **old, **asset,
                     "metrics": old.get("metrics") or {},
                     "financials": old.get("financials") or [],
                     "rankings": old.get("rankings") or {},
                 }
+                if asset.get("asset_class") == "etf":
+                    merged_asset["etf"] = {**(old.get("etf") or {}), **(asset.get("etf") or {})}
+                assets[asset["id"]] = merged_asset
                 official_rows += 1
         except Exception as exc:
             print("warning master", exchange, cls, exc)
@@ -456,8 +522,10 @@ def main() -> None:
             "sector": "fund", "listing_status": "active", "metrics": {}, "financials": [],
         })
         aliases = list(dict.fromkeys([*(base.get("aliases") or []), *(override.get("aliases") or [])]))
-        assets[aid] = {**base, **override, "id": aid, "market": "TW", "symbol": symbol,
-                       "currency": "TWD", "sector": "fund", "aliases": aliases}
+        merged_override = {**base, **override, "id": aid, "market": "TW", "symbol": symbol,
+                           "currency": "TWD", "sector": "fund", "aliases": aliases}
+        merged_override["etf"] = {**(override.get("etf") or {}), **(base.get("etf") or {})}
+        assets[aid] = merged_override
 
     rows = sorted(assets.values(), key=lambda row: (row.get("market",""), row.get("symbol","")))
     rank_assets(rows)
@@ -466,7 +534,7 @@ def main() -> None:
         raise SystemExit(f"Only {len(rows)} securities; previous master was not replaced.")
     payload = {
         "metadata": {
-            "version": "v11.1.1", "updated_at": NOW.isoformat(timespec="seconds"),
+            "version": "v11.1.2", "updated_at": NOW.isoformat(timespec="seconds"),
             "asset_count": len(rows), "official_rows": official_rows,
             "financially_enriched_stocks": enriched,
             "income_rows": len(income_rows), "balance_rows": len(balance_rows),
