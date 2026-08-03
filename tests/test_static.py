@@ -90,18 +90,28 @@ class StaticTests(unittest.TestCase):
         self.assertIn("html5lib>=1.1,<2", requirements)
         self.assertIn("def read_html_tables", updater)
         self.assertIn('for flavor in ("lxml", "html5lib")', updater)
-        self.assertIn("Verify HTML parser dependencies", workflow)
+        self.assertIn("Verify financial parser dependencies", workflow)
 
-    def test_one_minute_live_refresh(self):
+    def test_high_frequency_live_refresh(self):
         shared=(ROOT/"assets/shared.js").read_text(encoding="utf-8")
         home=(ROOT/"assets/home.js").read_text(encoding="utf-8")
         asset=(ROOT/"assets/asset.js").read_text(encoding="utf-8")
+        portfolio=(ROOT/"assets/portfolio.js").read_text(encoding="utf-8")
+        market=(ROOT/"assets/tw-market.js").read_text(encoding="utf-8")
+        news_workflow=(ROOT/".github/workflows/update-news.yml").read_text(encoding="utf-8")
         self.assertIn("fetchTaiwanLiveQuotes",shared)
         self.assertIn("fetchTaiwanIndicesLive",home)
         self.assertIn('fetchYahooChart("^TWII")',home)
         self.assertIn('fetchYahooChart("^TWOII")',home)
-        self.assertIn("setInterval(refreshLiveMarket, 60_000)",home)
-        self.assertIn("setInterval(refreshCurrentQuote,60_000)",asset)
+        self.assertIn("return isTaiwanQuoteWindow(date) ? 5_000 : 60_000",shared)
+        self.assertIn("scheduleAdaptiveRefresh(refreshLiveMarket,taiwanQuoteRefreshDelay,2500)",home)
+        self.assertIn("scheduleAdaptiveRefresh(refreshCurrentQuote,taiwanQuoteRefreshDelay,2500)",asset)
+        self.assertIn("scheduleAdaptiveRefresh(refreshPortfolioQuotes,taiwanQuoteRefreshDelay,2500)",portfolio)
+        self.assertIn("scheduleAdaptiveRefresh(refreshVisibleQuotes,taiwanQuoteRefreshDelay,2500)",market)
+        self.assertIn("startCryptoTickerStream",shared)
+        self.assertIn("wss://data-stream.binance.vision",shared)
+        self.assertIn("setInterval(refreshNewsData,5*60_000)",home)
+        self.assertIn('3,8,13,18,23,28,33,38,43,48,53,58',news_workflow)
 
     def test_market_wide_coverage_audit(self):
         updater=(ROOT/"scripts/update_assets.py").read_text(encoding="utf-8")
@@ -109,7 +119,7 @@ class StaticTests(unittest.TestCase):
         self.assertIn("TWSE_EPS_URL",updater)
         self.assertIn("TPEX_EPS_URL",updater)
         self.assertIn("asset-coverage.json",updater)
-        self.assertIn("Coverage percent",workflow)
+        self.assertIn("coverage",workflow)
         self.assertTrue((ROOT/"coverage.html").exists())
         self.assertTrue((ROOT/"assets/coverage.js").exists())
 
@@ -120,6 +130,68 @@ class StaticTests(unittest.TestCase):
         rows=[{"公司代號":"1595","年度":"115","季別":"2","基本每股盈餘（元）":"1.23"}]
         parsed=module.parse_income(rows)
         self.assertEqual(parsed["1595"][0]["eps"],1.23)
+
+
+    def test_six_independent_data_channels(self):
+        workflows={p.name:p.read_text(encoding="utf-8") for p in (ROOT/".github/workflows").glob("*.yml")}
+        self.assertEqual(set(workflows),{
+            "update-daily.yml","update-events.yml","update-global-market.yml",
+            "update-news.yml","update-tw-chips.yml","update-tw-market.yml"
+        })
+        branches={
+            "update-daily.yml":"live-assets",
+            "update-events.yml":"live-events",
+            "update-global-market.yml":"live-global-market",
+            "update-news.yml":"live-news",
+            "update-tw-chips.yml":"live-tw-chips",
+            "update-tw-market.yml":"live-tw-market",
+        }
+        groups=set()
+        for name,branch in branches.items():
+            body=workflows[name]
+            self.assertIn(branch,body)
+            self.assertNotIn("LIVE_BRANCH: live-data",body)
+            group=next(line.strip().split(":",1)[1].strip() for line in body.splitlines() if line.strip().startswith("group:"))
+            self.assertNotIn(group,groups)
+            groups.add(group)
+        self.assertEqual(len(groups),6)
+
+    def test_branch_aware_frontend_loader(self):
+        shared=(ROOT/"assets/shared.js").read_text(encoding="utf-8")
+        for branch in ("live-assets","live-events","live-tw-market","live-tw-chips","live-global-market","live-news"):
+            self.assertIn(branch,shared)
+        self.assertIn("const dedicated = available.find",shared)
+        self.assertIn("loadChannelManifest",shared)
+        self.assertTrue((ROOT/"data-status.html").exists())
+        self.assertTrue((ROOT/"assets/data-status.js").exists())
+
+    def test_isolated_publish_helpers(self):
+        publish=(ROOT/"scripts/publish_data_branch.sh").read_text(encoding="utf-8")
+        restore=(ROOT/"scripts/restore_data_branch.sh").read_text(encoding="utf-8")
+        self.assertIn("channel.json",publish)
+        self.assertIn("GH_TOKEN",publish)
+        self.assertIn("git ls-remote",restore)
+
+    def test_actions_use_node24_compatible_versions(self):
+        for path in (ROOT/".github/workflows").glob("*.yml"):
+            body=path.read_text(encoding="utf-8")
+            self.assertIn("actions/checkout@v6",body)
+            self.assertIn("actions/setup-python@v6",body)
+
+    def test_crypto_second_level_and_fallback(self):
+        shared=(ROOT/"assets/shared.js").read_text(encoding="utf-8")
+        home=(ROOT/"assets/home.js").read_text(encoding="utf-8")
+        self.assertIn("@miniTicker",shared)
+        self.assertIn("30_000",shared)
+        self.assertIn('symbols:["BTC","ETH","BNB","SOL","XRP"]',home)
+        self.assertIn('live:"每秒即時"',home)
+
+    def test_full_market_is_not_polled_every_five_seconds(self):
+        market=(ROOT/"assets/tw-market.js").read_text(encoding="utf-8")
+        self.assertIn("liveTargets()",market)
+        self.assertIn("slice(0,20)",market)
+        self.assertIn("setInterval(refreshFullSnapshot,60_000)",market)
+        self.assertNotIn("fetchTaiwanLiveQuotes(items)",market)
 
     def test_etf_official_parser(self):
         spec=importlib.util.spec_from_file_location("update_assets_etf",ROOT/"scripts/update_assets.py")

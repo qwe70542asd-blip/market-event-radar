@@ -1,4 +1,4 @@
-name: Update v11.1.5 multi-source news
+name: Update v11.2.1 multi-source news
 
 on:
   push:
@@ -6,79 +6,71 @@ on:
     paths:
       - ".github/workflows/update-news.yml"
       - "scripts/update_news.py"
+      - "scripts/publish_data_branch.sh"
+      - "scripts/restore_data_branch.sh"
       - "requirements.txt"
   schedule:
-    - cron: "*/10 * * * *"
+    - cron: "3,8,13,18,23,28,33,38,43,48,53,58 * * * *"
   workflow_dispatch:
+    inputs:
+      clean_rebuild:
+        description: "Ignore the previous live-news archive and rebuild from current sources"
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
 
 concurrency:
-  group: market-radar-live-data-writer
-  cancel-in-progress: false
+  group: market-radar-news
+  cancel-in-progress: true
 
 jobs:
   news:
     runs-on: ubuntu-latest
     timeout-minutes: 35
     env:
-      LIVE_BRANCH: live-data
+      DATA_BRANCH: live-news
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
           cache: pip
       - run: pip install -r requirements.txt
-      - name: Restore last successful archive
-        shell: bash
+      - name: Restore previous news archive
+        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.clean_rebuild) }}
         run: |
-          set -euo pipefail
-          if git ls-remote --exit-code --heads origin "$LIVE_BRANCH" >/dev/null 2>&1; then
-            git fetch --depth=1 origin "$LIVE_BRANCH"
-            for file in news.json news-seed.js news-link-cache.json; do
-              if git cat-file -e "FETCH_HEAD:$file" 2>/dev/null; then
-                git show "FETCH_HEAD:$file" > "data/$file"
-              fi
-            done
-          fi
+          bash scripts/restore_data_branch.sh "$DATA_BRANCH" \
+            "news.json:data/news.json" \
+            "news-seed.js:data/news-seed.js" \
+            "news-link-cache.json:data/news-link-cache.json"
+      - name: Reset news archive for clean rebuild
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.clean_rebuild }}
+        run: |
+          cat > data/news.json <<'JSON'
+          {"metadata":{"version":"v11.2.1"},"items":[],"sources":[]}
+          JSON
+          printf '{}\n' > data/news-link-cache.json
       - run: python scripts/update_news.py
-      - name: Validate
+      - name: Validate news
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
-          p=json.loads(Path("data/news.json").read_text(encoding="utf-8"))
-          assert p.get("items"), "empty news"
-          assert p.get("metadata",{}).get("retention_days")==20
-          assert all(str(x.get("link","")).startswith(("http://","https://")) for x in p["items"])
-          print("OK",len(p["items"]),"news")
+          payload=json.loads(Path("data/news.json").read_text(encoding="utf-8"))
+          assert payload.get("items"), "empty news archive"
+          assert payload.get("metadata",{}).get("retention_days")==20
+          assert all(str(row.get("link","")).startswith(("http://","https://")) for row in payload["items"])
+          print("news",len(payload["items"]))
+          print("updated",payload.get("metadata",{}).get("updated_at"))
           PY
-      - name: Publish news files to live-data
-        shell: bash
+      - name: Publish isolated news channel
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          set -euo pipefail
-          rm -rf /tmp/market-live && mkdir -p /tmp/market-live
-          cd /tmp/market-live
-          git init
-          git config user.name "market-event-radar-bot"
-          git config user.email "actions@users.noreply.github.com"
-          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          if git ls-remote --exit-code --heads origin "$LIVE_BRANCH" >/dev/null 2>&1; then
-            git fetch --depth=1 origin "$LIVE_BRANCH"
-            git checkout -B "$LIVE_BRANCH" FETCH_HEAD
-          else
-            git checkout --orphan "$LIVE_BRANCH"
-          fi
-          cp "$GITHUB_WORKSPACE/data/news.json" news.json
-          cp "$GITHUB_WORKSPACE/data/news-seed.js" news-seed.js
-          cp "$GITHUB_WORKSPACE/data/news-link-cache.json" news-link-cache.json
-          git add news.json news-seed.js news-link-cache.json
-          if git diff --cached --quiet; then exit 0; fi
-          git commit -m "chore: refresh multi-source news v11.1.5"
-          git push origin "HEAD:$LIVE_BRANCH"
+          bash scripts/publish_data_branch.sh "$DATA_BRANCH" "multi-source-news" \
+            data/news.json data/news-seed.js data/news-link-cache.json

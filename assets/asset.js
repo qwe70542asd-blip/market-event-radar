@@ -2,7 +2,8 @@
   "use strict";
   const { $, $$, escapeHtml, finite, loadData, fetchTaiwanLiveQuotes, mergeAssets,
     canonicalAsset, findTwQuote, formatPrice, formatPercent, formatVolume, direction,
-    safeNewsLink, newsScore, formatTime } = MR;
+    safeNewsLink, newsScore, formatTime, scheduleAdaptiveRefresh, taiwanQuoteRefreshDelay,
+    startCryptoTickerStream } = MR;
   const id = decodeURIComponent(new URLSearchParams(location.search).get("id") || "").toUpperCase();
   const [assetPayload,twPayload,chipsPayload,newsPayload] = await Promise.all([
     loadData("assets.json",window.__ASSET_SEED__||{assets:[]}),
@@ -17,6 +18,7 @@
   document.title=`${asset.name}（${asset.symbol}）｜市場事件雷達`;
   let quote=asset.market==="TW"?findTwQuote(asset,twPayload):null;
   const isEtf=asset.asset_class==="etf";
+  const isCrypto=asset.asset_class==="crypto";
   const metrics={...(asset.metrics||{})};
   const financials=asset.financials||[];
   const latest=financials[0]||{};
@@ -42,14 +44,14 @@
   }
   const price=finite(quote?.price??metrics.price),pct=finite(quote?.change_percent);
   const common=[
-    metric("最新價格",formatPrice(price,asset.currency)),
+    metric("最新價格",formatPrice(price,isCrypto?"USD":asset.currency)),
     metric("漲跌幅",formatPercent(pct),direction(pct)),
-    metric(isEtf?"淨值":"開盤",isEtf?(asset.etf?.nav?formatPrice(asset.etf.nav):"排程待更新"):formatPrice(quote?.open,asset.currency)),
-    metric(isEtf?"折溢價":"最高",isEtf?(finite(asset.etf?.premium_discount)!==null?formatPercent(asset.etf.premium_discount):"排程待更新"):formatPrice(quote?.high,asset.currency)),
-    metric("最低",formatPrice(quote?.low,asset.currency)),
-    metric("成交量",`${formatVolume(quote?.volume)} 張`),
-    metric(isEtf?"基金規模":"本益比",isEtf?(asset.etf?.aum||"官方排程待更新"):(finite(metrics.pe)!==null?metrics.pe.toFixed(2):"財報排程待更新")),
-    metric(isEtf?"內扣費用":"EPS",isEtf?(asset.etf?.expense_ratio||"公開說明書"):(finite(metrics.eps??latest.eps)!==null?Number(metrics.eps??latest.eps).toFixed(2):"財報排程待更新"))
+    metric(isEtf?"淨值":"開盤",isEtf?(asset.etf?.nav?formatPrice(asset.etf.nav):"排程待更新"):formatPrice(quote?.open,isCrypto?"USD":asset.currency)),
+    metric(isEtf?"折溢價":"最高",isEtf?(finite(asset.etf?.premium_discount)!==null?formatPercent(asset.etf.premium_discount):"排程待更新"):formatPrice(quote?.high,isCrypto?"USD":asset.currency)),
+    metric("最低",formatPrice(quote?.low,isCrypto?"USD":asset.currency)),
+    metric("成交量",isCrypto?(finite(quote?.volume)!==null?`$${Number(quote.volume).toLocaleString("en-US",{maximumFractionDigits:0})}`:"—"):`${formatVolume(quote?.volume)} 張`),
+    metric(isEtf?"基金規模":isCrypto?"24H 高低":"本益比",isEtf?(asset.etf?.aum||"官方排程待更新"):isCrypto?"秒級串流":(finite(metrics.pe)!==null?metrics.pe.toFixed(2):"財報排程待更新")),
+    metric(isEtf?"內扣費用":isCrypto?"資料來源":"EPS",isEtf?(asset.etf?.expense_ratio||"公開說明書"):isCrypto?"Binance WebSocket":(finite(metrics.eps??latest.eps)!==null?Number(metrics.eps??latest.eps).toFixed(2):"財報排程待更新"))
   ];
   $("#metricGrid").innerHTML=common.join("");
 
@@ -154,16 +156,42 @@
         updateMetric("最低",formatPrice(quote.low,asset.currency));
       }
       updateMetric("成交量",`${formatVolume(quote.volume)} 張`);
-      $("#assetMeta").textContent=`${asset.exchange||asset.market} · ${asset.official_industry||asset.sub_industry||"待分類"} · ${asset.currency||""} · 每分鐘更新 ${quote.quote_time||""}`;
+      $("#assetMeta").textContent=`${asset.exchange||asset.market} · ${asset.official_industry||asset.sub_industry||"待分類"} · ${asset.currency||""} · 5 秒快照 ${quote.quote_time||""}`;
     }catch(error){
-      console.warn("Asset one-minute refresh failed:",error);
+      console.warn("Asset fast refresh failed:",error);
     }finally{
       liveQuoteBusy=false;
     }
   }
 
   $$("[data-tab]").forEach(btn=>btn.addEventListener("click",()=>{$$("[data-tab]").forEach(b=>b.classList.toggle("active",b===btn));$$("[data-panel]").forEach(panel=>panel.hidden=panel.dataset.panel!==btn.dataset.tab)}));
-  setTimeout(refreshCurrentQuote,2500);
-  setInterval(refreshCurrentQuote,60_000);
+  if(asset.market==="TW"){
+    scheduleAdaptiveRefresh(refreshCurrentQuote,taiwanQuoteRefreshDelay,2500);
+  }
+  if(isCrypto){
+    startCryptoTickerStream({
+      symbols:[asset.symbol],
+      onUpdate:rows=>{
+        const row=rows[0];
+        if(!row)return;
+        quote={
+          price:row.current_price,
+          change_percent:row.price_change_percentage_24h,
+          open:row.current_price/(1+(Number(row.price_change_percentage_24h)||0)/100),
+          high:row.high_24h,
+          low:row.low_24h,
+          volume:row.total_volume,
+          quote_time:new Date(row.updated_at||Date.now()).toLocaleTimeString("zh-TW",{hour12:false})
+        };
+        updateMetric("最新價格",formatPrice(quote.price,"USD"));
+        updateMetric("漲跌幅",formatPercent(quote.change_percent),direction(quote.change_percent));
+        updateMetric("開盤",formatPrice(quote.open,"USD"));
+        updateMetric("最高",formatPrice(quote.high,"USD"));
+        updateMetric("最低",formatPrice(quote.low,"USD"));
+        updateMetric("成交量",finite(quote.volume)!==null?`$${Number(quote.volume).toLocaleString("en-US",{maximumFractionDigits:0})}`:"—");
+        $("#assetMeta").textContent=`CRYPTO · USD · 每秒行情 ${quote.quote_time}`;
+      }
+    });
+  }
   document.addEventListener("visibilitychange",()=>{if(!document.hidden)refreshCurrentQuote()});
 })();

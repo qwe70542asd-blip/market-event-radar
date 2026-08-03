@@ -1,20 +1,30 @@
-市場事件雷達 v11.1.5 驗證
+市場事件雷達 v11.2.1 驗證
 
 - JSON：通過
 - Python：通過
 - JavaScript：通過
+- Shell：通過
+- Workflow YAML：通過
 - HTML references：通過
-- GitHub Actions YAML：通過
 - Unit tests：通過
+- Taiwan 5-second visible refresh：通過
+- Crypto one-second WebSocket：通過
+- Crypto 30-second fallback：通過
+- News five-minute schedule：通過
+- Independent data channels：通過
 - Version consistency：通過
-- Parser dependency fix：通過
 
-本版修正的錯誤：
-Missing optional dependency 'html5lib'
+更新頻率：
+- 台股／ETF 畫面：盤中每 5 秒，休市每 60 秒。
+- 台股完整市場分支：每 5 分鐘。
+- 虛擬貨幣：Binance miniTicker WebSocket 約每 1 秒。
+- 虛擬貨幣斷線備援：CoinGecko 每 30 秒。
+- 新聞 Workflow：每 5 分鐘。
+- 首頁與新聞頁：每 5 分鐘檢查 live-news。
 
-修正驗證：
-- requirements.txt 已包含 html5lib。
-- MOPS HTML 先以 lxml 解析。
-- lxml 失敗時改用 html5lib。
-- Workflow 執行前檢查 pandas、lxml、html5lib。
-- 1595 EPS 回歸驗證仍保留。
+全市場保護：
+- 不會讓每位訪客每 5 秒抓取全部數千檔股票。
+- 台股排行只快速更新目前前 20 漲、前 20 跌與持股。
+- 完整市場排序由五分鐘資料分支校正。
+
+單元測試：21 項通過。

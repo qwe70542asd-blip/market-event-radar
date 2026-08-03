@@ -1,4 +1,4 @@
-name: Update v11.1.5 daily data
+name: Update v11.2.1 assets and financials
 
 on:
   push:
@@ -6,17 +6,16 @@ on:
     paths:
       - ".github/workflows/update-daily.yml"
       - "scripts/update_assets.py"
-      - "scripts/update_events.py"
-      - "scripts/update_market_snapshot.py"
-      - "data/manual-events.json"
+      - "scripts/publish_data_branch.sh"
+      - "scripts/restore_data_branch.sh"
       - "requirements.txt"
   schedule:
-    - cron: "10 22 * * *"
-    - cron: "30 10 * * 1-5"
+    - cron: "20 22 * * *"
+    - cron: "40 10 * * 1-5"
   workflow_dispatch:
     inputs:
       clean_rebuild:
-        description: "Ignore live-data fallback and rebuild from main-branch seed files"
+        description: "Ignore the previous live-assets payload and rebuild from main"
         required: false
         default: false
         type: boolean
@@ -25,25 +24,25 @@ permissions:
   contents: write
 
 concurrency:
-  group: market-radar-live-data-writer
+  group: market-radar-assets
   cancel-in-progress: false
 
 jobs:
-  daily:
+  assets:
     runs-on: ubuntu-latest
-    timeout-minutes: 50
+    timeout-minutes: 55
     env:
-      LIVE_BRANCH: live-data
+      DATA_BRANCH: live-assets
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
           cache: pip
       - run: pip install -r requirements.txt
-      - name: Verify HTML parser dependencies
+      - name: Verify financial parser dependencies
         run: |
           python - <<'PY'
           import pandas, lxml, html5lib
@@ -51,69 +50,30 @@ jobs:
           print("lxml", lxml.__version__)
           print("html5lib", html5lib.__version__)
           PY
-      - name: Restore last successful dynamic files
+      - name: Restore previous asset payload
         if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.clean_rebuild) }}
-        shell: bash
         run: |
-          set -euo pipefail
-          if git ls-remote --exit-code --heads origin "$LIVE_BRANCH" >/dev/null 2>&1; then
-            git fetch --depth=1 origin "$LIVE_BRANCH"
-            for pair in \
-              "assets.json:data/assets.json" "assets-seed.js:data/assets-seed.js" "asset-coverage.json:data/asset-coverage.json" \
-              "events.json:data/events.json" "events-seed.js:data/events-seed.js" \
-              "market-snapshot.json:data/market-snapshot.json" "market-snapshot-seed.js:data/market-snapshot-seed.js"; do
-              src="${pair%%:*}"; dst="${pair#*:}"
-              if git cat-file -e "FETCH_HEAD:$src" 2>/dev/null; then git show "FETCH_HEAD:$src" > "$dst"; fi
-            done
-          fi
+          bash scripts/restore_data_branch.sh "$DATA_BRANCH" \
+            "assets.json:data/assets.json" \
+            "assets-seed.js:data/assets-seed.js" \
+            "asset-coverage.json:data/asset-coverage.json"
       - run: python scripts/update_assets.py
-      - run: python scripts/update_events.py
-      - run: python scripts/update_market_snapshot.py
-      - name: Validate JSON
+      - name: Validate assets and coverage
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
-          for name in ("assets.json","asset-coverage.json","events.json","market-snapshot.json"):
-            p=json.loads((Path("data")/name).read_text(encoding="utf-8"))
-            print("OK",name)
           assets=json.loads(Path("data/assets.json").read_text(encoding="utf-8"))
           coverage=json.loads(Path("data/asset-coverage.json").read_text(encoding="utf-8"))
           stocks=[row for row in assets.get("assets",[]) if row.get("market")=="TW" and row.get("asset_class")=="stock"]
-          assert len(stocks)>=1000, len(stocks)
-          assert coverage["summary"]["total_stocks"]==len(stocks), coverage["summary"]
-          target=next((row for row in stocks if row.get("symbol")=="1595"),None)
-          print("Coverage",coverage["summary"])
-          print("Coverage percent",coverage["summary"].get("coverage_percent"))
-          print("1595 status", {
-              "present": bool(target),
-              "eps": target.get("metrics",{}).get("eps") if target else None,
-              "analysis_status": target.get("analysis_status") if target else None,
-          })
-          print("Quality checks",coverage.get("quality_checks",{}))
+          assert len(stocks)>=1000, f"stock master too small: {len(stocks)}"
+          assert coverage.get("summary",{}).get("total_stocks")==len(stocks), coverage.get("summary")
+          print("stocks",len(stocks))
+          print("coverage",coverage.get("summary"))
           PY
-      - name: Publish daily files to live-data
-        shell: bash
+      - name: Publish isolated asset channel
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          set -euo pipefail
-          rm -rf /tmp/market-live && mkdir -p /tmp/market-live
-          cd /tmp/market-live
-          git init
-          git config user.name "market-event-radar-bot"
-          git config user.email "actions@users.noreply.github.com"
-          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          if git ls-remote --exit-code --heads origin "$LIVE_BRANCH" >/dev/null 2>&1; then
-            git fetch --depth=1 origin "$LIVE_BRANCH"
-            git checkout -B "$LIVE_BRANCH" FETCH_HEAD
-          else
-            git checkout --orphan "$LIVE_BRANCH"
-          fi
-          for name in assets.json assets-seed.js asset-coverage.json events.json events-seed.js market-snapshot.json market-snapshot-seed.js; do
-            cp "$GITHUB_WORKSPACE/data/$name" "$name"
-          done
-          git add .
-          if git diff --cached --quiet; then exit 0; fi
-          git commit -m "chore: refresh daily data v11.1.5"
-          git push origin "HEAD:$LIVE_BRANCH"
+          bash scripts/publish_data_branch.sh "$DATA_BRANCH" "assets-financials" \
+            data/assets.json data/assets-seed.js data/asset-coverage.json

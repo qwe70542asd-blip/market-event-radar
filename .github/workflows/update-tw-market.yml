@@ -1,4 +1,4 @@
-name: Update v11.1.5 Taiwan market
+name: Update v11.2.1 Taiwan quotes
 
 on:
   push:
@@ -6,92 +6,53 @@ on:
     paths:
       - ".github/workflows/update-tw-market.yml"
       - "scripts/update_tw_market.py"
-      - "scripts/update_tw_chips.py"
+      - "scripts/publish_data_branch.sh"
+      - "scripts/restore_data_branch.sh"
       - "requirements.txt"
   schedule:
-    - cron: "*/5 0-6 * * 1-5"
+    - cron: "1,6,11,16,21,26,31,36,41,46,51,56 0-6 * * 1-5"
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: market-radar-live-data-writer
-  cancel-in-progress: false
+  group: market-radar-tw-quotes
+  cancel-in-progress: true
 
 jobs:
-  taiwan-market:
+  taiwan-quotes:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 20
     env:
-      LIVE_BRANCH: live-data
+      DATA_BRANCH: live-tw-market
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
           cache: pip
       - run: pip install -r requirements.txt
-      - name: Restore expanded master and last chip payload
-        shell: bash
+      - name: Restore latest expanded security master
         run: |
-          set -euo pipefail
-          if git ls-remote --exit-code --heads origin "$LIVE_BRANCH" >/dev/null 2>&1; then
-            git fetch --depth=1 origin "$LIVE_BRANCH"
-            for pair in "assets.json:data/assets.json" "tw-chips.json:data/tw-chips.json" "tw-chips-seed.js:data/tw-chips-seed.js"; do
-              src="${pair%%:*}"; dst="${pair#*:}"
-              if git cat-file -e "FETCH_HEAD:$src" 2>/dev/null; then
-                git show "FETCH_HEAD:$src" > "$dst"
-              fi
-            done
-          fi
+          bash scripts/restore_data_branch.sh "live-assets" \
+            "assets.json:data/assets.json"
       - run: python scripts/update_tw_market.py
-      - run: python scripts/update_tw_chips.py
-        continue-on-error: true
-      - name: Validate
+      - name: Validate Taiwan quotes
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
-          p=json.loads(Path("data/tw-market.json").read_text(encoding="utf-8"))
-          usable=[x for x in p.get("items",[]) if x.get("price") is not None and x.get("previous_close") is not None]
-          assert len(usable)>=25, len(usable)
-          print("OK",len(usable),"Taiwan quotes")
+          payload=json.loads(Path("data/tw-market.json").read_text(encoding="utf-8"))
+          usable=[row for row in payload.get("items",[]) if row.get("price") is not None and row.get("previous_close") is not None]
+          assert len(usable)>=25, f"usable Taiwan quotes: {len(usable)}"
+          print("quotes",len(usable))
           PY
-      - name: Publish Taiwan files to live-data
-        shell: bash
+      - name: Publish isolated Taiwan quote channel
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          set -euo pipefail
-          rm -rf /tmp/market-live && mkdir -p /tmp/market-live
-          cd /tmp/market-live
-          git init
-          git config user.name "market-event-radar-bot"
-          git config user.email "actions@users.noreply.github.com"
-          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          if git ls-remote --exit-code --heads origin "$LIVE_BRANCH" >/dev/null 2>&1; then
-            git fetch --depth=1 origin "$LIVE_BRANCH"
-            git checkout -B "$LIVE_BRANCH" FETCH_HEAD
-          else
-            git checkout --orphan "$LIVE_BRANCH"
-          fi
-          cp "$GITHUB_WORKSPACE/data/tw-market.json" tw-market.json
-          cp "$GITHUB_WORKSPACE/data/tw-market-seed.js" tw-market-seed.js
-          git add tw-market.json tw-market-seed.js
-          if python - <<'PY'
-          import json,os
-          from pathlib import Path
-          p=json.loads((Path(os.environ["GITHUB_WORKSPACE"])/"data/tw-chips.json").read_text(encoding="utf-8"))
-          raise SystemExit(0 if p.get("metadata",{}).get("updated_at") else 1)
-          PY
-          then
-            cp "$GITHUB_WORKSPACE/data/tw-chips.json" tw-chips.json
-            cp "$GITHUB_WORKSPACE/data/tw-chips-seed.js" tw-chips-seed.js
-            git add tw-chips.json tw-chips-seed.js
-          fi
-          if git diff --cached --quiet; then exit 0; fi
-          git commit -m "chore: refresh Taiwan market v11.1.5"
-          git push origin "HEAD:$LIVE_BRANCH"
+          bash scripts/publish_data_branch.sh "$DATA_BRANCH" "taiwan-quotes" \
+            data/tw-market.json data/tw-market-seed.js

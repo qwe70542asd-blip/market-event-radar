@@ -2,7 +2,8 @@
   "use strict";
   const { $, escapeHtml, finite, loadData, fetchTaiwanLiveQuotes, mergeQuoteItems, mergeAssets, searchAssets, resolveAsset,
     loadPortfolio, migratePortfolio, savePortfolio, findTwQuote, formatPrice, formatPercent,
-    formatMoney, direction, safeNewsLink, newsScore, formatTime } = MR;
+    formatMoney, direction, safeNewsLink, newsScore, formatTime, startCryptoTickerStream,
+    scheduleAdaptiveRefresh, taiwanQuoteRefreshDelay } = MR;
 
   const [assetPayload,initialTwPayload,marketPayload,newsPayload] = await Promise.all([
     loadData("assets.json", window.__ASSET_SEED__ || {assets:[]}),
@@ -15,9 +16,11 @@
   const assets = mergeAssets(assetPayload.assets || [], (window.__ASSET_SEED__ || {}).assets || []);
   let entries = migratePortfolio(loadPortfolio(), assets);
   let selectedId = "";
+  const cryptoQuotes=new Map();
 
   function quoteFor(entry) {
     if (entry.market === "TW") return findTwQuote(entry,twPayload);
+    if (entry.asset_class === "crypto") return cryptoQuotes.get(String(entry.symbol||"").toUpperCase()) || null;
     return (marketPayload.items || []).find(item => String(item.symbol || "").toUpperCase() === String(entry.symbol || "").toUpperCase()) || null;
   }
   function stats() {
@@ -100,18 +103,38 @@
     try{
       const rows=await fetchTaiwanLiveQuotes(entries.filter(entry=>entry.market==="TW"));
       if(rows.length){
-        twPayload={...twPayload,metadata:{...(twPayload.metadata||{}),updated_at:new Date().toISOString(),source:"TWSE MIS 每分鐘刷新"},items:mergeQuoteItems(twPayload.items||[],rows)};
+        twPayload={...twPayload,metadata:{...(twPayload.metadata||{}),updated_at:new Date().toISOString(),source:"TWSE MIS 5 秒快照"},items:mergeQuoteItems(twPayload.items||[],rows)};
         renderHoldings();
       }else{
         const latest=await loadData("tw-market.json",twPayload);
         if(latest?.items?.length){twPayload=latest;renderHoldings()}
       }
-    }catch(error){console.warn("Portfolio one-minute refresh failed:",error)}
+    }catch(error){console.warn("Portfolio fast refresh failed:",error)}
     finally{quoteRefreshBusy=false}
   }
 
   renderAll();
-  setTimeout(refreshPortfolioQuotes,2500);
-  setInterval(refreshPortfolioQuotes,60_000);
+  scheduleAdaptiveRefresh(refreshPortfolioQuotes,taiwanQuoteRefreshDelay,2500);
+
+  const cryptoSymbols=[...new Set(entries.filter(entry=>entry.asset_class==="crypto").map(entry=>String(entry.symbol||"").toUpperCase()).filter(Boolean))];
+  if(cryptoSymbols.length){
+    startCryptoTickerStream({
+      symbols:cryptoSymbols,
+      onUpdate:rows=>{
+        rows.forEach(row=>cryptoQuotes.set(row.symbol,{
+          symbol:row.symbol,
+          price:row.current_price,
+          change_percent:row.price_change_percentage_24h,
+          high:row.high_24h,
+          low:row.low_24h,
+          volume:row.total_volume,
+          updated_at:row.updated_at,
+          source:row.source
+        }));
+        renderHoldings();
+      }
+    });
+  }
+
   document.addEventListener("visibilitychange",()=>{if(!document.hidden)refreshPortfolioQuotes()});
 })();

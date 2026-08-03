@@ -62,7 +62,7 @@ footer{display:flex;justify-content:space-between;gap:12px;margin-top:16px;paddi
 }
 
 
-/* v11.1.5 compact layout and clean background */
+/* v11.2.1 compact layout and clean background */
 .noise { display:none !important; }
 body {
   background:
@@ -185,7 +185,7 @@ th,td { padding:9px 7px; }
 }
 
 
-/* v11.1.5 homepage hierarchy, index rail and natural-height side panels */
+/* v11.2.1 homepage hierarchy, index rail and natural-height side panels */
 .feature-strip {
   margin:0 0 9px;
   gap:8px;
@@ -415,4 +415,80 @@ th,td { padding:9px 7px; }
   }
   .index-price { justify-content:flex-start; }
   .index-price>strong { font-size:25px; }
+}
+
+
+/* v11.2.1 independent data-channel status */
+.channel-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  margin:10px 0;
+}
+.channel-card{
+  padding:16px;
+  min-height:190px;
+}
+.channel-head{
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+.channel-head small{
+  color:var(--muted);
+  font-size:10px;
+}
+.channel-head h2{
+  margin:3px 0 0;
+  font-size:19px;
+}
+.channel-state{
+  width:12px;
+  height:12px;
+  flex:0 0 auto;
+  border-radius:50%;
+  background:var(--amber);
+  box-shadow:0 0 14px rgba(255,200,95,.35);
+}
+.channel-state.source-ok{
+  background:var(--green);
+  box-shadow:0 0 14px rgba(87,231,186,.4);
+}
+.channel-state.down{
+  background:var(--red);
+}
+.channel-kpis{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+  margin:15px 0 12px;
+}
+.channel-kpis>span{
+  padding:10px;
+  border:1px solid var(--line);
+  border-radius:11px;
+  background:rgba(255,255,255,.018);
+}
+.channel-kpis small,
+.channel-kpis strong{
+  display:block;
+}
+.channel-kpis small{
+  color:var(--muted);
+  font-size:9px;
+}
+.channel-kpis strong{
+  margin-top:4px;
+  font-size:15px;
+}
+.channel-card p{
+  margin:5px 0 0;
+  color:var(--muted);
+  font-size:10px;
+}
+@media(max-width:1000px){
+  .channel-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:620px){
+  .channel-grid{grid-template-columns:1fr}
 }

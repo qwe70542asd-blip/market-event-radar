@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#061120">
+  <title>資料通道狀態｜市場事件雷達</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/favicon.svg">
+  <link rel="stylesheet" href="assets/styles.css?v=11.2.1">
+</head>
+<body>
+<div class="noise" aria-hidden="true"></div>
+<header class="topbar">
+  <a class="brand" href="index.html">
+    <span class="brand-mark"><svg viewBox="0 0 48 48"><path d="M7 34 16 24l7 6 10-16 8 6"></path><path d="M7 40h34"></path></svg></span>
+    <span><strong>市場事件雷達 <em class="version">v11.2.1</em></strong><small>INDEPENDENT DATA CHANNELS</small></span>
+  </a>
+  <nav class="topnav">
+    <span class="live-pill"><i></i> 分區獨立</span>
+    <a href="news.html">財經新聞</a>
+    <a href="tw-market.html">台股排行</a>
+    <a href="institutional.html">法人籌碼</a>
+    <a href="coverage.html">資料覆蓋</a>
+    <a href="data-status.html">資料狀態</a>
+    <a class="keep-mobile" href="portfolio.html">我的組合</a>
+  </nav>
+</header>
+<main class="shell">
+  <section class="panel page-hero">
+    <div>
+      <p class="eyebrow">DATA CHANNEL CONTROL</p>
+      <h1>六個獨立分支＋秒級行情</h1>
+      <p>六個資料區塊使用獨立 GitHub 分支；虛擬貨幣使用獨立 WebSocket。任何一區失敗，不會卡住其他區塊。</p>
+    </div>
+    <span class="status-pill" id="statusUpdated">檢查中</span>
+  </section>
+  <section class="channel-grid" id="channelGrid"></section>
+  <section class="panel table-card">
+    <div class="section-head">
+      <div><p class="eyebrow">ISOLATION MAP</p><h2>分支與檔案配置</h2></div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>區塊</th><th>獨立分支</th><th>排程</th><th>檔案</th><th>目前讀取來源</th></tr></thead>
+        <tbody id="channelRows"></tbody>
+      </table>
+    </div>
+  </section>
+  <footer><span>舊 live-data 僅作遷移備援；六個新分支建立後不再寫入。</span><span>Asia/Taipei · v11.2.1</span></footer>
+</main>
+<script src="assets/shared.js?v=11.2.1"></script>
+<script src="assets/data-status.js?v=11.2.1"></script>
+<script src="assets/sw-register.js?v=11.2.1"></script>
+</body>
+</html>

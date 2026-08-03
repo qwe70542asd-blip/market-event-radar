@@ -2,21 +2,26 @@
   "use strict";
   const { $, $$, escapeHtml, finite, loadData, fetchTaiwanLiveQuotes, fetchTaiwanIndicesLive, fetchYahooChart,
     mergeQuoteItems, mergeAssets, loadPortfolio, migratePortfolio, findTwQuote, formatPrice,
-    formatPercent, direction, formatTime, safeNewsLink, diversifyNews } = MR;
+    formatPercent, direction, formatTime, safeNewsLink, diversifyNews, startCryptoTickerStream,
+    scheduleAdaptiveRefresh, taiwanQuoteRefreshDelay } = MR;
   const DAY = ["日","一","二","三","四","五","六"];
   const state = {events:[], filtered:[], month:new Date(new Date().getFullYear(),new Date().getMonth(),1), focus:"all"};
 
-  const [assetPayload,eventPayload,newsPayload,initialTwPayload,initialMarketPayload] = await Promise.all([
+  const [assetPayload,eventPayload,initialNewsPayload,initialTwPayload,initialMarketPayload] = await Promise.all([
     loadData("assets.json", window.__ASSET_SEED__ || {assets:[]}),
     loadData("events.json", window.__EVENT_SEED__ || {events:[]}),
     loadData("news.json", window.__NEWS_SEED__ || {items:[]}),
     loadData("tw-market.json", window.__TW_MARKET_SEED__ || {items:[]}),
     loadData("market-snapshot.json", window.__MARKET_SNAPSHOT_SEED__ || {items:[]})
   ]);
+  let newsPayload = initialNewsPayload;
   let twPayload = initialTwPayload;
   let marketPayload = initialMarketPayload;
+  let newsRefreshBusy = false;
   let liveRefreshBusy = false;
   let lastDirectRefresh = 0;
+  let cryptoRows = [];
+  let cryptoRenderTimer = null;
 
   const assets = mergeAssets(assetPayload.assets || [], (window.__ASSET_SEED__ || {}).assets || []);
   const entries = migratePortfolio(loadPortfolio(), assets);
@@ -193,24 +198,35 @@
     $("#marketList").innerHTML = items.length ? items.map(item => `<div class="market-row"><span><strong>${escapeHtml(item.name || item.symbol)}</strong><small>${escapeHtml(item.symbol || item.market || "")}</small></span><b>${formatPrice(item.price,item.currency || "")}</b><em class="${direction(item.change_percent)}">${formatPercent(item.change_percent)}</em></div>`).join("") : '<div class="empty">等待市場行情排程。</div>';
   }
 
-  async function renderCrypto() {
-    const fallback = [
-      {symbol:"BTC",name:"Bitcoin",current_price:63547,price_change_percentage_24h:1.23,total_volume:15890000000},
-      {symbol:"ETH",name:"Ethereum",current_price:1883,price_change_percentage_24h:2.11,total_volume:5100000000},
-      {symbol:"SOL",name:"Solana",current_price:73.58,price_change_percentage_24h:2.35,total_volume:1050000000},
-      {symbol:"XRP",name:"XRP",current_price:1.085,price_change_percentage_24h:2.3,total_volume:770000000},
-      {symbol:"ADA",name:"Cardano",current_price:.1888,price_change_percentage_24h:8.51,total_volume:640000000}
-    ];
-    let rows = fallback;
-    try {
-      const response = await fetch("https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=8&page=1&sparkline=false&price_change_percentage=24h",{cache:"no-store"});
-      if (response.ok) rows = (await response.json()).filter(row => !["usdt","usdc"].includes(String(row.symbol).toLowerCase())).slice(0,5);
-      $("#cryptoStatus").textContent = "近即時";
-    } catch { $("#cryptoStatus").textContent = "備援資料"; }
-    $("#cryptoList").innerHTML = rows.map(row => `<div class="crypto-row"><span><strong>${escapeHtml(row.name)}</strong><small>${String(row.symbol).toUpperCase()} · 24H量 ${(Number(row.total_volume || 0)/1e8).toFixed(1)}億</small></span><b>$${Number(row.current_price).toLocaleString("en-US",{maximumFractionDigits:row.current_price<10?4:2})}</b><em class="${direction(row.price_change_percentage_24h)}">${formatPercent(row.price_change_percentage_24h)}</em></div>`).join("");
-    $("#cryptoTime").textContent = new Date().toLocaleTimeString("zh-TW",{hour:"2-digit",minute:"2-digit",hour12:false});
+  function renderCrypto() {
+    const rows=cryptoRows.slice(0,5);
+    if(!rows.length){
+      $("#cryptoList").innerHTML='<div class="empty">正在連接秒級虛擬貨幣行情。</div>';
+      $("#cryptoTime").textContent="連線中";
+      return;
+    }
+    $("#cryptoList").innerHTML = rows.map(row => {
+      const price=finite(row.current_price);
+      const volume=finite(row.total_volume);
+      return `<div class="crypto-row"><span><strong>${escapeHtml(row.name||row.symbol)}</strong><small>${String(row.symbol).toUpperCase()} · 24H量 ${volume===null?"—":`${(volume/1e8).toFixed(1)}億`}</small></span><b>${price===null?"—":`$${price.toLocaleString("en-US",{maximumFractionDigits:price<10?4:2})}`}</b><em class="${direction(row.price_change_percentage_24h)}">${formatPercent(row.price_change_percentage_24h)}</em></div>`;
+    }).join("");
+    const updateTimes=rows.map(row=>Number(row.updated_at||0)).filter(Number.isFinite);
+    const latest=updateTimes.length?Math.max(...updateTimes):Date.now();
+    $("#cryptoTime").textContent = new Date(latest).toLocaleTimeString("zh-TW",{hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false});
+    const marketCap=rows.reduce((sum,row)=>sum+(finite(row.market_cap)||0),0);
+    $("#cryptoCap").textContent=marketCap?`前五幣市值 $${(marketCap/1e12).toFixed(2)}T`:"WebSocket 秒級行情";
     syncCalendarToSideRail();
   }
+
+  function queueCryptoRender(rows){
+    cryptoRows=rows;
+    if(cryptoRenderTimer)return;
+    cryptoRenderTimer=setTimeout(()=>{
+      cryptoRenderTimer=null;
+      renderCrypto();
+    },250);
+  }
+
 
   function renderNews() {
     const items = diversifyNews(newsPayload.items || [], 6);
@@ -223,6 +239,24 @@
       const related = Number(item.duplicate_count || item.related_count || 0);
       return `<a class="news-card" href="${escapeHtml(safeNewsLink(item))}" target="_blank" rel="noreferrer noopener"><div class="news-source"><span>${escapeHtml(item.source || "財經新聞")}</span><time>${formatTime(item.published_at)}</time></div><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.summary || "點擊前往原始來源閱讀全文。")}</p><div class="tag-row"><span class="tag">${escapeHtml(item.region || "GLOBAL")}</span><span class="tag">${escapeHtml(item.topic || "market")}</span>${related ? `<span class="tag">另有 ${related} 篇相關</span>` : ""}<span class="tag">原始文章</span></div></a>`;
     }).join("") : '<div class="empty" style="grid-column:1/-1">第一次新聞排程完成後，這裡會顯示 Yahoo、鉅亨、MoneyDJ 與券商來源。</div>';
+  }
+
+  async function refreshNewsData() {
+    if (newsRefreshBusy || document.hidden) return;
+    newsRefreshBusy = true;
+    try {
+      const latest = await loadData("news.json", newsPayload);
+      const oldTime = Date.parse(newsPayload?.metadata?.updated_at || 0);
+      const newTime = Date.parse(latest?.metadata?.updated_at || 0);
+      if (latest?.items?.length && (newTime > oldTime || latest.items.length !== (newsPayload.items || []).length)) {
+        newsPayload = latest;
+        renderNews();
+      }
+    } catch (error) {
+      console.warn("News refresh failed:", error);
+    } finally {
+      newsRefreshBusy = false;
+    }
   }
 
   async function refreshLiveMarket() {
@@ -252,7 +286,7 @@
           metadata: {
             ...(twPayload.metadata || {}),
             updated_at: new Date().toISOString(),
-            source: "TWSE MIS 瀏覽器每分鐘刷新",
+            source: "TWSE MIS 瀏覽器 5 秒快照",
             refresh_interval_seconds: 60
           },
           items: mergeQuoteItems(twPayload.items || [], liveTw)
@@ -269,8 +303,8 @@
           metadata: {
             ...(marketPayload.metadata || {}),
             updated_at: new Date().toISOString(),
-            source: indexUpdates.some(row => row.source === "TWSE MIS") ? "TWSE MIS 每分鐘刷新" : "Yahoo chart 1m 瀏覽器刷新",
-            refresh_interval_seconds: 60
+            source: indexUpdates.some(row => row.source === "TWSE MIS") ? "TWSE MIS 5 秒快照" : "Yahoo chart 1m 備援",
+            refresh_interval_seconds: 5
           },
           items: mergeQuoteItems(marketPayload.items || [], indexUpdates)
         };
@@ -284,7 +318,7 @@
       renderTaiwanIndices();
       renderMarket();
       $("#portfolioStatus").title = lastDirectRefresh
-        ? `最近每分鐘刷新：${new Date(lastDirectRefresh).toLocaleTimeString("zh-TW",{hour12:false})}`
+        ? `最近 5 秒刷新：${new Date(lastDirectRefresh).toLocaleTimeString("zh-TW",{hour12:false})}`
         : "直接行情連線失敗時使用 GitHub 排程備援";
     } catch (error) {
       console.warn("One-minute market refresh failed:", error);
@@ -324,9 +358,26 @@
   $("#eventUpdated").textContent = formatTime(eventPayload?.metadata?.updated_at);
   state.filtered = [...state.events];
   renderPortfolio(); renderCalendar(); renderTaiwanIndices(); renderMarket(); renderCrypto(); renderNews(); syncCalendarToSideRail();
-  setTimeout(refreshLiveMarket, 2500);
-  setInterval(refreshLiveMarket, 60_000);
+
+  scheduleAdaptiveRefresh(refreshLiveMarket,taiwanQuoteRefreshDelay,2500);
+  setInterval(refreshNewsData,5*60_000);
+
+  startCryptoTickerStream({
+    symbols:["BTC","ETH","BNB","SOL","XRP"],
+    onUpdate:queueCryptoRender,
+    onStatus:status=>{
+      $("#cryptoStatus").textContent={
+        live:"每秒即時",
+        connecting:"連線中",
+        reconnecting:"重新連線",
+        fallback:"30 秒備援",
+        offline:"暫時離線"
+      }[status]||status;
+    }
+  });
+
   document.addEventListener("visibilitychange", () => {
-    if (!document.hidden && Date.now() - lastDirectRefresh > 55_000) refreshLiveMarket();
+    if (!document.hidden && Date.now() - lastDirectRefresh > 4_500) refreshLiveMarket();
+    if (!document.hidden) refreshNewsData();
   });
 })();

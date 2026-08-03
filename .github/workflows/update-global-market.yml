@@ -1,0 +1,53 @@
+name: Update v11.2.1 global market
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/update-global-market.yml"
+      - "scripts/update_market_snapshot.py"
+      - "scripts/publish_data_branch.sh"
+      - "requirements.txt"
+  schedule:
+    - cron: "4,14,24,34,44,54 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: market-radar-global-market
+  cancel-in-progress: true
+
+jobs:
+  global-market:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      DATA_BRANCH: live-global-market
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python scripts/update_market_snapshot.py
+      - name: Validate global snapshot
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          payload=json.loads(Path("data/market-snapshot.json").read_text(encoding="utf-8"))
+          usable=[row for row in payload.get("items",[]) if row.get("price") is not None]
+          assert len(usable)>=5, f"usable global quotes: {len(usable)}"
+          print("global quotes",len(usable))
+          PY
+      - name: Publish isolated global market channel
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          bash scripts/publish_data_branch.sh "$DATA_BRANCH" "global-market" \
+            data/market-snapshot.json data/market-snapshot-seed.js

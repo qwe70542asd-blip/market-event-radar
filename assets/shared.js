@@ -1,11 +1,40 @@
 (() => {
   "use strict";
 
-  const VERSION = "11.1.5";
+  const VERSION = "11.2.1";
   const OWNER = "qwe70542asd-blip";
   const REPO = "market-event-radar";
-  const LIVE_BASE = `https://raw.githubusercontent.com/${OWNER}/${REPO}/live-data/`;
+  const LEGACY_LIVE_BASE = `https://raw.githubusercontent.com/${OWNER}/${REPO}/live-data/`;
   const MAIN_BASE = `https://raw.githubusercontent.com/${OWNER}/${REPO}/main/`;
+  const DATA_CHANNELS = Object.freeze({
+    assets: {
+      branch:"live-assets", label:"股票主檔／財務／ETF",
+      files:["assets.json","asset-coverage.json"]
+    },
+    events: {
+      branch:"live-events", label:"市場事件月曆",
+      files:["events.json"]
+    },
+    twMarket: {
+      branch:"live-tw-market", label:"台股與 ETF 行情",
+      files:["tw-market.json"]
+    },
+    twChips: {
+      branch:"live-tw-chips", label:"法人／當沖／融資券",
+      files:["tw-chips.json"]
+    },
+    globalMarket: {
+      branch:"live-global-market", label:"全球市場行情",
+      files:["market-snapshot.json"]
+    },
+    news: {
+      branch:"live-news", label:"多來源財經新聞",
+      files:["news.json","news-link-cache.json"]
+    }
+  });
+  const DATA_BRANCH_BY_FILE = Object.fromEntries(
+    Object.values(DATA_CHANNELS).flatMap(channel => channel.files.map(file => [file, channel.branch]))
+  );
   const PORTFOLIO_KEY = "market-radar-portfolio-v11-1";
   const LEGACY_PORTFOLIO_KEYS = ["market-radar-portfolio-v10-3", "market-radar-portfolio-v10"];
   const QUOTE_CACHE_KEY = "market-radar-quote-cache-v11-1";
@@ -108,6 +137,175 @@
   }[ch]));
   const finite = value => value === null || value === undefined || value === "" ? null :
     Number.isFinite(Number(value)) ? Number(value) : null;
+
+  function taipeiClockParts(date=new Date()) {
+    const parts = new Intl.DateTimeFormat("en-CA", {
+      timeZone:"Asia/Taipei",
+      weekday:"short",
+      hour:"2-digit",
+      minute:"2-digit",
+      second:"2-digit",
+      hourCycle:"h23"
+    }).formatToParts(date);
+    return Object.fromEntries(parts.map(part => [part.type, part.value]));
+  }
+
+  function isTaiwanQuoteWindow(date=new Date()) {
+    const parts=taipeiClockParts(date);
+    if (["Sat","Sun"].includes(parts.weekday)) return false;
+    const minutes=Number(parts.hour)*60+Number(parts.minute);
+    return minutes>=8*60+30 && minutes<=13*60+35;
+  }
+
+  function taiwanQuoteRefreshDelay(date=new Date()) {
+    return isTaiwanQuoteWindow(date) ? 5_000 : 60_000;
+  }
+
+  function scheduleAdaptiveRefresh(task, delayProvider, initialDelay=0) {
+    let stopped=false;
+    let timer=null;
+    const run=async()=>{
+      if(stopped)return;
+      try{await task()}catch(error){console.warn("Adaptive refresh failed:",error)}
+      if(stopped)return;
+      const delay=Math.max(1_000,Number(typeof delayProvider==="function"?delayProvider():delayProvider)||60_000);
+      timer=setTimeout(run,delay);
+    };
+    timer=setTimeout(run,Math.max(0,initialDelay));
+    return ()=>{stopped=true;if(timer)clearTimeout(timer)};
+  }
+
+  function startCryptoTickerStream({
+    symbols=["BTC","ETH","BNB","XRP","SOL","ADA"],
+    onUpdate=()=>{},
+    onStatus=()=>{}
+  }={}) {
+    const names={BTC:"Bitcoin",ETH:"Ethereum",BNB:"BNB",XRP:"XRP",SOL:"Solana",ADA:"Cardano"};
+    const normalized=[...new Set(symbols.map(symbol=>String(symbol||"").toUpperCase()
+      .replace(/[-_]?USDT$/,"").replace(/[-_]?USD$/,"")).filter(Boolean))];
+    const streams=normalized.map(symbol=>`${symbol.toLowerCase()}usdt@miniTicker`).join("/");
+    let socket=null;
+    let stopped=false;
+    let reconnectAttempt=0;
+    let reconnectTimer=null;
+    let fallbackTimer=null;
+    const rows=new Map();
+
+    const emit=()=>onUpdate([...rows.values()].sort((a,b)=>normalized.indexOf(a.symbol)-normalized.indexOf(b.symbol)));
+
+    const applyTicker=data=>{
+      const pair=String(data?.s||"").toUpperCase();
+      if(!pair.endsWith("USDT"))return;
+      const symbol=pair.slice(0,-4);
+      if(!normalized.includes(symbol))return;
+      const price=finite(data.c);
+      const open=finite(data.o);
+      const high=finite(data.h);
+      const low=finite(data.l);
+      const baseVolume=finite(data.v);
+      const quoteVolume=finite(data.q);
+      const pct=price!==null&&open?((price-open)/open*100):null;
+      const previous=rows.get(symbol)||{};
+      rows.set(symbol,{
+        ...previous,
+        symbol,
+        name:names[symbol]||symbol,
+        current_price:price,
+        price_change_percentage_24h:pct,
+        high_24h:high,
+        low_24h:low,
+        total_volume:quoteVolume,
+        base_volume:baseVolume,
+        updated_at:Number(data.E||Date.now()),
+        source:"Binance WebSocket"
+      });
+      emit();
+    };
+
+    const fallbackFetch=async()=>{
+      if(stopped)return;
+      try{
+        const ids={BTC:"bitcoin",ETH:"ethereum",BNB:"binancecoin",XRP:"ripple",SOL:"solana",ADA:"cardano"};
+        const query=normalized.map(symbol=>ids[symbol]).filter(Boolean).join(",");
+        const response=await fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${encodeURIComponent(query)}&sparkline=false&price_change_percentage=24h`,{cache:"no-store"});
+        if(!response.ok)throw new Error(`CoinGecko ${response.status}`);
+        for(const row of await response.json()){
+          const symbol=String(row.symbol||"").toUpperCase();
+          if(!normalized.includes(symbol))continue;
+          rows.set(symbol,{
+            symbol,
+            name:row.name||names[symbol]||symbol,
+            current_price:finite(row.current_price),
+            price_change_percentage_24h:finite(row.price_change_percentage_24h),
+            high_24h:finite(row.high_24h),
+            low_24h:finite(row.low_24h),
+            total_volume:finite(row.total_volume),
+            market_cap:finite(row.market_cap),
+            updated_at:Date.now(),
+            source:"CoinGecko fallback"
+          });
+        }
+        emit();
+        onStatus("fallback");
+      }catch(error){
+        console.warn("Crypto fallback failed:",error);
+        onStatus("offline");
+      }
+    };
+
+    const scheduleFallback=()=>{
+      clearInterval(fallbackTimer);
+      fallbackTimer=setInterval(()=>{
+        if(!socket||socket.readyState!==WebSocket.OPEN)fallbackFetch();
+      },30_000);
+    };
+
+    const connect=()=>{
+      if(stopped||!streams)return;
+      clearTimeout(reconnectTimer);
+      try{
+        socket=new WebSocket(`wss://data-stream.binance.vision/stream?streams=${streams}`);
+      }catch(error){
+        socket=null;
+        fallbackFetch();
+        reconnectTimer=setTimeout(connect,Math.min(30_000,2_000*2**reconnectAttempt++));
+        return;
+      }
+      onStatus("connecting");
+      socket.addEventListener("open",()=>{
+        reconnectAttempt=0;
+        onStatus("live");
+      });
+      socket.addEventListener("message",event=>{
+        try{
+          const message=JSON.parse(event.data);
+          applyTicker(message?.data||message);
+        }catch(error){
+          console.warn("Crypto stream payload error:",error);
+        }
+      });
+      socket.addEventListener("close",()=>{
+        if(stopped)return;
+        onStatus("reconnecting");
+        fallbackFetch();
+        reconnectTimer=setTimeout(connect,Math.min(30_000,2_000*2**reconnectAttempt++));
+      });
+      socket.addEventListener("error",()=>{
+        try{socket.close()}catch{}
+      });
+    };
+
+    fallbackFetch();
+    connect();
+    scheduleFallback();
+
+    return ()=>{
+      stopped=true;
+      clearTimeout(reconnectTimer);
+      clearInterval(fallbackTimer);
+      try{socket?.close()}catch{}
+    };
+  }
 
   function cacheBust(url) {
     return `${url}${url.includes("?") ? "&" : "?"}t=${Date.now()}`;
@@ -262,29 +460,78 @@
   }
 
   function scorePayload(payload) {
-    return ["assets","items","events","announcements","daily","financials"].reduce((sum,key) =>
+    const listScore = ["assets","items","events","announcements","daily","financials"].reduce((sum,key) =>
       sum + (Array.isArray(payload?.[key]) ? payload[key].length : 0), 0);
+    const summaryScore = Number(payload?.summary?.total_stocks || 0);
+    return listScore + summaryScore;
+  }
+
+  function payloadTime(payload) {
+    return Date.parse(payload?.metadata?.updated_at || payload?.updated_at || payload?.published_at || 0) || 0;
+  }
+
+  function isUsablePayload(payload) {
+    return Boolean(payload && typeof payload === "object" && (
+      scorePayload(payload) > 0 ||
+      payload?.metadata?.updated_at ||
+      payload?.summary?.total_stocks > 0
+    ));
+  }
+
+  function dataBranchFor(path) {
+    const clean = String(path || "").replace(/^\.?\//,"").replace(/^data\//,"");
+    return DATA_BRANCH_BY_FILE[clean] || null;
+  }
+
+  function dataChannelUrl(path) {
+    const clean = String(path || "").replace(/^\.?\//,"").replace(/^data\//,"");
+    const branch = dataBranchFor(clean);
+    return branch ? `https://raw.githubusercontent.com/${OWNER}/${REPO}/${branch}/${clean}` : null;
   }
 
   async function loadData(path, fallback={}) {
     const clean = String(path || "").replace(/^\.?\//,"").replace(/^data\//,"");
-    const local = path.startsWith("data/") ? path : `data/${clean}`;
+    const local = String(path || "").startsWith("data/") ? String(path) : `data/${clean}`;
+    const dedicatedUrl = dataChannelUrl(clean);
     const candidates = [
-      ["live", `${LIVE_BASE}${clean}`],
-      ["local", local],
-      ["main", `${MAIN_BASE}data/${clean}`]
+      ...(dedicatedUrl ? [["channel", dedicatedUrl, dataBranchFor(clean), 4]] : []),
+      ["legacy", `${LEGACY_LIVE_BASE}${clean}`, "live-data", 3],
+      ["local", local, "main-pages", 2],
+      ["main", `${MAIN_BASE}data/${clean}`, "main", 1]
     ];
-    const results = await Promise.allSettled(candidates.map(([,url]) => fetchJson(url)));
-    const available = results.flatMap((result,index) => result.status === "fulfilled"
-      ? [{...result.value, __source:candidates[index][0], __priority:3-index}]
-      : []);
-    if (!available.length) return {...fallback, __source:"fallback"};
-    available.sort((a,b) => scorePayload(b)-scorePayload(a) ||
-      Date.parse(b?.metadata?.updated_at || b?.updated_at || 0)-Date.parse(a?.metadata?.updated_at || a?.updated_at || 0) ||
-      b.__priority-a.__priority);
-    const selected = {...available[0]};
+
+    const results = await Promise.allSettled(
+      candidates.map(([,url]) => fetchJson(url))
+    );
+    const available = results.flatMap((result,index) => {
+      if (result.status !== "fulfilled" || !isUsablePayload(result.value)) return [];
+      const [source,,branch,priority] = candidates[index];
+      return [{...result.value, __source:source, __branch:branch, __priority:priority}];
+    });
+    if (!available.length) return {...fallback, __source:"fallback", __branch:null};
+
+    // A valid dedicated channel is authoritative. Other candidates are only
+    // migration/offline fallbacks and must never win merely because they contain
+    // more historical rows.
+    const dedicated = available.find(row => row.__source === "channel");
+    const selected = {...(dedicated || available.sort((a,b) =>
+      payloadTime(b)-payloadTime(a) ||
+      scorePayload(b)-scorePayload(a) ||
+      b.__priority-a.__priority
+    )[0])};
     delete selected.__priority;
     return selected;
+  }
+
+  async function loadChannelManifest(channel) {
+    const definition = typeof channel === "string" ? DATA_CHANNELS[channel] : channel;
+    if (!definition?.branch) return null;
+    const url = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${definition.branch}/channel.json`;
+    try {
+      return await fetchJson(url, 10000);
+    } catch {
+      return null;
+    }
   }
 
   function canonicalAsset(raw={}) {
@@ -568,8 +815,11 @@
 
   window.MR = {
     VERSION, OWNER, REPO, LIVE_BASE, MAIN_BASE, PORTFOLIO_KEY, OFFICIAL_OVERRIDES,
-    $, $$, normalize, escapeHtml, finite, fetchJson, fetchTaiwanLiveQuotes, fetchTaiwanIndicesLive, fetchYahooChart,
-    mergeQuoteItems, loadData, canonicalAsset, mergeAssets,
+    $, $$, normalize, escapeHtml, finite, taipeiClockParts, isTaiwanQuoteWindow,
+    taiwanQuoteRefreshDelay, scheduleAdaptiveRefresh, startCryptoTickerStream,
+    fetchJson, fetchTaiwanLiveQuotes, fetchTaiwanIndicesLive, fetchYahooChart,
+    mergeQuoteItems, loadData, loadChannelManifest, dataBranchFor, dataChannelUrl, DATA_CHANNELS,
+    canonicalAsset, mergeAssets,
     searchAssets, resolveAsset, loadPortfolio, migratePortfolio, savePortfolio,
     findTwQuote, loadQuoteCache, saveQuoteCache, formatPrice, formatPercent, formatMoney,
     formatVolume, direction, formatTime, safeNewsLink, diversifyNews, newsKeywords, newsScore

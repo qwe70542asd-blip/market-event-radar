@@ -1,0 +1,59 @@
+name: Update v11.2.1 Taiwan chips
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/update-tw-chips.yml"
+      - "scripts/update_tw_chips.py"
+      - "scripts/publish_data_branch.sh"
+      - "scripts/restore_data_branch.sh"
+      - "requirements.txt"
+  schedule:
+    - cron: "15 7,8,9,10 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: market-radar-tw-chips
+  cancel-in-progress: true
+
+jobs:
+  taiwan-chips:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      DATA_BRANCH: live-tw-chips
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Restore previous verified chip payload
+        run: |
+          bash scripts/restore_data_branch.sh "$DATA_BRANCH" \
+            "tw-chips.json:data/tw-chips.json" \
+            "tw-chips-seed.js:data/tw-chips-seed.js"
+      - run: python scripts/update_tw_chips.py
+      - name: Validate Taiwan chips
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          payload=json.loads(Path("data/tw-chips.json").read_text(encoding="utf-8"))
+          assert payload.get("metadata",{}).get("updated_at"), "chip payload has no verified update time"
+          assert payload.get("markets") or payload.get("items"), "empty chip payload"
+          print("updated",payload["metadata"]["updated_at"])
+          PY
+      - name: Publish isolated Taiwan chip channel
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          bash scripts/publish_data_branch.sh "$DATA_BRANCH" "taiwan-chips" \
+            data/tw-chips.json data/tw-chips-seed.js

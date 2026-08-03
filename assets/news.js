@@ -1,8 +1,8 @@
 (async () => {
   "use strict";
   const {$,escapeHtml,loadData,safeNewsLink,formatTime,diversifyNews}=MR;
-  const payload=await loadData("news.json",window.__NEWS_SEED__||{items:[],sources:[]});
-  const items=payload.items||[];
+  let payload=await loadData("news.json",window.__NEWS_SEED__||{items:[],sources:[]});
+  let items=payload.items||[];
   const sources=[...new Set(items.map(item=>item.source).filter(Boolean))].sort();
   $("#newsSource").innerHTML='<option value="all">全部來源</option>'+sources.map(s=>`<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join("");
   $("#newsCount").textContent=items.length.toLocaleString("zh-TW");$("#sourceCount").textContent=sources.length.toLocaleString("zh-TW");$("#newsUpdated").textContent=formatTime(payload?.metadata?.updated_at);
@@ -21,4 +21,18 @@
     }).join(""):'<div class="empty" style="grid-column:1/-1">目前沒有符合篩選的新聞。</div>';
   }
   ["newsSearch","newsRegion","newsTopic","newsSource"].forEach(id=>$("#"+id).addEventListener(id==="newsSearch"?"input":"change",render));render();
+  let refreshBusy=false;
+  async function refreshNews(){
+    if(refreshBusy||document.hidden)return;
+    refreshBusy=true;
+    try{
+      const latest=await loadData("news.json",payload);
+      if(Date.parse(latest?.metadata?.updated_at||0)>Date.parse(payload?.metadata?.updated_at||0)){
+        location.reload();
+      }
+    }catch(error){console.warn("News page refresh failed:",error)}
+    finally{refreshBusy=false}
+  }
+  setInterval(refreshNews,5*60_000);
+  document.addEventListener("visibilitychange",()=>{if(!document.hidden)refreshNews()});
 })();

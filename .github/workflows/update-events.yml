@@ -1,0 +1,72 @@
+name: Update v11.2.1 event calendar
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/update-events.yml"
+      - "scripts/update_events.py"
+      - "scripts/publish_data_branch.sh"
+      - "scripts/restore_data_branch.sh"
+      - "data/manual-events.json"
+      - "requirements.txt"
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+    inputs:
+      clean_rebuild:
+        description: "Ignore the previous live-events archive and rebuild from manual events"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: market-radar-events
+  cancel-in-progress: true
+
+jobs:
+  events:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      DATA_BRANCH: live-events
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Restore previous verified event archive
+        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.clean_rebuild) }}
+        run: |
+          bash scripts/restore_data_branch.sh "$DATA_BRANCH" \
+            "events.json:data/events.json" \
+            "events-seed.js:data/events-seed.js"
+      - name: Reset event archive for clean rebuild
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.clean_rebuild }}
+        run: |
+          cat > data/events.json <<'JSON'
+          {"metadata":{"version":"v11.2.1"},"events":[],"sources":[]}
+          JSON
+      - run: python scripts/update_events.py
+      - name: Validate events
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          payload=json.loads(Path("data/events.json").read_text(encoding="utf-8"))
+          assert payload.get("events"), "empty event calendar"
+          print("events",len(payload["events"]))
+          PY
+      - name: Publish isolated event channel
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          bash scripts/publish_data_branch.sh "$DATA_BRANCH" "event-calendar" \
+            data/events.json data/events-seed.js
