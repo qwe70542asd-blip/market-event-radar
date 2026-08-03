@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "version": "v11.1.0",
-    "updated_at": "2026-08-03T07:57:21+08:00",
+    "version": "v11.1.1",
+    "updated_at": "2026-08-03T08:18:06+08:00",
     "source": "Yahoo 公開行情",
     "note": "公開行情可能延遲；失敗時保留上次成功資料。"
   },
@@ -71,11 +71,11 @@
       "name": "日經 225",
       "market": "JP",
       "currency": "JPY",
-      "price": 64362.02,
-      "previous_close": 64931.19,
-      "change": -569.1700000000055,
-      "change_percent": -0.87657410868337,
-      "market_at": 1785480303,
+      "price": 63430.18,
+      "previous_close": 62364.92,
+      "change": 1065.260000000002,
+      "change_percent": 1.7081076990077146,
+      "market_at": 1785715385,
       "source": "Yahoo 公開行情"
     },
     {
@@ -84,9 +84,9 @@
       "market": "KR",
       "currency": "KRW",
       "price": 6595.45,
-      "previous_close": 6690.62,
-      "change": -95.17000000000007,
-      "change_percent": -1.4224391760404875,
+      "previous_close": 6755.75,
+      "change": -160.30000000000018,
+      "change_percent": -2.372793546238392,
       "market_at": 1785488730,
       "source": "Yahoo 公開行情"
     },
