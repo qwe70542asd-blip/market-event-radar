@@ -1,29 +1,33 @@
 {
   "project": "market-event-radar",
-  "baseline_version": "11.4.2",
-  "label": "v11.4.2-news-and-history-recovery",
-  "updated_at": "2026-08-04T16:00:00+08:00",
-  "stage": "news-history-recovery",
+  "baseline_version": "11.4.3",
+  "version": "v11.4.3",
+  "label": "v11.4.3-isolated-data-channels",
+  "updated_at": "2026-08-04T17:30:00+08:00",
+  "stage": "multi-source-and-history-isolation",
   "data_channels": {
     "assets": "live-assets",
     "events": "live-events",
     "tw_market": "live-tw-market",
     "tw_chips": "live-tw-chips",
     "global_market": "live-global-market",
-    "news": "live-news"
+    "cna": "live-news-cna",
+    "moneydj": "live-news-moneydj",
+    "cnyes": "live-news-cnyes",
+    "udn": "live-news-udn",
+    "ltn": "live-news-ltn",
+    "official_notices": "live-official-notices",
+    "company_disclosures": "live-company-disclosures",
+    "monthly_revenue": "live-monthly-revenue",
+    "dividend_history": "live-dividend-history"
   },
   "changes": [
-    "修復新聞來源全部被過濾造成 0 則的問題",
-    "Google News 原站網址無法解碼時保留文章專屬連結，不再刪除整批新聞",
-    "新聞更新前恢復 live-news 最後成功資料，空結果禁止發布",
-    "月營收由當期資料擴充為最近 60 個月官方歷史回補",
-    "月營收加入 12、24、36、60 個月與全部期間切換",
-    "月營收加入最新營收、年增率、收錄月份、成長月數與區間高點摘要",
-    "股利金額改用官方精確欄位，不再因模糊欄位配對出現錯誤數值",
-    "股利歷史由 MOPS 分批回補並跨工作流程持續保存",
-    "股利頁加入近 5 年、近 10 年與全部紀錄篩選",
-    "所有頁面、Workflow、資料與 Service Worker 更新為 v11.4.2"
-  ],
-  "version": "v11.4.2",
-  "description": "News recovery safeguards plus five-year monthly revenue and progressive dividend history."
+    "中央社、MoneyDJ、鉅亨網、經濟日報、自由財經各自獨立更新",
+    "官方市場公告與個股重大訊息各自獨立更新",
+    "月營收歷史與股利歷史各自獨立更新並保存進度",
+    "月營收每次只回補四個月份，降低 MOPS 限流風險",
+    "股利游標即使部分公司失敗也會前進，失敗標的進入重試佇列",
+    "單一來源失敗只保留該來源上一版，不再清空其他來源",
+    "停止使用單一 live-news 作為新聞唯一來源"
+  ]
 }

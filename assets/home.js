@@ -1,10 +1,10 @@
 (async()=>{
   "use strict";
-  const {$,escapeHtml,fmt,pct,cls,formatTime,loadData,loadPortfolio,finite}=MR;
+  const {$,escapeHtml,fmt,pct,cls,formatTime,loadData,loadNewsChannels,loadPortfolio,finite}=MR;
   const [assets,events,news,tw,chips,snapshot]=await Promise.all([
     loadData("assets.json",window.__ASSET_SEED__||{assets:[]}),
     loadData("events.json",window.__EVENT_SEED__||{events:[]}),
-    loadData("news.json",window.__NEWS_SEED__||{items:[]}),
+    loadNewsChannels(),
     loadData("tw-market.json",window.__TW_MARKET_SEED__||{items:[]}),
     loadData("tw-chips.json",window.__TW_CHIPS_SEED__||{markets:{},items:{}}),
     loadData("market-snapshot.json",window.__MARKET_SNAPSHOT_SEED__||{items:[]})

@@ -1,13 +1,15 @@
 (async()=>{
   "use strict";
-  const {$,$$,escapeHtml,fmt,pct,cls,formatTime,loadData,finite,stripHtml,normalizeText}=MR;
+  const {$,$$,escapeHtml,fmt,pct,cls,formatTime,loadData,loadNewsChannels,finite,stripHtml,normalizeText}=MR;
   const symbol=(new URLSearchParams(location.search).get("symbol")||"2330").toUpperCase();
-  const [assetPayload,marketPayload,chipPayload,eventPayload,newsPayload]=await Promise.all([
+  const [assetPayload,marketPayload,chipPayload,eventPayload,newsPayload,revenuePayload,dividendPayload]=await Promise.all([
     loadData("assets.json",window.__ASSET_SEED__||{assets:[]}),
     loadData("tw-market.json",window.__TW_MARKET_SEED__||{items:[]}),
     loadData("tw-chips.json",window.__TW_CHIPS_SEED__||{items:{},history:{}}),
     loadData("events.json",window.__EVENT_SEED__||{events:[]}),
-    loadData("news.json",window.__NEWS_SEED__||{items:[]})
+    loadNewsChannels(),
+    loadData("monthly-revenue.json",window.__MONTHLY_REVENUE_SEED__||{metadata:{status:"waiting"},items:{}}),
+    loadData("dividend-history.json",window.__DIVIDEND_HISTORY_SEED__||{metadata:{status:"waiting"},items:{}})
   ]);
   const quote=(marketPayload.items||[]).find(row=>String(row.symbol||"").toUpperCase()===symbol)||{};
   const found=(assetPayload.assets||[]).find(row=>String(row.symbol||"").toUpperCase()===symbol);
@@ -171,7 +173,8 @@
     showSection("#financialSection","財務");
   }
 
-  const revenues=!isEtf?(asset.monthly_revenue||[]).filter(row=>finite(row.revenue)!=null).sort((a,b)=>String(b.period||"").localeCompare(String(a.period||""))):[];
+  const revenueSourceRows=(revenuePayload.items?.[symbol]||asset.monthly_revenue||[]);
+  const revenues=!isEtf?revenueSourceRows.filter(row=>finite(row.revenue)!=null).sort((a,b)=>String(b.period||"").localeCompare(String(a.period||""))):[];
   if(revenues.length){
     const revenueStreak=()=>{let count=0;for(const row of revenues){if((finite(row.yoy)||0)>0)count++;else break}return count};
     const renderRevenue=(months=24)=>{
@@ -196,7 +199,7 @@
     ].join("");
     renderRevenue(24);
     $$("#revenuePeriods button").forEach(button=>button.addEventListener("click",()=>{$$("#revenuePeriods button").forEach(item=>item.classList.remove("active"));button.classList.add("active");renderRevenue(Number(button.dataset.months||0))}));
-    $("#revenueUpdated").textContent=asset.revenue_updated_at?`營收資料更新 ${formatTime(asset.revenue_updated_at)} · 已收錄 ${revenues.length} 個月`:`依公開資訊觀測站 · 已收錄 ${revenues.length} 個月`;
+    $("#revenueUpdated").textContent=revenuePayload.metadata?.updated_at?`獨立營收通道更新 ${formatTime(revenuePayload.metadata.updated_at)} · ${revenuePayload.metadata.status||"等待"} · 已收錄 ${revenues.length} 個月`:asset.revenue_updated_at?`營收資料更新 ${formatTime(asset.revenue_updated_at)} · 已收錄 ${revenues.length} 個月`:`依公開資訊觀測站 · 已收錄 ${revenues.length} 個月`;
     showSection("#revenueSection","月營收");
   }
 
@@ -224,7 +227,8 @@
     showSection("#chipSection","籌碼");
   }
 
-  const distributions=(isEtf?(etf.distributions||asset.dividends||[]):(asset.dividends||[])).slice().sort((a,b)=>String(b.period||b.year||"").localeCompare(String(a.period||a.year||"")));
+  const isolatedDistributions=dividendPayload.items?.[symbol]||[];
+  const distributions=(isolatedDistributions.length?isolatedDistributions:(isEtf?(etf.distributions||asset.dividends||[]):(asset.dividends||[]))).slice().sort((a,b)=>String(b.period||b.year||"").localeCompare(String(a.period||a.year||"")));
   if(distributions.length){
     const periodYear=row=>{const text=String(row.period||row.year||row.period_raw||"");const match=text.match(/(?:20)?(\d{2,4})/);if(!match)return null;let year=Number(match[1]);if(year<1911)year+=1911;return year};
     const periodLabel=row=>{
@@ -242,7 +246,7 @@
     $("#distributionTitle").textContent=isEtf?"配息歷史":"股利與除權息歷史";
     renderDistributions(5);
     $$("#distributionPeriods button").forEach(button=>button.addEventListener("click",()=>{$$("#distributionPeriods button").forEach(item=>item.classList.remove("active"));button.classList.add("active");renderDistributions(Number(button.dataset.years||0))}));
-    $("#distributionUpdated").textContent=(asset.dividend_updated_at?`股利資料更新 ${formatTime(asset.dividend_updated_at)}`:etf.distribution_updated_at?`配息資料更新 ${formatTime(etf.distribution_updated_at)}`:"")+` · 已收錄 ${distributions.length} 筆`;
+    $("#distributionUpdated").textContent=(dividendPayload.metadata?.updated_at?`獨立股利通道更新 ${formatTime(dividendPayload.metadata.updated_at)} · ${dividendPayload.metadata.status||"等待"}`:asset.dividend_updated_at?`股利資料更新 ${formatTime(asset.dividend_updated_at)}`:etf.distribution_updated_at?`配息資料更新 ${formatTime(etf.distribution_updated_at)}`:"")+` · 已收錄 ${distributions.length} 筆`;
     showSection("#distributionSection",isEtf?"配息":"股利");
   }
 

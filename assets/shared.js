@@ -1,6 +1,7 @@
 (()=>{"use strict";
 const OWNER="qwe70542asd-blip",REPO="market-event-radar";
-const CHANNELS={"assets.json":"live-assets","asset-audit.json":"live-assets","asset-coverage.json":"live-assets","events.json":"live-events","event-source-state.json":"live-events","tw-market.json":"live-tw-market","tw-chips.json":"live-tw-chips","market-snapshot.json":"live-global-market","news.json":"live-news"};
+const CHANNELS={"assets.json":"live-assets","asset-audit.json":"live-assets","asset-coverage.json":"live-assets","events.json":"live-events","event-source-state.json":"live-events","tw-market.json":"live-tw-market","tw-chips.json":"live-tw-chips","market-snapshot.json":"live-global-market","news-cna.json":"live-news-cna","news-moneydj.json":"live-news-moneydj","news-cnyes.json":"live-news-cnyes","news-udn.json":"live-news-udn","news-ltn.json":"live-news-ltn","official-market-notices.json":"live-official-notices","company-disclosures.json":"live-company-disclosures","monthly-revenue.json":"live-monthly-revenue","dividend-history.json":"live-dividend-history"};
+const NEWS_FILES=[{file:"news-cna.json",id:"cna",label:"中央社",seed:"__NEWS_CNA_SEED__",kind:"media"},{file:"news-moneydj.json",id:"moneydj",label:"MoneyDJ",seed:"__NEWS_MONEYDJ_SEED__",kind:"media"},{file:"news-cnyes.json",id:"cnyes",label:"鉅亨網",seed:"__NEWS_CNYES_SEED__",kind:"media"},{file:"news-udn.json",id:"udn",label:"經濟日報",seed:"__NEWS_UDN_SEED__",kind:"media"},{file:"news-ltn.json",id:"ltn",label:"自由財經",seed:"__NEWS_LTN_SEED__",kind:"media"},{file:"official-market-notices.json",id:"official-notices",label:"官方市場公告",seed:"__OFFICIAL_NOTICE_SEED__",kind:"official"},{file:"company-disclosures.json",id:"company-disclosures",label:"個股重大訊息",seed:"__COMPANY_DISCLOSURE_SEED__",kind:"company"}];
 const $=(q,r=document)=>r.querySelector(q),$$=(q,r=document)=>[...r.querySelectorAll(q)];
 const escapeHtml=v=>String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
 const finite=v=>{if(v===null||v===undefined)return null;if(typeof v==="string"&&!v.trim())return null;const n=Number(String(v).replace(/,/g,""));return Number.isFinite(n)?n:null};
@@ -13,6 +14,18 @@ const normalizeText=value=>stripHtml(value).toLowerCase().normalize("NFKC").repl
 async function getJson(url,timeout=9000){const ctl=new AbortController(),id=setTimeout(()=>ctl.abort(),timeout);try{const r=await fetch(url,{cache:"no-store",signal:ctl.signal});if(!r.ok)throw Error(r.status);return await r.json()}finally{clearTimeout(id)}}
 async function loadData(name,fallback={}){const branch=CHANNELS[name];if(branch){try{return await getJson(`https://raw.githubusercontent.com/${OWNER}/${REPO}/${branch}/${name}?t=${Date.now()}`)}catch(e){}}
 try{return await getJson(`data/${name}?t=${Date.now()}`)}catch(e){return typeof structuredClone==="function"?structuredClone(fallback):JSON.parse(JSON.stringify(fallback))}}
+async function loadNewsChannels(){
+ const channels=await Promise.all(NEWS_FILES.map(async cfg=>{
+  const fallback=window[cfg.seed]||{metadata:{source_id:cfg.id,source_name:cfg.label,status:"waiting",item_count:0},items:[]};
+  const payload=await loadData(cfg.file,fallback);
+  return {...payload,channel:cfg,items:(payload.items||[]).map(item=>({...item,source_id:item.source_id||cfg.id,source:item.source||cfg.label,channel_kind:cfg.kind}))};
+ }));
+ const seen=new Set(),items=[];
+ for(const channel of channels){for(const item of channel.items||[]){const key=String(item.id||`${item.title||""}|${item.url||""}`);if(!key||seen.has(key))continue;seen.add(key);items.push(item)}}
+ items.sort((a,b)=>Date.parse(b.published_at||b.date||0)-Date.parse(a.published_at||a.date||0));
+ const updated=channels.map(c=>c.metadata?.updated_at).filter(Boolean).sort().pop()||null;
+ return {metadata:{version:"v11.4.3",updated_at:updated,item_count:items.length,channel_count:channels.length},channels,items};
+}
 const portfolioKeys=["marketRadarPortfolioV2","marketRadarPortfolio","market-radar-portfolio","portfolio"];
 function loadPortfolio(){for(const k of portfolioKeys){try{const v=JSON.parse(localStorage.getItem(k)||"null");if(Array.isArray(v))return v;if(Array.isArray(v?.items))return v.items}catch(e){}}return[]}
 function savePortfolio(rows){localStorage.setItem(portfolioKeys[0],JSON.stringify(rows));window.dispatchEvent(new CustomEvent("portfoliochange"))}
@@ -56,5 +69,5 @@ function relatedNews(event,items,options={}){
     return score>=10?{...item,_relatedScore:score}:null;
   }).filter(Boolean).sort((a,b)=>b._relatedScore-a._relatedScore||Date.parse(b.published_at||0)-Date.parse(a.published_at||0)).slice(0,limit);
 }
-window.MR={$,$$,escapeHtml,finite,fmt,pct,cls,formatTime,stripHtml,normalizeText,relatedNews,loadData,getJson,loadPortfolio,savePortfolio,mergeAssets,OWNER,REPO};
+window.MR={$,$$,escapeHtml,finite,fmt,pct,cls,formatTime,stripHtml,normalizeText,relatedNews,loadData,loadNewsChannels,getJson,loadPortfolio,savePortfolio,mergeAssets,NEWS_FILES,OWNER,REPO};
 })();

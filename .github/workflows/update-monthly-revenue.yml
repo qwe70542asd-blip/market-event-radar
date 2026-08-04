@@ -1,0 +1,55 @@
+name: Update v11.4.3 monthly revenue history
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/update-monthly-revenue.yml"
+      - "scripts/update_monthly_revenue.py"
+      - "scripts/update_assets.py"
+  schedule:
+    - cron: "18 * * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: live-monthly-revenue
+  cancel-in-progress: true
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Restore isolated revenue archive and asset list
+        run: |
+          bash scripts/restore_data_branch.sh live-monthly-revenue \
+            "monthly-revenue.json:data/monthly-revenue.json" \
+            "monthly-revenue-seed.js:data/monthly-revenue-seed.js" \
+            "monthly-revenue-state.json:data/monthly-revenue-state.json"
+          bash scripts/restore_data_branch.sh live-assets \
+            "assets.json:data/assets.json"
+      - run: python scripts/update_monthly_revenue.py
+      - name: Validate isolated revenue channel
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          payload=json.loads(Path("data/monthly-revenue.json").read_text(encoding="utf-8"))
+          assert payload.get("items"), "monthly revenue has no usable records"
+          print(payload.get("metadata",{}))
+          PY
+      - name: Publish isolated channel
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          bash scripts/publish_data_branch.sh live-monthly-revenue monthly-revenue \
+            data/monthly-revenue.json \
+            data/monthly-revenue-seed.js \
+            data/monthly-revenue-state.json

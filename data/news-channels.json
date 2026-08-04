@@ -1,0 +1,82 @@
+{
+  "version": "v11.4.3",
+  "media": [
+    {
+      "id": "cna",
+      "name": "中央社",
+      "kind": "rss",
+      "urls": [
+        "https://feeds.feedburner.com/rsscna/finance",
+        "https://feeds.feedburner.com/rsscna/technology"
+      ],
+      "file": "news-cna.json",
+      "var": "__NEWS_CNA_SEED__",
+      "retention_days": 7,
+      "minimum_records": 3
+    },
+    {
+      "id": "moneydj",
+      "name": "MoneyDJ",
+      "kind": "html",
+      "urls": [
+        "https://m.moneydj.com/allNews.aspx"
+      ],
+      "article_patterns": [
+        "moneydj\\\\.com/.+(?:NewsViewer|news|article)"
+      ],
+      "file": "news-moneydj.json",
+      "var": "__NEWS_MONEYDJ_SEED__",
+      "retention_days": 5,
+      "minimum_records": 3
+    },
+    {
+      "id": "cnyes",
+      "name": "鉅亨網",
+      "kind": "html",
+      "urls": [
+        "https://news.cnyes.com/news/category/tw_stock",
+        "https://news.cnyes.com/news/category/us_stock"
+      ],
+      "article_patterns": [
+        "cnyes\\\\.com/news/id/",
+        "cnyes\\\\.com/news/"
+      ],
+      "file": "news-cnyes.json",
+      "var": "__NEWS_CNYES_SEED__",
+      "retention_days": 5,
+      "minimum_records": 3
+    },
+    {
+      "id": "udn",
+      "name": "經濟日報",
+      "kind": "html",
+      "urls": [
+        "https://money.udn.com/rank/newest/1001/0/1"
+      ],
+      "article_patterns": [
+        "money\\\\.udn\\\\.com/money/story/",
+        "money\\\\.udn\\\\.com/money/breaknews/"
+      ],
+      "file": "news-udn.json",
+      "var": "__NEWS_UDN_SEED__",
+      "retention_days": 5,
+      "minimum_records": 3
+    },
+    {
+      "id": "ltn",
+      "name": "自由財經",
+      "kind": "html",
+      "urls": [
+        "https://ec.ltn.com.tw/"
+      ],
+      "article_patterns": [
+        "ec\\\\.ltn\\\\.com\\\\.tw/article/",
+        "ec\\\\.ltn\\\\.com\\\\.tw/article/breakingnews/"
+      ],
+      "file": "news-ltn.json",
+      "var": "__NEWS_LTN_SEED__",
+      "retention_days": 5,
+      "minimum_records": 3
+    }
+  ]
+}

@@ -1,9 +1,9 @@
 (async()=>{
   "use strict";
-  const {$,escapeHtml,formatTime,loadData,stripHtml}=MR;
+  const {$,escapeHtml,formatTime,loadData,loadNewsChannels,stripHtml}=MR;
   const [events,news]=await Promise.all([
     loadData("events.json",window.__EVENT_SEED__||{events:[]}),
-    loadData("news.json",window.__NEWS_SEED__||{items:[]})
+    loadNewsChannels()
   ]);
   const id=new URLSearchParams(location.search).get("id"),event=(events.events||[]).find(row=>row.id===id);
   if(!event){$("#eventDetail").innerHTML='<div class="empty">找不到事件，可能尚未由官方排程更新。</div>';return}

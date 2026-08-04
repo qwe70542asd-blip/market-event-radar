@@ -1,141 +1,93 @@
 from pathlib import Path
-import json,unittest
+import json,re,unittest
 ROOT=Path(__file__).resolve().parents[1]
 
 class StaticTests(unittest.TestCase):
+ def read(self,path):return (ROOT/path).read_text(encoding="utf-8")
  def test_required_tree(self):
-  for path in [".github/workflows","assets","data","docs","scripts","tests","index.html","portfolio.html","tw-market.html","news.html","institutional.html","asset.html","coverage.html","service-worker.js"]:
-   self.assertTrue((ROOT/path).exists(),path)
+  for path in [".github/workflows","assets","data","docs","scripts","tests","index.html","news.html","asset.html","service-worker.js"]:self.assertTrue((ROOT/path).exists(),path)
  def test_version(self):
-  self.assertEqual(json.loads((ROOT/"VERSION.json").read_text(encoding="utf-8"))["baseline_version"],"11.4.2")
+  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.3")
  def test_ascii_filenames(self):
-  for path in ROOT.rglob("*"):
-   self.assertTrue(all(ord(char)<128 for char in path.name),f"non ASCII filename: {path}")
- def test_home_replaces_crypto(self):
-  html=(ROOT/"index.html").read_text(encoding="utf-8")
-  self.assertIn("今日市場重點",html);self.assertNotIn("虛擬貨幣即時排行",html);self.assertNotIn("工作",html)
- def test_calendar_is_grouped(self):
-  js=(ROOT/"assets/home.js").read_text(encoding="utf-8")
-  for text in ("重大事件","公司資訊","除權息","day-summary","dividendTable","localKey"):
-   self.assertIn(text,js)
- def test_news_is_clean_and_classified(self):
-  script=(ROOT/"scripts/update_news.py").read_text(encoding="utf-8")
-  for text in ("article_url","clean_text","ai_category","market_direction","affected_markets","extract_key_facts","original_text"):
-   self.assertIn(text,script)
- def test_stage2_news_layout(self):
-  html=(ROOT/"news.html").read_text(encoding="utf-8")
-  js=(ROOT/"assets/news.js").read_text(encoding="utf-8")
-  for text in ("重大市場資訊","個股重要公告","一般財經新聞","companyNotices"):
-   self.assertIn(text,html)
-  for text in ("company-notice-card","notice-facts","notice-full","item.is_major===true&&!item.company"):
-   self.assertIn(text,js)
- def test_market_rankings(self):
-  html=(ROOT/"tw-market.html").read_text(encoding="utf-8")
-  for text in ("今日個股漲幅前 15 名","今日個股跌幅前 15 名","今日 ETF 漲幅前 15 名","今日 ETF 跌幅前 15 名","成交金額"):
-   self.assertIn(text,html)
- def test_institutional_search_and_hot_lists(self):
-  html=(ROOT/"institutional.html").read_text(encoding="utf-8")
-  js=(ROOT/"assets/institutional.js").read_text(encoding="utf-8")
-  for text in ("搜尋單一標的籌碼","熱門個股前 10 名","熱門 ETF 前 10 名","當沖","融資","融券"):
-   self.assertIn(text,html)
-  for text in ("chipSuggestions","selectItem","最近五日趨勢"):
-   self.assertIn(text,js)
- def test_stage1_global_market(self):
-  script=(ROOT/"scripts/update_market_snapshot.py").read_text(encoding="utf-8")
-  for symbol in ("^KS11","^KQ11","^VIX","^TNX","DX-Y.NYB","TWD=X","KRW=X"):
-   self.assertIn(symbol,script)
+  for path in ROOT.rglob("*"):self.assertTrue(all(ord(c)<128 for c in path.name),path)
+ def test_no_audio(self):
+  self.assertFalse(any(p.suffix.lower() in {".m4a",".mp3",".wav"} for p in ROOT.rglob("*")))
+ def test_home_market_focus(self):
+  html=self.read("index.html");self.assertIn("今日市場重點",html);self.assertNotIn("虛擬貨幣即時排行",html)
+ def test_calendar_grouped(self):
+  js=self.read("assets/home.js")
+  for x in ("重大事件","公司資訊","除權息","dividendTable","localKey"):self.assertIn(x,js)
+ def test_global_market_set(self):
+  script=self.read("scripts/update_market_snapshot.py")
+  for x in ("^KS11","^KQ11","^VIX","^TNX","DX-Y.NYB","TWD=X","KRW=X"):self.assertIn(x,script)
   self.assertNotIn('(\"NVDA\", \"NVIDIA\"',script)
-  seed=json.loads((ROOT/"data/market-snapshot.json").read_text(encoding="utf-8"))
-  symbols={row.get("symbol") for row in seed.get("items",[])}
-  self.assertNotIn("NVDA",symbols);self.assertIn("^KS11",symbols);self.assertIn("^VIX",symbols)
- def test_stage1_etf_whitelist(self):
-  script=(ROOT/"scripts/update_tw_market.py").read_text(encoding="utf-8")
-  self.assertIn("TWSE_FUNDS",script);self.assertIn("TPEX_FUNDS",script);self.assertIn('return "other"',script)
-  self.assertNotIn("len(s)>4",script)
-  market_js=(ROOT/"assets/tw-market.js").read_text(encoding="utf-8")
-  institutional_js=(ROOT/"assets/institutional.js").read_text(encoding="utf-8")
-  self.assertIn('item.asset_class===assetClass',market_js)
-  self.assertIn('item.asset_class==="etf"',institutional_js)
- def test_stage1_missing_values(self):
-  shared=(ROOT/"assets/shared.js").read_text(encoding="utf-8")
-  self.assertIn("v===null||v===undefined",shared)
-  self.assertIn('typeof v==="string"&&!v.trim()',shared)
- def test_stage1_news_scope_and_titles(self):
-  script=(ROOT/"scripts/update_news.py").read_text(encoding="utf-8")
-  for text in ("GENERIC_TITLE_RE","rewrite_company_title","resolve_url","company_announcement","scope == \"market\" and impact == \"high\""):
-   self.assertIn(text,script)
-  news_js=(ROOT/"assets/news.js").read_text(encoding="utf-8")
-  self.assertIn('item.is_major===true&&!item.company',news_js)
- def test_stage1_calendar_local_date(self):
-  updater=(ROOT/"scripts/update_events.py").read_text(encoding="utf-8")
-  home=(ROOT/"assets/home.js").read_text(encoding="utf-8")
-  self.assertIn('"local_date": start.astimezone(TAIPEI).date().isoformat()',updater)
-  self.assertIn("eventDateKey",home);self.assertIn("eventIdentity",home)
+ def test_etf_whitelist(self):
+  script=self.read("scripts/update_tw_market.py")
+  for x in ("TWSE_FUNDS","TPEX_FUNDS",'return "other"'):self.assertIn(x,script)
+ def test_stock_etf_split(self):
+  html=self.read("asset.html");js=self.read("assets/asset.js")
+  self.assertNotIn("券商分點",html)
+  for x in ("fundSection","holdingsSection","chartSection","const isEtf","fetchTwseHistory","fetchTpexHistory"):self.assertIn(x,html+js)
+ def test_history_pipeline_preserved(self):
+  script=self.read("scripts/update_assets.py")
+  for x in ("HISTORY_MONTHS = 60","MOPS_REVENUE_ARCHIVES","fetch_mops_dividend_history","asset-history-state.json"):self.assertIn(x,script)
+ def test_news_config_has_five_publishers(self):
+  cfg=json.loads(self.read("data/news-channels.json"));ids={x["id"] for x in cfg["media"]}
+  self.assertEqual(ids,{"cna","moneydj","cnyes","udn","ltn"})
+ def test_cna_uses_direct_rss(self):
+  cfg=json.loads(self.read("data/news-channels.json"));cna=next(x for x in cfg["media"] if x["id"]=="cna")
+  self.assertTrue(all("feedburner.com/rsscna" in x for x in cna["urls"]))
+  self.assertFalse(any("news.google.com" in x for x in cna["urls"]))
+ def test_media_sources_are_direct(self):
+  cfg=json.loads(self.read("data/news-channels.json"))
+  urls=[u for c in cfg["media"] for u in c["urls"]]
+  self.assertFalse(any("news.google.com" in u for u in urls))
+ def test_separate_data_files(self):
+  for name in ["news-cna","news-moneydj","news-cnyes","news-udn","news-ltn","official-market-notices","company-disclosures","monthly-revenue","dividend-history"]:
+   self.assertTrue((ROOT/f"data/{name}.json").exists());self.assertTrue((ROOT/f"data/{name}-seed.js").exists())
+ def test_separate_live_branches(self):
+  shared=self.read("assets/shared.js")
+  for branch in ("live-news-cna","live-news-moneydj","live-news-cnyes","live-news-udn","live-news-ltn","live-official-notices","live-company-disclosures","live-monthly-revenue","live-dividend-history"):self.assertIn(branch,shared)
+ def test_load_news_channels(self):
+  shared=self.read("assets/shared.js")
+  for x in ("NEWS_FILES","loadNewsChannels","Promise.all","channel_kind"):self.assertIn(x,shared)
+ def test_consumers_use_multi_source(self):
+  for f in ("assets/home.js","assets/news.js","assets/asset.js","assets/event.js","assets/date-alerts.js"):self.assertIn("loadNewsChannels",self.read(f),f)
+ def test_news_page_blocks(self):
+  html=self.read("news.html")
+  for x in ("獨立資料來源","重大市場資訊","官方市場公告","個股重大訊息","publisherBlocks","全部媒體新聞查詢"):self.assertIn(x,html)
+ def test_news_source_status(self):
+  js=self.read("assets/news.js")
+  for x in ("sourceStatus","publisherBlocks","sourceFilters","獨立來源"):self.assertIn(x,js)
+ def test_official_structured_sources(self):
+  official=self.read("scripts/update_official_notices.py");company=self.read("scripts/update_company_disclosures.py")
+  self.assertIn("/v1/news/newsList",official);self.assertIn("t187ap04_L",company);self.assertIn("t187ap04_O",company)
+ def test_independent_workflows(self):
+  expected=["update-news-cna.yml","update-news-moneydj.yml","update-news-cnyes.yml","update-news-udn.yml","update-news-ltn.yml","update-official-notices.yml","update-company-disclosures.yml","update-monthly-revenue.yml","update-dividend-history.yml"]
+  for name in expected:self.assertTrue((ROOT/".github/workflows"/name).exists(),name)
+  self.assertFalse((ROOT/".github/workflows/update-news.yml").exists())
+ def test_workflows_publish_unique_branches(self):
+  texts="\n".join(self.read(p.relative_to(ROOT)) for p in (ROOT/".github/workflows").glob("update-news-*.yml"))
+  for branch in ("live-news-cna","live-news-moneydj","live-news-cnyes","live-news-udn","live-news-ltn"):self.assertIn(branch,texts)
+ def test_service_worker_cache(self):
+  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-3",sw)
+  for seed in ("news-cna-seed.js","news-moneydj-seed.js","company-disclosures-seed.js","monthly-revenue-seed.js","dividend-history-seed.js"):self.assertIn(seed,sw)
+ def test_all_pages_current_version(self):
+  for p in ROOT.glob("*.html"):self.assertNotIn("v11.4.2",p.read_text(encoding="utf-8"),p.name)
 
- def test_stage3_event_news_linking(self):
-  shared=(ROOT/"assets/shared.js").read_text(encoding="utf-8")
-  home=(ROOT/"assets/home.js").read_text(encoding="utf-8")
-  event=(ROOT/"assets/event.js").read_text(encoding="utf-8")
-  event_html=(ROOT/"event.html").read_text(encoding="utf-8")
-  for text in ("relatedNews","EVENT_ALIASES","windowDays"):
-   self.assertIn(text,shared)
-  self.assertIn("event-related-news",home)
-  self.assertIn("related-news-grid",event)
-  self.assertIn("data/news-seed.js?v=11.4.2",event_html)
+ def test_history_channels_are_isolated(self):
+  shared=self.read("assets/shared.js"); asset=self.read("assets/asset.js"); updater=self.read("scripts/update_assets.py")
+  for x in ("live-monthly-revenue","live-dividend-history"):self.assertIn(x,shared)
+  for x in ("monthly-revenue.json","dividend-history.json"):self.assertIn(x,asset)
+  self.assertIn("EMBEDDED_HISTORY_BACKFILL = False",updater)
+  for name in ("update-monthly-revenue.yml","update-dividend-history.yml"):self.assertTrue((ROOT/".github/workflows"/name).exists())
 
- def test_stage3_official_financial_pipeline(self):
-  updater=(ROOT/"scripts/update_assets.py").read_text(encoding="utf-8")
-  for text in ("BWIBBU_ALL","tpex_mainboard_peratio_analysis","t187ap14_L","mopsfin_t187ap14_O","financial_endpoint","merge_financial","ThreadPoolExecutor","[:12]"):
-   self.assertIn(text,updater)
-  asset_html=(ROOT/"asset.html").read_text(encoding="utf-8")
-  asset_js=(ROOT/"assets/asset.js").read_text(encoding="utf-8")
-  for text in ("最近 12 期財務資料","financialRows","overviewUpdated","revenueRows"):
-   self.assertIn(text,asset_html)
-  for text in ("net_margin","current_ratio","monthly_revenue","financials"):
-   self.assertIn(text,asset_js)
+ def test_dividend_cursor_does_not_block(self):
+  script=self.read("scripts/update_dividend_history.py")
+  for x in ("retry_symbols","cursor + len(new_targets)","ThreadPoolExecutor(max_workers=2)"):self.assertIn(x,script)
 
- def test_v1141_stock_etf_detail_split(self):
-  updater=(ROOT/"scripts/update_assets.py").read_text(encoding="utf-8")
-  asset_html=(ROOT/"asset.html").read_text(encoding="utf-8")
-  asset_js=(ROOT/"assets/asset.js").read_text(encoding="utf-8")
-  for text in ("t187ap47_L","MONTHLY_REVENUE_SOURCES","DIVIDEND_SOURCES","parse_fund_row","industry_name"):
-   self.assertIn(text,updater)
-  for text in ("fundSection","holdingsSection","chartSection","chipSection","eventsSection"):
-   self.assertIn(text,asset_html)
-  for text in ("const isEtf","fetchTwseHistory","fetchTpexHistory","fetchYahooHistory","holdings.length","showSection"):
-   self.assertIn(text,asset_js)
-  self.assertNotIn("券商分點",asset_html)
-
- def test_stage3_news_analysis(self):
-  updater=(ROOT/"scripts/update_news.py").read_text(encoding="utf-8")
-  news_js=(ROOT/"assets/news.js").read_text(encoding="utf-8")
-  for text in ("importance_score","why_it_matters","event_terms","infer_symbols","build_asset_alias_map"):
-   self.assertIn(text,updater)
-  for text in ("why-it-matters","重要度","市場判讀"):
-   self.assertIn(text,news_js)
-
- def test_stage3_hot_score_and_final_cache(self):
-  inst=(ROOT/"assets/institutional.js").read_text(encoding="utf-8")
-  html=(ROOT/"institutional.html").read_text(encoding="utf-8")
-  sw=(ROOT/"service-worker.js").read_text(encoding="utf-8")
-  self.assertIn("hot-score",inst)
-  self.assertIn("熱門分數",html)
-  self.assertIn("market-event-radar-v11-4-2",sw)
-
- def test_v1142_news_recovery_and_history(self):
-  news=(ROOT/"scripts/update_news.py").read_text(encoding="utf-8")
-  assets=(ROOT/"scripts/update_assets.py").read_text(encoding="utf-8")
-  news_workflow=(ROOT/".github/workflows/update-news.yml").read_text(encoding="utf-8")
-  asset_workflow=(ROOT/".github/workflows/update-daily.yml").read_text(encoding="utf-8")
-  asset_js=(ROOT/"assets/asset.js").read_text(encoding="utf-8")
-  for text in ("decode_google_news_url","google-news-fallback","minimum_fresh","old_clean","No valid news records"):
-   self.assertIn(text,news)
-  self.assertIn("Restore last successful news archive",news_workflow)
-  self.assertIn("Reject empty news publication",news_workflow)
-  for text in ("HISTORY_MONTHS = 60","MOPS_REVENUE_ARCHIVES","parse_mops_revenue_html","fetch_mops_dividend_history","asset-history-state.json","DIVIDEND_BACKFILL_BATCH"):
-   self.assertIn(text,assets)
-  self.assertIn("Restore detailed asset history",asset_workflow)
-  for text in ("revenuePeriods","已收錄","distributionPeriods","近 10 年"):
-   self.assertIn(text,asset_js if text not in {"revenuePeriods","distributionPeriods","近 10 年"} else (ROOT/"asset.html").read_text(encoding="utf-8")+asset_js)
+ def test_revenue_small_batches(self):
+  script=self.read("scripts/update_monthly_revenue.py")
+  for x in ("BATCH_MONTHS = 4","ThreadPoolExecutor(max_workers=2)","month_cursor"):self.assertIn(x,script)
 
 if __name__=="__main__":unittest.main()

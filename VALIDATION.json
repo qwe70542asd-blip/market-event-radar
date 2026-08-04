@@ -1,21 +1,22 @@
 {
-  "version": "v11.4.2",
+  "version": "v11.4.3",
   "status": "PASS",
-  "scope": "news recovery and historical revenue/dividend integration",
+  "scope": "independent media, official notice, disclosure, monthly revenue and dividend channels",
   "checks": [
     "Python syntax",
     "JavaScript syntax",
-    "JSON parse",
-    "workflow restore safeguards",
-    "Google News fallback",
-    "empty-news publication guard",
-    "60-month revenue backfill parser",
-    "progressive dividend history parser",
-    "version/cache references",
+    "JSON and workflow YAML",
+    "five independent media channels",
+    "official notice and company disclosure channels",
+    "isolated monthly-revenue small-batch progress",
+    "isolated dividend cursor and retry queue",
+    "asset page independent-channel fallback",
+    "service worker and version references",
     "complete project tree"
   ],
   "limitations": [
-    "Live official endpoints must be verified by GitHub Actions after upload.",
-    "Dividend history is progressively backfilled in bounded batches to avoid overloading MOPS."
-  ]
+    "Live publisher and official endpoints must be verified by GitHub Actions after upload.",
+    "Historical revenue and dividends accumulate over multiple scheduled runs."
+  ],
+  "test_summary": "27 static tests plus smoke test passed"
 }

@@ -1,0 +1,51 @@
+name: Update v11.4.3 經濟日報 news
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/update-news-udn.yml"
+      - "scripts/update_media_source.py"
+      - "scripts/news_pipeline.py"
+      - "data/news-channels.json"
+  schedule:
+    - cron: "9-59/15 * * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: live-news-udn
+  cancel-in-progress: true
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Restore 經濟日報 archive
+        run: |
+          bash scripts/restore_data_branch.sh live-news-udn \
+            "news-udn.json:data/news-udn.json" \
+            "news-udn-seed.js:data/news-udn-seed.js"
+          bash scripts/restore_data_branch.sh live-assets \
+            "assets.json:data/assets.json"
+      - run: python scripts/update_media_source.py --channel udn
+      - name: Validate isolated source
+        run: |
+          python - <<'PY2'
+          import json
+          from pathlib import Path
+          p=json.loads(Path("data/news-udn.json").read_text(encoding="utf-8"))
+          assert p.get("items"), "經濟日報 returned no usable records; preserving previous branch"
+          print("經濟日報",len(p["items"]),p.get("metadata",{}).get("status"))
+          PY2
+      - name: Publish isolated channel
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/publish_data_branch.sh live-news-udn udn data/news-udn.json data/news-udn-seed.js

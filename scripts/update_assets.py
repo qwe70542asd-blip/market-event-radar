@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Update the v11.4.2 Taiwan stock and ETF master with detailed official data.
+"""Update the v11.4.3 Taiwan stock and ETF master with detailed official data.
 
 The updater is intentionally defensive:
 - official TWSE/TPEx endpoints are parsed with bilingual/format-tolerant keys;
@@ -22,8 +22,8 @@ from bs4 import BeautifulSoup
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.2"
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.2)"}
+VERSION = "v11.4.3"
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.3)"}
 SESSION = requests.Session()
 
 MASTER_SOURCES = [
@@ -54,6 +54,7 @@ DIVIDEND_SOURCES = [
 HISTORY_MONTHS = 60
 REVENUE_BACKFILL_INTERVAL_DAYS = 7
 DIVIDEND_BACKFILL_BATCH = 120
+EMBEDDED_HISTORY_BACKFILL = False
 MOPS_REVENUE_ARCHIVES = [
     ("MOPS listed revenue history", "sii"),
     ("MOPS OTC revenue history", "otc"),
@@ -486,17 +487,28 @@ def parse_mops_revenue_html(content: bytes, source_name: str, year: int, month: 
 
 def fetch_mops_revenue_month(source_name: str, market_path: str, year: int, month: int) -> tuple[str, dict[str, list[dict[str, Any]]], str | None]:
     roc_year = year - 1911
-    url = f"https://mops.twse.com.tw/nas/t21/{market_path}/t21sc03_{roc_year}_{month}_0.html"
-    try:
-        response = SESSION.get(url, headers=HEADERS, timeout=18)
-        response.raise_for_status()
-        parsed = parse_mops_revenue_html(response.content, source_name, year, month)
-        if not parsed:
-            raise ValueError("no company rows parsed")
-        return source_name, parsed, None
-    except Exception as exc:
-        return source_name, {}, f"{year}-{month:02d}: {exc}"
-
+    filename = f"t21sc03_{roc_year}_{month}_0.html"
+    urls = [
+        f"https://mopsov.twse.com.tw/nas/t21/{market_path}/{filename}",
+        f"https://mops.twse.com.tw/nas/t21/{market_path}/{filename}",
+    ]
+    errors = []
+    for url in urls:
+        for attempt in range(2):
+            try:
+                response = SESSION.get(
+                    url,
+                    headers={**HEADERS, "Referer": "https://mops.twse.com.tw/mops/web/index"},
+                    timeout=20,
+                )
+                response.raise_for_status()
+                parsed = parse_mops_revenue_html(response.content, source_name, year, month)
+                if parsed:
+                    return source_name, parsed, None
+                errors.append(f"{url}: no company rows parsed")
+            except Exception as exc:
+                errors.append(f"{url}: {exc}")
+    return source_name, {}, f"{year}-{month:02d}: " + "; ".join(errors[-4:])
 
 def expand_html_table(table) -> list[list[str]]:
     grid: list[list[str]] = []
@@ -805,7 +817,7 @@ def main() -> None:
     except Exception:
         last_backfill = None
     run_revenue_backfill = not last_backfill or NOW - last_backfill.astimezone(NOW.tzinfo) >= timedelta(days=REVENUE_BACKFILL_INTERVAL_DAYS)
-    if run_revenue_backfill:
+    if EMBEDDED_HISTORY_BACKFILL and run_revenue_backfill:
         archive_jobs = [(source_name, market_path, year, month) for year, month in recent_year_months() for source_name, market_path in MOPS_REVENUE_ARCHIVES]
         successful_archive_jobs = 0
         with ThreadPoolExecutor(max_workers=10) as pool:
@@ -870,7 +882,7 @@ def main() -> None:
     # overloading MOPS while every successful run advances the all-stock queue.
     stock_symbols_for_history = sorted({str(asset.get("symbol") or "") for asset in assets.values() if asset.get("market") == "TW" and asset.get("asset_class") == "stock" and asset.get("symbol")})
     cursor = int(history_meta.get("dividend_cursor") or 0)
-    if stock_symbols_for_history:
+    if EMBEDDED_HISTORY_BACKFILL and stock_symbols_for_history:
         if cursor >= len(stock_symbols_for_history):
             cursor = 0
         batch = stock_symbols_for_history[cursor:cursor + DIVIDEND_BACKFILL_BATCH]

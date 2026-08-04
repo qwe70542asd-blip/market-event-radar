@@ -1,0 +1,55 @@
+name: Update v11.4.3 dividend history
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/update-dividend-history.yml"
+      - "scripts/update_dividend_history.py"
+      - "scripts/update_assets.py"
+  schedule:
+    - cron: "38 * * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: live-dividend-history
+  cancel-in-progress: true
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Restore isolated dividend archive and asset list
+        run: |
+          bash scripts/restore_data_branch.sh live-dividend-history \
+            "dividend-history.json:data/dividend-history.json" \
+            "dividend-history-seed.js:data/dividend-history-seed.js" \
+            "dividend-history-state.json:data/dividend-history-state.json"
+          bash scripts/restore_data_branch.sh live-assets \
+            "assets.json:data/assets.json"
+      - run: python scripts/update_dividend_history.py
+      - name: Validate isolated dividend channel
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          payload=json.loads(Path("data/dividend-history.json").read_text(encoding="utf-8"))
+          assert payload.get("items"), "dividend history has no usable records"
+          print(payload.get("metadata",{}))
+          PY
+      - name: Publish isolated channel
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          bash scripts/publish_data_branch.sh live-dividend-history dividend-history \
+            data/dividend-history.json \
+            data/dividend-history-seed.js \
+            data/dividend-history-state.json

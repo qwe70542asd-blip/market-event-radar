@@ -1,16 +1,15 @@
-# 部署
+# v11.4.3 部署
 
-1. 將 `market-event-radar` 內全部檔案覆蓋原 GitHub 專案根目錄。
-2. 使用 GitHub Desktop 提交並推送到 `main`。
-3. GitHub Pages 設為 `Deploy from a branch`、`main`、`/(root)`。
-4. 到 Actions 手動執行六個更新工作一次。
-5. 事件工作第一次建立比對基準，第二次後才標記真正的新公布日期。
-6. 若舊畫面仍存在，重新整理兩次或清除該網站快取。
+將完整 `market-event-radar` 資料夾覆蓋到 GitHub 專案並推送 `main`。
 
+推送後會依檔案變更與排程分別執行：
 
-## v11.4.2 首次上傳後
+- 五家媒體新聞工作
+- 官方市場公告
+- 個股重大訊息
+- 月營收歷史
+- 股利歷史
 
-1. 手動執行 `Update v11.4.2 finance news`，確認 `live-news` 不再是 0 則。
-2. 手動執行 `Update v11.4.2 assets and audit`，第一次會回補最近 60 個月月營收。
-3. 股利歷史採每次 120 家分批回補；`data/asset-history-state.json` 會記錄進度。
-4. 不要刪除 `live-news` 與 `live-assets` 分支，下一次排程會從最後成功資料繼續合併。
+各工作流程獨立成功或失敗。某一家顯示紅色，不會影響其他來源與網站其他資料。
+
+第一次部署後到 `data-status.html` 查看每條通道的筆數與狀態。月營收與股利歷史採小批次累積，不需重複手動執行同一工作。
