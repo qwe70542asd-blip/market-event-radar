@@ -1,4 +1,4 @@
-name: Update v11.3.0 Taiwan chips
+name: Update v11.4.0 Taiwan chips
 on:
   push:
     branches: [main]

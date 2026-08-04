@@ -1,21 +1,23 @@
-Market Event Radar v11.3.0
+Market Event Radar v11.4.0 - Final Integration Validation
+Overall: PASS
 
-Result: PASS
+PASS: Python compile
+PASS: JavaScript syntax
+PASS: 18 static tests
+PASS: smoke test
+PASS: JSON parsing
+PASS: GitHub Actions YAML parsing
+PASS: HTML local references
+PASS: ASCII-only file and folder names
+PASS: Service Worker and page cache version v11.4.0
 
-Validated:
-- Complete repository structure
-- ASCII-only archive paths
-- Python compile and 8 static tests
-- JavaScript syntax
-- HTML local references
-- News URL and sanitization rules
-- Market focus replacement
-- Grouped calendar and dividend counts
-- Four top-15 market rankings
-- Search-only institutional details and hot rankings
+Final-stage checks:
+- event cards and event pages match related news within a three-day window
+- news extracts stock symbols, company aliases and economic-event aliases
+- official valuation, EPS, income-statement and balance-sheet update pipeline
+- up to twelve financial periods retained per stock
+- missing, not-applicable and temporarily unavailable states are separated
+- daily hot-stock and hot-ETF rankings
+- news impact, direction, confidence, affected markets and rationale
 
-Pending after deployment:
-- Official endpoint responses
-- GitHub Actions write permissions
-- Live data branch publication
-- Visual check on GitHub Pages
+Browser local navigation and online source connectivity are restricted in the packaging sandbox. GitHub Actions performs live-source validation after upload.

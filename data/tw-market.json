@@ -1,10 +1,12 @@
 {
   "metadata": {
-    "version": "v11.3.0",
+    "version": "v11.4.0",
     "updated_at": null,
     "trading_date": null,
     "market_status": "pending",
-    "source": "TWSE／TPEx official data"
+    "source": "TWSE／TPEx official data",
+    "etf_classifier": "official-fund-whitelist-with-conservative-last-known-good-fallback",
+    "excluded_product_count": 0
   },
   "breadth": {
     "up": 0,

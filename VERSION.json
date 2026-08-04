@@ -1,8 +1,9 @@
 {
   "project": "market-event-radar",
-  "baseline_version": "11.3.0",
-  "label": "v11.3.0-clarified-market-integration",
-  "updated_at": "2026-08-04T09:23:00+08:00",
+  "baseline_version": "11.4.0",
+  "label": "v11.4.0-final-integration",
+  "updated_at": "2026-08-04T11:26:00+08:00",
+  "stage": "final-integrated",
   "data_channels": {
     "assets": "live-assets",
     "events": "live-events",
@@ -11,25 +12,21 @@
     "global_market": "live-global-market",
     "news": "live-news"
   },
-  "integrated_decisions": [
-    "完整專案而非補丁包",
-    "不包含工作區塊",
-    "虛擬貨幣區塊替換為今日市場重點",
-    "日曆使用台北日期並將除權息彙總為家數",
-    "日曆詳細視窗分重大事件公司資訊除權息",
-    "事件更新無異動時改顯示最新重大資訊",
-    "新聞只保留文章或公告並清除HTML原碼",
-    "新聞加入規則式AI分類影響方向與文章大綱",
-    "台股只顯示個股ETF漲跌幅前15名並保留搜尋",
-    "法人頁預設不列全市場改為搜尋與熱門個股ETF前10名",
-    "缺值顯示破折號不以零代替",
-    "券商分點資料明確標示不等於真實外資持倉",
-    "所有檔案名稱使用ASCII避免Windows亂碼"
+  "final_changes": [
+    "事件卡片與事件詳情自動配對事件前後三天的相關新聞",
+    "新聞依股票代碼、公司別名與經濟事件別名建立關聯",
+    "個股主檔接入官方估值、EPS、損益表與資產負債表來源",
+    "保存最近十二期財務資料並計算 ROE、負債比、淨利率與流動比率",
+    "個股頁清楚區分尚未公告、不適用與資料暫時無法取得",
+    "熱門個股與熱門 ETF 加入每日綜合熱門分數",
+    "新聞加入重要度、影響市場、方向、信心與市場判讀理由",
+    "全部頁面、資料、Workflow 與 Service Worker 更新為 v11.4.0"
   ],
   "realtime": {
     "tw_market_minutes": 5,
     "global_market_minutes": 5,
     "news_minutes": 10,
-    "event_source_poll_minutes": 10
+    "event_source_poll_minutes": 10,
+    "assets_daily": true
   }
 }

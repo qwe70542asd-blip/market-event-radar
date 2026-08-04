@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build Market Event Radar v11.3.0 event data from official schedules.
+"""Build Market Event Radar v11.4.0 event data from official schedules.
 
 The updater keeps the last verified archive, refreshes selected official sources,
 and records when an exact date first appears or changes. It never invents dates.
@@ -179,6 +179,7 @@ def make_event(
         "tracking_key": tracking_key,
         "title": clean(title),
         "start": iso_taipei(start),
+        "local_date": start.astimezone(TAIPEI).date().isoformat(),
         "category": category,
         "event_type": event_type,
         "event_group": event_group,
@@ -432,6 +433,33 @@ def normalized_subject(subject: str) -> str:
     return clean(without_dates).lower()[:180]
 
 
+def concise_material_title(symbol: str, name: str, subject: str, event_type: str, target_day: date) -> str:
+    prefix = clean(f"{symbol} {name}")
+    text = clean(subject)
+    day_label = f"{target_day.month}/{target_day.day}"
+    if event_type == "investor-conference":
+        return f"{prefix}｜{day_label} 法人說明會"
+    if event_type == "financial-report":
+        return f"{prefix}｜公布財務報告"
+    if event_type == "dividend-payment":
+        return f"{prefix}｜{day_label} 股利發放"
+    if event_type == "ex-dividend":
+        amount = re.search(r"(?:每股(?:配發)?|現金股利)[^0-9]{0,12}([0-9]+(?:\.[0-9]+)?)\s*元", text)
+        return f"{prefix}｜{day_label} 除權息" + (f"，每股 {amount.group(1)} 元" if amount else "")
+    if event_type == "corporate-action":
+        for label, pattern in [
+            ("現金增資", r"現金增資"), ("減資", r"減資"), ("合併", r"合併"),
+            ("公開收購", r"公開收購"), ("股份轉換", r"股份轉換"), ("公司分割", r"分割"),
+            ("終止上市櫃", r"下市|終止上市|終止上櫃"),
+        ]:
+            if re.search(pattern, text):
+                shares = re.search(r"(?:發行(?:新股|總股數)|發行股數)[^0-9]{0,12}([0-9][0-9,]*)", text)
+                return f"{prefix}｜{label}" + (f" {shares.group(1)} 股" if shares and label == "現金增資" else "")
+    first = re.split(r"[。；;]", text, maxsplit=1)[0]
+    first = re.sub(r"^\s*\d+[.)、．]\s*", "", first).strip()
+    return f"{prefix}｜{first[:70]}"
+
+
 def parse_material(rows: Any, market: str, source_url: str, origin: str) -> list[dict[str, Any]]:
     events = []
     if not isinstance(rows, list):
@@ -455,7 +483,7 @@ def parse_material(rows: Any, market: str, source_url: str, origin: str) -> list
         tracking = f"{origin}|{symbol}|{event_type}|{normalized_subject(subject)}"
         events.append(make_event(
             event_id=stable_id("tw-material-date", tracking, target_day), tracking_key=tracking,
-            title=f"{symbol} {name}｜{subject[:72]}", start=at_taipei(target_day), category=category,
+            title=concise_material_title(symbol, name, subject, event_type, target_day), start=at_taipei(target_day), category=category,
             event_type=event_type, event_group=group, region="TW",
             impact="medium" if category in {"earnings", "corporate-action", "dividend-payment"} else "low",
             description=subject, market_effect="公司重大訊息可能影響個股評價；請閱讀官方完整說明與附件。",
@@ -574,7 +602,7 @@ def main() -> None:
         start = parse_start(raw)
         if not start or not cutoff <= start <= horizon:
             continue
-        row = {**raw, "start": start.isoformat(timespec="seconds")}
+        row = {**raw, "start": start.isoformat(timespec="seconds"), "local_date": start.date().isoformat()}
         tracking = fallback_tracking_key(row)
         row["tracking_key"] = tracking
         origin = clean(row.get("origin"))
@@ -617,7 +645,7 @@ def main() -> None:
     canonical: dict[str, dict[str, Any]] = {}
     for row in merged.values():
         start = parse_start(row)
-        day = start.date().isoformat() if start else clean(row.get("start"))[:10]
+        day = clean(row.get("local_date") or row.get("target_date") or row.get("ex_date"))[:10] or (start.date().isoformat() if start else clean(row.get("start"))[:10])
         group = clean(row.get("event_group") or row.get("category") or "event").lower()
         symbol = clean(row.get("symbol") or "").upper()
         title = clean(row.get("title") or "")
@@ -625,7 +653,8 @@ def main() -> None:
             kind = "ex-right" if "除權" in title else "ex-dividend"
             key = f"{day}|dividend|{symbol}|{kind}"
         else:
-            normalized = re.sub(r"[^0-9a-zA-Z\u4e00-\u9fff]+", "", title.lower())[:180]
+            title_without_amount = re.sub(r"[（(][^）)]*(?:元|%)[^）)]*[）)]", "", title)
+            normalized = re.sub(r"[^0-9a-zA-Z\u4e00-\u9fff]+", "", title_without_amount.lower())[:180]
             key = f"{day}|{group}|{symbol}|{normalized}"
         existing = canonical.get(key)
         if existing is None:
@@ -652,7 +681,7 @@ def main() -> None:
     )
     payload = {
         "metadata": {
-            "version": "v11.3.0",
+            "version": "v11.4.0",
             "updated_at": NOW.isoformat(timespec="seconds"),
             "timezone": "Asia/Taipei",
             "event_count": len(events),
@@ -669,7 +698,7 @@ def main() -> None:
     EVENTS_PATH.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     SEED_PATH.write_text("window.__EVENT_SEED__ = " + json.dumps(payload, ensure_ascii=False) + ";\n", encoding="utf-8")
     STATE_PATH.write_text(json.dumps({
-        "version": "v11.3.0", "initialized": True,
+        "version": "v11.4.0", "initialized": True,
         "initialized_origins": sorted(next_initialized_origins),
         "updated_at": NOW.isoformat(timespec="seconds"), "events": next_state,
     }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
