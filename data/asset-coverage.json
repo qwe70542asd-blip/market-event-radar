@@ -1,18 +1,15 @@
 {
   "metadata": {
-    "version": "v11.2.8",
-    "updated_at": null,
-    "source": "等待 GitHub Actions 官方資料覆蓋稽核"
+    "version": "v11.3.0",
+    "updated_at": null
   },
   "summary": {
-    "total_stocks": 0,
+    "audited_assets": 17,
+    "stock_count": 10,
+    "etf_count": 7,
     "complete": 0,
-    "partial_or_basic": 0,
-    "missing": 0,
-    "with_any_analysis": 0,
-    "coverage_percent": 0,
-    "field_counts": {}
-  },
-  "missing_stocks": [],
-  "partial_stocks": []
+    "partial": 17,
+    "unresolved": 0,
+    "audit_coverage_percent": 100.0
+  }
 }

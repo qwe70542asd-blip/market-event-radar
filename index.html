@@ -4,14 +4,14 @@
 <meta name="theme-color" content="#061120"><meta name="description" content="市場事件、台股行情、多來源新聞與個人投資組合儀表板。">
 <title>市場事件雷達｜整合版</title>
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="assets/favicon.svg">
-<link rel="stylesheet" href="assets/styles.css?v=11.2.8">
+<link rel="stylesheet" href="assets/styles.css?v=11.3.0"><link rel="stylesheet" href="assets/date-alerts.css?v=11.3.0">
 </head><body>
 
 <div class="noise" aria-hidden="true"></div>
 <header class="topbar">
   <a class="brand" href="index.html">
     <span class="brand-mark"><svg viewBox="0 0 48 48"><path d="M7 34 16 24l7 6 10-16 8 6"></path><path d="M7 40h34"></path></svg></span>
-    <span><strong>市場事件雷達 <em class="version">v11.2.8</em></strong><small>PERSONAL MARKET & EVENT RADAR</small></span>
+    <span><strong>市場事件雷達 <em class="version">v11.3.0</em></strong><small>PERSONAL MARKET & EVENT RADAR</small></span>
   </a>
   <nav class="topnav">
     <span class="live-pill"><i></i> 台股 5 秒・幣 1 秒・新聞 5 分</span>
@@ -54,6 +54,14 @@
     <div class="portfolio-strip" id="portfolioStrip"><div class="empty" style="min-width:100%">尚未加入投資標的。</div></div>
   </section>
 
+  <section class="panel date-alert-panel" id="dateAlertPanel">
+    <div class="date-alert-head">
+      <div><p class="eyebrow">DATE ANNOUNCEMENT WATCH</p><div class="date-alert-title"><h2>今日新公布日期</h2><span class="date-alert-count" id="dateAlertCount">讀取中</span></div></div>
+      <span class="date-alert-updated" id="dateAlertUpdated">正在同步官方來源</span>
+    </div>
+    <div class="date-alert-list" id="dateAlertList"><div class="date-alert-empty"><strong>正在讀取日期異動</strong><span>新日期與延期、提前會顯示在這裡。</span></div></div>
+  </section>
+
   <section class="home-grid">
     <section class="panel calendar-card">
       <div class="section-head">
@@ -76,18 +84,17 @@
     </aside>
   </section>
 
-
   <section class="panel news-preview" id="latestNews">
     <div class="section-head"><div><p class="eyebrow">MULTI-SOURCE NEWS</p><h2>最新財經快訊</h2></div><a class="btn" href="news.html">查看全部 →</a></div>
     <div class="news-grid" id="homeNews"></div>
   </section>
 
-<footer><span>資料僅供市場觀察，不構成投資建議。盤中數值可能延遲。</span><span>Asia/Taipei · v11.2.8</span></footer>
+<footer><span>資料僅供市場觀察，不構成投資建議。盤中數值可能延遲。</span><span>Asia/Taipei · v11.3.0</span></footer>
 <nav class="mobile-nav"><a href="index.html">首頁</a><a href="tw-market.html">台股</a><a href="news.html">新聞</a><a href="portfolio.html">組合</a></nav>
 
 </main>
 
 <dialog class="dialog" id="dayDialog"><div class="dialog-head"><h2 id="dayDialogTitle">當日事件</h2><button class="dialog-close" id="closeDayDialog">×</button></div><div class="dialog-body" id="dayDialogBody"></div></dialog>
-<script src="data/assets-seed.js?v=11.2.8"></script><script src="data/events-seed.js?v=11.2.8"></script><script src="data/news-seed.js?v=11.2.8"></script><script src="data/tw-market-seed.js?v=11.2.8"></script><script src="data/market-snapshot-seed.js?v=11.2.8"></script>
-<script src="assets/shared.js?v=11.2.8"></script><script src="assets/home.js?v=11.2.8"></script><script src="assets/sw-register.js?v=11.2.8"></script>
+<script src="data/assets-seed.js?v=11.3.0"></script><script src="data/events-seed.js?v=11.3.0"></script><script src="data/news-seed.js?v=11.3.0"></script><script src="data/tw-market-seed.js?v=11.3.0"></script><script src="data/market-snapshot-seed.js?v=11.3.0"></script>
+<script src="assets/shared.js?v=11.3.0"></script><script src="assets/home.js?v=11.3.0"></script><script src="assets/date-alerts.js?v=11.3.0"></script><script src="assets/sw-register.js?v=11.3.0"></script>
 </body></html>

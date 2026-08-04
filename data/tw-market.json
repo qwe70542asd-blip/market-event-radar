@@ -1,11 +1,10 @@
 {
   "metadata": {
-    "version": "v11.2.8",
+    "version": "v11.3.0",
     "updated_at": null,
     "trading_date": null,
     "market_status": "pending",
-    "source": "TWSE MIS、TWSE／TPEx OpenAPI",
-    "note": "等待第一次台股行情排程；不以 0 代替缺值。"
+    "source": "TWSE／TPEx official data"
   },
   "breadth": {
     "up": 0,
@@ -104,8 +103,8 @@
       "status": "pending"
     },
     {
-      "symbol": "009816",
-      "name": "凱基台灣TOP50",
+      "symbol": "00981A",
+      "name": "主動統一台股增長",
       "exchange": "TWSE",
       "asset_class": "etf",
       "price": null,
@@ -122,8 +121,8 @@
       "status": "pending"
     },
     {
-      "symbol": "00981A",
-      "name": "主動統一台股增長",
+      "symbol": "009816",
+      "name": "凱基台灣TOP50",
       "exchange": "TWSE",
       "asset_class": "etf",
       "price": null,

@@ -1,4 +1,4 @@
-name: Update v11.2.8 event calendar
+name: Update v11.3.0 event calendar and announced dates
 
 on:
   push:
@@ -9,13 +9,14 @@ on:
       - "scripts/publish_data_branch.sh"
       - "scripts/restore_data_branch.sh"
       - "data/manual-events.json"
+      - "data/event-source-state.json"
       - "requirements.txt"
   schedule:
-    - cron: "17 */6 * * *"
+    - cron: "*/10 * * * *"
   workflow_dispatch:
     inputs:
       clean_rebuild:
-        description: "Ignore live-events and rebuild from the verified legacy bootstrap plus manual events"
+        description: "Ignore live-events and rebuild the verified archive and comparison baseline"
         required: false
         default: false
         type: boolean
@@ -42,11 +43,16 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: pip install -r requirements.txt
-      - name: Restore previous verified event archive
+
+      - name: Restore previous verified event archive and comparison state
         if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.clean_rebuild) }}
         run: |
-          bash scripts/restore_data_branch.sh "$DATA_BRANCH"             "events.json:data/events.json"             "events-seed.js:data/events-seed.js"
-      - name: Bootstrap verified events when the new channel is empty
+          bash scripts/restore_data_branch.sh "$DATA_BRANCH" \
+            "events.json:data/events.json" \
+            "events-seed.js:data/events-seed.js" \
+            "event-source-state.json:data/event-source-state.json"
+
+      - name: Bootstrap verified events when the isolated channel is empty
         shell: bash
         run: |
           set -euo pipefail
@@ -62,22 +68,40 @@ jobs:
           )"
           if [ "$EVENT_COUNT" -eq 0 ]; then
             echo "Migrating the last verified event archive from legacy live-data."
-            bash scripts/restore_data_branch.sh "live-data"               "events.json:data/events.json"               "events-seed.js:data/events-seed.js"
+            bash scripts/restore_data_branch.sh "live-data" \
+              "events.json:data/events.json" \
+              "events-seed.js:data/events-seed.js"
           fi
-      - run: python scripts/update_events.py
-      - name: Validate events
+
+      - name: Scan official calendars and compare exact dates
+        run: python scripts/update_events.py
+
+      - name: Validate event archive and date-monitor metadata
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
           payload=json.loads(Path("data/events.json").read_text(encoding="utf-8"))
+          state=json.loads(Path("data/event-source-state.json").read_text(encoding="utf-8"))
           events=payload.get("events") or []
-          assert events, "empty event calendar after legacy bootstrap"
+          metadata=payload.get("metadata") or {}
+          assert events, "empty event calendar after official-source refresh"
+          assert metadata.get("version")=="v11.3.0", metadata
+          assert metadata.get("state_initialized") is True, metadata
+          assert isinstance(metadata.get("announced_today_count"), int), metadata
+          assert state.get("initialized") is True, state
+          assert all(row.get("id") and row.get("title") and row.get("start") for row in events)
           print("events",len(events))
-          print("updated",payload.get("metadata",{}).get("updated_at"))
+          print("today newly announced",metadata.get("announced_today_count"))
+          print("sources ok",metadata.get("source_ok_count"))
+          print("sources warning",metadata.get("source_warning_count"))
           PY
+
       - name: Publish isolated event channel
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          bash scripts/publish_data_branch.sh "$DATA_BRANCH" "event-calendar"             data/events.json data/events-seed.js
+          bash scripts/publish_data_branch.sh "$DATA_BRANCH" "event-calendar-v11.3.0" \
+            data/events.json \
+            data/events-seed.js \
+            data/event-source-state.json

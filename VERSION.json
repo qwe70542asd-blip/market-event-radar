@@ -1,8 +1,8 @@
 {
   "project": "market-event-radar",
-  "baseline_version": "11.2.8",
-  "label": "v11.2.8-full-universe-data-audit",
-  "updated_at": "2026-08-03T18:10:00+08:00",
+  "baseline_version": "11.3.0",
+  "label": "v11.3.0-two-chat-full-integration",
+  "updated_at": "2026-08-04T08:21:00+08:00",
   "data_channels": {
     "assets": "live-assets",
     "events": "live-events",
@@ -11,32 +11,23 @@
     "global_market": "live-global-market",
     "news": "live-news"
   },
-  "features": [
-    "exhaustive audit of every Taiwan stock and ETF without sampling",
-    "per-asset required and optional field diagnostics",
-    "twelve completed-quarter financial-history target",
-    "bounded two-attempt official-data update with previous-data restoration",
-    "per-field applicable denominators and not-applicable classification",
-    "unresolved asset and field CSV report",
-    "calendar event details without underlines",
-    "hidden administrator source-health diagnostics",
-    "public navigation without data-status entry"
+  "integrated_decisions": [
+    "完整專案而非補丁包",
+    "不包含工作區塊",
+    "法人頁移除公告區塊",
+    "法人頁加入當沖融資融券",
+    "虛擬貨幣排行自動滾動並有 WebSocket 與 REST 備援",
+    "今日新公布日期與日期異動追蹤",
+    "券商分點資料明確標示不等於真實外資持倉",
+    "ETF 成分股顯示資料日期與來源",
+    "所有檔案與資料夾名稱使用 ASCII 避免 Windows 亂碼"
   ],
   "realtime": {
-    "taiwan_visible_quotes_seconds": 5,
-    "taiwan_off_hours_seconds": 60,
-    "taiwan_full_market_minutes": 5,
+    "tw_market_minutes": 5,
+    "global_market_minutes": 5,
     "crypto_websocket_seconds": 1,
     "crypto_fallback_seconds": 30,
-    "news_minutes": 5
-  },
-  "fixes": [
-    "calendar modal event underline removal",
-    "full-universe stock and ETF audit",
-    "financial-history parallel collection and retry",
-    "separate not-applicable awaiting-filing parser-mismatch and source-failure reasons",
-    "asset update failure preservation",
-    "coverage page full audit table",
-    "public diagnostic UI cleanup"
-  ]
+    "news_minutes": 10,
+    "event_source_poll_minutes": 10
+  }
 }

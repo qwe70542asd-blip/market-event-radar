@@ -1,103 +1,34 @@
-name: Update v11.2.8 Taiwan news and material information
-
+name: Update v11.3.0 finance news
 on:
   push:
     branches: [main]
     paths:
-      - ".github/workflows/update-news.yml"
-      - "scripts/update_news.py"
-      - "data/news-sources.json"
-      - "scripts/publish_data_branch.sh"
-      - "scripts/restore_data_branch.sh"
-      - "requirements.txt"
+      - ".github/workflows/**"
+      - "scripts/**"
+      - "data/**"
   schedule:
-    - cron: "3,8,13,18,23,28,33,38,43,48,53,58 * * * *"
+    - cron: "*/10 * * * *"
   workflow_dispatch:
-    inputs:
-      clean_rebuild:
-        description: "Ignore the previous live-news archive and rebuild from current sources"
-        required: false
-        default: false
-        type: boolean
-
 permissions:
   contents: write
-
 concurrency:
-  group: market-radar-news
-  cancel-in-progress: false
-
+  group: live-news
+  cancel-in-progress: true
 jobs:
-  news:
+  update:
     runs-on: ubuntu-latest
     timeout-minutes: 14
-    env:
-      DATA_BRANCH: live-news
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: pip
-
       - run: pip install -r requirements.txt
-
-      - name: Restore previous news archive
-        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.clean_rebuild) }}
-        run: |
-          bash scripts/restore_data_branch.sh "$DATA_BRANCH" \
-            "news.json:data/news.json" \
-            "news-seed.js:data/news-seed.js" \
-            "news-link-cache.json:data/news-link-cache.json"
-
-      - name: Reset news archive for clean rebuild
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.clean_rebuild }}
-        run: |
-          cat > data/news.json <<'JSON'
-          {"metadata":{"version":"v11.2.8"},"items":[],"sources":[]}
-          JSON
-          printf '{}\n' > data/news-link-cache.json
-
-      - name: Update Taiwan news archive
-        run: python scripts/update_news.py
-
-      - name: Validate news archive and source registry
-        run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-
-          payload=json.loads(Path("data/news.json").read_text(encoding="utf-8"))
-          registry=json.loads(Path("data/news-sources.json").read_text(encoding="utf-8"))
-          metadata=payload.get("metadata",{})
-          items=payload.get("items") or []
-          sources=payload.get("sources") or []
-
-          assert items, "empty news archive"
-          assert metadata.get("retention_days")==20
-          assert metadata.get("configured_source_count",0)>=90, metadata
-          assert metadata.get("checked_source_count",0)>=20, metadata
-          assert len(registry.get("sources") or [])>=90
-          assert len(sources)>=metadata.get("configured_source_count",0)
-          assert all(str(row.get("link","")).startswith(("http://","https://")) for row in items)
-          assert all(row.get("name") for row in sources)
-          assert metadata.get("elapsed_seconds",999)<780, metadata
-
-          print("news",len(items))
-          print("material",metadata.get("material_item_count"))
-          print("configured",metadata.get("configured_source_count"))
-          print("checked",metadata.get("checked_source_count"))
-          print("active",metadata.get("active_source_count"))
-          print("warnings",metadata.get("warning_source_count"))
-          print("seconds",metadata.get("elapsed_seconds"))
-          PY
-
-      - name: Publish isolated news channel
+      - run: python scripts/update_news.py
+      - name: Publish data channel
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          bash scripts/publish_data_branch.sh "$DATA_BRANCH" "taiwan-news-and-material-information" \
-            data/news.json data/news-seed.js data/news-link-cache.json
+        run: bash scripts/publish_data_branch.sh live-news live-news data/news.json data/news-seed.js

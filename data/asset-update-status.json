@@ -1,10 +1,8 @@
 {
   "metadata": {
-    "version": "v11.2.8",
+    "version": "v11.3.0",
     "updated_at": null,
     "status": "pending",
-    "attempts": 0,
-    "last_exit_status": null,
-    "message": "等待第一次 GitHub Actions 官方資料更新。"
+    "message": "等待第一次官方資產更新。"
   }
 }

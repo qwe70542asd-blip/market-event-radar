@@ -1,1 +1,1 @@
-window.__EVENT_SEED__ = {"metadata": {"version": "v11.2.8", "updated_at": null, "timezone": "Asia/Taipei", "note": "等待第一次官方事件排程。"}, "sources": [], "events": []};
+window.__EVENT_SEED__ = {"metadata":{"version":"v11.3.0","updated_at":null,"timezone":"Asia/Taipei","state_initialized":false,"announced_today_count":0,"note":"等待第一次官方事件掃描。"},"sources":[],"events":[]};

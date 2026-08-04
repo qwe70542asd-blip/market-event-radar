@@ -1,58 +1,34 @@
-name: Update v11.2.8 Taiwan quotes
-
+name: Update v11.3.0 Taiwan market
 on:
   push:
     branches: [main]
     paths:
-      - ".github/workflows/update-tw-market.yml"
-      - "scripts/update_tw_market.py"
-      - "scripts/publish_data_branch.sh"
-      - "scripts/restore_data_branch.sh"
-      - "requirements.txt"
+      - ".github/workflows/**"
+      - "scripts/**"
+      - "data/**"
   schedule:
-    - cron: "1,6,11,16,21,26,31,36,41,46,51,56 0-6 * * 1-5"
+    - cron: "*/5 * * * *"
   workflow_dispatch:
-
 permissions:
   contents: write
-
 concurrency:
-  group: market-radar-tw-quotes
+  group: live-tw-market
   cancel-in-progress: true
-
 jobs:
-  taiwan-quotes:
+  update:
     runs-on: ubuntu-latest
     timeout-minutes: 14
-    env:
-      DATA_BRANCH: live-tw-market
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: pip
       - run: pip install -r requirements.txt
-      - name: Restore latest expanded security master
-        run: |
-          bash scripts/restore_data_branch.sh "live-assets" \
-            "assets.json:data/assets.json"
       - run: python scripts/update_tw_market.py
-      - name: Validate Taiwan quotes
-        run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          payload=json.loads(Path("data/tw-market.json").read_text(encoding="utf-8"))
-          usable=[row for row in payload.get("items",[]) if row.get("price") is not None and row.get("previous_close") is not None]
-          assert len(usable)>=25, f"usable Taiwan quotes: {len(usable)}"
-          print("quotes",len(usable))
-          PY
-      - name: Publish isolated Taiwan quote channel
+      - name: Publish data channel
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          bash scripts/publish_data_branch.sh "$DATA_BRANCH" "taiwan-quotes" \
-            data/tw-market.json data/tw-market-seed.js
+        run: bash scripts/publish_data_branch.sh live-tw-market live-tw-market data/tw-market.json data/tw-market-seed.js

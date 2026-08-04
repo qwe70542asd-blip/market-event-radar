@@ -1,99 +1,25 @@
 {
   "metadata": {
-    "version": "v11.2.8",
+    "version": "v11.3.0",
     "updated_at": null,
     "trading_date": null,
-    "source": "TWSE／TPEx 官方盤後資料",
-    "note": "靜態備援；正式資料由 Taiwan chips Workflow 更新。"
+    "source": "TWSE／TPEx official after-hours data"
   },
   "markets": {
     "twse": {
-      "institutional": {
-        "foreign_net": null,
-        "trust_net": null,
-        "dealer_net": null,
-        "total_net": null
-      },
-      "margin": {
-        "previous_balance": null,
-        "balance": null,
-        "change": null
-      },
-      "short": {
-        "previous_balance": null,
-        "balance": null,
-        "change": null
-      },
+      "institutional": {},
+      "margin": {},
+      "short": {},
       "stock_count": 0
     },
     "tpex": {
-      "institutional": {
-        "foreign_net": null,
-        "trust_net": null,
-        "dealer_net": null,
-        "total_net": null
-      },
-      "margin": {
-        "previous_balance": null,
-        "balance": null,
-        "change": null
-      },
-      "short": {
-        "previous_balance": null,
-        "balance": null,
-        "change": null
-      },
+      "institutional": {},
+      "margin": {},
+      "short": {},
       "stock_count": 0
     }
   },
   "items": {},
-  "available_dates": [
-    "20260731"
-  ],
-  "history": {
-    "20260731": {
-      "date": "20260731",
-      "markets": {
-        "twse": {
-          "institutional": {
-            "foreign_net": null,
-            "trust_net": null,
-            "dealer_net": null,
-            "total_net": null
-          },
-          "margin": {
-            "previous_balance": null,
-            "balance": null,
-            "change": null
-          },
-          "short": {
-            "previous_balance": null,
-            "balance": null,
-            "change": null
-          },
-          "stock_count": 0
-        },
-        "tpex": {
-          "institutional": {
-            "foreign_net": null,
-            "trust_net": null,
-            "dealer_net": null,
-            "total_net": null
-          },
-          "margin": {
-            "previous_balance": null,
-            "balance": null,
-            "change": null
-          },
-          "short": {
-            "previous_balance": null,
-            "balance": null,
-            "change": null
-          },
-          "stock_count": 0
-        }
-      },
-      "items": {}
-    }
-  }
+  "history": {},
+  "available_dates": []
 }

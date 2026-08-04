@@ -1,51 +1,42 @@
 {
-  "status": "PASS",
-  "results": {
-    "JSON": {
+  "version": "11.3.0",
+  "result": "PASS",
+  "validated_at": "2026-08-04T08:31:00+08:00",
+  "checks": [
+    {
+      "name": "完整專案結構",
       "ok": true,
-      "seconds": 0.003
+      "detail": "85 entries including .github, assets, data, docs, scripts, tests and all HTML pages"
     },
-    "Python compile": {
+    {
+      "name": "Windows filename compatibility",
       "ok": true,
-      "seconds": 3.985
+      "detail": "all archive paths are ASCII; no patch/tool/SHA folders"
     },
-    "JavaScript syntax": {
+    {
+      "name": "Python compile and static tests",
       "ok": true,
-      "seconds": 0.22
+      "detail": "5 unit tests passed; all Python scripts compiled"
     },
-    "Shell syntax": {
+    {
+      "name": "JavaScript syntax",
       "ok": true,
-      "seconds": 0.062
+      "detail": "all assets/*.js and service-worker.js passed node --check"
     },
-    "Workflow YAML and <15m ceiling": {
+    {
+      "name": "HTML local references",
       "ok": true,
-      "seconds": 0.015
+      "detail": "all local src/href targets exist"
     },
-    "HTML references": {
+    {
+      "name": "Two-chat decisions",
       "ok": true,
-      "seconds": 0.002
-    },
-    "Version and no audio": {
-      "ok": true,
-      "seconds": 0.007
-    },
-    "Unit tests": {
-      "ok": true,
-      "seconds": 3.414
-    },
-    "Workflow parser smoke": {
-      "ok": true,
-      "seconds": 3.35
-    },
-    "Browser E2E": {
-      "ok": true,
-      "seconds": 10.705
-    },
-    "Visual readability": {
-      "ok": true,
-      "seconds": 6.998
-    },
-    "total_seconds": 28.771
-  },
-  "details": []
+      "detail": "no work section; institutional page has day trade, margin and short; date announcement monitor and crypto auto-scroll included"
+    }
+  ],
+  "online_validation_pending": [
+    "official endpoints",
+    "GitHub Actions permissions",
+    "live data branch publication"
+  ]
 }
