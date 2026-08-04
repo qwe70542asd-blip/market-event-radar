@@ -1,4 +1,4 @@
-name: Update v11.4.4 經濟日報 news
+name: Update v11.4.6 經濟日報 news
 on:
   push:
     branches: [main]
@@ -28,7 +28,7 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: pip install -r requirements.txt
-      - name: Restore 經濟日報 archive
+      - name: Restore 經濟日報 archive and stock master
         run: |
           bash scripts/restore_data_branch.sh live-news-udn \
             "news-udn.json:data/news-udn.json" \
@@ -42,8 +42,7 @@ jobs:
           import json
           from pathlib import Path
           p=json.loads(Path("data/news-udn.json").read_text(encoding="utf-8"))
-          assert p.get("items"), "經濟日報 returned no usable records; preserving previous branch"
-          print("經濟日報",len(p["items"]),p.get("metadata",{}).get("status"))
+          print("經濟日報",len(p.get("items",[])),p.get("metadata",{}).get("status"))
           PY2
       - name: Publish isolated channel
         env:

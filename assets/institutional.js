@@ -19,7 +19,7 @@
     const marketData=payload.markets?.[key]||{},institutional=marketData.institutional||{};
     return `<article class="stat"><small>${label} 外資</small><strong class="${cls(institutional.foreign_net)}">${display(institutional.foreign_net)}</strong></article><article class="stat"><small>${label} 投信</small><strong class="${cls(institutional.trust_net)}">${display(institutional.trust_net)}</strong></article><article class="stat"><small>${label} 自營商</small><strong class="${cls(institutional.dealer_net)}">${display(institutional.dealer_net)}</strong></article><article class="stat"><small>${label} 合計</small><strong class="${cls(institutional.total_net)}">${display(institutional.total_net)}</strong></article>`;
   }
-  $("#marketFlowCards").innerHTML=marketCard("twse","上市")+marketCard("tpex","上櫃");
+  $("#marketFlowCards").innerHTML=marketCard("twse","上市");
 
   const trendRows=item=>{
     const history=item.history||item.recent||[];

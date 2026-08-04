@@ -1,1 +1,1 @@
-window.__ASSET_AUDIT_SEED__ = {"metadata":{"version":"v11.4.4","updated_at":null},"summary":{"audited_assets":17,"stock_count":10,"etf_count":7,"complete":0,"partial":17,"unresolved":0,"audit_coverage_percent":100.0},"assets":[]};
+window.__ASSET_AUDIT_SEED__ = {"metadata":{"version":"v11.4.6","updated_at":null},"summary":{"audited_assets":17,"stock_count":10,"etf_count":7,"complete":0,"partial":17,"unresolved":0,"audit_coverage_percent":100.0},"assets":[]};

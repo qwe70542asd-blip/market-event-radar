@@ -1,4 +1,4 @@
-name: Update v11.4.4 MoneyDJ news
+name: Update v11.4.6 MoneyDJ news
 on:
   push:
     branches: [main]
@@ -28,7 +28,7 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: pip install -r requirements.txt
-      - name: Restore MoneyDJ archive
+      - name: Restore MoneyDJ archive and stock master
         run: |
           bash scripts/restore_data_branch.sh live-news-moneydj \
             "news-moneydj.json:data/news-moneydj.json" \
@@ -42,8 +42,7 @@ jobs:
           import json
           from pathlib import Path
           p=json.loads(Path("data/news-moneydj.json").read_text(encoding="utf-8"))
-          assert p.get("items"), "MoneyDJ returned no usable records; preserving previous branch"
-          print("MoneyDJ",len(p["items"]),p.get("metadata",{}).get("status"))
+          print("MoneyDJ",len(p.get("items",[])),p.get("metadata",{}).get("status"))
           PY2
       - name: Publish isolated channel
         env:

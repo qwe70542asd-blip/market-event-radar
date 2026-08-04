@@ -1,23 +1,33 @@
 {
-  "version": "v11.4.4",
+  "version": "v11.4.6",
   "status": "PASS",
-  "scope": "Chinese-only multi-source news, concise disclosures, monthly revenue backfill and dividend filters",
+  "scope": "Homepage redesign, unified Traditional-Chinese finance news, portfolio summary, volume momentum, TPEx webpage notice pause, and source verification",
   "checks": [
     "Python syntax",
     "JavaScript syntax",
-    "JSON and workflow YAML",
-    "Chinese readability and mojibake rejection",
-    "UTF-8 Big5 CP950 response decoding",
-    "collapsed company disclosure details",
-    "twelve-month revenue batches and retry queue",
-    "five-year and ten-year dividend filters",
-    "independent media and history channels",
-    "service worker and version references",
-    "complete project tree"
+    "JSON parsing",
+    "21 GitHub Actions workflow YAML files",
+    "HTML local file references",
+    "38 static integration tests",
+    "Project smoke test",
+    "Homepage portfolio summary without zero-valuing missing quotes",
+    "TWSE foreign direction and 20-session market volume momentum",
+    "Unified media news layout and filters",
+    "Expanded major-news scoring",
+    "Traditional-Chinese readability and mojibake rejection",
+    "TPEx webpage news and announcement channel disabled",
+    "Official notices and company disclosures separated from media news",
+    "Secondary Yahoo quote reference channel",
+    "Official-first data verification with conflict preservation",
+    "Market volume history persistence",
+    "Service worker and v11.4.6 references",
+    "Complete project tree and ASCII file names"
   ],
   "limitations": [
-    "Live publisher and official endpoints must be verified by GitHub Actions after upload.",
-    "Historical revenue and dividends accumulate over multiple scheduled runs."
+    "The execution environment blocked browser navigation to localhost and file URLs, so browser automation screenshots could not be completed.",
+    "Live publisher, official and secondary endpoints must be verified by GitHub Actions after upload.",
+    "Yahoo chart values are secondary references only; Goodinfo is provided as an external verification link and is not automatically scraped.",
+    "Conflicting sources are reported and never auto-resolved."
   ],
-  "test_summary": "30 static tests plus syntax and workflow parsing passed"
+  "test_summary": "38 static tests, Python/JavaScript syntax, JSON, 21 workflow YAML files, HTML local references and smoke tests passed"
 }

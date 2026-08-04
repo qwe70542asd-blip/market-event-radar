@@ -1,0 +1,56 @@
+name: Update v11.4.6 stock media news
+on:
+  workflow_run:
+    workflows: ["Update v11.4.6 中央社 news", "Update v11.4.6 MoneyDJ news", "Update v11.4.6 鉅亨網 news", "Update v11.4.6 經濟日報 news", "Update v11.4.6 自由財經 news", "Update v11.4.6 財富自由 news", "Update v11.4.6 Yahoo股市 news", "Update v11.4.6 科技新報／財經新報 news", "Update v11.4.6 工商時報 news"]
+    types: [completed]
+  schedule:
+    - cron: "14-59/15 * * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: live-stock-news
+  cancel-in-progress: true
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Restore stock-news archive, media channels and stock master
+        run: |
+          bash scripts/restore_data_branch.sh live-stock-news \
+            "stock-news.json:data/stock-news.json" \
+            "stock-news-seed.js:data/stock-news-seed.js"
+          bash scripts/restore_data_branch.sh live-assets \
+            "assets.json:data/assets.json"
+          bash scripts/restore_data_branch.sh live-news-cna \
+            "news-cna.json:data/news-cna.json"
+          bash scripts/restore_data_branch.sh live-news-moneydj \
+            "news-moneydj.json:data/news-moneydj.json"
+          bash scripts/restore_data_branch.sh live-news-cnyes \
+            "news-cnyes.json:data/news-cnyes.json"
+          bash scripts/restore_data_branch.sh live-news-udn \
+            "news-udn.json:data/news-udn.json"
+          bash scripts/restore_data_branch.sh live-news-ltn \
+            "news-ltn.json:data/news-ltn.json"
+          bash scripts/restore_data_branch.sh live-news-wealth \
+            "news-wealth.json:data/news-wealth.json"
+          bash scripts/restore_data_branch.sh live-news-yahoo \
+            "news-yahoo.json:data/news-yahoo.json"
+          bash scripts/restore_data_branch.sh live-news-technews \
+            "news-technews.json:data/news-technews.json"
+          bash scripts/restore_data_branch.sh live-news-ctee \
+            "news-ctee.json:data/news-ctee.json"
+      - run: python scripts/update_stock_news.py
+      - name: Publish stock media channel
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/publish_data_branch.sh live-stock-news stock-news data/stock-news.json data/stock-news-seed.js

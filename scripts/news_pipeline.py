@@ -12,17 +12,22 @@ from dateutil import parser as date_parser
 
 from common import DATA, NOW, read_json
 
-VERSION="v11.4.4"
-HEADERS={"User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.4.4; +https://github.com/qwe70542asd-blip/market-event-radar)"}
+VERSION="v11.4.6"
+HEADERS={"User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.4.6; +https://github.com/qwe70542asd-blip/market-event-radar)"}
 COMPANY_EVENT_RE=re.compile(r"增資|減資|除權|除息|股利|法說|財報|財務報告|股東會|停牌|復牌|公開收購|併購|合併|處分資產|取得資產|重大合約|融資融券|注意股票|處置股票|庫藏股|董事會|重大訊息",re.I)
 MARKET_HIGH_RE=re.compile(r"FOMC|聯準會|Fed\b|央行|CPI|PCE|GDP|非農|JOLTS|PMI|利率決策|升息|降息|關稅|制裁|戰爭|金融危機|熔斷|重大法規|匯率干預|資本管制",re.I)
 MEDIUM_RE=re.compile(r"財報|營收|法說|政策|匯率|債券|半導體|AI|原油|除權|除息|增資|減資|融資融券|出口|進口|景氣",re.I)
+
+LEADER_RE=re.compile(r"台積電|鴻海|聯發科|廣達|緯創|國巨|川湖|日月光|台達電|中華電|長榮|陽明|NVIDIA|輝達|Microsoft|微軟|Apple|蘋果|Amazon|亞馬遜|Meta|Google|Alphabet|AMD|Intel|Tesla|三星|SK\s*海力士|海力士|Sony|Toyota",re.I)
+LEADING_SECTOR_RE=re.compile(r"AI\s*伺服器|人工智慧|半導體|晶圓代工|記憶體|HBM|封裝測試|散熱|PCB|電源供應|雲端|資料中心|金融|航運|能源|原物料|機器人",re.I)
+EXECUTIVE_RE=re.compile(r"執行長|董事長|財務長|總經理|基金經理人|分析師|首席經濟學家|央行總裁|官員|法說會|投資人會議|發表會|開發者大會|展覽|論壇|供應鏈會議",re.I)
+BUSINESS_RE=re.compile(r"財報|財測|展望|營收|獲利|EPS|訂單|資本支出|擴產|漲價|降價|新品|新產品|合作|併購|投資",re.I)
 POSITIVE_RE=re.compile(r"優於預期|上修|成長|創高|大增|獲利增加|降息|擴產|訂單增加|買超|利多|回升|改善",re.I)
 NEGATIVE_RE=re.compile(r"低於預期|下修|衰退|虧損|暴跌|大跌|升息|制裁|關稅|減產|賣超|利空|違約|下滑|惡化",re.I)
 GENERIC_RE=re.compile(r"^(?:TWSE\s*)?(?:(?:臺灣|台灣)證券交易所[>：:\-\s]*)?(?:首頁|新聞|最新消息|公文公告|公告查詢|新聞中心|個股資訊|台股新聞|財經新聞|即時新聞)$",re.I)
 CJK_RE=re.compile(r"[\u3400-\u9fff]")
 MOJIBAKE_RE=re.compile(r"(?:Ã|Â|â€|å[\x80-\xff]|æ[\x80-\xff]|ç[\x80-\xff]|è[\x80-\xff]|é[\x80-\xff]|ï¿½|�)")
-SITE_SUFFIX_RE=re.compile(r"\s*(?:[-｜|]\s*)?(?:中央社|MoneyDJ(?:理財網)?|鉅亨網|經濟日報|自由財經|twse\.com\.tw|tpex\.org\.tw|Google News)\s*$",re.I)
+SITE_SUFFIX_RE=re.compile(r"\s*(?:[-｜|]\s*)?(?:中央社|MoneyDJ(?:理財網)?|鉅亨網|經濟日報|自由財經|財富自由|Yahoo(?:奇摩)?股市|科技新報|財經新報|工商時報|twse\.com\.tw|tpex\.org\.tw|Google News)\s*$",re.I)
 CODE_RE=re.compile(r"(?<!\d)(\d{4}|00\d{3}[A-Z]|00\d{4})(?!\d)",re.I)
 
 CATEGORY_RULES=[
@@ -140,6 +145,16 @@ def asset_aliases()->dict[str,str]:
    if len(n)>=2:out[n]=symbol
  return out
 
+def asset_profiles()->dict[str,dict[str,Any]]:
+ payload=read_json(DATA/"assets.json",{"assets":[]});out={}
+ for a in payload.get("assets",[]):
+  symbol=str(a.get("symbol") or "").upper()
+  if not symbol:continue
+  name=clean_text(a.get("name") or a.get("company_name") or symbol)
+  industry=clean_text(a.get("official_industry") or a.get("sub_industry") or (a.get("etf") or {}).get("category") or "")
+  out[symbol]={"symbol":symbol,"name":name or symbol,"industry":industry,"asset_class":a.get("asset_class") or "stock"}
+ return out
+
 def infer_symbols(text:str,aliases:dict[str,str])->list[str]:
  found=[]
  for m in CODE_RE.finditer(text):
@@ -153,36 +168,56 @@ def infer_symbols(text:str,aliases:dict[str,str])->list[str]:
 
 def classify(title:str,summary:str,aliases:dict[str,str],forced_scope:str|None=None)->dict[str,Any]:
  text=f"{title} {summary}";symbols=infer_symbols(text,aliases)
- company=forced_scope=="company" or bool(symbols and COMPANY_EVENT_RE.search(text))
- market=forced_scope=="market" or bool(MARKET_HIGH_RE.search(text))
- scope="company" if company else "market" if market else "general"
+ media_mode=forced_scope=="media"
+ company=forced_scope=="company" or (not media_mode and bool(symbols and COMPANY_EVENT_RE.search(text)))
+ stock_article=media_mode and bool(symbols)
+ systemic=bool(MARKET_HIGH_RE.search(text))
+ market=forced_scope=="market" or systemic
+ scope="company" if company else "stock" if stock_article else "market" if market else "general"
  category,topic="市場動態","market"
  for label,tp,pat in CATEGORY_RULES:
   if pat.search(text):category,topic=label,tp;break
  if company:category,topic="個股公告","company"
- impact="high" if market and MARKET_HIGH_RE.search(text) else "medium" if MEDIUM_RE.search(text) else "low"
+ elif stock_article and category=="市場動態":category,topic="個股新聞","stock"
+ impact="high" if systemic else "medium" if MEDIUM_RE.search(text) else "low"
  pos,neg=bool(POSITIVE_RE.search(text)),bool(NEGATIVE_RE.search(text))
  direction="多空混合" if pos and neg else "偏多" if pos else "偏空" if neg else "中性"
  affected=[]
  for pat,vals in [
-  (re.compile(r"台股|證交所|櫃買|新台幣",re.I),["台股"]),(re.compile(r"半導體|晶片|台積電|NVIDIA|輝達|AI",re.I),["半導體","科技股"]),
+  (re.compile(r"台股|證交所|櫃買|新台幣",re.I),["台股"]),(re.compile(r"半導體|晶片|台積電|NVIDIA|輝達|AI|記憶體",re.I),["半導體","科技股"]),
   (re.compile(r"美股|NASDAQ|S&P|道瓊|聯準會|Fed\b",re.I),["美股"]),(re.compile(r"韓國|KOSPI|KOSDAQ|韓元",re.I),["韓股"]),
   (re.compile(r"美元|匯率|日圓|新台幣|韓元",re.I),["匯率"]),(re.compile(r"債券|美債|殖利率",re.I),["債券"]),
   (re.compile(r"原油|石油|天然氣|黃金|銅價",re.I),["原物料"]),(re.compile(r"金融|銀行|保險",re.I),["金融股"]),
   (re.compile(r"航運|海運|運價",re.I),["航運股"])]:
   if pat.search(text):affected.extend(vals)
- if company and symbols:affected=symbols
+ if (company or stock_article) and symbols:affected=symbols
  affected=list(dict.fromkeys(affected))[:5] or ["整體市場"]
- score=92 if market and impact=="high" else 68 if impact=="medium" else 35
- return {"scope":scope,"company_announcement":company,"is_major":market and impact=="high","ai_category":category,"ai_topic":topic,"topic":topic,"impact":impact,"market_direction":direction,"affected_markets":affected,"confidence":"高" if score>=80 else "中","importance_score":score,"symbols":symbols,"why_it_matters":f"此資訊可能影響{'、'.join(affected[:3])}的風險偏好、估值或資金流向。" if impact=="high" else f"此資訊主要影響{'、'.join(affected[:3])}，仍需配合實際數據與市場預期判斷。"}
+ score=0
+ if systemic:score+=42
+ if LEADER_RE.search(text):score+=24
+ if LEADING_SECTOR_RE.search(text):score+=18
+ if EXECUTIVE_RE.search(text):score+=16
+ if BUSINESS_RE.search(text):score+=14
+ if impact=="high":score+=12
+ elif impact=="medium":score+=5
+ if forced_scope=="market":score+=12
+ is_major=(not company) and score>=45
+ if is_major and impact=="low":impact="medium"
+ verification_status="official" if forced_scope in {"market","company"} else "reference"
+ return {"scope":scope,"company_announcement":company,"is_stock_news":stock_article,"is_major":is_major,"ai_category":category,"ai_topic":topic,"topic":topic,"impact":impact,"market_direction":direction,"affected_markets":affected,"confidence":"高" if score>=70 else "中","importance_score":score,"symbols":symbols,"verification_status":verification_status,"why_it_matters":f"此資訊可能影響{'、'.join(affected[:3])}的風險偏好、產業展望、估值或資金流向。" if is_major else f"此資訊主要影響{'、'.join(affected[:3])}，仍需配合正式數據與市場預期判斷。"}
 
-def normalize_item(*,title:Any,url:Any,source_id:str,source_name:str,summary:Any="",published_at:Any=None,aliases:dict[str,str]|None=None,forced_scope:str|None=None,base_url:str|None=None,extra:dict[str,Any]|None=None)->dict[str,Any]|None:
+def normalize_item(*,title:Any,url:Any,source_id:str,source_name:str,summary:Any="",published_at:Any=None,aliases:dict[str,str]|None=None,profiles:dict[str,dict[str,Any]]|None=None,forced_scope:str|None=None,base_url:str|None=None,extra:dict[str,Any]|None=None)->dict[str,Any]|None:
  title=clean_title(title);url=direct_url(url,base_url);summary=clean_text(summary)
  if len(title)<6 or GENERIC_RE.fullmatch(title) or not url or not readable_chinese(title,summary):return None
  dt=parse_datetime(published_at) or NOW
  analysis=classify(title,summary,aliases or {},forced_scope)
- item={"id":hashlib.sha1(f"{source_id}|{title}|{url}".encode()).hexdigest()[:18],"source_id":source_id,"source":source_name,"title":title[:180],"url":url,"url_valid":True,"published_at":dt.isoformat(timespec="seconds"),"summary":summary[:400] or title,"ai_summary":summary[:400] or title,"language":"zh-Hant",**analysis}
+ profiles=profiles or {}
+ companies=[profiles[symbol] for symbol in analysis.get("symbols",[]) if symbol in profiles]
+ item={"id":hashlib.sha1(f"{source_id}|{title}|{url}".encode()).hexdigest()[:18],"source_id":source_id,"source":source_name,"title":title[:180],"url":url,"url_valid":True,"published_at":dt.isoformat(timespec="seconds"),"summary":summary[:400] or title,"ai_summary":summary[:400] or title,"language":"zh-Hant","companies":companies,**analysis}
  if extra:item.update(extra)
+ image=direct_url(item.get("image_url")) if item.get("image_url") else None
+ if image:item["image_url"]=image
+ else:item.pop("image_url",None)
  return item
 
 def dedupe(items:list[dict[str,Any]],days:int=14,limit:int=300)->list[dict[str,Any]]:

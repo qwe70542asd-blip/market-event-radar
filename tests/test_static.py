@@ -7,7 +7,7 @@ class StaticTests(unittest.TestCase):
  def test_required_tree(self):
   for path in [".github/workflows","assets","data","docs","scripts","tests","index.html","news.html","asset.html","service-worker.js"]:self.assertTrue((ROOT/path).exists(),path)
  def test_version(self):
-  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.4")
+  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.6")
  def test_ascii_filenames(self):
   for path in ROOT.rglob("*"):self.assertTrue(all(ord(c)<128 for c in path.name),path)
  def test_no_audio(self):
@@ -31,9 +31,9 @@ class StaticTests(unittest.TestCase):
  def test_history_pipeline_preserved(self):
   script=self.read("scripts/update_assets.py")
   for x in ("HISTORY_MONTHS = 60","MOPS_REVENUE_ARCHIVES","fetch_mops_dividend_history","asset-history-state.json"):self.assertIn(x,script)
- def test_news_config_has_five_publishers(self):
+ def test_news_config_has_nine_publishers(self):
   cfg=json.loads(self.read("data/news-channels.json"));ids={x["id"] for x in cfg["media"]}
-  self.assertEqual(ids,{"cna","moneydj","cnyes","udn","ltn"})
+  self.assertEqual(ids,{"cna","moneydj","cnyes","udn","ltn","wealth","yahoo","technews","ctee"})
  def test_cna_uses_direct_rss(self):
   cfg=json.loads(self.read("data/news-channels.json"));cna=next(x for x in cfg["media"] if x["id"]=="cna")
   self.assertTrue(all("feedburner.com/rsscna" in x for x in cna["urls"]))
@@ -43,11 +43,11 @@ class StaticTests(unittest.TestCase):
   urls=[u for c in cfg["media"] for u in c["urls"]]
   self.assertFalse(any("news.google.com" in u for u in urls))
  def test_separate_data_files(self):
-  for name in ["news-cna","news-moneydj","news-cnyes","news-udn","news-ltn","official-market-notices","company-disclosures","monthly-revenue","dividend-history"]:
+  for name in ["news-cna","news-moneydj","news-cnyes","news-udn","news-ltn","news-wealth","news-yahoo","news-technews","news-ctee","stock-news","official-market-notices","company-disclosures","monthly-revenue","dividend-history"]:
    self.assertTrue((ROOT/f"data/{name}.json").exists());self.assertTrue((ROOT/f"data/{name}-seed.js").exists())
  def test_separate_live_branches(self):
   shared=self.read("assets/shared.js")
-  for branch in ("live-news-cna","live-news-moneydj","live-news-cnyes","live-news-udn","live-news-ltn","live-official-notices","live-company-disclosures","live-monthly-revenue","live-dividend-history"):self.assertIn(branch,shared)
+  for branch in ("live-news-cna","live-news-moneydj","live-news-cnyes","live-news-udn","live-news-ltn","live-news-wealth","live-news-yahoo","live-news-technews","live-news-ctee","live-stock-news","live-official-notices","live-company-disclosures","live-monthly-revenue","live-dividend-history"):self.assertIn(branch,shared)
  def test_load_news_channels(self):
   shared=self.read("assets/shared.js")
   for x in ("NEWS_FILES","loadNewsChannels","Promise.all","channel_kind"):self.assertIn(x,shared)
@@ -55,23 +55,25 @@ class StaticTests(unittest.TestCase):
   for f in ("assets/home.js","assets/news.js","assets/asset.js","assets/event.js","assets/date-alerts.js"):self.assertIn("loadNewsChannels",self.read(f),f)
  def test_news_page_blocks(self):
   html=self.read("news.html")
-  for x in ("獨立資料來源","重大市場資訊","官方市場公告","個股重大訊息","publisherBlocks","全部媒體新聞查詢"):self.assertIn(x,html)
+  for x in ("精選重大資訊","最新財經新聞","官方市場公告","個股重大訊息","latestNewsRows","sourceFilters"):self.assertIn(x,html)
+  for x in ("獨立資料來源","publisherBlocks"):self.assertNotIn(x,html)
  def test_news_source_status(self):
   js=self.read("assets/news.js")
-  for x in ("sourceStatus","publisherBlocks","sourceFilters","獨立來源"):self.assertIn(x,js)
+  for x in ("newsHealthNote","sourceFilters","majorScore","verification-badge"):self.assertIn(x,js)
+  for x in ("sourceStatus","publisherBlocks"):self.assertNotIn(x,js)
  def test_official_structured_sources(self):
   official=self.read("scripts/update_official_notices.py");company=self.read("scripts/update_company_disclosures.py")
   self.assertIn("/v1/news/newsList",official);self.assertIn("t187ap04_L",company);self.assertIn("t187ap04_O",company)
  def test_independent_workflows(self):
-  expected=["update-news-cna.yml","update-news-moneydj.yml","update-news-cnyes.yml","update-news-udn.yml","update-news-ltn.yml","update-official-notices.yml","update-company-disclosures.yml","update-monthly-revenue.yml","update-dividend-history.yml"]
+  expected=["update-news-cna.yml","update-news-moneydj.yml","update-news-cnyes.yml","update-news-udn.yml","update-news-ltn.yml","update-news-wealth.yml","update-news-yahoo.yml","update-news-technews.yml","update-news-ctee.yml","update-stock-news.yml","update-official-notices.yml","update-company-disclosures.yml","update-monthly-revenue.yml","update-dividend-history.yml"]
   for name in expected:self.assertTrue((ROOT/".github/workflows"/name).exists(),name)
   self.assertFalse((ROOT/".github/workflows/update-news.yml").exists())
  def test_workflows_publish_unique_branches(self):
   texts="\n".join(self.read(p.relative_to(ROOT)) for p in (ROOT/".github/workflows").glob("update-news-*.yml"))
-  for branch in ("live-news-cna","live-news-moneydj","live-news-cnyes","live-news-udn","live-news-ltn"):self.assertIn(branch,texts)
+  for branch in ("live-news-cna","live-news-moneydj","live-news-cnyes","live-news-udn","live-news-ltn","live-news-wealth","live-news-yahoo","live-news-technews","live-news-ctee"):self.assertIn(branch,texts)
  def test_service_worker_cache(self):
-  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-4",sw)
-  for seed in ("news-cna-seed.js","news-moneydj-seed.js","company-disclosures-seed.js","monthly-revenue-seed.js","dividend-history-seed.js"):self.assertIn(seed,sw)
+  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-6",sw)
+  for seed in ("news-cna-seed.js","news-moneydj-seed.js","news-wealth-seed.js","news-yahoo-seed.js","news-technews-seed.js","news-ctee-seed.js","stock-news-seed.js","company-disclosures-seed.js","monthly-revenue-seed.js","dividend-history-seed.js","secondary-reference-seed.js","data-verification-seed.js","market-volume-history-seed.js"):self.assertIn(seed,sw)
  def test_all_pages_current_version(self):
   for p in ROOT.glob("*.html"):self.assertNotIn("v11.4.2",p.read_text(encoding="utf-8"),p.name)
 
@@ -104,5 +106,55 @@ class StaticTests(unittest.TestCase):
   asset=self.read("assets/asset.js")
   self.assertIn("(20\\d{2})",asset)
   self.assertNotIn("(?:20)?(\\d{2,4})",asset)
+
+ def test_stock_news_is_separate_from_disclosures(self):
+  pipeline=self.read("scripts/news_pipeline.py");front=self.read("assets/news.js");asset=self.read("assets/asset.js")
+  for x in ('forced_scope=="media"','is_stock_news','"stock" if stock_article'):self.assertIn(x,pipeline)
+  self.assertIn('item.source_id==="company-disclosures"',front)
+  self.assertNotIn('item.source_id==="company-disclosures"||item.scope==="company"',front)
+  for x in ("loadStockNews","stockNewsPayload","asset-media-card"):self.assertIn(x,asset+self.read("assets/shared.js"))
+
+ def test_stock_news_aggregator(self):
+  script=self.read("scripts/update_stock_news.py")
+  for x in ("other_reports","asset_profiles","SequenceMatcher","stock-news.json"):self.assertIn(x,script)
+  self.assertTrue((ROOT/".github/workflows/update-stock-news.yml").exists())
+
+ def test_stock_news_sources_include_requested_media(self):
+  cfg=json.loads(self.read("data/news-channels.json"));ids={x["id"] for x in cfg["media"]}
+  for x in ("wealth","yahoo","technews","ctee"):self.assertIn(x,ids)
+  wealth=next(x for x in cfg["media"] if x["id"]=="wealth")
+  self.assertTrue(any("stock.ltn.com.tw" in u for u in wealth["urls"]))
+  yahoo=next(x for x in cfg["media"] if x["id"]=="yahoo")
+  self.assertTrue(all("rss?category=" in u for u in yahoo["urls"]))
+
+ def test_stock_news_cards_support_images(self):
+  for path in ("scripts/update_media_source.py","assets/news.js","assets/asset.js"):
+   self.assertIn("image_url",self.read(path),path)
+  self.assertIn("stock-news-grid",self.read("assets/styles.css"))
+
+ def test_home_summary_and_volume_momentum(self):
+  html=self.read("index.html");js=self.read("assets/home.js")
+  for x in ("我的資產總覽","portfolioTotalValue","成交動能","volumeMomentum"):self.assertIn(x,html)
+  for x in ("renderPortfolioSummary","volume_ratio_20d","portfolioDayPL"):self.assertIn(x,js)
+  self.assertNotIn("台灣櫃買指數",html)
+
+ def test_tpex_web_news_disabled(self):
+  updater=self.read("scripts/update_official_notices.py")
+  self.assertNotIn("tpex_press",updater)
+  self.assertIn("TPEx 網頁新聞與公告",updater)
+  data=json.loads(self.read("data/official-market-notices.json"))
+  self.assertFalse(any("櫃買" in str(x.get("source","")) for x in data.get("items",[])))
+
+ def test_verification_channels(self):
+  shared=self.read("assets/shared.js");asset=self.read("assets/asset.js")
+  for x in ("live-secondary-reference","live-data-verification"):self.assertIn(x,shared)
+  for x in ("secondary-reference.json","data-verification.json","assetTrust","多來源一致","資料衝突"):self.assertIn(x,asset)
+  for name in ("update-secondary-reference.yml","update-data-verification.yml"):
+   self.assertTrue((ROOT/".github/workflows"/name).exists(),name)
+
+ def test_market_volume_history(self):
+  script=self.read("scripts/update_tw_market.py");workflow=self.read(".github/workflows/update-tw-market.yml")
+  for x in ("market-volume-history.json","volume_ratio_20d","average_20d_trade_value"):self.assertIn(x,script)
+  self.assertIn("market-volume-history.json",workflow)
 
 if __name__=="__main__":unittest.main()

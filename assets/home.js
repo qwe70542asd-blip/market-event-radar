@@ -1,15 +1,17 @@
 (async()=>{
   "use strict";
-  const {$,escapeHtml,fmt,pct,cls,formatTime,loadData,loadNewsChannels,loadPortfolio,finite}=MR;
-  const [assets,events,news,tw,chips,snapshot]=await Promise.all([
+  const {$,escapeHtml,fmt,pct,cls,formatTime,loadData,loadNewsChannels,loadStockNews,loadPortfolio,finite}=MR;
+  const [assets,events,news,stockNews,tw,chips,snapshot]=await Promise.all([
     loadData("assets.json",window.__ASSET_SEED__||{assets:[]}),
     loadData("events.json",window.__EVENT_SEED__||{events:[]}),
     loadNewsChannels(),
+    loadStockNews(),
     loadData("tw-market.json",window.__TW_MARKET_SEED__||{items:[]}),
     loadData("tw-chips.json",window.__TW_CHIPS_SEED__||{markets:{},items:{}}),
     loadData("market-snapshot.json",window.__MARKET_SNAPSHOT_SEED__||{items:[]})
   ]);
 
+  const assetMap=new Map((assets.assets||[]).map(row=>[String(row.symbol||"").toUpperCase(),row]));
   const quotes=new Map([...(tw.items||[]),...(snapshot.items||[])].map(row=>[String(row.symbol||"").toUpperCase(),row]));
   const strip=value=>String(value||"").replace(/<[^>]*>/g," ").replace(/&nbsp;/gi," ").replace(/\s+/g," ").trim();
   const truncate=(value,max=180)=>{const text=strip(value);return text.length>max?`${text.slice(0,max).trim()}…`:text};
@@ -52,48 +54,76 @@
   };
   const impactLabel=impact=>impact==="high"?"高影響":impact==="low"?"低影響":"中影響";
 
-  function setIndex(symbol,priceId,changeId,rangeId,timeId){
-    const quote=quotes.get(symbol);
-    $(priceId).textContent=fmt(quote?.price);
-    const change=$(changeId);
-    change.textContent=pct(quote?.change_percent);
-    change.className=cls(quote?.change_percent);
-    $(rangeId).textContent=quote?`高 ${fmt(quote.high)}／低 ${fmt(quote.low)}`:"高低 —";
-    $(timeId).textContent=quote?.market_at||quote?.quote_time||"等待行情";
-  }
-  setIndex("^TWII","#taiexPrice","#taiexChange","#taiexRange","#taiexTime");
-  setIndex("^TWOII","#tpexIndexPrice","#tpexIndexChange","#tpexIndexRange","#tpexIndexTime");
+  const LEADER_RE=/台積電|鴻海|聯發科|廣達|緯創|國巨|川湖|日月光|台達電|中華電|長榮|陽明|NVIDIA|輝達|Microsoft|微軟|Apple|蘋果|Amazon|亞馬遜|Meta|Google|Alphabet|AMD|Intel|Tesla|三星|SK\s*海力士|海力士|Sony|Toyota/i;
+  const LEADING_SECTOR_RE=/AI\s*伺服器|人工智慧|半導體|晶圓代工|記憶體|HBM|封裝測試|散熱|PCB|電源供應|雲端|資料中心|金融|航運|能源|原物料|機器人/i;
+  const EXECUTIVE_RE=/執行長|董事長|財務長|總經理|基金經理人|分析師|首席經濟學家|央行總裁|官員|法說會|投資人會議|發表會|開發者大會|展覽|論壇|供應鏈會議/i;
+  const BUSINESS_RE=/財報|財測|展望|營收|獲利|EPS|訂單|資本支出|擴產|漲價|降價|新品|新產品|合作|併購|投資/i;
+  const SYSTEMIC_RE=/FOMC|聯準會|央行|CPI|PCE|GDP|非農|JOLTS|PMI|升息|降息|關稅|制裁|戰爭|金融危機|熔斷|重大法規/i;
+  const majorScore=item=>{
+    const text=`${item.title||""} ${item.summary||""} ${item.ai_summary||""}`;
+    let score=0;
+    if(SYSTEMIC_RE.test(text))score+=42;
+    if(LEADER_RE.test(text))score+=24;
+    if(LEADING_SECTOR_RE.test(text))score+=18;
+    if(EXECUTIVE_RE.test(text))score+=16;
+    if(BUSINESS_RE.test(text))score+=14;
+    if(["official-notices","company-disclosures","cna"].includes(item.source_id))score+=12;
+    if((item.other_reports||[]).length)score+=Math.min(14,(item.other_reports||[]).length*5);
+    if(item.impact==="high")score+=12; else if(item.impact==="medium")score+=5;
+    const age=(Date.now()-Date.parse(item.published_at||item.date||0))/86400000;
+    if(Number.isFinite(age)&&age<=1)score+=10;else if(Number.isFinite(age)&&age<=3)score+=6;
+    return Math.max(score,Number(item.importance_score||0));
+  };
+  const verificationLabel=item=>item.source_id==="official-notices"||item.source_id==="company-disclosures"?"官方來源":(item.other_reports||[]).length?"多來源佐證":item.source_id==="cna"?"主要媒體":"單一來源";
 
-  const marketRows=(snapshot.items||[]).filter(row=>!["BTCUSDT","ETHUSDT","NVDA"].includes(String(row.symbol||"").toUpperCase()));
+  const marketRows=(snapshot.items||[]).filter(row=>!["BTCUSDT","ETHUSDT","NVDA","^TWOII"].includes(String(row.symbol||"").toUpperCase()));
   $("#marketList").innerHTML=marketRows.length?marketRows.slice(0,14).map(row=>`<div class="market-row"><span><strong>${escapeHtml(row.name||row.symbol)}</strong><small>${escapeHtml(row.symbol)}</small></span><b>${fmt(row.price)}${escapeHtml(row.display_suffix||"")}</b><em class="${cls(row.change_percent)}">${pct(row.change_percent)}</em></div>`).join(""):'<div class="empty">等待全球行情更新</div>';
   $("#marketUpdated").textContent=snapshot.metadata?.updated_at?formatTime(snapshot.metadata.updated_at):"等待資料";
 
-  function renderPortfolio(){
+  function renderPortfolioSummary(){
     const rows=loadPortfolio();
-    $("#portfolioCount").textContent=`${rows.length} 個標的`;
-    $("#portfolioStatus").textContent=rows.length?"使用最新行情":"尚未設定";
-    $("#portfolioStrip").innerHTML=rows.length?rows.map(holding=>{
-      const quote=quotes.get(String(holding.symbol).toUpperCase());
-      const price=finite(quote?.price),qty=Number(holding.quantity||holding.qty||0),cost=Number(holding.cost||holding.average_cost||0);
-      const profit=price!=null&&qty?(price-cost)*qty:null;
-      return `<a class="portfolio-card" href="asset.html?symbol=${encodeURIComponent(holding.symbol)}"><span class="symbol">${escapeHtml(holding.symbol)}</span><small>${escapeHtml(holding.name||"")}</small><strong>${fmt(price)}</strong><div class="${cls(profit)}">損益 ${fmt(profit,0)}</div></a>`;
-    }).join(""):'<div class="empty" style="min-width:100%">尚未加入投資標的，請到「我的組合」新增。</div>';
+    let totalCost=0,valuedCost=0,totalValue=0,dayPL=0,valued=0,dayValued=0;
+    const allocation=new Map();
+    for(const holding of rows){
+      const symbol=String(holding.symbol||"").toUpperCase(),quote=quotes.get(symbol),asset=assetMap.get(symbol)||{};
+      const qty=finite(holding.quantity??holding.qty),cost=finite(holding.cost??holding.average_cost),price=finite(quote?.price),previous=finite(quote?.previous_close);
+      if(qty!=null&&cost!=null)totalCost+=qty*cost;
+      if(qty!=null&&price!=null){
+        const value=qty*price;totalValue+=value;valued++;if(cost!=null)valuedCost+=qty*cost;
+        const category=asset.asset_class==="etf"?"ETF":asset.asset_class==="stock"?"個股":"其他";
+        allocation.set(category,(allocation.get(category)||0)+value);
+        if(previous!=null){dayPL+=(price-previous)*qty;dayValued++}
+      }
+    }
+    const cumulative=valued?totalValue-valuedCost:null,returnPct=cumulative!=null&&valuedCost?cumulative/valuedCost*100:null;
+    const dayBase=dayValued?totalValue-dayPL:null,dayPct=dayBase?dayPL/dayBase*100:null;
+    $("#portfolioTotalValue").textContent=valued?`NT$ ${fmt(totalValue,0)}`:"—";
+    $("#portfolioTotalCost").textContent=rows.length?`NT$ ${fmt(totalCost,0)}`:"—";
+    $("#portfolioTotalPL").textContent=cumulative==null?"—":`${cumulative>=0?"+":"-"}NT$ ${fmt(Math.abs(cumulative),0)}`;
+    $("#portfolioTotalPL").className=cls(cumulative);
+    $("#portfolioReturn").textContent=pct(returnPct);$("#portfolioReturn").className=cls(returnPct);
+    $("#portfolioDayPL").textContent=dayValued?`${dayPL>=0?"+":"-"}NT$ ${fmt(Math.abs(dayPL),0)}`:"—";$("#portfolioDayPL").className=cls(dayPL);
+    $("#portfolioDayReturn").textContent=dayValued?pct(dayPct):"—";$("#portfolioDayReturn").className=cls(dayPct);
+    $("#portfolioStatus").textContent=!rows.length?"尚未設定":valued===rows.length?"行情完整":`暫估 ${valued}/${rows.length}`;
+    const totalAllocated=[...allocation.values()].reduce((a,b)=>a+b,0);
+    $("#portfolioAllocation").innerHTML=totalAllocated?`<div class="allocation-bar">${[...allocation.entries()].map(([name,value])=>`<span style="flex:${Math.max(value,1)}" title="${escapeHtml(name)} ${((value/totalAllocated)*100).toFixed(1)}%"></span>`).join("")}</div><div class="allocation-labels">${[...allocation.entries()].sort((a,b)=>b[1]-a[1]).map(([name,value])=>`<span><i></i>${escapeHtml(name)} <b>${((value/totalAllocated)*100).toFixed(1)}%</b></span>`).join("")}</div>`:'<div class="empty">尚未加入投資標的。</div>';
+    $("#portfolioEstimateNote").textContent=rows.length&&valued<rows.length?`${rows.length-valued} 項資產尚未取得最新行情；總資產與損益為已取得行情部分的暫估值。`:"";
   }
-  renderPortfolio();
-  window.addEventListener("portfoliochange",renderPortfolio);
+  renderPortfolioSummary();window.addEventListener("portfoliochange",renderPortfolioSummary);
 
-  const genericNewsTitle=/^(?:公文公告|公告查詢|證交所新聞|櫃買中心公告|新聞中心|最新消息|公告|新聞)$/i;
-  const companyNewsTerms=/增資|減資|除權|除息|股利|法說|財報|股東會|停牌|復牌|公開收購|併購|合併|處分資產|取得資產|重大合約|融資融券|注意股票|處置股票/i;
-  const safeNews=(news.items||[]).map(item=>{
-    const title=strip(item.title).replace(/\s*(?:[-｜|]\s*)?(?:twse\.com\.tw|tpex\.org\.tw|臺灣證券交易所|台灣證券交易所|櫃買中心|Google News)\s*$/i,"").trim();
-    const company=item.scope==="company"||item.company_announcement===true||((item.symbols||[]).length>0&&companyNewsTerms.test(`${title} ${item.summary||""}`));
-    return {...item,title,_company:company};
-  }).filter(item=>item.url_valid!==false&&/^https?:\/\//i.test(String(item.url||""))&&!/<a\b/i.test(`${item.title||""} ${item.summary||""}`)&&item.title&&!genericNewsTitle.test(item.title));
-  const marketNews=safeNews.filter(item=>!item._company);
-  const majorNews=marketNews.filter(item=>item.is_major===true).slice(0,6);
-  const latest=majorNews[0]||marketNews[0];
+  const mediaItems=[...(news.items||[]),...(stockNews.items||[])];
+  const safeNews=[];const seenNews=new Set();
+  for(const item of mediaItems){
+    if(item.source_id==="company-disclosures"||item.source_id==="official-notices")continue;
+    const title=strip(item.title),key=strip(`${title}|${item.url||""}`).toLowerCase();
+    if(!title||!/^https?:\/\//i.test(String(item.url||""))||seenNews.has(key))continue;
+    seenNews.add(key);safeNews.push({...item,title,_majorScore:majorScore(item)});
+  }
+  safeNews.sort((a,b)=>b._majorScore-a._majorScore||Date.parse(b.published_at||0)-Date.parse(a.published_at||0));
+  const majorNews=safeNews.filter(item=>item._majorScore>=45).slice(0,6);
+  const latest=majorNews[0]||safeNews[0];
   if(latest){$("#breakingLink").textContent=strip(latest.title);$("#breakingLink").href=latest.url}
-  $("#homeNews").innerHTML=(majorNews.length?majorNews:marketNews.slice(0,6)).map(item=>`<a class="news-card home-news-card" href="${escapeHtml(item.url)}" target="_blank" rel="noreferrer noopener"><div class="news-meta"><span>${escapeHtml(item.source||"市場消息")}</span><time>${escapeHtml(formatTime(item.published_at||item.date))}</time></div><div class="ai-badges"><span class="tag">${escapeHtml(item.ai_category||item.topic||"市場")}</span><span class="impact-badge ${escapeHtml(item.impact||"medium")}">${impactLabel(item.impact)}</span><span class="direction-badge">${escapeHtml(item.market_direction||"中性")}</span></div><h3>${escapeHtml(strip(item.title))}</h3><p>${escapeHtml(truncate(item.ai_summary||item.summary,150)||"來源未提供摘要。")}</p></a>`).join("")||'<div class="empty">等待重大資訊更新</div>';
+  $("#homeNews").innerHTML=(majorNews.length?majorNews:safeNews.slice(0,6)).map(item=>`<a class="news-card home-news-card" href="${escapeHtml(item.url)}" target="_blank" rel="noreferrer noopener"><div class="news-meta"><span>${escapeHtml(item.source||"市場消息")}</span><time>${escapeHtml(formatTime(item.published_at||item.date))}</time></div><div class="ai-badges"><span class="tag">${escapeHtml(item.ai_category||item.topic||"市場")}</span><span class="impact-badge ${escapeHtml(item.impact||"medium")}">${impactLabel(item.impact)}</span><span class="verification-badge">${escapeHtml(verificationLabel(item))}</span></div><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(truncate(item.ai_summary||item.summary,150)||"來源未提供摘要。")}</p></a>`).join("")||'<div class="empty">等待重大資訊更新</div>';
 
   const todayKey=localKey(new Date());
   const todayEvents=uniqueEvents((events.events||[]).filter(event=>eventDateKey(event)===todayKey));
@@ -104,12 +134,13 @@
   $("#marketTone").textContent=tone;$("#marketTone").className=tone==="偏多"?"up":tone==="偏空"?"down":"flat";
   $("#breadthSummary").textContent=up+down?`${up} 漲／${down} 跌`:"—";
   const markets=chips.markets||{};
-  const foreign=[markets.twse?.institutional?.foreign_net,markets.tpex?.institutional?.foreign_net].map(finite).filter(value=>value!=null);
-  const foreignNet=foreign.length?foreign.reduce((sum,value)=>sum+value,0):null;
-  $("#foreignDirection").textContent=foreignNet==null?"—":foreignNet>0?"買超":"賣超";$("#foreignDirection").className=cls(foreignNet);
-  const margin=[markets.twse?.margin?.change,markets.tpex?.margin?.change].map(finite).filter(value=>value!=null);
-  const marginNet=margin.length?margin.reduce((sum,value)=>sum+value,0):null;
-  $("#marginDirection").textContent=marginNet==null?"—":`${marginNet>0?"增加":"減少"} ${fmt(Math.abs(marginNet),0)}`;$("#marginDirection").className=cls(marginNet);
+  const foreignNet=finite(markets.twse?.institutional?.foreign_net);
+  $("#foreignDirection").textContent=foreignNet==null?"尚未公布":foreignNet>0?"買超":"賣超";$("#foreignDirection").className=cls(foreignNet);
+  const volumeRatio=finite(tw.metadata?.volume_ratio_20d),totalTrade=finite(tw.metadata?.total_trade_value),avgTrade=finite(tw.metadata?.average_20d_trade_value);
+  let volumeLabel="資料更新中",volumeNote="";
+  if(volumeRatio!=null){volumeLabel=volumeRatio>=1.3?"明顯放量":volumeRatio>=1.1?"溫和放量":volumeRatio<.85?"量縮觀望":"量能正常";volumeNote=`近 20 日均量的 ${(volumeRatio*100).toFixed(0)}%`;}
+  else if(totalTrade!=null){volumeLabel="等待歷史均量";volumeNote=`今日成交金額 ${fmt(totalTrade/100000000,0)} 億元`;}
+  $("#volumeMomentum").textContent=volumeLabel;$("#volumeMomentumNote").textContent=volumeNote;
   $("#todayFocusList").innerHTML=majorToday.length?majorToday.slice(0,6).map(event=>`<a class="today-focus-item" href="event.html?id=${encodeURIComponent(event.id)}"><span class="impact-dot ${escapeHtml(event.impact||"medium")}"></span><span><strong>${escapeHtml(strip(event.title))}</strong><small>${escapeHtml(formatTime(event.start))}</small></span></a>`).join(""):'<div class="empty">今天沒有已確認的重大事件</div>';
   $("#focusUpdated").textContent=events.metadata?.updated_at?formatTime(events.metadata.updated_at):"等待資料";
 

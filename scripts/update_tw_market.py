@@ -13,7 +13,7 @@ import requests
 
 from common import DATA, NOW, read_json, write_payload
 
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.3)"}
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.6)"}
 TWSE_QUOTES = "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL"
 TPEX_QUOTES = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes"
 TWSE_FUNDS = "https://openapi.twse.com.tw/v1/opendata/t187ap47_L"
@@ -137,9 +137,39 @@ def main() -> None:
     ranked_rows = [row for row in rows if row.get("asset_class") in {"stock", "etf"}]
     up = sum((number(row.get("change_percent")) or 0) > 0 for row in ranked_rows)
     down = sum((number(row.get("change_percent")) or 0) < 0 for row in ranked_rows)
+
+    # Persist daily total turnover so the home page can compare today's market
+    # activity with the latest 20 trading sessions instead of showing an
+    # unreliable margin-financing placeholder.
+    total_trade_value = sum(number(row.get("trade_value")) or 0 for row in ranked_rows)
+    history_path = DATA / "market-volume-history.json"
+    history = read_json(history_path, {"metadata": {}, "items": []})
+    by_date = {str(item.get("date") or ""): dict(item) for item in history.get("items", []) if item.get("date")}
+    if total_trade_value > 0:
+        by_date[NOW.date().isoformat()] = {
+            "date": NOW.date().isoformat(),
+            "trade_value": total_trade_value,
+            "source": "TWSE／TPEx official close",
+            "updated_at": NOW.isoformat(timespec="seconds"),
+        }
+    history_rows = sorted(by_date.values(), key=lambda item: str(item.get("date") or ""), reverse=True)[:60]
+    previous_values = [number(item.get("trade_value")) for item in history_rows if item.get("date") != NOW.date().isoformat()]
+    previous_values = [value for value in previous_values if value is not None and value > 0][:20]
+    average_20d = sum(previous_values) / len(previous_values) if previous_values else None
+    volume_ratio_20d = total_trade_value / average_20d if average_20d not in (None, 0) else None
+    volume_payload = {
+        "metadata": {"version": "v11.4.6", "updated_at": NOW.isoformat(timespec="seconds"), "retention_days": 60},
+        "items": history_rows,
+    }
+    history_path.write_text(__import__("json").dumps(volume_payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    (DATA / "market-volume-history-seed.js").write_text(
+        "window.__MARKET_VOLUME_HISTORY_SEED__=" + __import__("json").dumps(volume_payload, ensure_ascii=False, separators=(",", ":")) + ";\n",
+        encoding="utf-8",
+    )
+
     payload = {
         "metadata": {
-            "version": "v11.4.4",
+            "version": "v11.4.6",
             "updated_at": NOW.isoformat(timespec="seconds"),
             "trading_date": NOW.date().isoformat(),
             "market_status": "official-close",
@@ -148,6 +178,10 @@ def main() -> None:
             "etf_count": sum(row.get("asset_class") == "etf" for row in rows),
             "excluded_product_count": sum(row.get("asset_class") == "other" for row in rows),
             "etf_classifier": "official-fund-whitelist-with-conservative-last-known-good-fallback",
+            "total_trade_value": total_trade_value or None,
+            "average_20d_trade_value": average_20d,
+            "volume_ratio_20d": volume_ratio_20d,
+            "volume_history_sessions": len(previous_values),
         },
         "breadth": {"up": up, "down": down, "flat": len(ranked_rows) - up - down},
         "items": rows,

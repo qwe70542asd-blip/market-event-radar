@@ -1,0 +1,39 @@
+name: Update v11.4.6 data verification
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/update-data-verification.yml"
+      - "scripts/update_data_verification.py"
+      - "scripts/common.py"
+  schedule:
+    - cron: "45 * * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: live-data-verification
+  cancel-in-progress: true
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Restore source channels
+        run: |
+          bash scripts/restore_data_branch.sh live-assets "assets.json:data/assets.json"
+          bash scripts/restore_data_branch.sh live-tw-market "tw-market.json:data/tw-market.json"
+          bash scripts/restore_data_branch.sh live-monthly-revenue "monthly-revenue.json:data/monthly-revenue.json"
+          bash scripts/restore_data_branch.sh live-dividend-history "dividend-history.json:data/dividend-history.json"
+          bash scripts/restore_data_branch.sh live-secondary-reference "secondary-reference.json:data/secondary-reference.json"
+      - run: python scripts/update_data_verification.py
+      - name: Publish verification channel
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/publish_data_branch.sh live-data-verification live-data-verification data/data-verification.json data/data-verification-seed.js

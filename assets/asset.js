@@ -1,20 +1,26 @@
 (async()=>{
   "use strict";
-  const {$,$$,escapeHtml,fmt,pct,cls,formatTime,loadData,loadNewsChannels,finite,stripHtml,normalizeText}=MR;
+  const {$,$$,escapeHtml,fmt,pct,cls,formatTime,loadData,loadNewsChannels,loadStockNews,finite,stripHtml,normalizeText}=MR;
   const symbol=(new URLSearchParams(location.search).get("symbol")||"2330").toUpperCase();
-  const [assetPayload,marketPayload,chipPayload,eventPayload,newsPayload,revenuePayload,dividendPayload]=await Promise.all([
+  const [assetPayload,marketPayload,chipPayload,eventPayload,newsPayload,stockNewsPayload,revenuePayload,dividendPayload,secondaryPayload,verificationPayload]=await Promise.all([
     loadData("assets.json",window.__ASSET_SEED__||{assets:[]}),
     loadData("tw-market.json",window.__TW_MARKET_SEED__||{items:[]}),
     loadData("tw-chips.json",window.__TW_CHIPS_SEED__||{items:{},history:{}}),
     loadData("events.json",window.__EVENT_SEED__||{events:[]}),
     loadNewsChannels(),
+    loadStockNews(),
     loadData("monthly-revenue.json",window.__MONTHLY_REVENUE_SEED__||{metadata:{status:"waiting"},items:{}}),
-    loadData("dividend-history.json",window.__DIVIDEND_HISTORY_SEED__||{metadata:{status:"waiting"},items:{}})
+    loadData("dividend-history.json",window.__DIVIDEND_HISTORY_SEED__||{metadata:{status:"waiting"},items:{}}),
+    loadData("secondary-reference.json",window.__SECONDARY_REFERENCE_SEED__||{metadata:{status:"waiting"},items:{}}),
+    loadData("data-verification.json",window.__DATA_VERIFICATION_SEED__||{metadata:{status:"waiting"},items:{}})
   ]);
-  const quote=(marketPayload.items||[]).find(row=>String(row.symbol||"").toUpperCase()===symbol)||{};
+  const officialQuote=(marketPayload.items||[]).find(row=>String(row.symbol||"").toUpperCase()===symbol)||{};
+  const secondaryQuote=(secondaryPayload.items||{})[symbol]||{};
+  const quote=Object.keys(officialQuote).length?officialQuote:(secondaryQuote.price!=null?{symbol,name:symbol,price:secondaryQuote.price,previous_close:secondaryQuote.previous_close,status:"secondary-reference",quote_time:secondaryQuote.updated_at,quote_date:secondaryQuote.updated_at}:{});
   const found=(assetPayload.assets||[]).find(row=>String(row.symbol||"").toUpperCase()===symbol);
   const asset=found||{id:`TW:${symbol}`,symbol,name:quote.name||symbol,exchange:quote.exchange,asset_class:quote.asset_class||"stock",market:"TW"};
   const isEtf=asset.asset_class==="etf"||quote.asset_class==="etf";
+  const verification=(verificationPayload.items||{})[symbol]||{};
   const chip=chipPayload.items?.[symbol]||{};
   const etf=asset.etf||{};
   const metrics=asset.metrics||{};
@@ -36,10 +42,13 @@
   };
   const industryName=value=>INDUSTRIES[String(value||"").padStart(2,"0")]||value||"";
   const compactNumber=(value,unit="")=>finite(value)==null?"":`${fmt(value,0)}${unit}`;
+  const trustLabel=status=>status==="multi_source"?"多來源一致":status==="official"?"官方確認":status==="reference"?"參考資料":status==="conflict"?"資料衝突":status==="expired"?"資料過期":"";
+  const trustClass=status=>status==="multi_source"?"confirmed":status==="official"?"official":status==="reference"?"reference":status==="conflict"?"conflict":"";
   const metricCard=(label,value,source="",options={})=>{
     if(!has(value)&&finite(value)==null)return "";
     const display=options.percent?`${fmt(value,2)}%`:options.money?`${fmt(value,2)} ${options.money}`:options.integer?fmt(value,0):String(value);
-    return `<article class="stat metric-card"><small>${escapeHtml(label)}</small><strong class="${options.className||""}">${escapeHtml(display)}</strong>${source?`<span>${escapeHtml(source)}</span>`:""}</article>`;
+    const trust=options.verification?trustLabel(options.verification):"";
+    return `<article class="stat metric-card"><small>${escapeHtml(label)}</small><strong class="${options.className||""}">${escapeHtml(display)}</strong>${source?`<span>${escapeHtml(source)}</span>`:""}${trust?`<em class="verification-badge ${trustClass(options.verification)}">${escapeHtml(trust)}</em>`:""}</article>`;
   };
   const infoGrid=rows=>`<div class="asset-info-grid detailed">${rows.filter(row=>has(row.value)).map(row=>{
     const value=row.url?`<a href="${escapeHtml(row.url)}" target="_blank" rel="noreferrer noopener">${escapeHtml(row.value)} ↗</a>`:escapeHtml(row.value);
@@ -62,11 +71,14 @@
   $("#assetChange").textContent=pct(quote.change_percent);
   $("#assetChange").className=cls(quote.change_percent);
   $("#assetQuoteTime").textContent=quote.quote_date?`${formatDate(quote.quote_date)} ${quote.quote_time||""}`:marketPayload.metadata?.updated_at?formatTime(marketPayload.metadata.updated_at):"";
+  const overallTrust=verification.overall||"missing";
+  const trustText=trustLabel(overallTrust)||"資料驗證中";
+  $("#assetTrust").innerHTML=`<span class="verification-badge ${trustClass(overallTrust)}">${escapeHtml(trustText)}</span><span>官方資料優先；不同來源衝突時不自動選值。</span>${verification.reference_links?.yahoo?`<a href="${escapeHtml(verification.reference_links.yahoo)}" target="_blank" rel="noreferrer noopener">Yahoo 查閱 ↗</a>`:""}${verification.reference_links?.goodinfo?`<a href="${escapeHtml(verification.reference_links.goodinfo)}" target="_blank" rel="noreferrer noopener">Goodinfo 查閱 ↗</a>`:""}`;
 
   const overview=[];
-  const pushCard=(label,value,source,options)=>{const html=metricCard(label,value,source,options);if(html)overview.push(html)};
-  pushCard("成交價",finite(quote.price),quote.status||"市場行情",{money:"元"});
-  pushCard("漲跌幅",finite(quote.change_percent),"市場行情",{percent:true,className:cls(quote.change_percent)});
+  const pushCard=(label,value,source,options={})=>{const html=metricCard(label,value,source,options);if(html)overview.push(html)};
+  pushCard("成交價",finite(quote.price),quote.status||"市場行情",{money:"元",verification:verification.fields?.quote?.status});
+  pushCard("漲跌幅",finite(quote.change_percent),"市場行情",{percent:true,className:cls(quote.change_percent),verification:verification.fields?.quote?.status});
   pushCard("開盤",finite(quote.open),"市場行情",{money:"元"});
   pushCard("最高",finite(quote.high),"市場行情",{money:"元"});
   pushCard("最低",finite(quote.low),"市場行情",{money:"元"});
@@ -81,15 +93,15 @@
     pushCard("受益人數",finite(etf.beneficiary_count),etf.beneficiary_source||"基金資料",{integer:true});
     pushCard("受益權單位數",finite(etf.units),etf.units_source||"基金資料",{integer:true});
   }else{
-    pushCard("本益比",finite(metrics.pe),asset.metric_sources?.pe||"官方估值",{});
-    pushCard("股價淨值比",finite(metrics.pb),asset.metric_sources?.pb||"官方估值",{});
-    pushCard("殖利率",finite(metrics.dividend_yield),asset.metric_sources?.dividend_yield||"官方估值",{percent:true});
-    pushCard("EPS",finite(metrics.eps),asset.metric_sources?.eps||"官方財報",{money:"元"});
-    pushCard("ROE",finite(metrics.roe),asset.metric_sources?.roe||"官方財報計算",{percent:true});
-    pushCard("ROA",finite(metrics.roa),asset.metric_sources?.roa||"官方財報計算",{percent:true});
-    pushCard("負債比",finite(metrics.debt_ratio),asset.metric_sources?.debt_ratio||"官方財報計算",{percent:true});
-    pushCard("淨利率",finite(metrics.net_margin),asset.metric_sources?.net_margin||"官方財報計算",{percent:true});
-    pushCard("流動比率",finite(metrics.current_ratio),asset.metric_sources?.current_ratio||"官方財報計算",{percent:true});
+    pushCard("本益比",finite(metrics.pe),asset.metric_sources?.pe||"官方估值",{verification:verification.fields?.metrics?.status});
+    pushCard("股價淨值比",finite(metrics.pb),asset.metric_sources?.pb||"官方估值",{verification:verification.fields?.metrics?.status});
+    pushCard("殖利率",finite(metrics.dividend_yield),asset.metric_sources?.dividend_yield||"官方估值",{percent:true,verification:verification.fields?.metrics?.status});
+    pushCard("EPS",finite(metrics.eps),asset.metric_sources?.eps||"官方財報",{money:"元",verification:verification.fields?.metrics?.status});
+    pushCard("ROE",finite(metrics.roe),asset.metric_sources?.roe||"官方財報計算",{percent:true,verification:verification.fields?.metrics?.status});
+    pushCard("ROA",finite(metrics.roa),asset.metric_sources?.roa||"官方財報計算",{percent:true,verification:verification.fields?.metrics?.status});
+    pushCard("負債比",finite(metrics.debt_ratio),asset.metric_sources?.debt_ratio||"官方財報計算",{percent:true,verification:verification.fields?.metrics?.status});
+    pushCard("淨利率",finite(metrics.net_margin),asset.metric_sources?.net_margin||"官方財報計算",{percent:true,verification:verification.fields?.metrics?.status});
+    pushCard("流動比率",finite(metrics.current_ratio),asset.metric_sources?.current_ratio||"官方財報計算",{percent:true,verification:verification.fields?.metrics?.status});
   }
   if(overview.length){
     $("#assetMetrics").innerHTML=overview.join("");
@@ -200,6 +212,7 @@
     renderRevenue(24);
     $$("#revenuePeriods button").forEach(button=>button.addEventListener("click",()=>{$$("#revenuePeriods button").forEach(item=>item.classList.remove("active"));button.classList.add("active");renderRevenue(Number(button.dataset.months||0))}));
     const revenueMeta=revenuePayload.metadata||{},progress=revenueMeta.covered_period_count?` · 歷史通道 ${revenueMeta.covered_period_count}/${revenueMeta.history_months||60} 個月份（${revenueMeta.backfill_percent||0}%）`:"";
+    $("#revenueUpdated").dataset.verification=verification.fields?.monthly_revenue?.status||"";
     $("#revenueUpdated").textContent=revenueMeta.updated_at?`獨立營收通道更新 ${formatTime(revenueMeta.updated_at)} · ${revenueMeta.status||"等待"} · 此公司已收錄 ${revenues.length} 個月${progress}`:asset.revenue_updated_at?`營收資料更新 ${formatTime(asset.revenue_updated_at)} · 已收錄 ${revenues.length} 個月`:`依公開資訊觀測站 · 已收錄 ${revenues.length} 個月`;
     showSection("#revenueSection","月營收");
   }
@@ -247,6 +260,7 @@
     $("#distributionTitle").textContent=isEtf?"配息歷史":"股利與除權息歷史";
     renderDistributions(5);
     $$("#distributionPeriods button").forEach(button=>button.addEventListener("click",()=>{$$("#distributionPeriods button").forEach(item=>item.classList.remove("active"));button.classList.add("active");renderDistributions(Number(button.dataset.years||0))}));
+    $("#distributionUpdated").dataset.verification=verification.fields?.dividends?.status||"";
     $("#distributionUpdated").textContent=(dividendPayload.metadata?.updated_at?`獨立股利通道更新 ${formatTime(dividendPayload.metadata.updated_at)} · ${dividendPayload.metadata.status||"等待"}`:asset.dividend_updated_at?`股利資料更新 ${formatTime(asset.dividend_updated_at)}`:etf.distribution_updated_at?`配息資料更新 ${formatTime(etf.distribution_updated_at)}`:"")+` · 已收錄 ${distributions.length} 筆`;
     showSection("#distributionSection",isEtf?"配息":"股利");
   }
@@ -262,15 +276,15 @@
     showSection("#eventsSection","事件公告");
   }
 
-  const relatedNews=(newsPayload.items||[]).filter(item=>{
-    if(item.url_valid===false)return false;
+  const relatedNews=[...(stockNewsPayload.items||[]),...(newsPayload.items||[])].filter(item=>{
+    if(item.url_valid===false||item.source_id==="company-disclosures"||item.source_id==="official-notices")return false;
     const itemSymbols=(item.symbols||[]).map(value=>String(value).toUpperCase());
     const text=normalizeText(`${item.title||""} ${item.ai_summary||item.summary||""}`);
     return itemSymbols.includes(symbol)||assetNames.some(name=>name&&text.includes(name));
-  }).slice(0,12);
+  }).filter((item,index,list)=>list.findIndex(x=>x.url===item.url||x.id===item.id)===index).slice(0,12);
   if(relatedNews.length){
-    $("#assetNews").innerHTML=relatedNews.map(item=>`<a class="news-card compact" href="${escapeHtml(item.url||"#")}" target="_blank" rel="noreferrer noopener"><div class="news-meta"><span>${escapeHtml(item.source||"")}</span><time>${escapeHtml(formatTime(item.published_at))}</time></div><div class="ai-badges"><span class="tag">${escapeHtml(item.ai_category||item.topic||"市場")}</span>${item.impact?`<span class="impact-badge ${escapeHtml(item.impact)}">${item.impact==="high"?"高影響":item.impact==="low"?"低影響":"中影響"}</span>`:""}</div><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(stripHtml(item.ai_summary||item.summary||"").slice(0,170))}</p></a>`).join("");
-    showSection("#newsSection","相關新聞");
+    $("#assetNews").innerHTML=relatedNews.map(item=>`<article class="asset-media-card">${item.image_url?`<div class="asset-media-image"><img src="${escapeHtml(item.image_url)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.remove()"></div>`:""}<div><div class="news-meta"><span>${escapeHtml(item.source||"")}</span><time>${escapeHtml(formatTime(item.published_at))}</time></div><div class="ai-badges"><span class="tag">${escapeHtml(item.ai_category||"個股新聞")}</span>${item.impact?`<span class="impact-badge ${escapeHtml(item.impact)}">${item.impact==="high"?"高影響":item.impact==="low"?"低影響":"中影響"}</span>`:""}<span class="direction-badge">${escapeHtml(item.market_direction||"中性")}</span></div><h3><a href="${escapeHtml(item.url||"#")}" target="_blank" rel="noreferrer noopener">${escapeHtml(item.title)}</a></h3><p>${escapeHtml(stripHtml(item.ai_summary||item.summary||"").slice(0,190))}</p>${(item.other_reports||[]).length?`<small>另有 ${item.other_reports.length} 家媒體報導同一事件</small>`:""}</div></article>`).join("");
+    showSection("#newsSection","個股新聞");
   }
 
   const parseRocDate=value=>{

@@ -8,7 +8,17 @@
   const today=dayKey(Date.now());
   const rows=(payload.events||[]).filter(e=>e.announced_at&&dayKey(e.announced_at)===today&&["new-date","date-changed"].includes(e.announcement_kind)).sort((a,b)=>Date.parse(b.announced_at)-Date.parse(a.announced_at));
   updated.textContent=payload?.metadata?.updated_at?`最近掃描 ${formatTime(payload.metadata.updated_at)}`:"等待第一次掃描";
-  if(rows.length){count.textContent=`${rows.length} 件`;list.innerHTML=rows.slice(0,10).map(e=>`<article class="date-alert-item ${e.announcement_kind==="date-changed"?"changed":"new"}"><div class="date-alert-label">${e.announcement_kind==="date-changed"?"日期異動":"今日新確認"}</div><a class="date-alert-main" href="event.html?id=${encodeURIComponent(e.id)}"><strong>${escapeHtml(e.title)}</strong><span>事件日期：${escapeHtml(formatTime(e.start))}</span>${e.previous_start?`<small>原日期：${escapeHtml(formatTime(e.previous_start))}</small>`:""}</a><div class="date-alert-meta"><span>確認 ${escapeHtml(formatTime(e.announced_at))}</span>${e.source_url?`<a href="${escapeHtml(e.source_url)}" target="_blank" rel="noreferrer noopener">官方來源 ↗</a>`:""}</div></article>`).join("");return}
+  if(rows.length){
+    count.textContent=`${rows.length} 件`;
+    const financial=rows.filter(e=>/財報|財務報告|季度報告|年報/.test(e.title||""));
+    const others=rows.filter(e=>!financial.includes(e));
+    const cards=[];
+    if(financial.length>=5){
+      cards.push(`<article class="date-alert-item new"><div class="date-alert-label">今日新確認</div><a class="date-alert-main" href="#calendarGrid"><strong>今日新增 ${financial.length} 家公司財報日期</strong><span>已合併顯示，請到月曆查看完整名單</span><small>${escapeHtml(formatTime(financial[0].announced_at))}</small></a></article>`);
+    }else cards.push(...financial.map(e=>`<article class="date-alert-item new"><div class="date-alert-label">今日新確認</div><a class="date-alert-main" href="event.html?id=${encodeURIComponent(e.id)}"><strong>${escapeHtml(e.title)}</strong><span>事件日期：${escapeHtml(formatTime(e.start))}</span></a></article>`));
+    cards.push(...others.slice(0,Math.max(0,9-cards.length)).map(e=>`<article class="date-alert-item ${e.announcement_kind==="date-changed"?"changed":"new"}"><div class="date-alert-label">${e.announcement_kind==="date-changed"?"日期異動":"今日新確認"}</div><a class="date-alert-main" href="event.html?id=${encodeURIComponent(e.id)}"><strong>${escapeHtml(e.title)}</strong><span>事件日期：${escapeHtml(formatTime(e.start))}</span>${e.previous_start?`<small>原日期：${escapeHtml(formatTime(e.previous_start))}</small>`:""}</a><div class="date-alert-meta"><span>確認 ${escapeHtml(formatTime(e.announced_at))}</span>${e.source_url?`<a href="${escapeHtml(e.source_url)}" target="_blank" rel="noreferrer noopener">官方來源 ↗</a>`:""}</div></article>`));
+    list.innerHTML=cards.slice(0,9).join("");return
+  }
   const genericTitle=/^(?:公文公告|公告查詢|證交所新聞|櫃買中心公告|新聞中心|最新消息|公告|新聞)$/i;
   const companyTerms=/增資|減資|除權|除息|股利|法說|財報|股東會|停牌|復牌|公開收購|併購|合併|處分資產|取得資產|重大合約|融資融券/i;
   const major=(news.items||[]).filter(n=>{const title=String(n.title||"").replace(/<[^>]*>/g," ").trim(),company=n.scope==="company"||n.company_announcement===true||((n.symbols||[]).length>0&&companyTerms.test(`${title} ${n.summary||""}`));return n.url_valid!==false&&n.is_major===true&&!company&&title&&!genericTitle.test(title)&&/^https?:\/\//i.test(String(n.url||""))}).slice(0,5);

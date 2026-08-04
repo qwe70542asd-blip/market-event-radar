@@ -1,5 +1,5 @@
 {
-  "version": "v11.4.4",
+  "version": "v11.4.6",
   "media": [
     {
       "id": "cna",
@@ -65,18 +65,71 @@
     {
       "id": "ltn",
       "name": "自由財經",
-      "kind": "html",
+      "kind": "rss",
       "urls": [
-        "https://ec.ltn.com.tw/"
-      ],
-      "article_patterns": [
-        "ec\\\\.ltn\\\\.com\\\\.tw/article/",
-        "ec\\\\.ltn\\\\.com\\\\.tw/article/breakingnews/"
+        "https://news.ltn.com.tw/rss/business.xml"
       ],
       "file": "news-ltn.json",
       "var": "__NEWS_LTN_SEED__",
       "retention_days": 5,
       "minimum_records": 3
+    },
+    {
+      "id": "wealth",
+      "name": "財富自由",
+      "kind": "html",
+      "urls": [
+        "https://stock.ltn.com.tw/"
+      ],
+      "article_patterns": [
+        "stock\\\\.ltn\\\\.com\\\\.tw/article/"
+      ],
+      "file": "news-wealth.json",
+      "var": "__NEWS_WEALTH_SEED__",
+      "retention_days": 7,
+      "minimum_records": 2
+    },
+    {
+      "id": "yahoo",
+      "name": "Yahoo股市",
+      "kind": "rss",
+      "urls": [
+        "https://tw.stock.yahoo.com/rss?category=tw-market",
+        "https://tw.stock.yahoo.com/rss?category=news"
+      ],
+      "file": "news-yahoo.json",
+      "var": "__NEWS_YAHOO_SEED__",
+      "retention_days": 5,
+      "minimum_records": 3
+    },
+    {
+      "id": "technews",
+      "name": "科技新報／財經新報",
+      "kind": "rss",
+      "urls": [
+        "https://technews.tw/feed/",
+        "https://finance.technews.tw/feed/"
+      ],
+      "file": "news-technews.json",
+      "var": "__NEWS_TECHNEWS_SEED__",
+      "retention_days": 7,
+      "minimum_records": 2
+    },
+    {
+      "id": "ctee",
+      "name": "工商時報",
+      "kind": "html",
+      "urls": [
+        "https://www.ctee.com.tw/livenews"
+      ],
+      "article_patterns": [
+        "ctee\\\\.com\\\\.tw/news/",
+        "ctee\\\\.com\\\\.tw/livenews/"
+      ],
+      "file": "news-ctee.json",
+      "var": "__NEWS_CTEE_SEED__",
+      "retention_days": 5,
+      "minimum_records": 2
     }
   ]
 }

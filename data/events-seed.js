@@ -1,1 +1,1 @@
-window.__EVENT_SEED__ = {"metadata":{"version":"v11.4.4","updated_at":null,"timezone":"Asia/Taipei","state_initialized":false,"announced_today_count":0,"note":"等待第一次官方事件掃描。"},"sources":[],"events":[]};
+window.__EVENT_SEED__ = {"metadata":{"version":"v11.4.6","updated_at":null,"timezone":"Asia/Taipei","state_initialized":false,"announced_today_count":0,"note":"等待第一次官方事件掃描。"},"sources":[],"events":[]};
