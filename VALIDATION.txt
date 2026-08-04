@@ -1,11 +1,21 @@
-市場事件雷達 v11.3.0 完整整合版
-總結果：PASS
+Market Event Radar v11.3.0
 
-- 完整專案結構：PASS
-- 檔名相容性：PASS（全部 ASCII）
-- Python 測試：PASS
-- JavaScript 語法：PASS
-- HTML 本地引用：PASS
-- 兩個聊天室功能整合：PASS
+Result: PASS
 
-上線後仍需驗證官方端點、GitHub Actions 權限與 live data 分支發布。
+Validated:
+- Complete repository structure
+- ASCII-only archive paths
+- Python compile and 8 static tests
+- JavaScript syntax
+- HTML local references
+- News URL and sanitization rules
+- Market focus replacement
+- Grouped calendar and dividend counts
+- Four top-15 market rankings
+- Search-only institutional details and hot rankings
+
+Pending after deployment:
+- Official endpoint responses
+- GitHub Actions write permissions
+- Live data branch publication
+- Visual check on GitHub Pages

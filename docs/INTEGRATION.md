@@ -1,11 +1,17 @@
-# v11.3.0 integration
+# v11.3.0 Integration
 
-本版合併「延續市場事件雷達」與「市場事件雷達網頁」的決定。
+This is a complete repository, not a patch package.
 
-- 不保留工作區塊。
-- 首頁保留行情、投資組合、事件、新聞與虛擬貨幣。
-- 法人頁移除公告，加入當沖、融資、融券。
-- 新增今日新公布日期與日期異動。
-- 券商資料只標示公開分點成交，不宣稱是真實持倉。
-- ETF 成分股必須附資料日期與來源；沒有就明確標示缺漏。
-- 壓縮檔解壓後就是完整專案，檔名全部使用 ASCII。
+## Integrated interface decisions
+
+- The crypto sidebar is replaced with a Taiwan market focus panel.
+- Calendar cells show major events plus grouped company/dividend counts.
+- The day dialog separates major events, company information and dividends.
+- Taipei date keys are used instead of UTC date slicing.
+- Duplicate event and ex-dividend records are collapsed.
+- Event updates fall back to recent major information when no date changed today.
+- News text is sanitized and homepage/listing links are removed.
+- News cards include deterministic category, impact, direction and outline fields.
+- Taiwan market pages show four top-15 rankings and search-only full-universe results.
+- Institutional pages show search-only detail plus daily hot stock/ETF rankings.
+- Missing chip values are never converted to zero.

@@ -1,11 +1,10 @@
-# 無法直接做到與應對方法
+# v11.3.0 Limitations and responses
 
-| 項目 | 無法直接做到的原因 | v11.3.0 應對方法 |
+| Limitation | Reason | Response |
 |---|---|---|
-| 外資券商真實持倉與最終客戶 | 公開成交分點不等於券商自有持倉，也無法辨識最終委託人 | 只呈現分點買賣超、集中度與連續買賣，畫面明確警告 |
-| 所有 ETF 每日完整成分股 | 各投信揭露格式、頻率不同，主動 ETF 可能延遲 | 逐投信增加解析器；顯示來源與資料日期，缺資料不猜 |
-| 秒級所有市場行情 | 免費資料受授權、延遲與限流影響 | 台股使用官方排程；虛擬貨幣用 WebSocket，失敗改 30 秒 REST |
-| 官方公告後數秒進日曆 | GitHub Actions 排程可能延遲 | 10 分鐘掃描；要秒級需改用常駐後端或 Cloudflare Worker |
-| 官方網站改版後永不故障 | HTML/API 格式可能變更 | 單一來源失敗保留上一版；不以空資料覆蓋成功資料 |
-| 模糊日期自動判定 | 月份、季度、預計日期不是確切日期 | 等官方確定日期後才進正式月曆 |
-| 全市場十二季財報永遠完整 | 不同行業科目、申報時間與解析格式不同 | 透過稽核頁列出缺漏原因，金融業與一般產業分開擴充 |
+| True foreign-broker holdings | Public branch data does not identify final clients or full positions | Show public institutional flow and branch concentration with a warning |
+| Guaranteed second-level quotes | Free/public sources have latency and licensing limits | Mark update time; use official after-hours data and retained last-good payloads |
+| Every ETF constituent every day | Managers publish in different formats and active ETFs may disclose later | Display source date and only publish verified holdings |
+| Guaranteed parser stability | Official pages and APIs can change | Isolate sources, reject empty refreshes and retain the last successful payload |
+| True generative AI without a secret | GitHub Pages cannot safely store model API keys | Use deterministic no-key classification now; allow an Actions secret later |
+| Predicting market direction with certainty | News impact is conditional and expectation-dependent | Use impact, direction and confidence labels rather than certain predictions |

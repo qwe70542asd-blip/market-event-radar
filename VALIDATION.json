@@ -1,42 +1,48 @@
 {
   "version": "11.3.0",
   "result": "PASS",
-  "validated_at": "2026-08-04T08:31:00+08:00",
+  "validated_at": "2026-08-04T09:23:00+08:00",
   "checks": [
     {
-      "name": "完整專案結構",
+      "name": "Complete repository structure",
       "ok": true,
-      "detail": "85 entries including .github, assets, data, docs, scripts, tests and all HTML pages"
+      "detail": "86 files including workflows, assets, data, docs, scripts, tests and all HTML pages"
     },
     {
       "name": "Windows filename compatibility",
       "ok": true,
-      "detail": "all archive paths are ASCII; no patch/tool/SHA folders"
+      "detail": "all archive paths are ASCII; no patch, tool or checksum folders"
     },
     {
       "name": "Python compile and static tests",
       "ok": true,
-      "detail": "5 unit tests passed; all Python scripts compiled"
+      "detail": "8 unit tests passed; all Python scripts compiled"
     },
     {
       "name": "JavaScript syntax",
       "ok": true,
-      "detail": "all assets/*.js and service-worker.js passed node --check"
+      "detail": "all assets JavaScript and service worker passed node --check"
     },
     {
       "name": "HTML local references",
       "ok": true,
-      "detail": "all local src/href targets exist"
+      "detail": "all local src and href targets exist"
     },
     {
-      "name": "Two-chat decisions",
+      "name": "Clarified interface decisions",
       "ok": true,
-      "detail": "no work section; institutional page has day trade, margin and short; date announcement monitor and crypto auto-scroll included"
+      "detail": "market focus, grouped calendar, event fallback, article-only news, four top-15 rankings and search-only chip details integrated"
+    },
+    {
+      "name": "News sanitization rules",
+      "ok": true,
+      "detail": "homepage/listing URL rejection, HTML stripping, classification, impact, direction and summary rules tested"
     }
   ],
   "online_validation_pending": [
-    "official endpoints",
+    "official endpoint responses",
     "GitHub Actions permissions",
-    "live data branch publication"
+    "live branch publication",
+    "browser visual validation on deployed GitHub Pages"
   ]
 }

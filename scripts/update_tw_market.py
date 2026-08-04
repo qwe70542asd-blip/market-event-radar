@@ -9,7 +9,8 @@ def fetch(url,exchange):
  for x in r.json():
   s=str(x.get("Code") or x.get("SecuritiesCompanyCode") or x.get("SecuritiesCompanyCode") or "").strip();n=x.get("Name") or x.get("CompanyName") or x.get("SecuritiesCompanyName") or "";price=num(x.get("ClosingPrice") or x.get("Close") or x.get("ClosePrice"));chg=num(x.get("Change") or x.get("ChangeAmount"));prev=price-chg if price is not None and chg is not None else None
   if not s or price is None:continue
-  out.append({"symbol":s,"name":n,"exchange":exchange,"asset_class":"etf" if not s.isdigit() or len(s)>4 else "stock","price":price,"previous_close":prev,"change":chg,"change_percent":chg/prev*100 if chg is not None and prev else None,"open":num(x.get("OpeningPrice") or x.get("Open")),"high":num(x.get("HighestPrice") or x.get("High")),"low":num(x.get("LowestPrice") or x.get("Low")),"volume":num(x.get("TradeVolume") or x.get("TradingShares") or x.get("TradingVolume")),"trade_value":num(x.get("TradeValue") or x.get("TransactionAmount")),"quote_date":NOW.date().isoformat(),"quote_time":NOW.strftime("%H:%M"),"status":"official-close"})
+  is_etf=s.startswith("00") or not s.isdigit() or len(s)>4 or "ETF" in str(n).upper() or "基金" in str(n)
+  out.append({"symbol":s,"name":n,"exchange":exchange,"asset_class":"etf" if is_etf else "stock","price":price,"previous_close":prev,"change":chg,"change_percent":chg/prev*100 if chg is not None and prev else None,"open":num(x.get("OpeningPrice") or x.get("Open")),"high":num(x.get("HighestPrice") or x.get("High")),"low":num(x.get("LowestPrice") or x.get("Low")),"volume":num(x.get("TradeVolume") or x.get("TradingShares") or x.get("TradingVolume")),"trade_value":num(x.get("TradeValue") or x.get("TransactionAmount")),"quote_date":NOW.date().isoformat(),"quote_time":NOW.strftime("%H:%M"),"status":"official-close"})
  return out
 def main():
  old=read_json(DATA/"tw-market.json",{"items":[]});rows=[];warn=[]

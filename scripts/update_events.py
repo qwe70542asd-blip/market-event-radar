@@ -611,7 +611,37 @@ def main() -> None:
         row["id"] = row_id
         merged[row_id] = row
 
-    events = sorted(merged.values(), key=lambda row: (str(row.get("start")), str(row.get("title"))))
+    # Remove duplicate records exposed by overlapping official/legacy feeds.  Dividend
+    # events are unique by Taipei date + symbol + ex-right/ex-dividend kind; other
+    # events are unique by Taipei date + group + symbol + normalized title.
+    canonical: dict[str, dict[str, Any]] = {}
+    for row in merged.values():
+        start = parse_start(row)
+        day = start.date().isoformat() if start else clean(row.get("start"))[:10]
+        group = clean(row.get("event_group") or row.get("category") or "event").lower()
+        symbol = clean(row.get("symbol") or "").upper()
+        title = clean(row.get("title") or "")
+        if group == "dividend" or "dividend" in clean(row.get("category")).lower():
+            kind = "ex-right" if "除權" in title else "ex-dividend"
+            key = f"{day}|dividend|{symbol}|{kind}"
+        else:
+            normalized = re.sub(r"[^0-9a-zA-Z\u4e00-\u9fff]+", "", title.lower())[:180]
+            key = f"{day}|{group}|{symbol}|{normalized}"
+        existing = canonical.get(key)
+        if existing is None:
+            canonical[key] = row
+            continue
+        # Prefer the richer, directly sourced record while retaining announcement metadata.
+        score = lambda value: sum(bool(value.get(field)) for field in (
+            "source_url", "source_name", "description", "market_effect", "announced_at", "cash_dividend"
+        ))
+        winner, loser = (row, existing) if score(row) > score(existing) else (existing, row)
+        for field in ("announced_at", "announcement_kind", "announcement_status", "previous_start"):
+            if loser.get(field) and not winner.get(field):
+                winner[field] = loser[field]
+        canonical[key] = winner
+
+    events = sorted(canonical.values(), key=lambda row: (str(row.get("start")), str(row.get("title"))))
     if not events and previous_events:
         raise SystemExit("No events after refresh; previous verified archive was not replaced.")
 
