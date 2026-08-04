@@ -1,4 +1,4 @@
-name: Update v11.4.1 assets and audit
+name: Update v11.4.2 assets and audit
 on:
   push:
     branches: [main]
@@ -17,7 +17,7 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 18
+    timeout-minutes: 28
     steps:
       - uses: actions/checkout@v4
         with:
@@ -27,9 +27,15 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: pip install -r requirements.txt
+      - name: Restore detailed asset history
+        run: |
+          bash scripts/restore_data_branch.sh live-assets \
+            "assets.json:data/assets.json" \
+            "assets-seed.js:data/assets-seed.js" \
+            "asset-history-state.json:data/asset-history-state.json"
       - run: python scripts/update_assets.py
       - run: python scripts/audit_all_assets.py
       - name: Publish data channel
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: bash scripts/publish_data_branch.sh live-assets live-assets data/assets.json data/assets-seed.js data/asset-audit.json data/asset-audit-seed.js data/asset-coverage.json data/asset-audit-failures.csv data/asset-update-status.json
+        run: bash scripts/publish_data_branch.sh live-assets live-assets data/assets.json data/assets-seed.js data/asset-audit.json data/asset-audit-seed.js data/asset-coverage.json data/asset-audit-failures.csv data/asset-update-status.json data/asset-history-state.json

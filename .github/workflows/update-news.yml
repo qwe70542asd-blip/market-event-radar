@@ -1,4 +1,4 @@
-name: Update v11.4.1 finance news
+name: Update v11.4.2 finance news
 on:
   push:
     branches: [main]
@@ -27,7 +27,21 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: pip install -r requirements.txt
+      - name: Restore last successful news archive
+        run: |
+          bash scripts/restore_data_branch.sh live-news \
+            "news.json:data/news.json" \
+            "news-seed.js:data/news-seed.js"
       - run: python scripts/update_news.py
+      - name: Reject empty news publication
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          payload=json.loads(Path("data/news.json").read_text(encoding="utf-8"))
+          assert payload.get("items"), "news feed is empty; refusing publication"
+          print("news items",len(payload["items"]))
+          PY
       - name: Publish data channel
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

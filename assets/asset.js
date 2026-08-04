@@ -171,12 +171,32 @@
     showSection("#financialSection","財務");
   }
 
-  const revenues=!isEtf?(asset.monthly_revenue||[]).slice(0,24):[];
+  const revenues=!isEtf?(asset.monthly_revenue||[]).filter(row=>finite(row.revenue)!=null).sort((a,b)=>String(b.period||"").localeCompare(String(a.period||""))):[];
   if(revenues.length){
-    $("#revenueRows").innerHTML=revenues.slice(0,12).map(row=>`<tr><td>${escapeHtml(row.period||row.month||"—")}</td><td>${fmt(row.revenue,0)}</td><td class="${cls(row.mom)}">${pct(row.mom)}</td><td class="${cls(row.yoy)}">${pct(row.yoy)}</td><td>${fmt(row.cumulative_revenue,0)}</td><td class="${cls(row.cumulative_yoy)}">${pct(row.cumulative_yoy)}</td></tr>`).join("");
-    const values=revenues.slice().reverse().map(row=>finite(row.revenue)).filter(value=>value!=null),max=Math.max(...values,1);
-    $("#revenueChart").innerHTML=revenues.slice().reverse().map(row=>`<div title="${escapeHtml(row.period||"")} ${fmt(row.revenue,0)}"><i style="height:${Math.max(3,finite(row.revenue)/max*100)}%"></i><span>${escapeHtml(String(row.period||"").slice(-5))}</span></div>`).join("");
-    $("#revenueUpdated").textContent=asset.revenue_updated_at?`營收資料更新 ${formatTime(asset.revenue_updated_at)}`:"依公開資訊觀測站月營收";
+    const revenueStreak=()=>{let count=0;for(const row of revenues){if((finite(row.yoy)||0)>0)count++;else break}return count};
+    const renderRevenue=(months=24)=>{
+      const selected=months?revenues.slice(0,months):revenues.slice();
+      $("#revenueRows").innerHTML=selected.map(row=>`<tr><td>${escapeHtml(row.period||row.month||"—")}</td><td>${fmt(row.revenue,0)}</td><td class="${cls(row.mom)}">${pct(row.mom)}</td><td class="${cls(row.yoy)}">${pct(row.yoy)}</td><td>${fmt(row.cumulative_revenue,0)}</td><td class="${cls(row.cumulative_yoy)}">${pct(row.cumulative_yoy)}</td></tr>`).join("");
+      const chartRows=selected.slice(0,Math.min(24,selected.length)).reverse();
+      if(chartRows.length===1){
+        const row=chartRows[0];
+        $("#revenueChart").innerHTML=`<div class="single-history-value"><small>${escapeHtml(row.period||"最新月份")}</small><strong>${fmt(row.revenue,0)} 千元</strong><span class="${cls(row.yoy)}">年增 ${pct(row.yoy)}</span><em>歷史資料持續回補中</em></div>`;
+      }else{
+        const values=chartRows.map(row=>finite(row.revenue)).filter(value=>value!=null),max=Math.max(...values,1);
+        $("#revenueChart").innerHTML=chartRows.map(row=>`<div title="${escapeHtml(row.period||"")} ${fmt(row.revenue,0)} 千元"><i style="height:${Math.max(3,finite(row.revenue)/max*100)}%"></i><span>${escapeHtml(String(row.period||"").slice(-5))}</span></div>`).join("");
+      }
+    };
+    const latest=revenues[0],historyMax=Math.max(...revenues.map(row=>finite(row.revenue)||0));
+    $("#revenueSummary").innerHTML=[
+      metricCard("最新月營收",finite(latest.revenue),latest.unit||"千元",{integer:true}),
+      metricCard("最新年增率",finite(latest.yoy),latest.period||"",{percent:true,className:cls(latest.yoy)}),
+      metricCard("收錄月份",revenues.length,"官方歷史資料",{integer:true}),
+      metricCard("連續年增為正",revenueStreak(),"個月",{integer:true}),
+      metricCard("區間最高月營收",historyMax,"千元",{integer:true})
+    ].join("");
+    renderRevenue(24);
+    $$("#revenuePeriods button").forEach(button=>button.addEventListener("click",()=>{$$("#revenuePeriods button").forEach(item=>item.classList.remove("active"));button.classList.add("active");renderRevenue(Number(button.dataset.months||0))}));
+    $("#revenueUpdated").textContent=asset.revenue_updated_at?`營收資料更新 ${formatTime(asset.revenue_updated_at)} · 已收錄 ${revenues.length} 個月`:`依公開資訊觀測站 · 已收錄 ${revenues.length} 個月`;
     showSection("#revenueSection","月營收");
   }
 
@@ -204,11 +224,25 @@
     showSection("#chipSection","籌碼");
   }
 
-  const distributions=(isEtf?(etf.distributions||asset.dividends||[]):(asset.dividends||[]));
+  const distributions=(isEtf?(etf.distributions||asset.dividends||[]):(asset.dividends||[])).slice().sort((a,b)=>String(b.period||b.year||"").localeCompare(String(a.period||a.year||"")));
   if(distributions.length){
-    $("#distributionTitle").textContent=isEtf?"配息紀錄":"股利與除權息";
-    $("#distributionRows").innerHTML=distributions.slice(0,24).map(row=>`<tr><td>${escapeHtml(row.period||row.year||row.record_date||"—")}</td><td>${finite(row.cash)==null&&finite(row.amount)==null?"—":fmt(row.cash??row.amount,4)}</td><td>${finite(row.stock)==null?"—":fmt(row.stock,4)}</td><td>${escapeHtml(formatDate(row.ex_date||row.ex_dividend_date||row.date)||"—")}</td><td>${escapeHtml(formatDate(row.payment_date)||"—")}</td><td>${row.url?`<a href="${escapeHtml(row.url)}" target="_blank" rel="noreferrer noopener">${escapeHtml(row.source||"官方公告")} ↗</a>`:escapeHtml(row.source||"官方公告")}</td></tr>`).join("");
-    $("#distributionUpdated").textContent=asset.dividend_updated_at?`股利資料更新 ${formatTime(asset.dividend_updated_at)}`:etf.distribution_updated_at?`配息資料更新 ${formatTime(etf.distribution_updated_at)}`:"";
+    const periodYear=row=>{const text=String(row.period||row.year||row.period_raw||"");const match=text.match(/(?:20)?(\d{2,4})/);if(!match)return null;let year=Number(match[1]);if(year<1911)year+=1911;return year};
+    const periodLabel=row=>{
+      let text=String(row.period||row.year||row.period_raw||row.record_date||"—").trim();
+      const range=text.match(/^(\d{3})(\d{2})(\d{2})[~至-](\d{3})(\d{2})(\d{2})$/);
+      if(range)return `${Number(range[1])+1911}/${range[2]}/${range[3]}－${Number(range[4])+1911}/${range[5]}/${range[6]}`;
+      text=text.replace(/(\d{2,3})年/g,(_,year)=>`${Number(year)+1911}年`).replace(/^(\d{2,3})(?=\s|$)/,(_,year)=>String(Number(year)+1911));
+      return text;
+    };
+    const renderDistributions=(years=5)=>{
+      const cutoff=years?new Date().getFullYear()-years+1:null;
+      const selected=distributions.filter(row=>!cutoff||periodYear(row)==null||periodYear(row)>=cutoff).slice(0,40);
+      $("#distributionRows").innerHTML=selected.map(row=>`<tr><td>${escapeHtml(periodLabel(row))}</td><td>${finite(row.cash)==null&&finite(row.amount)==null?"—":fmt(row.cash??row.amount,4)}</td><td>${finite(row.stock)==null?"—":fmt(row.stock,4)}</td><td>${escapeHtml(formatDate(row.board_date)||"—")}</td><td>${escapeHtml(formatDate(row.shareholder_meeting_date)||"—")}</td><td>${escapeHtml(formatDate(row.ex_date||row.ex_dividend_date||row.date)||"—")}</td><td>${escapeHtml(formatDate(row.payment_date)||"—")}</td><td>${row.url?`<a href="${escapeHtml(row.url)}" target="_blank" rel="noreferrer noopener">${escapeHtml(row.source||"官方公告")} ↗</a>`:escapeHtml(row.source||"官方公告")}</td></tr>`).join("")||'<tr><td colspan="8" class="empty">此期間沒有股利紀錄</td></tr>';
+    };
+    $("#distributionTitle").textContent=isEtf?"配息歷史":"股利與除權息歷史";
+    renderDistributions(5);
+    $$("#distributionPeriods button").forEach(button=>button.addEventListener("click",()=>{$$("#distributionPeriods button").forEach(item=>item.classList.remove("active"));button.classList.add("active");renderDistributions(Number(button.dataset.years||0))}));
+    $("#distributionUpdated").textContent=(asset.dividend_updated_at?`股利資料更新 ${formatTime(asset.dividend_updated_at)}`:etf.distribution_updated_at?`配息資料更新 ${formatTime(etf.distribution_updated_at)}`:"")+` · 已收錄 ${distributions.length} 筆`;
     showSection("#distributionSection",isEtf?"配息":"股利");
   }
 

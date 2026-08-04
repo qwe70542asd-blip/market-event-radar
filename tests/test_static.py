@@ -7,7 +7,7 @@ class StaticTests(unittest.TestCase):
   for path in [".github/workflows","assets","data","docs","scripts","tests","index.html","portfolio.html","tw-market.html","news.html","institutional.html","asset.html","coverage.html","service-worker.js"]:
    self.assertTrue((ROOT/path).exists(),path)
  def test_version(self):
-  self.assertEqual(json.loads((ROOT/"VERSION.json").read_text(encoding="utf-8"))["baseline_version"],"11.4.1")
+  self.assertEqual(json.loads((ROOT/"VERSION.json").read_text(encoding="utf-8"))["baseline_version"],"11.4.2")
  def test_ascii_filenames(self):
   for path in ROOT.rglob("*"):
    self.assertTrue(all(ord(char)<128 for char in path.name),f"non ASCII filename: {path}")
@@ -81,7 +81,7 @@ class StaticTests(unittest.TestCase):
    self.assertIn(text,shared)
   self.assertIn("event-related-news",home)
   self.assertIn("related-news-grid",event)
-  self.assertIn("data/news-seed.js?v=11.4.1",event_html)
+  self.assertIn("data/news-seed.js?v=11.4.2",event_html)
 
  def test_stage3_official_financial_pipeline(self):
   updater=(ROOT/"scripts/update_assets.py").read_text(encoding="utf-8")
@@ -120,6 +120,22 @@ class StaticTests(unittest.TestCase):
   sw=(ROOT/"service-worker.js").read_text(encoding="utf-8")
   self.assertIn("hot-score",inst)
   self.assertIn("熱門分數",html)
-  self.assertIn("market-event-radar-v11-4-1",sw)
+  self.assertIn("market-event-radar-v11-4-2",sw)
+
+ def test_v1142_news_recovery_and_history(self):
+  news=(ROOT/"scripts/update_news.py").read_text(encoding="utf-8")
+  assets=(ROOT/"scripts/update_assets.py").read_text(encoding="utf-8")
+  news_workflow=(ROOT/".github/workflows/update-news.yml").read_text(encoding="utf-8")
+  asset_workflow=(ROOT/".github/workflows/update-daily.yml").read_text(encoding="utf-8")
+  asset_js=(ROOT/"assets/asset.js").read_text(encoding="utf-8")
+  for text in ("decode_google_news_url","google-news-fallback","minimum_fresh","old_clean","No valid news records"):
+   self.assertIn(text,news)
+  self.assertIn("Restore last successful news archive",news_workflow)
+  self.assertIn("Reject empty news publication",news_workflow)
+  for text in ("HISTORY_MONTHS = 60","MOPS_REVENUE_ARCHIVES","parse_mops_revenue_html","fetch_mops_dividend_history","asset-history-state.json","DIVIDEND_BACKFILL_BATCH"):
+   self.assertIn(text,assets)
+  self.assertIn("Restore detailed asset history",asset_workflow)
+  for text in ("revenuePeriods","已收錄","distributionPeriods","近 10 年"):
+   self.assertIn(text,asset_js if text not in {"revenuePeriods","distributionPeriods","近 10 年"} else (ROOT/"asset.html").read_text(encoding="utf-8")+asset_js)
 
 if __name__=="__main__":unittest.main()

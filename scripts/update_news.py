@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the v11.4.1 final market/news feed with compact summaries and structured company notices.
+"""Build the v11.4.2 final market/news feed with compact summaries and structured company notices.
 
 Rules in this stage:
 - keep only identifiable direct articles or direct announcement records;
@@ -12,10 +12,11 @@ Rules in this stage:
 """
 from __future__ import annotations
 
+import base64
 import hashlib
 import html
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 from urllib.parse import parse_qs, urlsplit, urlunsplit
 
 import feedparser
@@ -24,7 +25,7 @@ from bs4 import BeautifulSoup
 
 from common import DATA, NOW, read_json, write_payload
 
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.1)"}
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.2)"}
 HOME_PATHS = {"", "/", "/index.html", "/index.php", "/home", "/home/", "/news", "/news/"}
 LISTING_RE = re.compile(r"/(?:search|tag|tags|category|categories|topic|topics|section|sections|list|lists|download|downloads)/?$", re.I)
 GENERIC_TITLE_RE = re.compile(
@@ -148,23 +149,46 @@ def article_url(value: object) -> str | None:
     return urlunsplit((parts.scheme, parts.netloc, parts.path, parts.query, ""))
 
 
-def resolve_url(session: requests.Session, value: object) -> str | None:
+def decode_google_news_url(candidate: str) -> str | None:
+    """Decode older Google News RSS article IDs when the publisher URL is embedded.
+
+    Newer IDs cannot always be decoded locally, so failure is expected and the
+    article-specific Google News URL remains a safe fallback.
+    """
+    try:
+        token = urlsplit(candidate).path.rstrip("/").split("/")[-1]
+        raw = base64.urlsafe_b64decode(token + "=" * (-len(token) % 4))
+        match = re.search(rb"https?://[^\x00-\x20\"<>]+", raw)
+        if not match:
+            return None
+        return article_url(match.group(0).decode("utf-8", "ignore"))
+    except Exception:
+        return None
+
+
+def resolve_url(session: requests.Session, value: object) -> tuple[str | None, str]:
     candidate = article_url(value)
     if not candidate:
-        return None
+        return None, "invalid"
     host = urlsplit(candidate).netloc.lower()
     if "news.google." not in host:
-        return candidate
-    # Google RSS records are accepted only after they resolve to a publisher page.
+        return candidate, "direct"
+
+    decoded = decode_google_news_url(candidate)
+    if decoded and "news.google." not in urlsplit(decoded).netloc.lower():
+        return decoded, "decoded"
+
+    # Some Google records still use a normal redirect. Try it, but do not delete
+    # a specific article merely because Google returned an intermediate page.
     try:
         response = session.get(candidate, headers=HEADERS, timeout=12, allow_redirects=True)
         response.raise_for_status()
         final = article_url(response.url)
-        if not final or "news.google." in urlsplit(final).netloc.lower():
-            return None
-        return final
+        if final and "news.google." not in urlsplit(final).netloc.lower():
+            return final, "redirect"
     except Exception:
-        return None
+        pass
+    return candidate, "google-news-fallback"
 
 
 def roc_date_to_ad(text: str) -> str | None:
@@ -368,7 +392,7 @@ def main() -> None:
                 raw_summary = entry.get("summary") or entry.get("description") or ""
                 summary_text = clean_text(raw_summary)
                 title = rewrite_company_title(raw_title, summary_text)
-                url = resolve_url(session, entry.get("link"))
+                url, link_resolution = resolve_url(session, entry.get("link"))
                 if not title or not url:
                     rejected += 1
                     continue
@@ -381,6 +405,7 @@ def main() -> None:
                     "title": title,
                     "url": url,
                     "url_valid": True,
+                    "link_resolution": link_resolution,
                     "summary": summary,
                     "ai_summary": summary,
                     "original_text": original_text,
@@ -391,18 +416,26 @@ def main() -> None:
                     **analysis,
                 })
                 count += 1
-            health.append({"name": source["name"], "status": "ok", "count": count, "rejected": rejected})
+            health.append({"name": source["name"], "status": "ok" if count else "warning", "count": count, "rejected": rejected, "reason": None if count else "all records rejected or source returned no usable entries"})
         except Exception as exc:
             health.append({"name": source.get("name", "unknown"), "status": "warning", "error": str(exc)})
 
-    if not items:
-        # Preserve only already-clean, non-generic last-known-good records.
-        for row in old.get("items", []):
-            title = rewrite_company_title(row.get("title", ""), row.get("summary", ""))
-            url = article_url(row.get("url"))
-            if title and url:
-                analysis = classify(title, clean_text(row.get("summary")), row.get("topic", "market"))
-                items.append({**row, "title": title, "url": url, "url_valid": True, **analysis})
+    # Keep last-known-good records even when only part of the current scrape
+    # succeeds. This prevents a temporary resolver/source failure from shrinking
+    # the feed to zero or a handful of cards.
+    old_clean: list[dict] = []
+    for row in old.get("items", []):
+        title = rewrite_company_title(row.get("title", ""), row.get("summary", ""))
+        url = article_url(row.get("url"))
+        if not title or not url:
+            continue
+        analysis = classify(title, clean_text(row.get("summary")), row.get("topic", "market"))
+        old_clean.append({**row, "title": title, "url": url, "url_valid": True, **analysis})
+
+    minimum_fresh = 8
+    fresh_count = len(items)
+    if fresh_count < minimum_fresh and old_clean:
+        items.extend(old_clean)
 
     seen, deduped = set(), []
     for item in sorted(items, key=lambda row: str(row.get("published_at") or ""), reverse=True):
@@ -412,22 +445,42 @@ def main() -> None:
         seen.add(key)
         deduped.append(item)
 
+    # Retain a rolling archive. Invalid timestamps are retained rather than
+    # discarded because several official feeds use locale-specific dates.
+    cutoff = NOW - timedelta(days=14)
+    retained = []
+    for item in deduped:
+        raw = str(item.get("published_at") or "")
+        try:
+            dt = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=NOW.tzinfo)
+            if dt.astimezone(NOW.tzinfo) < cutoff:
+                continue
+        except Exception:
+            pass
+        retained.append(item)
+
+    if not retained:
+        raise SystemExit("No valid news records; live-news was not replaced.")
+
     payload = {
         "metadata": {
-            "version": "v11.4.1",
+            "version": "v11.4.2",
             "updated_at": NOW.isoformat(timespec="seconds"),
-            "item_count": len(deduped),
-            "major_item_count": sum(bool(row.get("is_major")) for row in deduped),
-            "company_announcement_count": sum(row.get("scope") == "company" for row in deduped),
+            "item_count": len(retained),
+            "fresh_item_count": fresh_count,
+            "used_archive_fallback": fresh_count < minimum_fresh and bool(old_clean),
+            "major_item_count": sum(bool(row.get("is_major")) for row in retained),
+            "company_announcement_count": sum(row.get("scope") == "company" for row in retained),
             "retention_days": 14,
-            "summary_mode": "deterministic-impact-analysis-v3",
-            "note": "Direct links only; market-wide news separated from company notices; entity detection, event terms, impact score, rationale and structured facts included.",
+            "minimum_fresh_records": minimum_fresh,
+            "summary_mode": "deterministic-impact-analysis-v4",
+            "note": "Article-specific Google News links remain usable when publisher URL decoding fails; previous successful records are restored before every update and empty publication is blocked.",
         },
         "sources": health,
-        "items": deduped[:500],
+        "items": retained[:500],
     }
-    if not payload["items"] and old.get("items"):
-        raise SystemExit("No valid news records after filtering; previous archive was not replaced.")
     write_payload("news.json", "__NEWS_SEED__", payload)
 
 

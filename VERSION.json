@@ -1,9 +1,9 @@
 {
   "project": "market-event-radar",
-  "baseline_version": "11.4.1",
-  "label": "v11.4.1-stock-etf-detail-overhaul",
-  "updated_at": "2026-08-04T12:54:00+08:00",
-  "stage": "asset-detail-integrated",
+  "baseline_version": "11.4.2",
+  "label": "v11.4.2-news-and-history-recovery",
+  "updated_at": "2026-08-04T16:00:00+08:00",
+  "stage": "news-history-recovery",
   "data_channels": {
     "assets": "live-assets",
     "events": "live-events",
@@ -13,15 +13,17 @@
     "news": "live-news"
   },
   "changes": [
-    "股票與 ETF 詳情頁使用不同資料模板",
-    "只顯示已取得的欄位，整個空區塊自動隱藏",
-    "ETF 接入基金基本資料並移除公司 EPS、ROE、負債比與財報欄位",
-    "股票加入公司主檔、估值、財報、月營收、股利、法人、信用交易與事件新聞區",
-    "ETF 加入發行投信、經理人、保管銀行、成立日、上市日、策略、費用、配息與持股欄位",
-    "一般股票不再顯示 ETF 成分股",
-    "ETF 沒有正式持股資料時隱藏成分股區塊",
-    "券商分點改為 K 線、成交量與移動平均線",
-    "產業代碼轉為中文名稱，八碼與民國日期統一格式化",
-    "全部頁面、資料、Workflow 與 Service Worker 更新為 v11.4.1"
-  ]
+    "修復新聞來源全部被過濾造成 0 則的問題",
+    "Google News 原站網址無法解碼時保留文章專屬連結，不再刪除整批新聞",
+    "新聞更新前恢復 live-news 最後成功資料，空結果禁止發布",
+    "月營收由當期資料擴充為最近 60 個月官方歷史回補",
+    "月營收加入 12、24、36、60 個月與全部期間切換",
+    "月營收加入最新營收、年增率、收錄月份、成長月數與區間高點摘要",
+    "股利金額改用官方精確欄位，不再因模糊欄位配對出現錯誤數值",
+    "股利歷史由 MOPS 分批回補並跨工作流程持續保存",
+    "股利頁加入近 5 年、近 10 年與全部紀錄篩選",
+    "所有頁面、Workflow、資料與 Service Worker 更新為 v11.4.2"
+  ],
+  "version": "v11.4.2",
+  "description": "News recovery safeguards plus five-year monthly revenue and progressive dividend history."
 }

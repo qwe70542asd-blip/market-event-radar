@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Update the v11.4.1 Taiwan stock and ETF master with detailed official data.
+"""Update the v11.4.2 Taiwan stock and ETF master with detailed official data.
 
 The updater is intentionally defensive:
 - official TWSE/TPEx endpoints are parsed with bilingual/format-tolerant keys;
@@ -12,16 +12,18 @@ from __future__ import annotations
 
 import json
 import re
+from datetime import datetime, timedelta
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any, Iterable
 
 import requests
+from bs4 import BeautifulSoup
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.1"
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.1)"}
+VERSION = "v11.4.2"
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.2)"}
 SESSION = requests.Session()
 
 MASTER_SOURCES = [
@@ -48,6 +50,17 @@ MONTHLY_REVENUE_SOURCES = [
 DIVIDEND_SOURCES = [
     ("TWSE dividend", "https://openapi.twse.com.tw/v1/opendata/t187ap45_L", "TWSE"),
     ("TPEx dividend", "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap39_O", "TPEx"),
+]
+HISTORY_MONTHS = 60
+REVENUE_BACKFILL_INTERVAL_DAYS = 7
+DIVIDEND_BACKFILL_BATCH = 120
+MOPS_REVENUE_ARCHIVES = [
+    ("MOPS listed revenue history", "sii"),
+    ("MOPS OTC revenue history", "otc"),
+]
+MOPS_DIVIDEND_HISTORY_URLS = [
+    "https://mops.twse.com.tw/mops/web/ajax_t05st09_2",
+    "https://mops.twse.com.tw/mops/web/ajax_t05st09",
 ]
 INDUSTRY_NAMES = {
     "01":"水泥工業","02":"食品工業","03":"塑膠工業","04":"紡織纖維","05":"電機機械","06":"電器電纜",
@@ -277,6 +290,9 @@ def format_date(value: Any) -> str | None:
     digits = re.sub(r"\D", "", text)
     if len(digits) == 8 and digits[:4].isdigit():
         return f"{digits[:4]}/{digits[4:6]}/{digits[6:8]}"
+    if len(digits) == 7 and digits[:3].isdigit():
+        year = int(digits[:3]) + 1911
+        return f"{year:04d}/{digits[3:5]}/{digits[5:7]}"
     match = re.search(r"(\d{2,4})[年/.-](\d{1,2})[月/.-](\d{1,2})", text)
     if match:
         year, month, day = map(int, match.groups())
@@ -370,6 +386,264 @@ def merge_period_rows(existing: list[dict[str, Any]], updates: Iterable[dict[str
             merged[key] = {**merged.get(key, {}), **{k: v for k, v in row.items() if v is not None}}
     return sorted(merged.values(), key=lambda row: str(row.get(key_name) or ""), reverse=True)[:limit]
 
+def exact_row_value(row: dict[str, Any], aliases: Iterable[str]) -> Any:
+    keyed = {normalized_key(key): value for key, value in row.items()}
+    for alias in aliases:
+        key = normalized_key(alias)
+        if key in keyed:
+            return keyed[key]
+    return None
+
+
+def sum_exact_numbers(row: dict[str, Any], aliases: Iterable[str]) -> float | None:
+    values = [number(exact_row_value(row, (alias,))) for alias in aliases]
+    valid = [value for value in values if value is not None]
+    return sum(valid) if valid else None
+
+
+def dividend_year_label(value: Any, period: Any = None) -> str:
+    raw = str(value or "").strip()
+    match = re.search(r"(\d{2,4})", raw)
+    if match:
+        year = int(match.group(1))
+        if year < 1911:
+            year += 1911
+        suffix = ""
+        text = str(period or raw)
+        if "上半年" in text:
+            suffix = " 上半年"
+        elif "下半年" in text:
+            suffix = " 下半年"
+        elif re.search(r"第?1季|Q1", text, re.I):
+            suffix = " Q1"
+        elif re.search(r"第?2季|Q2", text, re.I):
+            suffix = " Q2"
+        elif re.search(r"第?3季|Q3", text, re.I):
+            suffix = " Q3"
+        elif re.search(r"第?4季|Q4", text, re.I):
+            suffix = " Q4"
+        return f"{year}{suffix}"
+    formatted = format_date(period)
+    return formatted or raw
+
+
+def recent_year_months(count: int = HISTORY_MONTHS) -> list[tuple[int, int]]:
+    output = []
+    year, month = NOW.year, NOW.month - 1  # latest reportable month
+    if month == 0:
+        year, month = year - 1, 12
+    for _ in range(count):
+        output.append((year, month))
+        month -= 1
+        if month == 0:
+            year, month = year - 1, 12
+    return output
+
+
+def parse_mops_revenue_html(content: bytes, source_name: str, year: int, month: int) -> dict[str, list[dict[str, Any]]]:
+    # MOPS historical archives have used both Big5 and UTF-8 over time.
+    text = None
+    for encoding in ("utf-8", "big5", "cp950"):
+        try:
+            candidate = content.decode(encoding)
+            if "公司代號" in candidate or "當月營收" in candidate:
+                text = candidate
+                break
+        except Exception:
+            pass
+    text = text or content.decode("utf-8", "ignore")
+    soup = BeautifulSoup(text, "lxml")
+    updates: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for tr in soup.find_all("tr"):
+        cells = [re.sub(r"\s+", " ", cell.get_text(" ", strip=True)).strip() for cell in tr.find_all(["td", "th"])]
+        if len(cells) < 8:
+            continue
+        code_index = next((i for i, value in enumerate(cells[:4]) if re.fullmatch(r"\d{4,6}[A-Z]?", value, re.I)), None)
+        if code_index is None:
+            continue
+        values = cells[code_index:]
+        if len(values) < 9:
+            continue
+        symbol = values[0].upper()
+        # Stable MOPS monthly table order: code, name, current, previous,
+        # prior-year month, MoM, YoY, cumulative, prior cumulative, cum YoY.
+        updates[symbol].append({
+            "period": f"{year:04d}-{month:02d}",
+            "revenue": number(values[2]),
+            "previous_month_revenue": number(values[3]),
+            "previous_year_revenue": number(values[4]),
+            "mom": number(values[5]),
+            "yoy": number(values[6]),
+            "cumulative_revenue": number(values[7]),
+            "previous_cumulative_revenue": number(values[8]),
+            "cumulative_yoy": number(values[9]) if len(values) > 9 else None,
+            "unit": "千元",
+            "source": source_name,
+            "source_updated_at": NOW.isoformat(timespec="seconds"),
+        })
+    return updates
+
+
+def fetch_mops_revenue_month(source_name: str, market_path: str, year: int, month: int) -> tuple[str, dict[str, list[dict[str, Any]]], str | None]:
+    roc_year = year - 1911
+    url = f"https://mops.twse.com.tw/nas/t21/{market_path}/t21sc03_{roc_year}_{month}_0.html"
+    try:
+        response = SESSION.get(url, headers=HEADERS, timeout=18)
+        response.raise_for_status()
+        parsed = parse_mops_revenue_html(response.content, source_name, year, month)
+        if not parsed:
+            raise ValueError("no company rows parsed")
+        return source_name, parsed, None
+    except Exception as exc:
+        return source_name, {}, f"{year}-{month:02d}: {exc}"
+
+
+def expand_html_table(table) -> list[list[str]]:
+    grid: list[list[str]] = []
+    carried: dict[tuple[int, int], str] = {}
+    rows = table.find_all("tr")
+    for row_index, tr in enumerate(rows):
+        row: list[str] = []
+        col = 0
+        cells = tr.find_all(["th", "td"])
+        for cell in cells:
+            while (row_index, col) in carried:
+                while len(row) <= col:
+                    row.append("")
+                row[col] = carried[(row_index, col)]
+                col += 1
+            text = re.sub(r"\s+", " ", cell.get_text(" ", strip=True)).strip()
+            colspan = max(1, int(cell.get("colspan", 1) or 1))
+            rowspan = max(1, int(cell.get("rowspan", 1) or 1))
+            for dx in range(colspan):
+                while len(row) <= col + dx:
+                    row.append("")
+                row[col + dx] = text
+                for dy in range(1, rowspan):
+                    carried[(row_index + dy, col + dx)] = text
+            col += colspan
+        while (row_index, col) in carried:
+            while len(row) <= col:
+                row.append("")
+            row[col] = carried[(row_index, col)]
+            col += 1
+        if any(row):
+            grid.append(row)
+    return grid
+
+
+def parse_mops_dividend_html(content: bytes, symbol: str, source_name: str) -> list[dict[str, Any]]:
+    text = None
+    for encoding in ("utf-8", "big5", "cp950"):
+        try:
+            candidate = content.decode(encoding)
+            if "股利" in candidate and ("現金" in candidate or "配股" in candidate):
+                text = candidate
+                break
+        except Exception:
+            pass
+    text = text or content.decode("utf-8", "ignore")
+    soup = BeautifulSoup(text, "lxml")
+    results: list[dict[str, Any]] = []
+    for table in soup.find_all("table"):
+        grid = expand_html_table(table)
+        if not grid:
+            continue
+        header_rows = []
+        data_start = None
+        for index, row in enumerate(grid):
+            joined = " ".join(row)
+            if re.search(r"(?:^|\s)(?:\d{2,3}|20\d{2})年?(?:\s|$)", joined) and any(re.search(r"\d", cell) for cell in row):
+                data_start = index
+                break
+            header_rows.append(row)
+        if data_start is None or not any("現金" in " ".join(row) for row in header_rows):
+            continue
+        width = max(len(row) for row in grid)
+        headers = []
+        for col in range(width):
+            parts = []
+            for row in header_rows:
+                if col < len(row) and row[col] and row[col] not in parts:
+                    parts.append(row[col])
+            headers.append(" ".join(parts))
+        normalized_headers = [normalized_key(value) for value in headers]
+
+        def col_index(*terms: str) -> int | None:
+            targets = [normalized_key(term) for term in terms]
+            for i, header in enumerate(normalized_headers):
+                if all(target in header for target in targets):
+                    return i
+            return None
+
+        year_i = col_index("股利年度")
+        if year_i is None:
+            year_i = col_index("股利所屬年")
+        period_i = col_index("股利所屬期間")
+        term_i = col_index("期別")
+        board_i = col_index("董事會", "股利分派日")
+        meeting_i = col_index("股東會日期")
+        cash_cols = [i for i, h in enumerate(normalized_headers) if "元股" in h and "現金" in h and "總金額" not in h]
+        stock_cols = [i for i, h in enumerate(normalized_headers) if "元股" in h and ("配股" in h or "轉增資" in h)]
+        if year_i is None or not (cash_cols or stock_cols):
+            continue
+        for row in grid[data_start:]:
+            if year_i >= len(row):
+                continue
+            year_raw = row[year_i]
+            if not re.search(r"\d{2,4}", year_raw):
+                continue
+            period_raw = row[period_i] if period_i is not None and period_i < len(row) else ""
+            term_raw = row[term_i] if term_i is not None and term_i < len(row) else ""
+            cash_values = [number(row[i]) for i in cash_cols if i < len(row)]
+            stock_values = [number(row[i]) for i in stock_cols if i < len(row)]
+            cash_valid = [value for value in cash_values if value is not None]
+            stock_valid = [value for value in stock_values if value is not None]
+            cash = sum(cash_valid) if cash_valid else None
+            stock = sum(stock_valid) if stock_valid else None
+            if cash is None and stock is None:
+                continue
+            label = dividend_year_label(year_raw, f"{term_raw} {period_raw}")
+            results.append({
+                "period": label,
+                "period_raw": period_raw or None,
+                "term": term_raw or None,
+                "cash": cash,
+                "stock": stock,
+                "board_date": format_date(row[board_i]) if board_i is not None and board_i < len(row) else None,
+                "shareholder_meeting_date": format_date(row[meeting_i]) if meeting_i is not None and meeting_i < len(row) else None,
+                "source": source_name,
+                "url": f"https://mops.twse.com.tw/mops/web/t05st09_2?firstin=true&co_id={symbol}",
+                "source_updated_at": NOW.isoformat(timespec="seconds"),
+            })
+    return results
+
+
+def fetch_mops_dividend_history(symbol: str) -> tuple[str, list[dict[str, Any]], str | None]:
+    data = {"encodeURIComponent": "1", "step": "1", "firstin": "1", "off": "1", "TYPEK": "all", "co_id": symbol}
+    errors = []
+    for url in MOPS_DIVIDEND_HISTORY_URLS:
+        try:
+            response = SESSION.post(url, data=data, headers={**HEADERS, "Referer": "https://mops.twse.com.tw/mops/web/t05st09_2"}, timeout=18)
+            response.raise_for_status()
+            rows = parse_mops_dividend_html(response.content, symbol, "MOPS historical dividend")
+            if rows:
+                return symbol, rows, None
+            errors.append("no rows parsed")
+        except Exception as exc:
+            errors.append(str(exc))
+    try:
+        response = SESSION.get(f"https://mops.twse.com.tw/mops/web/t05st09_2?firstin=true&co_id={symbol}", headers=HEADERS, timeout=18)
+        response.raise_for_status()
+        rows = parse_mops_dividend_html(response.content, symbol, "MOPS historical dividend")
+        if rows:
+            return symbol, rows, None
+        errors.append("GET history page returned no rows")
+    except Exception as exc:
+        errors.append(str(exc))
+    return symbol, [], "; ".join(errors[-3:])
+
+
 def financial_endpoint(exchange: str, statement: str, suffix: str) -> list[tuple[str, str]]:
     if exchange == "TWSE":
         code = "06" if statement == "income" else "07"
@@ -389,6 +663,9 @@ def main() -> None:
         if row.get("symbol")
     }
     health: list[dict[str, Any]] = []
+    history_state_path = DATA / "asset-history-state.json"
+    history_state = read_json(history_state_path, {"metadata": {"version": VERSION, "dividend_cursor": 0}})
+    history_meta = history_state.setdefault("metadata", {})
 
     # Preserve and bootstrap securities discovered by the latest official quote channel.
     market_payload = read_json(DATA / "tw-market.json", {"items": []})
@@ -518,6 +795,33 @@ def main() -> None:
                 "source_updated_at": NOW.isoformat(timespec="seconds"),
             })
 
+    # Backfill the latest five years from MOPS monthly archives. The full scan
+    # runs weekly; ordinary daily runs merge only the current OpenAPI snapshot.
+    last_backfill_raw = history_meta.get("monthly_revenue_last_full_backfill")
+    try:
+        last_backfill = datetime.fromisoformat(str(last_backfill_raw)) if last_backfill_raw else None
+        if last_backfill and last_backfill.tzinfo is None:
+            last_backfill = last_backfill.replace(tzinfo=NOW.tzinfo)
+    except Exception:
+        last_backfill = None
+    run_revenue_backfill = not last_backfill or NOW - last_backfill.astimezone(NOW.tzinfo) >= timedelta(days=REVENUE_BACKFILL_INTERVAL_DAYS)
+    if run_revenue_backfill:
+        archive_jobs = [(source_name, market_path, year, month) for year, month in recent_year_months() for source_name, market_path in MOPS_REVENUE_ARCHIVES]
+        successful_archive_jobs = 0
+        with ThreadPoolExecutor(max_workers=10) as pool:
+            futures = {pool.submit(fetch_mops_revenue_month, *job): job for job in archive_jobs}
+            for future in as_completed(futures):
+                source_name, parsed, error = future.result()
+                if error:
+                    health.append({"name": source_name, "status": "warning", "error": error})
+                    continue
+                successful_archive_jobs += 1
+                for symbol, rows in parsed.items():
+                    revenue_updates[symbol].extend(rows)
+        health.append({"name": "MOPS five-year monthly revenue backfill", "status": "ok" if successful_archive_jobs else "warning", "successful_month_markets": successful_archive_jobs, "requested_month_markets": len(archive_jobs)})
+        if successful_archive_jobs >= max(1, len(archive_jobs) // 2):
+            history_meta["monthly_revenue_last_full_backfill"] = NOW.isoformat(timespec="seconds")
+
     # Cash / stock dividend history.
     dividend_updates: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for source_name, url, _exchange in DIVIDEND_SOURCES:
@@ -525,19 +829,70 @@ def main() -> None:
             symbol = symbol_of(row)
             if not symbol:
                 continue
-            year_raw = row_value(row, ("股利所屬期間", "股利年度", "年度", "Year"))
-            period = str(year_raw or format_date(row_value(row, ("除權息交易日", "資料日期", "Date"))) or "").strip()
+            year_raw = exact_row_value(row, ("股利年度", "年度", "Year"))
+            period_raw = exact_row_value(row, ("股利所屬期間", "股利所屬年(季)度", "Period"))
+            cash = sum_exact_numbers(row, (
+                "股東配發-盈餘分配之現金股利(元/股)",
+                "股東配發-法定盈餘公積發放之現金(元/股)",
+                "股東配發-資本公積發放之現金(元/股)",
+                "盈餘分配之現金股利(元/股)",
+                "法定盈餘公積發放之現金(元/股)",
+                "資本公積發放之現金(元/股)",
+            ))
+            stock = sum_exact_numbers(row, (
+                "股東配發-盈餘轉增資配股(元/股)",
+                "股東配發-法定盈餘公積轉增資配股(元/股)",
+                "股東配發-資本公積轉增資配股(元/股)",
+                "盈餘轉增資配股(元/股)",
+                "法定盈餘公積轉增資配股(元/股)",
+                "資本公積轉增資配股(元/股)",
+            ))
+            period = dividend_year_label(year_raw, period_raw)
+            if not period or (cash is None and stock is None):
+                continue
             dividend_updates[symbol].append({
                 "period": period,
-                "cash": pick(row, "盈餘分配之現金股利(元/股)", "現金股利", "每股現金股利", "CashDividend"),
-                "stock": pick(row, "盈餘轉增資配股(元/股)", "股票股利", "每股股票股利", "StockDividend"),
-                "ex_date": format_date(row_value(row, ("除權息交易日", "除息日", "除權日", "ExDate"))),
-                "payment_date": format_date(row_value(row, ("現金股利發放日", "發放日", "PaymentDate"))),
-                "record_date": format_date(row_value(row, ("除權息基準日", "基準日", "RecordDate"))),
+                "period_raw": str(period_raw or "").strip() or None,
+                "term": str(exact_row_value(row, ("期別",)) or "").strip() or None,
+                "cash": cash,
+                "stock": stock,
+                "board_date": format_date(exact_row_value(row, ("董事會（擬議）股利分派日", "董事會決議日", "董事會日期"))),
+                "shareholder_meeting_date": format_date(exact_row_value(row, ("股東會日期",))),
+                "ex_date": format_date(exact_row_value(row, ("除權息交易日", "除息日", "除權日", "ExDate"))),
+                "payment_date": format_date(exact_row_value(row, ("現金股利發放日", "發放日", "PaymentDate"))),
+                "record_date": format_date(exact_row_value(row, ("除權息基準日", "基準日", "RecordDate"))),
                 "source": source_name,
                 "url": text_value(row, "網址", "公告網址", "URL") or None,
                 "source_updated_at": NOW.isoformat(timespec="seconds"),
             })
+
+    # Progressive official dividend history backfill. A bounded batch avoids
+    # overloading MOPS while every successful run advances the all-stock queue.
+    stock_symbols_for_history = sorted({str(asset.get("symbol") or "") for asset in assets.values() if asset.get("market") == "TW" and asset.get("asset_class") == "stock" and asset.get("symbol")})
+    cursor = int(history_meta.get("dividend_cursor") or 0)
+    if stock_symbols_for_history:
+        if cursor >= len(stock_symbols_for_history):
+            cursor = 0
+        batch = stock_symbols_for_history[cursor:cursor + DIVIDEND_BACKFILL_BATCH]
+        if len(batch) < DIVIDEND_BACKFILL_BATCH:
+            batch += stock_symbols_for_history[:DIVIDEND_BACKFILL_BATCH - len(batch)]
+        success_count = 0
+        with ThreadPoolExecutor(max_workers=12) as pool:
+            futures = {pool.submit(fetch_mops_dividend_history, symbol): symbol for symbol in batch}
+            for future in as_completed(futures):
+                symbol, rows, error = future.result()
+                if rows:
+                    success_count += 1
+                    dividend_updates[symbol].extend(rows)
+                elif error:
+                    health.append({"name": f"MOPS dividend history {symbol}", "status": "warning", "error": error})
+        if success_count:
+            history_meta["dividend_cursor"] = (cursor + len(batch)) % len(stock_symbols_for_history)
+            history_meta["dividend_last_batch_at"] = NOW.isoformat(timespec="seconds")
+            history_meta["dividend_last_batch_success"] = success_count
+            if history_meta["dividend_cursor"] == 0:
+                history_meta["dividend_completed_cycle_at"] = NOW.isoformat(timespec="seconds")
+        health.append({"name": "MOPS progressive dividend history", "status": "ok" if success_count else "warning", "batch_size": len(batch), "successful_companies": success_count, "next_cursor": history_meta.get("dividend_cursor", cursor)})
 
     # Financial statements are fetched concurrently so the complete official
     # refresh remains inside the GitHub Actions time budget.  Duplicate L/X
@@ -565,7 +920,7 @@ def main() -> None:
             continue
         symbol = str(asset.get("symbol") or "")
         if dividend_updates.get(symbol):
-            asset["dividends"] = merge_period_rows(asset.get("dividends") or [], dividend_updates[symbol], "period", 24)
+            asset["dividends"] = merge_period_rows(asset.get("dividends") or [], dividend_updates[symbol], "period", 40)
             asset["dividend_updated_at"] = NOW.isoformat(timespec="seconds")
         if asset.get("asset_class") == "etf":
             # ETFs do not use company EPS/ROE/debt metrics. Preserve disclosed
@@ -588,10 +943,14 @@ def main() -> None:
         else:
             asset.setdefault("financials", [])
         if revenue_updates.get(symbol):
-            asset["monthly_revenue"] = merge_period_rows(asset.get("monthly_revenue") or [], revenue_updates[symbol], "period", 24)
+            asset["monthly_revenue"] = merge_period_rows(asset.get("monthly_revenue") or [], revenue_updates[symbol], "period", HISTORY_MONTHS)
             asset["revenue_updated_at"] = NOW.isoformat(timespec="seconds")
         apply_metrics(asset, valuations.get(symbol), eps_values.get(symbol))
         assets[key] = asset
+
+    history_meta["version"] = VERSION
+    history_meta["updated_at"] = NOW.isoformat(timespec="seconds")
+    history_state_path.write_text(json.dumps(history_state, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     rows = sorted(assets.values(), key=lambda row: (str(row.get("market") or ""), str(row.get("symbol") or "")))
     stock_count = sum(row.get("market") == "TW" and row.get("asset_class") == "stock" for row in rows)
@@ -616,7 +975,7 @@ def main() -> None:
             "stock_with_monthly_revenue": revenue_count,
             "source_success_count": success_sources,
             "source_warning_count": warning_sources,
-            "note": "Separate official stock and ETF masters; company profile, valuation, financial statements, monthly revenue, dividends and fund disclosures are preserved independently.",
+            "note": "Separate official stock and ETF masters; five-year monthly revenue and progressive historical dividend archives are merged and preserved across workflow runs.",
         },
         "sources": health,
         "assets": rows,
