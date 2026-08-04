@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Audit every Taiwan stock and ETF for the v11.4.3 final release."""
+"""Audit every Taiwan stock and ETF for the v11.4.4 final release."""
 from __future__ import annotations
 
 import csv
@@ -7,7 +7,7 @@ from typing import Any
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.3"
+VERSION = "v11.4.4"
 
 
 def present(value: Any) -> bool:

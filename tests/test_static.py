@@ -7,7 +7,7 @@ class StaticTests(unittest.TestCase):
  def test_required_tree(self):
   for path in [".github/workflows","assets","data","docs","scripts","tests","index.html","news.html","asset.html","service-worker.js"]:self.assertTrue((ROOT/path).exists(),path)
  def test_version(self):
-  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.3")
+  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.4")
  def test_ascii_filenames(self):
   for path in ROOT.rglob("*"):self.assertTrue(all(ord(c)<128 for c in path.name),path)
  def test_no_audio(self):
@@ -70,7 +70,7 @@ class StaticTests(unittest.TestCase):
   texts="\n".join(self.read(p.relative_to(ROOT)) for p in (ROOT/".github/workflows").glob("update-news-*.yml"))
   for branch in ("live-news-cna","live-news-moneydj","live-news-cnyes","live-news-udn","live-news-ltn"):self.assertIn(branch,texts)
  def test_service_worker_cache(self):
-  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-3",sw)
+  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-4",sw)
   for seed in ("news-cna-seed.js","news-moneydj-seed.js","company-disclosures-seed.js","monthly-revenue-seed.js","dividend-history-seed.js"):self.assertIn(seed,sw)
  def test_all_pages_current_version(self):
   for p in ROOT.glob("*.html"):self.assertNotIn("v11.4.2",p.read_text(encoding="utf-8"),p.name)
@@ -88,6 +88,21 @@ class StaticTests(unittest.TestCase):
 
  def test_revenue_small_batches(self):
   script=self.read("scripts/update_monthly_revenue.py")
-  for x in ("BATCH_MONTHS = 4","ThreadPoolExecutor(max_workers=2)","month_cursor"):self.assertIn(x,script)
+  for x in ("BATCH_MONTHS = 12","ThreadPoolExecutor(max_workers=2)","month_cursor"):self.assertIn(x,script)
+
+ def test_chinese_only_news_gate(self):
+  pipeline=self.read("scripts/news_pipeline.py")
+  for x in ("readable_chinese","decode_response","MOJIBAKE_RE","language\":\"zh-Hant"):
+   self.assertIn(x,pipeline)
+
+ def test_compact_disclosures(self):
+  updater=self.read("scripts/update_company_disclosures.py");front=self.read("assets/news.js")
+  for x in ("concise_disclosure_summary","short_summary","full_text"):self.assertIn(x,updater)
+  for x in ("notice-details","查看公告內容","slice(0,4)"):self.assertIn(x,front)
+
+ def test_dividend_year_filter(self):
+  asset=self.read("assets/asset.js")
+  self.assertIn("(20\\d{2})",asset)
+  self.assertNotIn("(?:20)?(\\d{2,4})",asset)
 
 if __name__=="__main__":unittest.main()

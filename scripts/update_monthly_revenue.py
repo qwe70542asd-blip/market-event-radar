@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Update the isolated monthly-revenue channel for v11.4.3.
+"""Update the isolated monthly-revenue channel for v11.4.4.
 
 Latest official OpenAPI rows and a small rolling MOPS history batch are merged
 without touching the asset master. A failed month never clears successful data.
@@ -18,14 +18,33 @@ from update_assets import (
     fetch_rows,
     merge_period_rows,
     pick,
-    recent_year_months,
     symbol_of,
     year_month_of,
 )
 
-VERSION = "v11.4.3"
+VERSION = "v11.4.4"
 HISTORY_MONTHS = 60
-BATCH_MONTHS = 4
+BATCH_MONTHS = 12
+RETRY_JOBS = 4
+
+
+def reportable_months(count: int = HISTORY_MONTHS) -> list[tuple[int, int]]:
+    # Companies normally publish the previous month's revenue by the 10th.
+    # Before then, begin from two months ago so an unavailable month does not
+    # consume the first history slot.
+    lag = 2 if NOW.day <= 10 else 1
+    year, month = NOW.year, NOW.month - lag
+    while month <= 0:
+        year -= 1
+        month += 12
+    output = []
+    for _ in range(count):
+        output.append((year, month))
+        month -= 1
+        if month == 0:
+            year -= 1
+            month = 12
+    return output
 
 
 def main() -> None:
@@ -62,12 +81,24 @@ def main() -> None:
                 "source_updated_at": NOW.isoformat(timespec="seconds"),
             })
 
-    months = recent_year_months(HISTORY_MONTHS)
+    months = reportable_months(HISTORY_MONTHS)
     cursor = int(meta.get("month_cursor") or 0) % len(months)
     selected = [months[(cursor + offset) % len(months)] for offset in range(BATCH_MONTHS)]
-    jobs = [(source_name, market_path, year, month) for year, month in selected for source_name, market_path in MOPS_REVENUE_ARCHIVES]
+    retry_pairs = [str(value) for value in meta.get("retry_pairs", [])]
+    retry_jobs = []
+    for value in retry_pairs[:RETRY_JOBS]:
+        try:
+            period, market_path = value.split(":", 1)
+            year, month = map(int, period.split("-"))
+            source_name = next(name for name, path in MOPS_REVENUE_ARCHIVES if path == market_path)
+            retry_jobs.append((source_name, market_path, year, month))
+        except Exception:
+            continue
+    new_jobs = [(source_name, market_path, year, month) for year, month in selected for source_name, market_path in MOPS_REVENUE_ARCHIVES]
+    jobs = list(dict.fromkeys(retry_jobs + new_jobs))
     history_success = 0
     failed_month_markets: list[str] = []
+    successful_pairs: set[str] = set()
     with ThreadPoolExecutor(max_workers=2) as pool:
         futures = {pool.submit(fetch_mops_revenue_month, *job): job for job in jobs}
         for future in as_completed(futures):
@@ -78,6 +109,7 @@ def main() -> None:
                 health.append({"name": source_name, "status": "warning", "error": error})
                 continue
             history_success += 1
+            successful_pairs.add(f"{job[2]:04d}-{job[3]:02d}:{job[1]}")
             health.append({"name": source_name, "status": "ok", "period": f"{job[2]:04d}-{job[3]:02d}", "market": job[1], "companies": len(parsed)})
             for symbol, rows in parsed.items():
                 updates[symbol].extend(rows)
@@ -88,6 +120,8 @@ def main() -> None:
     meta["last_batch_months"] = [f"{year:04d}-{month:02d}" for year, month in selected]
     meta["last_batch_requested"] = len(jobs)
     meta["last_batch_success"] = history_success
+    remaining_retry = [value for value in retry_pairs if value not in successful_pairs and value not in retry_pairs[:RETRY_JOBS]]
+    meta["retry_pairs"] = list(dict.fromkeys(remaining_retry + failed_month_markets))[:120]
     meta["last_batch_failures"] = failed_month_markets
     meta["version"] = VERSION
     meta["updated_at"] = NOW.isoformat(timespec="seconds")
@@ -111,6 +145,7 @@ def main() -> None:
     else:
         status = "warning"
 
+    covered_periods = sorted({str(row.get("period")) for rows in merged.values() for row in rows if row.get("period")}, reverse=True)
     payload = {
         "metadata": {
             "version": VERSION,
@@ -124,7 +159,11 @@ def main() -> None:
             "history_requested": len(jobs),
             "history_success": history_success,
             "next_month_cursor": meta["month_cursor"],
-            "note": "Monthly revenue is an isolated channel. Each run advances a small history batch and preserves prior successful months.",
+            "covered_period_count": len(covered_periods),
+            "covered_periods": covered_periods[:60],
+            "backfill_percent": round(min(100, len(covered_periods) / HISTORY_MONTHS * 100), 1),
+            "retry_queue_size": len(meta.get("retry_pairs", [])),
+            "note": "Monthly revenue is an isolated channel. Each run advances twelve months, retries failed market-month pairs and preserves prior successful history.",
         },
         "sources": health,
         "items": merged,

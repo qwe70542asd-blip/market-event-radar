@@ -199,7 +199,8 @@
     ].join("");
     renderRevenue(24);
     $$("#revenuePeriods button").forEach(button=>button.addEventListener("click",()=>{$$("#revenuePeriods button").forEach(item=>item.classList.remove("active"));button.classList.add("active");renderRevenue(Number(button.dataset.months||0))}));
-    $("#revenueUpdated").textContent=revenuePayload.metadata?.updated_at?`獨立營收通道更新 ${formatTime(revenuePayload.metadata.updated_at)} · ${revenuePayload.metadata.status||"等待"} · 已收錄 ${revenues.length} 個月`:asset.revenue_updated_at?`營收資料更新 ${formatTime(asset.revenue_updated_at)} · 已收錄 ${revenues.length} 個月`:`依公開資訊觀測站 · 已收錄 ${revenues.length} 個月`;
+    const revenueMeta=revenuePayload.metadata||{},progress=revenueMeta.covered_period_count?` · 歷史通道 ${revenueMeta.covered_period_count}/${revenueMeta.history_months||60} 個月份（${revenueMeta.backfill_percent||0}%）`:"";
+    $("#revenueUpdated").textContent=revenueMeta.updated_at?`獨立營收通道更新 ${formatTime(revenueMeta.updated_at)} · ${revenueMeta.status||"等待"} · 此公司已收錄 ${revenues.length} 個月${progress}`:asset.revenue_updated_at?`營收資料更新 ${formatTime(asset.revenue_updated_at)} · 已收錄 ${revenues.length} 個月`:`依公開資訊觀測站 · 已收錄 ${revenues.length} 個月`;
     showSection("#revenueSection","月營收");
   }
 
@@ -230,7 +231,7 @@
   const isolatedDistributions=dividendPayload.items?.[symbol]||[];
   const distributions=(isolatedDistributions.length?isolatedDistributions:(isEtf?(etf.distributions||asset.dividends||[]):(asset.dividends||[]))).slice().sort((a,b)=>String(b.period||b.year||"").localeCompare(String(a.period||a.year||"")));
   if(distributions.length){
-    const periodYear=row=>{const text=String(row.period||row.year||row.period_raw||"");const match=text.match(/(?:20)?(\d{2,4})/);if(!match)return null;let year=Number(match[1]);if(year<1911)year+=1911;return year};
+    const periodYear=row=>{const text=String(row.period||row.year||row.period_raw||"").trim();const ad=text.match(/(?:^|\D)(20\d{2})(?=\D|$)/);if(ad)return Number(ad[1]);const compact=text.match(/^(\d{3})\d{4}(?:[~至-]|$)/);if(compact)return Number(compact[1])+1911;const roc=text.match(/(?:^|\D)(\d{2,3})(?:年|(?=\D|$))/);if(!roc)return null;const year=Number(roc[1]);return year>=1911?year:year+1911};
     const periodLabel=row=>{
       let text=String(row.period||row.year||row.period_raw||row.record_date||"—").trim();
       const range=text.match(/^(\d{3})(\d{2})(\d{2})[~至-](\d{3})(\d{2})(\d{2})$/);

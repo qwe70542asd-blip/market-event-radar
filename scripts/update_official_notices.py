@@ -3,7 +3,7 @@ from __future__ import annotations
 import requests
 from bs4 import BeautifulSoup
 from common import NOW
-from news_pipeline import HEADERS,asset_aliases,normalize_item,save_channel,clean_text,direct_url
+from news_pipeline import HEADERS,asset_aliases,normalize_item,save_channel,clean_text,direct_url,decode_response
 
 ALIASES=asset_aliases()
 def value(row,*names):
@@ -23,7 +23,7 @@ def twse_news():
  return items
 
 def tpex_press():
- page="https://www.tpex.org.tw/zh-tw/about/company/press/list.html";r=requests.get(page,headers=HEADERS,timeout=25);r.raise_for_status();soup=BeautifulSoup(r.text,"lxml");items=[]
+ page="https://www.tpex.org.tw/zh-tw/about/company/press/list.html";r=requests.get(page,headers=HEADERS,timeout=25);r.raise_for_status();soup=BeautifulSoup(decode_response(r),"lxml");items=[]
  for a in soup.find_all("a",href=True):
   title=clean_text(a.get_text(" ",strip=True));href=direct_url(a["href"],page)
   if not href or len(title)<8:continue

@@ -128,7 +128,7 @@ def main() -> None:
 
     payload = {
         "metadata": {
-            "version": "v11.4.3",
+            "version": "v11.4.4",
             "updated_at": NOW.isoformat(timespec="seconds"),
             "source": "Yahoo public chart API",
             "warnings": warnings,

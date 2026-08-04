@@ -1,4 +1,4 @@
-name: Update v11.4.3 monthly revenue history
+name: Update v11.4.4 monthly revenue history
 on:
   push:
     branches: [main]
@@ -7,7 +7,7 @@ on:
       - "scripts/update_monthly_revenue.py"
       - "scripts/update_assets.py"
   schedule:
-    - cron: "18 * * * *"
+    - cron: "8,28,48 * * * *"
   workflow_dispatch:
 permissions:
   contents: write

@@ -1,33 +1,6 @@
 {
-  "project": "market-event-radar",
-  "baseline_version": "11.4.3",
-  "version": "v11.4.3",
-  "label": "v11.4.3-isolated-data-channels",
-  "updated_at": "2026-08-04T17:30:00+08:00",
-  "stage": "multi-source-and-history-isolation",
-  "data_channels": {
-    "assets": "live-assets",
-    "events": "live-events",
-    "tw_market": "live-tw-market",
-    "tw_chips": "live-tw-chips",
-    "global_market": "live-global-market",
-    "cna": "live-news-cna",
-    "moneydj": "live-news-moneydj",
-    "cnyes": "live-news-cnyes",
-    "udn": "live-news-udn",
-    "ltn": "live-news-ltn",
-    "official_notices": "live-official-notices",
-    "company_disclosures": "live-company-disclosures",
-    "monthly_revenue": "live-monthly-revenue",
-    "dividend_history": "live-dividend-history"
-  },
-  "changes": [
-    "中央社、MoneyDJ、鉅亨網、經濟日報、自由財經各自獨立更新",
-    "官方市場公告與個股重大訊息各自獨立更新",
-    "月營收歷史與股利歷史各自獨立更新並保存進度",
-    "月營收每次只回補四個月份，降低 MOPS 限流風險",
-    "股利游標即使部分公司失敗也會前進，失敗標的進入重試佇列",
-    "單一來源失敗只保留該來源上一版，不再清空其他來源",
-    "停止使用單一 live-news 作為新聞唯一來源"
-  ]
+  "version": "v11.4.4",
+  "baseline_version": "11.4.4",
+  "stage": "Chinese news, concise disclosures and history fixes",
+  "updated_at": "2026-08-04T18:28:00+08:00"
 }

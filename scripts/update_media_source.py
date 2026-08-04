@@ -6,7 +6,7 @@ from typing import Any
 import feedparser,requests
 from bs4 import BeautifulSoup
 from common import DATA,NOW
-from news_pipeline import HEADERS,asset_aliases,clean_text,normalize_item,save_channel,direct_url
+from news_pipeline import HEADERS,asset_aliases,clean_text,normalize_item,save_channel,direct_url,decode_response
 
 CONFIG=json.loads((DATA/"news-channels.json").read_text(encoding="utf-8"))
 
@@ -46,7 +46,7 @@ def nearest_date(text:str):
 def parse_html(cfg,aliases):
  session=requests.Session();items=[]
  for page in cfg.get("urls",[]):
-  r=session.get(page,headers=HEADERS,timeout=25);r.raise_for_status();soup=BeautifulSoup(r.text,"lxml")
+  r=session.get(page,headers=HEADERS,timeout=25);r.raise_for_status();soup=BeautifulSoup(decode_response(r),"lxml")
   for script in soup.select('script[type="application/ld+json"]'):
    try:data=json.loads(script.string or script.get_text())
    except Exception:continue

@@ -1,1 +1,1 @@
-window.__OFFICIAL_NOTICE_SEED__={"metadata":{"version":"v11.4.3","source_id":"official-notices","source_name":"官方市場公告","updated_at":null,"status":"waiting","item_count":0},"health":{},"items":[]};
+window.__OFFICIAL_NOTICE_SEED__={"metadata":{"version":"v11.4.4","source_id":"official-notices","source_name":"官方市場公告","updated_at":null,"status":"waiting","item_count":0},"health":{},"items":[]};

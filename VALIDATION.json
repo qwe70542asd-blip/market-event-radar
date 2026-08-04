@@ -1,16 +1,17 @@
 {
-  "version": "v11.4.3",
+  "version": "v11.4.4",
   "status": "PASS",
-  "scope": "independent media, official notice, disclosure, monthly revenue and dividend channels",
+  "scope": "Chinese-only multi-source news, concise disclosures, monthly revenue backfill and dividend filters",
   "checks": [
     "Python syntax",
     "JavaScript syntax",
     "JSON and workflow YAML",
-    "five independent media channels",
-    "official notice and company disclosure channels",
-    "isolated monthly-revenue small-batch progress",
-    "isolated dividend cursor and retry queue",
-    "asset page independent-channel fallback",
+    "Chinese readability and mojibake rejection",
+    "UTF-8 Big5 CP950 response decoding",
+    "collapsed company disclosure details",
+    "twelve-month revenue batches and retry queue",
+    "five-year and ten-year dividend filters",
+    "independent media and history channels",
     "service worker and version references",
     "complete project tree"
   ],
@@ -18,5 +19,5 @@
     "Live publisher and official endpoints must be verified by GitHub Actions after upload.",
     "Historical revenue and dividends accumulate over multiple scheduled runs."
   ],
-  "test_summary": "27 static tests plus smoke test passed"
+  "test_summary": "30 static tests plus syntax and workflow parsing passed"
 }

@@ -139,7 +139,7 @@ def main() -> None:
     down = sum((number(row.get("change_percent")) or 0) < 0 for row in ranked_rows)
     payload = {
         "metadata": {
-            "version": "v11.4.3",
+            "version": "v11.4.4",
             "updated_at": NOW.isoformat(timespec="seconds"),
             "trading_date": NOW.date().isoformat(),
             "market_status": "official-close",
