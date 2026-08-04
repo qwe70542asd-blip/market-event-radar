@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the v11.4.0 final market/news feed with compact summaries and structured company notices.
+"""Build the v11.4.1 final market/news feed with compact summaries and structured company notices.
 
 Rules in this stage:
 - keep only identifiable direct articles or direct announcement records;
@@ -24,7 +24,7 @@ from bs4 import BeautifulSoup
 
 from common import DATA, NOW, read_json, write_payload
 
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.0)"}
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.1)"}
 HOME_PATHS = {"", "/", "/index.html", "/index.php", "/home", "/home/", "/news", "/news/"}
 LISTING_RE = re.compile(r"/(?:search|tag|tags|category|categories|topic|topics|section|sections|list|lists|download|downloads)/?$", re.I)
 GENERIC_TITLE_RE = re.compile(
@@ -414,7 +414,7 @@ def main() -> None:
 
     payload = {
         "metadata": {
-            "version": "v11.4.0",
+            "version": "v11.4.1",
             "updated_at": NOW.isoformat(timespec="seconds"),
             "item_count": len(deduped),
             "major_item_count": sum(bool(row.get("is_major")) for row in deduped),

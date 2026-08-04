@@ -1,26 +1,51 @@
 {
   "project": "market-event-radar",
-  "version": "11.4.0",
-  "stage": "final-integrated",
-  "status": "PASS",
+  "version": "v11.4.1",
+  "result": "PASS",
+  "updated_at": "2026-08-04T12:54:00+08:00",
+  "file_count": 80,
   "checks": {
-    "python_compile": "PASS",
-    "javascript_syntax": "PASS",
-    "static_tests": "18 PASS",
-    "smoke_test": "PASS",
-    "json_parse": "PASS",
-    "workflow_yaml_parse": "PASS",
-    "html_local_references": "PASS",
-    "ascii_filenames": "PASS",
-    "event_related_news": true,
-    "news_symbol_and_event_matching": true,
-    "official_asset_metrics_pipeline": true,
-    "twelve_period_financial_history": true,
-    "metric_status_labels": true,
-    "hot_stock_and_etf_rankings": true,
-    "news_impact_analysis": true,
-    "service_worker_version": "v11.4.0",
-    "browser_screenshot_test": "NOT_RUN_LOCAL_NAVIGATION_BLOCKED_BY_SANDBOX",
-    "online_source_connectivity": "NOT_TESTED_IN_OFFLINE_CONTAINER"
-  }
+    "JavaScript syntax": {
+      "ok": true,
+      "files": 13
+    },
+    "Python compile": {
+      "ok": true
+    },
+    "JSON parse": {
+      "ok": true
+    },
+    "Static tests": {
+      "ok": true,
+      "tests": 19
+    },
+    "Smoke test": {
+      "ok": true
+    },
+    "Asset DOM references": {
+      "ok": true,
+      "ids": 34
+    },
+    "Stock ETF split": {
+      "ok": true
+    },
+    "Empty section hiding": {
+      "ok": true
+    },
+    "K line replacement": {
+      "ok": true
+    },
+    "Version and cache": {
+      "ok": true,
+      "version": "v11.4.1"
+    }
+  },
+  "notes": [
+    "Stock pages do not render ETF holdings.",
+    "ETF pages do not render company EPS, ROE, debt ratio or company financial statements.",
+    "ETF holdings section remains hidden unless disclosed holdings exist.",
+    "Historical chart uses TWSE or TPEx endpoints with Yahoo fallback.",
+    "External official endpoints require post-deployment GitHub Actions and browser connectivity.",
+    "News zero-item pipeline is outside this release scope."
+  ]
 }

@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "version": "v11.4.0",
+    "version": "v11.4.1",
     "updated_at": null,
     "source": "Yahoo public chart API",
     "note": "Market-level indices, Korea, VIX, U.S. 10Y yield, DXY and FX; no individual stock."

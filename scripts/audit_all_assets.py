@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Audit every Taiwan stock and ETF for the v11.4.0 final release."""
+"""Audit every Taiwan stock and ETF for the v11.4.1 final release."""
 from __future__ import annotations
 
 import csv
@@ -7,7 +7,7 @@ from typing import Any
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.0"
+VERSION = "v11.4.1"
 
 
 def present(value: Any) -> bool:
@@ -45,13 +45,19 @@ def stock_checks(asset: dict[str, Any]) -> list[tuple[str, bool, str]]:
 
 def etf_checks(asset: dict[str, Any]) -> list[tuple[str, bool, str]]:
     etf = asset.get("etf") or {}
+    active = "主動" in str(etf.get("category") or etf.get("management_style") or asset.get("name") or "")
     return [
-        ("基金名稱", present(asset.get("name")), "etf_master_missing"),
+        ("基金名稱", present(etf.get("formal_name") or asset.get("name")), "etf_master_missing"),
         ("市場", present(asset.get("exchange")), "etf_master_missing"),
-        ("發行公司", present(etf.get("issuer")), "etf_prospectus_missing"),
+        ("發行投信", present(etf.get("issuer")), "etf_prospectus_missing"),
+        ("基金經理人", present(etf.get("manager")), "etf_prospectus_missing"),
+        ("保管銀行", present(etf.get("custodian")), "etf_prospectus_missing"),
         ("基金類型", present(etf.get("category") or asset.get("sub_industry")), "etf_master_missing"),
-        ("追蹤指數", present(etf.get("benchmark")) or "主動" in str(etf.get("category") or asset.get("name") or ""), "etf_benchmark_not_applicable_or_missing"),
+        ("成立日期", present(etf.get("inception_date")), "etf_master_field_missing"),
+        ("上市／上櫃日期", present(etf.get("listing_date") or asset.get("listed_date")), "etf_master_field_missing"),
+        ("追蹤指數／主動式", present(etf.get("benchmark")) or active, "etf_benchmark_not_applicable_or_missing"),
         ("投資策略", present(etf.get("strategy")), "etf_prospectus_missing"),
+        ("配息資訊", present(etf.get("distribution_frequency") or etf.get("distributions")), "etf_distribution_missing"),
         ("成分股揭露狀態", present(etf.get("holdings")) or present(etf.get("holdings_status")), "etf_holdings_not_disclosed"),
     ]
 
@@ -96,7 +102,7 @@ def main() -> None:
         "metadata": {
             "version": VERSION,
             "updated_at": NOW.isoformat(timespec="seconds"),
-            "note": "Every Taiwan stock and ETF is audited; valuation states, official financial statements and ETF disclosure states are distinguished.",
+            "note": "Every Taiwan stock and ETF is audited separately; stock financial fields and ETF fund disclosures are never mixed.",
         },
         "summary": summary,
         "field_coverage": field_totals,

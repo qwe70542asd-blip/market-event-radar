@@ -1,23 +1,21 @@
-Market Event Radar v11.4.0 - Final Integration Validation
-Overall: PASS
+市場事件雷達 v11.4.1｜股票與 ETF 詳情頁整合版
 
-PASS: Python compile
-PASS: JavaScript syntax
-PASS: 18 static tests
-PASS: smoke test
-PASS: JSON parsing
-PASS: GitHub Actions YAML parsing
-PASS: HTML local references
-PASS: ASCII-only file and folder names
-PASS: Service Worker and page cache version v11.4.0
+總結果：PASS
 
-Final-stage checks:
-- event cards and event pages match related news within a three-day window
-- news extracts stock symbols, company aliases and economic-event aliases
-- official valuation, EPS, income-statement and balance-sheet update pipeline
-- up to twelve financial periods retained per stock
-- missing, not-applicable and temporarily unavailable states are separated
-- daily hot-stock and hot-ETF rankings
-- news impact, direction, confidence, affected markets and rationale
+已驗證：
+- JavaScript 語法
+- Python 編譯
+- JSON 格式
+- 19 項靜態測試
+- 專案煙霧測試
+- asset.js 使用的 34 個 DOM 元素均存在
+- 股票與 ETF 使用不同欄位模板
+- 股票頁不顯示 ETF 成分股
+- ETF 頁不顯示公司財務指標
+- 無資料的整個區塊自動隱藏
+- 券商分點已由 K 線與成交量取代
+- 產業代碼及日期格式化
+- 全專案版本與 Service Worker 快取為 v11.4.1
 
-Browser local navigation and online source connectivity are restricted in the packaging sandbox. GitHub Actions performs live-source validation after upload.
+外部官方資料端點需在部署後由 GitHub Actions 實際連線確認。
+新聞 0 則問題不包含在本次整合範圍。

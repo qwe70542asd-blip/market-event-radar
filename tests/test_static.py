@@ -7,7 +7,7 @@ class StaticTests(unittest.TestCase):
   for path in [".github/workflows","assets","data","docs","scripts","tests","index.html","portfolio.html","tw-market.html","news.html","institutional.html","asset.html","coverage.html","service-worker.js"]:
    self.assertTrue((ROOT/path).exists(),path)
  def test_version(self):
-  self.assertEqual(json.loads((ROOT/"VERSION.json").read_text(encoding="utf-8"))["baseline_version"],"11.4.0")
+  self.assertEqual(json.loads((ROOT/"VERSION.json").read_text(encoding="utf-8"))["baseline_version"],"11.4.1")
  def test_ascii_filenames(self):
   for path in ROOT.rglob("*"):
    self.assertTrue(all(ord(char)<128 for char in path.name),f"non ASCII filename: {path}")
@@ -81,7 +81,7 @@ class StaticTests(unittest.TestCase):
    self.assertIn(text,shared)
   self.assertIn("event-related-news",home)
   self.assertIn("related-news-grid",event)
-  self.assertIn("data/news-seed.js?v=11.4.0",event_html)
+  self.assertIn("data/news-seed.js?v=11.4.1",event_html)
 
  def test_stage3_official_financial_pipeline(self):
   updater=(ROOT/"scripts/update_assets.py").read_text(encoding="utf-8")
@@ -89,10 +89,22 @@ class StaticTests(unittest.TestCase):
    self.assertIn(text,updater)
   asset_html=(ROOT/"asset.html").read_text(encoding="utf-8")
   asset_js=(ROOT/"assets/asset.js").read_text(encoding="utf-8")
-  for text in ("最近 12 期財務資料","financialRows","metricUpdated"):
+  for text in ("最近 12 期財務資料","financialRows","overviewUpdated","revenueRows"):
    self.assertIn(text,asset_html)
-  for text in ("尚未公告","不適用","資料暫時無法取得","net_margin","current_ratio"):
+  for text in ("net_margin","current_ratio","monthly_revenue","financials"):
    self.assertIn(text,asset_js)
+
+ def test_v1141_stock_etf_detail_split(self):
+  updater=(ROOT/"scripts/update_assets.py").read_text(encoding="utf-8")
+  asset_html=(ROOT/"asset.html").read_text(encoding="utf-8")
+  asset_js=(ROOT/"assets/asset.js").read_text(encoding="utf-8")
+  for text in ("t187ap47_L","MONTHLY_REVENUE_SOURCES","DIVIDEND_SOURCES","parse_fund_row","industry_name"):
+   self.assertIn(text,updater)
+  for text in ("fundSection","holdingsSection","chartSection","chipSection","eventsSection"):
+   self.assertIn(text,asset_html)
+  for text in ("const isEtf","fetchTwseHistory","fetchTpexHistory","fetchYahooHistory","holdings.length","showSection"):
+   self.assertIn(text,asset_js)
+  self.assertNotIn("券商分點",asset_html)
 
  def test_stage3_news_analysis(self):
   updater=(ROOT/"scripts/update_news.py").read_text(encoding="utf-8")
@@ -108,6 +120,6 @@ class StaticTests(unittest.TestCase):
   sw=(ROOT/"service-worker.js").read_text(encoding="utf-8")
   self.assertIn("hot-score",inst)
   self.assertIn("熱門分數",html)
-  self.assertIn("market-event-radar-v11-4-0",sw)
+  self.assertIn("market-event-radar-v11-4-1",sw)
 
 if __name__=="__main__":unittest.main()

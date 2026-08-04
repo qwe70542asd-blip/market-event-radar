@@ -1,9 +1,9 @@
 {
   "project": "market-event-radar",
-  "baseline_version": "11.4.0",
-  "label": "v11.4.0-final-integration",
-  "updated_at": "2026-08-04T11:26:00+08:00",
-  "stage": "final-integrated",
+  "baseline_version": "11.4.1",
+  "label": "v11.4.1-stock-etf-detail-overhaul",
+  "updated_at": "2026-08-04T12:54:00+08:00",
+  "stage": "asset-detail-integrated",
   "data_channels": {
     "assets": "live-assets",
     "events": "live-events",
@@ -12,21 +12,16 @@
     "global_market": "live-global-market",
     "news": "live-news"
   },
-  "final_changes": [
-    "事件卡片與事件詳情自動配對事件前後三天的相關新聞",
-    "新聞依股票代碼、公司別名與經濟事件別名建立關聯",
-    "個股主檔接入官方估值、EPS、損益表與資產負債表來源",
-    "保存最近十二期財務資料並計算 ROE、負債比、淨利率與流動比率",
-    "個股頁清楚區分尚未公告、不適用與資料暫時無法取得",
-    "熱門個股與熱門 ETF 加入每日綜合熱門分數",
-    "新聞加入重要度、影響市場、方向、信心與市場判讀理由",
-    "全部頁面、資料、Workflow 與 Service Worker 更新為 v11.4.0"
-  ],
-  "realtime": {
-    "tw_market_minutes": 5,
-    "global_market_minutes": 5,
-    "news_minutes": 10,
-    "event_source_poll_minutes": 10,
-    "assets_daily": true
-  }
+  "changes": [
+    "股票與 ETF 詳情頁使用不同資料模板",
+    "只顯示已取得的欄位，整個空區塊自動隱藏",
+    "ETF 接入基金基本資料並移除公司 EPS、ROE、負債比與財報欄位",
+    "股票加入公司主檔、估值、財報、月營收、股利、法人、信用交易與事件新聞區",
+    "ETF 加入發行投信、經理人、保管銀行、成立日、上市日、策略、費用、配息與持股欄位",
+    "一般股票不再顯示 ETF 成分股",
+    "ETF 沒有正式持股資料時隱藏成分股區塊",
+    "券商分點改為 K 線、成交量與移動平均線",
+    "產業代碼轉為中文名稱，八碼與民國日期統一格式化",
+    "全部頁面、資料、Workflow 與 Service Worker 更新為 v11.4.1"
+  ]
 }
