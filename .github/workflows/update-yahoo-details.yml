@@ -1,4 +1,4 @@
-name: Update v11.4.7 Yahoo detail references
+name: Update v11.4.8 Yahoo detail references
 on:
   push:
     branches: [main]

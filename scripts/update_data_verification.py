@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from typing import Any
 from common import DATA,NOW,read_json
-VERSION="v11.4.7"
+VERSION="v11.4.8"
 
 def num(v:Any)->float|None:
  try:

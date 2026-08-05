@@ -111,6 +111,12 @@
   }
   renderPortfolioSummary();window.addEventListener("portfoliochange",renderPortfolioSummary);
 
+  const fallbackNewsImage=item=>{
+    const text=`${item.ai_topic||""} ${item.topic||""} ${item.ai_category||""} ${item.title||""}`.toLowerCase();
+    const key=/半導體|晶片|ai|人工智慧|科技|伺服器|記憶體/.test(text)?"technology":/財報|營收|eps|獲利|財測/.test(text)?"earnings":/央行|利率|債券|殖利率|匯率/.test(text)?"rates":/cpi|pce|gdp|非農|就業|通膨|景氣|總體/.test(text)?"macro":/原油|能源|黃金|原物料|天然氣|銅價/.test(text)?"commodities":/關稅|法規|政策|金管會/.test(text)?"policy":/戰爭|軍事|地緣|制裁|衝突/.test(text)?"geopolitics":/美股|全球|韓國|日本|歐洲|中國|國際/.test(text)?"global":(item.symbols||[]).length||item.is_stock_news?"stock":"market";
+    return `assets/news-fallback/${key}.svg`;
+  };
+
   const mediaItems=[...(news.items||[]),...(stockNews.items||[])];
   const safeNews=[];const seenNews=new Set();
   for(const item of mediaItems){
@@ -123,7 +129,7 @@
   const majorNews=safeNews.filter(item=>item._majorScore>=45).slice(0,6);
   const latest=majorNews[0]||safeNews[0];
   if(latest){$("#breakingLink").textContent=strip(latest.title);$("#breakingLink").href=latest.url}
-  $("#homeNews").innerHTML=(majorNews.length?majorNews:safeNews.slice(0,6)).map(item=>`<a class="news-card home-news-card" href="${escapeHtml(item.url)}" target="_blank" rel="noreferrer noopener">${item.image_url?`<div class="home-news-thumb"><img src="${escapeHtml(item.image_url)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.remove()"></div>`:""}<div class="news-meta"><span>${escapeHtml(item.ai_category||item.topic||"市場")}</span><time>${escapeHtml(formatTime(item.published_at||item.date))}</time></div><div class="ai-badges"><span class="impact-badge ${escapeHtml(item.impact||"medium")}">${impactLabel(item.impact)}</span><span class="verification-badge">${escapeHtml(verificationLabel(item))}</span></div><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(truncate(item.ai_summary||item.summary,100)||"查看完整事件內容。")}</p></a>`).join("")||'<div class="empty">等待重大資訊更新</div>';
+  $("#homeNews").innerHTML=(majorNews.length?majorNews:safeNews.slice(0,6)).map(item=>{const fallback=fallbackNewsImage(item),src=item.image_url||fallback;return `<a class="news-card home-news-card" href="${escapeHtml(item.url)}" target="_blank" rel="noreferrer noopener"><div class="home-news-thumb${item.image_url?"":" fallback"}"><img src="${escapeHtml(src)}" data-fallback="${escapeHtml(fallback)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="if(this.src!==this.dataset.fallback){this.src=this.dataset.fallback;this.parentElement.classList.add('fallback')}else{this.onerror=null}"></div><div class="news-meta"><span>${escapeHtml(item.ai_category||item.topic||"市場")}</span><time>${escapeHtml(formatTime(item.published_at||item.date))}</time></div><div class="ai-badges"><span class="impact-badge ${escapeHtml(item.impact||"medium")}">${impactLabel(item.impact)}</span><span class="verification-badge">${escapeHtml(verificationLabel(item))}</span></div><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(truncate(item.ai_summary||item.summary,100)||"查看完整事件內容。")}</p></a>`}).join("")||'<div class="empty">等待重大資訊更新</div>';
 
   const todayKey=localKey(new Date());
   const todayEvents=uniqueEvents((events.events||[]).filter(event=>eventDateKey(event)===todayKey));

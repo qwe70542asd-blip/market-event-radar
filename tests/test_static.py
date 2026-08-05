@@ -7,7 +7,7 @@ class StaticTests(unittest.TestCase):
  def test_required_tree(self):
   for path in [".github/workflows","assets","data","docs","scripts","tests","index.html","news.html","asset.html","service-worker.js"]:self.assertTrue((ROOT/path).exists(),path)
  def test_version(self):
-  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.7")
+  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.8")
  def test_ascii_filenames(self):
   for path in ROOT.rglob("*"):self.assertTrue(all(ord(c)<128 for c in path.name),path)
  def test_no_audio(self):
@@ -72,7 +72,7 @@ class StaticTests(unittest.TestCase):
   texts="\n".join(self.read(p.relative_to(ROOT)) for p in (ROOT/".github/workflows").glob("update-news-*.yml"))
   for branch in ("live-news-cna","live-news-moneydj","live-news-cnyes","live-news-udn","live-news-ltn","live-news-wealth","live-news-yahoo","live-news-technews","live-news-ctee"):self.assertIn(branch,texts)
  def test_service_worker_cache(self):
-  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-7",sw)
+  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-8",sw)
   for seed in ("news-cna-seed.js","news-moneydj-seed.js","news-wealth-seed.js","news-yahoo-seed.js","news-technews-seed.js","news-ctee-seed.js","stock-news-seed.js","company-disclosures-seed.js","monthly-revenue-seed.js","dividend-history-seed.js","secondary-reference-seed.js","data-verification-seed.js","yahoo-details-seed.js","market-volume-history-seed.js"):self.assertIn(seed,sw)
  def test_all_pages_current_version(self):
   for p in ROOT.glob("*.html"):self.assertNotIn("v11.4.2",p.read_text(encoding="utf-8"),p.name)
@@ -157,10 +157,24 @@ class StaticTests(unittest.TestCase):
   for x in ("market-volume-history.json","volume_ratio_20d","average_20d_trade_value"):self.assertIn(x,script)
   self.assertIn("market-volume-history.json",workflow)
 
- def test_calendar_first_home_layout(self):
+ def test_compact_controls_before_calendar_layout(self):
   html=self.read("index.html")
-  self.assertLess(html.index("本月事件月曆"),html.index("我的資產總覽"))
+  self.assertLess(html.index("compact-feature-strip"),html.index("我的資產總覽"))
+  self.assertLess(html.index("我的資產總覽"),html.index("本月事件月曆"))
   for x in ("home-primary-grid","home-calendar-primary","home-market-rail","home-summary-row"):self.assertIn(x,html)
+
+ def test_non_ai_news_image_pipeline(self):
+  updater=self.read("scripts/update_media_source.py");news=self.read("assets/news.js");home=self.read("assets/home.js")
+  for x in ("og:image","twitter:image","article_image_from_soup","enrich_article_images"):self.assertIn(x,updater)
+  for x in ("assets/news-fallback/","data-fallback","fallbackImage"):self.assertIn(x,news)
+  self.assertIn("fallbackNewsImage",home)
+  for name in ("market","macro","rates","technology","earnings","stock","commodities","global","policy","geopolitics"):
+   self.assertTrue((ROOT/f"assets/news-fallback/{name}.svg").exists(),name)
+
+ def test_no_ai_image_generation_dependency(self):
+  text="\n".join(self.read(p.relative_to(ROOT)) for p in [ROOT/"scripts/update_media_source.py",ROOT/"assets/news.js",ROOT/"assets/home.js"])
+  for forbidden in ("image_gen","openai.images","dall-e","stable diffusion","midjourney"):
+   self.assertNotIn(forbidden.lower(),text.lower())
 
  def test_compact_clickable_news_portal(self):
   html=self.read("news.html");js=self.read("assets/news.js");css=self.read("assets/styles.css")

@@ -1,7 +1,7 @@
-name: Update v11.4.7 stock media news
+name: Update v11.4.8 stock media news
 on:
   workflow_run:
-    workflows: ["Update v11.4.7 中央社 news", "Update v11.4.7 MoneyDJ news", "Update v11.4.7 鉅亨網 news", "Update v11.4.7 經濟日報 news", "Update v11.4.7 自由財經 news", "Update v11.4.7 財富自由 news", "Update v11.4.7 Yahoo股市 news", "Update v11.4.7 科技新報／財經新報 news", "Update v11.4.7 工商時報 news"]
+    workflows: ["Update v11.4.8 中央社 news", "Update v11.4.8 MoneyDJ news", "Update v11.4.8 鉅亨網 news", "Update v11.4.8 經濟日報 news", "Update v11.4.8 自由財經 news", "Update v11.4.8 財富自由 news", "Update v11.4.8 Yahoo股市 news", "Update v11.4.8 科技新報／財經新報 news", "Update v11.4.8 工商時報 news"]
     types: [completed]
   schedule:
     - cron: "14-59/15 * * * *"

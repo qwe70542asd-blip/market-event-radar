@@ -39,14 +39,65 @@ def rss_image(entry):
  if isinstance(image,dict):return image.get("href") or image.get("url")
  return None
 
+IMAGE_META_SELECTORS=(
+ ('meta[property="og:image"]','content'),('meta[property="og:image:secure_url"]','content'),
+ ('meta[name="twitter:image"]','content'),('meta[name="twitter:image:src"]','content'),
+ ('meta[itemprop="image"]','content'),('link[rel="image_src"]','href')
+)
+
+def article_image_from_soup(soup,base):
+ for selector,attribute in IMAGE_META_SELECTORS:
+  node=soup.select_one(selector)
+  if node:
+   found=direct_url(node.get(attribute),base)
+   if found:return found
+ for script in soup.select('script[type="application/ld+json"]'):
+  try:data=json.loads(script.string or script.get_text())
+  except Exception:continue
+  found=direct_url(image_value(data.get("image")) if isinstance(data,dict) else None,base)
+  if found:return found
+ for img in soup.find_all("img"):
+  raw=img.get("src") or img.get("data-src") or img.get("data-original") or img.get("data-lazy-src")
+  found=direct_url(raw,base)
+  if not found:continue
+  marker=f"{found} {img.get('class') or ''} {img.get('alt') or ''}".lower()
+  if any(word in marker for word in ("logo","icon","avatar","sprite","loading","blank","advert","banner")):continue
+  try:
+   width=int(re.sub(r"\D","",str(img.get("width") or "0")) or 0);height=int(re.sub(r"\D","",str(img.get("height") or "0")) or 0)
+  except Exception:width=height=0
+  if width and height and (width<240 or height<120):continue
+  return found
+ return None
+
+def enrich_article_images(session,items,limit=24):
+ cache={};attempts=0
+ for item in items:
+  if item.get("image_url"):continue
+  url=item.get("url")
+  if not url or attempts>=limit:break
+  if url in cache:
+   if cache[url]:item["image_url"]=cache[url]
+   continue
+  attempts+=1;found=None
+  try:
+   response=session.get(url,headers=HEADERS,timeout=18,allow_redirects=True)
+   response.raise_for_status()
+   if "html" in str(response.headers.get("content-type") or "").lower():
+    soup=BeautifulSoup(decode_response(response),"lxml")
+    found=article_image_from_soup(soup,response.url or url)
+  except Exception:pass
+  cache[url]=found
+  if found:item["image_url"]=found
+ return items
+
 def parse_rss(cfg,aliases,profiles):
- items=[]
+ session=requests.Session();items=[]
  for url in cfg.get("urls",[]):
   feed=feedparser.parse(url)
   for entry in feed.entries[:80]:
    item=normalize_item(title=entry.get("title"),url=entry.get("link"),source_id=cfg["id"],source_name=cfg["name"],summary=entry.get("summary") or entry.get("description"),published_at=entry.get("published") or entry.get("updated"),aliases=aliases,profiles=profiles,forced_scope="media",extra={"image_url":rss_image(entry)})
    if item:items.append(item)
- return items
+ return enrich_article_images(session,items,int(cfg.get("image_fetch_limit",24)))
 
 def nearest_date(text:str):
  for p in [r"20\d{2}[/-]\d{1,2}[/-]\d{1,2}\s+\d{1,2}:\d{2}",r"20\d{2}[/-]\d{1,2}[/-]\d{1,2}"]:
@@ -83,7 +134,7 @@ def parse_html(cfg,aliases,profiles):
    image=direct_url(img.get("src") or img.get("data-src") or img.get("data-original"),page) if img else None
    item=normalize_item(title=title,url=href,source_id=cfg["id"],source_name=cfg["name"],summary=summary,published_at=nearest_date(context),aliases=aliases,profiles=profiles,forced_scope="media",extra={"image_url":image})
    if item:items.append(item)
- return items
+ return enrich_article_images(session,items,int(cfg.get("image_fetch_limit",24)))
 
 def main():
  ap=argparse.ArgumentParser();ap.add_argument("--channel",required=True);args=ap.parse_args()
