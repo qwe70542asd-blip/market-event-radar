@@ -1,14 +1,63 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import argparse,json,re
+import argparse,json,re,os
 from typing import Any
+from datetime import date,datetime,timedelta
+from urllib.parse import quote_plus
 from urllib.parse import urlsplit
 import feedparser,requests
 from bs4 import BeautifulSoup
-from common import DATA,NOW
+from common import DATA,NOW,read_json
 from news_pipeline import HEADERS,asset_aliases,asset_profiles,clean_text,normalize_item,save_channel,direct_url,decode_response
 
 CONFIG=json.loads((DATA/"news-channels.json").read_text(encoding="utf-8"))
+
+HISTORY_QUERIES={
+ "cna":"site:cna.com.tw 財經 OR 科技",
+ "moneydj":"site:moneydj.com 台股 OR 美股 OR 財經",
+ "cnyes":"site:cnyes.com 台股 OR 美股 OR 財經",
+ "udn":"site:money.udn.com 財經 OR 台股 OR 國際",
+ "ltn":"site:ec.ltn.com.tw OR site:news.ltn.com.tw/business 財經",
+ "wealth":"site:stock.ltn.com.tw 台股 OR 投資",
+ "yahoo":"site:tw.stock.yahoo.com 台股 OR 美股 OR 財經",
+ "technews":"site:technews.tw OR site:finance.technews.tw 半導體 OR AI OR 財經",
+ "ctee":"site:ctee.com.tw 台股 OR 財經 OR 產業",
+ "asia-risk":"日圓 OR 日銀 OR 韓國央行 OR 韓元 OR KOSPI OR 中國房地產 OR 人民幣 OR 亞洲資金外流",
+}
+HISTORY_START=date(2026,1,1)
+
+def month_iter(start:date,end:date):
+ year,month=start.year,start.month
+ while (year,month)<=(end.year,end.month):
+  nxt=date(year+1,1,1) if month==12 else date(year,month+1,1)
+  yield date(year,month,1),nxt
+  year,month=nxt.year,nxt.month
+
+def archive_month_counts(cfg):
+ payload=read_json(DATA/cfg["file"],{"items":[]});counts={}
+ for item in payload.get("items",[]):
+  raw=str(item.get("published_at") or item.get("date") or "")
+  if len(raw)>=7:counts[raw[:7]]=counts.get(raw[:7],0)+1
+ return counts
+
+def parse_history_google_news(cfg,aliases,profiles):
+ if os.getenv("NEWS_HISTORY_BACKFILL","0").strip()=="0":return [],{"enabled":False,"queries":0,"items":0}
+ query=HISTORY_QUERIES.get(cfg["id"]);counts=archive_month_counts(cfg)
+ if not query:return [],{"enabled":False,"queries":0,"items":0}
+ session=requests.Session();items=[];queries=0
+ today=NOW.date()
+ for start,end in month_iter(HISTORY_START,today):
+  month=start.strftime("%Y-%m")
+  if counts.get(month,0)>=3:continue
+  before=min(end,today+timedelta(days=1))
+  q=f"{query} after:{start.isoformat()} before:{before.isoformat()}"
+  url=f"https://news.google.com/rss/search?q={quote_plus(q)}&hl=zh-TW&gl=TW&ceid=TW%3Azh-Hant"
+  feed=feedparser.parse(url);queries+=1
+  for entry in feed.entries[:12]:
+   publisher=clean_text((entry.get("source") or {}).get("title") if isinstance(entry.get("source"),dict) else "") or cfg["name"]
+   item=normalize_item(title=entry.get("title"),url=entry.get("link"),source_id=cfg["id"],source_name=cfg["name"],summary=entry.get("summary") or entry.get("description"),published_at=entry.get("published") or entry.get("updated"),aliases=aliases,profiles=profiles,forced_scope="media",extra={"image_url":rss_image(entry),"discovery_source":"google-news-history","discovery_channel":cfg["name"],"publisher":publisher,"history_month":month})
+   if item:items.append(item)
+ return items,{"enabled":True,"queries":queries,"items":len(items),"archive_start":HISTORY_START.isoformat()}
 
 def image_value(value:Any)->str|None:
  if isinstance(value,str):return value
@@ -177,7 +226,11 @@ def main():
  cfg=next(x for x in CONFIG["media"] if x["id"]==args.channel);aliases=asset_aliases();profiles=asset_profiles();error=None;items=[]
  try:items=parse_rss(cfg,aliases,profiles) if cfg["kind"]=="rss" else parse_html(cfg,aliases,profiles)
  except Exception as exc:error=str(exc)
- health={"status":"ok" if items else "warning","error":error,"requested_urls":cfg.get("urls",[]),"parsed_items":len(items)}
+ history_items=[];history_health={"enabled":False,"queries":0,"items":0}
+ try:history_items,history_health=parse_history_google_news(cfg,aliases,profiles)
+ except Exception as exc:history_health={"enabled":True,"queries":0,"items":0,"error":str(exc)}
+ items.extend(history_items)
+ health={"status":"ok" if items else "warning","error":error,"requested_urls":cfg.get("urls",[]),"parsed_items":len(items),"history_backfill":history_health}
  payload=save_channel(cfg["file"],cfg["var"],cfg["id"],cfg["name"],items,health,cfg.get("retention_days",7),cfg.get("minimum_records",1))
  print(cfg["id"],payload["metadata"]["status"],payload["metadata"]["item_count"])
 if __name__=="__main__":main()

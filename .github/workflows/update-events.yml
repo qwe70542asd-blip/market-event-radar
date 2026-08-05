@@ -1,4 +1,4 @@
-name: Update v11.4.16 event calendar and announced dates
+name: Update v11.4.17 event calendar and announced dates
 
 on:
   push:
@@ -86,9 +86,11 @@ jobs:
           events=payload.get("events") or []
           metadata=payload.get("metadata") or {}
           assert events, "empty event calendar after official-source refresh"
-          assert metadata.get("version")=="v11.4.16", metadata
+          assert metadata.get("version")=="v11.4.17", metadata
           assert metadata.get("state_initialized") is True, metadata
+          assert metadata.get("archive_start")=="2026-01-01", metadata
           assert isinstance(metadata.get("announced_today_count"), int), metadata
+          assert all(str(row.get("local_date") or row.get("start") or "")[:10] >= "2026-01-01" for row in events)
           assert state.get("initialized") is True, state
           assert all(row.get("id") and row.get("title") and row.get("start") for row in events)
           print("events",len(events))
@@ -101,7 +103,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          bash scripts/publish_data_branch.sh "$DATA_BRANCH" "event-calendar-v11.4.16" \
+          bash scripts/publish_data_branch.sh "$DATA_BRANCH" "event-calendar-v11.4.17" \
             data/events.json \
             data/events-seed.js \
             data/event-source-state.json

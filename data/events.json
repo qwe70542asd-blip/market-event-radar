@@ -1,11 +1,13 @@
 {
   "metadata": {
-    "version": "v11.4.16",
+    "version": "v11.4.17",
     "updated_at": null,
     "timezone": "Asia/Taipei",
     "state_initialized": false,
     "announced_today_count": 0,
-    "note": "等待第一次官方事件掃描。"
+    "note": "等待官方網路事件回補；本地檔僅作初始備援。",
+    "archive_start": "2026-01-01",
+    "archive_policy": "retain verified events from 2026-01-01 through the official future horizon"
   },
   "sources": [],
   "events": []

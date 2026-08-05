@@ -1,12 +1,15 @@
 {
   "metadata": {
-    "version": "v11.4.16",
+    "version": "v11.4.17",
     "source_id": "official-notices",
     "source_name": "官方市場公告",
     "updated_at": null,
     "status": "waiting",
     "item_count": 0,
-    "note": "TPEx webpage news/notice source disabled pending verification; TWSE and other official sources remain."
+    "note": "TPEx webpage news/notice source disabled pending verification; TWSE and other official sources remain.",
+    "archive_start": "2026-01-01",
+    "sort_order": "published_at_desc",
+    "archive_policy": "recent complete; older requires higher importance; pre-2026 deleted"
   },
   "health": {
     "disabled_sources": [

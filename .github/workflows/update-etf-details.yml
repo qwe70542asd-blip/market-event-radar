@@ -1,4 +1,4 @@
-name: Update v11.4.16 ETF detail references
+name: Update v11.4.17 ETF detail references
 on:
   push:
     branches: [main]

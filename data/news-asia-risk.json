@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "version": "v11.4.16",
+    "version": "v11.4.17",
     "source_id": "asia-risk",
     "source_name": "亞洲總體風險",
     "updated_at": null,
@@ -9,7 +9,10 @@
     "item_count": 0,
     "used_archive_fallback": false,
     "retention_days": 10,
-    "language_policy": "zh-Hant-only"
+    "language_policy": "zh-Hant-only",
+    "archive_start": "2026-01-01",
+    "sort_order": "published_at_desc",
+    "archive_policy": "recent complete; older requires higher importance; pre-2026 deleted"
   },
   "health": {
     "status": "waiting",

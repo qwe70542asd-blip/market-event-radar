@@ -1,4 +1,4 @@
-name: Update v11.4.16 global market
+name: Update v11.4.17 global market
 on:
   push:
     branches: [main]
@@ -27,7 +27,25 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: pip install -r requirements.txt
+      - name: Restore last successful global snapshot
+        run: |
+          bash scripts/restore_data_branch.sh live-global-market \
+            "market-snapshot.json:data/market-snapshot.json" \
+            "market-snapshot-seed.js:data/market-snapshot-seed.js"
       - run: python scripts/update_market_snapshot.py
+      - name: Validate six index K-lines
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          payload=json.loads(Path("data/market-snapshot.json").read_text(encoding="utf-8"))
+          wanted={"^TWII","^KS11","^N225","^IXIC","^SOX","^GSPC"}
+          rows={row.get("symbol"):row for row in payload.get("items",[]) if row.get("symbol") in wanted}
+          assert set(rows)==wanted, set(rows)
+          counts={symbol:len(rows[symbol].get("candles") or []) for symbol in wanted}
+          print("K-line sessions",counts)
+          assert sum(count>=10 for count in counts.values())>=4, counts
+          PY
       - name: Publish data channel
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

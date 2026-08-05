@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import json
 import re
-from datetime import timedelta
 from difflib import SequenceMatcher
 
 from common import DATA, NOW, read_json
@@ -15,6 +14,9 @@ from news_pipeline import (
     infer_symbols,
     parse_datetime,
     readable_chinese,
+    keep_in_archive,
+    archive_priority,
+    ARCHIVE_START,
 )
 
 PRIORITY = {
@@ -60,7 +62,6 @@ def main() -> None:
     config = read_json(DATA / "news-channels.json", {"media": []})
     profiles = asset_profiles()
     aliases = asset_aliases()
-    cutoff = NOW - timedelta(days=14)
     candidates: list[dict] = []
     sources: list[dict] = []
 
@@ -71,7 +72,8 @@ def main() -> None:
             title = clean_text(original.get("title"))
             summary = clean_text(original.get("ai_summary") or original.get("summary"))
             published = parse_datetime(original.get("published_at"))
-            if not published or published < cutoff or not readable_chinese(title, summary):
+            candidate_for_archive={**original,"title":title,"summary":summary or title,"ai_summary":summary or title}
+            if not published or not keep_in_archive(candidate_for_archive,published) or not readable_chinese(title, summary):
                 continue
             symbols = [
                 symbol
@@ -142,13 +144,14 @@ def main() -> None:
         primary["verification_sources"] = [item.get("source") for item in ranked if item.get("source")]
         output.append(primary)
 
-    output.sort(key=lambda row: str(row.get("published_at") or ""), reverse=True)
-    output = output[:240]
+    output.sort(key=lambda row: (str(row.get("published_at") or ""), archive_priority(row,parse_datetime(row.get("published_at")) or NOW)), reverse=True)
+    output = output[:600]
     old = read_json(DATA / "stock-news.json", {"items": []})
     fallback = False
     if not output and old.get("items"):
-        output = old["items"]
-        fallback = True
+        output = [row for row in old["items"] if (lambda dt: bool(dt and keep_in_archive(row, dt)))(parse_datetime(row.get("published_at") or row.get("date")))]
+        output.sort(key=lambda row: str(row.get("published_at") or row.get("date") or ""), reverse=True)
+        fallback = bool(output)
 
     payload = {
         "metadata": {
@@ -158,7 +161,9 @@ def main() -> None:
             "item_count": len(output),
             "source_count": len(sources),
             "used_archive_fallback": fallback,
-            "note": "繁體中文媒體個股新聞，與官方公司重大訊息分開保存。",
+            "archive_start": ARCHIVE_START.date().isoformat(),
+            "sort_order": "published_at_desc",
+            "note": "繁體中文媒體個股新聞；近期完整保留，較舊資料只保留高重要度內容，2026-01-01 前自動刪除。",
         },
         "sources": sources,
         "items": output,

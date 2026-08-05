@@ -7,7 +7,7 @@ class StaticTests(unittest.TestCase):
  def test_required_tree(self):
   for path in [".github/workflows","assets","data","docs","scripts","tests","index.html","news.html","asset.html","service-worker.js"]:self.assertTrue((ROOT/path).exists(),path)
  def test_version(self):
-  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.16")
+  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.17")
  def test_ascii_filenames(self):
   for path in ROOT.rglob("*"):self.assertTrue(all(ord(c)<128 for c in path.name),path)
  def test_no_audio(self):
@@ -80,18 +80,18 @@ class StaticTests(unittest.TestCase):
   texts="\n".join(self.read(p.relative_to(ROOT)) for p in (ROOT/".github/workflows").glob("update-news-*.yml"))
   for branch in ("live-news-cna","live-news-moneydj","live-news-cnyes","live-news-udn","live-news-ltn","live-news-wealth","live-news-yahoo","live-news-technews","live-news-ctee","live-news-asia-risk"):self.assertIn(branch,texts)
  def test_service_worker_cache(self):
-  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-16",sw)
+  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-17",sw)
   for seed in ("news-cna-seed.js","news-moneydj-seed.js","news-wealth-seed.js","news-yahoo-seed.js","news-technews-seed.js","news-ctee-seed.js","news-asia-risk-seed.js","stock-news-seed.js","company-disclosures-seed.js","monthly-revenue-seed.js","dividend-history-seed.js","secondary-reference-seed.js","data-verification-seed.js","yahoo-details-seed.js","etf-details-seed.js","stock-basics-seed.js","market-volume-history-seed.js"):self.assertIn(seed,sw)
  def test_market_snapshot_seed_schema(self):
   payload=json.loads(self.read("data/market-snapshot.json"))
-  self.assertEqual(payload.get("metadata",{}).get("version"),"v11.4.16")
+  self.assertEqual(payload.get("metadata",{}).get("version"),"v11.4.17")
   self.assertEqual(set(payload.get("metadata",{}).get("kline_symbols",[])),{"^TWII","^KS11","^N225","^IXIC","^SOX","^GSPC"})
   self.assertNotIn("^TWOII",{row.get("symbol") for row in payload.get("items",[])})
 
  def test_all_pages_current_version(self):
   for p in ROOT.glob("*.html"):
    body=p.read_text(encoding="utf-8")
-   self.assertIn("v11.4.16",body,p.name)
+   self.assertIn("v11.4.17",body,p.name)
    self.assertNotIn("v11.4.15",body,p.name)
 
 
@@ -299,5 +299,29 @@ class StaticTests(unittest.TestCase):
   updater=self.read("scripts/update_media_source.py")
   for token in ("excluded_item","resolve_google_news","discovery_source"):
    self.assertIn(token,updater)
+
+ def test_v11417_fresh_data_loader(self):
+  shared=self.read("assets/shared.js")
+  for token in ("loadBranchApi","api.github.com/repos","snapshotCacheKey","mergeSnapshotCache","FRESH_BRANCH_FILES"):self.assertIn(token,shared)
+  self.assertIn('"market-snapshot.json","tw-market.json","market-volume-history.json","events.json"',shared)
+
+ def test_online_turnover_backfill(self):
+  script=self.read("scripts/update_tw_market.py");workflow=self.read(".github/workflows/update-tw-market.yml")
+  for token in ("TWSE_HISTORY_OPENAPI","TWSE_HISTORY_MONTH","TPEX_HISTORY_OPENAPI","TPEX_HISTORY_MONTH","HISTORY_START = date(2026, 1, 1)","direct-online-official"):self.assertIn(token,script)
+  for token in ("tw-market.json:data/tw-market.json","Validate online turnover archive"):self.assertIn(token,workflow)
+
+ def test_calendar_archive_from_20260101(self):
+  script=self.read("scripts/update_events.py");workflow=self.read(".github/workflows/update-events.yml")
+  for token in ("ARCHIVE_START = date(2026, 1, 1)","fetch_fomc","FOMC_URL","archive_policy"):self.assertIn(token,script)
+  self.assertIn('metadata.get("archive_start")=="2026-01-01"',workflow)
+
+ def test_news_archive_policy_and_backfill(self):
+  pipeline=self.read("scripts/news_pipeline.py");updater=self.read("scripts/update_media_source.py")
+  for token in ("ARCHIVE_START=datetime(2026,1,1","keep_in_archive","RECENT_FULL_DAYS=30","published_at_desc"):self.assertIn(token,pipeline)
+  for token in ("HISTORY_QUERIES","google-news-history","NEWS_HISTORY_BACKFILL","after:{start.isoformat()}"):self.assertIn(token,updater)
+
+ def test_global_workflow_restores_last_kline(self):
+  workflow=self.read(".github/workflows/update-global-market.yml")
+  for token in ("Restore last successful global snapshot","market-snapshot.json:data/market-snapshot.json","Validate six index K-lines"):self.assertIn(token,workflow)
 
 if __name__=="__main__":unittest.main()

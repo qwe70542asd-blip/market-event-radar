@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build Market Event Radar v11.4.16 event data from official schedules.
+"""Build Market Event Radar v11.4.17 event data from official schedules.
 
 The updater keeps the last verified archive, refreshes selected official sources,
 and records when an exact date first appears or changes. It never invents dates.
@@ -33,9 +33,11 @@ NOW = datetime.now(ZoneInfo("Asia/Taipei"))
 TAIPEI = NOW.tzinfo
 NEW_YORK = ZoneInfo("America/New_York")
 OFFLINE = os.getenv("EVENT_OFFLINE", "").strip() == "1"
+ARCHIVE_START = date(2026, 1, 1)
+ARCHIVE_START_DT = datetime.combine(ARCHIVE_START, time.min, tzinfo=TAIPEI)
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.3; +https://github.com/qwe70542asd-blip/market-event-radar)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.17; +https://github.com/qwe70542asd-blip/market-event-radar)",
     "Accept-Language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
 }
 TWSE_EXDIV_URL = "https://openapi.twse.com.tw/v1/exchangeReport/TWT48U_ALL"
@@ -46,6 +48,7 @@ TWSE_MATERIAL_URL = "https://openapi.twse.com.tw/v1/opendata/t187ap04_L"
 TPEX_MATERIAL_URL = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap04_O"
 BLS_URL = "https://www.bls.gov/schedule/news_release/bls.ics"
 BEA_URL = "https://www.bea.gov/news/schedule"
+FOMC_URL = "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
 
 BLS_TRANSLATIONS = {
     "Employment Situation": ("美國非農就業報告", "high", ["NASDAQ", "美債", "美元", "黃金", "台股"]),
@@ -250,7 +253,7 @@ def fetch_bls(session: requests.Session) -> SourceResult:
         if not translated or not dt_pair:
             continue
         start = parse_ics_datetime(*dt_pair)
-        if not NOW - timedelta(days=14) <= start <= NOW + timedelta(days=370):
+        if not ARCHIVE_START_DT <= start <= NOW + timedelta(days=370):
             continue
         uid = next((v for k, v in block.items() if k.startswith("UID")), summary)
         title, impact, assets = translated
@@ -287,7 +290,7 @@ def fetch_bea(session: requests.Session) -> SourceResult:
             for year in (NOW.year - 1, NOW.year, NOW.year + 1)
         ]
         start = min(candidates, key=lambda value: abs((value - NOW).total_seconds()))
-        if not NOW - timedelta(days=14) <= start <= NOW + timedelta(days=370):
+        if not ARCHIVE_START_DT <= start <= NOW + timedelta(days=370):
             continue
         title, impact, assets = translated
         key = f"bea|{raw_title.lower()}"
@@ -302,6 +305,58 @@ def fetch_bea(session: requests.Session) -> SourceResult:
         raise RuntimeError("BEA schedule returned no recognized events")
     return SourceResult("bea", "U.S. BEA release schedule", BEA_URL, ("bea",), events)
 
+
+
+
+def fetch_fomc(session: requests.Session) -> SourceResult:
+    soup = BeautifulSoup(http_get(session, FOMC_URL).text, "html.parser")
+    lines = [clean(value) for value in soup.get_text("\n", strip=True).splitlines() if clean(value)]
+    active = False
+    month_value: int | None = None
+    events: list[dict[str, Any]] = []
+    month_names = {name: index for index, name in enumerate((
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ), start=1)}
+    for line in lines:
+        if re.fullmatch(r"2026 FOMC Meetings", line, re.I):
+            active = True
+            month_value = None
+            continue
+        if active and re.fullmatch(r"20\d{2} FOMC Meetings", line, re.I):
+            break
+        if not active:
+            continue
+        if line in month_names:
+            month_value = month_names[line]
+            continue
+        if month_value is None:
+            continue
+        match = re.fullmatch(r"(\d{1,2})(?:-(\d{1,2}))?\*?", line)
+        if not match:
+            continue
+        decision_day = int(match.group(2) or match.group(1))
+        try:
+            start = datetime(2026, month_value, decision_day, 14, 0, tzinfo=NEW_YORK).astimezone(TAIPEI)
+        except ValueError:
+            month_value = None
+            continue
+        if not ARCHIVE_START_DT <= start <= NOW + timedelta(days=370):
+            month_value = None
+            continue
+        events.append(make_event(
+            event_id=stable_id("fomc", start.date()), tracking_key=f"fomc|2026|{month_value:02d}",
+            title="美國聯準會 FOMC 利率決策", start=start, category="macro",
+            event_type="central-bank-decision", event_group="macro", region="US", impact="high",
+            description="聯邦公開市場委員會公布利率決議與政策聲明。",
+            market_effect="利率路徑與政策措辭可能影響美債殖利率、美元、美股及全球風險資產。",
+            source_name="Federal Reserve FOMC calendar", source_url=FOMC_URL, origin="fomc",
+            assets=["S&P 500", "NASDAQ", "美債", "美元", "台股"], tags=["FOMC", "聯準會", "利率決策"],
+        ))
+        month_value = None
+    if not events:
+        raise RuntimeError("FOMC calendar returned no 2026 meetings")
+    return SourceResult("fomc", "Federal Reserve FOMC calendar", FOMC_URL, ("fomc",), events)
 
 def tw_asset_type(symbol: str, name: str) -> tuple[str, str]:
     is_etf = symbol.startswith("00") or "ETF" in name.upper() or "基金" in name
@@ -378,7 +433,7 @@ def parse_dividend_plans(rows: Any, market: str, source_url: str, origin: str) -
         shareholder_day = parse_market_date(first_value(row, ["股東會日期", "ShareholdersMeetingDate"]))
         decision_day = parse_market_date(first_value(row, ["董事會（擬議）股利分派日", "董事會股利分派日", "BoardMeetingDate"]))
         cash, stock = dividend_total(row, "現金"), dividend_total(row, "配股")
-        if shareholder_day and NOW.date() - timedelta(days=30) <= shareholder_day <= NOW.date() + timedelta(days=370):
+        if shareholder_day and ARCHIVE_START <= shareholder_day <= NOW.date() + timedelta(days=370):
             tracking = f"{origin}|{symbol}|shareholder-meeting|{period}"
             events.append(make_event(
                 event_id=stable_id("tw-shareholder", tracking, shareholder_day), tracking_key=tracking,
@@ -391,7 +446,7 @@ def parse_dividend_plans(rows: Any, market: str, source_url: str, origin: str) -
                 symbol=symbol, asset_name=name, asset_id=f"TW:{symbol}", cash_dividend=cash or None,
                 stock_dividend=stock or None, currency="TWD", fiscal_period=period,
             ))
-        if decision_day and NOW.date() - timedelta(days=30) <= decision_day <= NOW.date() + timedelta(days=370):
+        if decision_day and ARCHIVE_START <= decision_day <= NOW.date() + timedelta(days=370):
             tracking = f"{origin}|{symbol}|dividend-decision|{period}"
             events.append(make_event(
                 event_id=stable_id("tw-dividend-plan", tracking, decision_day), tracking_key=tracking,
@@ -423,7 +478,7 @@ def extract_candidate_dates(text: str) -> list[date]:
     values = []
     for token in tokens:
         parsed = parse_market_date(token)
-        if parsed and NOW.date() - timedelta(days=1) <= parsed <= NOW.date() + timedelta(days=370):
+        if parsed and ARCHIVE_START <= parsed <= NOW.date() + timedelta(days=370):
             values.append(parsed)
     return sorted(set(values))
 
@@ -551,7 +606,7 @@ def main() -> None:
     previous_by_tracking = {fallback_tracking_key(row): row for row in previous_events}
 
     fetchers: list[Callable[[requests.Session], SourceResult]] = [
-        fetch_bls, fetch_bea, fetch_twse_exdiv, fetch_tpex_exdiv,
+        fetch_bls, fetch_bea, fetch_fomc, fetch_twse_exdiv, fetch_tpex_exdiv,
         fetch_twse_dividend_plans, fetch_tpex_dividend_plans,
         fetch_twse_material, fetch_tpex_material,
     ]
@@ -578,7 +633,7 @@ def main() -> None:
                 "twse-exdiv": ("twse-exdiv",), "tpex-exdiv": ("tpex-exdiv",),
                 "twse-dividend-plans": ("twse-dividend-plan",), "tpex-dividend-plans": ("tpex-dividend-plan",),
                 "twse-material": ("twse-material",), "tpex-material": ("tpex-material",),
-                "bls": ("bls",), "bea": ("bea",),
+                "bls": ("bls",), "bea": ("bea",), "fomc": ("fomc",),
             }
             origins = mapping.get(key, origins)
             failed_origins.update(origins)
@@ -592,7 +647,7 @@ def main() -> None:
     monitored = successful_origins | failed_origins
     untouched = [row for row in previous_events if clean(row.get("origin")) not in monitored]
     rows = [*untouched, *official_events, *manual]
-    cutoff, horizon = NOW - timedelta(days=35), NOW + timedelta(days=370)
+    cutoff, horizon = ARCHIVE_START_DT, NOW + timedelta(days=370)
     merged: dict[str, dict[str, Any]] = {}
     next_state: dict[str, dict[str, Any]] = dict(prior_state)
     next_initialized_origins = set(initialized_origins)
@@ -681,7 +736,7 @@ def main() -> None:
     )
     payload = {
         "metadata": {
-            "version": "v11.4.16",
+            "version": "v11.4.17",
             "updated_at": NOW.isoformat(timespec="seconds"),
             "timezone": "Asia/Taipei",
             "event_count": len(events),
@@ -690,7 +745,9 @@ def main() -> None:
             "state_initialized": True,
             "source_ok_count": sum(1 for source in sources if source.get("status") == "ok"),
             "source_warning_count": sum(1 for source in sources if source.get("status") != "ok"),
-            "note": "Official-source date monitor with last-known-good retention; no guessed dates.",
+            "archive_start": ARCHIVE_START.isoformat(),
+            "archive_policy": "retain verified events from 2026-01-01 through the official future horizon",
+            "note": "Official-source date monitor with online historical backfill and last-known-good retention; no guessed dates.",
         },
         "sources": sources,
         "events": events,
@@ -698,7 +755,7 @@ def main() -> None:
     EVENTS_PATH.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     SEED_PATH.write_text("window.__EVENT_SEED__ = " + json.dumps(payload, ensure_ascii=False) + ";\n", encoding="utf-8")
     STATE_PATH.write_text(json.dumps({
-        "version": "v11.4.16", "initialized": True,
+        "version": "v11.4.17", "initialized": True,
         "initialized_origins": sorted(next_initialized_origins),
         "updated_at": NOW.isoformat(timespec="seconds"), "events": next_state,
     }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

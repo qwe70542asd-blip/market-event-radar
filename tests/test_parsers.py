@@ -14,6 +14,8 @@ import update_etf_details as etf
 import update_yahoo_details as yahoo
 import update_tw_chips as chips
 import update_market_snapshot as market_snapshot
+import update_tw_market as tw_market
+import update_events as event_updater
 import news_pipeline as news
 
 
@@ -139,6 +141,34 @@ class ParserTests(unittest.TestCase):
         self.assertTrue(row["is_major"])
         self.assertEqual(row["regional_risk"], "asia")
 
+
+    def test_market_turnover_history_parser(self):
+        payload={"fields":["日期","成交股數","成交金額"],"data":[["115/08/03","1,000","123,456,789"]]}
+        rows=tw_market.history_records(payload,"twse_trade_value","TWSE test")
+        self.assertEqual(rows[0]["date"],"2026-08-03")
+        self.assertEqual(rows[0]["twse_trade_value"],123456789)
+
+    def test_market_turnover_merge_sums_online_components(self):
+        rows=tw_market.merge_history([], [
+            {"date":"2026-08-03","twse_trade_value":100,"sources":["TWSE"]},
+            {"date":"2026-08-03","tpex_trade_value":25,"sources":["TPEx"]},
+        ], None)
+        self.assertEqual(rows[0]["trade_value"],125)
+
+    def test_news_archive_drops_pre_2026_and_keeps_old_major(self):
+        base={"title":"聯準會重大利率決策影響全球市場","summary":"聯準會政策聲明可能影響美債、美元與全球股票市場。","url":"https://example.com/a","impact":"high","is_major":True,"importance_score":80}
+        old={**base,"published_at":"2025-12-31T12:00:00+08:00"}
+        kept={**base,"id":"b","url":"https://example.com/b","published_at":"2026-01-15T12:00:00+08:00"}
+        rows=news.dedupe([old,kept])
+        self.assertEqual([row["url"] for row in rows],["https://example.com/b"])
+
+    def test_fomc_2026_calendar_parser(self):
+        class Response:
+            text='<html><body><h4>2026 FOMC Meetings</h4><div>January</div><div>27-28</div><div>March</div><div>17-18*</div><h4>2025 FOMC Meetings</h4></body></html>'
+        with patch.object(event_updater,"http_get",return_value=Response()):
+            result=event_updater.fetch_fomc(object())
+        self.assertEqual(len(result.events),2)
+        self.assertTrue(all(row["title"]=="美國聯準會 FOMC 利率決策" for row in result.events))
 
 if __name__ == "__main__":
     unittest.main()

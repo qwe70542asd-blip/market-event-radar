@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "version": "v11.4.16",
+    "version": "v11.4.17",
     "updated_at": null,
     "source": "TWSE official TAIEX history + Yahoo public chart API",
     "note": "TAIEX uses TWSE official daily OHLC with Yahoo fallback. Korea, Japan and U.S. indices use Yahoo daily OHLC.",
@@ -13,7 +13,9 @@
       "^TWII"
     ],
     "kline_interval": "1d",
-    "kline_range": "3mo"
+    "kline_range": "3mo",
+    "frontend_fetch_policy": "GitHub Contents API first, Raw fallback, local seed fallback",
+    "browser_cache_policy": "preserve last successful six-index candles"
   },
   "items": [
     {

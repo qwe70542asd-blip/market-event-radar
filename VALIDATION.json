@@ -1,20 +1,19 @@
 {
-  "version": "v11.4.16",
-  "validated_at": "2026-08-05T16:03:00+08:00",
-  "tests": 64,
+  "version": "v11.4.17",
+  "validated_at": "2026-08-05T16:38:00+08:00",
+  "tests": 73,
   "status": "passed",
   "checks": [
-    "Six continuous daily K-line cards configured: TAIEX, KOSPI, Nikkei 225, NASDAQ, SOX, S&P 500",
-    "Taiwan OTC index ^TWOII removed from market updater, seed data and homepage K-line list",
-    "TAIEX uses TWSE official daily OHLC with Yahoo fallback",
-    "Overseas indices use Yahoo 3-month daily OHLC arrays",
-    "Per-symbol cached fallback preserves the last successful candles",
-    "Full TWSE and TPEx stock basics pipeline preserved from v11.4.15",
-    "News image fallback pipeline preserved",
-    "Service worker and visible page versions updated to v11.4.16",
-    "Python compilation and JavaScript syntax checks passed"
+    "Six-index K-line updater restores the last successful live-global-market snapshot before refresh",
+    "Frontend uses GitHub Contents API first for K-line, event and Taiwan market data and preserves last successful browser candles",
+    "TWSE and TPEx online history backfill begins at 2026-01-01 and computes 5/20/60-session turnover averages",
+    "Event archive lower bound is 2026-01-01 and Federal Reserve FOMC calendar is included",
+    "News is newest-first, pre-2026 content is deleted, and older content requires higher importance",
+    "Push/manual news workflows perform best-effort missing-month history searches; schedules update recent items only",
+    "Service worker cache and visible page versions updated to v11.4.17",
+    "Python compilation, JavaScript syntax, workflow YAML and automated tests passed"
   ],
   "notes": [
-    "Browser screenshot validation was not included in the package; automated parser, static and syntax tests passed."
+    "Historical source availability varies by publisher; unavailable articles are not fabricated."
   ]
 }

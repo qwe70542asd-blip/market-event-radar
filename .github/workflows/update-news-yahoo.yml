@@ -1,4 +1,4 @@
-name: Update v11.4.16 Yahoo股市 news
+name: Update v11.4.17 Yahoo股市 news
 on:
   push:
     branches: [main]
@@ -36,6 +36,8 @@ jobs:
           bash scripts/restore_data_branch.sh live-assets \
             "assets.json:data/assets.json"
       - run: python scripts/update_media_source.py --channel yahoo
+        env:
+          NEWS_HISTORY_BACKFILL: ${{ github.event_name == 'schedule' && '0' || '1' }}
       - name: Validate isolated source
         run: |
           python - <<'PY2'

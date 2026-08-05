@@ -1,5 +1,5 @@
 {
-  "version": "v11.4.16",
+  "version": "v11.4.17",
   "media": [
     {
       "id": "cna",
@@ -160,5 +160,7 @@
         "主持人"
       ]
     }
-  ]
+  ],
+  "archive_start": "2026-01-01",
+  "retention_policy": "newest-first tiered archive"
 }

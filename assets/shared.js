@@ -33,9 +33,35 @@ function renderNewsThumb(item,kind="tile",options={}){
  if(newsHasImage(item))return `<div class="news-thumb ${kind}" data-fallback="${slug}"><img src="${escapeHtml(item.image_url)}" data-fallback-src="${fallback}" alt="${alt}" loading="lazy" referrerpolicy="no-referrer" onerror="if(this.dataset.fallbackDone)return;this.dataset.fallbackDone='1';this.src=this.dataset.fallbackSrc;this.parentElement?.classList.add('fallback','remote-image-failed')"><span class="fallback-label">${label}</span></div>`;
  return `<div class="news-thumb ${kind} fallback" data-fallback="${slug}"><img src="${fallback}" alt="${alt}" loading="lazy"><span class="fallback-label">${label}</span></div>`;
 }
-async function getJson(url,timeout=9000){const ctl=new AbortController(),id=setTimeout(()=>ctl.abort(),timeout);try{const r=await fetch(url,{cache:"no-store",signal:ctl.signal});if(!r.ok)throw Error(r.status);return await r.json()}finally{clearTimeout(id)}}
-async function loadData(name,fallback={}){const branch=CHANNELS[name];if(branch){try{return await getJson(`https://raw.githubusercontent.com/${OWNER}/${REPO}/${branch}/${name}?t=${Date.now()}`)}catch(e){}}
-try{return await getJson(`data/${name}?t=${Date.now()}`)}catch(e){return typeof structuredClone==="function"?structuredClone(fallback):JSON.parse(JSON.stringify(fallback))}}
+async function getJson(url,timeout=9000){const ctl=new AbortController(),id=setTimeout(()=>ctl.abort(),timeout);try{const r=await fetch(url,{cache:"no-store",headers:{Accept:"application/json"},signal:ctl.signal});if(!r.ok)throw Error(r.status);return await r.json()}finally{clearTimeout(id)}}
+const FRESH_BRANCH_FILES=new Set(["market-snapshot.json","tw-market.json","market-volume-history.json","events.json"]);
+const cloneValue=value=>typeof structuredClone==="function"?structuredClone(value):JSON.parse(JSON.stringify(value));
+function decodeGitHubContent(value){const binary=atob(String(value||"").replace(/\s+/g,"")),bytes=Uint8Array.from(binary,char=>char.charCodeAt(0));return JSON.parse(new TextDecoder("utf-8").decode(bytes))}
+async function loadBranchApi(name,branch){
+ const url=`https://api.github.com/repos/${OWNER}/${REPO}/contents/${encodeURIComponent(name)}?ref=${encodeURIComponent(branch)}&_=${Date.now()}`;
+ const meta=await getJson(url,11000);
+ if(meta?.encoding==="base64"&&meta?.content)return decodeGitHubContent(meta.content);
+ if(meta?.download_url)return await getJson(`${meta.download_url}${meta.download_url.includes("?")?"&":"?"}sha=${encodeURIComponent(meta.sha||Date.now())}`,11000);
+ throw Error("GitHub contents API returned no JSON content");
+}
+const snapshotCacheKey="mr-market-snapshot-last-good-v11.4.17";
+const snapshotCandleCount=row=>(Array.isArray(row?.candles)?row.candles:[]).filter(candle=>candle?.date&&[candle.open,candle.high,candle.low,candle.close].every(value=>finite(value)!=null)).length;
+function mergeSnapshotCache(payload){
+ let cached=null;try{cached=JSON.parse(localStorage.getItem(snapshotCacheKey)||"null")}catch(e){}
+ if(!cached?.items?.length)return payload;
+ const oldMap=new Map(cached.items.map(row=>[String(row.symbol||"").toUpperCase(),row]));
+ const items=(payload?.items||[]).map(row=>{const old=oldMap.get(String(row.symbol||"").toUpperCase());if(snapshotCandleCount(row)>=10||!old)return row;return {...old,...row,candles:old.candles||[],candle_count:snapshotCandleCount(old),candle_source:`${row.candle_source||row.source||"線上行情"}／瀏覽器上次成功 K 線`,data_status:row.data_status==="live"?"cached-kline":row.data_status};});
+ return {...payload,items};
+}
+function rememberSnapshot(payload){const wanted=new Set(["^TWII","^KS11","^N225","^IXIC","^SOX","^GSPC"]),good=(payload?.items||[]).filter(row=>wanted.has(String(row.symbol||"").toUpperCase())&&snapshotCandleCount(row)>=10).length;if(good>=4){try{localStorage.setItem(snapshotCacheKey,JSON.stringify(payload))}catch(e){}}}
+async function loadData(name,fallback={}){
+ const branch=CHANNELS[name];let payload=null;
+ if(branch&&FRESH_BRANCH_FILES.has(name)){try{payload=await loadBranchApi(name,branch)}catch(e){}}
+ if(!payload&&branch){try{payload=await getJson(`https://raw.githubusercontent.com/${OWNER}/${REPO}/${branch}/${name}?t=${Date.now()}`,11000)}catch(e){}}
+ if(!payload){try{payload=await getJson(`data/${name}?t=${Date.now()}`,9000)}catch(e){payload=cloneValue(fallback)}}
+ if(name==="market-snapshot.json"){payload=mergeSnapshotCache(payload||cloneValue(fallback));rememberSnapshot(payload)}
+ return payload||cloneValue(fallback);
+}
 const STOCK_BASIC_ENDPOINTS=[
  {url:"https://openapi.twse.com.tw/v1/opendata/t187ap03_L",exchange:"TWSE",source:"TWSE 上市公司基本資料"},
  {url:"https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O",exchange:"TPEx",source:"TPEx 上櫃公司基本資料"}
@@ -53,29 +79,30 @@ function officialBasicRecord(row,endpoint){
  record.updated_at=new Date().toISOString();return record;
 }
 async function loadStockBasics(){
- const fallback=window.__STOCK_BASICS_SEED__||{metadata:{version:"v11.4.16",status:"waiting",item_count:0},items:{}};
+ const fallback=window.__STOCK_BASICS_SEED__||{metadata:{version:"v11.4.17",status:"waiting",item_count:0},items:{}};
  const payload=await loadData("stock-basics.json",fallback),items={...(payload.items||{})};
  if(Object.keys(items).length>=500)return payload;
  const settled=await Promise.allSettled(STOCK_BASIC_ENDPOINTS.map(async endpoint=>({endpoint,rows:await getJson(endpoint.url,15000)})));
  let added=0;
  for(const result of settled){if(result.status!=="fulfilled"||!Array.isArray(result.value.rows))continue;for(const row of result.value.rows){const record=officialBasicRecord(row,result.value.endpoint);if(!record)continue;items[record.symbol]={...(items[record.symbol]||{}),...record};added++}}
  const values=Object.values(items),average=values.length?values.reduce((sum,row)=>sum+Number(row.basic_coverage_percent||0),0)/values.length:0;
- return {...payload,metadata:{...(payload.metadata||{}),version:"v11.4.16",item_count:values.length,average_basic_coverage_percent:Math.round(average*10)/10,scope:"all-currently-listed-twse-and-tpex-stocks",browser_official_fallback_added:added},items};
+ return {...payload,metadata:{...(payload.metadata||{}),version:"v11.4.17",item_count:values.length,average_basic_coverage_percent:Math.round(average*10)/10,scope:"all-currently-listed-twse-and-tpex-stocks",browser_official_fallback_added:added},items};
 }
 async function loadNewsChannels(){
  const channels=await Promise.all(NEWS_FILES.map(async cfg=>{
   const fallback=window[cfg.seed]||{metadata:{source_id:cfg.id,source_name:cfg.label,status:"waiting",item_count:0},items:[]};
   const payload=await loadData(cfg.file,fallback);
-  return {...payload,channel:cfg,items:(payload.items||[]).map(item=>({...item,source_id:item.source_id||cfg.id,source:item.source||cfg.label,channel_kind:cfg.kind}))};
+  const archiveStart=Date.parse("2026-01-01T00:00:00+08:00"),tomorrow=Date.now()+86400000;
+  return {...payload,channel:cfg,items:(payload.items||[]).filter(item=>{const at=Date.parse(item.published_at||item.date||0);return Number.isFinite(at)&&at>=archiveStart&&at<=tomorrow}).map(item=>({...item,source_id:item.source_id||cfg.id,source:item.source||cfg.label,channel_kind:cfg.kind}))};
  }));
  const seen=new Set(),items=[];
  for(const channel of channels){for(const item of channel.items||[]){const key=String(item.id||`${item.title||""}|${item.url||""}`);if(!key||seen.has(key))continue;seen.add(key);items.push(item)}}
  items.sort((a,b)=>Date.parse(b.published_at||b.date||0)-Date.parse(a.published_at||a.date||0));
  const updated=channels.map(c=>c.metadata?.updated_at).filter(Boolean).sort().pop()||null;
- return {metadata:{version:"v11.4.16",updated_at:updated,item_count:items.length,channel_count:channels.length},channels,items};
+ return {metadata:{version:"v11.4.17",updated_at:updated,item_count:items.length,channel_count:channels.length},channels,items};
 }
 async function loadStockNews(){
- const fallback=window.__STOCK_NEWS_SEED__||{metadata:{version:"v11.4.16",status:"waiting",item_count:0},items:[]};
+ const fallback=window.__STOCK_NEWS_SEED__||{metadata:{version:"v11.4.17",status:"waiting",item_count:0},items:[]};
  return await loadData("stock-news.json",fallback);
 }
 

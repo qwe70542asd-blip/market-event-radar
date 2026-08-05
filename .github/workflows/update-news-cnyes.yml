@@ -1,4 +1,4 @@
-name: Update v11.4.16 鉅亨網 news
+name: Update v11.4.17 鉅亨網 news
 on:
   push:
     branches: [main]
@@ -36,6 +36,8 @@ jobs:
           bash scripts/restore_data_branch.sh live-assets \
             "assets.json:data/assets.json"
       - run: python scripts/update_media_source.py --channel cnyes
+        env:
+          NEWS_HISTORY_BACKFILL: ${{ github.event_name == 'schedule' && '0' || '1' }}
       - name: Validate isolated source
         run: |
           python - <<'PY2'
