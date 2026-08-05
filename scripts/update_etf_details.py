@@ -25,8 +25,9 @@ from bs4 import BeautifulSoup
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.9"
+VERSION = "v11.4.10"
 BATCH = 12
+PRIORITY_SYMBOLS = ["00981A", "00403A", "00631L", "006208", "0050", "0056", "00878", "00919", "2330", "2317", "2454"]
 TIMEOUT = 24
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/150 Safari/537.36",
@@ -395,12 +396,22 @@ def main() -> None:
     items = dict(old.get("items") or {})
     state = dict(old.get("state") or {})
     candidates = [asset for asset in assets if asset.get("market") == "TW" and asset.get("asset_class") == "etf" and asset.get("symbol")]
-    candidates.sort(key=lambda row: str(row.get("symbol")))
+    priority = {symbol: index for index, symbol in enumerate(PRIORITY_SYMBOLS)}
+    candidates.sort(key=lambda row: (priority.get(str(row.get("symbol")).upper(), 9999), str(row.get("symbol"))))
     cursor = int(state.get("cursor") or 0)
     cursor = cursor if cursor < len(candidates) else 0
-    batch = candidates[cursor:cursor + BATCH]
-    if len(batch) < BATCH:
-        batch += candidates[:BATCH - len(batch)]
+    rolling = candidates[cursor:cursor + BATCH]
+    if len(rolling) < BATCH:
+        rolling += candidates[:BATCH - len(rolling)]
+    missing_priority = [asset for asset in candidates if str(asset.get("symbol")).upper() in priority and str(asset.get("symbol")).upper() not in items]
+    batch, seen = [], set()
+    for asset in missing_priority + rolling:
+        symbol = str(asset.get("symbol")).upper()
+        if symbol in seen:
+            continue
+        batch.append(asset); seen.add(symbol)
+        if len(batch) >= BATCH:
+            break
     histock = histock_master()
     success = 0
     errors = []

@@ -7,7 +7,7 @@ class StaticTests(unittest.TestCase):
  def test_required_tree(self):
   for path in [".github/workflows","assets","data","docs","scripts","tests","index.html","news.html","asset.html","service-worker.js"]:self.assertTrue((ROOT/path).exists(),path)
  def test_version(self):
-  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.9")
+  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.10")
  def test_ascii_filenames(self):
   for path in ROOT.rglob("*"):self.assertTrue(all(ord(c)<128 for c in path.name),path)
  def test_no_audio(self):
@@ -72,7 +72,7 @@ class StaticTests(unittest.TestCase):
   texts="\n".join(self.read(p.relative_to(ROOT)) for p in (ROOT/".github/workflows").glob("update-news-*.yml"))
   for branch in ("live-news-cna","live-news-moneydj","live-news-cnyes","live-news-udn","live-news-ltn","live-news-wealth","live-news-yahoo","live-news-technews","live-news-ctee"):self.assertIn(branch,texts)
  def test_service_worker_cache(self):
-  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-9",sw)
+  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-10",sw)
   for seed in ("news-cna-seed.js","news-moneydj-seed.js","news-wealth-seed.js","news-yahoo-seed.js","news-technews-seed.js","news-ctee-seed.js","stock-news-seed.js","company-disclosures-seed.js","monthly-revenue-seed.js","dividend-history-seed.js","secondary-reference-seed.js","data-verification-seed.js","yahoo-details-seed.js","etf-details-seed.js","market-volume-history-seed.js"):self.assertIn(seed,sw)
  def test_all_pages_current_version(self):
   for p in ROOT.glob("*.html"):self.assertNotIn("v11.4.2",p.read_text(encoding="utf-8"),p.name)
@@ -206,5 +206,38 @@ class StaticTests(unittest.TestCase):
   self.assertIn("hero-lead.no-image",css)
   self.assertNotIn("assets/news-fallback/",news)
   self.assertIn("majorCandidates.find(hasImage)",news)
+
+ def test_chip_search_allows_manual_deletion(self):
+  js=self.read("assets/institutional.js")
+  self.assertIn('if(writeInput)$("#chipSymbol").value=selectedSymbol',js)
+  self.assertIn('renderItem(exact.symbol,{writeInput:false})',js)
+  self.assertNotIn('value=`${selected.symbol} ${selected.name',js)
+  self.assertIn('event.key!=="Enter"',js)
+
+ def test_tw_chips_updater_is_real_and_preserves_last_good(self):
+  script=self.read("scripts/update_tw_chips.py")
+  for token in ("/v1/fund/T86","MI_MARGN","TWTB4U","institutional-trading","/margin","write_payload","YAHOO_BATCH","merge_history"):
+   self.assertIn(token,script)
+  self.assertNotIn("add official parsers here",script)
+  workflow=self.read(".github/workflows/update-tw-chips.yml")
+  for token in ("Validate chips payload","json.loads","path.stat().st_size"):
+   self.assertIn(token,workflow)
+
+ def test_coverage_uses_final_merged_etf_view(self):
+  js=self.read("assets/coverage.js")
+  for token in ("assets.json","dividend-history.json","data-verification.json","deriveAllocations","officialEtf","distributionRows","allocationsComplete"):
+   self.assertIn(token,js)
+  audit=self.read("scripts/audit_all_assets.py")
+  for token in ("yahoo-details.json","etf-details.json","dividend-history.json","產業配置","multi_source"):
+   self.assertIn(token,audit)
+  daily=self.read(".github/workflows/update-daily.yml")
+  for token in ("Restore enrichment channels for final audit","live-yahoo-details","live-etf-details","live-dividend-history"):
+   self.assertIn(token,daily)
+
+ def test_priority_symbols_are_backfilled_first(self):
+  for path in ("scripts/update_etf_details.py","scripts/update_yahoo_details.py","scripts/update_tw_chips.py"):
+   text=self.read(path)
+   self.assertIn("00981A",text,path)
+   self.assertIn("PRIORITY_SYMBOLS",text,path)
 
 if __name__=="__main__":unittest.main()

@@ -12,6 +12,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 import update_etf_details as etf
 import update_yahoo_details as yahoo
+import update_tw_chips as chips
 
 
 class ParserTests(unittest.TestCase):
@@ -65,6 +66,41 @@ class ParserTests(unittest.TestCase):
         self.assertAlmostEqual(rows[0]["gross_margin"], 40)
         self.assertAlmostEqual(rows[0]["debt_ratio"], 40)
         self.assertAlmostEqual(rows[0]["current_ratio"], 200)
+
+    def test_twse_chip_parsers(self):
+        assets = {"00981A": {"name": "主動統一台股增長", "asset_class": "etf"}}
+        institutional_rows = [{
+            "證券代號": "00981A", "證券名稱": "主動統一台股增長",
+            "外陸資買賣超股數(不含外資自營商)": "56,033,000",
+            "投信買賣超股數": "0", "自營商買賣超股數": "-37,983,000",
+            "三大法人買賣超股數": "18,050,000", "日期": "2026/07/21"
+        }]
+        parsed, market, traded = chips.parse_institutional(institutional_rows, assets, "https://twse.test/T86")
+        self.assertEqual(parsed["00981A"]["institutional"]["foreign_net"], 56033)
+        self.assertEqual(parsed["00981A"]["institutional"]["dealer_net"], -37983)
+        self.assertEqual(market["total_net"], 18050)
+        self.assertEqual(traded, "2026-07-21")
+        margin_rows = [{
+            "股票代號": "00981A", "股票名稱": "主動統一台股增長",
+            "融資前日餘額": "172,882,000", "融資今日餘額": "175,408,000",
+            "融券前日餘額": "4,924,000", "融券今日餘額": "3,950,000", "日期": "2026/07/27"
+        }]
+        parsed_margin, _ = chips.parse_margin(margin_rows, assets, "https://twse.test/margin")
+        self.assertEqual(parsed_margin["00981A"]["margin"]["change"], 2526)
+        self.assertEqual(parsed_margin["00981A"]["short"]["change"], -974)
+
+    def test_yahoo_chip_history_parsers(self):
+        asset = {"symbol": "00981A", "name": "主動統一台股增長", "asset_class": "etf", "exchange": "TWSE"}
+        institutional_html = "<html><body><h2>法人逐日買賣超</h2><div>2026/07/21</div><div>56,033</div><div>0</div><div>-37,983</div><div>18,050</div><div>2.62%</div><div>7.03%</div><div>198,242</div><div>2026/07/20</div><div>3,874</div><div>0</div><div>-31,712</div><div>-27,838</div></body></html>"
+        margin_html = "<html><body><h2>資券餘額逐日增減</h2><div>2026/07/27</div><div>2,526</div><div>175,408</div><div>7.18%</div><div>-974</div><div>3,950</div><div>0.16%</div><div>2.25%</div><div>108</div></body></html>"
+        soups = [BeautifulSoup(institutional_html, "lxml"), BeautifulSoup(margin_html, "lxml")]
+        with patch.object(chips, "fetch_soup", side_effect=soups):
+            institutional = chips.parse_yahoo_institutional(asset)
+            margin = chips.parse_yahoo_margin(asset)
+        self.assertEqual(institutional["institutional"]["foreign_net"], 56033)
+        self.assertEqual(len(institutional["history"]), 2)
+        self.assertEqual(margin["margin"]["balance"], 175408)
+        self.assertEqual(margin["short"]["change"], -974)
 
 
 if __name__ == "__main__":

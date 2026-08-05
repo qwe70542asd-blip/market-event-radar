@@ -1,9 +1,10 @@
 {
   "metadata": {
-    "version": "v11.4.9",
+    "version": "v11.4.10",
     "updated_at": null,
     "trading_date": null,
-    "source": "TWSE／TPEx official after-hours data"
+    "source": "TWSE official structured data; Yahoo Taiwan reference fallback",
+    "note": "官方資料優先；第三方只補缺漏。失敗時保留最後成功資料，缺值不以 0 代替。"
   },
   "markets": {
     "twse": {
@@ -21,5 +22,9 @@
   },
   "items": {},
   "history": {},
-  "available_dates": []
+  "available_dates": [],
+  "state": {
+    "yahoo_cursor": 0
+  },
+  "errors": []
 }

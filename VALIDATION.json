@@ -1,31 +1,30 @@
 {
-  "version": "v11.4.9",
+  "version": "v11.4.10",
   "status": "PASS",
-  "scope": "ETF multi-source enrichment, calculated financial metrics, and compact no-image news layout",
+  "scope": "Taiwan chips data pipeline, editable symbol search, and final merged ETF coverage audit",
   "checks": [
-    "Python syntax",
-    "JavaScript syntax",
-    "JSON parsing",
+    "Python syntax and project smoke test",
+    "JavaScript syntax for all application and seed files",
+    "JSON parsing for all data files",
     "23 GitHub Actions workflow YAML files",
     "HTML local file references",
-    "46 static integration tests",
-    "3 parser and financial calculation tests",
-    "Project smoke test",
-    "News hero selects a real article image when available",
-    "News without images uses compact text layout without giant category artwork",
-    "TWSE ETF e添富, MoneyDJ and HiStock are isolated in live-etf-details",
-    "Yahoo financial rows include weighted-average shares and EPS status metadata",
-    "Calculated and estimated values retain formula/source labels",
-    "ETF holdings include source date, shares, change shares and weights when available",
-    "Official values remain higher priority than Yahoo/MoneyDJ/HiStock references",
-    "Service worker and all page references updated to v11.4.9",
-    "Complete project tree and ASCII-only archive paths"
+    "50 static integration tests",
+    "5 parser and calculation tests",
+    "Symbol search no longer rewrites code plus Chinese name while typing",
+    "TWSE institutional, margin and day-trading structured endpoints wired into live-tw-chips",
+    "Yahoo institutional and margin pages available as reference fallback",
+    "Last-good chip data preserved and empty JSON publication blocked",
+    "ETF coverage combines assets, ETF details, Yahoo details, dividend history and verification data",
+    "00981A and other priority ETFs are processed before the rolling cursor",
+    "Final asset audit restores enrichment channels before calculating missing fields",
+    "Service worker and all page references updated to v11.4.10",
+    "ASCII-only paths and no audio or checksum-only delivery files"
   ],
   "limitations": [
-    "The build container has no outbound DNS, so live Yahoo, MoneyDJ, HiStock and TWSE responses could not be executed here; parser fixtures and static integration tests passed.",
-    "Third-party HTML can change or block GitHub Actions; each source uses small batches and retains last-good data.",
-    "ETF complete daily holdings, official NAV and beneficiary data remain subject to issuer/exchange availability.",
-    "EPS computed with period-end shares is explicitly labeled estimated and is not treated as official EPS."
+    "The build container has no outbound DNS, so live TWSE and Yahoo responses could not be executed here; official-row and Yahoo-page parser fixtures passed.",
+    "Third-party HTML can change or block GitHub Actions. The updater preserves the previous successful payload when a source fails.",
+    "TPEx institutional data uses Yahoo reference fallback when no verified official structured row is available.",
+    "ETF daily complete holdings, official NAV and beneficiary data remain subject to issuer or exchange availability."
   ],
-  "test_summary": "49 tests passed: 46 static integration tests and 3 parser/calculation tests, plus Python/JavaScript/JSON/YAML and project smoke validation."
+  "test_summary": "55 tests passed: 50 static integration tests and 5 parser/calculation tests, plus Python, JavaScript, JSON, YAML, HTML reference and smoke validation."
 }

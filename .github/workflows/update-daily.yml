@@ -1,4 +1,4 @@
-name: Update v11.4.9 assets and audit
+name: Update v11.4.10 assets and audit
 on:
   push:
     branches: [main]
@@ -34,6 +34,11 @@ jobs:
             "assets-seed.js:data/assets-seed.js" \
             "asset-history-state.json:data/asset-history-state.json"
       - run: python scripts/update_assets.py
+      - name: Restore enrichment channels for final audit
+        run: |
+          bash scripts/restore_data_branch.sh live-yahoo-details "yahoo-details.json:data/yahoo-details.json"
+          bash scripts/restore_data_branch.sh live-etf-details "etf-details.json:data/etf-details.json"
+          bash scripts/restore_data_branch.sh live-dividend-history "dividend-history.json:data/dividend-history.json"
       - run: python scripts/audit_all_assets.py
       - name: Publish data channel
         env:

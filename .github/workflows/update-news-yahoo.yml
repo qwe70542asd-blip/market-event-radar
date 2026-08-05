@@ -1,4 +1,4 @@
-name: Update v11.4.9 Yahoo股市 news
+name: Update v11.4.10 Yahoo股市 news
 on:
   push:
     branches: [main]

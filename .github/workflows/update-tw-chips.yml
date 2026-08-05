@@ -1,4 +1,4 @@
-name: Update v11.4.9 Taiwan chips
+name: Update v11.4.10 Taiwan chips
 on:
   push:
     branches: [main]
@@ -30,6 +30,17 @@ jobs:
       - name: Restore previous chips
         run: bash scripts/restore_data_branch.sh live-tw-chips "tw-chips.json:data/tw-chips.json" "tw-chips-seed.js:data/tw-chips-seed.js"
       - run: python scripts/update_tw_chips.py
+      - name: Validate chips payload
+        run: |
+          python - <<'PYCODE'
+          import json
+          from pathlib import Path
+          path = Path("data/tw-chips.json")
+          payload = json.loads(path.read_text(encoding="utf-8"))
+          assert isinstance(payload, dict) and isinstance(payload.get("items"), dict)
+          assert path.stat().st_size > 20
+          print(payload.get("metadata", {}))
+          PYCODE
       - name: Publish data channel
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

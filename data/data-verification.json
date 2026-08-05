@@ -1,17 +1,19 @@
 {
   "metadata": {
-    "version": "v11.4.9",
-    "updated_at": "2026-08-05T00:11:06+08:00",
+    "version": "v11.4.10",
+    "updated_at": "2026-08-05T11:23:02+08:00",
     "status": "partial",
     "counts": {
       "official": 0,
       "multi_source": 0,
       "reference": 0,
+      "calculated": 0,
+      "estimated": 0,
       "conflict": 0,
       "missing": 17,
       "expired": 0
     },
-    "note": "Official data is primary. Secondary values are used only as references or when official quotes are missing; conflicts are never auto-resolved."
+    "note": "Official values are primary. Yahoo, MoneyDJ and HiStock fill gaps; formulas and estimates are explicitly labeled."
   },
   "items": {
     "00403A": {
@@ -21,8 +23,7 @@
         "quote": {
           "status": "missing",
           "sources": [],
-          "official_value": null,
-          "reference_value": null
+          "values": []
         },
         "monthly_revenue": {
           "status": "missing",
@@ -38,15 +39,72 @@
         },
         "metrics": {
           "status": "missing",
-          "sources": [],
+          "fields": {},
           "available": []
+        },
+        "etf": {
+          "status": "missing",
+          "fields": {
+            "issuer": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "manager": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "benchmark": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "aum": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "beneficiary_count": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "nav": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "premium_discount": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "holdings": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "allocations": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "distributions": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            }
+          }
         }
       },
       "reference_links": {
         "yahoo": "https://tw.stock.yahoo.com/quote/00403A.TW",
-        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=00403A"
+        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=00403A",
+        "moneydj_etf": "https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=00403A.TW",
+        "histock_etf": "https://histock.tw/stock/active-etf.aspx"
       },
-      "updated_at": "2026-08-05T00:11:06+08:00"
+      "updated_at": "2026-08-05T11:23:02+08:00"
     },
     "0050": {
       "symbol": "0050",
@@ -55,8 +113,7 @@
         "quote": {
           "status": "missing",
           "sources": [],
-          "official_value": null,
-          "reference_value": null
+          "values": []
         },
         "monthly_revenue": {
           "status": "missing",
@@ -72,15 +129,72 @@
         },
         "metrics": {
           "status": "missing",
-          "sources": [],
+          "fields": {},
           "available": []
+        },
+        "etf": {
+          "status": "missing",
+          "fields": {
+            "issuer": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "manager": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "benchmark": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "aum": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "beneficiary_count": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "nav": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "premium_discount": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "holdings": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "allocations": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "distributions": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            }
+          }
         }
       },
       "reference_links": {
         "yahoo": "https://tw.stock.yahoo.com/quote/0050.TW",
-        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=0050"
+        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=0050",
+        "moneydj_etf": "https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=0050.TW",
+        "histock_etf": "https://histock.tw/stock/active-etf.aspx"
       },
-      "updated_at": "2026-08-05T00:11:06+08:00"
+      "updated_at": "2026-08-05T11:23:02+08:00"
     },
     "006208": {
       "symbol": "006208",
@@ -89,8 +203,7 @@
         "quote": {
           "status": "missing",
           "sources": [],
-          "official_value": null,
-          "reference_value": null
+          "values": []
         },
         "monthly_revenue": {
           "status": "missing",
@@ -106,15 +219,72 @@
         },
         "metrics": {
           "status": "missing",
-          "sources": [],
+          "fields": {},
           "available": []
+        },
+        "etf": {
+          "status": "missing",
+          "fields": {
+            "issuer": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "manager": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "benchmark": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "aum": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "beneficiary_count": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "nav": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "premium_discount": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "holdings": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "allocations": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "distributions": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            }
+          }
         }
       },
       "reference_links": {
         "yahoo": "https://tw.stock.yahoo.com/quote/006208.TW",
-        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=006208"
+        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=006208",
+        "moneydj_etf": "https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=006208.TW",
+        "histock_etf": "https://histock.tw/stock/active-etf.aspx"
       },
-      "updated_at": "2026-08-05T00:11:06+08:00"
+      "updated_at": "2026-08-05T11:23:02+08:00"
     },
     "00631L": {
       "symbol": "00631L",
@@ -123,8 +293,7 @@
         "quote": {
           "status": "missing",
           "sources": [],
-          "official_value": null,
-          "reference_value": null
+          "values": []
         },
         "monthly_revenue": {
           "status": "missing",
@@ -140,15 +309,72 @@
         },
         "metrics": {
           "status": "missing",
-          "sources": [],
+          "fields": {},
           "available": []
+        },
+        "etf": {
+          "status": "missing",
+          "fields": {
+            "issuer": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "manager": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "benchmark": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "aum": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "beneficiary_count": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "nav": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "premium_discount": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "holdings": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "allocations": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "distributions": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            }
+          }
         }
       },
       "reference_links": {
         "yahoo": "https://tw.stock.yahoo.com/quote/00631L.TW",
-        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=00631L"
+        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=00631L",
+        "moneydj_etf": "https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=00631L.TW",
+        "histock_etf": "https://histock.tw/stock/active-etf.aspx"
       },
-      "updated_at": "2026-08-05T00:11:06+08:00"
+      "updated_at": "2026-08-05T11:23:02+08:00"
     },
     "00663L": {
       "symbol": "00663L",
@@ -157,8 +383,7 @@
         "quote": {
           "status": "missing",
           "sources": [],
-          "official_value": null,
-          "reference_value": null
+          "values": []
         },
         "monthly_revenue": {
           "status": "missing",
@@ -174,15 +399,72 @@
         },
         "metrics": {
           "status": "missing",
-          "sources": [],
+          "fields": {},
           "available": []
+        },
+        "etf": {
+          "status": "missing",
+          "fields": {
+            "issuer": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "manager": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "benchmark": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "aum": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "beneficiary_count": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "nav": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "premium_discount": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "holdings": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "allocations": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "distributions": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            }
+          }
         }
       },
       "reference_links": {
         "yahoo": "https://tw.stock.yahoo.com/quote/00663L.TW",
-        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=00663L"
+        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=00663L",
+        "moneydj_etf": "https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=00663L.TW",
+        "histock_etf": "https://histock.tw/stock/active-etf.aspx"
       },
-      "updated_at": "2026-08-05T00:11:06+08:00"
+      "updated_at": "2026-08-05T11:23:02+08:00"
     },
     "00981A": {
       "symbol": "00981A",
@@ -191,8 +473,7 @@
         "quote": {
           "status": "missing",
           "sources": [],
-          "official_value": null,
-          "reference_value": null
+          "values": []
         },
         "monthly_revenue": {
           "status": "missing",
@@ -208,15 +489,72 @@
         },
         "metrics": {
           "status": "missing",
-          "sources": [],
+          "fields": {},
           "available": []
+        },
+        "etf": {
+          "status": "missing",
+          "fields": {
+            "issuer": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "manager": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "benchmark": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "aum": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "beneficiary_count": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "nav": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "premium_discount": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "holdings": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "allocations": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "distributions": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            }
+          }
         }
       },
       "reference_links": {
         "yahoo": "https://tw.stock.yahoo.com/quote/00981A.TW",
-        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=00981A"
+        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=00981A",
+        "moneydj_etf": "https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=00981A.TW",
+        "histock_etf": "https://histock.tw/stock/active-etf.aspx"
       },
-      "updated_at": "2026-08-05T00:11:06+08:00"
+      "updated_at": "2026-08-05T11:23:02+08:00"
     },
     "009816": {
       "symbol": "009816",
@@ -225,8 +563,7 @@
         "quote": {
           "status": "missing",
           "sources": [],
-          "official_value": null,
-          "reference_value": null
+          "values": []
         },
         "monthly_revenue": {
           "status": "missing",
@@ -242,15 +579,72 @@
         },
         "metrics": {
           "status": "missing",
-          "sources": [],
+          "fields": {},
           "available": []
+        },
+        "etf": {
+          "status": "missing",
+          "fields": {
+            "issuer": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "manager": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "benchmark": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "aum": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "beneficiary_count": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "nav": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "premium_discount": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "holdings": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "allocations": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            },
+            "distributions": {
+              "status": "missing",
+              "values": [],
+              "source": null
+            }
+          }
         }
       },
       "reference_links": {
         "yahoo": "https://tw.stock.yahoo.com/quote/009816.TW",
-        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=009816"
+        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=009816",
+        "moneydj_etf": "https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=009816.TW",
+        "histock_etf": "https://histock.tw/stock/active-etf.aspx"
       },
-      "updated_at": "2026-08-05T00:11:06+08:00"
+      "updated_at": "2026-08-05T11:23:02+08:00"
     },
     "2317": {
       "symbol": "2317",
@@ -259,8 +653,7 @@
         "quote": {
           "status": "missing",
           "sources": [],
-          "official_value": null,
-          "reference_value": null
+          "values": []
         },
         "monthly_revenue": {
           "status": "missing",
@@ -276,15 +669,17 @@
         },
         "metrics": {
           "status": "missing",
-          "sources": [],
+          "fields": {},
           "available": []
         }
       },
       "reference_links": {
         "yahoo": "https://tw.stock.yahoo.com/quote/2317.TW",
-        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=2317"
+        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=2317",
+        "moneydj_etf": null,
+        "histock_etf": null
       },
-      "updated_at": "2026-08-05T00:11:06+08:00"
+      "updated_at": "2026-08-05T11:23:02+08:00"
     },
     "2330": {
       "symbol": "2330",
@@ -293,8 +688,7 @@
         "quote": {
           "status": "missing",
           "sources": [],
-          "official_value": null,
-          "reference_value": null
+          "values": []
         },
         "monthly_revenue": {
           "status": "missing",
@@ -310,15 +704,17 @@
         },
         "metrics": {
           "status": "missing",
-          "sources": [],
+          "fields": {},
           "available": []
         }
       },
       "reference_links": {
         "yahoo": "https://tw.stock.yahoo.com/quote/2330.TW",
-        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=2330"
+        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=2330",
+        "moneydj_etf": null,
+        "histock_etf": null
       },
-      "updated_at": "2026-08-05T00:11:06+08:00"
+      "updated_at": "2026-08-05T11:23:02+08:00"
     },
     "2382": {
       "symbol": "2382",
@@ -327,8 +723,7 @@
         "quote": {
           "status": "missing",
           "sources": [],
-          "official_value": null,
-          "reference_value": null
+          "values": []
         },
         "monthly_revenue": {
           "status": "missing",
@@ -344,15 +739,17 @@
         },
         "metrics": {
           "status": "missing",
-          "sources": [],
+          "fields": {},
           "available": []
         }
       },
       "reference_links": {
         "yahoo": "https://tw.stock.yahoo.com/quote/2382.TW",
-        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=2382"
+        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=2382",
+        "moneydj_etf": null,
+        "histock_etf": null
       },
-      "updated_at": "2026-08-05T00:11:06+08:00"
+      "updated_at": "2026-08-05T11:23:02+08:00"
     },
     "2454": {
       "symbol": "2454",
@@ -361,8 +758,7 @@
         "quote": {
           "status": "missing",
           "sources": [],
-          "official_value": null,
-          "reference_value": null
+          "values": []
         },
         "monthly_revenue": {
           "status": "missing",
@@ -378,15 +774,17 @@
         },
         "metrics": {
           "status": "missing",
-          "sources": [],
+          "fields": {},
           "available": []
         }
       },
       "reference_links": {
         "yahoo": "https://tw.stock.yahoo.com/quote/2454.TW",
-        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=2454"
+        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=2454",
+        "moneydj_etf": null,
+        "histock_etf": null
       },
-      "updated_at": "2026-08-05T00:11:06+08:00"
+      "updated_at": "2026-08-05T11:23:02+08:00"
     },
     "2603": {
       "symbol": "2603",
@@ -395,8 +793,7 @@
         "quote": {
           "status": "missing",
           "sources": [],
-          "official_value": null,
-          "reference_value": null
+          "values": []
         },
         "monthly_revenue": {
           "status": "missing",
@@ -412,15 +809,17 @@
         },
         "metrics": {
           "status": "missing",
-          "sources": [],
+          "fields": {},
           "available": []
         }
       },
       "reference_links": {
         "yahoo": "https://tw.stock.yahoo.com/quote/2603.TW",
-        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=2603"
+        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=2603",
+        "moneydj_etf": null,
+        "histock_etf": null
       },
-      "updated_at": "2026-08-05T00:11:06+08:00"
+      "updated_at": "2026-08-05T11:23:02+08:00"
     },
     "2881": {
       "symbol": "2881",
@@ -429,8 +828,7 @@
         "quote": {
           "status": "missing",
           "sources": [],
-          "official_value": null,
-          "reference_value": null
+          "values": []
         },
         "monthly_revenue": {
           "status": "missing",
@@ -446,15 +844,17 @@
         },
         "metrics": {
           "status": "missing",
-          "sources": [],
+          "fields": {},
           "available": []
         }
       },
       "reference_links": {
         "yahoo": "https://tw.stock.yahoo.com/quote/2881.TW",
-        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=2881"
+        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=2881",
+        "moneydj_etf": null,
+        "histock_etf": null
       },
-      "updated_at": "2026-08-05T00:11:06+08:00"
+      "updated_at": "2026-08-05T11:23:02+08:00"
     },
     "2882": {
       "symbol": "2882",
@@ -463,8 +863,7 @@
         "quote": {
           "status": "missing",
           "sources": [],
-          "official_value": null,
-          "reference_value": null
+          "values": []
         },
         "monthly_revenue": {
           "status": "missing",
@@ -480,15 +879,17 @@
         },
         "metrics": {
           "status": "missing",
-          "sources": [],
+          "fields": {},
           "available": []
         }
       },
       "reference_links": {
         "yahoo": "https://tw.stock.yahoo.com/quote/2882.TW",
-        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=2882"
+        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=2882",
+        "moneydj_etf": null,
+        "histock_etf": null
       },
-      "updated_at": "2026-08-05T00:11:06+08:00"
+      "updated_at": "2026-08-05T11:23:02+08:00"
     },
     "2891": {
       "symbol": "2891",
@@ -497,8 +898,7 @@
         "quote": {
           "status": "missing",
           "sources": [],
-          "official_value": null,
-          "reference_value": null
+          "values": []
         },
         "monthly_revenue": {
           "status": "missing",
@@ -514,15 +914,17 @@
         },
         "metrics": {
           "status": "missing",
-          "sources": [],
+          "fields": {},
           "available": []
         }
       },
       "reference_links": {
         "yahoo": "https://tw.stock.yahoo.com/quote/2891.TW",
-        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=2891"
+        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=2891",
+        "moneydj_etf": null,
+        "histock_etf": null
       },
-      "updated_at": "2026-08-05T00:11:06+08:00"
+      "updated_at": "2026-08-05T11:23:02+08:00"
     },
     "3231": {
       "symbol": "3231",
@@ -531,8 +933,7 @@
         "quote": {
           "status": "missing",
           "sources": [],
-          "official_value": null,
-          "reference_value": null
+          "values": []
         },
         "monthly_revenue": {
           "status": "missing",
@@ -548,15 +949,17 @@
         },
         "metrics": {
           "status": "missing",
-          "sources": [],
+          "fields": {},
           "available": []
         }
       },
       "reference_links": {
         "yahoo": "https://tw.stock.yahoo.com/quote/3231.TW",
-        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=3231"
+        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=3231",
+        "moneydj_etf": null,
+        "histock_etf": null
       },
-      "updated_at": "2026-08-05T00:11:06+08:00"
+      "updated_at": "2026-08-05T11:23:02+08:00"
     },
     "6669": {
       "symbol": "6669",
@@ -565,8 +968,7 @@
         "quote": {
           "status": "missing",
           "sources": [],
-          "official_value": null,
-          "reference_value": null
+          "values": []
         },
         "monthly_revenue": {
           "status": "missing",
@@ -582,15 +984,17 @@
         },
         "metrics": {
           "status": "missing",
-          "sources": [],
+          "fields": {},
           "available": []
         }
       },
       "reference_links": {
         "yahoo": "https://tw.stock.yahoo.com/quote/6669.TW",
-        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=6669"
+        "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=6669",
+        "moneydj_etf": null,
+        "histock_etf": null
       },
-      "updated_at": "2026-08-05T00:11:06+08:00"
+      "updated_at": "2026-08-05T11:23:02+08:00"
     }
   }
 }

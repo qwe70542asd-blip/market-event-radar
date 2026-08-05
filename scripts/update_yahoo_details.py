@@ -17,13 +17,14 @@ import requests
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.9"
+VERSION = "v11.4.10"
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/150 Safari/537.36",
     "Accept": "application/json,text/plain,*/*",
     "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.6",
 }
 BATCH = 30
+PRIORITY_SYMBOLS = ["00981A", "00403A", "00631L", "006208", "0050", "0056", "00878", "00919", "2330", "2317", "2454"]
 TIMEOUT = 22
 SESSION = requests.Session()
 SESSION.headers.update(HEADERS)
@@ -435,12 +436,22 @@ def main() -> None:
         asset for asset in assets
         if asset.get("market") == "TW" and asset.get("asset_class") in {"stock", "etf"} and asset.get("symbol")
     ]
-    candidates.sort(key=lambda asset: (asset.get("asset_class") != "stock", str(asset.get("symbol"))))
+    priority = {symbol: index for index, symbol in enumerate(PRIORITY_SYMBOLS)}
+    candidates.sort(key=lambda asset: (priority.get(str(asset.get("symbol")).upper(), 9999), asset.get("asset_class") != "stock", str(asset.get("symbol"))))
     cursor = int(state.get("cursor") or 0)
     cursor = cursor if cursor < len(candidates) else 0
-    batch = candidates[cursor:cursor + BATCH]
-    if len(batch) < BATCH:
-        batch += candidates[:BATCH - len(batch)]
+    rolling = candidates[cursor:cursor + BATCH]
+    if len(rolling) < BATCH:
+        rolling += candidates[:BATCH - len(rolling)]
+    missing_priority = [asset for asset in candidates if str(asset.get("symbol")).upper() in priority and str(asset.get("symbol")).upper() not in items]
+    batch, seen = [], set()
+    for asset in missing_priority + rolling:
+        symbol = str(asset.get("symbol")).upper()
+        if symbol in seen:
+            continue
+        batch.append(asset); seen.add(symbol)
+        if len(batch) >= BATCH:
+            break
     success = 0
     errors = []
     with ThreadPoolExecutor(max_workers=2) as pool:

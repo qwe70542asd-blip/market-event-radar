@@ -1,1 +1,1 @@
-window.__COMPANY_DISCLOSURE_SEED__={"metadata":{"version":"v11.4.9","source_id":"company-disclosures","source_name":"個股重大訊息","updated_at":null,"status":"waiting","item_count":0},"health":{},"items":[]};
+window.__COMPANY_DISCLOSURE_SEED__={"metadata":{"version":"v11.4.10","source_id":"company-disclosures","source_name":"個股重大訊息","updated_at":null,"status":"waiting","item_count":0},"health":{},"items":[]};
