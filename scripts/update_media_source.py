@@ -92,6 +92,13 @@ def article_image_from_soup(soup,base):
   return found
  return None
 
+def fallback_image_slug(title:Any,summary:Any="",category:Any=""):
+ text=clean_text(f"{title or ''} {summary or ''} {category or ''}")
+ mapping=[(r"台積電|鴻海|聯發科|廣達|緯創|半導體|晶圓|記憶體|AI|伺服器|輝達|NVIDIA|AMD|Intel|科技","technology"),(r"財報|EPS|營收|獲利|法說|展望|毛利|淨利","earnings"),(r"聯準會|央行|升息|降息|利率|殖利率|債券|FOMC|BOJ|日銀","rates"),(r"關稅|政策|法案|行政命令|監管|禁令|財政部|商務部|白宮","policy"),(r"戰爭|以伊|中東|俄烏|制裁|地緣|軍事","geopolitics"),(r"原油|石油|金價|黃金|銅價|天然氣|原物料|運價","commodities"),(r"GDP|CPI|PCE|非農|PMI|景氣|通膨|衰退|失業|總經","macro"),(r"美股|日股|韓股|歐股|中國|全球|國際|亞股|道瓊|NASDAQ|S&P","global"),(r"台股|加權|大盤|指數|成交量|盤中|創高|跌點","market")]
+ for pattern,slug in mapping:
+  if re.search(pattern,text,re.I):return slug
+ return "stock"
+
 def enrich_article_images(session,items,limit=24):
  cache={};attempts=0
  for item in items:
@@ -111,6 +118,8 @@ def enrich_article_images(session,items,limit=24):
   except Exception:pass
   cache[url]=found
   if found:item["image_url"]=found
+  if not item.get("fallback_image_slug"):
+   item["fallback_image_slug"]=fallback_image_slug(item.get("title"),item.get("summary"),item.get("ai_category") or item.get("source_name"))
  return items
 
 def parse_rss(cfg,aliases,profiles):

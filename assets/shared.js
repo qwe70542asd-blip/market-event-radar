@@ -11,6 +11,27 @@ const cls=v=>finite(v)==null||Number(v)===0?"flat":Number(v)>0?"up":"down";
 const formatTime=(v,opts={})=>{if(!v)return"—";const d=new Date(v);if(Number.isNaN(+d))return String(v);return new Intl.DateTimeFormat("zh-TW",{timeZone:"Asia/Taipei",year:"numeric",month:"2-digit",day:"2-digit",hour:opts.dateOnly?undefined:"2-digit",minute:opts.dateOnly?undefined:"2-digit",hour12:false}).format(d)};
 const stripHtml=value=>String(value??"").replace(/<[^>]*>/g," ").replace(/&nbsp;/gi," ").replace(/\s+/g," ").trim();
 const normalizeText=value=>stripHtml(value).toLowerCase().normalize("NFKC").replace(/[^0-9a-z\u3400-\u9fff]+/g," ").trim();
+const newsHasImage=item=>/^https?:\/\//i.test(String(item?.image_url||""));
+function pickNewsFallbackSlug(item={}){
+ const text=`${item.title||""} ${item.ai_summary||item.summary||""} ${item.ai_category||item.topic||""} ${item.ai_topic||""}`;
+ if(/台積電|鴻海|聯發科|廣達|緯創|半導體|晶圓|記憶體|AI|伺服器|NVIDIA|輝達|AMD|Intel|科技/.test(text))return"technology";
+ if(/財報|EPS|營收|獲利|法說|展望|毛利|淨利/.test(text))return"earnings";
+ if(/聯準會|央行|升息|降息|利率|殖利率|債券|FOMC|BOJ|日銀/.test(text))return"rates";
+ if(/關稅|政策|法案|行政命令|監管|禁令|財政部|商務部|白宮/.test(text))return"policy";
+ if(/戰爭|以伊|中東|俄烏|制裁|地緣|軍事/.test(text))return"geopolitics";
+ if(/原油|石油|金價|黃金|銅價|天然氣|原物料|運價/.test(text))return"commodities";
+ if(/GDP|CPI|PCE|非農|PMI|景氣|通膨|衰退|失業|總經/.test(text))return"macro";
+ if(/美股|日股|韓股|歐股|中國|全球|國際|亞股|道瓊|NASDAQ|S&P/.test(text))return"global";
+ if(/台股|加權|大盤|指數|成交量|盤中|開高走低|創高|跌點/.test(text))return"market";
+ return"stock";
+}
+function renderNewsThumb(item,kind="tile",options={}){
+ const alt=escapeHtml(options.alt||item?.title||item?.ai_category||"新聞配圖");
+ if(newsHasImage(item))return `<div class="news-thumb ${kind}"><img src="${escapeHtml(item.image_url)}" alt="${alt}" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.news-thumb')?.classList.add('thumb-load-failed');this.remove()"></div>`;
+ const slug=escapeHtml(item?.fallback_image_slug||pickNewsFallbackSlug(item));
+ const label=escapeHtml(item?.ai_category||item?.topic||"市場資訊");
+ return `<div class="news-thumb ${kind} fallback" data-fallback="${slug}"><img src="assets/news-fallback/${slug}.svg" alt="${alt}" loading="lazy"><span class="fallback-label">${label}</span></div>`;
+}
 async function getJson(url,timeout=9000){const ctl=new AbortController(),id=setTimeout(()=>ctl.abort(),timeout);try{const r=await fetch(url,{cache:"no-store",signal:ctl.signal});if(!r.ok)throw Error(r.status);return await r.json()}finally{clearTimeout(id)}}
 async function loadData(name,fallback={}){const branch=CHANNELS[name];if(branch){try{return await getJson(`https://raw.githubusercontent.com/${OWNER}/${REPO}/${branch}/${name}?t=${Date.now()}`)}catch(e){}}
 try{return await getJson(`data/${name}?t=${Date.now()}`)}catch(e){return typeof structuredClone==="function"?structuredClone(fallback):JSON.parse(JSON.stringify(fallback))}}
@@ -74,5 +95,5 @@ function relatedNews(event,items,options={}){
     return score>=10?{...item,_relatedScore:score}:null;
   }).filter(Boolean).sort((a,b)=>b._relatedScore-a._relatedScore||Date.parse(b.published_at||0)-Date.parse(a.published_at||0)).slice(0,limit);
 }
-window.MR={$,$$,escapeHtml,finite,fmt,pct,cls,formatTime,stripHtml,normalizeText,relatedNews,loadData,loadNewsChannels,loadStockNews,getJson,loadPortfolio,savePortfolio,mergeAssets,NEWS_FILES,OWNER,REPO};
+window.MR={$,$$,escapeHtml,finite,fmt,pct,cls,formatTime,stripHtml,normalizeText,newsHasImage,pickNewsFallbackSlug,renderNewsThumb,relatedNews,loadData,loadNewsChannels,loadStockNews,getJson,loadPortfolio,savePortfolio,mergeAssets,NEWS_FILES,OWNER,REPO};
 })();

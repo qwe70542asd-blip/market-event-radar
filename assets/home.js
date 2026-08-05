@@ -1,6 +1,6 @@
 (async()=>{
   "use strict";
-  const {$,escapeHtml,fmt,pct,cls,formatTime,loadData,loadNewsChannels,loadStockNews,loadPortfolio,finite}=MR;
+  const {$,escapeHtml,fmt,pct,cls,formatTime,loadData,loadNewsChannels,loadStockNews,loadPortfolio,finite,renderNewsThumb}=MR;
   const [assets,events,news,stockNews,tw,chips,snapshot]=await Promise.all([
     loadData("assets.json",window.__ASSET_SEED__||{assets:[]}),
     loadData("events.json",window.__EVENT_SEED__||{events:[]}),
@@ -117,7 +117,34 @@
   }
   renderPortfolioSummary();window.addEventListener("portfoliochange",renderPortfolioSummary);
 
-  const validNewsImage=item=>/^https?:\/\//i.test(String(item.image_url||""));
+  const marketKlineSymbols=["^TWII","^TWOII","^IXIC","^SOX","^GSPC","^N225"];
+  const marketKlineMap=new Map((snapshot.items||[]).map(item=>[String(item.symbol||"").toUpperCase(),item]));
+  const safeNumber=value=>finite(value);
+  const buildCandlestickSvg=row=>{
+    const open=safeNumber(row?.open),high=safeNumber(row?.high),low=safeNumber(row?.low),close=safeNumber(row?.price);
+    if([open,high,low,close].some(value=>value==null)){
+      return '<div class="market-kline-empty-plot">等待 OHLC 資料</div>';
+    }
+    const rangeMax=Math.max(high,open,close),rangeMin=Math.min(low,open,close),span=Math.max(rangeMax-rangeMin,Math.abs(close-open),1e-6);
+    const pad=8,height=88,width=120,bodyWidth=22;
+    const toY=value=>pad+((rangeMax-value)/span)*(height-pad*2);
+    const wickX=width/2,bodyX=wickX-bodyWidth/2;
+    const yHigh=toY(high),yLow=toY(low),yOpen=toY(open),yClose=toY(close),bodyTop=Math.min(yOpen,yClose),bodyHeight=Math.max(Math.abs(yClose-yOpen),3);
+    const tone=close>=open?'up':'down';
+    return `<svg viewBox="0 0 ${width} ${height}" class="market-kline-svg ${tone}" aria-hidden="true"><line x1="${wickX}" x2="${wickX}" y1="${yHigh.toFixed(2)}" y2="${yLow.toFixed(2)}"></line><rect x="${bodyX}" y="${bodyTop.toFixed(2)}" width="${bodyWidth}" height="${bodyHeight.toFixed(2)}" rx="4"></rect><line x1="14" x2="106" y1="${toY((rangeMax+rangeMin)/2).toFixed(2)}" y2="${toY((rangeMax+rangeMin)/2).toFixed(2)}" class="midline"></line></svg>`;
+  };
+  function renderMarketKlines(){
+    const rows=marketKlineSymbols.map(symbol=>marketKlineMap.get(symbol)).filter(Boolean);
+    $("#marketKlineUpdated").textContent=snapshot.metadata?.updated_at?formatTime(snapshot.metadata.updated_at):"等待資料";
+    $("#marketKlineGrid").innerHTML=rows.length?rows.map(row=>{
+      const open=safeNumber(row.open),high=safeNumber(row.high),low=safeNumber(row.low),close=safeNumber(row.price),changePct=safeNumber(row.change_percent),change=safeNumber(row.change);
+      const priceLabel=close!=null?`${fmt(close)}${escapeHtml(row.display_suffix||"")}`:"—";
+      const changeLabel=change!=null?`${change>=0?'+':''}${fmt(change)}${escapeHtml(row.display_suffix||"")}`:"—";
+      return `<article class="market-kline-card"><div class="market-kline-head"><div><small>${escapeHtml(row.market||"MARKET")}</small><h3>${escapeHtml(row.name||row.symbol)}</h3></div><div class="market-kline-price"><strong>${priceLabel}</strong><span class="${cls(changePct)}">${pct(changePct)}</span></div></div><div class="market-kline-visual">${buildCandlestickSvg(row)}</div><div class="market-kline-stats"><span><small>開</small><b>${open!=null?fmt(open):"—"}</b></span><span><small>高</small><b>${high!=null?fmt(high):"—"}</b></span><span><small>低</small><b>${low!=null?fmt(low):"—"}</b></span><span><small>差</small><b class="${cls(change)}">${changeLabel}</b></span></div></article>`;
+    }).join(""):'<div class="empty">等待大盤資料更新</div>';
+  }
+  renderMarketKlines();
+
 
   const mediaItems=[...(news.items||[]),...(stockNews.items||[])];
   const safeNews=[];const seenNews=new Set();
@@ -131,7 +158,7 @@
   const majorNews=safeNews.filter(item=>item._majorScore>=45).slice(0,6);
   const latest=majorNews[0]||safeNews[0];
   if(latest){$("#breakingLink").textContent=strip(latest.title);$("#breakingLink").href=latest.url}
-  $("#homeNews").innerHTML=(majorNews.length?majorNews:safeNews.slice(0,6)).map(item=>{const image=validNewsImage(item)?`<div class="home-news-thumb"><img src="${escapeHtml(item.image_url)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.remove();this.closest('a')?.classList.add('no-image')"></div>`:"";return `<a class="news-card home-news-card${image?"":" no-image"}" href="${escapeHtml(item.url)}" target="_blank" rel="noreferrer noopener">${image}<div class="news-meta"><span>${escapeHtml(item.ai_category||item.topic||"市場")}</span><time>${escapeHtml(formatTime(item.published_at||item.date))}</time></div><div class="ai-badges"><span class="impact-badge ${escapeHtml(item.impact||"medium")}">${impactLabel(item.impact)}</span><span class="verification-badge">${escapeHtml(verificationLabel(item))}</span></div><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(truncate(item.ai_summary||item.summary,100)||"查看完整事件內容。")}</p></a>`}).join("")||'<div class="empty">等待重大資訊更新</div>';
+  $("#homeNews").innerHTML=(majorNews.length?majorNews:safeNews.slice(0,6)).map(item=>{const image=renderNewsThumb(item,"large",{alt:item.title}).replace('class="news-thumb large','class="home-news-thumb large-thumb');const brief=truncate(item.ai_summary||item.summary||item.title,58)||"查看完整內容。";return `<a class="news-card home-news-card home-news-card-brief" href="${escapeHtml(item.url)}" target="_blank" rel="noreferrer noopener">${image}<div class="home-news-copy"><div class="news-meta"><span>${escapeHtml(item.ai_category||item.topic||"市場")}</span><time>${escapeHtml(formatTime(item.published_at||item.date))}</time></div><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(brief)}</p></div></a>`}).join("")||'<div class="empty">等待重大資訊更新</div>';
 
   const todayKey=localKey(new Date());
   const todayEvents=uniqueEvents((events.events||[]).filter(event=>eventDateKey(event)===todayKey));

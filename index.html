@@ -21,7 +21,10 @@
     <section class="panel live-market-summary compact-market-summary"><div class="section-head"><div><p class="eyebrow">LIVE MARKET SNAPSHOT</p><h2>即時大盤資訊</h2></div><small id="marketUpdated">等待資料</small></div><div class="live-market-layout"><div><div class="focus-overview market-focus-overview"><div><small>盤勢判讀</small><strong id="marketTone">—</strong></div><div><small>市場廣度</small><strong id="breadthSummary">—</strong></div><div><small>外資方向</small><strong id="foreignDirection">—</strong></div><div><small>成交動能</small><strong id="volumeMomentum">—</strong><em id="volumeMomentumNote"></em></div></div><div class="today-event-list compact-event-list market-today-focus" id="todayFocusList"><div class="empty">等待今日重大事件</div></div></div><div><div class="market-list compact-market-list" id="marketList"></div><div class="board-foot"><span>盤中／延遲行情</span><span id="marketSource">多來源</span></div></div></div><small class="live-market-foot" id="focusUpdated">等待資料</small></section>
   </section>
 
-  <section class="panel date-alert-panel" id="dateAlertPanel"><div class="date-alert-head"><div><p class="eyebrow">TODAY NEWLY ANNOUNCED DATES</p><div class="date-alert-title"><h2>今日新公布日期</h2><span class="date-alert-count" id="dateAlertCount">讀取中</span></div></div><span class="date-alert-updated" id="dateAlertUpdated">正在同步官方來源</span></div><div class="date-alert-list" id="dateAlertList"><div class="date-alert-empty"><strong>正在讀取日期異動</strong><span>今日新確認日期、改期與原日期會顯示在這裡。</span></div></div></section>
+  <section class="panel market-kline-panel" id="marketKlinePanel">
+    <div class="section-head"><div><p class="eyebrow">INDEX K-LINE MONITOR</p><h2>大盤 K 線與關鍵資訊</h2></div><small id="marketKlineUpdated">等待資料</small></div>
+    <div class="market-kline-grid" id="marketKlineGrid"><div class="empty">等待大盤資料更新</div></div>
+  </section>
 
   <section class="panel calendar-card dual-calendar-card" id="calendarPanel">
     <div class="section-head dual-calendar-head"><div><p class="eyebrow">MONTHLY DUAL-MODE RADAR</p><h2 id="calendarHeading">市場事件月曆</h2><p class="calendar-mode-description" id="calendarModeDescription">總經、央行、財報與公司重要日期。</p></div><div class="calendar-head-actions"><div class="calendar-mode-switch" role="tablist" aria-label="切換月曆模式"><button class="calendar-mode-button active" type="button" role="tab" aria-selected="true" data-calendar-mode="market">市場事件日曆</button><button class="calendar-mode-button" type="button" role="tab" aria-selected="false" data-calendar-mode="dividend">股利股息日曆</button></div><div class="calendar-toolbar"><button class="btn" id="prevMonth" type="button" aria-label="上一個月">‹</button><h3 id="calendarTitle">—</h3><button class="btn" id="todayMonth" type="button">本月</button><button class="btn" id="nextMonth" type="button" aria-label="下一個月">›</button></div></div></div>
@@ -41,7 +44,9 @@
     <div class="calendar-scroll"><div class="calendar-weekdays"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div><div class="calendar-grid" id="calendarGrid"></div></div>
   </section>
 
-  <section class="panel news-preview compact-home-news" id="latestNews"><div class="section-head"><div><p class="eyebrow">VERIFIED MARKET BRIEF</p><h2>精選重大資訊</h2></div><a class="btn" href="news.html">查看全部 →</a></div><div class="news-grid home-news-compact-grid" id="homeNews"></div></section>
+  <section class="panel date-alert-panel calendar-followup-date-alert" id="dateAlertPanel"><div class="date-alert-head"><div><p class="eyebrow">TODAY NEWLY ANNOUNCED DATES</p><div class="date-alert-title"><h2>今日新公布日期</h2><span class="date-alert-count" id="dateAlertCount">讀取中</span></div></div><span class="date-alert-updated" id="dateAlertUpdated">正在同步官方來源</span></div><div class="date-alert-list" id="dateAlertList"><div class="date-alert-empty"><strong>正在讀取日期異動</strong><span>今日新確認日期、改期與原日期會顯示在這裡。</span></div></div></section>
+
+    <section class="panel news-preview compact-home-news" id="latestNews"><div class="section-head"><div><p class="eyebrow">VERIFIED MARKET BRIEF</p><h2>精選重大資訊</h2></div><a class="btn" href="news.html">查看全部 →</a></div><div class="news-grid home-news-compact-grid" id="homeNews"></div></section>
 
 <footer><span>資料僅供市場觀察，不構成投資建議。盤中數值可能延遲。</span><span>Asia/Taipei · v11.4.12</span></footer><nav class="mobile-nav"><a href="index.html">首頁</a><a href="tw-market.html">台股</a><a href="news.html">新聞</a><a href="portfolio.html">組合</a></nav>
 </main>

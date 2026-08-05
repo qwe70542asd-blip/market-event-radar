@@ -63,16 +63,18 @@
     const fundMasterComplete=has(fundProfile.formal_name)&&has(fundProfile.issuer);
     const fundMasterPartial=has(fundProfile.formal_name)&&Object.values(fundProfile).filter(has).length>=2;
     const dividendComplete=distributionRows.length>0;
-    const dividendPartial=!dividendComplete&&has(firstValue(officialEtf.distribution_frequency,detailEtf.distribution_frequency,yahooEtf.distribution_frequency));
-    const holdingsComplete=holdings.length>=10;
-    const holdingsPartial=holdings.length>0;
+    const dividendPartial=!dividendComplete&&has(firstValue(officialEtf.distribution_frequency,detailEtf.distribution_frequency,yahooEtf.distribution_frequency,officialEtf.distribution,detailEtf.distribution));
+    const holdingsComplete=holdings.length>=8;
+    const holdingsPartial=holdings.length>0||has(firstValue(detailEtf.holdings_date,yahooEtf.holdings_date,officialEtf.holdings_date));
+    const allocationHints=[fundProfile.category,fundProfile.strategy,asset.sub_industry].filter(has).join(" ");
     const allocationsComplete=allocations.length>0;
+    const allocationsPartial=!allocationsComplete&&(holdings.length>0||/主動|ETF|槓反|高股息|科技|半導體|金融|台股/.test(allocationHints));
     const status=(complete,partial=false)=>complete?"complete":partial?"partial":"missing";
     const categories=row.asset_class==="etf"?[
       ["基金主檔",status(fundMasterComplete,fundMasterPartial)],
       ["配息",status(dividendComplete,dividendPartial)],
       ["持股",status(holdingsComplete,holdingsPartial)],
-      ["產業配置",status(allocationsComplete,false)]
+      ["產業配置",status(allocationsComplete,allocationsPartial)]
     ]:[
       ["估值",status(has(metrics.pe)||has(metrics.pb)||has(metrics.dividend_yield))],
       ["財務報表",status(financials.length>=4,financials.length>0)],

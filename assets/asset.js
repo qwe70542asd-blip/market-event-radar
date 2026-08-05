@@ -184,7 +184,7 @@
       $("#holdingRows").innerHTML=holdings.map(row=>`<tr><td>${escapeHtml(row.symbol||"—")}</td><td>${escapeHtml(row.name||"—")}</td><td>${escapeHtml(row.industry||"—")}</td><td>${finite(row.shares)==null?"—":fmt(row.shares,0)}</td><td>${finite(row.change_shares)==null?"—":fmt(row.change_shares,0)}</td><td>${finite(row.weight)==null?"—":`${fmt(row.weight,2)}%`}</td></tr>`).join("");
       const allocation=etf.allocations||etf.sector_allocation||yahooEtf.allocations||yahooEtf.sector_allocation||[];
       if(allocation.length)$("#allocationGrid").innerHTML=allocation.map(row=>`<div><span>${escapeHtml(row.name||row.industry||"其他")}</span><strong>${finite(row.weight)==null?"—":`${fmt(row.weight,2)}%`}</strong></div>`).join("");
-      $("#holdingsUpdated").textContent=etf.holdings_date?`持股資料日 ${formatDate(etf.holdings_date)} · ${etf.field_sources?.holdings||"來源已標示"}`:"依投信、TWSE、MoneyDJ、HiStock 或 Yahoo 最新可驗證資料";
+      $("#holdingsUpdated").textContent=etf.holdings_date?`持股資料日 ${formatDate(etf.holdings_date)} · ${etf.field_sources?.holdings||"來源已標示"}`:"依投信、TWSE、MoneyDJ、HiStock、Yahoo 與 ETF 資訊來源交叉整理";
       showSection("#holdingsSection","持股");
     }
   }

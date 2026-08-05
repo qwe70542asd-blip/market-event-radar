@@ -133,8 +133,9 @@ class StaticTests(unittest.TestCase):
   self.assertTrue(all("rss?category=" in u for u in yahoo["urls"]))
 
  def test_stock_news_cards_support_images(self):
-  for path in ("scripts/update_media_source.py","assets/news.js","assets/asset.js"):
+  for path in ("scripts/update_media_source.py","assets/asset.js"):
    self.assertIn("image_url",self.read(path),path)
+  self.assertIn("image_url",self.read("assets/shared.js"))
   self.assertIn("stock-news-grid",self.read("assets/styles.css"))
 
  def test_home_summary_and_volume_momentum(self):
@@ -165,9 +166,10 @@ class StaticTests(unittest.TestCase):
  def test_compact_controls_before_calendar_layout(self):
   html=self.read("index.html")
   self.assertLess(html.index("compact-feature-strip"),html.index("我的資產總覽"))
-  self.assertLess(html.index("我的資產總覽"),html.index("今日新公布日期"))
-  self.assertLess(html.index("今日新公布日期"),html.index("市場事件月曆"))
-  for token in ("home-summary-row","balanced-summary-row","dual-calendar-card","calendar-mode-switch"):self.assertIn(token,html)
+  self.assertLess(html.index("我的資產總覽"),html.index("大盤 K 線與關鍵資訊"))
+  self.assertLess(html.index("大盤 K 線與關鍵資訊"),html.index("市場事件月曆"))
+  self.assertLess(html.index("市場事件月曆"),html.index("今日新公布日期"))
+  for token in ("home-summary-row","balanced-summary-row","dual-calendar-card","calendar-mode-switch","market-kline-panel"):self.assertIn(token,html)
   for token in ("home-primary-grid","home-market-rail"):self.assertNotIn(token,html)
 
  def test_today_new_dates_jump_to_matching_calendar_mode(self):
@@ -176,11 +178,11 @@ class StaticTests(unittest.TestCase):
   for token in ("data-calendar-jump","market-radar:calendar-jump","data-calendar-mode","data-calendar-date"):self.assertIn(token,js)
 
  def test_non_ai_news_image_pipeline(self):
-  updater=self.read("scripts/update_media_source.py");news=self.read("assets/news.js");home=self.read("assets/home.js")
-  for x in ("og:image","twitter:image","article_image_from_soup","enrich_article_images"):self.assertIn(x,updater)
-  for x in ("hasImage","no-image","majorCandidates.find(hasImage)"):self.assertIn(x,news)
-  self.assertIn("validNewsImage",home)
-  self.assertNotIn("data-fallback",news+home)
+  updater=self.read("scripts/update_media_source.py");news=self.read("assets/news.js");home=self.read("assets/home.js");shared=self.read("assets/shared.js")
+  for x in ("og:image","twitter:image","article_image_from_soup","enrich_article_images","fallback_image_slug"):self.assertIn(x,updater)
+  for x in ("renderNewsThumb","newsHasImage","majorCandidates.find(newsHasImage)"):self.assertIn(x,news+shared)
+  self.assertIn("renderNewsThumb",home)
+  self.assertIn("data-fallback",shared)
   self.assertNotIn("fallbackImage",news)
 
  def test_no_ai_image_generation_dependency(self):
@@ -214,10 +216,10 @@ class StaticTests(unittest.TestCase):
   for x in ("計算值","估算值","yahooMetricMeta"):self.assertIn(x,asset)
 
  def test_news_without_giant_placeholders(self):
-  news=self.read("assets/news.js");css=self.read("assets/styles.css")
+  shared=self.read("assets/shared.js");news=self.read("assets/news.js");css=self.read("assets/styles.css")
   self.assertIn("hero-lead.no-image",css)
-  self.assertNotIn("assets/news-fallback/",news)
-  self.assertIn("majorCandidates.find(hasImage)",news)
+  self.assertIn("assets/news-fallback/",shared)
+  self.assertIn("majorCandidates.find(newsHasImage)",news)
 
  def test_chip_search_allows_manual_deletion(self):
   js=self.read("assets/institutional.js")

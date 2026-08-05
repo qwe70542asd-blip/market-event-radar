@@ -5,6 +5,7 @@ Precedence inside this channel:
 1. TWSE ETF e添富 / issuer official links
 2. MoneyDJ structured ETF pages
 3. HiStock active ETF observation page
+4. Yahoo ETF top holdings / reference hints (merged by frontend coverage)
 
 The channel is reference-only when no official field is available. It never
 replaces an official value already embedded in assets.json on the frontend.
@@ -26,7 +27,7 @@ from bs4 import BeautifulSoup
 from common import DATA, NOW, read_json, write_payload
 
 VERSION = "v11.4.12"
-BATCH = 12
+BATCH = 24
 PRIORITY_SYMBOLS = ["00981A", "00403A", "00631L", "006208", "0050", "0056", "00878", "00919", "2330", "2317", "2454"]
 TIMEOUT = 24
 HEADERS = {
@@ -433,7 +434,7 @@ def main() -> None:
             "item_count": len(items),
             "batch_size": len(batch),
             "batch_success": success,
-            "note": "Official ETF fields are primary. MoneyDJ and HiStock fill gaps with source date and reference labels.",
+            "note": "Official ETF fields are primary. MoneyDJ、HiStock 與 Yahoo 交叉補齊基金主檔、配息、持股與產業配置；前端同時會整合 ETF 相關參考來源。",
         },
         "state": {"cursor": next_cursor, "last_batch_at": NOW.isoformat(timespec="seconds")},
         "errors": errors[:100],
