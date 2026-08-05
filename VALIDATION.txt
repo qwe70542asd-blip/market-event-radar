@@ -1,3 +1,3 @@
-v11.4.12 PASS
-59 項自動測試通過；Python、JavaScript、JSON、YAML、煙霧測試與 HTML 本機引用驗證通過。
-完整保留原始專案，並整合左右各半首頁、雙模式事件／股利月曆與今日新公布日期跳轉。
+v11.4.15 validation
+59 static/parser tests pass.
+新聞圖片具備強制備援；股票基本資料管線已改為全部 TWSE／TPEx 上市櫃公司，不再限於 10 檔。

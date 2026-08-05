@@ -1,4 +1,4 @@
-name: Update v11.4.12 財富自由 news
+name: Update v11.4.15 財富自由 news
 on:
   push:
     branches: [main]

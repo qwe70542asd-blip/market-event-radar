@@ -7,7 +7,7 @@ class StaticTests(unittest.TestCase):
  def test_required_tree(self):
   for path in [".github/workflows","assets","data","docs","scripts","tests","index.html","news.html","asset.html","service-worker.js"]:self.assertTrue((ROOT/path).exists(),path)
  def test_version(self):
-  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.12")
+  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.15")
  def test_ascii_filenames(self):
   for path in ROOT.rglob("*"):self.assertTrue(all(ord(c)<128 for c in path.name),path)
  def test_no_audio(self):
@@ -77,8 +77,8 @@ class StaticTests(unittest.TestCase):
   texts="\n".join(self.read(p.relative_to(ROOT)) for p in (ROOT/".github/workflows").glob("update-news-*.yml"))
   for branch in ("live-news-cna","live-news-moneydj","live-news-cnyes","live-news-udn","live-news-ltn","live-news-wealth","live-news-yahoo","live-news-technews","live-news-ctee","live-news-asia-risk"):self.assertIn(branch,texts)
  def test_service_worker_cache(self):
-  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-12",sw)
-  for seed in ("news-cna-seed.js","news-moneydj-seed.js","news-wealth-seed.js","news-yahoo-seed.js","news-technews-seed.js","news-ctee-seed.js","news-asia-risk-seed.js","stock-news-seed.js","company-disclosures-seed.js","monthly-revenue-seed.js","dividend-history-seed.js","secondary-reference-seed.js","data-verification-seed.js","yahoo-details-seed.js","etf-details-seed.js","market-volume-history-seed.js"):self.assertIn(seed,sw)
+  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-15",sw)
+  for seed in ("news-cna-seed.js","news-moneydj-seed.js","news-wealth-seed.js","news-yahoo-seed.js","news-technews-seed.js","news-ctee-seed.js","news-asia-risk-seed.js","stock-news-seed.js","company-disclosures-seed.js","monthly-revenue-seed.js","dividend-history-seed.js","secondary-reference-seed.js","data-verification-seed.js","yahoo-details-seed.js","etf-details-seed.js","stock-basics-seed.js","market-volume-history-seed.js"):self.assertIn(seed,sw)
  def test_all_pages_current_version(self):
   for p in ROOT.glob("*.html"):self.assertNotIn("v11.4.2",p.read_text(encoding="utf-8"),p.name)
 
@@ -133,9 +133,10 @@ class StaticTests(unittest.TestCase):
   self.assertTrue(all("rss?category=" in u for u in yahoo["urls"]))
 
  def test_stock_news_cards_support_images(self):
-  for path in ("scripts/update_media_source.py","assets/asset.js"):
-   self.assertIn("image_url",self.read(path),path)
-  self.assertIn("image_url",self.read("assets/shared.js"))
+  self.assertIn("image_url",self.read("scripts/update_media_source.py"))
+  for path in ("assets/shared.js","assets/asset.js","assets/news.js","assets/home.js"):
+   self.assertIn("renderNewsThumb",self.read(path),path)
+  self.assertIn("data-fallback-src",self.read("assets/shared.js"))
   self.assertIn("stock-news-grid",self.read("assets/styles.css"))
 
  def test_home_summary_and_volume_momentum(self):
@@ -220,6 +221,19 @@ class StaticTests(unittest.TestCase):
   self.assertIn("hero-lead.no-image",css)
   self.assertIn("assets/news-fallback/",shared)
   self.assertIn("majorCandidates.find(newsHasImage)",news)
+
+
+ def test_stock_basic_channel(self):
+  for path in ("scripts/update_stock_basics.py",".github/workflows/update-stock-basics.yml","data/stock-basics.json","data/stock-basics-seed.js"):
+   self.assertTrue((ROOT/path).exists(),path)
+  shared=self.read("assets/shared.js");asset=self.read("assets/asset.js");coverage=self.read("assets/coverage.js");updater=self.read("scripts/update_stock_basics.py")
+  for token in ("live-stock-basics","stock-basics.json","loadStockBasics","STOCK_BASIC_ENDPOINTS"):self.assertIn(token,shared+asset+coverage)
+  for token in ("t187ap03_L","mopsfin_t187ap03_O","universe = set(official)","all-currently-listed-twse-and-tpex-stocks"):self.assertIn(token,updater)
+  self.assertNotIn("candidates = [asset for asset in assets",updater)
+  self.assertIn("Object.entries(stockBasics)",coverage)
+  payload=json.loads(self.read("data/stock-basics.json"))
+  self.assertGreaterEqual(len(payload.get("items",{})),10)
+  self.assertTrue(all(float(row.get("basic_coverage_percent",0))>=90 for row in payload.get("items",{}).values()))
 
  def test_chip_search_allows_manual_deletion(self):
   js=self.read("assets/institutional.js")

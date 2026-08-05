@@ -1,16 +1,17 @@
 (async()=>{
   "use strict";
-  const {$,escapeHtml,fmt,loadData}=MR;
-  const [audit,coverage,yahooPayload,etfPayload,assetsPayload,dividendPayload,verificationPayload]=await Promise.all([
+  const {$,escapeHtml,fmt,loadData,loadStockBasics}=MR;
+  const [audit,coverage,yahooPayload,etfPayload,assetsPayload,dividendPayload,verificationPayload,stockBasicsPayload]=await Promise.all([
     loadData("asset-audit.json",window.__ASSET_AUDIT_SEED__||{assets:[],summary:{}}),
     loadData("asset-coverage.json",{summary:{}}),
     loadData("yahoo-details.json",window.__YAHOO_DETAILS_SEED__||{items:{},metadata:{}}),
     loadData("etf-details.json",window.__ETF_DETAILS_SEED__||{items:{},metadata:{}}),
-    loadData("assets.json",window.__ASSETS_SEED__||{assets:[]}),
+    loadData("assets.json",window.__ASSET_SEED__||{assets:[]}),
     loadData("dividend-history.json",window.__DIVIDEND_HISTORY_SEED__||{items:{}}),
-    loadData("data-verification.json",window.__DATA_VERIFICATION_SEED__||{items:{}})
+    loadData("data-verification.json",window.__DATA_VERIFICATION_SEED__||{items:{}}),
+    loadStockBasics()
   ]);
-  const summary=audit.summary||coverage.summary||{},yahoo=yahooPayload.items||{},etfs=etfPayload.items||{},dividends=dividendPayload.items||{},verification=verificationPayload.items||{};
+  const summary=audit.summary||coverage.summary||{},yahoo=yahooPayload.items||{},etfs=etfPayload.items||{},dividends=dividendPayload.items||{},verification=verificationPayload.items||{},stockBasics=stockBasicsPayload.items||{};
   const assetMap=new Map((assetsPayload.assets||[]).map(asset=>[String(asset.symbol),asset]));
   const has=value=>{
     if(value===null||value===undefined)return false;
@@ -42,10 +43,14 @@
   const fallbackRows=(assetsPayload.assets||[]).filter(asset=>asset.market==="TW"&&["stock","etf"].includes(asset.asset_class)).map(asset=>({
     symbol:asset.symbol,name:asset.name,asset_class:asset.asset_class,exchange:asset.exchange,coverage_percent:0,missing_fields:[]
   }));
-  const sourceRows=(audit.assets||[]).length?(audit.assets||[]):fallbackRows;
+  const sourceMap=new Map();
+  for(const row of fallbackRows)sourceMap.set(String(row.symbol),row);
+  for(const row of (audit.assets||[]))sourceMap.set(String(row.symbol),{...(sourceMap.get(String(row.symbol))||{}),...row});
+  for(const [symbol,basic] of Object.entries(stockBasics))sourceMap.set(String(symbol),{...(sourceMap.get(String(symbol))||{}),symbol,name:basic.company_name||basic.short_name||symbol,asset_class:"stock",exchange:basic.exchange,coverage_percent:Number(basic.basic_coverage_percent||0),missing_fields:[]});
+  const sourceRows=[...sourceMap.values()].sort((a,b)=>String(a.symbol).localeCompare(String(b.symbol),"zh-Hant",{numeric:true}));
 
   const patched=row=>{
-    const symbol=String(row.symbol),asset=assetMap.get(symbol)||{},ref=yahoo[symbol]||{},metrics=mergeNonempty(asset.metrics||{},ref.metrics||{}),financials=firstList(asset.financials,ref.financials);
+    const symbol=String(row.symbol),asset=assetMap.get(symbol)||{},ref=yahoo[symbol]||{},basic=stockBasics[symbol]||{},metrics=mergeNonempty(asset.metrics||{},ref.metrics||{},basic.metrics||{}),financials=firstList(asset.financials,ref.financials,basic.financials);
     const officialEtf=asset.etf||{},yahooEtf=ref.etf||{},detailEtf=etfs[symbol]||{};
     const etf=mergeNonempty(officialEtf,detailEtf,yahooEtf);
     const distributionRows=firstList(officialEtf.distributions,detailEtf.distributions,ref.dividends,(dividends[symbol]||{}).rows,dividends[symbol]);
@@ -70,22 +75,25 @@
     const allocationsComplete=allocations.length>0;
     const allocationsPartial=!allocationsComplete&&(holdings.length>0||/主動|ETF|槓反|高股息|科技|半導體|金融|台股/.test(allocationHints));
     const status=(complete,partial=false)=>complete?"complete":partial?"partial":"missing";
+    const stockBasicFields=[symbol,basic.company_name||asset.company_name||asset.name,basic.market||asset.market,basic.exchange||asset.exchange,basic.industry||asset.official_industry||asset.sub_industry,basic.currency||asset.currency,basic.official_url,basic.profile_url||basic.quote_url];
+    const stockBasicPercent=Number(basic.basic_coverage_percent||Math.round(stockBasicFields.filter(has).length/stockBasicFields.length*100));
     const categories=row.asset_class==="etf"?[
       ["基金主檔",status(fundMasterComplete,fundMasterPartial)],
       ["配息",status(dividendComplete,dividendPartial)],
       ["持股",status(holdingsComplete,holdingsPartial)],
       ["產業配置",status(allocationsComplete,allocationsPartial)]
     ]:[
-      ["估值",status(has(metrics.pe)||has(metrics.pb)||has(metrics.dividend_yield))],
-      ["財務報表",status(financials.length>=4,financials.length>0)],
-      ["財務比率",status(has(metrics.roe)&&has(metrics.debt_ratio)&&has(metrics.net_margin),Object.keys(metrics).length>0)],
-      ["歷史財報",status(financials.length>=12,financials.length>=4)]
+      ["基本資料",status(stockBasicPercent>=90,stockBasicPercent>=70)],
+      ["估值",status(has(metrics.pe)||has(metrics.pb)||has(metrics.dividend_yield),has(metrics.eps)||has(metrics.book_value_per_share))],
+      ["最新財報",status(financials.length>=1,has(metrics.eps))],
+      ["財務比率",status(has(metrics.roe)&&has(metrics.net_margin),Object.keys(metrics).length>=2)],
+      ["歷史財報",status(financials.length>=4,financials.length>0)]
     ];
     const missing=(row.missing_fields||[]).filter(label=>{
-      if(label==="公司名稱")return !has(asset.company_name||asset.name||ref.profile?.company_name);
-      if(label==="產業")return !has(asset.official_industry||asset.sub_industry||ref.profile?.industry||ref.profile?.sector);
-      if(label==="上市／上櫃日期")return !has(asset.listed_date||officialEtf.listing_date||detailEtf.listing_date);
-      if(label==="發行股數")return !has(asset.issued_shares||metrics.shares_outstanding);
+      if(label==="公司名稱")return !has(basic.company_name||asset.company_name||asset.name||ref.profile?.company_name);
+      if(label==="產業")return !has(basic.industry||asset.official_industry||asset.sub_industry||ref.profile?.industry||ref.profile?.sector);
+      if(label==="上市／上櫃日期")return !has(basic.listed_date||asset.listed_date||officialEtf.listing_date||detailEtf.listing_date);
+      if(label==="發行股數")return !has(basic.issued_shares||asset.issued_shares||metrics.shares_outstanding);
       if(["本益比狀態","股價淨值比狀態","殖利率狀態"].includes(label))return !has(metrics[label==="本益比狀態"?"pe":label==="股價淨值比狀態"?"pb":"dividend_yield"]);
       if(["EPS","ROE","負債比","淨利率"].includes(label))return !has(metrics[label==="EPS"?"eps":label==="ROE"?"roe":label==="負債比"?"debt_ratio":"net_margin"]);
       if(label==="最近季度財報")return !financials.length;
@@ -104,23 +112,28 @@
     const checks=categories.length,completeCount=categories.filter(([,state])=>state==="complete").length,partialCount=categories.filter(([,state])=>state==="partial").length;
     const categoryScore=(completeCount+partialCount*.55)/Math.max(1,checks)*100;
     const baseCoverage=Number(row.coverage_percent||0);
-    const effective=Math.min(100,Math.max(baseCoverage,Math.round((baseCoverage*.45)+(categoryScore*.55))));
+    const effective=row.asset_class==="stock"?Math.min(100,stockBasicPercent):Math.min(100,Math.max(baseCoverage,Math.round((baseCoverage*.45)+(categoryScore*.55))));
     const finalVerification=verification[symbol]||{};
-    return {...row,name:row.name||asset.name,missing_fields:missing,effective,categories,reference:Boolean(ref.updated_at||detailEtf.updated_at||finalVerification.updated_at),sourceSummary:{holdings:holdings.length,allocations:allocations.length,distributions:distributionRows.length}};
+    return {...row,name:row.name||basic.company_name||asset.name,missing_fields:missing,effective,categories,basicCoverage:stockBasicPercent,reference:Boolean(basic.updated_at||basic.profile_url||ref.updated_at||detailEtf.updated_at||finalVerification.updated_at),sourceSummary:{holdings:holdings.length,allocations:allocations.length,distributions:distributionRows.length}};
   };
   const rows=sourceRows.map(patched),avg=rows.length?rows.reduce((sum,row)=>sum+row.effective,0)/rows.length:0;
   $("#coverageStats").innerHTML=[
-    ["稽核標的",summary.audited_assets||summary.total_assets||rows.length],
-    ["股票",summary.stock_count||summary.total_stocks||rows.filter(row=>row.asset_class==="stock").length],
-    ["ETF",summary.etf_count||summary.total_etfs||rows.filter(row=>row.asset_class==="etf").length],
-    ["官方平均",`${fmt(summary.average_field_coverage_percent||0)}%`],
+    ["全市場標的",rows.length],
+    ["全部上市櫃股票",rows.filter(row=>row.asset_class==="stock").length],
+    ["ETF",rows.filter(row=>row.asset_class==="etf").length],
+    ["股票基本平均",`${fmt(stockBasicsPayload.metadata?.average_basic_coverage_percent||rows.filter(row=>row.asset_class==="stock").reduce((sum,row)=>sum+(row.basicCoverage||0),0)/Math.max(1,rows.filter(row=>row.asset_class==="stock").length))}%`],
     ["整合後平均",`${fmt(avg)}%`],
-    ["多來源已補",new Set([...Object.keys(yahoo),...Object.keys(etfs)]).size]
+    ["多來源已補",new Set([...Object.keys(stockBasics),...Object.keys(yahoo),...Object.keys(etfs)]).size]
   ].map(([key,value])=>`<article class="stat"><small>${key}</small><strong>${typeof value==="number"?fmt(value,0):escapeHtml(value)}</strong></article>`).join("");
   const stateText=state=>state==="complete"?"✓":state==="partial"?"部分":"待補";
-  $("#coverageRows").innerHTML=rows.map(row=>{
-    const summaryText=row.categories.map(([name,state])=>`${name}${stateText(state)}`).join(" · ");
-    const detail=row.asset_class==="etf"&&row.sourceSummary?`持股 ${row.sourceSummary.holdings} 檔、產業 ${row.sourceSummary.allocations} 類、配息 ${row.sourceSummary.distributions} 筆`:"點入標的查看來源、期間與公式";
-    return `<tr><td><a href="asset.html?symbol=${encodeURIComponent(row.symbol)}">${escapeHtml(row.symbol)}</a></td><td>${escapeHtml(row.name||"")}</td><td>${escapeHtml(row.asset_class||"")}</td><td>${fmt(row.effective)}% ${row.reference?'<span class="verification-badge reference">多來源整合</span>':""}</td><td>${escapeHtml(summaryText)}</td><td>${row.missing_fields?.length?`尚缺 ${row.missing_fields.length} 項；${escapeHtml(detail)}`:`已達目前可驗證範圍；${escapeHtml(detail)}`}</td></tr>`;
-  }).join("")||'<tr><td colspan="6" class="empty">等待完整資料稽核</td></tr>';
+  const renderRows=list=>{
+    $("#coverageVisibleCount").textContent=`顯示 ${list.length}／${rows.length} 檔`;
+    $("#coverageRows").innerHTML=list.map(row=>{
+      const summaryText=row.categories.map(([name,state])=>`${name}${stateText(state)}`).join(" · ");
+      const detail=row.asset_class==="etf"&&row.sourceSummary?`持股 ${row.sourceSummary.holdings} 檔、產業 ${row.sourceSummary.allocations} 類、配息 ${row.sourceSummary.distributions} 筆`:`基本資料 ${fmt(row.basicCoverage||row.effective)}%；進階財報依來源更新，不以假值補空白`;
+      return `<tr><td><a href="asset.html?symbol=${encodeURIComponent(row.symbol)}">${escapeHtml(row.symbol)}</a></td><td>${escapeHtml(row.name||"")}</td><td>${escapeHtml(row.asset_class||"")}</td><td>${fmt(row.effective)}% ${row.reference?'<span class="verification-badge reference">多來源整合</span>':""}</td><td>${escapeHtml(summaryText)}</td><td>${row.missing_fields?.length?`尚缺 ${row.missing_fields.length} 項；${escapeHtml(detail)}`:`已達目前可驗證範圍；${escapeHtml(detail)}`}</td></tr>`;
+    }).join("")||'<tr><td colspan="6" class="empty">找不到符合條件的標的</td></tr>';
+  };
+  const filterRows=()=>{const query=$("#coverageSearch").value.trim().toLowerCase();renderRows(!query?rows:rows.filter(row=>`${row.symbol} ${row.name||""} ${row.exchange||""} ${row.asset_class||""}`.toLowerCase().includes(query)))};
+  $("#coverageSearch").oninput=filterRows;renderRows(rows);
 })();

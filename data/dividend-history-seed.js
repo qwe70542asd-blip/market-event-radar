@@ -1,1 +1,1 @@
-window.__DIVIDEND_HISTORY_SEED__={"metadata":{"version":"v11.4.12","updated_at":null,"status":"waiting","symbol_count":0,"record_count":0,"note":"Waiting for the isolated dividend-history workflow."},"sources":[],"items":{}};
+window.__DIVIDEND_HISTORY_SEED__={"metadata":{"version":"v11.4.15","updated_at":null,"status":"waiting","symbol_count":0,"record_count":0,"note":"Waiting for the isolated dividend-history workflow."},"sources":[],"items":{}};

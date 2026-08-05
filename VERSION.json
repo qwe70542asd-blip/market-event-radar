@@ -1,7 +1,7 @@
 {
-  "version": "v11.4.12",
-  "name": "dual-mode-event-dividend-calendar",
+  "version": "v11.4.15",
+  "name": "full-market-stock-basics-and-news-images",
   "released_at": "2026-08-05",
   "stage": "integrated",
-  "baseline_version": "11.4.12"
+  "baseline_version": "11.4.15"
 }

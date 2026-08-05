@@ -1,8 +1,8 @@
 (async()=>{
   "use strict";
-  const {$,$$,escapeHtml,fmt,pct,cls,formatTime,loadData,loadNewsChannels,loadStockNews,finite,stripHtml,normalizeText}=MR;
+  const {$,$$,escapeHtml,fmt,pct,cls,formatTime,loadData,loadStockBasics,loadNewsChannels,loadStockNews,finite,stripHtml,normalizeText,renderNewsThumb}=MR;
   const symbol=(new URLSearchParams(location.search).get("symbol")||"2330").toUpperCase();
-  const [assetPayload,marketPayload,chipPayload,eventPayload,newsPayload,stockNewsPayload,revenuePayload,dividendPayload,secondaryPayload,verificationPayload,yahooPayload,etfPayload]=await Promise.all([
+  const [assetPayload,marketPayload,chipPayload,eventPayload,newsPayload,stockNewsPayload,revenuePayload,dividendPayload,secondaryPayload,verificationPayload,yahooPayload,etfPayload,stockBasicsPayload]=await Promise.all([
     loadData("assets.json",window.__ASSET_SEED__||{assets:[]}),
     loadData("tw-market.json",window.__TW_MARKET_SEED__||{items:[]}),
     loadData("tw-chips.json",window.__TW_CHIPS_SEED__||{items:{},history:{}}),
@@ -14,7 +14,8 @@
     loadData("secondary-reference.json",window.__SECONDARY_REFERENCE_SEED__||{metadata:{status:"waiting"},items:{}}),
     loadData("data-verification.json",window.__DATA_VERIFICATION_SEED__||{metadata:{status:"waiting"},items:{}}),
     loadData("yahoo-details.json",window.__YAHOO_DETAILS_SEED__||{metadata:{status:"waiting"},items:{}}),
-    loadData("etf-details.json",window.__ETF_DETAILS_SEED__||{metadata:{status:"waiting"},items:{}})
+    loadData("etf-details.json",window.__ETF_DETAILS_SEED__||{metadata:{status:"waiting"},items:{}}),
+    loadStockBasics()
   ]);
   const officialQuote=(marketPayload.items||[]).find(row=>String(row.symbol||"").toUpperCase()===symbol)||{};
   const secondaryQuote=(secondaryPayload.items||{})[symbol]||{};
@@ -22,8 +23,9 @@
   const found=(assetPayload.assets||[]).find(row=>String(row.symbol||"").toUpperCase()===symbol);
   const yahoo=(yahooPayload.items||{})[symbol]||{};
   const etfReference=(etfPayload.items||{})[symbol]||{};
-  const yahooProfile=yahoo.profile||{},yahooMetrics=yahoo.metrics||{},yahooEtf=yahoo.etf||{},yahooMetricMeta=yahoo.metrics_meta||{};
-  const asset=found||{id:`TW:${symbol}`,symbol,name:yahooProfile.company_name||quote.name||symbol,exchange:quote.exchange,asset_class:yahoo.asset_class||quote.asset_class||"stock",market:"TW"};
+  const stockBasic=(stockBasicsPayload.items||{})[symbol]||{};
+  const yahooProfile={...stockBasic,...(yahoo.profile||{})},yahooMetrics={...(stockBasic.metrics||{}),...(yahoo.metrics||{})},yahooEtf=yahoo.etf||{},yahooMetricMeta=yahoo.metrics_meta||{};
+  const asset={...(stockBasic||{}),...(found||{}),id:(found||{}).id||`TW:${symbol}`,symbol,name:(found||{}).name||stockBasic.short_name||stockBasic.company_name||yahooProfile.company_name||quote.name||symbol,exchange:(found||{}).exchange||stockBasic.exchange||yahooProfile.exchange||quote.exchange,asset_class:(found||{}).asset_class||stockBasic.asset_class||yahoo.asset_class||yahooProfile.asset_class||quote.asset_class||"stock",market:"TW"};
   const isEtf=asset.asset_class==="etf"||quote.asset_class==="etf";
   const verification=(verificationPayload.items||{})[symbol]||{};
   const chip=chipPayload.items?.[symbol]||{};
@@ -82,9 +84,9 @@
   $("#assetChange").textContent=pct(quote.change_percent);
   $("#assetChange").className=cls(quote.change_percent);
   $("#assetQuoteTime").textContent=quote.quote_date?`${formatDate(quote.quote_date)} ${quote.quote_time||""}`:marketPayload.metadata?.updated_at?formatTime(marketPayload.metadata.updated_at):"";
-  const overallTrust=verification.overall||"missing";
+  const overallTrust=Number(stockBasic.basic_coverage_percent||0)>=90?"multi_source":(verification.overall||"missing");
   const trustText=trustLabel(overallTrust)||"資料驗證中";
-  $("#assetTrust").innerHTML=`<span class="verification-badge ${trustClass(overallTrust)}">${escapeHtml(trustText)}</span><span>官方資料優先；Yahoo、MoneyDJ、HiStock 僅補空白欄位，計算值會標示公式。</span>${yahoo.updated_at?`<span class="verification-badge reference">Yahoo 已補充</span>`:""}${etfReference.updated_at?`<span class="verification-badge reference">ETF 多來源已補充</span>`:""}${(verification.reference_links?.yahoo||yahoo.source_url)?`<a href="${escapeHtml(verification.reference_links?.yahoo||yahoo.source_url)}" target="_blank" rel="noreferrer noopener">Yahoo 查閱 ↗</a>`:""}${verification.reference_links?.goodinfo?`<a href="${escapeHtml(verification.reference_links.goodinfo)}" target="_blank" rel="noreferrer noopener">Goodinfo 查閱 ↗</a>`:""}`;
+  $("#assetTrust").innerHTML=`<span class="verification-badge ${trustClass(overallTrust)}">${escapeHtml(trustText)}</span><span>官方資料優先；Yahoo、MoneyDJ、HiStock 僅補空白欄位，計算值會標示公式。</span>${stockBasic.basic_coverage_percent?`<span class="verification-badge official">基本資料 ${escapeHtml(stockBasic.basic_coverage_percent)}%</span>`:""}${yahoo.updated_at?`<span class="verification-badge reference">Yahoo 已補充</span>`:""}${etfReference.updated_at?`<span class="verification-badge reference">ETF 多來源已補充</span>`:""}${(verification.reference_links?.yahoo||yahoo.source_url)?`<a href="${escapeHtml(verification.reference_links?.yahoo||yahoo.source_url)}" target="_blank" rel="noreferrer noopener">Yahoo 查閱 ↗</a>`:""}${verification.reference_links?.goodinfo?`<a href="${escapeHtml(verification.reference_links.goodinfo)}" target="_blank" rel="noreferrer noopener">Goodinfo 查閱 ↗</a>`:""}`;
 
   const overview=[];
   const pushCard=(label,value,source,options={})=>{const html=metricCard(label,value,source,options);if(html)overview.push(html)};
@@ -125,19 +127,19 @@
     {label:"公司全名",value:prefer(asset.company_name,yahooProfile.company_name),note:!asset.company_name&&yahooProfile.company_name?"Yahoo 參考資料":""},
     {label:"公司簡稱",value:displayName!==symbol?displayName:""},
     {label:"產業類別",value:prefer(industryName(asset.official_industry||asset.sub_industry),yahooProfile.industry||yahooProfile.sector)},
-    {label:"統一編號",value:asset.tax_id},
+    {label:"統一編號",value:prefer(asset.tax_id,yahooProfile.tax_id)},
     {label:"董事長",value:prefer(asset.chairperson,yahooProfile.chairperson)},
     {label:"總經理",value:prefer(asset.general_manager,yahooProfile.general_manager)},
-    {label:"發言人",value:asset.spokesperson},
-    {label:"成立日期",value:formatDate(asset.established_date)},
-    {label:"上市／上櫃日期",value:formatDate(asset.listed_date)},
-    {label:"實收資本額",value:compactNumber(asset.paid_in_capital," 元")},
-    {label:"發行股數",value:compactNumber(prefer(asset.issued_shares,yahooMetrics.shares_outstanding)," 股"),note:!asset.issued_shares&&yahooMetrics.shares_outstanding?"Yahoo 參考資料":""},
+    {label:"發言人",value:prefer(asset.spokesperson,yahooProfile.spokesperson)},
+    {label:"成立日期",value:formatDate(prefer(asset.established_date,yahooProfile.established_date))},
+    {label:"上市／上櫃日期",value:formatDate(prefer(asset.listed_date,yahooProfile.listed_date))},
+    {label:"實收資本額",value:compactNumber(prefer(asset.paid_in_capital,yahooProfile.paid_in_capital)," 元")},
+    {label:"發行股數",value:compactNumber(prefer(asset.issued_shares,prefer(yahooProfile.issued_shares,yahooMetrics.shares_outstanding))," 股"),note:!asset.issued_shares&&(yahooProfile.issued_shares||yahooMetrics.shares_outstanding)?"基本資料／Yahoo 參考":""},
     {label:"員工人數",value:compactNumber(prefer(asset.employee_count,yahooProfile.employees)," 人")},
     {label:"公司電話",value:prefer(asset.phone,yahooProfile.phone)},
     {label:"公司地址",value:prefer(asset.address,yahooProfile.address)},
     {label:"官方網站",value:prefer(asset.website||asset.official_url,yahooProfile.website),url:safeUrl(prefer(asset.website||asset.official_url,yahooProfile.website))},
-    {label:"主要經營業務",value:prefer(asset.business_scope,yahooProfile.business_summary)},
+    {label:"主要經營業務",value:prefer(asset.business_scope,prefer(yahooProfile.business_scope,yahooProfile.business_summary))},
     {label:"簽證會計師／事務所",value:asset.accounting_firm}
   ];
   if(basicRows.some(row=>has(row.value))){
@@ -190,7 +192,8 @@
   }
 
   const financialMap=new Map();
-  for(const row of (yahoo.financials||[])){const key=String(row.period||row.date||"");if(key)financialMap.set(key,row)}
+  for(const row of (stockBasic.financials||[])){const key=String(row.period||row.date||"");if(key)financialMap.set(key,row)}
+  for(const row of (yahoo.financials||[])){const key=String(row.period||row.date||"");if(key)financialMap.set(key,{...(financialMap.get(key)||{}),...row})}
   for(const row of (asset.financials||[])){const key=String(row.period||row.date||"");if(key)financialMap.set(key,{...(financialMap.get(key)||{}),...row})}
   const financials=!isEtf?[...financialMap.values()].sort((a,b)=>String(b.period||b.date||"").localeCompare(String(a.period||a.date||""))).slice(0,20):[];
   if(financials.length){
@@ -310,7 +313,7 @@
     return itemSymbols.includes(symbol)||assetNames.some(name=>name&&text.includes(name));
   }).filter((item,index,list)=>list.findIndex(x=>x.url===item.url||x.id===item.id)===index).slice(0,12);
   if(relatedNews.length){
-    $("#assetNews").innerHTML=relatedNews.map(item=>`<article class="asset-media-card">${item.image_url?`<div class="asset-media-image"><img src="${escapeHtml(item.image_url)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.remove()"></div>`:""}<div><div class="news-meta"><span>${escapeHtml(item.source||"")}</span><time>${escapeHtml(formatTime(item.published_at))}</time></div><div class="ai-badges"><span class="tag">${escapeHtml(item.ai_category||"個股新聞")}</span>${item.impact?`<span class="impact-badge ${escapeHtml(item.impact)}">${item.impact==="high"?"高影響":item.impact==="low"?"低影響":"中影響"}</span>`:""}<span class="direction-badge">${escapeHtml(item.market_direction||"中性")}</span></div><h3><a href="${escapeHtml(item.url||"#")}" target="_blank" rel="noreferrer noopener">${escapeHtml(item.title)}</a></h3><p>${escapeHtml(stripHtml(item.ai_summary||item.summary||"").slice(0,190))}</p>${(item.other_reports||[]).length?`<small>另有 ${item.other_reports.length} 家媒體報導同一事件</small>`:""}</div></article>`).join("");
+    $("#assetNews").innerHTML=relatedNews.map(item=>`<article class="asset-media-card">${renderNewsThumb(item,"asset",{alt:item.title}).replace('class="news-thumb asset','class="asset-media-image news-thumb asset')}<div><div class="news-meta"><span>${escapeHtml(item.source||"")}</span><time>${escapeHtml(formatTime(item.published_at))}</time></div><div class="ai-badges"><span class="tag">${escapeHtml(item.ai_category||"個股新聞")}</span>${item.impact?`<span class="impact-badge ${escapeHtml(item.impact)}">${item.impact==="high"?"高影響":item.impact==="low"?"低影響":"中影響"}</span>`:""}<span class="direction-badge">${escapeHtml(item.market_direction||"中性")}</span></div><h3><a href="${escapeHtml(item.url||"#")}" target="_blank" rel="noreferrer noopener">${escapeHtml(item.title)}</a></h3><p>${escapeHtml(stripHtml(item.ai_summary||item.summary||"").slice(0,190))}</p>${(item.other_reports||[]).length?`<small>另有 ${item.other_reports.length} 家媒體報導同一事件</small>`:""}</div></article>`).join("");
     showSection("#newsSection","個股新聞");
   }
 

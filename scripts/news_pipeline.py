@@ -12,8 +12,8 @@ from dateutil import parser as date_parser
 
 from common import DATA, NOW, read_json
 
-VERSION="v11.4.12"
-HEADERS={"User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.4.12; +https://github.com/qwe70542asd-blip/market-event-radar)"}
+VERSION="v11.4.15"
+HEADERS={"User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.4.15; +https://github.com/qwe70542asd-blip/market-event-radar)"}
 COMPANY_EVENT_RE=re.compile(r"增資|減資|除權|除息|股利|法說|財報|財務報告|股東會|停牌|復牌|公開收購|併購|合併|處分資產|取得資產|重大合約|融資融券|注意股票|處置股票|庫藏股|董事會|重大訊息",re.I)
 MARKET_HIGH_RE=re.compile(r"FOMC|聯準會|Fed\b|央行|CPI|PCE|GDP|非農|JOLTS|PMI|利率決策|升息|降息|關稅|制裁|戰爭|金融危機|熔斷|重大法規|匯率干預|資本管制|銀行危機|債務危機|財政危機|信用危機",re.I)
 ASIA_RISK_RE=re.compile(r"日本銀行|日銀|BOJ|日圓|日債|日本國債|日本政府債務|日本企業倒閉|日本企業破產|匯市干預|韓國央行|韓元|KOSPI|KOSDAQ|中國房地產|中國房企|地方債|人民幣|亞洲貨幣|亞洲資金外流|貨幣競貶",re.I)

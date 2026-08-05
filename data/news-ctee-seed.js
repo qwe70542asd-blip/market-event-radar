@@ -1,1 +1,1 @@
-window.__NEWS_CTEE_SEED__={"metadata":{"version":"v11.4.12","source_id":"ctee","source_name":"工商時報","status":"waiting","fresh_count":0,"item_count":0},"health":{},"items":[]};
+window.__NEWS_CTEE_SEED__={"metadata":{"version":"v11.4.15","source_id":"ctee","source_name":"工商時報","status":"waiting","fresh_count":0,"item_count":0},"health":{},"items":[]};

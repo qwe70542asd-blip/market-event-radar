@@ -1,6 +1,6 @@
 (()=>{"use strict";
 const OWNER="qwe70542asd-blip",REPO="market-event-radar";
-const CHANNELS={"assets.json":"live-assets","asset-audit.json":"live-assets","asset-coverage.json":"live-assets","events.json":"live-events","event-source-state.json":"live-events","tw-market.json":"live-tw-market","tw-chips.json":"live-tw-chips","market-snapshot.json":"live-global-market","news-cna.json":"live-news-cna","news-moneydj.json":"live-news-moneydj","news-cnyes.json":"live-news-cnyes","news-udn.json":"live-news-udn","news-ltn.json":"live-news-ltn","news-wealth.json":"live-news-wealth","news-yahoo.json":"live-news-yahoo","news-technews.json":"live-news-technews","news-ctee.json":"live-news-ctee","news-asia-risk.json":"live-news-asia-risk","stock-news.json":"live-stock-news","official-market-notices.json":"live-official-notices","company-disclosures.json":"live-company-disclosures","monthly-revenue.json":"live-monthly-revenue","dividend-history.json":"live-dividend-history","market-volume-history.json":"live-tw-market","secondary-reference.json":"live-secondary-reference","data-verification.json":"live-data-verification","yahoo-details.json":"live-yahoo-details","etf-details.json":"live-etf-details"};
+const CHANNELS={"assets.json":"live-assets","asset-audit.json":"live-assets","asset-coverage.json":"live-assets","events.json":"live-events","event-source-state.json":"live-events","tw-market.json":"live-tw-market","tw-chips.json":"live-tw-chips","market-snapshot.json":"live-global-market","news-cna.json":"live-news-cna","news-moneydj.json":"live-news-moneydj","news-cnyes.json":"live-news-cnyes","news-udn.json":"live-news-udn","news-ltn.json":"live-news-ltn","news-wealth.json":"live-news-wealth","news-yahoo.json":"live-news-yahoo","news-technews.json":"live-news-technews","news-ctee.json":"live-news-ctee","news-asia-risk.json":"live-news-asia-risk","stock-news.json":"live-stock-news","official-market-notices.json":"live-official-notices","company-disclosures.json":"live-company-disclosures","monthly-revenue.json":"live-monthly-revenue","dividend-history.json":"live-dividend-history","market-volume-history.json":"live-tw-market","secondary-reference.json":"live-secondary-reference","data-verification.json":"live-data-verification","yahoo-details.json":"live-yahoo-details","etf-details.json":"live-etf-details","stock-basics.json":"live-stock-basics"};
 const NEWS_FILES=[{"file":"news-cna.json","id":"cna","label":"中央社","seed":"__NEWS_CNA_SEED__","kind":"media"},{"file":"news-moneydj.json","id":"moneydj","label":"MoneyDJ","seed":"__NEWS_MONEYDJ_SEED__","kind":"media"},{"file":"news-cnyes.json","id":"cnyes","label":"鉅亨網","seed":"__NEWS_CNYES_SEED__","kind":"media"},{"file":"news-udn.json","id":"udn","label":"經濟日報","seed":"__NEWS_UDN_SEED__","kind":"media"},{"file":"news-ltn.json","id":"ltn","label":"自由財經","seed":"__NEWS_LTN_SEED__","kind":"media"},{"file":"news-wealth.json","id":"wealth","label":"財富自由","seed":"__NEWS_WEALTH_SEED__","kind":"media"},{"file":"news-yahoo.json","id":"yahoo","label":"Yahoo股市","seed":"__NEWS_YAHOO_SEED__","kind":"media"},{"file":"news-technews.json","id":"technews","label":"科技新報／財經新報","seed":"__NEWS_TECHNEWS_SEED__","kind":"media"},{"file":"news-ctee.json","id":"ctee","label":"工商時報","seed":"__NEWS_CTEE_SEED__","kind":"media"},{"file":"news-asia-risk.json","id":"asia-risk","label":"亞洲總體風險","seed":"__NEWS_ASIA_RISK_SEED__","kind":"media"},{"file":"official-market-notices.json","id":"official-notices","label":"官方市場公告","seed":"__OFFICIAL_NOTICE_SEED__","kind":"official"},{"file":"company-disclosures.json","id":"company-disclosures","label":"個股重大訊息","seed":"__COMPANY_DISCLOSURE_SEED__","kind":"company"}];
 const $=(q,r=document)=>r.querySelector(q),$$=(q,r=document)=>[...r.querySelectorAll(q)];
 const escapeHtml=v=>String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
@@ -27,14 +27,41 @@ function pickNewsFallbackSlug(item={}){
 }
 function renderNewsThumb(item,kind="tile",options={}){
  const alt=escapeHtml(options.alt||item?.title||item?.ai_category||"新聞配圖");
- if(newsHasImage(item))return `<div class="news-thumb ${kind}"><img src="${escapeHtml(item.image_url)}" alt="${alt}" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.news-thumb')?.classList.add('thumb-load-failed');this.remove()"></div>`;
  const slug=escapeHtml(item?.fallback_image_slug||pickNewsFallbackSlug(item));
  const label=escapeHtml(item?.ai_category||item?.topic||"市場資訊");
- return `<div class="news-thumb ${kind} fallback" data-fallback="${slug}"><img src="assets/news-fallback/${slug}.svg" alt="${alt}" loading="lazy"><span class="fallback-label">${label}</span></div>`;
+ const fallback=`assets/news-fallback/${slug}.svg`;
+ if(newsHasImage(item))return `<div class="news-thumb ${kind}" data-fallback="${slug}"><img src="${escapeHtml(item.image_url)}" data-fallback-src="${fallback}" alt="${alt}" loading="lazy" referrerpolicy="no-referrer" onerror="if(this.dataset.fallbackDone)return;this.dataset.fallbackDone='1';this.src=this.dataset.fallbackSrc;this.parentElement?.classList.add('fallback','remote-image-failed')"><span class="fallback-label">${label}</span></div>`;
+ return `<div class="news-thumb ${kind} fallback" data-fallback="${slug}"><img src="${fallback}" alt="${alt}" loading="lazy"><span class="fallback-label">${label}</span></div>`;
 }
 async function getJson(url,timeout=9000){const ctl=new AbortController(),id=setTimeout(()=>ctl.abort(),timeout);try{const r=await fetch(url,{cache:"no-store",signal:ctl.signal});if(!r.ok)throw Error(r.status);return await r.json()}finally{clearTimeout(id)}}
 async function loadData(name,fallback={}){const branch=CHANNELS[name];if(branch){try{return await getJson(`https://raw.githubusercontent.com/${OWNER}/${REPO}/${branch}/${name}?t=${Date.now()}`)}catch(e){}}
 try{return await getJson(`data/${name}?t=${Date.now()}`)}catch(e){return typeof structuredClone==="function"?structuredClone(fallback):JSON.parse(JSON.stringify(fallback))}}
+const STOCK_BASIC_ENDPOINTS=[
+ {url:"https://openapi.twse.com.tw/v1/opendata/t187ap03_L",exchange:"TWSE",source:"TWSE 上市公司基本資料"},
+ {url:"https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O",exchange:"TPEx",source:"TPEx 上櫃公司基本資料"}
+];
+const basicField=(row,...labels)=>{for(const label of labels){if(row?.[label]!=null&&String(row[label]).trim())return row[label]}for(const [key,value] of Object.entries(row||{})){if(labels.some(label=>String(key).includes(label))&&value!=null&&String(value).trim())return value}return null};
+const basicDate=value=>{const text=String(value||"").trim();let m=text.match(/(20\d{2})[\/-]?(\d{2})[\/-]?(\d{2})/);if(m)return`${m[1]}-${m[2]}-${m[3]}`;m=text.match(/(\d{2,3})[\/-](\d{1,2})[\/-](\d{1,2})/);return m?`${Number(m[1])+1911}-${String(m[2]).padStart(2,"0")}-${String(m[3]).padStart(2,"0")}`:""};
+const basicNumber=value=>{const m=String(value||"").replace(/,/g,"").match(/[-+]?\d+(?:\.\d+)?/);return m?Number(m[0]):null};
+function officialBasicRecord(row,endpoint){
+ const symbol=String(basicField(row,"公司代號","公司代碼","SecuritiesCompanyCode")||"").trim().toUpperCase();
+ if(!/^\d{4,6}[A-Z]?$/.test(symbol))return null;
+ const yahooSymbol=endpoint.exchange==="TPEx"?`${symbol}.TWO`:symbol;
+ const record={symbol,company_name:String(basicField(row,"公司名稱","CompanyName")||"").trim(),short_name:String(basicField(row,"公司簡稱","CompanyAbbreviation")||"").trim(),asset_class:"stock",market:"TW",exchange:endpoint.exchange,market_label:endpoint.exchange==="TWSE"?"上市":"上櫃",currency:"TWD",industry:String(basicField(row,"產業別","產業類別","Industry")||"").trim(),address:String(basicField(row,"住址","地址","Address")||"").trim(),tax_id:String(basicField(row,"營利事業統一編號","統一編號","UnifiedBusinessNo")||"").trim(),chairperson:String(basicField(row,"董事長","Chairman")||"").trim(),general_manager:String(basicField(row,"總經理","GeneralManager")||"").trim(),spokesperson:String(basicField(row,"發言人","Spokesman")||"").trim(),phone:String(basicField(row,"總機電話","Telephone")||"").trim(),established_date:basicDate(basicField(row,"成立日期","DateOfIncorporation")),listed_date:basicDate(basicField(row,"上市日期","上櫃日期","DateOfListing")),paid_in_capital:basicNumber(basicField(row,"實收資本額","PaidinCapital")),issued_shares:basicNumber(basicField(row,"已發行普通股數","已發行普通股數或TDR原股發行股數","IssuedShares")),website:String(basicField(row,"網址","URL","公司網站")||"").trim(),email:String(basicField(row,"電子郵件信箱","Email")||"").trim(),accounting_firm:String(basicField(row,"簽證會計師事務所")||"").trim(),source:endpoint.source,source_level:"official",source_url:endpoint.url,official_url:`https://mops.twse.com.tw/mops/web/t05st03?step=1&off=1&firstin=1&co_id=${symbol}`,profile_url:`https://tw.stock.yahoo.com/quote/${yahooSymbol}/profile`,quote_url:`https://tw.stock.yahoo.com/quote/${yahooSymbol}`,financial_url:`https://tw.stock.yahoo.com/quote/${yahooSymbol}/income-statement`};
+ const fields=[record.symbol,record.company_name||record.short_name,record.asset_class,record.market,record.exchange,record.industry,record.currency,record.listed_date,record.paid_in_capital,record.issued_shares,record.official_url,record.profile_url];
+ record.basic_coverage_percent=Math.round(fields.filter(value=>value!==null&&value!==undefined&&String(value).trim()!=="").length/fields.length*1000)/10;
+ record.updated_at=new Date().toISOString();return record;
+}
+async function loadStockBasics(){
+ const fallback=window.__STOCK_BASICS_SEED__||{metadata:{version:"v11.4.15",status:"waiting",item_count:0},items:{}};
+ const payload=await loadData("stock-basics.json",fallback),items={...(payload.items||{})};
+ if(Object.keys(items).length>=500)return payload;
+ const settled=await Promise.allSettled(STOCK_BASIC_ENDPOINTS.map(async endpoint=>({endpoint,rows:await getJson(endpoint.url,15000)})));
+ let added=0;
+ for(const result of settled){if(result.status!=="fulfilled"||!Array.isArray(result.value.rows))continue;for(const row of result.value.rows){const record=officialBasicRecord(row,result.value.endpoint);if(!record)continue;items[record.symbol]={...(items[record.symbol]||{}),...record};added++}}
+ const values=Object.values(items),average=values.length?values.reduce((sum,row)=>sum+Number(row.basic_coverage_percent||0),0)/values.length:0;
+ return {...payload,metadata:{...(payload.metadata||{}),version:"v11.4.15",item_count:values.length,average_basic_coverage_percent:Math.round(average*10)/10,scope:"all-currently-listed-twse-and-tpex-stocks",browser_official_fallback_added:added},items};
+}
 async function loadNewsChannels(){
  const channels=await Promise.all(NEWS_FILES.map(async cfg=>{
   const fallback=window[cfg.seed]||{metadata:{source_id:cfg.id,source_name:cfg.label,status:"waiting",item_count:0},items:[]};
@@ -45,10 +72,10 @@ async function loadNewsChannels(){
  for(const channel of channels){for(const item of channel.items||[]){const key=String(item.id||`${item.title||""}|${item.url||""}`);if(!key||seen.has(key))continue;seen.add(key);items.push(item)}}
  items.sort((a,b)=>Date.parse(b.published_at||b.date||0)-Date.parse(a.published_at||a.date||0));
  const updated=channels.map(c=>c.metadata?.updated_at).filter(Boolean).sort().pop()||null;
- return {metadata:{version:"v11.4.12",updated_at:updated,item_count:items.length,channel_count:channels.length},channels,items};
+ return {metadata:{version:"v11.4.15",updated_at:updated,item_count:items.length,channel_count:channels.length},channels,items};
 }
 async function loadStockNews(){
- const fallback=window.__STOCK_NEWS_SEED__||{metadata:{version:"v11.4.12",status:"waiting",item_count:0},items:[]};
+ const fallback=window.__STOCK_NEWS_SEED__||{metadata:{version:"v11.4.15",status:"waiting",item_count:0},items:[]};
  return await loadData("stock-news.json",fallback);
 }
 
@@ -95,5 +122,5 @@ function relatedNews(event,items,options={}){
     return score>=10?{...item,_relatedScore:score}:null;
   }).filter(Boolean).sort((a,b)=>b._relatedScore-a._relatedScore||Date.parse(b.published_at||0)-Date.parse(a.published_at||0)).slice(0,limit);
 }
-window.MR={$,$$,escapeHtml,finite,fmt,pct,cls,formatTime,stripHtml,normalizeText,newsHasImage,pickNewsFallbackSlug,renderNewsThumb,relatedNews,loadData,loadNewsChannels,loadStockNews,getJson,loadPortfolio,savePortfolio,mergeAssets,NEWS_FILES,OWNER,REPO};
+window.MR={$,$$,escapeHtml,finite,fmt,pct,cls,formatTime,stripHtml,normalizeText,newsHasImage,pickNewsFallbackSlug,renderNewsThumb,relatedNews,loadData,loadStockBasics,loadNewsChannels,loadStockNews,getJson,loadPortfolio,savePortfolio,mergeAssets,NEWS_FILES,OWNER,REPO};
 })();

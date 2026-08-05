@@ -1,21 +1,23 @@
 {
-  "version": "v11.4.12",
+  "version": "v11.4.15",
   "status": "PASS",
-  "scope": "Full v11.4.11 repository upgraded to the v11.4.12 balanced dashboard and dual market-event/dividend calendar.",
+  "scope": "Full repository upgraded with all-market TWSE/TPEx stock basics and guaranteed news imagery.",
   "checks": [
     "All original repository files, scripts, workflows and data channels are preserved",
-    "Asset summary and live market snapshot use a balanced two-column homepage layout",
-    "Market event and dividend calendar modes switch filters, month summaries, date cells and day dialogs",
-    "Today newly announced dates show new and previous dates without mixing in general news",
-    "Date announcement actions switch to the correct calendar mode and target month",
-    "The selected calendar mode persists in localStorage",
-    "Service worker and visible page versions are updated to v11.4.12",
+    "News cards always render either a source image or a topic-matched local fallback image",
+    "Stock basics updater builds its universe from every company returned by official TWSE and TPEx company-master endpoints",
+    "The stock universe is not limited by assets.json, a portfolio, or a hand-picked symbol list",
+    "Coverage page unions every stock-basics record and reports the full listed-stock count",
+    "Taiwan market search includes all stock-basic records even when a quote is temporarily unavailable",
+    "Browser-side official API fallback can populate all-market basics before the live data branch is refreshed",
+    "Basic-profile completeness is separated from advanced valuation and historical-financial coverage",
+    "Service worker and visible page versions are updated to v11.4.15",
     "No audio files are included"
   ],
   "limitations": [
-    "The first event workflow run establishes the official-source baseline; later runs can classify newly confirmed or changed dates.",
-    "External sources can change or restrict automated access; last-good archives are retained.",
-    "Browser rendering screenshots could not be generated in the restricted validation environment; runtime logic was covered by static, syntax and smoke checks."
+    "Advanced valuation and historical statements remain separate scheduled data and are not falsely marked complete.",
+    "Official or third-party endpoints can be temporarily unavailable; prior archives and browser fallback are retained.",
+    "The bundled seed is a bootstrap snapshot; the all-market official master is populated by GitHub Actions or browser fallback after deployment."
   ],
-  "test_summary": "59 automated tests passed, plus Python compilation, JavaScript syntax checks, JSON/YAML parsing, smoke test and HTML local-reference validation."
+  "test_summary": "60 automated tests passed, plus Python compilation and JavaScript syntax checks."
 }
