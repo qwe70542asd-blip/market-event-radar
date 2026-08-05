@@ -1,2 +1,2 @@
-v11.4.8 PASS
-43 static tests passed. Python, JavaScript, JSON, YAML and HTML reference checks passed. News images use article metadata or local non-AI SVG fallbacks.
+v11.4.9 PASS
+49 tests passed: 46 static integration tests and 3 parser/calculation tests. Python, JavaScript, JSON, 23 workflow YAML files and project smoke checks passed. Live external endpoints must be verified by GitHub Actions after upload because the build container has no outbound DNS.

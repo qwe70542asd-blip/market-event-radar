@@ -1,1 +1,1 @@
-window.__STOCK_NEWS_SEED__={"metadata":{"version":"v11.4.8","status":"waiting","item_count":0,"source_count":9},"sources":[],"items":[]};
+window.__STOCK_NEWS_SEED__={"metadata":{"version":"v11.4.9","status":"waiting","item_count":0,"source_count":9},"sources":[],"items":[]};

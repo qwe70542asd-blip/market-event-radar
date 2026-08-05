@@ -1,24 +1,24 @@
-name: Update v11.4.9 Yahoo detail references
+name: Update v11.4.9 ETF detail references
 on:
   push:
     branches: [main]
     paths:
-      - ".github/workflows/update-yahoo-details.yml"
-      - "scripts/update_yahoo_details.py"
+      - ".github/workflows/update-etf-details.yml"
+      - "scripts/update_etf_details.py"
       - "scripts/common.py"
       - "requirements.txt"
   schedule:
-    - cron: "35 * * * *"
+    - cron: "15 */2 * * *"
   workflow_dispatch:
 permissions:
   contents: write
 concurrency:
-  group: live-yahoo-details
+  group: live-etf-details
   cancel-in-progress: true
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
         with:
@@ -30,11 +30,13 @@ jobs:
       - run: pip install -r requirements.txt
       - name: Restore official asset master
         run: bash scripts/restore_data_branch.sh live-assets "assets.json:data/assets.json"
-      - name: Restore previous Yahoo detail references
+      - name: Restore previous ETF details
         run: |
-          bash scripts/restore_data_branch.sh live-yahoo-details             "yahoo-details.json:data/yahoo-details.json"             "yahoo-details-seed.js:data/yahoo-details-seed.js"
-      - run: python scripts/update_yahoo_details.py
-      - name: Publish Yahoo detail channel
+          bash scripts/restore_data_branch.sh live-etf-details \
+            "etf-details.json:data/etf-details.json" \
+            "etf-details-seed.js:data/etf-details-seed.js"
+      - run: python scripts/update_etf_details.py
+      - name: Publish ETF detail channel
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: bash scripts/publish_data_branch.sh live-yahoo-details live-yahoo-details data/yahoo-details.json data/yahoo-details-seed.js
+        run: bash scripts/publish_data_branch.sh live-etf-details live-etf-details data/etf-details.json data/etf-details-seed.js

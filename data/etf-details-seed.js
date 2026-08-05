@@ -1,0 +1,1 @@
+window.__ETF_DETAILS_SEED__ = {"metadata":{"version":"v11.4.9","updated_at":null,"status":"waiting","item_count":0,"note":"ETF details will accumulate from TWSE ETF e添富, MoneyDJ and HiStock after deployment."},"state":{"cursor":0},"errors":[],"items":{}};

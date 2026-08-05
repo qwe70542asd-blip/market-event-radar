@@ -7,7 +7,7 @@ class StaticTests(unittest.TestCase):
  def test_required_tree(self):
   for path in [".github/workflows","assets","data","docs","scripts","tests","index.html","news.html","asset.html","service-worker.js"]:self.assertTrue((ROOT/path).exists(),path)
  def test_version(self):
-  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.8")
+  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.9")
  def test_ascii_filenames(self):
   for path in ROOT.rglob("*"):self.assertTrue(all(ord(c)<128 for c in path.name),path)
  def test_no_audio(self):
@@ -72,8 +72,8 @@ class StaticTests(unittest.TestCase):
   texts="\n".join(self.read(p.relative_to(ROOT)) for p in (ROOT/".github/workflows").glob("update-news-*.yml"))
   for branch in ("live-news-cna","live-news-moneydj","live-news-cnyes","live-news-udn","live-news-ltn","live-news-wealth","live-news-yahoo","live-news-technews","live-news-ctee"):self.assertIn(branch,texts)
  def test_service_worker_cache(self):
-  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-8",sw)
-  for seed in ("news-cna-seed.js","news-moneydj-seed.js","news-wealth-seed.js","news-yahoo-seed.js","news-technews-seed.js","news-ctee-seed.js","stock-news-seed.js","company-disclosures-seed.js","monthly-revenue-seed.js","dividend-history-seed.js","secondary-reference-seed.js","data-verification-seed.js","yahoo-details-seed.js","market-volume-history-seed.js"):self.assertIn(seed,sw)
+  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-9",sw)
+  for seed in ("news-cna-seed.js","news-moneydj-seed.js","news-wealth-seed.js","news-yahoo-seed.js","news-technews-seed.js","news-ctee-seed.js","stock-news-seed.js","company-disclosures-seed.js","monthly-revenue-seed.js","dividend-history-seed.js","secondary-reference-seed.js","data-verification-seed.js","yahoo-details-seed.js","etf-details-seed.js","market-volume-history-seed.js"):self.assertIn(seed,sw)
  def test_all_pages_current_version(self):
   for p in ROOT.glob("*.html"):self.assertNotIn("v11.4.2",p.read_text(encoding="utf-8"),p.name)
 
@@ -166,10 +166,10 @@ class StaticTests(unittest.TestCase):
  def test_non_ai_news_image_pipeline(self):
   updater=self.read("scripts/update_media_source.py");news=self.read("assets/news.js");home=self.read("assets/home.js")
   for x in ("og:image","twitter:image","article_image_from_soup","enrich_article_images"):self.assertIn(x,updater)
-  for x in ("assets/news-fallback/","data-fallback","fallbackImage"):self.assertIn(x,news)
-  self.assertIn("fallbackNewsImage",home)
-  for name in ("market","macro","rates","technology","earnings","stock","commodities","global","policy","geopolitics"):
-   self.assertTrue((ROOT/f"assets/news-fallback/{name}.svg").exists(),name)
+  for x in ("hasImage","no-image","majorCandidates.find(hasImage)"):self.assertIn(x,news)
+  self.assertIn("validNewsImage",home)
+  self.assertNotIn("data-fallback",news+home)
+  self.assertNotIn("fallbackImage",news)
 
  def test_no_ai_image_generation_dependency(self):
   text="\n".join(self.read(p.relative_to(ROOT)) for p in [ROOT/"scripts/update_media_source.py",ROOT/"assets/news.js",ROOT/"assets/home.js"])
@@ -188,5 +188,23 @@ class StaticTests(unittest.TestCase):
   for x in ("live-yahoo-details","yahoo-details.json"):self.assertIn(x,shared+asset+workflow)
   for x in ("querySummary" if False else "quoteSummary","fundamentals-timeseries","quarterlyTotalRevenue","topHoldings"):self.assertIn(x,self.read("scripts/update_yahoo_details.py"))
   self.assertIn("Yahoo 參考資料",asset)
+
+ def test_etf_detail_channel(self):
+  for p in ("scripts/update_etf_details.py",".github/workflows/update-etf-details.yml","data/etf-details.json","data/etf-details-seed.js"):self.assertTrue((ROOT/p).exists(),p)
+  shared=self.read("assets/shared.js");asset=self.read("assets/asset.js");workflow=self.read(".github/workflows/update-etf-details.yml")
+  for x in ("live-etf-details","etf-details.json"):self.assertIn(x,shared+asset+workflow)
+  updater=self.read("scripts/update_etf_details.py")
+  for x in ("ETFortune/etfInfo","Basic0004","Basic0007","active-etf.aspx","field_sources","verification"):self.assertIn(x,updater)
+
+ def test_financial_calculation_metadata(self):
+  updater=self.read("scripts/update_yahoo_details.py");asset=self.read("assets/asset.js")
+  for x in ("quarterlyBasicAverageShares","quarterlyDilutedAverageShares","metrics_meta","eps_status","估算EPS","單季ROE年化"):self.assertIn(x,updater)
+  for x in ("計算值","估算值","yahooMetricMeta"):self.assertIn(x,asset)
+
+ def test_news_without_giant_placeholders(self):
+  news=self.read("assets/news.js");css=self.read("assets/styles.css")
+  self.assertIn("hero-lead.no-image",css)
+  self.assertNotIn("assets/news-fallback/",news)
+  self.assertIn("majorCandidates.find(hasImage)",news)
 
 if __name__=="__main__":unittest.main()

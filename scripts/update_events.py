@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build Market Event Radar v11.4.8 event data from official schedules.
+"""Build Market Event Radar v11.4.9 event data from official schedules.
 
 The updater keeps the last verified archive, refreshes selected official sources,
 and records when an exact date first appears or changes. It never invents dates.
@@ -681,7 +681,7 @@ def main() -> None:
     )
     payload = {
         "metadata": {
-            "version": "v11.4.8",
+            "version": "v11.4.9",
             "updated_at": NOW.isoformat(timespec="seconds"),
             "timezone": "Asia/Taipei",
             "event_count": len(events),
@@ -698,7 +698,7 @@ def main() -> None:
     EVENTS_PATH.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     SEED_PATH.write_text("window.__EVENT_SEED__ = " + json.dumps(payload, ensure_ascii=False) + ";\n", encoding="utf-8")
     STATE_PATH.write_text(json.dumps({
-        "version": "v11.4.8", "initialized": True,
+        "version": "v11.4.9", "initialized": True,
         "initialized_origins": sorted(next_initialized_origins),
         "updated_at": NOW.isoformat(timespec="seconds"), "events": next_state,
     }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

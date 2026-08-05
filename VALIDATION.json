@@ -1,30 +1,31 @@
 {
-  "version": "v11.4.8",
+  "version": "v11.4.9",
   "status": "PASS",
-  "scope": "Compact top homepage controls and article-image retrieval with local non-AI category fallbacks",
+  "scope": "ETF multi-source enrichment, calculated financial metrics, and compact no-image news layout",
   "checks": [
     "Python syntax",
     "JavaScript syntax",
     "JSON parsing",
-    "GitHub Actions workflow YAML files",
+    "23 GitHub Actions workflow YAML files",
     "HTML local file references",
-    "43 static integration tests",
+    "46 static integration tests",
+    "3 parser and financial calculation tests",
     "Project smoke test",
-    "Shortcut navigation placed above portfolio and market summaries",
-    "Portfolio and market summaries compressed into a low-height row",
-    "Event calendar remains the primary large content area",
-    "RSS enclosure, Open Graph, Twitter image, JSON-LD and article image extraction",
-    "Local category SVG fallbacks for missing or blocked article images",
-    "No AI image generation dependency or API usage",
-    "External image failure automatically switches to a local fallback",
-    "Service worker and all page references updated to v11.4.8",
+    "News hero selects a real article image when available",
+    "News without images uses compact text layout without giant category artwork",
+    "TWSE ETF e添富, MoneyDJ and HiStock are isolated in live-etf-details",
+    "Yahoo financial rows include weighted-average shares and EPS status metadata",
+    "Calculated and estimated values retain formula/source labels",
+    "ETF holdings include source date, shares, change shares and weights when available",
+    "Official values remain higher priority than Yahoo/MoneyDJ/HiStock references",
+    "Service worker and all page references updated to v11.4.9",
     "Complete project tree and ASCII-only archive paths"
   ],
   "limitations": [
-    "Some publishers may block image hotlinking; those cards automatically use local category artwork.",
-    "Article image extraction is limited per source run to reduce publisher load and workflow duration.",
-    "Live publisher and official endpoint responses must be verified by GitHub Actions after upload.",
-    "The container browser process did not complete a live screenshot because remote data fetches did not terminate within the headless timeout; static, syntax and integration checks passed."
+    "The build container has no outbound DNS, so live Yahoo, MoneyDJ, HiStock and TWSE responses could not be executed here; parser fixtures and static integration tests passed.",
+    "Third-party HTML can change or block GitHub Actions; each source uses small batches and retains last-good data.",
+    "ETF complete daily holdings, official NAV and beneficiary data remain subject to issuer/exchange availability.",
+    "EPS computed with period-end shares is explicitly labeled estimated and is not treated as official EPS."
   ],
-  "test_summary": "43 static tests plus Python/JavaScript syntax, JSON, workflow YAML, HTML references, image-fallback asset checks and project smoke tests passed"
+  "test_summary": "49 tests passed: 46 static integration tests and 3 parser/calculation tests, plus Python/JavaScript/JSON/YAML and project smoke validation."
 }

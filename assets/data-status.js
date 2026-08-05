@@ -1,7 +1,7 @@
 (async()=>{
   "use strict";
   const {$,escapeHtml,formatTime,loadData}=MR;
-  const base=[["assets.json","標的與財報"],["tw-market.json","台股行情"],["tw-chips.json","法人籌碼"],["market-snapshot.json","全球行情"],["events.json","事件月曆"],["monthly-revenue.json","月營收歷史"],["dividend-history.json","股利歷史"],["stock-news.json","個股媒體新聞"],["secondary-reference.json","股票網站參考行情"],["data-verification.json","資料交叉驗證"],["yahoo-details.json","Yahoo 詳細資料補充"]];
+  const base=[["assets.json","標的與財報"],["tw-market.json","台股行情"],["tw-chips.json","法人籌碼"],["market-snapshot.json","全球行情"],["events.json","事件月曆"],["monthly-revenue.json","月營收歷史"],["dividend-history.json","股利歷史"],["stock-news.json","個股媒體新聞"],["secondary-reference.json","股票網站參考行情"],["data-verification.json","資料交叉驗證"],["yahoo-details.json","Yahoo 詳細資料補充"],["etf-details.json","ETF 多來源資料補充"]];
   const news=MR.NEWS_FILES.map(x=>[x.file,x.label]);
   const rows=await Promise.all([...base,...news].map(async([file,label])=>{const p=await loadData(file,{});return{file,label,metadata:p.metadata||{},count:(p.items||p.assets||p.events||[]).length||Object.keys(p.items||{}).length,health:p.health||{}}}));
   const verification=rows.find(x=>x.file==="data-verification.json")?.metadata||{};

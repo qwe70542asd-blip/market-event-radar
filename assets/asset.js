@@ -2,7 +2,7 @@
   "use strict";
   const {$,$$,escapeHtml,fmt,pct,cls,formatTime,loadData,loadNewsChannels,loadStockNews,finite,stripHtml,normalizeText}=MR;
   const symbol=(new URLSearchParams(location.search).get("symbol")||"2330").toUpperCase();
-  const [assetPayload,marketPayload,chipPayload,eventPayload,newsPayload,stockNewsPayload,revenuePayload,dividendPayload,secondaryPayload,verificationPayload,yahooPayload]=await Promise.all([
+  const [assetPayload,marketPayload,chipPayload,eventPayload,newsPayload,stockNewsPayload,revenuePayload,dividendPayload,secondaryPayload,verificationPayload,yahooPayload,etfPayload]=await Promise.all([
     loadData("assets.json",window.__ASSET_SEED__||{assets:[]}),
     loadData("tw-market.json",window.__TW_MARKET_SEED__||{items:[]}),
     loadData("tw-chips.json",window.__TW_CHIPS_SEED__||{items:{},history:{}}),
@@ -13,27 +13,30 @@
     loadData("dividend-history.json",window.__DIVIDEND_HISTORY_SEED__||{metadata:{status:"waiting"},items:{}}),
     loadData("secondary-reference.json",window.__SECONDARY_REFERENCE_SEED__||{metadata:{status:"waiting"},items:{}}),
     loadData("data-verification.json",window.__DATA_VERIFICATION_SEED__||{metadata:{status:"waiting"},items:{}}),
-    loadData("yahoo-details.json",window.__YAHOO_DETAILS_SEED__||{metadata:{status:"waiting"},items:{}})
+    loadData("yahoo-details.json",window.__YAHOO_DETAILS_SEED__||{metadata:{status:"waiting"},items:{}}),
+    loadData("etf-details.json",window.__ETF_DETAILS_SEED__||{metadata:{status:"waiting"},items:{}})
   ]);
   const officialQuote=(marketPayload.items||[]).find(row=>String(row.symbol||"").toUpperCase()===symbol)||{};
   const secondaryQuote=(secondaryPayload.items||{})[symbol]||{};
   const quote=Object.keys(officialQuote).length?officialQuote:(secondaryQuote.price!=null?{symbol,name:symbol,price:secondaryQuote.price,previous_close:secondaryQuote.previous_close,status:"secondary-reference",quote_time:secondaryQuote.updated_at,quote_date:secondaryQuote.updated_at}:{});
   const found=(assetPayload.assets||[]).find(row=>String(row.symbol||"").toUpperCase()===symbol);
   const yahoo=(yahooPayload.items||{})[symbol]||{};
-  const yahooProfile=yahoo.profile||{},yahooMetrics=yahoo.metrics||{},yahooEtf=yahoo.etf||{};
+  const etfReference=(etfPayload.items||{})[symbol]||{};
+  const yahooProfile=yahoo.profile||{},yahooMetrics=yahoo.metrics||{},yahooEtf=yahoo.etf||{},yahooMetricMeta=yahoo.metrics_meta||{};
   const asset=found||{id:`TW:${symbol}`,symbol,name:yahooProfile.company_name||quote.name||symbol,exchange:quote.exchange,asset_class:yahoo.asset_class||quote.asset_class||"stock",market:"TW"};
   const isEtf=asset.asset_class==="etf"||quote.asset_class==="etf";
   const verification=(verificationPayload.items||{})[symbol]||{};
   const chip=chipPayload.items?.[symbol]||{};
   const officialEtf=asset.etf||{};
-  const etf={...yahooEtf,...Object.fromEntries(Object.entries(officialEtf).filter(([,v])=>v!==null&&v!==undefined&&String(v).trim()!==""))};
+  const cleanObject=value=>Object.fromEntries(Object.entries(value||{}).filter(([,v])=>v!==null&&v!==undefined&&String(v).trim()!==""));
+  const etf={...cleanObject(yahooEtf),...cleanObject(etfReference),...cleanObject(officialEtf)};
   const officialMetrics=asset.metrics||{};
   const metrics={...yahooMetrics,...Object.fromEntries(Object.entries(officialMetrics).filter(([,v])=>v!==null&&v!==undefined&&String(v).trim()!==""))};
   const sourceDate=value=>value?formatTime(value,{dateOnly:true}):"";
   const has=value=>value!==null&&value!==undefined&&String(value).trim()!=="";
   const prefer=(official,reference)=>has(official)?official:reference;
-  const metricSource=(key,fallback)=>asset.metric_sources?.[key]||(has(yahooMetrics[key])?"Yahoo 參考資料":fallback);
-  const metricTrust=key=>asset.metric_sources?.[key]?verification.fields?.metrics?.status:(has(yahooMetrics[key])?"reference":verification.fields?.metrics?.status);
+  const metricSource=(key,fallback)=>asset.metric_sources?.[key]||(yahooMetricMeta[key]?.source)||(has(yahooMetrics[key])?"Yahoo 參考資料":fallback);
+  const metricTrust=key=>asset.metric_sources?.[key]?verification.fields?.metrics?.status:(yahooMetricMeta[key]?.status|| (has(yahooMetrics[key])?"reference":verification.fields?.metrics?.status));
   const nonEmpty=value=>Array.isArray(value)?value.length>0:has(value);
   const safeUrl=value=>/^https?:\/\//i.test(String(value||""))?String(value):"";
   const formatDate=value=>{
@@ -50,11 +53,11 @@
   };
   const industryName=value=>INDUSTRIES[String(value||"").padStart(2,"0")]||value||"";
   const compactNumber=(value,unit="")=>finite(value)==null?"":`${fmt(value,0)}${unit}`;
-  const trustLabel=status=>status==="multi_source"?"多來源一致":status==="official"?"官方確認":status==="reference"?"參考資料":status==="conflict"?"資料衝突":status==="expired"?"資料過期":"";
-  const trustClass=status=>status==="multi_source"?"confirmed":status==="official"?"official":status==="reference"?"reference":status==="conflict"?"conflict":"";
+  const trustLabel=status=>status==="multi_source"?"多來源一致":status==="official"?"官方確認":status==="calculated"?"計算值":status==="estimated"?"估算值":status==="reference"?"參考資料":status==="conflict"?"資料衝突":status==="expired"?"資料過期":"";
+  const trustClass=status=>status==="multi_source"?"confirmed":status==="official"?"official":status==="calculated"?"calculated":status==="estimated"?"estimated":status==="reference"?"reference":status==="conflict"?"conflict":"";
   const metricCard=(label,value,source="",options={})=>{
     if(!has(value)&&finite(value)==null)return "";
-    const display=options.percent?`${fmt(value,2)}%`:options.money?`${fmt(value,2)} ${options.money}`:options.integer?fmt(value,0):String(value);
+    const display=(options.percent?`${fmt(value,2)}%`:options.money?`${fmt(value,2)} ${options.money}`:options.integer?fmt(value,0):String(value))+String(options.suffix||"");
     const trust=options.verification?trustLabel(options.verification):"";
     return `<article class="stat metric-card"><small>${escapeHtml(label)}</small><strong class="${options.className||""}">${escapeHtml(display)}</strong>${source?`<span>${escapeHtml(source)}</span>`:""}${trust?`<em class="verification-badge ${trustClass(options.verification)}">${escapeHtml(trust)}</em>`:""}</article>`;
   };
@@ -81,7 +84,7 @@
   $("#assetQuoteTime").textContent=quote.quote_date?`${formatDate(quote.quote_date)} ${quote.quote_time||""}`:marketPayload.metadata?.updated_at?formatTime(marketPayload.metadata.updated_at):"";
   const overallTrust=verification.overall||"missing";
   const trustText=trustLabel(overallTrust)||"資料驗證中";
-  $("#assetTrust").innerHTML=`<span class="verification-badge ${trustClass(overallTrust)}">${escapeHtml(trustText)}</span><span>官方資料優先；Yahoo 僅補空白欄位，不覆蓋官方值。</span>${yahoo.updated_at?`<span class="verification-badge reference">Yahoo 已補充</span>`:""}${(verification.reference_links?.yahoo||yahoo.source_url)?`<a href="${escapeHtml(verification.reference_links?.yahoo||yahoo.source_url)}" target="_blank" rel="noreferrer noopener">Yahoo 查閱 ↗</a>`:""}${verification.reference_links?.goodinfo?`<a href="${escapeHtml(verification.reference_links.goodinfo)}" target="_blank" rel="noreferrer noopener">Goodinfo 查閱 ↗</a>`:""}`;
+  $("#assetTrust").innerHTML=`<span class="verification-badge ${trustClass(overallTrust)}">${escapeHtml(trustText)}</span><span>官方資料優先；Yahoo、MoneyDJ、HiStock 僅補空白欄位，計算值會標示公式。</span>${yahoo.updated_at?`<span class="verification-badge reference">Yahoo 已補充</span>`:""}${etfReference.updated_at?`<span class="verification-badge reference">ETF 多來源已補充</span>`:""}${(verification.reference_links?.yahoo||yahoo.source_url)?`<a href="${escapeHtml(verification.reference_links?.yahoo||yahoo.source_url)}" target="_blank" rel="noreferrer noopener">Yahoo 查閱 ↗</a>`:""}${verification.reference_links?.goodinfo?`<a href="${escapeHtml(verification.reference_links.goodinfo)}" target="_blank" rel="noreferrer noopener">Goodinfo 查閱 ↗</a>`:""}`;
 
   const overview=[];
   const pushCard=(label,value,source,options={})=>{const html=metricCard(label,value,source,options);if(html)overview.push(html)};
@@ -97,8 +100,8 @@
   if(isEtf){
     pushCard("淨值",finite(etf.nav),etf.nav_source||"基金揭露",{money:"元"});
     pushCard("折溢價",finite(etf.premium_discount),etf.nav_source||"基金揭露",{percent:true,className:cls(etf.premium_discount)});
-    pushCard("基金規模",finite(etf.aum),etf.aum_source||"基金資料",{integer:true});
-    pushCard("受益人數",finite(etf.beneficiary_count),etf.beneficiary_source||"基金資料",{integer:true});
+    pushCard("基金規模",finite(etf.aum),etf.aum_source||etf.field_sources?.aum||"基金資料",{integer:true,suffix:etf.aum_unit?` ${etf.aum_unit}`:""});
+    pushCard("受益人數",finite(etf.beneficiary_count),etf.beneficiary_source||etf.field_sources?.beneficiary_count||"基金資料",{integer:true,suffix:" 人"});
     pushCard("受益權單位數",finite(etf.units),etf.units_source||"基金資料",{integer:true});
   }else{
     pushCard("本益比",finite(metrics.pe),metricSource("pe","官方估值"),{verification:metricTrust("pe")});
@@ -165,7 +168,11 @@
       {label:"風險等級",value:etf.risk_level},
       {label:"槓桿／反向倍數",value:etf.leverage},
       {label:"申購買回方式",value:etf.creation_redemption},
-      {label:"官方資料",value:etf.official_url?"查看基金官方資料":"",url:safeUrl(etf.official_url)}
+      {label:"持股資料日期",value:formatDate(etf.holdings_date)},
+      {label:"資料驗證",value:etf.verification?.holdings?.status==="official"?"官方確認":etf.verification?.holdings?.status==="multi_source"?"多來源一致":etf.updated_at?"次級來源補充":""},
+      {label:"官方資料",value:etf.official_url?"查看基金官方資料":"",url:safeUrl(etf.official_url)},
+      {label:"MoneyDJ",value:(etf.sources||[]).find(row=>String(row.source||"").includes("MoneyDJ"))?"查看ETF資料":"",url:safeUrl((etf.sources||[]).find(row=>String(row.source||"").includes("MoneyDJ"))?.source_url)},
+      {label:"HiStock",value:(etf.sources||[]).find(row=>String(row.source||"").includes("HiStock"))?"查看主動式ETF觀測":"",url:safeUrl((etf.sources||[]).find(row=>String(row.source||"").includes("HiStock"))?.source_url)}
     ];
     if(fundRows.some(row=>has(row.value))){
       $("#fundInfo").innerHTML=infoGrid(fundRows);
@@ -174,10 +181,10 @@
     }
     const holdings=etf.holdings||yahooEtf.holdings||[];
     if(holdings.length){
-      $("#holdingRows").innerHTML=holdings.map(row=>`<tr><td>${escapeHtml(row.symbol||"—")}</td><td>${escapeHtml(row.name||"—")}</td><td>${escapeHtml(row.industry||"—")}</td><td>${finite(row.shares)==null?"—":fmt(row.shares,0)}</td><td>${finite(row.weight)==null?"—":`${fmt(row.weight,2)}%`}</td></tr>`).join("");
-      const allocation=etf.allocations||yahooEtf.sector_allocation||[];
+      $("#holdingRows").innerHTML=holdings.map(row=>`<tr><td>${escapeHtml(row.symbol||"—")}</td><td>${escapeHtml(row.name||"—")}</td><td>${escapeHtml(row.industry||"—")}</td><td>${finite(row.shares)==null?"—":fmt(row.shares,0)}</td><td>${finite(row.change_shares)==null?"—":fmt(row.change_shares,0)}</td><td>${finite(row.weight)==null?"—":`${fmt(row.weight,2)}%`}</td></tr>`).join("");
+      const allocation=etf.allocations||etf.sector_allocation||yahooEtf.allocations||yahooEtf.sector_allocation||[];
       if(allocation.length)$("#allocationGrid").innerHTML=allocation.map(row=>`<div><span>${escapeHtml(row.name||row.industry||"其他")}</span><strong>${finite(row.weight)==null?"—":`${fmt(row.weight,2)}%`}</strong></div>`).join("");
-      $("#holdingsUpdated").textContent=etf.holdings_date?`持股資料日 ${formatDate(etf.holdings_date)}`:"依投信或官方最新揭露";
+      $("#holdingsUpdated").textContent=etf.holdings_date?`持股資料日 ${formatDate(etf.holdings_date)} · ${etf.field_sources?.holdings||"來源已標示"}`:"依投信、TWSE、MoneyDJ、HiStock 或 Yahoo 最新可驗證資料";
       showSection("#holdingsSection","持股");
     }
   }
@@ -190,7 +197,8 @@
     const ratio=(n,d)=>finite(n)!=null&&finite(d)!=null&&Number(d)!==0?Number(n)/Number(d)*100:null;
     $("#financialRows").innerHTML=financials.map(row=>{
       const roe=finite(row.roe)??ratio(row.net_income,row.total_equity),debt=finite(row.debt_ratio)??ratio(row.total_liabilities,row.total_assets),margin=finite(row.net_margin)??ratio(row.net_income,row.revenue),current=finite(row.current_ratio)??ratio(row.current_assets,row.current_liabilities);
-      return `<tr><td><b>${escapeHtml(row.period||"—")}</b><br><small>${escapeHtml(row.source||"官方財報")}</small></td><td>${fmt(row.revenue,0)}</td><td>${fmt(row.gross_profit,0)}</td><td>${fmt(row.operating_income,0)}</td><td>${fmt(row.net_income,0)}</td><td>${fmt(row.eps,2)}</td><td>${finite(roe)==null?"—":`${fmt(roe,2)}%`}</td><td>${finite(debt)==null?"—":`${fmt(debt,2)}%`}</td><td>${finite(margin)==null?"—":`${fmt(margin,2)}%`}</td><td>${finite(current)==null?"—":`${fmt(current,2)}%`}</td></tr>`;
+      const epsNote=row.eps_status==="estimated"?'<br><em class="verification-badge estimated">估算</em>':row.eps_status==="calculated"?'<br><em class="verification-badge calculated">計算</em>':"";
+      return `<tr><td><b>${escapeHtml(row.period||"—")}</b><br><small>${escapeHtml(row.source||"官方財報")}</small></td><td>${fmt(row.revenue,0)}</td><td>${fmt(row.gross_profit,0)}</td><td>${fmt(row.operating_income,0)}</td><td>${fmt(row.net_income_common??row.net_income,0)}</td><td>${fmt(row.eps,2)}${epsNote}</td><td>${finite(roe)==null?"—":`${fmt(roe,2)}%`}</td><td>${finite(debt)==null?"—":`${fmt(debt,2)}%`}</td><td>${finite(margin)==null?"—":`${fmt(margin,2)}%`}</td><td>${finite(current)==null?"—":`${fmt(current,2)}%`}</td></tr>`;
     }).join("");
     $("#financialUpdated").textContent=asset.financial_updated_at?`財報更新 ${formatTime(asset.financial_updated_at)}`:"依官方最新已申報季度";
     showSection("#financialSection","財務");
