@@ -58,11 +58,17 @@
   const LEADING_SECTOR_RE=/AI\s*伺服器|人工智慧|半導體|晶圓代工|記憶體|HBM|封裝測試|散熱|PCB|電源供應|雲端|資料中心|金融|航運|能源|原物料|機器人/i;
   const EXECUTIVE_RE=/執行長|董事長|財務長|總經理|基金經理人|分析師|首席經濟學家|央行總裁|官員|法說會|投資人會議|發表會|開發者大會|展覽|論壇|供應鏈會議/i;
   const BUSINESS_RE=/財報|財測|展望|營收|獲利|EPS|訂單|資本支出|擴產|漲價|降價|新品|新產品|合作|併購|投資/i;
-  const SYSTEMIC_RE=/FOMC|聯準會|央行|CPI|PCE|GDP|非農|JOLTS|PMI|升息|降息|關稅|制裁|戰爭|金融危機|熔斷|重大法規/i;
+  const SYSTEMIC_RE=/FOMC|聯準會|央行|CPI|PCE|GDP|非農|JOLTS|PMI|升息|降息|關稅|制裁|戰爭|金融危機|熔斷|重大法規|銀行危機|債務危機|財政危機|信用危機/i;
+  const ASIA_RISK_RE=/日本銀行|日銀|BOJ|日圓|日債|日本國債|日本政府債務|日本企業倒閉|日本企業破產|匯市干預|韓國央行|韓元|KOSPI|KOSDAQ|中國房地產|中國房企|地方債|人民幣|亞洲貨幣|亞洲資金外流|貨幣競貶/i;
+  const ASIA_STRESS_RE=/(?:創|跌至|貶至|升至|突破|失守).{0,10}(?:年|低點|高點)|暴跌|重貶|急貶|干預匯市|企業倒閉.{0,8}(?:增加|創高|突破)|破產.{0,8}(?:增加|創高)|債務.{0,8}(?:危機|失控|惡化)|房企.{0,8}(?:違約|倒閉)|地方債.{0,8}(?:風險|危機)|資金外流|信用風險/i;
+  const ASIA_CROSS_BORDER_RE=/亞洲|台灣|台股|出口|供應鏈|半導體|觀光|航空|壽險|金融|匯率|資金流向/i;
   const majorScore=item=>{
     const text=`${item.title||""} ${item.summary||""} ${item.ai_summary||""}`;
     let score=0;
     if(SYSTEMIC_RE.test(text))score+=42;
+    if(ASIA_RISK_RE.test(text))score+=18;
+    if(ASIA_RISK_RE.test(text)&&ASIA_STRESS_RE.test(text))score+=26;
+    if(ASIA_RISK_RE.test(text)&&ASIA_CROSS_BORDER_RE.test(text))score+=10;
     if(LEADER_RE.test(text))score+=24;
     if(LEADING_SECTOR_RE.test(text))score+=18;
     if(EXECUTIVE_RE.test(text))score+=16;

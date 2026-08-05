@@ -2,6 +2,7 @@
 from __future__ import annotations
 import argparse,json,re
 from typing import Any
+from urllib.parse import urlsplit
 import feedparser,requests
 from bs4 import BeautifulSoup
 from common import DATA,NOW
@@ -30,6 +31,28 @@ def json_candidates(value:Any):
   for child in value.values():yield from json_candidates(child)
  elif isinstance(value,list):
   for child in value:yield from json_candidates(child)
+
+
+
+def excluded_item(cfg,title,url):
+ host=urlsplit(str(url or "")).netloc.lower()
+ if any(domain.lower() in host for domain in cfg.get("exclude_domains",[])):return True
+ return any(re.search(pattern,str(title or ""),re.I) for pattern in cfg.get("exclude_title_patterns",[]))
+
+def resolve_google_news(session,url):
+ if "news.google." not in urlsplit(str(url or "")).netloc.lower():return url
+ try:
+  response=session.get(url,headers=HEADERS,timeout=15,allow_redirects=True)
+  response.raise_for_status()
+  final=direct_url(response.url)
+  if final and "news.google." not in urlsplit(final).netloc.lower():return final
+  soup=BeautifulSoup(decode_response(response),"lxml")
+  for selector,attr in (('link[rel="canonical"]',"href"),('meta[property="og:url"]',"content")):
+   node=soup.select_one(selector)
+   candidate=direct_url(node.get(attr),response.url) if node else None
+   if candidate and "news.google." not in urlsplit(candidate).netloc.lower():return candidate
+ except Exception:pass
+ return url
 
 def rss_image(entry):
  for key in ("media_content","media_thumbnail","enclosures"):
@@ -95,7 +118,11 @@ def parse_rss(cfg,aliases,profiles):
  for url in cfg.get("urls",[]):
   feed=feedparser.parse(url)
   for entry in feed.entries[:80]:
-   item=normalize_item(title=entry.get("title"),url=entry.get("link"),source_id=cfg["id"],source_name=cfg["name"],summary=entry.get("summary") or entry.get("description"),published_at=entry.get("published") or entry.get("updated"),aliases=aliases,profiles=profiles,forced_scope="media",extra={"image_url":rss_image(entry)})
+   title=entry.get("title");url=entry.get("link")
+   if excluded_item(cfg,title,url):continue
+   url=resolve_google_news(session,url)
+   publisher=clean_text((entry.get("source") or {}).get("title") if isinstance(entry.get("source"),dict) else "") or cfg["name"]
+   item=normalize_item(title=title,url=url,source_id=cfg["id"],source_name=publisher if cfg["id"]=="asia-risk" else cfg["name"],summary=entry.get("summary") or entry.get("description"),published_at=entry.get("published") or entry.get("updated"),aliases=aliases,profiles=profiles,forced_scope="media",extra={"image_url":rss_image(entry),"discovery_source":"google-news-search" if "news.google." in str(entry.get("link") or "") else "direct-feed","discovery_channel":cfg["name"],"publisher":publisher})
    if item:items.append(item)
  return enrich_article_images(session,items,int(cfg.get("image_fetch_limit",24)))
 

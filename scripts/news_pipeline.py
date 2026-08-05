@@ -12,18 +12,21 @@ from dateutil import parser as date_parser
 
 from common import DATA, NOW, read_json
 
-VERSION="v11.4.10"
-HEADERS={"User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.4.10; +https://github.com/qwe70542asd-blip/market-event-radar)"}
+VERSION="v11.4.11"
+HEADERS={"User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.4.11; +https://github.com/qwe70542asd-blip/market-event-radar)"}
 COMPANY_EVENT_RE=re.compile(r"增資|減資|除權|除息|股利|法說|財報|財務報告|股東會|停牌|復牌|公開收購|併購|合併|處分資產|取得資產|重大合約|融資融券|注意股票|處置股票|庫藏股|董事會|重大訊息",re.I)
-MARKET_HIGH_RE=re.compile(r"FOMC|聯準會|Fed\b|央行|CPI|PCE|GDP|非農|JOLTS|PMI|利率決策|升息|降息|關稅|制裁|戰爭|金融危機|熔斷|重大法規|匯率干預|資本管制",re.I)
-MEDIUM_RE=re.compile(r"財報|營收|法說|政策|匯率|債券|半導體|AI|原油|除權|除息|增資|減資|融資融券|出口|進口|景氣",re.I)
+MARKET_HIGH_RE=re.compile(r"FOMC|聯準會|Fed\b|央行|CPI|PCE|GDP|非農|JOLTS|PMI|利率決策|升息|降息|關稅|制裁|戰爭|金融危機|熔斷|重大法規|匯率干預|資本管制|銀行危機|債務危機|財政危機|信用危機",re.I)
+ASIA_RISK_RE=re.compile(r"日本銀行|日銀|BOJ|日圓|日債|日本國債|日本政府債務|日本企業倒閉|日本企業破產|匯市干預|韓國央行|韓元|KOSPI|KOSDAQ|中國房地產|中國房企|地方債|人民幣|亞洲貨幣|亞洲資金外流|貨幣競貶",re.I)
+ASIA_STRESS_RE=re.compile(r"(?:創|跌至|貶至|升至|突破|失守).{0,10}(?:年|低點|高點)|暴跌|重貶|急貶|干預匯市|企業倒閉.{0,8}(?:增加|創高|突破)|破產.{0,8}(?:增加|創高)|債務.{0,8}(?:危機|失控|惡化)|房企.{0,8}(?:違約|倒閉)|地方債.{0,8}(?:風險|危機)|資金外流|信用風險",re.I)
+ASIA_CROSS_BORDER_RE=re.compile(r"亞洲|台灣|台股|出口|供應鏈|半導體|觀光|航空|壽險|金融|匯率|資金流向",re.I)
+MEDIUM_RE=re.compile(r"財報|營收|法說|政策|匯率|債券|半導體|AI|原油|除權|除息|增資|減資|融資融券|出口|進口|景氣|日圓|日債|韓元|人民幣|企業倒閉|房地產|地方債",re.I)
 
 LEADER_RE=re.compile(r"台積電|鴻海|聯發科|廣達|緯創|國巨|川湖|日月光|台達電|中華電|長榮|陽明|NVIDIA|輝達|Microsoft|微軟|Apple|蘋果|Amazon|亞馬遜|Meta|Google|Alphabet|AMD|Intel|Tesla|三星|SK\s*海力士|海力士|Sony|Toyota",re.I)
 LEADING_SECTOR_RE=re.compile(r"AI\s*伺服器|人工智慧|半導體|晶圓代工|記憶體|HBM|封裝測試|散熱|PCB|電源供應|雲端|資料中心|金融|航運|能源|原物料|機器人",re.I)
 EXECUTIVE_RE=re.compile(r"執行長|董事長|財務長|總經理|基金經理人|分析師|首席經濟學家|央行總裁|官員|法說會|投資人會議|發表會|開發者大會|展覽|論壇|供應鏈會議",re.I)
 BUSINESS_RE=re.compile(r"財報|財測|展望|營收|獲利|EPS|訂單|資本支出|擴產|漲價|降價|新品|新產品|合作|併購|投資",re.I)
 POSITIVE_RE=re.compile(r"優於預期|上修|成長|創高|大增|獲利增加|降息|擴產|訂單增加|買超|利多|回升|改善",re.I)
-NEGATIVE_RE=re.compile(r"低於預期|下修|衰退|虧損|暴跌|大跌|升息|制裁|關稅|減產|賣超|利空|違約|下滑|惡化",re.I)
+NEGATIVE_RE=re.compile(r"低於預期|下修|衰退|虧損|暴跌|大跌|升息|制裁|關稅|減產|賣超|利空|違約|下滑|惡化|倒閉|破產|重貶|急貶|資金外流|信用風險",re.I)
 GENERIC_RE=re.compile(r"^(?:TWSE\s*)?(?:(?:臺灣|台灣)證券交易所[>：:\-\s]*)?(?:首頁|新聞|最新消息|公文公告|公告查詢|新聞中心|個股資訊|台股新聞|財經新聞|即時新聞)$",re.I)
 CJK_RE=re.compile(r"[\u3400-\u9fff]")
 MOJIBAKE_RE=re.compile(r"(?:Ã|Â|â€|å[\x80-\xff]|æ[\x80-\xff]|ç[\x80-\xff]|è[\x80-\xff]|é[\x80-\xff]|ï¿½|�)")
@@ -31,6 +34,7 @@ SITE_SUFFIX_RE=re.compile(r"\s*(?:[-｜|]\s*)?(?:中央社|MoneyDJ(?:理財網)?
 CODE_RE=re.compile(r"(?<!\d)(\d{4}|00\d{3}[A-Z]|00\d{4})(?!\d)",re.I)
 
 CATEGORY_RULES=[
+ ("日本與亞洲風險","asia-risk",ASIA_RISK_RE),
  ("央行與利率","macro",re.compile(r"聯準會|Fed\b|FOMC|央行|升息|降息|利率|殖利率",re.I)),
  ("總體經濟","macro",re.compile(r"CPI|PCE|GDP|非農|JOLTS|就業|失業|通膨|景氣|PMI|出口|進口",re.I)),
  ("企業財報","earnings",re.compile(r"財報|營收|獲利|EPS|法說|展望|財測|季報|年報",re.I)),
@@ -38,7 +42,7 @@ CATEGORY_RULES=[
  ("政策與法規","policy",re.compile(r"政策|法規|關稅|制裁|補貼|金管會|行政院|立法院|交易制度",re.I)),
  ("地緣政治","geopolitics",re.compile(r"戰爭|衝突|軍事|地緣|停火|攻擊|選舉",re.I)),
  ("能源與原物料","commodities",re.compile(r"原油|石油|天然氣|黃金|銅價|原物料|OPEC",re.I)),
- ("匯率與債券","rates",re.compile(r"美元|日圓|新台幣|韓元|匯率|債券|美債",re.I)),
+ ("匯率與債券","rates",re.compile(r"美元|日圓|新台幣|韓元|人民幣|匯率|債券|美債|日債",re.I)),
 ]
 
 def _text_score(value:str)->int:
@@ -172,28 +176,32 @@ def classify(title:str,summary:str,aliases:dict[str,str],forced_scope:str|None=N
  company=forced_scope=="company" or (not media_mode and bool(symbols and COMPANY_EVENT_RE.search(text)))
  stock_article=media_mode and bool(symbols)
  systemic=bool(MARKET_HIGH_RE.search(text))
- market=forced_scope=="market" or systemic
+ asia_risk=bool(ASIA_RISK_RE.search(text));asia_stress=bool(ASIA_STRESS_RE.search(text));asia_cross_border=bool(ASIA_CROSS_BORDER_RE.search(text))
+ market=forced_scope=="market" or systemic or asia_risk
  scope="company" if company else "stock" if stock_article else "market" if market else "general"
  category,topic="市場動態","market"
  for label,tp,pat in CATEGORY_RULES:
   if pat.search(text):category,topic=label,tp;break
  if company:category,topic="個股公告","company"
  elif stock_article and category=="市場動態":category,topic="個股新聞","stock"
- impact="high" if systemic else "medium" if MEDIUM_RE.search(text) else "low"
+ impact="high" if systemic or (asia_risk and asia_stress) else "medium" if asia_risk or MEDIUM_RE.search(text) else "low"
  pos,neg=bool(POSITIVE_RE.search(text)),bool(NEGATIVE_RE.search(text))
  direction="多空混合" if pos and neg else "偏多" if pos else "偏空" if neg else "中性"
  affected=[]
  for pat,vals in [
-  (re.compile(r"台股|證交所|櫃買|新台幣",re.I),["台股"]),(re.compile(r"半導體|晶片|台積電|NVIDIA|輝達|AI|記憶體",re.I),["半導體","科技股"]),
-  (re.compile(r"美股|NASDAQ|S&P|道瓊|聯準會|Fed\b",re.I),["美股"]),(re.compile(r"韓國|KOSPI|KOSDAQ|韓元",re.I),["韓股"]),
+  (re.compile(r"台灣|台股|證交所|櫃買|新台幣",re.I),["台股"]),(re.compile(r"半導體|晶片|台積電|NVIDIA|輝達|AI|記憶體",re.I),["半導體","科技股"]),
+  (re.compile(r"美股|NASDAQ|S&P|道瓊|聯準會|Fed\b",re.I),["美股"]),(re.compile(r"日本|日經|日圓|日銀|日本銀行|日債",re.I),["日股","日圓"]),(re.compile(r"韓國|KOSPI|KOSDAQ|韓元|韓國央行",re.I),["韓股","韓元"]),(re.compile(r"中國|人民幣|港股|中國房地產|地方債",re.I),["中港股","人民幣"]),(re.compile(r"亞洲|資金外流|貨幣競貶",re.I),["亞洲市場"]),
   (re.compile(r"美元|匯率|日圓|新台幣|韓元",re.I),["匯率"]),(re.compile(r"債券|美債|殖利率",re.I),["債券"]),
   (re.compile(r"原油|石油|天然氣|黃金|銅價",re.I),["原物料"]),(re.compile(r"金融|銀行|保險",re.I),["金融股"]),
-  (re.compile(r"航運|海運|運價",re.I),["航運股"])]:
+  (re.compile(r"航運|海運|運價",re.I),["航運股"]),(re.compile(r"航空|觀光|旅遊|赴日",re.I),["航空觀光"]),(re.compile(r"壽險|保險業|避險成本",re.I),["壽險金融"]),(re.compile(r"出口|供應鏈|競爭力",re.I),["台灣出口產業"])]:
   if pat.search(text):affected.extend(vals)
  if (company or stock_article) and symbols:affected=symbols
  affected=list(dict.fromkeys(affected))[:5] or ["整體市場"]
  score=0
  if systemic:score+=42
+ if asia_risk:score+=18
+ if asia_risk and asia_stress:score+=26
+ if asia_risk and asia_cross_border:score+=10
  if LEADER_RE.search(text):score+=24
  if LEADING_SECTOR_RE.search(text):score+=18
  if EXECUTIVE_RE.search(text):score+=16
@@ -204,7 +212,7 @@ def classify(title:str,summary:str,aliases:dict[str,str],forced_scope:str|None=N
  is_major=(not company) and score>=45
  if is_major and impact=="low":impact="medium"
  verification_status="official" if forced_scope in {"market","company"} else "reference"
- return {"scope":scope,"company_announcement":company,"is_stock_news":stock_article,"is_major":is_major,"ai_category":category,"ai_topic":topic,"topic":topic,"impact":impact,"market_direction":direction,"affected_markets":affected,"confidence":"高" if score>=70 else "中","importance_score":score,"symbols":symbols,"verification_status":verification_status,"why_it_matters":f"此資訊可能影響{'、'.join(affected[:3])}的風險偏好、產業展望、估值或資金流向。" if is_major else f"此資訊主要影響{'、'.join(affected[:3])}，仍需配合正式數據與市場預期判斷。"}
+ return {"scope":scope,"regional_risk":"asia" if asia_risk else None,"risk_signals":{"asia_topic":asia_risk,"stress":asia_stress,"cross_border":asia_cross_border},"company_announcement":company,"is_stock_news":stock_article,"is_major":is_major,"ai_category":category,"ai_topic":topic,"topic":topic,"impact":impact,"market_direction":direction,"affected_markets":affected,"confidence":"高" if score>=70 else "中","importance_score":score,"symbols":symbols,"verification_status":verification_status,"why_it_matters":f"此資訊可能影響{'、'.join(affected[:3])}的風險偏好、產業展望、估值或資金流向。" if is_major else f"此資訊主要影響{'、'.join(affected[:3])}，仍需配合正式數據與市場預期判斷。"}
 
 def normalize_item(*,title:Any,url:Any,source_id:str,source_name:str,summary:Any="",published_at:Any=None,aliases:dict[str,str]|None=None,profiles:dict[str,dict[str,Any]]|None=None,forced_scope:str|None=None,base_url:str|None=None,extra:dict[str,Any]|None=None)->dict[str,Any]|None:
  title=clean_title(title);url=direct_url(url,base_url);summary=clean_text(summary)

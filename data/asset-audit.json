@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "version": "v11.4.10",
+    "version": "v11.4.11",
     "updated_at": "2026-08-05T11:23:01+08:00",
     "note": "Audit uses the final merged view: official asset master first, then Yahoo, ETF detail and dividend channels. Existing reference data is no longer reported as missing."
   },

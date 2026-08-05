@@ -1,7 +1,7 @@
-name: Update v11.4.10 stock media news
+name: Update v11.4.11 stock media news
 on:
   workflow_run:
-    workflows: ["Update v11.4.10 中央社 news", "Update v11.4.10 MoneyDJ news", "Update v11.4.10 鉅亨網 news", "Update v11.4.10 經濟日報 news", "Update v11.4.10 自由財經 news", "Update v11.4.10 財富自由 news", "Update v11.4.10 Yahoo股市 news", "Update v11.4.10 科技新報／財經新報 news", "Update v11.4.10 工商時報 news"]
+    workflows: ["Update v11.4.11 中央社 news", "Update v11.4.11 MoneyDJ news", "Update v11.4.11 鉅亨網 news", "Update v11.4.11 經濟日報 news", "Update v11.4.11 自由財經 news", "Update v11.4.11 財富自由 news", "Update v11.4.11 Yahoo股市 news", "Update v11.4.11 科技新報／財經新報 news", "Update v11.4.11 工商時報 news", "Update v11.4.11 亞洲總體風險 news"]
     types: [completed]
   schedule:
     - cron: "14-59/15 * * * *"
@@ -49,6 +49,8 @@ jobs:
             "news-technews.json:data/news-technews.json"
           bash scripts/restore_data_branch.sh live-news-ctee \
             "news-ctee.json:data/news-ctee.json"
+          bash scripts/restore_data_branch.sh live-news-asia-risk \
+            "news-asia-risk.json:data/news-asia-risk.json"
       - run: python scripts/update_stock_news.py
       - name: Publish stock media channel
         env:

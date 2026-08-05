@@ -13,6 +13,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import update_etf_details as etf
 import update_yahoo_details as yahoo
 import update_tw_chips as chips
+import news_pipeline as news
 
 
 class ParserTests(unittest.TestCase):
@@ -101,6 +102,13 @@ class ParserTests(unittest.TestCase):
         self.assertEqual(len(institutional["history"]), 2)
         self.assertEqual(margin["margin"]["balance"], 175408)
         self.assertEqual(margin["short"]["change"], -974)
+
+    def test_asia_risk_major_classification(self):
+        row = news.classify("日圓跌至40年低點 日本企業倒閉增加", "日銀政策與企業成本壓力恐影響亞洲資金流向及台灣出口供應鏈", {}, "media")
+        self.assertEqual(row["ai_topic"], "asia-risk")
+        self.assertEqual(row["impact"], "high")
+        self.assertTrue(row["is_major"])
+        self.assertEqual(row["regional_risk"], "asia")
 
 
 if __name__ == "__main__":

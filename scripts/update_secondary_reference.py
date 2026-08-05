@@ -12,8 +12,8 @@ from typing import Any
 import requests
 from common import DATA, NOW, read_json
 
-VERSION="v11.4.10"
-HEADERS={"User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.4.10)"}
+VERSION="v11.4.11"
+HEADERS={"User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.4.11)"}
 BATCH=80
 
 def number(value:Any)->float|None:

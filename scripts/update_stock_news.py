@@ -27,6 +27,7 @@ PRIORITY = {
     "yahoo": 84,
     "technews": 82,
     "ctee": 80,
+    "asia-risk": 78,
 }
 STOP = set("台股 公司 今日 最新 表示 指出 宣布 公布 市場 今年 去年 可能 相關 產業 股票 新聞 再創 投資 財經".split())
 

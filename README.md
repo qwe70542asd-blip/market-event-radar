@@ -1,4 +1,4 @@
-# 市場事件雷達 v11.4.10
+# 市場事件雷達 v11.4.11
 
 本版集中修正法人籌碼與 ETF 資料覆蓋判定：搜尋框不再強制補回中文名稱，籌碼通道開始真正抓取資料，ETF 已存在的基金主檔、配息、持股與產業配置也不再被誤判為待補。
 
@@ -50,10 +50,10 @@
 
 將解壓後 `market-event-radar` 資料夾內的完整內容提交到 `main`。上傳後建議手動執行：
 
-1. `Update v11.4.10 ETF details`
-2. `Update v11.4.10 Yahoo asset details`
-3. `Update v11.4.10 Taiwan chips`
-4. `Update v11.4.10 assets and audit`
+1. `Update v11.4.11 ETF details`
+2. `Update v11.4.11 Yahoo asset details`
+3. `Update v11.4.11 Taiwan chips`
+4. `Update v11.4.11 assets and audit`
 
 第一次執行會優先補齊 00981A 等常用標的，後續排程再逐批累積全市場。
 
@@ -63,3 +63,7 @@
 - 上櫃籌碼在官方結構化來源不足時，會使用 Yahoo 作為參考來源並標示來源。
 - ETF 每日完整持股、正式淨值與受益人資料仍以投信和交易所公告為準。
 - 個人投資組合保存在使用者瀏覽器的 localStorage，不會上傳到伺服器。
+
+## v11.4.11 亞洲總體風險新聞
+
+新增日本、韓國、中國與亞洲金融風險的繁體中文文字新聞通道；不採用訪談節目或影音內容。

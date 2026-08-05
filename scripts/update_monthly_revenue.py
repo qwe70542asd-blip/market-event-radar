@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Update the isolated monthly-revenue channel for v11.4.10.
+"""Update the isolated monthly-revenue channel for v11.4.11.
 
 Latest official OpenAPI rows and a small rolling MOPS history batch are merged
 without touching the asset master. A failed month never clears successful data.
@@ -22,7 +22,7 @@ from update_assets import (
     year_month_of,
 )
 
-VERSION = "v11.4.10"
+VERSION = "v11.4.11"
 HISTORY_MONTHS = 60
 BATCH_MONTHS = 12
 RETRY_JOBS = 4
