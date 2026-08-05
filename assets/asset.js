@@ -2,7 +2,7 @@
   "use strict";
   const {$,$$,escapeHtml,fmt,pct,cls,formatTime,loadData,loadNewsChannels,loadStockNews,finite,stripHtml,normalizeText}=MR;
   const symbol=(new URLSearchParams(location.search).get("symbol")||"2330").toUpperCase();
-  const [assetPayload,marketPayload,chipPayload,eventPayload,newsPayload,stockNewsPayload,revenuePayload,dividendPayload,secondaryPayload,verificationPayload]=await Promise.all([
+  const [assetPayload,marketPayload,chipPayload,eventPayload,newsPayload,stockNewsPayload,revenuePayload,dividendPayload,secondaryPayload,verificationPayload,yahooPayload]=await Promise.all([
     loadData("assets.json",window.__ASSET_SEED__||{assets:[]}),
     loadData("tw-market.json",window.__TW_MARKET_SEED__||{items:[]}),
     loadData("tw-chips.json",window.__TW_CHIPS_SEED__||{items:{},history:{}}),
@@ -12,20 +12,28 @@
     loadData("monthly-revenue.json",window.__MONTHLY_REVENUE_SEED__||{metadata:{status:"waiting"},items:{}}),
     loadData("dividend-history.json",window.__DIVIDEND_HISTORY_SEED__||{metadata:{status:"waiting"},items:{}}),
     loadData("secondary-reference.json",window.__SECONDARY_REFERENCE_SEED__||{metadata:{status:"waiting"},items:{}}),
-    loadData("data-verification.json",window.__DATA_VERIFICATION_SEED__||{metadata:{status:"waiting"},items:{}})
+    loadData("data-verification.json",window.__DATA_VERIFICATION_SEED__||{metadata:{status:"waiting"},items:{}}),
+    loadData("yahoo-details.json",window.__YAHOO_DETAILS_SEED__||{metadata:{status:"waiting"},items:{}})
   ]);
   const officialQuote=(marketPayload.items||[]).find(row=>String(row.symbol||"").toUpperCase()===symbol)||{};
   const secondaryQuote=(secondaryPayload.items||{})[symbol]||{};
   const quote=Object.keys(officialQuote).length?officialQuote:(secondaryQuote.price!=null?{symbol,name:symbol,price:secondaryQuote.price,previous_close:secondaryQuote.previous_close,status:"secondary-reference",quote_time:secondaryQuote.updated_at,quote_date:secondaryQuote.updated_at}:{});
   const found=(assetPayload.assets||[]).find(row=>String(row.symbol||"").toUpperCase()===symbol);
-  const asset=found||{id:`TW:${symbol}`,symbol,name:quote.name||symbol,exchange:quote.exchange,asset_class:quote.asset_class||"stock",market:"TW"};
+  const yahoo=(yahooPayload.items||{})[symbol]||{};
+  const yahooProfile=yahoo.profile||{},yahooMetrics=yahoo.metrics||{},yahooEtf=yahoo.etf||{};
+  const asset=found||{id:`TW:${symbol}`,symbol,name:yahooProfile.company_name||quote.name||symbol,exchange:quote.exchange,asset_class:yahoo.asset_class||quote.asset_class||"stock",market:"TW"};
   const isEtf=asset.asset_class==="etf"||quote.asset_class==="etf";
   const verification=(verificationPayload.items||{})[symbol]||{};
   const chip=chipPayload.items?.[symbol]||{};
-  const etf=asset.etf||{};
-  const metrics=asset.metrics||{};
+  const officialEtf=asset.etf||{};
+  const etf={...yahooEtf,...Object.fromEntries(Object.entries(officialEtf).filter(([,v])=>v!==null&&v!==undefined&&String(v).trim()!==""))};
+  const officialMetrics=asset.metrics||{};
+  const metrics={...yahooMetrics,...Object.fromEntries(Object.entries(officialMetrics).filter(([,v])=>v!==null&&v!==undefined&&String(v).trim()!==""))};
   const sourceDate=value=>value?formatTime(value,{dateOnly:true}):"";
   const has=value=>value!==null&&value!==undefined&&String(value).trim()!=="";
+  const prefer=(official,reference)=>has(official)?official:reference;
+  const metricSource=(key,fallback)=>asset.metric_sources?.[key]||(has(yahooMetrics[key])?"Yahoo 參考資料":fallback);
+  const metricTrust=key=>asset.metric_sources?.[key]?verification.fields?.metrics?.status:(has(yahooMetrics[key])?"reference":verification.fields?.metrics?.status);
   const nonEmpty=value=>Array.isArray(value)?value.length>0:has(value);
   const safeUrl=value=>/^https?:\/\//i.test(String(value||""))?String(value):"";
   const formatDate=value=>{
@@ -62,7 +70,7 @@
     const link=document.createElement("a");link.href=`#${anchor}`;link.textContent=label;nav.appendChild(link);
   };
 
-  const displayName=(asset.name&&asset.name!==symbol)?asset.name:(quote.name&&quote.name!==symbol?quote.name:symbol);
+  const displayName=(asset.name&&asset.name!==symbol)?asset.name:(yahooProfile.company_name&&yahooProfile.company_name!==symbol?yahooProfile.company_name:(quote.name&&quote.name!==symbol?quote.name:symbol));
   document.title=`${displayName}｜市場事件雷達`;
   $("#assetTitle").textContent=`${symbol}${displayName&&displayName!==symbol?` ${displayName}`:""}`;
   $("#assetKindLabel").textContent=isEtf?"ETF DETAIL":"STOCK DETAIL";
@@ -73,7 +81,7 @@
   $("#assetQuoteTime").textContent=quote.quote_date?`${formatDate(quote.quote_date)} ${quote.quote_time||""}`:marketPayload.metadata?.updated_at?formatTime(marketPayload.metadata.updated_at):"";
   const overallTrust=verification.overall||"missing";
   const trustText=trustLabel(overallTrust)||"資料驗證中";
-  $("#assetTrust").innerHTML=`<span class="verification-badge ${trustClass(overallTrust)}">${escapeHtml(trustText)}</span><span>官方資料優先；不同來源衝突時不自動選值。</span>${verification.reference_links?.yahoo?`<a href="${escapeHtml(verification.reference_links.yahoo)}" target="_blank" rel="noreferrer noopener">Yahoo 查閱 ↗</a>`:""}${verification.reference_links?.goodinfo?`<a href="${escapeHtml(verification.reference_links.goodinfo)}" target="_blank" rel="noreferrer noopener">Goodinfo 查閱 ↗</a>`:""}`;
+  $("#assetTrust").innerHTML=`<span class="verification-badge ${trustClass(overallTrust)}">${escapeHtml(trustText)}</span><span>官方資料優先；Yahoo 僅補空白欄位，不覆蓋官方值。</span>${yahoo.updated_at?`<span class="verification-badge reference">Yahoo 已補充</span>`:""}${(verification.reference_links?.yahoo||yahoo.source_url)?`<a href="${escapeHtml(verification.reference_links?.yahoo||yahoo.source_url)}" target="_blank" rel="noreferrer noopener">Yahoo 查閱 ↗</a>`:""}${verification.reference_links?.goodinfo?`<a href="${escapeHtml(verification.reference_links.goodinfo)}" target="_blank" rel="noreferrer noopener">Goodinfo 查閱 ↗</a>`:""}`;
 
   const overview=[];
   const pushCard=(label,value,source,options={})=>{const html=metricCard(label,value,source,options);if(html)overview.push(html)};
@@ -93,15 +101,15 @@
     pushCard("受益人數",finite(etf.beneficiary_count),etf.beneficiary_source||"基金資料",{integer:true});
     pushCard("受益權單位數",finite(etf.units),etf.units_source||"基金資料",{integer:true});
   }else{
-    pushCard("本益比",finite(metrics.pe),asset.metric_sources?.pe||"官方估值",{verification:verification.fields?.metrics?.status});
-    pushCard("股價淨值比",finite(metrics.pb),asset.metric_sources?.pb||"官方估值",{verification:verification.fields?.metrics?.status});
-    pushCard("殖利率",finite(metrics.dividend_yield),asset.metric_sources?.dividend_yield||"官方估值",{percent:true,verification:verification.fields?.metrics?.status});
-    pushCard("EPS",finite(metrics.eps),asset.metric_sources?.eps||"官方財報",{money:"元",verification:verification.fields?.metrics?.status});
-    pushCard("ROE",finite(metrics.roe),asset.metric_sources?.roe||"官方財報計算",{percent:true,verification:verification.fields?.metrics?.status});
-    pushCard("ROA",finite(metrics.roa),asset.metric_sources?.roa||"官方財報計算",{percent:true,verification:verification.fields?.metrics?.status});
-    pushCard("負債比",finite(metrics.debt_ratio),asset.metric_sources?.debt_ratio||"官方財報計算",{percent:true,verification:verification.fields?.metrics?.status});
-    pushCard("淨利率",finite(metrics.net_margin),asset.metric_sources?.net_margin||"官方財報計算",{percent:true,verification:verification.fields?.metrics?.status});
-    pushCard("流動比率",finite(metrics.current_ratio),asset.metric_sources?.current_ratio||"官方財報計算",{percent:true,verification:verification.fields?.metrics?.status});
+    pushCard("本益比",finite(metrics.pe),metricSource("pe","官方估值"),{verification:metricTrust("pe")});
+    pushCard("股價淨值比",finite(metrics.pb),metricSource("pb","官方估值"),{verification:metricTrust("pb")});
+    pushCard("殖利率",finite(metrics.dividend_yield),metricSource("dividend_yield","官方估值"),{percent:true,verification:metricTrust("dividend_yield")});
+    pushCard("EPS",finite(metrics.eps),metricSource("eps","官方財報"),{money:"元",verification:metricTrust("eps")});
+    pushCard("ROE",finite(metrics.roe),metricSource("roe","官方財報計算"),{percent:true,verification:metricTrust("roe")});
+    pushCard("ROA",finite(metrics.roa),metricSource("roa","官方財報計算"),{percent:true,verification:metricTrust("roa")});
+    pushCard("負債比",finite(metrics.debt_ratio),metricSource("debt_ratio","官方財報計算"),{percent:true,verification:metricTrust("debt_ratio")});
+    pushCard("淨利率",finite(metrics.net_margin),metricSource("net_margin","官方財報計算"),{percent:true,verification:metricTrust("net_margin")});
+    pushCard("流動比率",finite(metrics.current_ratio),metricSource("current_ratio","官方財報計算"),{percent:true,verification:metricTrust("current_ratio")});
   }
   if(overview.length){
     $("#assetMetrics").innerHTML=overview.join("");
@@ -111,22 +119,22 @@
   }
 
   const basicRows=isEtf?[]:[
-    {label:"公司全名",value:asset.company_name},
+    {label:"公司全名",value:prefer(asset.company_name,yahooProfile.company_name),note:!asset.company_name&&yahooProfile.company_name?"Yahoo 參考資料":""},
     {label:"公司簡稱",value:displayName!==symbol?displayName:""},
-    {label:"產業類別",value:industryName(asset.official_industry||asset.sub_industry)},
+    {label:"產業類別",value:prefer(industryName(asset.official_industry||asset.sub_industry),yahooProfile.industry||yahooProfile.sector)},
     {label:"統一編號",value:asset.tax_id},
-    {label:"董事長",value:asset.chairperson},
-    {label:"總經理",value:asset.general_manager},
+    {label:"董事長",value:prefer(asset.chairperson,yahooProfile.chairperson)},
+    {label:"總經理",value:prefer(asset.general_manager,yahooProfile.general_manager)},
     {label:"發言人",value:asset.spokesperson},
     {label:"成立日期",value:formatDate(asset.established_date)},
     {label:"上市／上櫃日期",value:formatDate(asset.listed_date)},
     {label:"實收資本額",value:compactNumber(asset.paid_in_capital," 元")},
-    {label:"發行股數",value:compactNumber(asset.issued_shares," 股")},
-    {label:"員工人數",value:compactNumber(asset.employee_count," 人")},
-    {label:"公司電話",value:asset.phone},
-    {label:"公司地址",value:asset.address},
-    {label:"官方網站",value:asset.website||asset.official_url,url:safeUrl(asset.website||asset.official_url)},
-    {label:"主要經營業務",value:asset.business_scope},
+    {label:"發行股數",value:compactNumber(prefer(asset.issued_shares,yahooMetrics.shares_outstanding)," 股"),note:!asset.issued_shares&&yahooMetrics.shares_outstanding?"Yahoo 參考資料":""},
+    {label:"員工人數",value:compactNumber(prefer(asset.employee_count,yahooProfile.employees)," 人")},
+    {label:"公司電話",value:prefer(asset.phone,yahooProfile.phone)},
+    {label:"公司地址",value:prefer(asset.address,yahooProfile.address)},
+    {label:"官方網站",value:prefer(asset.website||asset.official_url,yahooProfile.website),url:safeUrl(prefer(asset.website||asset.official_url,yahooProfile.website))},
+    {label:"主要經營業務",value:prefer(asset.business_scope,yahooProfile.business_summary)},
     {label:"簽證會計師／事務所",value:asset.accounting_firm}
   ];
   if(basicRows.some(row=>has(row.value))){
@@ -164,17 +172,20 @@
       $("#fundUpdated").textContent=etf.updated_at?`基金資料更新 ${formatTime(etf.updated_at)}`:asset.master_updated_at?`基金主檔更新 ${formatTime(asset.master_updated_at)}`:"";
       showSection("#fundSection","基金資料");
     }
-    const holdings=etf.holdings||[];
+    const holdings=etf.holdings||yahooEtf.holdings||[];
     if(holdings.length){
       $("#holdingRows").innerHTML=holdings.map(row=>`<tr><td>${escapeHtml(row.symbol||"—")}</td><td>${escapeHtml(row.name||"—")}</td><td>${escapeHtml(row.industry||"—")}</td><td>${finite(row.shares)==null?"—":fmt(row.shares,0)}</td><td>${finite(row.weight)==null?"—":`${fmt(row.weight,2)}%`}</td></tr>`).join("");
-      const allocation=etf.allocations||[];
+      const allocation=etf.allocations||yahooEtf.sector_allocation||[];
       if(allocation.length)$("#allocationGrid").innerHTML=allocation.map(row=>`<div><span>${escapeHtml(row.name||row.industry||"其他")}</span><strong>${finite(row.weight)==null?"—":`${fmt(row.weight,2)}%`}</strong></div>`).join("");
       $("#holdingsUpdated").textContent=etf.holdings_date?`持股資料日 ${formatDate(etf.holdings_date)}`:"依投信或官方最新揭露";
       showSection("#holdingsSection","持股");
     }
   }
 
-  const financials=!isEtf?(asset.financials||[]).slice(0,12):[];
+  const financialMap=new Map();
+  for(const row of (yahoo.financials||[])){const key=String(row.period||row.date||"");if(key)financialMap.set(key,row)}
+  for(const row of (asset.financials||[])){const key=String(row.period||row.date||"");if(key)financialMap.set(key,{...(financialMap.get(key)||{}),...row})}
+  const financials=!isEtf?[...financialMap.values()].sort((a,b)=>String(b.period||b.date||"").localeCompare(String(a.period||a.date||""))).slice(0,20):[];
   if(financials.length){
     const ratio=(n,d)=>finite(n)!=null&&finite(d)!=null&&Number(d)!==0?Number(n)/Number(d)*100:null;
     $("#financialRows").innerHTML=financials.map(row=>{
@@ -185,7 +196,7 @@
     showSection("#financialSection","財務");
   }
 
-  const revenueSourceRows=(revenuePayload.items?.[symbol]||asset.monthly_revenue||[]);
+  const revenueSourceRows=(revenuePayload.items?.[symbol]||asset.monthly_revenue||yahoo.monthly_revenue||[]);
   const revenues=!isEtf?revenueSourceRows.filter(row=>finite(row.revenue)!=null).sort((a,b)=>String(b.period||"").localeCompare(String(a.period||""))):[];
   if(revenues.length){
     const revenueStreak=()=>{let count=0;for(const row of revenues){if((finite(row.yoy)||0)>0)count++;else break}return count};
@@ -230,6 +241,11 @@
   addChip("當沖量",chip.day_trade?.volume,"當沖統計",{integer:true});
   addChip("當沖比例",chip.day_trade?.ratio,"當沖統計",{percent:true});
   addChip("借券賣出",chip.borrowed_short?.balance,"借券資料",{integer:true});
+  const holderPercent=value=>{const number=finite(value);if(number==null)return null;return Math.abs(number)<=1?number*100:number};
+  addChip("機構持股比例",holderPercent(yahoo.holders?.institutionsPercentHeld),"Yahoo 補充資料",{percent:true});
+  addChip("內部人持股比例",holderPercent(yahoo.holders?.insidersPercentHeld),"Yahoo 補充資料",{percent:true});
+  addChip("機構持有流通股",holderPercent(yahoo.holders?.institutionsFloatPercentHeld),"Yahoo 補充資料",{percent:true});
+  addChip("機構持有人數",yahoo.holders?.institutionsCount,"Yahoo 補充資料",{integer:true});
   if(chipCards.length){
     $("#chipMetrics").innerHTML=chipCards.join("");
     const history=Object.values(chipPayload.history||{}).map(day=>({date:day.date||day.trading_date,row:day.items?.[symbol]})).filter(x=>x.row).sort((a,b)=>String(b.date).localeCompare(String(a.date))).slice(0,10);
@@ -242,7 +258,10 @@
   }
 
   const isolatedDistributions=dividendPayload.items?.[symbol]||[];
-  const distributions=(isolatedDistributions.length?isolatedDistributions:(isEtf?(etf.distributions||asset.dividends||[]):(asset.dividends||[]))).slice().sort((a,b)=>String(b.period||b.year||"").localeCompare(String(a.period||a.year||"")));
+  const distributionMap=new Map();
+  const distributionRows=[...(yahoo.dividends||[]),...(isEtf?(etf.distributions||asset.dividends||[]):(asset.dividends||[])),...isolatedDistributions];
+  for(const row of distributionRows){const key=`${row.ex_date||row.ex_dividend_date||row.date||row.period||row.year||""}|${row.cash??row.amount??row.cash_dividend??""}`;if(key!=="|")distributionMap.set(key,{...(distributionMap.get(key)||{}),...row})}
+  const distributions=[...distributionMap.values()].sort((a,b)=>String(b.period||b.year||"").localeCompare(String(a.period||a.year||"")));
   if(distributions.length){
     const periodYear=row=>{const text=String(row.period||row.year||row.period_raw||"").trim();const ad=text.match(/(?:^|\D)(20\d{2})(?=\D|$)/);if(ad)return Number(ad[1]);const compact=text.match(/^(\d{3})\d{4}(?:[~至-]|$)/);if(compact)return Number(compact[1])+1911;const roc=text.match(/(?:^|\D)(\d{2,3})(?:年|(?=\D|$))/);if(!roc)return null;const year=Number(roc[1]);return year>=1911?year:year+1911};
     const periodLabel=row=>{
@@ -255,7 +274,7 @@
     const renderDistributions=(years=5)=>{
       const cutoff=years?new Date().getFullYear()-years+1:null;
       const selected=distributions.filter(row=>!cutoff||periodYear(row)==null||periodYear(row)>=cutoff).slice(0,40);
-      $("#distributionRows").innerHTML=selected.map(row=>`<tr><td>${escapeHtml(periodLabel(row))}</td><td>${finite(row.cash)==null&&finite(row.amount)==null?"—":fmt(row.cash??row.amount,4)}</td><td>${finite(row.stock)==null?"—":fmt(row.stock,4)}</td><td>${escapeHtml(formatDate(row.board_date)||"—")}</td><td>${escapeHtml(formatDate(row.shareholder_meeting_date)||"—")}</td><td>${escapeHtml(formatDate(row.ex_date||row.ex_dividend_date||row.date)||"—")}</td><td>${escapeHtml(formatDate(row.payment_date)||"—")}</td><td>${row.url?`<a href="${escapeHtml(row.url)}" target="_blank" rel="noreferrer noopener">${escapeHtml(row.source||"官方公告")} ↗</a>`:escapeHtml(row.source||"官方公告")}</td></tr>`).join("")||'<tr><td colspan="8" class="empty">此期間沒有股利紀錄</td></tr>';
+      $("#distributionRows").innerHTML=selected.map(row=>`<tr><td>${escapeHtml(periodLabel(row))}</td><td>${finite(row.cash)==null&&finite(row.amount)==null&&finite(row.cash_dividend)==null?"—":fmt(row.cash??row.amount??row.cash_dividend,4)}</td><td>${finite(row.stock)==null?"—":fmt(row.stock,4)}</td><td>${escapeHtml(formatDate(row.board_date)||"—")}</td><td>${escapeHtml(formatDate(row.shareholder_meeting_date)||"—")}</td><td>${escapeHtml(formatDate(row.ex_date||row.ex_dividend_date||row.date)||"—")}</td><td>${escapeHtml(formatDate(row.payment_date)||"—")}</td><td>${row.url?`<a href="${escapeHtml(row.url)}" target="_blank" rel="noreferrer noopener">${escapeHtml(row.source||"官方公告")} ↗</a>`:escapeHtml(row.source||"官方公告")}</td></tr>`).join("")||'<tr><td colspan="8" class="empty">此期間沒有股利紀錄</td></tr>';
     };
     $("#distributionTitle").textContent=isEtf?"配息歷史":"股利與除權息歷史";
     renderDistributions(5);

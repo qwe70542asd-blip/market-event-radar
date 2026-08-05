@@ -1,6 +1,7 @@
 {
-  "version": "v11.4.6",
-  "baseline_version": "11.4.6",
-  "stage": "homepage, unified finance news, TPEx webpage notice pause, portfolio summary, volume momentum, and source verification",
-  "updated_at": "2026-08-05T00:20:00+08:00"
+  "version": "v11.4.7",
+  "name": "calendar-news-yahoo-details",
+  "released_at": "2026-08-05",
+  "stage": "integrated",
+  "baseline_version": "11.4.7"
 }

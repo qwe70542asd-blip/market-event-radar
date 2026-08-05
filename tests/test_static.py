@@ -7,7 +7,7 @@ class StaticTests(unittest.TestCase):
  def test_required_tree(self):
   for path in [".github/workflows","assets","data","docs","scripts","tests","index.html","news.html","asset.html","service-worker.js"]:self.assertTrue((ROOT/path).exists(),path)
  def test_version(self):
-  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.6")
+  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.7")
  def test_ascii_filenames(self):
   for path in ROOT.rglob("*"):self.assertTrue(all(ord(c)<128 for c in path.name),path)
  def test_no_audio(self):
@@ -55,12 +55,12 @@ class StaticTests(unittest.TestCase):
   for f in ("assets/home.js","assets/news.js","assets/asset.js","assets/event.js","assets/date-alerts.js"):self.assertIn("loadNewsChannels",self.read(f),f)
  def test_news_page_blocks(self):
   html=self.read("news.html")
-  for x in ("精選重大資訊","最新財經新聞","官方市場公告","個股重大訊息","latestNewsRows","sourceFilters"):self.assertIn(x,html)
+  for x in ("精選重大資訊","最新財經新聞","官方市場公告","個股重大訊息","latestNewsRows","news-hero-layout","portal-news-grid"):self.assertIn(x,html)
   for x in ("獨立資料來源","publisherBlocks"):self.assertNotIn(x,html)
  def test_news_source_status(self):
   js=self.read("assets/news.js")
-  for x in ("newsHealthNote","sourceFilters","majorScore","verification-badge"):self.assertIn(x,js)
-  for x in ("sourceStatus","publisherBlocks"):self.assertNotIn(x,js)
+  for x in ("newsHealthNote","majorScore","portal-news-card","hero-lead"):self.assertIn(x,js)
+  for x in ("sourceStatus","publisherBlocks","sourceFilters"):self.assertNotIn(x,js)
  def test_official_structured_sources(self):
   official=self.read("scripts/update_official_notices.py");company=self.read("scripts/update_company_disclosures.py")
   self.assertIn("/v1/news/newsList",official);self.assertIn("t187ap04_L",company);self.assertIn("t187ap04_O",company)
@@ -72,8 +72,8 @@ class StaticTests(unittest.TestCase):
   texts="\n".join(self.read(p.relative_to(ROOT)) for p in (ROOT/".github/workflows").glob("update-news-*.yml"))
   for branch in ("live-news-cna","live-news-moneydj","live-news-cnyes","live-news-udn","live-news-ltn","live-news-wealth","live-news-yahoo","live-news-technews","live-news-ctee"):self.assertIn(branch,texts)
  def test_service_worker_cache(self):
-  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-6",sw)
-  for seed in ("news-cna-seed.js","news-moneydj-seed.js","news-wealth-seed.js","news-yahoo-seed.js","news-technews-seed.js","news-ctee-seed.js","stock-news-seed.js","company-disclosures-seed.js","monthly-revenue-seed.js","dividend-history-seed.js","secondary-reference-seed.js","data-verification-seed.js","market-volume-history-seed.js"):self.assertIn(seed,sw)
+  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-7",sw)
+  for seed in ("news-cna-seed.js","news-moneydj-seed.js","news-wealth-seed.js","news-yahoo-seed.js","news-technews-seed.js","news-ctee-seed.js","stock-news-seed.js","company-disclosures-seed.js","monthly-revenue-seed.js","dividend-history-seed.js","secondary-reference-seed.js","data-verification-seed.js","yahoo-details-seed.js","market-volume-history-seed.js"):self.assertIn(seed,sw)
  def test_all_pages_current_version(self):
   for p in ROOT.glob("*.html"):self.assertNotIn("v11.4.2",p.read_text(encoding="utf-8"),p.name)
 
@@ -156,5 +156,23 @@ class StaticTests(unittest.TestCase):
   script=self.read("scripts/update_tw_market.py");workflow=self.read(".github/workflows/update-tw-market.yml")
   for x in ("market-volume-history.json","volume_ratio_20d","average_20d_trade_value"):self.assertIn(x,script)
   self.assertIn("market-volume-history.json",workflow)
+
+ def test_calendar_first_home_layout(self):
+  html=self.read("index.html")
+  self.assertLess(html.index("本月事件月曆"),html.index("我的資產總覽"))
+  for x in ("home-primary-grid","home-calendar-primary","home-market-rail","home-summary-row"):self.assertIn(x,html)
+
+ def test_compact_clickable_news_portal(self):
+  html=self.read("news.html");js=self.read("assets/news.js");css=self.read("assets/styles.css")
+  self.assertNotIn("sourceFilters",html+js)
+  for x in ("hero-lead","hero-side-item","portal-news-card","portal-news-grid"):self.assertIn(x,js+css)
+  self.assertNotIn("閱讀原文 →",js)
+
+ def test_yahoo_detail_channel(self):
+  for p in ("scripts/update_yahoo_details.py",".github/workflows/update-yahoo-details.yml","data/yahoo-details.json","data/yahoo-details-seed.js"):self.assertTrue((ROOT/p).exists(),p)
+  shared=self.read("assets/shared.js");asset=self.read("assets/asset.js");workflow=self.read(".github/workflows/update-yahoo-details.yml")
+  for x in ("live-yahoo-details","yahoo-details.json"):self.assertIn(x,shared+asset+workflow)
+  for x in ("querySummary" if False else "quoteSummary","fundamentals-timeseries","quarterlyTotalRevenue","topHoldings"):self.assertIn(x,self.read("scripts/update_yahoo_details.py"))
+  self.assertIn("Yahoo 參考資料",asset)
 
 if __name__=="__main__":unittest.main()

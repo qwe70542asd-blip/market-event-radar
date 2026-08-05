@@ -1,0 +1,1 @@
+window.__YAHOO_DETAILS_SEED__={"metadata":{"version":"v11.4.7","updated_at":null,"status":"waiting","item_count":0,"note":"Yahoo detail reference channel has not run yet."},"state":{"cursor":0},"errors":[],"items":{}};

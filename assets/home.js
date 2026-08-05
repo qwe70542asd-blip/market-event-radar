@@ -77,7 +77,7 @@
   const verificationLabel=item=>item.source_id==="official-notices"||item.source_id==="company-disclosures"?"官方來源":(item.other_reports||[]).length?"多來源佐證":item.source_id==="cna"?"主要媒體":"單一來源";
 
   const marketRows=(snapshot.items||[]).filter(row=>!["BTCUSDT","ETHUSDT","NVDA","^TWOII"].includes(String(row.symbol||"").toUpperCase()));
-  $("#marketList").innerHTML=marketRows.length?marketRows.slice(0,14).map(row=>`<div class="market-row"><span><strong>${escapeHtml(row.name||row.symbol)}</strong><small>${escapeHtml(row.symbol)}</small></span><b>${fmt(row.price)}${escapeHtml(row.display_suffix||"")}</b><em class="${cls(row.change_percent)}">${pct(row.change_percent)}</em></div>`).join(""):'<div class="empty">等待全球行情更新</div>';
+  $("#marketList").innerHTML=marketRows.length?marketRows.slice(0,10).map(row=>`<div class="market-row"><span><strong>${escapeHtml(row.name||row.symbol)}</strong><small>${escapeHtml(row.symbol)}</small></span><b>${fmt(row.price)}${escapeHtml(row.display_suffix||"")}</b><em class="${cls(row.change_percent)}">${pct(row.change_percent)}</em></div>`).join(""):'<div class="empty">等待全球行情更新</div>';
   $("#marketUpdated").textContent=snapshot.metadata?.updated_at?formatTime(snapshot.metadata.updated_at):"等待資料";
 
   function renderPortfolioSummary(){
@@ -123,7 +123,7 @@
   const majorNews=safeNews.filter(item=>item._majorScore>=45).slice(0,6);
   const latest=majorNews[0]||safeNews[0];
   if(latest){$("#breakingLink").textContent=strip(latest.title);$("#breakingLink").href=latest.url}
-  $("#homeNews").innerHTML=(majorNews.length?majorNews:safeNews.slice(0,6)).map(item=>`<a class="news-card home-news-card" href="${escapeHtml(item.url)}" target="_blank" rel="noreferrer noopener"><div class="news-meta"><span>${escapeHtml(item.source||"市場消息")}</span><time>${escapeHtml(formatTime(item.published_at||item.date))}</time></div><div class="ai-badges"><span class="tag">${escapeHtml(item.ai_category||item.topic||"市場")}</span><span class="impact-badge ${escapeHtml(item.impact||"medium")}">${impactLabel(item.impact)}</span><span class="verification-badge">${escapeHtml(verificationLabel(item))}</span></div><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(truncate(item.ai_summary||item.summary,150)||"來源未提供摘要。")}</p></a>`).join("")||'<div class="empty">等待重大資訊更新</div>';
+  $("#homeNews").innerHTML=(majorNews.length?majorNews:safeNews.slice(0,6)).map(item=>`<a class="news-card home-news-card" href="${escapeHtml(item.url)}" target="_blank" rel="noreferrer noopener">${item.image_url?`<div class="home-news-thumb"><img src="${escapeHtml(item.image_url)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.remove()"></div>`:""}<div class="news-meta"><span>${escapeHtml(item.ai_category||item.topic||"市場")}</span><time>${escapeHtml(formatTime(item.published_at||item.date))}</time></div><div class="ai-badges"><span class="impact-badge ${escapeHtml(item.impact||"medium")}">${impactLabel(item.impact)}</span><span class="verification-badge">${escapeHtml(verificationLabel(item))}</span></div><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(truncate(item.ai_summary||item.summary,100)||"查看完整事件內容。")}</p></a>`).join("")||'<div class="empty">等待重大資訊更新</div>';
 
   const todayKey=localKey(new Date());
   const todayEvents=uniqueEvents((events.events||[]).filter(event=>eventDateKey(event)===todayKey));
