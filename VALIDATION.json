@@ -1,22 +1,21 @@
 {
-  "version": "v11.4.11",
+  "version": "v11.4.12",
   "status": "PASS",
-  "scope": "Expanded Japanese, Korean, Chinese and Asia regional macro-risk text-news coverage and major-news scoring.",
+  "scope": "Full v11.4.11 repository upgraded to the v11.4.12 balanced dashboard and dual market-event/dividend calendar.",
   "checks": [
-    "Asia macro-risk channel is isolated from existing publishers",
-    "Text-news search covers yen, BOJ, JGBs, Japanese bankruptcies, won, BOK, China property/local debt and Asian capital outflows",
-    "Video, interview, livestream and YouTube sources are excluded from the new channel",
-    "Google News is used only for discovery and attempts to resolve to the original publisher article",
-    "Asia stress and cross-border transmission signals increase major-news scoring",
-    "News page includes a Japan/Asia risk filter",
-    "Home and news major-card scoring use the same regional-risk logic",
-    "Traditional Chinese readability and invalid-page filters remain enabled",
-    "Service worker, seed files and isolated GitHub Actions branch are included"
+    "All original repository files, scripts, workflows and data channels are preserved",
+    "Asset summary and live market snapshot use a balanced two-column homepage layout",
+    "Market event and dividend calendar modes switch filters, month summaries, date cells and day dialogs",
+    "Today newly announced dates show new and previous dates without mixing in general news",
+    "Date announcement actions switch to the correct calendar mode and target month",
+    "The selected calendar mode persists in localStorage",
+    "Service worker and visible page versions are updated to v11.4.12",
+    "No audio files are included"
   ],
   "limitations": [
-    "Google News may occasionally retain an article-specific aggregator URL when the original publisher blocks redirect resolution.",
-    "The channel discovers public Traditional Chinese text articles; it does not ingest television interviews, talk shows or video transcripts.",
-    "External publishers can change RSS/HTML behavior. Last-good archives are preserved when the fresh batch is insufficient."
+    "The first event workflow run establishes the official-source baseline; later runs can classify newly confirmed or changed dates.",
+    "External sources can change or restrict automated access; last-good archives are retained.",
+    "Browser rendering screenshots could not be generated in the restricted validation environment; runtime logic was covered by static, syntax and smoke checks."
   ],
-  "test_summary": "58 automated tests passed, plus Python compilation, JavaScript syntax, JSON/YAML parsing, smoke test and HTML local-reference validation. 24 GitHub Actions workflows included."
+  "test_summary": "59 automated tests passed, plus Python compilation, JavaScript syntax checks, JSON/YAML parsing, smoke test and HTML local-reference validation."
 }

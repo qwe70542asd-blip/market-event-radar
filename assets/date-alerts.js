@@ -1,29 +1,38 @@
 (async()=>{
   "use strict";
-  const {escapeHtml,loadData,loadNewsChannels,formatTime}=MR;
+  const {escapeHtml,loadData,formatTime}=MR;
   const list=document.querySelector("#dateAlertList"),count=document.querySelector("#dateAlertCount"),updated=document.querySelector("#dateAlertUpdated");
-  if(!list||!count)return;
-  const [payload,news]=await Promise.all([loadData("events.json",window.__EVENT_SEED__||{events:[]}),loadNewsChannels()]);
-  const dayKey=value=>{const p=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Taipei",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date(value)),m=Object.fromEntries(p.map(x=>[x.type,x.value]));return`${m.year}-${m.month}-${m.day}`};
+  if(!list||!count||!updated)return;
+  const payload=await loadData("events.json",window.__EVENT_SEED__||{events:[]});
+  const dayKey=value=>{
+    const date=new Date(value);
+    if(Number.isNaN(+date))return"";
+    const parts=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Taipei",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(date);
+    const map=Object.fromEntries(parts.map(part=>[part.type,part.value]));
+    return`${map.year}-${map.month}-${map.day}`;
+  };
+  const eventDate=event=>String(event.local_date||event.target_date||event.ex_date||"").match(/^\d{4}-\d{2}-\d{2}/)?.[0]||dayKey(event.start);
+  const calendarMode=event=>{
+    const group=String(event.event_group||"").toLowerCase(),type=String(event.category||event.event_type||"").toLowerCase();
+    return group==="dividend"||/dividend|ex-right|ex-div|distribution/.test(type)?"dividend":"market";
+  };
   const today=dayKey(Date.now());
-  const rows=(payload.events||[]).filter(e=>e.announced_at&&dayKey(e.announced_at)===today&&["new-date","date-changed"].includes(e.announcement_kind)).sort((a,b)=>Date.parse(b.announced_at)-Date.parse(a.announced_at));
-  updated.textContent=payload?.metadata?.updated_at?`最近掃描 ${formatTime(payload.metadata.updated_at)}`:"等待第一次掃描";
-  if(rows.length){
-    count.textContent=`${rows.length} 件`;
-    const financial=rows.filter(e=>/財報|財務報告|季度報告|年報/.test(e.title||""));
-    const others=rows.filter(e=>!financial.includes(e));
-    const cards=[];
-    if(financial.length>=5){
-      cards.push(`<article class="date-alert-item new"><div class="date-alert-label">今日新確認</div><a class="date-alert-main" href="#calendarGrid"><strong>今日新增 ${financial.length} 家公司財報日期</strong><span>已合併顯示，請到月曆查看完整名單</span><small>${escapeHtml(formatTime(financial[0].announced_at))}</small></a></article>`);
-    }else cards.push(...financial.map(e=>`<article class="date-alert-item new"><div class="date-alert-label">今日新確認</div><a class="date-alert-main" href="event.html?id=${encodeURIComponent(e.id)}"><strong>${escapeHtml(e.title)}</strong><span>事件日期：${escapeHtml(formatTime(e.start))}</span></a></article>`));
-    cards.push(...others.slice(0,Math.max(0,9-cards.length)).map(e=>`<article class="date-alert-item ${e.announcement_kind==="date-changed"?"changed":"new"}"><div class="date-alert-label">${e.announcement_kind==="date-changed"?"日期異動":"今日新確認"}</div><a class="date-alert-main" href="event.html?id=${encodeURIComponent(e.id)}"><strong>${escapeHtml(e.title)}</strong><span>事件日期：${escapeHtml(formatTime(e.start))}</span>${e.previous_start?`<small>原日期：${escapeHtml(formatTime(e.previous_start))}</small>`:""}</a><div class="date-alert-meta"><span>確認 ${escapeHtml(formatTime(e.announced_at))}</span>${e.source_url?`<a href="${escapeHtml(e.source_url)}" target="_blank" rel="noreferrer noopener">官方來源 ↗</a>`:""}</div></article>`));
-    list.innerHTML=cards.slice(0,9).join("");return
+  const rows=(payload.events||[]).filter(event=>event.announced_at&&dayKey(event.announced_at)===today&&["new-date","date-changed"].includes(event.announcement_kind)).sort((a,b)=>Date.parse(b.announced_at)-Date.parse(a.announced_at));
+  updated.textContent=payload?.metadata?.updated_at?`最近掃描 ${formatTime(payload.metadata.updated_at)}`:"等待第一次官方事件掃描";
+  count.textContent=`${rows.length} 件`;
+  if(!rows.length){
+    list.innerHTML='<div class="date-alert-empty"><strong>今日尚無新公布日期</strong><span>官方來源仍會定期掃描；新確認日期或改期時會自動列出新舊日期。</span></div>';
+    return;
   }
-  const genericTitle=/^(?:公文公告|公告查詢|證交所新聞|櫃買中心公告|新聞中心|最新消息|公告|新聞)$/i;
-  const companyTerms=/增資|減資|除權|除息|股利|法說|財報|股東會|停牌|復牌|公開收購|併購|合併|處分資產|取得資產|重大合約|融資融券/i;
-  const major=(news.items||[]).filter(n=>{const title=String(n.title||"").replace(/<[^>]*>/g," ").trim(),company=n.scope==="company"||n.company_announcement===true||((n.symbols||[]).length>0&&companyTerms.test(`${title} ${n.summary||""}`));return n.url_valid!==false&&n.is_major===true&&!company&&title&&!genericTitle.test(title)&&/^https?:\/\//i.test(String(n.url||""))}).slice(0,5);
-  const upcoming=(payload.events||[]).filter(e=>e.impact==="high"&&Date.parse(e.start)>=Date.now()-86400000).sort((a,b)=>Date.parse(a.start)-Date.parse(b.start)).slice(0,5);
-  const fallbacks=major.length?major.map(n=>({kind:"重大資訊",title:n.title,time:n.published_at||n.date,url:n.url,summary:n.ai_summary||n.summary})):upcoming.map(e=>({kind:"近期重大事件",title:e.title,time:e.start,url:`event.html?id=${encodeURIComponent(e.id)}`,summary:e.description||e.summary}));
-  count.textContent=fallbacks.length?`${fallbacks.length} 則`:"0 件";
-  list.innerHTML=fallbacks.length?fallbacks.map(x=>`<article class="date-alert-item latest"><div class="date-alert-label">${escapeHtml(x.kind)}</div><a class="date-alert-main" href="${escapeHtml(x.url)}" ${/^https?:/.test(x.url)?'target="_blank" rel="noreferrer noopener"':""}><strong>${escapeHtml(String(x.title||"").replace(/<[^>]*>/g," "))}</strong><span>${escapeHtml(formatTime(x.time))}</span><small>${escapeHtml(String(x.summary||"").replace(/<[^>]*>/g," ").slice(0,140))}</small></a></article>`).join(""):'<div class="date-alert-empty"><strong>目前沒有新日期或重大資訊</strong><span>官方來源仍會每 10 分鐘掃描，出現新日期或改期時會自動更新。</span></div>';
+  const visible=rows.slice(0,12);
+  list.innerHTML=visible.map(event=>{
+    const changed=event.announcement_kind==="date-changed",date=eventDate(event),mode=calendarMode(event);
+    return `<article class="date-alert-item ${changed?"changed":"new"}"><div class="date-alert-label">${changed?"日期異動":"今日新確認"}</div><a class="date-alert-main" href="event.html?id=${encodeURIComponent(event.id)}"><strong>${escapeHtml(event.title||"未命名事件")}</strong><span>新日期：${escapeHtml(date||formatTime(event.start))}</span>${changed&&event.previous_start?`<small>原日期：${escapeHtml(dayKey(event.previous_start)||formatTime(event.previous_start))}</small>`:""}</a><div class="date-alert-meta"><span>確認 ${escapeHtml(formatTime(event.announced_at))}</span><span class="date-alert-actions"><button type="button" data-calendar-jump data-calendar-mode="${mode}" data-calendar-date="${escapeHtml(date)}">在月曆查看</button>${event.source_url?`<a href="${escapeHtml(event.source_url)}" target="_blank" rel="noreferrer noopener">官方來源 ↗</a>`:""}</span></div></article>`;
+  }).join("")+(rows.length>visible.length?`<div class="date-alert-more">另有 ${rows.length-visible.length} 件今日新公布日期，請使用月曆搜尋查看。</div>`:"");
+  list.addEventListener("click",event=>{
+    const button=event.target.closest("[data-calendar-jump]");
+    if(!button)return;
+    event.preventDefault();
+    window.dispatchEvent(new CustomEvent("market-radar:calendar-jump",{detail:{mode:button.dataset.calendarMode,date:button.dataset.calendarDate}}));
+  });
 })();

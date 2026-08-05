@@ -24,10 +24,10 @@ async function loadNewsChannels(){
  for(const channel of channels){for(const item of channel.items||[]){const key=String(item.id||`${item.title||""}|${item.url||""}`);if(!key||seen.has(key))continue;seen.add(key);items.push(item)}}
  items.sort((a,b)=>Date.parse(b.published_at||b.date||0)-Date.parse(a.published_at||a.date||0));
  const updated=channels.map(c=>c.metadata?.updated_at).filter(Boolean).sort().pop()||null;
- return {metadata:{version:"v11.4.11",updated_at:updated,item_count:items.length,channel_count:channels.length},channels,items};
+ return {metadata:{version:"v11.4.12",updated_at:updated,item_count:items.length,channel_count:channels.length},channels,items};
 }
 async function loadStockNews(){
- const fallback=window.__STOCK_NEWS_SEED__||{metadata:{version:"v11.4.11",status:"waiting",item_count:0},items:[]};
+ const fallback=window.__STOCK_NEWS_SEED__||{metadata:{version:"v11.4.12",status:"waiting",item_count:0},items:[]};
  return await loadData("stock-news.json",fallback);
 }
 

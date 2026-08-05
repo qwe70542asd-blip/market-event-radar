@@ -13,7 +13,7 @@ import requests
 
 from common import DATA, NOW, read_json, write_payload
 
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.11)"}
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.12)"}
 TWSE_QUOTES = "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL"
 TPEX_QUOTES = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes"
 TWSE_FUNDS = "https://openapi.twse.com.tw/v1/opendata/t187ap47_L"
@@ -158,7 +158,7 @@ def main() -> None:
     average_20d = sum(previous_values) / len(previous_values) if previous_values else None
     volume_ratio_20d = total_trade_value / average_20d if average_20d not in (None, 0) else None
     volume_payload = {
-        "metadata": {"version": "v11.4.11", "updated_at": NOW.isoformat(timespec="seconds"), "retention_days": 60},
+        "metadata": {"version": "v11.4.12", "updated_at": NOW.isoformat(timespec="seconds"), "retention_days": 60},
         "items": history_rows,
     }
     history_path.write_text(__import__("json").dumps(volume_payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -169,7 +169,7 @@ def main() -> None:
 
     payload = {
         "metadata": {
-            "version": "v11.4.11",
+            "version": "v11.4.12",
             "updated_at": NOW.isoformat(timespec="seconds"),
             "trading_date": NOW.date().isoformat(),
             "market_status": "official-close",

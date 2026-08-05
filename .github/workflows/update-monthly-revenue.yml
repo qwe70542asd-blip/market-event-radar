@@ -1,4 +1,4 @@
-name: Update v11.4.11 monthly revenue history
+name: Update v11.4.12 monthly revenue history
 on:
   push:
     branches: [main]

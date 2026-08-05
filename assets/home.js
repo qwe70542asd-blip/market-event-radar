@@ -152,20 +152,42 @@
   $("#todayFocusList").innerHTML=majorToday.length?majorToday.slice(0,6).map(event=>`<a class="today-focus-item" href="event.html?id=${encodeURIComponent(event.id)}"><span class="impact-dot ${escapeHtml(event.impact||"medium")}"></span><span><strong>${escapeHtml(strip(event.title))}</strong><small>${escapeHtml(formatTime(event.start))}</small></span></a>`).join(""):'<div class="empty">今天沒有已確認的重大事件</div>';
   $("#focusUpdated").textContent=events.metadata?.updated_at?formatTime(events.metadata.updated_at):"等待資料";
 
-  let current=new Date(),focus="all";
+  let current=new Date(),focus="all",calendarMode=localStorage.getItem("mr-calendar-mode-v11.4.12")==="dividend"?"dividend":"market",pendingJumpDate="";
   const calendar=$("#calendarGrid"),dialog=$("#dayDialog");
-  const filters=()=>({q:$("#eventSearch").value.trim().toLowerCase(),region:$("#eventRegion").value,type:$("#eventType").value,impact:$("#eventImpact").value});
-  function relevant(event,filter){
-    const hay=`${event.title||""} ${event.description||event.summary||""} ${(event.assets||event.symbols||[]).join(" ")}`.toLowerCase();
-    const group=eventGroup(event);
+  const marketFilters=()=>({q:$("#eventSearch").value.trim().toLowerCase(),region:$("#eventRegion").value,type:$("#eventType").value,impact:$("#eventImpact").value});
+  const dividendFilters=()=>({q:$("#eventSearch").value.trim().toLowerCase(),kind:$("#dividendKind").value,asset:$("#dividendAsset").value,amount:$("#dividendAmount").value});
+  const searchableText=event=>`${event.title||""} ${event.description||event.summary||""} ${event.symbol||event.asset_id||""} ${event.asset_name||event.name||""} ${Array.isArray(event.assets)?event.assets.join(" "):event.assets||""} ${Array.isArray(event.symbols)?event.symbols.join(" "):event.symbols||""}`.toLowerCase();
+  const dividendKind=event=>{
+    const title=String(event.title||""),type=String(event.event_type||event.category||"").toLowerCase();
+    if(/dividend-payment/.test(type)||/股利發放/.test(title))return"payment";
+    if(/dividend-decision/.test(type)||/股利方案|股利案|盈餘分派/.test(title))return"decision";
+    if(/除權/.test(title))return"ex-right";
+    if(/除息/.test(title)||/ex-dividend|etf-distribution/.test(type))return"ex-dividend";
+    return"other";
+  };
+  const dividendAssetClass=event=>{
+    const explicit=String(event.asset_class||"").toLowerCase();
+    if(explicit==="etf"||explicit==="stock")return explicit;
+    const symbol=String(event.symbol||event.asset_id||"").replace(/^TW:/i,"").toUpperCase();
+    return symbol.startsWith("00")||/ETF|基金/i.test(`${event.asset_name||event.name||""} ${event.title||""}`)?"etf":"stock";
+  };
+  function marketRelevant(event,filter){
+    if(eventGroup(event)==="dividend")return false;
+    const hay=searchableText(event),group=eventGroup(event);
     const impactOk=filter.impact==="all"||event.impact==="high"||(filter.impact==="medium"&&["high","medium"].includes(event.impact));
     return (!filter.q||hay.includes(filter.q))&&(filter.region==="all"||event.region===filter.region)&&(filter.type==="all"||group===filter.type)&&impactOk&&(focus==="all"||(event.focus||event.category||event.type)===focus||(event.tags||[]).includes(focus));
   }
+  function dividendRelevant(event,filter){
+    if(eventGroup(event)!=="dividend")return false;
+    const hay=searchableText(event),kind=dividendKind(event),assetClass=dividendAssetClass(event);
+    const amountOk=filter.amount==="all"||(filter.amount==="cash"&&finite(event.cash_dividend)!=null&&finite(event.cash_dividend)!==0)||(filter.amount==="stock"&&(finite(event.stock_dividend)!=null&&finite(event.stock_dividend)!==0||finite(event.stock_dividend_ratio)!=null&&finite(event.stock_dividend_ratio)!==0));
+    return (!filter.q||hay.includes(filter.q))&&(filter.kind==="all"||kind===filter.kind)&&(filter.asset==="all"||assetClass===filter.asset)&&amountOk;
+  }
   function monthEvents(year,month){
-    const filter=filters();
+    const filter=calendarMode==="market"?marketFilters():dividendFilters();
     return uniqueEvents((events.events||[]).filter(event=>{
       const parts=eventDateKey(event).split("-").map(Number);
-      return parts[0]===year&&parts[1]-1===month&&relevant(event,filter);
+      return parts[0]===year&&parts[1]-1===month&&(calendarMode==="market"?marketRelevant(event,filter):dividendRelevant(event,filter));
     }));
   }
   function factRows(event){
@@ -193,53 +215,104 @@
     const source=event.source_url?`<a href="${escapeHtml(event.source_url)}" target="_blank" rel="noreferrer noopener">官方來源 ↗</a>`:`<span>${escapeHtml(event.source_name||"官方來源")}</span>`;
     return `<article class="event-detail ${group}"><div class="event-detail-top"><div><span class="tag">${escapeHtml(event.region||"GLOBAL")}</span><span class="event-kind">${group==="company"?"公司資訊":"重大事件"}</span></div><span class="impact-badge ${escapeHtml(event.impact||"medium")}">${impactLabel(event.impact)}</span></div><h3><a href="event.html?id=${encodeURIComponent(event.id)}">${escapeHtml(strip(event.title))}</a></h3>${description?`<p>${escapeHtml(truncate(description,220))}</p>`:""}${facts.length?`<dl class="event-fact-grid">${facts.map(row=>`<div><dt>${escapeHtml(row.label)}</dt><dd>${escapeHtml(row.value)}</dd></div>`).join("")}</dl>`:""}<div class="event-detail-foot"><time>${escapeHtml(formatTime(event.start))}</time>${source}</div>${relatedNewsHtml(event)}${description.length>220?`<details class="event-full"><summary>查看完整說明</summary><p>${escapeHtml(description)}</p></details>`:""}</article>`;
   };
+  const dividendEventLabel=event=>({"ex-dividend":"除息","ex-right":"除權／除權息",decision:"股利方案",payment:"股利發放",other:"股利事件"})[dividendKind(event)]||"股利事件";
+  const dividendCash=event=>finite(event.cash_dividend);
+  const dividendStock=event=>finite(event.stock_dividend??event.stock_dividend_ratio);
   const dividendTable=rows=>{
-    if(!rows.length)return '<div class="empty">當日沒有除權息資訊</div>';
-    return `<div class="table-wrap dividend-table-wrap"><table class="dividend-table"><thead><tr><th>標的</th><th>類型</th><th>每股金額</th><th>發放日期</th><th>來源</th></tr></thead><tbody>${rows.map(event=>`<tr><td><a href="asset.html?symbol=${encodeURIComponent(event.symbol||"")}"><b>${escapeHtml(event.symbol||"—")}</b><br><small>${escapeHtml(event.name||strip(event.title).replace(/^\S+\s*/,""))}</small></a></td><td>${/除權/.test(event.title||"")?"除權":"除息"}</td><td>${finite(event.cash_dividend)!=null?`${fmt(event.cash_dividend,4)} 元`:"—"}</td><td>${escapeHtml(event.payment_date||event.pay_date||"—")}</td><td>${event.source_url?`<a href="${escapeHtml(event.source_url)}" target="_blank" rel="noreferrer noopener">官方公告 ↗</a>`:escapeHtml(event.source_name||"—")}</td></tr>`).join("")}</tbody></table></div>`;
+    if(!rows.length)return '<div class="empty">當日沒有符合篩選的股利股息資訊</div>';
+    return `<div class="table-wrap dividend-table-wrap"><table class="dividend-table"><thead><tr><th>標的</th><th>事件</th><th>現金股利</th><th>股票股利</th><th>發放日期</th><th>來源</th></tr></thead><tbody>${rows.map(event=>`<tr><td><a href="asset.html?symbol=${encodeURIComponent(event.symbol||"")}"><b>${escapeHtml(event.symbol||"—")}</b><br><small>${escapeHtml(event.asset_name||event.name||strip(event.title).replace(/^\S+\s*/,""))}</small></a></td><td>${escapeHtml(dividendEventLabel(event))}</td><td>${dividendCash(event)!=null?`${fmt(dividendCash(event),4)} 元`:"—"}</td><td>${dividendStock(event)!=null?fmt(dividendStock(event),4):"—"}</td><td>${escapeHtml(event.payment_date||event.pay_date||"—")}</td><td>${event.source_url?`<a href="${escapeHtml(event.source_url)}" target="_blank" rel="noreferrer noopener">官方公告 ↗</a>`:escapeHtml(event.source_name||"—")}</td></tr>`).join("")}</tbody></table></div>`;
   };
   function openDay(date,rows){
-    const groups={major:[],company:[],dividend:[]};
-    for(const event of uniqueEvents(rows))groups[eventGroup(event)].push(event);
+    const unique=uniqueEvents(rows);
+    if(calendarMode==="dividend"){
+      const dividends=unique.filter(event=>eventGroup(event)==="dividend").sort((a,b)=>String(a.symbol||"").localeCompare(String(b.symbol||""),"zh-Hant"));
+      const companies=new Set(dividends.map(event=>event.symbol||event.asset_id||event.id)).size;
+      const etfs=new Set(dividends.filter(event=>dividendAssetClass(event)==="etf").map(event=>event.symbol||event.id)).size;
+      const knownCash=dividends.map(dividendCash).filter(value=>value!=null);
+      const cashTotal=knownCash.reduce((sum,value)=>sum+value,0);
+      $("#dayDialogTitle").textContent=`${date.toLocaleDateString("zh-TW")} 股利股息`;
+      $("#dayDialogBody").innerHTML=`<div class="day-summary dividend-day-summary"><div><strong>${companies}</strong><span>標的家數</span></div><div><strong>${etfs}</strong><span>ETF 家數</span></div><div><strong>${knownCash.length?fmt(cashTotal,4):"—"}</strong><span>已知每股金額合計</span></div></div>${dividendTable(dividends)}`;
+      dialog.showModal();return;
+    }
+    const groups={major:[],company:[]};
+    for(const event of unique){const group=eventGroup(event);if(group==="major"||group==="company")groups[group].push(event)}
     groups.major.sort((a,b)=>Number(b.impact==="high")-Number(a.impact==="high")||Date.parse(a.start)-Date.parse(b.start));
     groups.company.sort((a,b)=>Date.parse(a.start)-Date.parse(b.start));
-    groups.dividend.sort((a,b)=>String(a.symbol||"").localeCompare(String(b.symbol||""),"zh-Hant"));
-    $("#dayDialogTitle").textContent=`${date.toLocaleDateString("zh-TW")} 事件`;
-    $("#dayDialogBody").innerHTML=`<div class="day-summary"><div><strong>${groups.major.length}</strong><span>重大事件</span></div><div><strong>${groups.company.length}</strong><span>公司資訊</span></div><div><strong>${new Set(groups.dividend.map(event=>event.symbol||event.id)).size}</strong><span>除權息家數</span></div></div><div class="dialog-tabs"><button class="chip active" data-day-tab="major">重大事件 <b>${groups.major.length}</b></button><button class="chip" data-day-tab="company">公司資訊 <b>${groups.company.length}</b></button><button class="chip" data-day-tab="dividend">除權息 <b>${groups.dividend.length}</b></button></div><div class="day-tab-panel" data-day-panel="major">${groups.major.length?groups.major.map(eventCard).join(""):'<div class="empty">當日沒有重大事件</div>'}</div><div class="day-tab-panel" data-day-panel="company" hidden>${groups.company.length?groups.company.map(eventCard).join(""):'<div class="empty">當日沒有公司資訊</div>'}</div><div class="day-tab-panel" data-day-panel="dividend" hidden>${dividendTable(groups.dividend)}</div>`;
+    $("#dayDialogTitle").textContent=`${date.toLocaleDateString("zh-TW")} 市場事件`;
+    $("#dayDialogBody").innerHTML=`<div class="day-summary market-day-summary"><div><strong>${groups.major.length}</strong><span>重大事件</span></div><div><strong>${groups.company.length}</strong><span>公司資訊</span></div></div><div class="dialog-tabs"><button class="chip active" data-day-tab="major">重大事件 <b>${groups.major.length}</b></button><button class="chip" data-day-tab="company">公司資訊 <b>${groups.company.length}</b></button></div><div class="day-tab-panel" data-day-panel="major">${groups.major.length?groups.major.map(eventCard).join(""):'<div class="empty">當日沒有重大事件</div>'}</div><div class="day-tab-panel" data-day-panel="company" hidden>${groups.company.length?groups.company.map(eventCard).join(""):'<div class="empty">當日沒有公司資訊</div>'}</div>`;
     document.querySelectorAll("[data-day-tab]").forEach(button=>button.onclick=()=>{
       document.querySelectorAll("[data-day-tab]").forEach(item=>item.classList.toggle("active",item===button));
       document.querySelectorAll("[data-day-panel]").forEach(panel=>panel.hidden=panel.dataset.dayPanel!==button.dataset.dayTab);
     });
     dialog.showModal();
   }
+  function renderMarketPills(rows){
+    const major=rows.filter(event=>eventGroup(event)==="major"),company=rows.filter(event=>eventGroup(event)==="company"),pills=[];
+    if(major.length){
+      pills.push(`<span class="event-pill ${escapeHtml(major[0].impact||"")}">${escapeHtml(truncate(major[0].title,38))}</span>`);
+      if(major.length>1)pills.push(`<span class="event-pill major-summary">另有重大事件 ${major.length-1} 件</span>`);
+    }
+    if(company.length)pills.push(`<span class="event-pill company-summary">公司資訊 ${company.length} 件</span>`);
+    return pills;
+  }
+  function renderDividendPills(rows){
+    const sorted=[...rows].sort((a,b)=>String(a.symbol||"").localeCompare(String(b.symbol||""),"zh-Hant"));
+    const companyCount=new Set(sorted.map(event=>event.symbol||event.asset_id||event.id)).size;
+    const pills=sorted.slice(0,2).map(event=>{const cash=dividendCash(event);return `<span class="event-pill dividend-symbol-pill"><b>${escapeHtml(event.symbol||"股利")}</b><span>${escapeHtml(dividendEventLabel(event))}${cash!=null?` · ${fmt(cash,4)} 元`:""}</span></span>`});
+    if(companyCount>2)pills.push(`<span class="event-pill dividend-summary">另有 ${companyCount-2} 家</span>`);
+    return pills;
+  }
   function renderCalendar(){
     const year=current.getFullYear(),month=current.getMonth(),first=new Date(year,month,1),start=new Date(year,month,1-first.getDay()),all=monthEvents(year,month);
     $("#calendarTitle").textContent=`${year} 年 ${month+1} 月`;
     $("#eventUpdated").textContent=events.metadata?.updated_at?formatTime(events.metadata.updated_at):"等待排程";
+    if(calendarMode==="market"){
+      const major=all.filter(event=>eventGroup(event)==="major").length,company=all.filter(event=>eventGroup(event)==="company").length;
+      $("#calendarModeSummary").textContent=`本月 ${major} 件重大事件・${company} 件公司資訊`;
+    }else{
+      const companies=new Set(all.map(event=>event.symbol||event.asset_id||event.id)).size,etfs=new Set(all.filter(event=>dividendAssetClass(event)==="etf").map(event=>event.symbol||event.id)).size;
+      $("#calendarModeSummary").textContent=`本月 ${companies} 家標的・其中 ${etfs} 家 ETF`;
+    }
     calendar.innerHTML="";
     for(let index=0;index<42;index++){
       const date=new Date(start);date.setDate(start.getDate()+index);
-      const key=localKey(date),rows=all.filter(event=>eventDateKey(event)===key);
-      const major=rows.filter(event=>eventGroup(event)==="major"),company=rows.filter(event=>eventGroup(event)==="company"),dividend=rows.filter(event=>eventGroup(event)==="dividend");
-      const cell=document.createElement("div");
-      cell.className=`calendar-day ${date.getMonth()!==month?"other":""} ${localKey(date)===todayKey?"today":""}`;
-      const dividendCount=new Set(dividend.map(event=>event.symbol||event.id)).size;
-      const pills=[];
-      if(major.length){
-        pills.push(`<span class="event-pill ${escapeHtml(major[0].impact||"")}">${escapeHtml(truncate(major[0].title,38))}</span>`);
-        if(major.length>1)pills.push(`<span class="event-pill major-summary">另有重大事件 ${major.length-1} 件</span>`);
-      }
-      if(company.length)pills.push(`<span class="event-pill company-summary">公司資訊 ${company.length} 件</span>`);
-      if(dividendCount)pills.push(`<span class="event-pill dividend-summary">除權息 ${dividendCount} 家</span>`);
+      const key=localKey(date),rows=all.filter(event=>eventDateKey(event)===key),pills=calendarMode==="market"?renderMarketPills(rows):renderDividendPills(rows);
+      const cell=document.createElement("button");
+      cell.type="button";cell.dataset.date=key;
+      cell.className=`calendar-day ${date.getMonth()!==month?"other":""} ${key===todayKey?"today":""} ${pendingJumpDate===key?"calendar-jump-highlight":""} ${calendarMode==="dividend"?"dividend-mode-day":""}`;
+      cell.setAttribute("aria-label",`${date.toLocaleDateString("zh-TW")}，${rows.length} 件資訊`);
       cell.innerHTML=`<span class="day-num">${date.getDate()}</span>${pills.join("")}${rows.length&&!pills.length?`<span class="event-pill">共 ${rows.length} 件資訊</span>`:""}`;
       cell.onclick=()=>openDay(date,rows);
       calendar.appendChild(cell);
     }
+    if(pendingJumpDate){const target=calendar.querySelector(`[data-date="${pendingJumpDate}"]`);if(target)setTimeout(()=>target.scrollIntoView({behavior:"smooth",block:"center",inline:"center"}),60)}
   }
-  ["eventSearch","eventRegion","eventType","eventImpact"].forEach(id=>$("#"+id).addEventListener("input",renderCalendar));
+  function setCalendarMode(mode,{render=true}={}){
+    calendarMode=mode==="dividend"?"dividend":"market";
+    localStorage.setItem("mr-calendar-mode-v11.4.12",calendarMode);
+    document.querySelectorAll("[data-calendar-mode]").forEach(button=>{const active=button.dataset.calendarMode===calendarMode;button.classList.toggle("active",active);button.setAttribute("aria-selected",String(active))});
+    document.querySelectorAll("[data-calendar-filter]").forEach(panel=>panel.hidden=panel.dataset.calendarFilter!==calendarMode);
+    $("#calendarHeading").textContent=calendarMode==="market"?"市場事件月曆":"股利股息月曆";
+    $("#calendarModeDescription").textContent=calendarMode==="market"?"總經、央行、財報與公司重要日期。":"除權、除息、股利方案與發放日期分開整理。";
+    $("#eventSearch").placeholder=calendarMode==="market"?"搜尋：CPI、台積電、財報、法說會…":"搜尋：代碼、公司、ETF、除息或股利金額…";
+    $("#calendarMetaText").textContent=calendarMode==="market"?"點日期查看重大事件與公司資訊":"點日期查看股利類型、每股金額與發放日期";
+    $("#calendarPanel").dataset.mode=calendarMode;
+    if(render)renderCalendar();
+  }
+  $("#eventSearch").addEventListener("input",renderCalendar);
+  ["eventRegion","eventType","eventImpact","dividendKind","dividendAsset","dividendAmount"].forEach(id=>$("#"+id).addEventListener("change",renderCalendar));
   document.querySelectorAll("[data-focus]").forEach(button=>button.onclick=()=>{document.querySelectorAll("[data-focus]").forEach(item=>item.classList.remove("active"));button.classList.add("active");focus=button.dataset.focus;renderCalendar()});
-  $("#prevMonth").onclick=()=>{current.setMonth(current.getMonth()-1);renderCalendar()};
-  $("#nextMonth").onclick=()=>{current.setMonth(current.getMonth()+1);renderCalendar()};
-  $("#todayMonth").onclick=()=>{current=new Date();renderCalendar()};
+  document.querySelectorAll("[data-calendar-mode]").forEach(button=>button.onclick=()=>setCalendarMode(button.dataset.calendarMode));
+  $("#prevMonth").onclick=()=>{current.setMonth(current.getMonth()-1);pendingJumpDate="";renderCalendar()};
+  $("#nextMonth").onclick=()=>{current.setMonth(current.getMonth()+1);pendingJumpDate="";renderCalendar()};
+  $("#todayMonth").onclick=()=>{current=new Date();pendingJumpDate="";renderCalendar()};
   $("#closeDayDialog").onclick=()=>dialog.close();
+  window.addEventListener("market-radar:calendar-jump",event=>{
+    const detail=event.detail||{},target=String(detail.date||"").match(/^\d{4}-\d{2}-\d{2}/)?.[0]||"";
+    if(target){const [year,month,day]=target.split("-").map(Number);current=new Date(year,month-1,day);pendingJumpDate=target}
+    setCalendarMode(detail.mode==="dividend"?"dividend":"market");
+    $("#calendarPanel").scrollIntoView({behavior:"smooth",block:"start"});
+  });
+  setCalendarMode(calendarMode,{render:false});
   renderCalendar();
 })();

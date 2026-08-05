@@ -25,7 +25,7 @@ from bs4 import BeautifulSoup
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.11"
+VERSION = "v11.4.12"
 BATCH = 12
 PRIORITY_SYMBOLS = ["00981A", "00403A", "00631L", "006208", "0050", "0056", "00878", "00919", "2330", "2317", "2454"]
 TIMEOUT = 24

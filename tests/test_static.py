@@ -7,16 +7,19 @@ class StaticTests(unittest.TestCase):
  def test_required_tree(self):
   for path in [".github/workflows","assets","data","docs","scripts","tests","index.html","news.html","asset.html","service-worker.js"]:self.assertTrue((ROOT/path).exists(),path)
  def test_version(self):
-  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.11")
+  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.12")
  def test_ascii_filenames(self):
   for path in ROOT.rglob("*"):self.assertTrue(all(ord(c)<128 for c in path.name),path)
  def test_no_audio(self):
   self.assertFalse(any(p.suffix.lower() in {".m4a",".mp3",".wav"} for p in ROOT.rglob("*")))
  def test_home_market_focus(self):
-  html=self.read("index.html");self.assertIn("今日市場重點",html);self.assertNotIn("虛擬貨幣即時排行",html)
+  html=self.read("index.html")
+  for token in ("我的資產總覽","即時大盤資訊","balanced-summary-row","marketList"):self.assertIn(token,html)
+  self.assertNotIn("虛擬貨幣即時排行",html)
  def test_calendar_grouped(self):
-  js=self.read("assets/home.js")
-  for x in ("重大事件","公司資訊","除權息","dividendTable","localKey"):self.assertIn(x,js)
+  html=self.read("index.html");js=self.read("assets/home.js")
+  for token in ("市場事件日曆","股利股息日曆","marketCalendarFilters","dividendCalendarFilters","calendarModeSummary"):self.assertIn(token,html)
+  for token in ("setCalendarMode","marketRelevant","dividendRelevant","dividendTable","localKey"):self.assertIn(token,js)
  def test_global_market_set(self):
   script=self.read("scripts/update_market_snapshot.py")
   for x in ("^KS11","^KQ11","^VIX","^TNX","DX-Y.NYB","TWD=X","KRW=X"):self.assertIn(x,script)
@@ -53,7 +56,8 @@ class StaticTests(unittest.TestCase):
   shared=self.read("assets/shared.js")
   for x in ("NEWS_FILES","loadNewsChannels","Promise.all","channel_kind"):self.assertIn(x,shared)
  def test_consumers_use_multi_source(self):
-  for f in ("assets/home.js","assets/news.js","assets/asset.js","assets/event.js","assets/date-alerts.js"):self.assertIn("loadNewsChannels",self.read(f),f)
+  for f in ("assets/home.js","assets/news.js","assets/asset.js","assets/event.js"):self.assertIn("loadNewsChannels",self.read(f),f)
+  self.assertIn('loadData("events.json"',self.read("assets/date-alerts.js"))
  def test_news_page_blocks(self):
   html=self.read("news.html")
   for x in ("精選重大資訊","最新財經新聞","官方市場公告","個股重大訊息","latestNewsRows","news-hero-layout","portal-news-grid"):self.assertIn(x,html)
@@ -73,7 +77,7 @@ class StaticTests(unittest.TestCase):
   texts="\n".join(self.read(p.relative_to(ROOT)) for p in (ROOT/".github/workflows").glob("update-news-*.yml"))
   for branch in ("live-news-cna","live-news-moneydj","live-news-cnyes","live-news-udn","live-news-ltn","live-news-wealth","live-news-yahoo","live-news-technews","live-news-ctee","live-news-asia-risk"):self.assertIn(branch,texts)
  def test_service_worker_cache(self):
-  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-11",sw)
+  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-12",sw)
   for seed in ("news-cna-seed.js","news-moneydj-seed.js","news-wealth-seed.js","news-yahoo-seed.js","news-technews-seed.js","news-ctee-seed.js","news-asia-risk-seed.js","stock-news-seed.js","company-disclosures-seed.js","monthly-revenue-seed.js","dividend-history-seed.js","secondary-reference-seed.js","data-verification-seed.js","yahoo-details-seed.js","etf-details-seed.js","market-volume-history-seed.js"):self.assertIn(seed,sw)
  def test_all_pages_current_version(self):
   for p in ROOT.glob("*.html"):self.assertNotIn("v11.4.2",p.read_text(encoding="utf-8"),p.name)
@@ -161,8 +165,15 @@ class StaticTests(unittest.TestCase):
  def test_compact_controls_before_calendar_layout(self):
   html=self.read("index.html")
   self.assertLess(html.index("compact-feature-strip"),html.index("我的資產總覽"))
-  self.assertLess(html.index("我的資產總覽"),html.index("本月事件月曆"))
-  for x in ("home-primary-grid","home-calendar-primary","home-market-rail","home-summary-row"):self.assertIn(x,html)
+  self.assertLess(html.index("我的資產總覽"),html.index("今日新公布日期"))
+  self.assertLess(html.index("今日新公布日期"),html.index("市場事件月曆"))
+  for token in ("home-summary-row","balanced-summary-row","dual-calendar-card","calendar-mode-switch"):self.assertIn(token,html)
+  for token in ("home-primary-grid","home-market-rail"):self.assertNotIn(token,html)
+
+ def test_today_new_dates_jump_to_matching_calendar_mode(self):
+  html=self.read("index.html");js=self.read("assets/date-alerts.js")+self.read("assets/home.js")
+  self.assertIn("今日新公布日期",html)
+  for token in ("data-calendar-jump","market-radar:calendar-jump","data-calendar-mode","data-calendar-date"):self.assertIn(token,js)
 
  def test_non_ai_news_image_pipeline(self):
   updater=self.read("scripts/update_media_source.py");news=self.read("assets/news.js");home=self.read("assets/home.js")

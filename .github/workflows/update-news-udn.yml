@@ -1,4 +1,4 @@
-name: Update v11.4.11 經濟日報 news
+name: Update v11.4.12 經濟日報 news
 on:
   push:
     branches: [main]
