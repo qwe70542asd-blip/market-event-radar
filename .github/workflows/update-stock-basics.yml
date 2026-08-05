@@ -1,4 +1,4 @@
-name: Update v11.4.19 stock basics
+name: Update v11.4.20 stock basics
 on:
   push:
     branches: [main]
@@ -36,6 +36,7 @@ jobs:
             "stock-basics.json:data/stock-basics.json" \
             "stock-basics-seed.js:data/stock-basics-seed.js"
       - run: python scripts/update_stock_basics.py
+      - run: python scripts/validate_public_data.py basics
       - name: Publish stock basics channel
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

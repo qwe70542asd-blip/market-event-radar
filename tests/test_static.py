@@ -7,7 +7,7 @@ class StaticTests(unittest.TestCase):
  def test_required_tree(self):
   for path in [".github/workflows","assets","data","docs","scripts","tests","index.html","news.html","asset.html","service-worker.js"]:self.assertTrue((ROOT/path).exists(),path)
  def test_version(self):
-  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.19")
+  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.20")
  def test_ascii_filenames(self):
   for path in ROOT.rglob("*"):self.assertTrue(all(ord(c)<128 for c in path.name),path)
  def test_no_audio(self):
@@ -80,18 +80,18 @@ class StaticTests(unittest.TestCase):
   texts="\n".join(self.read(p.relative_to(ROOT)) for p in (ROOT/".github/workflows").glob("update-news-*.yml"))
   for branch in ("live-news-cna","live-news-moneydj","live-news-cnyes","live-news-udn","live-news-ltn","live-news-wealth","live-news-yahoo","live-news-technews","live-news-ctee","live-news-asia-risk"):self.assertIn(branch,texts)
  def test_service_worker_cache(self):
-  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-19",sw)
+  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-20",sw)
   for seed in ("news-cna-seed.js","news-moneydj-seed.js","news-wealth-seed.js","news-yahoo-seed.js","news-technews-seed.js","news-ctee-seed.js","news-asia-risk-seed.js","stock-news-seed.js","company-disclosures-seed.js","monthly-revenue-seed.js","dividend-history-seed.js","secondary-reference-seed.js","data-verification-seed.js","yahoo-details-seed.js","etf-details-seed.js","stock-basics-seed.js","market-volume-history-seed.js"):self.assertIn(seed,sw)
  def test_market_snapshot_seed_schema(self):
   payload=json.loads(self.read("data/market-snapshot.json"))
-  self.assertEqual(payload.get("metadata",{}).get("version"),"v11.4.19")
+  self.assertEqual(payload.get("metadata",{}).get("version"),"v11.4.20")
   self.assertEqual(set(payload.get("metadata",{}).get("kline_symbols",[])),{"^TWII","^KS11","^N225","^IXIC","^SOX","^GSPC"})
   self.assertNotIn("^TWOII",{row.get("symbol") for row in payload.get("items",[])})
 
  def test_all_pages_current_version(self):
   for p in ROOT.glob("*.html"):
    body=p.read_text(encoding="utf-8")
-   self.assertIn("v11.4.19",body,p.name)
+   self.assertIn("v11.4.20",body,p.name)
    self.assertNotIn("v11.4.15",body,p.name)
 
 
@@ -154,7 +154,7 @@ class StaticTests(unittest.TestCase):
 
  def test_balanced_portfolio_summary_layout(self):
   css=self.read("assets/styles.css")
-  for token in ("v11.4.19 portfolio summary balance","grid-template-columns:repeat(3,minmax(0,1fr))","grid-template-rows:repeat(2,minmax(78px,1fr))","justify-content:center"):
+  for token in ("v11.4.20 portfolio summary balance","grid-template-columns:repeat(3,minmax(0,1fr))","grid-template-rows:repeat(2,minmax(78px,1fr))","justify-content:center"):
    self.assertIn(token,css)
 
  def test_home_summary_and_volume_momentum(self):
@@ -335,5 +335,26 @@ class StaticTests(unittest.TestCase):
  def test_global_workflow_restores_last_kline(self):
   workflow=self.read(".github/workflows/update-global-market.yml")
   for token in ("Restore last successful global snapshot","market-snapshot.json:data/market-snapshot.json","Validate six index K-lines"):self.assertIn(token,workflow)
+
+ def test_strict_data_quality_gates(self):
+  market=self.read("scripts/update_market_snapshot.py");events=self.read("scripts/update_events.py");news=self.read("scripts/news_pipeline.py");validator=self.read("scripts/validate_public_data.py")
+  for token in ("adjacent-daily-candles","chartPreviousClose can refer","validate_market_row","quality_policy"):self.assertIn(token,market)
+  for token in ("choose_material_target_date","explicit-labeled-date","official-announcement-date","BLS_HTML_URL","BEA_FULL_URL"):self.assertIn(token,events)
+  for token in ("valid_symbols=set(aliases.values())","Longest-name-first","official stock/ETF master"):self.assertIn(token,news)
+  for token in ("bad market change","period start leaked","invalid news symbols"):self.assertIn(token,validator)
+  for workflow in ("update-global-market.yml","update-events.yml","update-stock-basics.yml"):
+   self.assertIn("validate_public_data.py",self.read(f".github/workflows/{workflow}"))
+
+ def test_company_and_financial_coverage_are_separate(self):
+  updater=self.read("scripts/update_stock_basics.py");asset=self.read("assets/asset.js")
+  for token in ("financial_coverage_percent","average_financial_coverage_percent","INDUSTRY_NAMES","industry_name"):self.assertIn(token,updater)
+  self.assertIn("公司主檔",asset);self.assertIn("財務資料",asset)
+  payload=json.loads(self.read("data/stock-basics.json"))
+  self.assertIn("average_financial_coverage_percent",payload["metadata"])
+  self.assertTrue(all("financial_coverage_percent" in row for row in payload.get("items",{}).values()))
+
+ def test_seed_data_passes_strict_validator(self):
+  import subprocess,sys
+  subprocess.run([sys.executable,str(ROOT/"scripts/validate_public_data.py"),"all"],cwd=ROOT,check=True)
 
 if __name__=="__main__":unittest.main()

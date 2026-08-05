@@ -1,13 +1,14 @@
 {
   "metadata": {
-    "version": "v11.4.19",
+    "version": "v11.4.20",
     "updated_at": null,
     "timezone": "Asia/Taipei",
     "state_initialized": false,
     "announced_today_count": 0,
-    "note": "等待官方網路事件回補；本地檔僅作初始備援。",
+    "note": "Official-source date monitor; material events use labeled event dates or the official announcement date. Reporting-period dates are never calendar dates.",
     "archive_start": "2026-01-01",
-    "archive_policy": "retain verified events from 2026-01-01 through the official future horizon"
+    "archive_policy": "retain verified events from 2026-01-01 through the official future horizon",
+    "event_count": 0
   },
   "sources": [],
   "events": []

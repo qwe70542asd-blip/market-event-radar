@@ -1,4 +1,4 @@
-name: Update v11.4.19 event calendar and announced dates
+name: Update v11.4.20 event calendar and announced dates
 
 on:
   push:
@@ -86,7 +86,7 @@ jobs:
           events=payload.get("events") or []
           metadata=payload.get("metadata") or {}
           assert events, "empty event calendar after official-source refresh"
-          assert metadata.get("version")=="v11.4.19", metadata
+          assert metadata.get("version")=="v11.4.20", metadata
           assert metadata.get("state_initialized") is True, metadata
           assert metadata.get("archive_start")=="2026-01-01", metadata
           assert isinstance(metadata.get("announced_today_count"), int), metadata
@@ -99,11 +99,12 @@ jobs:
           print("sources warning",metadata.get("source_warning_count"))
           PY
 
+      - run: python scripts/validate_public_data.py events
       - name: Publish isolated event channel
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          bash scripts/publish_data_branch.sh "$DATA_BRANCH" "event-calendar-v11.4.19" \
+          bash scripts/publish_data_branch.sh "$DATA_BRANCH" "event-calendar-v11.4.20" \
             data/events.json \
             data/events-seed.js \
             data/event-source-state.json

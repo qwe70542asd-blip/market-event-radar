@@ -1,9 +1,9 @@
 {
   "metadata": {
-    "version": "v11.4.19",
+    "version": "v11.4.20",
     "updated_at": null,
     "source": "TWSE official TAIEX history + Yahoo public chart API",
-    "note": "TAIEX uses TWSE official daily OHLC with Yahoo fallback. Korea, Japan and U.S. indices use Yahoo daily OHLC.",
+    "note": "Daily change is calculated only from adjacent daily sessions, never Yahoo chartPreviousClose. Invalid arithmetic or OHLC is rejected before publication.",
     "kline_symbols": [
       "^GSPC",
       "^IXIC",
@@ -15,7 +15,8 @@
     "kline_interval": "1d",
     "kline_range": "3mo",
     "frontend_fetch_policy": "GitHub Contents API first, Raw fallback, local seed fallback",
-    "browser_cache_policy": "preserve last successful six-index candles"
+    "browser_cache_policy": "preserve last successful six-index candles",
+    "quality_policy": "fail-closed-on-invalid-ohlc-or-change"
   },
   "items": [
     {
@@ -38,7 +39,9 @@
       "candle_count": 0,
       "candle_interval": "1d",
       "candle_range": "3mo",
-      "data_status": "waiting"
+      "data_status": "waiting",
+      "change_basis": "awaiting-adjacent-session-refresh",
+      "validation_status": "withheld-until-verified"
     },
     {
       "symbol": "^GSPC",
@@ -60,7 +63,9 @@
       "candle_count": 0,
       "candle_interval": "1d",
       "candle_range": "3mo",
-      "data_status": "waiting"
+      "data_status": "waiting",
+      "change_basis": "awaiting-adjacent-session-refresh",
+      "validation_status": "withheld-until-verified"
     },
     {
       "symbol": "^DJI",
@@ -77,7 +82,9 @@
       "market_at": null,
       "quote_kind": "index",
       "display_suffix": "",
-      "close": null
+      "close": null,
+      "change_basis": "awaiting-adjacent-session-refresh",
+      "validation_status": "withheld-until-verified"
     },
     {
       "symbol": "^IXIC",
@@ -99,7 +106,9 @@
       "candle_count": 0,
       "candle_interval": "1d",
       "candle_range": "3mo",
-      "data_status": "waiting"
+      "data_status": "waiting",
+      "change_basis": "awaiting-adjacent-session-refresh",
+      "validation_status": "withheld-until-verified"
     },
     {
       "symbol": "^SOX",
@@ -121,7 +130,9 @@
       "candle_count": 0,
       "candle_interval": "1d",
       "candle_range": "3mo",
-      "data_status": "waiting"
+      "data_status": "waiting",
+      "change_basis": "awaiting-adjacent-session-refresh",
+      "validation_status": "withheld-until-verified"
     },
     {
       "symbol": "^N225",
@@ -143,7 +154,9 @@
       "candle_count": 0,
       "candle_interval": "1d",
       "candle_range": "3mo",
-      "data_status": "waiting"
+      "data_status": "waiting",
+      "change_basis": "awaiting-adjacent-session-refresh",
+      "validation_status": "withheld-until-verified"
     },
     {
       "symbol": "^KS11",
@@ -165,7 +178,9 @@
       "candle_count": 0,
       "candle_interval": "1d",
       "candle_range": "3mo",
-      "data_status": "waiting"
+      "data_status": "waiting",
+      "change_basis": "awaiting-adjacent-session-refresh",
+      "validation_status": "withheld-until-verified"
     },
     {
       "symbol": "^KQ11",
@@ -182,7 +197,9 @@
       "low": null,
       "volume": null,
       "market_at": null,
-      "close": null
+      "close": null,
+      "change_basis": "awaiting-adjacent-session-refresh",
+      "validation_status": "withheld-until-verified"
     },
     {
       "symbol": "^VIX",
@@ -199,7 +216,9 @@
       "low": null,
       "volume": null,
       "market_at": null,
-      "close": null
+      "close": null,
+      "change_basis": "awaiting-adjacent-session-refresh",
+      "validation_status": "withheld-until-verified"
     },
     {
       "symbol": "^TNX",
@@ -216,7 +235,9 @@
       "low": null,
       "volume": null,
       "market_at": null,
-      "close": null
+      "close": null,
+      "change_basis": "awaiting-adjacent-session-refresh",
+      "validation_status": "withheld-until-verified"
     },
     {
       "symbol": "DX-Y.NYB",
@@ -233,7 +254,9 @@
       "low": null,
       "volume": null,
       "market_at": null,
-      "close": null
+      "close": null,
+      "change_basis": "awaiting-adjacent-session-refresh",
+      "validation_status": "withheld-until-verified"
     },
     {
       "symbol": "TWD=X",
@@ -250,7 +273,9 @@
       "low": null,
       "volume": null,
       "market_at": null,
-      "close": null
+      "close": null,
+      "change_basis": "awaiting-adjacent-session-refresh",
+      "validation_status": "withheld-until-verified"
     },
     {
       "symbol": "KRW=X",
@@ -267,7 +292,9 @@
       "low": null,
       "volume": null,
       "market_at": null,
-      "close": null
+      "close": null,
+      "change_basis": "awaiting-adjacent-session-refresh",
+      "validation_status": "withheld-until-verified"
     }
   ]
 }

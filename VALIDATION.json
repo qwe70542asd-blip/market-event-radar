@@ -1,18 +1,21 @@
 {
-  "version": "v11.4.19",
-  "validated_at": "2026-08-05T17:24:00+08:00",
-  "tests": 75,
+  "version": "v11.4.20",
+  "validated_at": "2026-08-05T18:06:00+08:00",
+  "tests": 85,
   "status": "passed",
   "checks": [
-    "Home asset summary uses a balanced 3 by 2 metric grid",
-    "Metric cards expand vertically to use the full summary panel",
-    "Tablet and mobile asset summary switches to a 2 by 3 grid",
-    "Public data coverage page and navigation remain removed",
-    "Six-index K-line, online history, event calendar and news update pipelines remain intact",
-    "Service worker cache and visible page versions updated to v11.4.19",
+    "Daily index changes use adjacent trading sessions",
+    "Market arithmetic and OHLC validation block invalid publication",
+    "Material-event dates use labeled event dates or official announcement dates",
+    "Financial reporting-period dates cannot become calendar event dates",
+    "BLS official annual HTML fallback and BEA full schedule parser are present",
+    "News symbols must exist in the official full-market master",
+    "Longest company-name matching prevents overlapping aliases",
+    "Company-master and financial-data coverage are separate",
+    "Seed datasets pass the strict public-data validator",
     "Python compilation, JavaScript syntax, workflow YAML and automated tests passed"
   ],
   "notes": [
-    "Historical source availability varies by publisher; unavailable articles are not fabricated."
+    "No internet data system can honestly guarantee zero external-source errors. This version fails closed: detected inconsistencies are withheld instead of displayed."
   ]
 }

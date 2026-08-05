@@ -12,11 +12,11 @@ from dateutil import parser as date_parser
 
 from common import DATA, NOW, read_json
 
-VERSION="v11.4.19"
+VERSION="v11.4.20"
 ARCHIVE_START=datetime(2026,1,1,tzinfo=NOW.tzinfo)
 RECENT_FULL_DAYS=30
 MID_ARCHIVE_DAYS=90
-HEADERS={"User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.4.19; +https://github.com/qwe70542asd-blip/market-event-radar)"}
+HEADERS={"User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.4.20; +https://github.com/qwe70542asd-blip/market-event-radar)"}
 COMPANY_EVENT_RE=re.compile(r"增資|減資|除權|除息|股利|法說|財報|財務報告|股東會|停牌|復牌|公開收購|併購|合併|處分資產|取得資產|重大合約|融資融券|注意股票|處置股票|庫藏股|董事會|重大訊息",re.I)
 MARKET_HIGH_RE=re.compile(r"FOMC|聯準會|Fed\b|央行|CPI|PCE|GDP|非農|JOLTS|PMI|利率決策|升息|降息|關稅|制裁|戰爭|金融危機|熔斷|重大法規|匯率干預|資本管制|銀行危機|債務危機|財政危機|信用危機",re.I)
 ASIA_RISK_RE=re.compile(r"日本銀行|日銀|BOJ|日圓|日債|日本國債|日本政府債務|日本企業倒閉|日本企業破產|匯市干預|韓國央行|韓元|KOSPI|KOSDAQ|中國房地產|中國房企|地方債|人民幣|亞洲貨幣|亞洲資金外流|貨幣競貶",re.I)
@@ -142,35 +142,51 @@ def parse_datetime(value:Any)->datetime|None:
    except Exception:return None
  return None
 
+def _stock_master_rows()->list[dict[str,Any]]:
+ payload=read_json(DATA/"stock-basics.json",{"items":{}});rows=[]
+ items=payload.get("items") or {}
+ if isinstance(items,dict): rows.extend(value for value in items.values() if isinstance(value,dict))
+ assets=read_json(DATA/"assets.json",{"assets":[]}).get("assets",[])
+ rows.extend(value for value in assets if isinstance(value,dict) and value.get("market")=="TW")
+ return rows
+
 def asset_aliases()->dict[str,str]:
- payload=read_json(DATA/"assets.json",{"assets":[]});out={}
- for a in payload.get("assets",[]):
+ out={}
+ for a in _stock_master_rows():
   symbol=str(a.get("symbol") or "").upper()
   if not symbol:continue
-  for name in [a.get("name"),a.get("company_name"),*((a.get("aliases") or []))]:
+  names=[a.get("short_name"),a.get("name"),a.get("company_name"),*((a.get("aliases") or []))]
+  for name in names:
    n=clean_text(name).lower()
-   if len(n)>=2:out[n]=symbol
+   if len(n)>=2 and (n not in out or len(symbol)>len(out[n])):out[n]=symbol
  return out
 
 def asset_profiles()->dict[str,dict[str,Any]]:
- payload=read_json(DATA/"assets.json",{"assets":[]});out={}
- for a in payload.get("assets",[]):
+ out={}
+ for a in _stock_master_rows():
   symbol=str(a.get("symbol") or "").upper()
   if not symbol:continue
-  name=clean_text(a.get("name") or a.get("company_name") or symbol)
-  industry=clean_text(a.get("official_industry") or a.get("sub_industry") or (a.get("etf") or {}).get("category") or "")
+  name=clean_text(a.get("short_name") or a.get("name") or a.get("company_name") or symbol)
+  industry=clean_text(a.get("industry_name") or a.get("official_industry") or a.get("sub_industry") or a.get("industry") or (a.get("etf") or {}).get("category") or "")
   out[symbol]={"symbol":symbol,"name":name or symbol,"industry":industry,"asset_class":a.get("asset_class") or "stock"}
  return out
 
 def infer_symbols(text:str,aliases:dict[str,str])->list[str]:
+ valid_symbols=set(aliases.values())
  found=[]
+ # A four-to-six-character number is accepted only when it exists in the
+ # official stock/ETF master. Revenue, prices and years can never become codes.
  for m in CODE_RE.finditer(text):
   code=m.group(1).upper()
-  if code.isdigit() and 1900<=int(code)<=2100:continue
-  found.append(code)
- low=text.lower()
- for name,symbol in aliases.items():
-  if name in low:found.append(symbol)
+  if code in valid_symbols:found.append(code)
+ low=text.lower();occupied=[]
+ # Longest-name-first matching prevents 南亞 from matching inside 南亞科.
+ for name,symbol in sorted(aliases.items(),key=lambda item:(-len(item[0]),item[0])):
+  if symbol in found:continue
+  for match in re.finditer(re.escape(name),low):
+   span=match.span()
+   if any(not (span[1]<=old[0] or span[0]>=old[1]) for old in occupied):continue
+   found.append(symbol);occupied.append(span);break
  return list(dict.fromkeys(found))[:10]
 
 def classify(title:str,summary:str,aliases:dict[str,str],forced_scope:str|None=None)->dict[str,Any]:

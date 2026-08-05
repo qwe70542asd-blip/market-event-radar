@@ -1,4 +1,4 @@
-name: Update v11.4.19 Taiwan market
+name: Update v11.4.20 Taiwan market
 on:
   push:
     branches: [main]
@@ -42,7 +42,7 @@ jobs:
           from pathlib import Path
           market=json.loads(Path("data/tw-market.json").read_text(encoding="utf-8"))
           history=json.loads(Path("data/market-volume-history.json").read_text(encoding="utf-8"))
-          assert market.get("metadata",{}).get("version")=="v11.4.19"
+          assert market.get("metadata",{}).get("version")=="v11.4.20"
           assert history.get("metadata",{}).get("history_start")=="2026-01-01"
           assert all(str(row.get("date", "")) >= "2026-01-01" for row in history.get("items",[]))
           print("turnover sessions",len(history.get("items",[])))

@@ -1,7 +1,15 @@
-v11.4.19 validation
-- home asset summary changed to a balanced 3 x 2 metric layout
-- metric cards use the full panel height instead of one compressed row
-- mobile and tablet layout uses a 2 x 3 grid
-- public coverage page and navigation remain removed
-- market, news and event update pipelines remain intact
-- 75 static and parser tests passed
+Market Event Radar v11.4.20 validation
+
+Status: PASSED
+Automated tests: 85
+
+Strict gates:
+- adjacent-session market change arithmetic
+- OHLC ordering
+- labeled material-event dates
+- no reporting-period date leakage
+- official-master-only news stock symbols
+- longest company-name matching
+- separate company-master and financial-data completeness
+
+Policy: detected inconsistent data is not published; the last verified dataset is retained.

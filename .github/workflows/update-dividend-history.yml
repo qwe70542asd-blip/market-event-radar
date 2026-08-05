@@ -1,4 +1,4 @@
-name: Update v11.4.19 dividend history
+name: Update v11.4.20 dividend history
 on:
   push:
     branches: [main]

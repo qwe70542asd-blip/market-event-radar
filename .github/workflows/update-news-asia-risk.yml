@@ -1,4 +1,4 @@
-name: Update v11.4.19 亞洲總體風險 news
+name: Update v11.4.20 亞洲總體風險 news
 on:
   push:
     branches: [main]
@@ -47,6 +47,7 @@ jobs:
           assert isinstance(p.get("items"),list)
           print("亞洲總體風險",len(p.get("items",[])),p.get("metadata",{}).get("status"))
           PY2
+      - run: python scripts/validate_public_data.py news
       - name: Publish isolated channel
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

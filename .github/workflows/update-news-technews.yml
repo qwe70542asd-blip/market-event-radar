@@ -1,4 +1,4 @@
-name: Update v11.4.19 科技新報／財經新報 news
+name: Update v11.4.20 科技新報／財經新報 news
 on:
   push:
     branches: [main]
@@ -46,6 +46,7 @@ jobs:
           p=json.loads(Path("data/news-technews.json").read_text(encoding="utf-8"))
           print("科技新報／財經新報",len(p.get("items",[])),p.get("metadata",{}).get("status"))
           PY2
+      - run: python scripts/validate_public_data.py news
       - name: Publish isolated channel
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build Market Event Radar v11.4.19 event data from official schedules.
+"""Build Market Event Radar v11.4.20 event data from official schedules.
 
 The updater keeps the last verified archive, refreshes selected official sources,
 and records when an exact date first appears or changes. It never invents dates.
@@ -37,7 +37,7 @@ ARCHIVE_START = date(2026, 1, 1)
 ARCHIVE_START_DT = datetime.combine(ARCHIVE_START, time.min, tzinfo=TAIPEI)
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.19; +https://github.com/qwe70542asd-blip/market-event-radar)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.20; +https://github.com/qwe70542asd-blip/market-event-radar)",
     "Accept-Language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
 }
 TWSE_EXDIV_URL = "https://openapi.twse.com.tw/v1/exchangeReport/TWT48U_ALL"
@@ -47,7 +47,9 @@ TPEX_DIVIDEND_PLAN_URL = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap45_O"
 TWSE_MATERIAL_URL = "https://openapi.twse.com.tw/v1/opendata/t187ap04_L"
 TPEX_MATERIAL_URL = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap04_O"
 BLS_URL = "https://www.bls.gov/schedule/news_release/bls.ics"
+BLS_HTML_URL = f"https://www.bls.gov/schedule/{NOW.year}/home.htm"
 BEA_URL = "https://www.bea.gov/news/schedule"
+BEA_FULL_URL = "https://www.bea.gov/index.php/news/schedule/full"
 FOMC_URL = "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
 
 BLS_TRANSLATIONS = {
@@ -59,6 +61,7 @@ BLS_TRANSLATIONS = {
     "Productivity and Costs": ("美國生產力與單位勞動成本", "medium", ["美債", "NASDAQ", "美元"]),
 }
 BEA_TRANSLATIONS = {
+    "GDP": ("美國 GDP", "high", ["S&P 500", "美債", "美元", "台股"]),
     "Gross Domestic Product": ("美國 GDP", "high", ["S&P 500", "美債", "美元", "台股"]),
     "Personal Income and Outlays": ("美國個人所得與支出／PCE", "high", ["NASDAQ", "美債", "美元", "黃金"]),
     "U.S. International Trade in Goods and Services": ("美國貿易收支", "medium", ["美元", "美債", "航運"]),
@@ -232,80 +235,105 @@ def parse_ics_datetime(key: str, value: str) -> datetime:
     return parsed.replace(tzinfo=zone).astimezone(TAIPEI)
 
 
-def fetch_bls(session: requests.Session) -> SourceResult:
-    lines = unfold_ics(http_get(session, BLS_URL).text)
-    blocks: list[dict[str, str]] = []
-    current: dict[str, str] | None = None
-    for line in lines:
-        if line == "BEGIN:VEVENT":
-            current = {}
-        elif line == "END:VEVENT" and current is not None:
-            blocks.append(current)
-            current = None
-        elif current is not None and ":" in line:
-            key, value = line.split(":", 1)
-            current[key] = value
-    events = []
-    for block in blocks:
-        summary = next((v for k, v in block.items() if k.startswith("SUMMARY")), "")
-        translated = translate(summary, BLS_TRANSLATIONS)
-        dt_pair = next(((k, v) for k, v in block.items() if k.startswith("DTSTART")), None)
-        if not translated or not dt_pair:
-            continue
-        start = parse_ics_datetime(*dt_pair)
-        if not ARCHIVE_START_DT <= start <= NOW + timedelta(days=370):
-            continue
-        uid = next((v for k, v in block.items() if k.startswith("UID")), summary)
-        title, impact, assets = translated
-        key = f"bls|{clean(uid)}"
-        events.append(make_event(
-            event_id=stable_id("bls", key, start.date()), tracking_key=key,
-            title=title, start=start, category="macro", event_type="economic-release", event_group="macro",
-            region="US", impact=impact, description=f"BLS 發布 {summary}。",
-            market_effect="數據與市場預期的落差可能改變聯準會政策、美債殖利率、美元與股票評價。",
-            source_name="U.S. BLS", source_url=BLS_URL, origin="bls", assets=assets, tags=["BLS", summary],
-        ))
-    if not events:
-        raise RuntimeError("BLS calendar returned no recognized events")
-    return SourceResult("bls", "U.S. BLS release calendar", BLS_URL, ("bls",), events)
+def _bls_event(summary: str, start: datetime, uid: str) -> dict[str, Any] | None:
+    translated = translate(summary, BLS_TRANSLATIONS)
+    if not translated or not ARCHIVE_START_DT <= start <= NOW + timedelta(days=370):
+        return None
+    title, impact, assets = translated
+    key = f"bls|{clean(uid)}"
+    return make_event(
+        event_id=stable_id("bls", key, start.date()), tracking_key=key, title=title, start=start,
+        category="macro", event_type="economic-release", event_group="macro", region="US", impact=impact,
+        description=f"BLS 發布 {summary}。", market_effect="數據與市場預期的落差可能改變聯準會政策、美債殖利率、美元與股票評價。",
+        source_name="U.S. BLS", source_url=BLS_HTML_URL, origin="bls", assets=assets, tags=["BLS", summary],
+        date_basis="BLS official release schedule",
+    )
 
+
+def fetch_bls_html(session: requests.Session) -> list[dict[str, Any]]:
+    soup = BeautifulSoup(http_get(session, BLS_HTML_URL).text, "html.parser")
+    events: list[dict[str, Any]] = []
+    for row in soup.select("tr"):
+        cells = [clean(cell.get_text(" ", strip=True)) for cell in row.select("th,td")]
+        if len(cells) < 2:
+            continue
+        joined = " | ".join(cells)
+        date_match = re.search(r"(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{1,2})(?:,\s*(20\d{2}))?", joined, re.I)
+        time_match = re.search(r"(\d{1,2}:\d{2})\s*(AM|PM)", joined, re.I)
+        if not date_match or not time_match:
+            continue
+        year = int(date_match.group(3) or NOW.year)
+        raw_date = f"{date_match.group(1)} {date_match.group(2)}, {year} {time_match.group(1)} {time_match.group(2)}"
+        try:
+            start = date_parser.parse(raw_date).replace(tzinfo=NEW_YORK).astimezone(TAIPEI)
+        except Exception:
+            continue
+        summary = next((cell for cell in reversed(cells) if translate(cell, BLS_TRANSLATIONS)), "")
+        event = _bls_event(summary, start, f"html|{summary}|{start.date()}") if summary else None
+        if event: events.append(event)
+    if not events:
+        text = soup.get_text(" ", strip=True)
+        pattern = re.compile(r"(?:Monday|Tuesday|Wednesday|Thursday|Friday)?[,]?\s*(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{1,2}),?\s+(20\d{2})\s+(\d{1,2}:\d{2})\s*(AM|PM)\s+(.{3,120}?)(?=(?:Monday|Tuesday|Wednesday|Thursday|Friday|January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2}|$)", re.I)
+        for match in pattern.finditer(text):
+            summary = clean(match.group(6))
+            if not translate(summary, BLS_TRANSLATIONS): continue
+            start = date_parser.parse(f"{match.group(1)} {match.group(2)}, {match.group(3)} {match.group(4)} {match.group(5)}").replace(tzinfo=NEW_YORK).astimezone(TAIPEI)
+            event = _bls_event(summary, start, f"html-text|{summary}|{start.date()}")
+            if event: events.append(event)
+    return list({row["id"]: row for row in events}.values())
+
+
+def fetch_bls(session: requests.Session) -> SourceResult:
+    events: list[dict[str, Any]] = []
+    errors: list[str] = []
+    try:
+        lines = unfold_ics(http_get(session, BLS_URL).text)
+        blocks: list[dict[str, str]] = []; current: dict[str, str] | None = None
+        for line in lines:
+            if line == "BEGIN:VEVENT": current = {}
+            elif line == "END:VEVENT" and current is not None: blocks.append(current); current = None
+            elif current is not None and ":" in line:
+                key, value = line.split(":", 1); current[key] = value
+        for block in blocks:
+            summary = next((v for k, v in block.items() if k.startswith("SUMMARY")), "")
+            dt_pair = next(((k, v) for k, v in block.items() if k.startswith("DTSTART")), None)
+            if not dt_pair: continue
+            event = _bls_event(summary, parse_ics_datetime(*dt_pair), next((v for k, v in block.items() if k.startswith("UID")), summary))
+            if event: events.append(event)
+    except Exception as exc:
+        errors.append(str(exc))
+    if not events:
+        try: events = fetch_bls_html(session)
+        except Exception as exc: errors.append(str(exc))
+    if not events: raise RuntimeError("BLS official calendars returned no recognized events: " + "; ".join(errors[:2]))
+    return SourceResult("bls", "U.S. BLS release calendar", BLS_HTML_URL, ("bls",), events, "ICS with official annual HTML fallback")
 
 def fetch_bea(session: requests.Session) -> SourceResult:
-    soup = BeautifulSoup(http_get(session, BEA_URL).text, "html.parser")
-    raw_text = soup.get_text("\n", strip=True)
-    pattern = re.compile(
-        r"(?P<month>January|February|March|April|May|June|July|August|September|October|November|December)\s+"
-        r"(?P<day>\d{1,2})\s+(?P<hour>\d{1,2}):(?P<minute>\d{2})\s+(?P<ampm>AM|PM)\s+(?:News|Data)\s+(?P<title>[^\n]+)", re.I,
-    )
-    events = []
-    for match in pattern.finditer(raw_text):
-        raw_title = clean(match.group("title"))
-        translated = translate(raw_title, BEA_TRANSLATIONS)
-        if not translated:
-            continue
-        month = datetime.strptime(match.group("month"), "%B").month
-        hour = int(match.group("hour")) % 12 + (12 if match.group("ampm").upper() == "PM" else 0)
-        candidates = [
-            datetime(year, month, int(match.group("day")), hour, int(match.group("minute")), tzinfo=NEW_YORK).astimezone(TAIPEI)
-            for year in (NOW.year - 1, NOW.year, NOW.year + 1)
-        ]
-        start = min(candidates, key=lambda value: abs((value - NOW).total_seconds()))
-        if not ARCHIVE_START_DT <= start <= NOW + timedelta(days=370):
-            continue
-        title, impact, assets = translated
-        key = f"bea|{raw_title.lower()}"
-        events.append(make_event(
-            event_id=stable_id("bea", key, start.date()), tracking_key=key,
-            title=title, start=start, category="macro", event_type="economic-release", event_group="macro",
-            region="US", impact=impact, description=f"BEA 發布 {raw_title}。",
-            market_effect="成長、所得、消費與通膨資料可能改變美債、美元及風險資產定價。",
-            source_name="U.S. BEA", source_url=BEA_URL, origin="bea", assets=assets, tags=["BEA", raw_title],
-        ))
-    if not events:
-        raise RuntimeError("BEA schedule returned no recognized events")
-    return SourceResult("bea", "U.S. BEA release schedule", BEA_URL, ("bea",), events)
-
-
+    errors=[];events=[]
+    for url in (BEA_URL, BEA_FULL_URL):
+        try:
+            soup = BeautifulSoup(http_get(session, url).text, "html.parser")
+            candidates=[]
+            for row in soup.select("tr"):
+                cells=[clean(cell.get_text(" ",strip=True)) for cell in row.select("th,td")]
+                if len(cells)>=2:candidates.append(" | ".join(cells))
+            candidates.append(soup.get_text(" ",strip=True))
+            pattern = re.compile(r"(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{1,2})(?:,\s*(20\d{2}))?\s+(\d{1,2}:\d{2})\s*(AM|PM)\s+(?:N\s*ews|D\s*ata|News|Data)?\s*[|:-]*\s*(.{3,180}?)(?=(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2}|$)",re.I)
+            for content in candidates:
+                for match in pattern.finditer(content):
+                    raw_title=clean(match.group(6)).strip(" |-")
+                    translated=translate(raw_title,BEA_TRANSLATIONS)
+                    if not translated:continue
+                    year=int(match.group(3) or NOW.year)
+                    start=date_parser.parse(f"{match.group(1)} {match.group(2)}, {year} {match.group(4)} {match.group(5)}").replace(tzinfo=NEW_YORK).astimezone(TAIPEI)
+                    if not ARCHIVE_START_DT<=start<=NOW+timedelta(days=370):continue
+                    title,impact,assets=translated;key=f"bea|{raw_title.lower()}"
+                    events.append(make_event(event_id=stable_id("bea",key,start.date()),tracking_key=key,title=title,start=start,category="macro",event_type="economic-release",event_group="macro",region="US",impact=impact,description=f"BEA 發布 {raw_title}。",market_effect="成長、所得、消費與通膨資料可能改變美債、美元及風險資產定價。",source_name="U.S. BEA",source_url=url,origin="bea",assets=assets,tags=["BEA",raw_title],date_basis="BEA official release schedule"))
+            if events:break
+        except Exception as exc:errors.append(str(exc))
+    events=list({row["id"]:row for row in events}.values())
+    if not events:raise RuntimeError("BEA official schedules returned no recognized events: "+"; ".join(errors[:2]))
+    return SourceResult("bea","U.S. BEA release schedule",BEA_URL,("bea",),events,"primary and full official schedule parsers")
 
 
 def fetch_fomc(session: requests.Session) -> SourceResult:
@@ -320,30 +348,17 @@ def fetch_fomc(session: requests.Session) -> SourceResult:
     ), start=1)}
     for line in lines:
         if re.fullmatch(r"2026 FOMC Meetings", line, re.I):
-            active = True
-            month_value = None
-            continue
-        if active and re.fullmatch(r"20\d{2} FOMC Meetings", line, re.I):
-            break
-        if not active:
-            continue
-        if line in month_names:
-            month_value = month_names[line]
-            continue
-        if month_value is None:
-            continue
+            active = True; month_value = None; continue
+        if active and re.fullmatch(r"20\d{2} FOMC Meetings", line, re.I): break
+        if not active: continue
+        if line in month_names: month_value = month_names[line]; continue
+        if month_value is None: continue
         match = re.fullmatch(r"(\d{1,2})(?:-(\d{1,2}))?\*?", line)
-        if not match:
-            continue
+        if not match: continue
         decision_day = int(match.group(2) or match.group(1))
-        try:
-            start = datetime(2026, month_value, decision_day, 14, 0, tzinfo=NEW_YORK).astimezone(TAIPEI)
-        except ValueError:
-            month_value = None
-            continue
-        if not ARCHIVE_START_DT <= start <= NOW + timedelta(days=370):
-            month_value = None
-            continue
+        try: start = datetime(2026, month_value, decision_day, 14, 0, tzinfo=NEW_YORK).astimezone(TAIPEI)
+        except ValueError: month_value = None; continue
+        if not ARCHIVE_START_DT <= start <= NOW + timedelta(days=370): month_value = None; continue
         events.append(make_event(
             event_id=stable_id("fomc", start.date()), tracking_key=f"fomc|2026|{month_value:02d}",
             title="美國聯準會 FOMC 利率決策", start=start, category="macro",
@@ -352,10 +367,10 @@ def fetch_fomc(session: requests.Session) -> SourceResult:
             market_effect="利率路徑與政策措辭可能影響美債殖利率、美元、美股及全球風險資產。",
             source_name="Federal Reserve FOMC calendar", source_url=FOMC_URL, origin="fomc",
             assets=["S&P 500", "NASDAQ", "美債", "美元", "台股"], tags=["FOMC", "聯準會", "利率決策"],
+            date_basis="Federal Reserve official meeting calendar",
         ))
         month_value = None
-    if not events:
-        raise RuntimeError("FOMC calendar returned no 2026 meetings")
+    if not events: raise RuntimeError("FOMC calendar returned no 2026 meetings")
     return SourceResult("fomc", "Federal Reserve FOMC calendar", FOMC_URL, ("fomc",), events)
 
 def tw_asset_type(symbol: str, name: str) -> tuple[str, str]:
@@ -483,6 +498,33 @@ def extract_candidate_dates(text: str) -> list[date]:
     return sorted(set(values))
 
 
+DATE_TOKEN_RE = re.compile(r"(?<!\d)(?:\d{3}|\d{4})[年/.-]\d{1,2}[月/.-]\d{1,2}日?(?!\d)")
+
+def labeled_date(text: str, patterns: list[str]) -> date | None:
+    for pattern in patterns:
+        match = re.search(pattern + r"[^0-9]{0,20}(?P<date>(?:\d{3}|\d{4})[年/.-]\d{1,2}[月/.-]\d{1,2}日?)", text, re.I)
+        if match:
+            parsed = parse_market_date(match.group("date"))
+            if parsed and ARCHIVE_START <= parsed <= NOW.date()+timedelta(days=370): return parsed
+    return None
+
+def choose_material_target_date(subject: str, event_type: str, announcement_day: date) -> tuple[date | None, str]:
+    rules={
+      "financial-report":[r"提報董事會或經董事會決議日期",r"董事會決議日期",r"審計委員會通過日期"],
+      "investor-conference":[r"法人說明會日期",r"召開法人說明會日期",r"召開日期",r"舉辦日期"],
+      "dividend-payment":[r"現金股利發放日",r"股利發放日",r"發放日",r"支付日"],
+      "ex-dividend":[r"除權息交易日",r"除息交易日",r"除權交易日",r"除權息日期"],
+      "shareholder-meeting":[r"股東會日期",r"開會日期",r"股東常會日期"],
+      "corporate-action":[r"合併基準日",r"減資基準日",r"增資基準日",r"股份轉換基準日",r"生效日",r"董事會決議日期",r"決議日期"],
+    }
+    selected=labeled_date(subject,rules.get(event_type,[]))
+    if selected:return selected,"explicit-labeled-date"
+    # Financial reports and decisions are announcements; the reporting period
+    # start/end must never become the event date.
+    if event_type in {"financial-report","corporate-action"}:return announcement_day,"official-announcement-date"
+    return None,"missing-exact-event-date"
+
+
 def normalized_subject(subject: str) -> str:
     without_dates = re.sub(r"(?<!\d)(?:\d{3}|\d{4})[年/.-]\d{1,2}[月/.-]\d{1,2}日?(?!\d)", "<DATE>", subject)
     return clean(without_dates).lower()[:180]
@@ -531,10 +573,9 @@ def parse_material(rows: Any, market: str, source_url: str, origin: str) -> list
         if not symbol:
             continue
         announcement_day = parse_market_date(first_value(row, ["發言日期", "出表日期", "Date"])) or NOW.date()
-        dates = [value for value in extract_candidate_dates(subject) if value != announcement_day]
-        if not dates:
-            continue  # exact target date was not published; do not guess one
-        target_day = dates[0]
+        target_day, date_basis = choose_material_target_date(subject, event_type, announcement_day)
+        if not target_day:
+            continue  # exact event date unavailable; do not publish a guessed period date
         tracking = f"{origin}|{symbol}|{event_type}|{normalized_subject(subject)}"
         events.append(make_event(
             event_id=stable_id("tw-material-date", tracking, target_day), tracking_key=tracking,
@@ -545,7 +586,7 @@ def parse_material(rows: Any, market: str, source_url: str, origin: str) -> list
             source_name=f"{market} 每日重大訊息", source_url=source_url, origin=origin,
             all_day=True, assets=[symbol, name], tags=[category, "重大訊息", "日期已確認"],
             market=market, symbol=symbol, asset_name=name, asset_id=f"TW:{symbol}",
-            source_published_at=iso_taipei(at_taipei(announcement_day)), target_date=target_day.isoformat(),
+            source_published_at=iso_taipei(at_taipei(announcement_day)), target_date=target_day.isoformat(), date_basis=date_basis,
         ))
     return events
 
@@ -736,7 +777,7 @@ def main() -> None:
     )
     payload = {
         "metadata": {
-            "version": "v11.4.19",
+            "version": "v11.4.20",
             "updated_at": NOW.isoformat(timespec="seconds"),
             "timezone": "Asia/Taipei",
             "event_count": len(events),
@@ -755,7 +796,7 @@ def main() -> None:
     EVENTS_PATH.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     SEED_PATH.write_text("window.__EVENT_SEED__ = " + json.dumps(payload, ensure_ascii=False) + ";\n", encoding="utf-8")
     STATE_PATH.write_text(json.dumps({
-        "version": "v11.4.19", "initialized": True,
+        "version": "v11.4.20", "initialized": True,
         "initialized_origins": sorted(next_initialized_origins),
         "updated_at": NOW.isoformat(timespec="seconds"), "events": next_state,
     }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

@@ -1,4 +1,4 @@
-name: Update v11.4.19 工商時報 news
+name: Update v11.4.20 工商時報 news
 on:
   push:
     branches: [main]
@@ -46,6 +46,7 @@ jobs:
           p=json.loads(Path("data/news-ctee.json").read_text(encoding="utf-8"))
           print("工商時報",len(p.get("items",[])),p.get("metadata",{}).get("status"))
           PY2
+      - run: python scripts/validate_public_data.py news
       - name: Publish isolated channel
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

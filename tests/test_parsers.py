@@ -170,5 +170,55 @@ class ParserTests(unittest.TestCase):
         self.assertEqual(len(result.events),2)
         self.assertTrue(all(row["title"]=="美國聯準會 FOMC 利率決策" for row in result.events))
 
+    def test_daily_change_uses_adjacent_candles(self):
+        candles=[
+            {"date":"2026-08-03","close":100},
+            {"date":"2026-08-04","close":102},
+            {"date":"2026-08-05","close":105},
+        ]
+        row=market_snapshot.daily_reference(candles,105,"2026-08-05")
+        self.assertEqual(row["previous_close"],102)
+        self.assertEqual(row["change"],3)
+        self.assertAlmostEqual(row["change_percent"],3/102*100)
+
+    def test_material_financial_report_uses_board_date_not_period_start(self):
+        subject="提報董事會或經董事會決議日期:115/08/04 財務報告期間:115/01/01~115/06/30"
+        day,basis=event_updater.choose_material_target_date(subject,"financial-report",event_updater.date(2026,8,5))
+        self.assertEqual(day.isoformat(),"2026-08-04")
+        self.assertEqual(basis,"explicit-labeled-date")
+
+    def test_material_financial_report_falls_back_to_announcement_date(self):
+        subject="本公司公布115年上半年財務報告，期間115/01/01至115/06/30"
+        day,basis=event_updater.choose_material_target_date(subject,"financial-report",event_updater.date(2026,8,5))
+        self.assertEqual(day.isoformat(),"2026-08-05")
+        self.assertEqual(basis,"official-announcement-date")
+
+    def test_news_symbols_require_official_master_and_longest_name(self):
+        aliases={"南亞科":"2408","南亞":"1303","鴻海":"2317"}
+        text="南亞科今年資本支出697億元；鴻海營收9465億元"
+        self.assertEqual(news.infer_symbols(text,aliases),["2408","2317"])
+
+    def test_bls_html_fallback_parser(self):
+        class Response:
+            text='<html><table><tr><td>Wednesday, August 12, 2026</td><td>08:30 AM</td><td>Consumer Price Index for July 2026</td></tr></table></html>'
+        with patch.object(event_updater,"http_get",return_value=Response()):
+            rows=event_updater.fetch_bls_html(object())
+        self.assertEqual(len(rows),1)
+        self.assertEqual(rows[0]["title"],"美國 CPI 通膨")
+        self.assertEqual(rows[0]["date_basis"],"BLS official release schedule")
+
+    def test_bea_table_parser(self):
+        class Response:
+            text='<html><table><tr><td>August 26</td><td>8:30 AM</td><td>News</td><td>GDP (Second Estimate) and Corporate Profits, 2nd Quarter 2026</td></tr></table></html>'
+        with patch.object(event_updater,"http_get",return_value=Response()):
+            result=event_updater.fetch_bea(object())
+        self.assertEqual(len(result.events),1)
+        self.assertEqual(result.events[0]["title"],"美國 GDP")
+
+    def test_financial_coverage_is_separate_from_basic_coverage(self):
+        import update_stock_basics
+        row={"metrics":{"pe":10,"pb":1,"dividend_yield":3},"financials":[]}
+        self.assertLess(update_stock_basics.financial_coverage(row),50)
+
 if __name__ == "__main__":
     unittest.main()

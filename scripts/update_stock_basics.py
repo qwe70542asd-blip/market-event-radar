@@ -26,7 +26,7 @@ from bs4 import BeautifulSoup
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.19"
+VERSION = "v11.4.20"
 TIMEOUT = 25
 YAHOO_BATCH = 48
 HEADERS = {
@@ -35,6 +35,25 @@ HEADERS = {
 }
 SESSION = requests.Session()
 SESSION.headers.update(HEADERS)
+
+
+INDUSTRY_NAMES = {
+    "01":"水泥工業","02":"食品工業","03":"塑膠工業","04":"紡織纖維","05":"電機機械",
+    "06":"電器電纜","08":"玻璃陶瓷","09":"造紙工業","10":"鋼鐵工業","11":"橡膠工業",
+    "12":"汽車工業","14":"建材營造","15":"航運業","16":"觀光餐旅","17":"金融保險",
+    "18":"貿易百貨","19":"綜合企業","20":"其他業","21":"化學工業","22":"生技醫療業",
+    "23":"油電燃氣業","24":"半導體業","25":"電腦及週邊設備業","26":"光電業",
+    "27":"通信網路業","28":"電子零組件業","29":"電子通路業","30":"資訊服務業",
+    "31":"其他電子業","32":"文化創意業","33":"農業科技業","34":"電子商務業",
+    "35":"綠能環保","36":"數位雲端","37":"運動休閒","38":"居家生活",
+}
+
+def normalized_industry(value: Any) -> tuple[str | None, str | None]:
+    raw = clean(value)
+    if not raw:
+        return None, None
+    code = raw.zfill(2) if raw.isdigit() and len(raw) <= 2 else None
+    return code, INDUSTRY_NAMES.get(code, raw)
 
 OFFICIAL_ENDPOINTS = [
     ("TWSE 上市公司基本資料", "https://openapi.twse.com.tw/v1/opendata/t187ap03_L", "TWSE"),
@@ -99,6 +118,7 @@ def official_record(row: dict[str, Any], source_name: str, source_url: str, exch
         return None
     symbol = symbol.upper()
     links = company_links(symbol, exchange)
+    industry_code, industry_name = normalized_industry(value_from(row, "產業別", "產業類別", "Industry"))
     return {
         "symbol": symbol,
         "company_name": clean(value_from(row, "公司名稱", "CompanyName")),
@@ -108,7 +128,9 @@ def official_record(row: dict[str, Any], source_name: str, source_url: str, exch
         "market_label": "上市" if exchange == "TWSE" else "上櫃",
         "asset_class": "stock",
         "currency": "TWD",
-        "industry": clean(value_from(row, "產業別", "產業類別", "Industry")),
+        "industry": industry_name,
+        "industry_code": industry_code,
+        "industry_name": industry_name,
         "address": clean(value_from(row, "住址", "地址", "Address")),
         "tax_id": clean(value_from(row, "營利事業統一編號", "統一編號", "UnifiedBusinessNo")),
         "chairperson": clean(value_from(row, "董事長", "Chairman")),
@@ -258,6 +280,15 @@ def basic_coverage(row: dict[str, Any]) -> float:
     return round(sum(value not in (None, "", []) for value in fields) / len(fields) * 100, 1)
 
 
+def financial_coverage(row: dict[str, Any]) -> float:
+    metrics = row.get("metrics") or {}
+    fields = [metrics.get(key) for key in ("pe", "pb", "dividend_yield", "eps", "roe", "debt_ratio", "net_margin", "current_ratio")]
+    metric_score = sum(value not in (None, "", []) for value in fields) / len(fields)
+    statements = row.get("financials") or []
+    statement_score = min(len(statements), 12) / 12
+    return round((metric_score * 0.6 + statement_score * 0.4) * 100, 1)
+
+
 def existing_asset_records() -> dict[str, dict[str, Any]]:
     rows = read_json(DATA / "assets.json", {"assets": []}).get("assets", [])
     output: dict[str, dict[str, Any]] = {}
@@ -346,15 +377,21 @@ def main() -> None:
         merged["asset_class"] = "stock"
         merged["market"] = "TW"
         merged["currency"] = merged.get("currency") or "TWD"
+        code, industry_name = normalized_industry(merged.get("industry_code") or merged.get("industry"))
+        merged["industry_code"] = code or merged.get("industry_code")
+        merged["industry_name"] = industry_name or merged.get("industry_name") or merged.get("industry")
+        merged["industry"] = merged["industry_name"]
         merged["basic_coverage_percent"] = basic_coverage(merged)
+        merged["financial_coverage_percent"] = financial_coverage(merged)
         merged["updated_at"] = NOW.isoformat(timespec="seconds")
-        merged["source_summary"] = "TWSE／TPEx 官方全市場公司主檔；Yahoo 僅補空白顯示欄位"
+        merged["source_summary"] = "公司主檔與財務資料分開計算；TWSE／TPEx 官方主檔優先，Yahoo 僅補空白欄位"
         if merged["basic_coverage_percent"] < 90:
             below_90.append(symbol)
         items[symbol] = merged
 
     next_cursor = (cursor + len(yahoo_batch)) % len(symbols) if symbols else 0
     average = round(sum(row.get("basic_coverage_percent", 0) for row in items.values()) / max(1, len(items)), 1)
+    financial_average = round(sum(row.get("financial_coverage_percent", 0) for row in items.values()) / max(1, len(items)), 1)
     payload = {
         "metadata": {
             "version": VERSION,
@@ -365,9 +402,10 @@ def main() -> None:
             "tpex_count": sum(row.get("exchange") == "TPEx" for row in items.values()),
             "official_endpoint_counts": counts,
             "average_basic_coverage_percent": average,
+            "average_financial_coverage_percent": financial_average,
             "below_90_count": len(below_90),
             "scope": "all-currently-listed-twse-and-tpex-stocks",
-            "note": "All official TWSE and TPEx listed-company records are included. Advanced valuation and historical statements are tracked separately.",
+            "note": "Company-master coverage and financial-data coverage are separate metrics. A high company-master score never implies complete financial statements.",
         },
         "state": {
             "yahoo_cursor": next_cursor,
