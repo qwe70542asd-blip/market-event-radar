@@ -1,9 +1,19 @@
 {
   "metadata": {
-    "version": "v11.4.15",
+    "version": "v11.4.16",
     "updated_at": null,
-    "source": "Yahoo public chart API",
-    "note": "Market-level indices, Korea, VIX, U.S. 10Y yield, DXY and FX; no individual stock."
+    "source": "TWSE official TAIEX history + Yahoo public chart API",
+    "note": "TAIEX uses TWSE official daily OHLC with Yahoo fallback. Korea, Japan and U.S. indices use Yahoo daily OHLC.",
+    "kline_symbols": [
+      "^GSPC",
+      "^IXIC",
+      "^KS11",
+      "^N225",
+      "^SOX",
+      "^TWII"
+    ],
+    "kline_interval": "1d",
+    "kline_range": "3mo"
   },
   "items": [
     {
@@ -20,23 +30,13 @@
       "volume": null,
       "market_at": null,
       "quote_kind": "index",
-      "display_suffix": ""
-    },
-    {
-      "symbol": "^TWOII",
-      "name": "台灣櫃買指數",
-      "market": "TW",
-      "price": null,
-      "previous_close": null,
-      "change": null,
-      "change_percent": null,
-      "open": null,
-      "high": null,
-      "low": null,
-      "volume": null,
-      "market_at": null,
-      "quote_kind": "index",
-      "display_suffix": ""
+      "display_suffix": "",
+      "close": null,
+      "candles": [],
+      "candle_count": 0,
+      "candle_interval": "1d",
+      "candle_range": "3mo",
+      "data_status": "waiting"
     },
     {
       "symbol": "^GSPC",
@@ -52,7 +52,13 @@
       "volume": null,
       "market_at": null,
       "quote_kind": "index",
-      "display_suffix": ""
+      "display_suffix": "",
+      "close": null,
+      "candles": [],
+      "candle_count": 0,
+      "candle_interval": "1d",
+      "candle_range": "3mo",
+      "data_status": "waiting"
     },
     {
       "symbol": "^DJI",
@@ -68,7 +74,8 @@
       "volume": null,
       "market_at": null,
       "quote_kind": "index",
-      "display_suffix": ""
+      "display_suffix": "",
+      "close": null
     },
     {
       "symbol": "^IXIC",
@@ -84,7 +91,13 @@
       "volume": null,
       "market_at": null,
       "quote_kind": "index",
-      "display_suffix": ""
+      "display_suffix": "",
+      "close": null,
+      "candles": [],
+      "candle_count": 0,
+      "candle_interval": "1d",
+      "candle_range": "3mo",
+      "data_status": "waiting"
     },
     {
       "symbol": "^SOX",
@@ -100,7 +113,13 @@
       "volume": null,
       "market_at": null,
       "quote_kind": "index",
-      "display_suffix": ""
+      "display_suffix": "",
+      "close": null,
+      "candles": [],
+      "candle_count": 0,
+      "candle_interval": "1d",
+      "candle_range": "3mo",
+      "data_status": "waiting"
     },
     {
       "symbol": "^N225",
@@ -116,7 +135,13 @@
       "volume": null,
       "market_at": null,
       "quote_kind": "index",
-      "display_suffix": ""
+      "display_suffix": "",
+      "close": null,
+      "candles": [],
+      "candle_count": 0,
+      "candle_interval": "1d",
+      "candle_range": "3mo",
+      "data_status": "waiting"
     },
     {
       "symbol": "^KS11",
@@ -132,7 +157,13 @@
       "high": null,
       "low": null,
       "volume": null,
-      "market_at": null
+      "market_at": null,
+      "close": null,
+      "candles": [],
+      "candle_count": 0,
+      "candle_interval": "1d",
+      "candle_range": "3mo",
+      "data_status": "waiting"
     },
     {
       "symbol": "^KQ11",
@@ -148,7 +179,8 @@
       "high": null,
       "low": null,
       "volume": null,
-      "market_at": null
+      "market_at": null,
+      "close": null
     },
     {
       "symbol": "^VIX",
@@ -164,7 +196,8 @@
       "high": null,
       "low": null,
       "volume": null,
-      "market_at": null
+      "market_at": null,
+      "close": null
     },
     {
       "symbol": "^TNX",
@@ -180,7 +213,8 @@
       "high": null,
       "low": null,
       "volume": null,
-      "market_at": null
+      "market_at": null,
+      "close": null
     },
     {
       "symbol": "DX-Y.NYB",
@@ -196,7 +230,8 @@
       "high": null,
       "low": null,
       "volume": null,
-      "market_at": null
+      "market_at": null,
+      "close": null
     },
     {
       "symbol": "TWD=X",
@@ -212,7 +247,8 @@
       "high": null,
       "low": null,
       "volume": null,
-      "market_at": null
+      "market_at": null,
+      "close": null
     },
     {
       "symbol": "KRW=X",
@@ -228,7 +264,8 @@
       "high": null,
       "low": null,
       "volume": null,
-      "market_at": null
+      "market_at": null,
+      "close": null
     }
   ]
 }

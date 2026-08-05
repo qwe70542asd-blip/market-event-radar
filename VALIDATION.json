@@ -1,23 +1,20 @@
 {
-  "version": "v11.4.15",
-  "status": "PASS",
-  "scope": "Full repository upgraded with all-market TWSE/TPEx stock basics and guaranteed news imagery.",
+  "version": "v11.4.16",
+  "validated_at": "2026-08-05T16:03:00+08:00",
+  "tests": 64,
+  "status": "passed",
   "checks": [
-    "All original repository files, scripts, workflows and data channels are preserved",
-    "News cards always render either a source image or a topic-matched local fallback image",
-    "Stock basics updater builds its universe from every company returned by official TWSE and TPEx company-master endpoints",
-    "The stock universe is not limited by assets.json, a portfolio, or a hand-picked symbol list",
-    "Coverage page unions every stock-basics record and reports the full listed-stock count",
-    "Taiwan market search includes all stock-basic records even when a quote is temporarily unavailable",
-    "Browser-side official API fallback can populate all-market basics before the live data branch is refreshed",
-    "Basic-profile completeness is separated from advanced valuation and historical-financial coverage",
-    "Service worker and visible page versions are updated to v11.4.15",
-    "No audio files are included"
+    "Six continuous daily K-line cards configured: TAIEX, KOSPI, Nikkei 225, NASDAQ, SOX, S&P 500",
+    "Taiwan OTC index ^TWOII removed from market updater, seed data and homepage K-line list",
+    "TAIEX uses TWSE official daily OHLC with Yahoo fallback",
+    "Overseas indices use Yahoo 3-month daily OHLC arrays",
+    "Per-symbol cached fallback preserves the last successful candles",
+    "Full TWSE and TPEx stock basics pipeline preserved from v11.4.15",
+    "News image fallback pipeline preserved",
+    "Service worker and visible page versions updated to v11.4.16",
+    "Python compilation and JavaScript syntax checks passed"
   ],
-  "limitations": [
-    "Advanced valuation and historical statements remain separate scheduled data and are not falsely marked complete.",
-    "Official or third-party endpoints can be temporarily unavailable; prior archives and browser fallback are retained.",
-    "The bundled seed is a bootstrap snapshot; the all-market official master is populated by GitHub Actions or browser fallback after deployment."
-  ],
-  "test_summary": "60 automated tests passed, plus Python compilation and JavaScript syntax checks."
+  "notes": [
+    "Browser screenshot validation was not included in the package; automated parser, static and syntax tests passed."
+  ]
 }

@@ -5,7 +5,7 @@ from typing import Any
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.15"
+VERSION = "v11.4.16"
 
 
 def num(value: Any) -> float | None:

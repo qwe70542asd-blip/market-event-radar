@@ -82,7 +82,7 @@
   };
   const verificationLabel=item=>item.source_id==="official-notices"||item.source_id==="company-disclosures"?"官方來源":(item.other_reports||[]).length?"多來源佐證":item.source_id==="cna"?"主要媒體":"單一來源";
 
-  const marketRows=(snapshot.items||[]).filter(row=>!["BTCUSDT","ETHUSDT","NVDA","^TWOII"].includes(String(row.symbol||"").toUpperCase()));
+  const marketRows=(snapshot.items||[]).filter(row=>!["BTCUSDT","ETHUSDT","NVDA"].includes(String(row.symbol||"").toUpperCase()));
   $("#marketList").innerHTML=marketRows.length?marketRows.slice(0,10).map(row=>`<div class="market-row"><span><strong>${escapeHtml(row.name||row.symbol)}</strong><small>${escapeHtml(row.symbol)}</small></span><b>${fmt(row.price)}${escapeHtml(row.display_suffix||"")}</b><em class="${cls(row.change_percent)}">${pct(row.change_percent)}</em></div>`).join(""):'<div class="empty">等待全球行情更新</div>';
   $("#marketUpdated").textContent=snapshot.metadata?.updated_at?formatTime(snapshot.metadata.updated_at):"等待資料";
 
@@ -117,30 +117,43 @@
   }
   renderPortfolioSummary();window.addEventListener("portfoliochange",renderPortfolioSummary);
 
-  const marketKlineSymbols=["^TWII","^TWOII","^IXIC","^SOX","^GSPC","^N225"];
+  const marketKlineSymbols=["^TWII","^KS11","^N225","^IXIC","^SOX","^GSPC"];
   const marketKlineMap=new Map((snapshot.items||[]).map(item=>[String(item.symbol||"").toUpperCase(),item]));
   const safeNumber=value=>finite(value);
+  const normalizedCandles=row=>(Array.isArray(row?.candles)?row.candles:[]).map(candle=>({
+    date:String(candle?.date||""),open:safeNumber(candle?.open),high:safeNumber(candle?.high),low:safeNumber(candle?.low),close:safeNumber(candle?.close),volume:safeNumber(candle?.volume)
+  })).filter(candle=>candle.date&&[candle.open,candle.high,candle.low,candle.close].every(value=>value!=null)).slice(-60);
+  const candleFallback=row=>{
+    const candle={date:String(row?.market_at||"").slice(0,10),open:safeNumber(row?.open),high:safeNumber(row?.high),low:safeNumber(row?.low),close:safeNumber(row?.close??row?.price),volume:safeNumber(row?.volume)};
+    return candle.date&&[candle.open,candle.high,candle.low,candle.close].every(value=>value!=null)?[candle]:[];
+  };
   const buildCandlestickSvg=row=>{
-    const open=safeNumber(row?.open),high=safeNumber(row?.high),low=safeNumber(row?.low),close=safeNumber(row?.price);
-    if([open,high,low,close].some(value=>value==null)){
-      return '<div class="market-kline-empty-plot">等待 OHLC 資料</div>';
-    }
-    const rangeMax=Math.max(high,open,close),rangeMin=Math.min(low,open,close),span=Math.max(rangeMax-rangeMin,Math.abs(close-open),1e-6);
-    const pad=8,height=88,width=120,bodyWidth=22;
-    const toY=value=>pad+((rangeMax-value)/span)*(height-pad*2);
-    const wickX=width/2,bodyX=wickX-bodyWidth/2;
-    const yHigh=toY(high),yLow=toY(low),yOpen=toY(open),yClose=toY(close),bodyTop=Math.min(yOpen,yClose),bodyHeight=Math.max(Math.abs(yClose-yOpen),3);
-    const tone=close>=open?'up':'down';
-    return `<svg viewBox="0 0 ${width} ${height}" class="market-kline-svg ${tone}" aria-hidden="true"><line x1="${wickX}" x2="${wickX}" y1="${yHigh.toFixed(2)}" y2="${yLow.toFixed(2)}"></line><rect x="${bodyX}" y="${bodyTop.toFixed(2)}" width="${bodyWidth}" height="${bodyHeight.toFixed(2)}" rx="4"></rect><line x1="14" x2="106" y1="${toY((rangeMax+rangeMin)/2).toFixed(2)}" y2="${toY((rangeMax+rangeMin)/2).toFixed(2)}" class="midline"></line></svg>`;
+    const candles=normalizedCandles(row);const series=candles.length?candles:candleFallback(row);
+    if(series.length<2)return '<div class="market-kline-empty-plot"><strong>等待歷史 K 線</strong><span>資料排程更新後會自動顯示。</span></div>';
+    const width=520,height=160,pad={top:12,right:12,bottom:22,left:12};
+    const highs=series.map(candle=>candle.high),lows=series.map(candle=>candle.low),max=Math.max(...highs),min=Math.min(...lows),span=Math.max(max-min,Math.abs(max)*0.002,1e-6);
+    const chartHeight=height-pad.top-pad.bottom,chartWidth=width-pad.left-pad.right,step=chartWidth/series.length,bodyWidth=Math.max(2,Math.min(8,step*.62));
+    const y=value=>pad.top+((max-value)/span)*chartHeight;
+    const grid=[0,.25,.5,.75,1].map(ratio=>{const lineY=pad.top+ratio*chartHeight;return `<line class="kline-grid-line" x1="${pad.left}" x2="${width-pad.right}" y1="${lineY.toFixed(2)}" y2="${lineY.toFixed(2)}"></line>`}).join("");
+    const bodies=series.map((candle,index)=>{
+      const x=pad.left+step*(index+.5),openY=y(candle.open),closeY=y(candle.close),highY=y(candle.high),lowY=y(candle.low),top=Math.min(openY,closeY),bodyHeight=Math.max(1.5,Math.abs(closeY-openY)),tone=candle.close>=candle.open?"up":"down";
+      const title=`${escapeHtml(candle.date)} 開 ${fmt(candle.open)} 高 ${fmt(candle.high)} 低 ${fmt(candle.low)} 收 ${fmt(candle.close)}`;
+      return `<g class="market-candle ${tone}"><title>${title}</title><line x1="${x.toFixed(2)}" x2="${x.toFixed(2)}" y1="${highY.toFixed(2)}" y2="${lowY.toFixed(2)}"></line><rect x="${(x-bodyWidth/2).toFixed(2)}" y="${top.toFixed(2)}" width="${bodyWidth.toFixed(2)}" height="${bodyHeight.toFixed(2)}" rx="1"></rect></g>`;
+    }).join("");
+    const last=series.at(-1),lastY=y(last.close),firstDate=series[0].date.slice(5),lastDate=last.date.slice(5);
+    return `<svg viewBox="0 0 ${width} ${height}" class="market-kline-svg" role="img" aria-label="${escapeHtml(row.name||row.symbol)} 最近 ${series.length} 個交易日日 K">${grid}${bodies}<line class="kline-last-line" x1="${pad.left}" x2="${width-pad.right}" y1="${lastY.toFixed(2)}" y2="${lastY.toFixed(2)}"></line><text class="kline-date-label" x="${pad.left}" y="${height-5}">${escapeHtml(firstDate)}</text><text class="kline-date-label end" x="${width-pad.right}" y="${height-5}">${escapeHtml(lastDate)}</text></svg>`;
   };
   function renderMarketKlines(){
     const rows=marketKlineSymbols.map(symbol=>marketKlineMap.get(symbol)).filter(Boolean);
-    $("#marketKlineUpdated").textContent=snapshot.metadata?.updated_at?formatTime(snapshot.metadata.updated_at):"等待資料";
+    $("#marketKlineUpdated").textContent=snapshot.metadata?.updated_at?`${formatTime(snapshot.metadata.updated_at)} · 日 K` :"等待資料";
     $("#marketKlineGrid").innerHTML=rows.length?rows.map(row=>{
-      const open=safeNumber(row.open),high=safeNumber(row.high),low=safeNumber(row.low),close=safeNumber(row.price),changePct=safeNumber(row.change_percent),change=safeNumber(row.change);
+      const candles=normalizedCandles(row),latest=candles.at(-1)||candleFallback(row).at(-1)||{};
+      const open=safeNumber(latest.open??row.open),high=safeNumber(latest.high??row.high),low=safeNumber(latest.low??row.low),close=safeNumber(row.price??latest.close),changePct=safeNumber(row.change_percent),change=safeNumber(row.change);
       const priceLabel=close!=null?`${fmt(close)}${escapeHtml(row.display_suffix||"")}`:"—";
       const changeLabel=change!=null?`${change>=0?'+':''}${fmt(change)}${escapeHtml(row.display_suffix||"")}`:"—";
-      return `<article class="market-kline-card"><div class="market-kline-head"><div><small>${escapeHtml(row.market||"MARKET")}</small><h3>${escapeHtml(row.name||row.symbol)}</h3></div><div class="market-kline-price"><strong>${priceLabel}</strong><span class="${cls(changePct)}">${pct(changePct)}</span></div></div><div class="market-kline-visual">${buildCandlestickSvg(row)}</div><div class="market-kline-stats"><span><small>開</small><b>${open!=null?fmt(open):"—"}</b></span><span><small>高</small><b>${high!=null?fmt(high):"—"}</b></span><span><small>低</small><b>${low!=null?fmt(low):"—"}</b></span><span><small>差</small><b class="${cls(change)}">${changeLabel}</b></span></div></article>`;
+      const cached=row.data_status==="cached",statusLabel=cached?"使用快取":candles.length>=10?"K 線已更新":"等待完整資料",statusClass=cached?"cached":candles.length>=10?"live":"waiting";
+      const source=row.candle_source||row.source||"資料來源待更新";
+      return `<article class="market-kline-card"><div class="market-kline-head"><div><small>${escapeHtml(row.market||"MARKET")}</small><h3>${escapeHtml(row.name||row.symbol)}</h3></div><div class="market-kline-price"><strong>${priceLabel}</strong><span class="${cls(changePct)}">${pct(changePct)}</span></div></div><div class="market-kline-status"><span class="kline-status ${statusClass}">${statusLabel}</span><small>近 ${candles.length||0} 個交易日</small></div><div class="market-kline-visual">${buildCandlestickSvg(row)}</div><div class="market-kline-stats"><span><small>開</small><b>${open!=null?fmt(open):"—"}</b></span><span><small>高</small><b>${high!=null?fmt(high):"—"}</b></span><span><small>低</small><b>${low!=null?fmt(low):"—"}</b></span><span><small>差</small><b class="${cls(change)}">${changeLabel}</b></span></div><div class="market-kline-source"><span>${escapeHtml(source)}</span><time>${escapeHtml(formatTime(row.market_at))}</time></div></article>`;
     }).join(""):'<div class="empty">等待大盤資料更新</div>';
   }
   renderMarketKlines();
@@ -179,7 +192,7 @@
   $("#todayFocusList").innerHTML=majorToday.length?majorToday.slice(0,6).map(event=>`<a class="today-focus-item" href="event.html?id=${encodeURIComponent(event.id)}"><span class="impact-dot ${escapeHtml(event.impact||"medium")}"></span><span><strong>${escapeHtml(strip(event.title))}</strong><small>${escapeHtml(formatTime(event.start))}</small></span></a>`).join(""):'<div class="empty">今天沒有已確認的重大事件</div>';
   $("#focusUpdated").textContent=events.metadata?.updated_at?formatTime(events.metadata.updated_at):"等待資料";
 
-  let current=new Date(),focus="all",calendarMode=localStorage.getItem("mr-calendar-mode-v11.4.15")==="dividend"?"dividend":"market",pendingJumpDate="";
+  let current=new Date(),focus="all",calendarMode=localStorage.getItem("mr-calendar-mode-v11.4.16")==="dividend"?"dividend":"market",pendingJumpDate="";
   const calendar=$("#calendarGrid"),dialog=$("#dayDialog");
   const marketFilters=()=>({q:$("#eventSearch").value.trim().toLowerCase(),region:$("#eventRegion").value,type:$("#eventType").value,impact:$("#eventImpact").value});
   const dividendFilters=()=>({q:$("#eventSearch").value.trim().toLowerCase(),kind:$("#dividendKind").value,asset:$("#dividendAsset").value,amount:$("#dividendAmount").value});
@@ -316,7 +329,7 @@
   }
   function setCalendarMode(mode,{render=true}={}){
     calendarMode=mode==="dividend"?"dividend":"market";
-    localStorage.setItem("mr-calendar-mode-v11.4.15",calendarMode);
+    localStorage.setItem("mr-calendar-mode-v11.4.16",calendarMode);
     document.querySelectorAll("[data-calendar-mode]").forEach(button=>{const active=button.dataset.calendarMode===calendarMode;button.classList.toggle("active",active);button.setAttribute("aria-selected",String(active))});
     document.querySelectorAll("[data-calendar-filter]").forEach(panel=>panel.hidden=panel.dataset.calendarFilter!==calendarMode);
     $("#calendarHeading").textContent=calendarMode==="market"?"市場事件月曆":"股利股息月曆";

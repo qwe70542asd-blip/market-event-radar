@@ -1,3 +1,6 @@
-v11.4.15 validation
-59 static/parser tests pass.
-新聞圖片具備強制備援；股票基本資料管線已改為全部 TWSE／TPEx 上市櫃公司，不再限於 10 檔。
+v11.4.16 validation
+64 tests passed
+Python compilation passed
+JavaScript syntax checks passed
+Six-index continuous daily K-line pipeline enabled
+^TWOII removed

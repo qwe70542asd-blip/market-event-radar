@@ -7,7 +7,7 @@ class StaticTests(unittest.TestCase):
  def test_required_tree(self):
   for path in [".github/workflows","assets","data","docs","scripts","tests","index.html","news.html","asset.html","service-worker.js"]:self.assertTrue((ROOT/path).exists(),path)
  def test_version(self):
-  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.15")
+  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.16")
  def test_ascii_filenames(self):
   for path in ROOT.rglob("*"):self.assertTrue(all(ord(c)<128 for c in path.name),path)
  def test_no_audio(self):
@@ -21,9 +21,12 @@ class StaticTests(unittest.TestCase):
   for token in ("市場事件日曆","股利股息日曆","marketCalendarFilters","dividendCalendarFilters","calendarModeSummary"):self.assertIn(token,html)
   for token in ("setCalendarMode","marketRelevant","dividendRelevant","dividendTable","localKey"):self.assertIn(token,js)
  def test_global_market_set(self):
-  script=self.read("scripts/update_market_snapshot.py")
-  for x in ("^KS11","^KQ11","^VIX","^TNX","DX-Y.NYB","TWD=X","KRW=X"):self.assertIn(x,script)
-  self.assertNotIn('(\"NVDA\", \"NVIDIA\"',script)
+  script=self.read("scripts/update_market_snapshot.py");home=self.read("assets/home.js")
+  for x in ("^TWII","^KS11","^N225","^IXIC","^SOX","^GSPC","^KQ11","^VIX","^TNX","DX-Y.NYB","TWD=X","KRW=X"):self.assertIn(x,script)
+  for x in ("parse_yahoo_candles","fetch_twse_taiex","candles","candle_source","data_status",'"range": "3mo"','"interval": "1d"'):self.assertIn(x,script)
+  for x in ('marketKlineSymbols=["^TWII","^KS11","^N225","^IXIC","^SOX","^GSPC"]',"market-candle","近 ${candles.length||0} 個交易日"):self.assertIn(x,home)
+  self.assertNotIn("^TWOII",script+home)
+  self.assertNotIn('("NVDA", "NVIDIA"',script)
  def test_etf_whitelist(self):
   script=self.read("scripts/update_tw_market.py")
   for x in ("TWSE_FUNDS","TPEX_FUNDS",'return "other"'):self.assertIn(x,script)
@@ -77,10 +80,20 @@ class StaticTests(unittest.TestCase):
   texts="\n".join(self.read(p.relative_to(ROOT)) for p in (ROOT/".github/workflows").glob("update-news-*.yml"))
   for branch in ("live-news-cna","live-news-moneydj","live-news-cnyes","live-news-udn","live-news-ltn","live-news-wealth","live-news-yahoo","live-news-technews","live-news-ctee","live-news-asia-risk"):self.assertIn(branch,texts)
  def test_service_worker_cache(self):
-  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-15",sw)
+  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-16",sw)
   for seed in ("news-cna-seed.js","news-moneydj-seed.js","news-wealth-seed.js","news-yahoo-seed.js","news-technews-seed.js","news-ctee-seed.js","news-asia-risk-seed.js","stock-news-seed.js","company-disclosures-seed.js","monthly-revenue-seed.js","dividend-history-seed.js","secondary-reference-seed.js","data-verification-seed.js","yahoo-details-seed.js","etf-details-seed.js","stock-basics-seed.js","market-volume-history-seed.js"):self.assertIn(seed,sw)
+ def test_market_snapshot_seed_schema(self):
+  payload=json.loads(self.read("data/market-snapshot.json"))
+  self.assertEqual(payload.get("metadata",{}).get("version"),"v11.4.16")
+  self.assertEqual(set(payload.get("metadata",{}).get("kline_symbols",[])),{"^TWII","^KS11","^N225","^IXIC","^SOX","^GSPC"})
+  self.assertNotIn("^TWOII",{row.get("symbol") for row in payload.get("items",[])})
+
  def test_all_pages_current_version(self):
-  for p in ROOT.glob("*.html"):self.assertNotIn("v11.4.2",p.read_text(encoding="utf-8"),p.name)
+  for p in ROOT.glob("*.html"):
+   body=p.read_text(encoding="utf-8")
+   self.assertIn("v11.4.16",body,p.name)
+   self.assertNotIn("v11.4.15",body,p.name)
+
 
  def test_history_channels_are_isolated(self):
   shared=self.read("assets/shared.js"); asset=self.read("assets/asset.js"); updater=self.read("scripts/update_assets.py")
@@ -167,10 +180,10 @@ class StaticTests(unittest.TestCase):
  def test_compact_controls_before_calendar_layout(self):
   html=self.read("index.html")
   self.assertLess(html.index("compact-feature-strip"),html.index("我的資產總覽"))
-  self.assertLess(html.index("我的資產總覽"),html.index("大盤 K 線與關鍵資訊"))
-  self.assertLess(html.index("大盤 K 線與關鍵資訊"),html.index("市場事件月曆"))
+  self.assertLess(html.index("我的資產總覽"),html.index("六大指數日 K 與關鍵資訊"))
+  self.assertLess(html.index("六大指數日 K 與關鍵資訊"),html.index("市場事件月曆"))
   self.assertLess(html.index("市場事件月曆"),html.index("今日新公布日期"))
-  for token in ("home-summary-row","balanced-summary-row","dual-calendar-card","calendar-mode-switch","market-kline-panel"):self.assertIn(token,html)
+  for token in ("home-summary-row","balanced-summary-row","dual-calendar-card","calendar-mode-switch","market-kline-panel","六大指數日 K 與關鍵資訊"):self.assertIn(token,html)
   for token in ("home-primary-grid","home-market-rail"):self.assertNotIn(token,html)
 
  def test_today_new_dates_jump_to_matching_calendar_mode(self):

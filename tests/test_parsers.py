@@ -13,6 +13,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import update_etf_details as etf
 import update_yahoo_details as yahoo
 import update_tw_chips as chips
+import update_market_snapshot as market_snapshot
 import news_pipeline as news
 
 
@@ -102,6 +103,34 @@ class ParserTests(unittest.TestCase):
         self.assertEqual(len(institutional["history"]), 2)
         self.assertEqual(margin["margin"]["balance"], 175408)
         self.assertEqual(margin["short"]["change"], -974)
+
+    def test_yahoo_daily_candle_parser(self):
+        chart = {
+            "timestamp": [1785801600, 1785888000],
+            "indicators": {"quote": [{
+                "open": [100, 102], "high": [105, 108], "low": [98, 101],
+                "close": [103, 107], "volume": [1000, 1200]
+            }]}
+        }
+        rows = market_snapshot.parse_yahoo_candles(chart, "index")
+        self.assertEqual(len(rows), 2)
+        self.assertEqual(rows[-1]["open"], 102)
+        self.assertEqual(rows[-1]["close"], 107)
+        self.assertEqual(rows[-1]["source"], "Yahoo chart")
+
+    def test_twse_taiex_payload_parser(self):
+        payload = {"data": [["115/08/03", "28,100.00", "28,300.00", "27,950.00", "28,250.00"]]}
+        rows = market_snapshot.parse_twse_payload(payload)
+        self.assertEqual(rows[0]["date"], "2026-08-03")
+        self.assertEqual(rows[0]["high"], 28300)
+        self.assertEqual(rows[0]["source"], "TWSE official TAIEX history")
+
+    def test_merge_candles_prefers_official(self):
+        yahoo = [{"date": "2026-08-03", "close": 100, "source": "Yahoo chart"}]
+        official = [{"date": "2026-08-03", "close": 101, "source": "TWSE official TAIEX history"}]
+        rows = market_snapshot.merge_candles(official, yahoo)
+        self.assertEqual(rows[0]["close"], 101)
+        self.assertIn("TWSE", rows[0]["source"])
 
     def test_asia_risk_major_classification(self):
         row = news.classify("日圓跌至40年低點 日本企業倒閉增加", "日銀政策與企業成本壓力恐影響亞洲資金流向及台灣出口供應鏈", {}, "media")

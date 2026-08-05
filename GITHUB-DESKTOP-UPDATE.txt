@@ -1,9 +1,10 @@
-市場事件雷達 v11.4.15 覆蓋方式
+市場事件雷達 v11.4.16 覆蓋方式
 
 1. 在 GitHub Desktop 按 Show in Explorer。
 2. 解壓本 ZIP。
 3. 將 ZIP 裡面的全部檔案與資料夾複製到 market-event-radar repository 根目錄。
 4. 選擇覆蓋同名檔案；不要刪除 repository 內的 .git 資料夾。
-5. 回到 GitHub Desktop，Summary 填 Update to v11.4.15。
+5. 回到 GitHub Desktop，Summary 填 Update to v11.4.16。
 6. Commit to main，接著 Push origin。
-7. 推送後可到 Actions 手動執行 Update v11.4.15 stock basics。
+7. 推送後等待 Update v11.4.16 global market 執行完成；也可到 Actions 手動執行。
+8. 若頁面仍顯示舊版，重新整理一次；v11.4.16 Service Worker 會清除舊快取。
