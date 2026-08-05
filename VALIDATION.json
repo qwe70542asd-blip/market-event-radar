@@ -1,16 +1,15 @@
 {
-  "version": "v11.4.17",
-  "validated_at": "2026-08-05T16:38:00+08:00",
-  "tests": 73,
+  "version": "v11.4.19",
+  "validated_at": "2026-08-05T17:24:00+08:00",
+  "tests": 75,
   "status": "passed",
   "checks": [
-    "Six-index K-line updater restores the last successful live-global-market snapshot before refresh",
-    "Frontend uses GitHub Contents API first for K-line, event and Taiwan market data and preserves last successful browser candles",
-    "TWSE and TPEx online history backfill begins at 2026-01-01 and computes 5/20/60-session turnover averages",
-    "Event archive lower bound is 2026-01-01 and Federal Reserve FOMC calendar is included",
-    "News is newest-first, pre-2026 content is deleted, and older content requires higher importance",
-    "Push/manual news workflows perform best-effort missing-month history searches; schedules update recent items only",
-    "Service worker cache and visible page versions updated to v11.4.17",
+    "Home asset summary uses a balanced 3 by 2 metric grid",
+    "Metric cards expand vertically to use the full summary panel",
+    "Tablet and mobile asset summary switches to a 2 by 3 grid",
+    "Public data coverage page and navigation remain removed",
+    "Six-index K-line, online history, event calendar and news update pipelines remain intact",
+    "Service worker cache and visible page versions updated to v11.4.19",
     "Python compilation, JavaScript syntax, workflow YAML and automated tests passed"
   ],
   "notes": [

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Refresh global-market quotes and continuous daily candlesticks.
 
-v11.4.17 source policy:
+v11.4.19 source policy:
 - TAIEX daily OHLC: TWSE official historical index endpoint, with Yahoo as
   the quote/candle fallback.
 - Overseas indices, rates, risk gauges and FX: Yahoo public chart endpoint.
@@ -19,9 +19,9 @@ import requests
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.17"
+VERSION = "v11.4.19"
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.17)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.19)",
     "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.6",
 }
 YAHOO_CHART = "https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"

@@ -1,4 +1,4 @@
-name: Update v11.4.17 工商時報 news
+name: Update v11.4.19 工商時報 news
 on:
   push:
     branches: [main]

@@ -7,7 +7,7 @@ class StaticTests(unittest.TestCase):
  def test_required_tree(self):
   for path in [".github/workflows","assets","data","docs","scripts","tests","index.html","news.html","asset.html","service-worker.js"]:self.assertTrue((ROOT/path).exists(),path)
  def test_version(self):
-  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.17")
+  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.19")
  def test_ascii_filenames(self):
   for path in ROOT.rglob("*"):self.assertTrue(all(ord(c)<128 for c in path.name),path)
  def test_no_audio(self):
@@ -80,18 +80,18 @@ class StaticTests(unittest.TestCase):
   texts="\n".join(self.read(p.relative_to(ROOT)) for p in (ROOT/".github/workflows").glob("update-news-*.yml"))
   for branch in ("live-news-cna","live-news-moneydj","live-news-cnyes","live-news-udn","live-news-ltn","live-news-wealth","live-news-yahoo","live-news-technews","live-news-ctee","live-news-asia-risk"):self.assertIn(branch,texts)
  def test_service_worker_cache(self):
-  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-17",sw)
+  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-19",sw)
   for seed in ("news-cna-seed.js","news-moneydj-seed.js","news-wealth-seed.js","news-yahoo-seed.js","news-technews-seed.js","news-ctee-seed.js","news-asia-risk-seed.js","stock-news-seed.js","company-disclosures-seed.js","monthly-revenue-seed.js","dividend-history-seed.js","secondary-reference-seed.js","data-verification-seed.js","yahoo-details-seed.js","etf-details-seed.js","stock-basics-seed.js","market-volume-history-seed.js"):self.assertIn(seed,sw)
  def test_market_snapshot_seed_schema(self):
   payload=json.loads(self.read("data/market-snapshot.json"))
-  self.assertEqual(payload.get("metadata",{}).get("version"),"v11.4.17")
+  self.assertEqual(payload.get("metadata",{}).get("version"),"v11.4.19")
   self.assertEqual(set(payload.get("metadata",{}).get("kline_symbols",[])),{"^TWII","^KS11","^N225","^IXIC","^SOX","^GSPC"})
   self.assertNotIn("^TWOII",{row.get("symbol") for row in payload.get("items",[])})
 
  def test_all_pages_current_version(self):
   for p in ROOT.glob("*.html"):
    body=p.read_text(encoding="utf-8")
-   self.assertIn("v11.4.17",body,p.name)
+   self.assertIn("v11.4.19",body,p.name)
    self.assertNotIn("v11.4.15",body,p.name)
 
 
@@ -151,6 +151,11 @@ class StaticTests(unittest.TestCase):
    self.assertIn("renderNewsThumb",self.read(path),path)
   self.assertIn("data-fallback-src",self.read("assets/shared.js"))
   self.assertIn("stock-news-grid",self.read("assets/styles.css"))
+
+ def test_balanced_portfolio_summary_layout(self):
+  css=self.read("assets/styles.css")
+  for token in ("v11.4.19 portfolio summary balance","grid-template-columns:repeat(3,minmax(0,1fr))","grid-template-rows:repeat(2,minmax(78px,1fr))","justify-content:center"):
+   self.assertIn(token,css)
 
  def test_home_summary_and_volume_momentum(self):
   html=self.read("index.html");js=self.read("assets/home.js")
@@ -239,11 +244,10 @@ class StaticTests(unittest.TestCase):
  def test_stock_basic_channel(self):
   for path in ("scripts/update_stock_basics.py",".github/workflows/update-stock-basics.yml","data/stock-basics.json","data/stock-basics-seed.js"):
    self.assertTrue((ROOT/path).exists(),path)
-  shared=self.read("assets/shared.js");asset=self.read("assets/asset.js");coverage=self.read("assets/coverage.js");updater=self.read("scripts/update_stock_basics.py")
-  for token in ("live-stock-basics","stock-basics.json","loadStockBasics","STOCK_BASIC_ENDPOINTS"):self.assertIn(token,shared+asset+coverage)
+  shared=self.read("assets/shared.js");asset=self.read("assets/asset.js");updater=self.read("scripts/update_stock_basics.py")
+  for token in ("live-stock-basics","stock-basics.json","loadStockBasics","STOCK_BASIC_ENDPOINTS"):self.assertIn(token,shared+asset)
   for token in ("t187ap03_L","mopsfin_t187ap03_O","universe = set(official)","all-currently-listed-twse-and-tpex-stocks"):self.assertIn(token,updater)
   self.assertNotIn("candidates = [asset for asset in assets",updater)
-  self.assertIn("Object.entries(stockBasics)",coverage)
   payload=json.loads(self.read("data/stock-basics.json"))
   self.assertGreaterEqual(len(payload.get("items",{})),10)
   self.assertTrue(all(float(row.get("basic_coverage_percent",0))>=90 for row in payload.get("items",{}).values()))
@@ -264,10 +268,18 @@ class StaticTests(unittest.TestCase):
   for token in ("Validate chips payload","json.loads","path.stat().st_size"):
    self.assertIn(token,workflow)
 
- def test_coverage_uses_final_merged_etf_view(self):
-  js=self.read("assets/coverage.js")
-  for token in ("assets.json","dividend-history.json","data-verification.json","deriveAllocations","officialEtf","distributionRows","allocationsComplete"):
-   self.assertIn(token,js)
+ def test_public_coverage_page_removed(self):
+  self.assertFalse((ROOT/"coverage.html").exists())
+  self.assertFalse((ROOT/"assets/coverage.js").exists())
+  for page in ROOT.glob("*.html"):
+   body=page.read_text(encoding="utf-8")
+   self.assertNotIn("coverage.html",body,page.name)
+   self.assertNotIn("資料覆蓋",body,page.name)
+  sw=self.read("service-worker.js")
+  self.assertNotIn("coverage.html",sw)
+  self.assertNotIn("assets/coverage.js",sw)
+
+ def test_backend_audit_uses_final_merged_etf_view(self):
   audit=self.read("scripts/audit_all_assets.py")
   for token in ("yahoo-details.json","etf-details.json","dividend-history.json","產業配置","multi_source"):
    self.assertIn(token,audit)
