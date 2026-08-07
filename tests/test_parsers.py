@@ -255,3 +255,18 @@ class ParserTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def test_nikkei_official_csv_parser():
+    import sys
+    sys.path.insert(0,str(ROOT/"scripts"))
+    import update_market_snapshot as market
+    class Response:
+        content=b"Date,Open,High,Low,Close\n2026/08/06,65565.27,66302.52,64555.52,65685.22\n2026/08/07,65250.00,65500.00,64800.00,65210.13\n"
+        def raise_for_status(self): return None
+    class Session:
+        def get(self,*args,**kwargs): return Response()
+    rows=market.fetch_nikkei_official(Session())
+    assert rows[-1]["date"]=="2026-08-07"
+    assert rows[-1]["close"]==65210.13
+    assert rows[-1]["source"]=="Nikkei official daily data"

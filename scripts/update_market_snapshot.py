@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Refresh global-market quotes and continuous daily candlesticks.
 
-v11.4.25 data-quality policy
+v11.4.26 data-quality policy
 - A card may only combine price, change and OHLC from the same exchange session.
 - When Yahoo's live quote is newer than the last completed daily candle, the
   live-session OHLC comes from Yahoo meta fields; yesterday's daily candle is
@@ -15,19 +15,22 @@ from __future__ import annotations
 
 from datetime import datetime, time, timedelta
 from typing import Any
+from io import StringIO
 from zoneinfo import ZoneInfo
 
+import csv
 import requests
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.25"
+VERSION = "v11.4.26"
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.25)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.26)",
     "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.6",
 }
 YAHOO_CHART = "https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"
 TWSE_TAIEX = "https://www.twse.com.tw/indicesReport/MI_5MINS_HIST"
+NIKKEI_DAILY_CSV = "https://indexes.nikkei.co.jp/nkave/historical/nikkei_stock_average_daily_en.csv"
 CANDLE_LIMIT = 70
 KLINE_SYMBOLS = {"^TWII", "^DJI", "^IXIC", "^SOX", "^GSPC", "^N225"}
 SYMBOLS = [
@@ -151,7 +154,7 @@ def parse_yahoo_candles(chart: dict[str, Any], market: str, quote_kind: str | No
 def daily_reference(candles: list[dict[str, Any]], live_price: float | None, market_date: str | None = None) -> dict[str, Any]:
     """Compatibility helper for tests and downstream tools.
 
-    The v11.4.25 publisher uses same-session-price-vs-adjacent-close. This
+    The v11.4.26 publisher uses same-session-price-vs-adjacent-close. This
     helper preserves the old adjacent-daily-candles API without ever using
     Yahoo chartPreviousClose, which can refer to the beginning of a range.
     """
@@ -362,6 +365,49 @@ def parse_twse_payload(payload: Any) -> list[dict[str, Any]]:
     return parsed
 
 
+def fetch_nikkei_official(session: requests.Session) -> list[dict[str, Any]]:
+    response=session.get(NIKKEI_DAILY_CSV,headers=HEADERS,timeout=18)
+    response.raise_for_status()
+    text=response.content.decode("utf-8-sig",errors="replace")
+    rows=[]
+    for raw in csv.DictReader(StringIO(text)):
+        date_raw=str(raw.get("Date") or raw.get("date") or "").strip()
+        parsed=None
+        for pattern in ("%Y/%m/%d","%Y-%m-%d","%b/%d/%Y"):
+            try: parsed=datetime.strptime(date_raw,pattern).date().isoformat();break
+            except ValueError: pass
+        if not parsed:continue
+        values=[number(raw.get("Open") or raw.get("open")),number(raw.get("High") or raw.get("high")),number(raw.get("Low") or raw.get("low")),number(raw.get("Close") or raw.get("close"))]
+        if not valid_ohlc(*values):continue
+        rows.append({"date":parsed,"open":values[0],"high":values[1],"low":values[2],"close":values[3],"volume":None,"source":"Nikkei official daily data"})
+    return rows[-CANDLE_LIMIT:]
+
+
+def enrich_nikkei_with_official(session: requests.Session, yahoo_row: dict[str, Any]) -> dict[str, Any]:
+    official=fetch_nikkei_official(session)
+    if not official:return yahoo_row
+    yahoo_candles=yahoo_row.get("candles") or []
+    schedule=market_session_state("JP")
+    session_date=str(yahoo_row.get("session_date") or "")
+    official_by_date={str(row.get("date")):row for row in official}
+    if not schedule["is_open"] and session_date in official_by_date:
+        display=official_by_date[session_date]
+        idx=next((i for i,row in enumerate(official) if row["date"]==session_date),len(official)-1)
+        previous=number(official[idx-1]["close"]) if idx>0 else number(yahoo_row.get("previous_close"))
+        price=number(display["close"]);change=price-previous if price is not None and previous is not None else None
+        percent=change/previous*100 if change is not None and previous not in (None,0) else None
+        row={**yahoo_row,"price":price,"previous_close":previous,"change":change,"change_percent":percent,"open":display["open"],"high":display["high"],"low":display["low"],"close":display["close"],"candles":merge_candles(official,yahoo_candles),"candle_source":"Nikkei official daily history + Yahoo live fallback","source":"Nikkei official completed-session validation","validation_source":"Nikkei official daily CSV"}
+    else:
+        prior=[row for row in official if row["date"]<session_date]
+        previous=number(prior[-1]["close"]) if prior else number(yahoo_row.get("previous_close"))
+        price=number(yahoo_row.get("price"));change=price-previous if price is not None and previous is not None else None
+        percent=change/previous*100 if change is not None and previous not in (None,0) else None
+        row={**yahoo_row,"previous_close":previous,"change":change,"change_percent":percent,"candles":merge_candles(official,yahoo_candles),"candle_source":"Nikkei official daily history + Yahoo same-session live candle","source":"Yahoo live quote validated against Nikkei official completed history","validation_source":"Nikkei official daily CSV"}
+    row["candle_count"]=len(row.get("candles") or [])
+    validate_market_row(row)
+    return row
+
+
 def fetch_twse_taiex(session: requests.Session, months: int = 4) -> list[dict[str, Any]]:
     rows: dict[str, dict[str, Any]] = {}; errors: list[str] = []
     for offset in range(months):
@@ -443,6 +489,12 @@ def main() -> None:
                     warnings.append(f"TWSE ^TWII: {exc}")
                     row["candle_source"] = "Yahoo same-session chart fallback"
                     row["source"] = "Yahoo public chart API (TWSE history unavailable)"
+            elif symbol == "^N225":
+                try:
+                    row = enrich_nikkei_with_official(session,row)
+                except Exception as exc:
+                    warnings.append(f"Nikkei ^N225 official validation: {exc}")
+                    row["validation_source"]="Yahoo only; Nikkei official validation unavailable"
             if symbol in KLINE_SYMBOLS and len(row.get("candles") or []) < 10 and previous:
                 row["candles"] = merge_candles(row.get("candles") or [], previous.get("candles") or [])
                 row["candle_count"] = len(row["candles"])

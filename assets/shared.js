@@ -13,7 +13,9 @@ const formatTime=(v,opts={})=>{if(!v)return"—";const d=new Date(v);if(Number.i
 const stripHtml=value=>String(value??"").replace(/<[^>]*>/g," ").replace(/&nbsp;/gi," ").replace(/\s+/g," ").trim();
 const normalizeText=value=>stripHtml(value).toLowerCase().normalize("NFKC").replace(/[^0-9a-z\u3400-\u9fff]+/g," ").trim();
 const GENERIC_NEWS_IMAGE_RE=/(?:og-image|default(?:_og)?|logo|placeholder|no[-_]?image|blank|icon|avatar|sprite|favicon)(?:[._/-]|$)/i;
-const newsHasImage=item=>{const url=String(item?.image_url||"").trim();return /^https?:\/\//i.test(url)&&!GENERIC_NEWS_IMAGE_RE.test(url)};
+const newsImageCandidates=item=>[item?.image_url,...(Array.isArray(item?.image_candidates)?item.image_candidates:[])].map(value=>String(value||"").trim()).filter((url,index,rows)=>/^https?:\/\//i.test(url)&&!GENERIC_NEWS_IMAGE_RE.test(url)&&rows.indexOf(url)===index);
+const newsHasImage=item=>newsImageCandidates(item).length>0;
+function advanceNewsImage(img){try{const candidates=JSON.parse(decodeURIComponent(img.dataset.candidates||"%5B%5D"));const next=Number(img.dataset.candidateIndex||0)+1;if(next<candidates.length){img.dataset.candidateIndex=String(next);img.src=candidates[next];return}img.style.display="none";img.parentElement?.classList.add("fallback","remote-image-failed")}catch(e){img.style.display="none";img.parentElement?.classList.add("fallback","remote-image-failed")}}
 function pickNewsFallbackSlug(item={}){
  const text=`${item.title||""} ${item.ai_summary||item.summary||""} ${item.ai_category||item.topic||""} ${item.ai_topic||""}`;
  if(/台積電|鴻海|聯發科|廣達|緯創|半導體|晶圓|記憶體|AI|伺服器|NVIDIA|輝達|AMD|Intel|科技/.test(text))return"technology";
@@ -32,7 +34,8 @@ function renderNewsThumb(item,kind="tile",options={}){
  const slug=escapeHtml(item?.fallback_image_slug||pickNewsFallbackSlug(item));
  const label=escapeHtml(item?.ai_category||item?.topic||"市場資訊");
  const fallback=`assets/news-fallback/${slug}.svg`,loading=options.eager?"eager":"lazy",priority=options.eager?' fetchpriority="high"':'';
- if(newsHasImage(item))return `<div class="news-thumb ${kind}" data-fallback="${slug}" style="background-image:url('${fallback}')"><img src="${escapeHtml(item.image_url)}" data-fallback-src="${fallback}" alt="${alt}" loading="${loading}"${priority} decoding="async" referrerpolicy="strict-origin-when-cross-origin" onload="this.dataset.loaded='true';this.parentElement?.classList.add('remote-image-loaded')" onerror="this.style.display='none';this.parentElement?.classList.add('fallback','remote-image-failed')"><span class="fallback-label">${label}</span></div>`;
+ const candidates=newsImageCandidates(item);
+ if(candidates.length){const encoded=escapeHtml(encodeURIComponent(JSON.stringify(candidates)));return `<div class="news-thumb ${kind}" data-fallback="${slug}" style="background-image:url('${fallback}')"><img src="${escapeHtml(candidates[0])}" data-candidates="${encoded}" data-candidate-index="0" data-fallback-src="${fallback}" alt="${alt}" loading="${loading}"${priority} decoding="async" referrerpolicy="no-referrer" onload="this.dataset.loaded='true';this.parentElement?.classList.add('remote-image-loaded')" onerror="MR.advanceNewsImage(this)"><span class="fallback-label">${label}</span></div>`;}
  return `<div class="news-thumb ${kind} fallback" data-fallback="${slug}" style="background-image:url('${fallback}')"><img src="${fallback}" alt="${alt}" loading="${loading}"${priority} decoding="async"><span class="fallback-label">${label}</span></div>`;
 }
 async function getJson(url,timeout=9000){const ctl=new AbortController(),id=setTimeout(()=>ctl.abort(),timeout);try{const r=await fetch(url,{cache:"no-store",headers:{Accept:"application/json"},signal:ctl.signal});if(!r.ok)throw Error(r.status);return await r.json()}finally{clearTimeout(id)}}
@@ -46,9 +49,9 @@ async function loadBranchApi(name,branch){
  if(meta?.download_url)return await getJson(`${meta.download_url}${meta.download_url.includes("?")?"&":"?"}sha=${encodeURIComponent(meta.sha||Date.now())}`,11000);
  throw Error("GitHub contents API returned no JSON content");
 }
-const snapshotCacheKey="mr-market-snapshot-last-good-v11.4.25";
+const snapshotCacheKey="mr-market-snapshot-last-good-v11.4.26";
 const DATA_MEMORY=new Map();
-const dataCacheKey=name=>`mr-data-cache-v11.4.25:${name}`;
+const dataCacheKey=name=>`mr-data-cache-v11.4.26:${name}`;
 const dataCacheTtl=name=>["market-snapshot.json","market-kline.json","tw-market.json","events.json"].includes(name)?30000:300000;
 const snapshotCandleCount=row=>(Array.isArray(row?.candles)?row.candles:[]).filter(candle=>candle?.date&&[candle.open,candle.high,candle.low,candle.close].every(value=>finite(value)!=null)).length;
 function mergeSnapshotCache(payload){
@@ -91,14 +94,14 @@ function officialBasicRecord(row,endpoint){
  record.updated_at=new Date().toISOString();return record;
 }
 async function loadStockBasics(){
- const fallback=window.__STOCK_BASICS_SEED__||{metadata:{version:"v11.4.25",status:"waiting",item_count:0},items:{}};
+ const fallback=window.__STOCK_BASICS_SEED__||{metadata:{version:"v11.4.26",status:"waiting",item_count:0},items:{}};
  const payload=await loadData("stock-basics.json",fallback),items={...(payload.items||{})};
  if(Object.keys(items).length>=500)return payload;
  const settled=await Promise.allSettled(STOCK_BASIC_ENDPOINTS.map(async endpoint=>({endpoint,rows:await getJson(endpoint.url,15000)})));
  let added=0;
  for(const result of settled){if(result.status!=="fulfilled"||!Array.isArray(result.value.rows))continue;for(const row of result.value.rows){const record=officialBasicRecord(row,result.value.endpoint);if(!record)continue;items[record.symbol]={...(items[record.symbol]||{}),...record};added++}}
  const values=Object.values(items),average=values.length?values.reduce((sum,row)=>sum+Number(row.basic_coverage_percent||0),0)/values.length:0;
- return {...payload,metadata:{...(payload.metadata||{}),version:"v11.4.25",item_count:values.length,average_basic_coverage_percent:Math.round(average*10)/10,scope:"all-currently-listed-twse-and-tpex-stocks",browser_official_fallback_added:added},items};
+ return {...payload,metadata:{...(payload.metadata||{}),version:"v11.4.26",item_count:values.length,average_basic_coverage_percent:Math.round(average*10)/10,scope:"all-currently-listed-twse-and-tpex-stocks",browser_official_fallback_added:added},items};
 }
 async function loadNewsChannels(){
  const channels=await Promise.all(NEWS_FILES.map(async cfg=>{
@@ -111,10 +114,10 @@ async function loadNewsChannels(){
  for(const channel of channels){for(const item of channel.items||[]){const key=String(item.id||`${item.title||""}|${item.url||""}`);if(!key||seen.has(key))continue;seen.add(key);items.push(item)}}
  items.sort((a,b)=>Date.parse(b.published_at||b.date||0)-Date.parse(a.published_at||a.date||0));
  const updated=channels.map(c=>c.metadata?.updated_at).filter(Boolean).sort().pop()||null;
- return {metadata:{version:"v11.4.25",updated_at:updated,item_count:items.length,channel_count:channels.length},channels,items};
+ return {metadata:{version:"v11.4.26",updated_at:updated,item_count:items.length,channel_count:channels.length},channels,items};
 }
 async function loadStockNews(){
- const fallback=window.__STOCK_NEWS_SEED__||{metadata:{version:"v11.4.25",status:"waiting",item_count:0},items:[]};
+ const fallback=window.__STOCK_NEWS_SEED__||{metadata:{version:"v11.4.26",status:"waiting",item_count:0},items:[]};
  return await loadData("stock-news.json",fallback);
 }
 
@@ -209,5 +212,5 @@ function scheduleAssetPrefetch(){
  document.addEventListener("pointerover",warm,{passive:true});document.addEventListener("touchstart",warm,{passive:true});
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",scheduleAssetPrefetch,{once:true});else scheduleAssetPrefetch();
-window.MR={$,$$,escapeHtml,finite,fmt,pct,cls,formatTime,stripHtml,normalizeText,newsHasImage,pickNewsFallbackSlug,renderNewsThumb,relatedNews,loadData,loadMarketKline,loadStockBasics,loadNewsChannels,loadStockNews,getJson,loadPortfolio,savePortfolio,mergeAssets,NEWS_FILES,OWNER,REPO,LIVE_MARKET_ENDPOINT,KLINE_INTERVALS};
+window.MR={$,$$,escapeHtml,finite,fmt,pct,cls,formatTime,stripHtml,normalizeText,newsImageCandidates,newsHasImage,advanceNewsImage,pickNewsFallbackSlug,renderNewsThumb,relatedNews,loadData,loadMarketKline,loadStockBasics,loadNewsChannels,loadStockNews,getJson,loadPortfolio,savePortfolio,mergeAssets,NEWS_FILES,OWNER,REPO,LIVE_MARKET_ENDPOINT,KLINE_INTERVALS};
 })();

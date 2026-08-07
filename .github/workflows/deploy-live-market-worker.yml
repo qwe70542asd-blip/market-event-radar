@@ -1,4 +1,4 @@
-name: Deploy v11.4.25 live market worker
+name: Deploy v11.4.26 live market worker
 on:
   workflow_dispatch:
   push:

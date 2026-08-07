@@ -1,13 +1,19 @@
-Market Event Radar v11.4.25 validation
+Market Event Radar v11.4.26 validation
 
-PASS: 105 automated tests
+PASS: 113 automated tests
 PASS: strict public-data validation
 PASS: Python syntax
 PASS: JavaScript syntax
 PASS: 27 GitHub Actions YAML files
 PASS: HTTP smoke test (7 pages / 42 referenced assets)
-PASS: Taiwan sector heat-card rendering and unique-stock selection
-PASS: official-field-first industry classification
-PASS: current + historical news merged image enrichment
+PASS: institutional lot-unit display and direction labels
+PASS: portfolio autocomplete / unknown-symbol guard
+PASS: industry-code normalization
+PASS: balanced selected-news layout
+PASS: current + historical news merged image enrichment with alternate candidates
+PASS: Nikkei official CSV parser regression fixture
+PASS: basic package security/audio scan
 
-Online note: publisher image availability and sub-minute market updates require the first GitHub Actions run and deployed edge worker respectively.
+SKIPPED (post-deploy): 15-minute K runtime availability. It depends on Yahoo/Edge Worker and is not falsely counted as passed.
+POST-DEPLOY: configure assets/runtime-config.js liveMarketEndpoint for true 30-60 second live market refresh.
+POST-DEPLOY: run news Actions to verify each publisher's current image reachability.

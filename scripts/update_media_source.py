@@ -55,7 +55,8 @@ def parse_history_google_news(cfg,aliases,profiles):
   feed=feedparser.parse(url);queries+=1
   for entry in feed.entries[:12]:
    publisher=clean_text((entry.get("source") or {}).get("title") if isinstance(entry.get("source"),dict) else "") or cfg["name"]
-   item=normalize_item(title=entry.get("title"),url=entry.get("link"),source_id=cfg["id"],source_name=cfg["name"],summary=entry.get("summary") or entry.get("description"),published_at=entry.get("published") or entry.get("updated"),aliases=aliases,profiles=profiles,forced_scope="media",extra={"image_url":rss_image(entry),"discovery_source":"google-news-history","discovery_channel":cfg["name"],"publisher":publisher,"history_month":month})
+   article_url=resolve_google_news(session,entry.get("link"))
+   item=normalize_item(title=entry.get("title"),url=article_url,source_id=cfg["id"],source_name=cfg["name"],summary=entry.get("summary") or entry.get("description"),published_at=entry.get("published") or entry.get("updated"),aliases=aliases,profiles=profiles,forced_scope="media",extra={"image_url":rss_image(entry),"discovery_source":"google-news-history","discovery_channel":cfg["name"],"publisher":publisher,"history_month":month})
    if item:items.append(item)
  return items,{"enabled":True,"queries":queries,"items":len(items),"archive_start":HISTORY_START.isoformat()}
 
@@ -125,26 +126,33 @@ IMAGE_META_SELECTORS=(
  ('meta[itemprop="image"]','content'),('link[rel="image_src"]','href')
 )
 
-def article_image_from_soup(soup,base):
+def article_image_candidates_from_soup(soup,base):
+ candidates=[]
+ def add(value):
+  found=usable_image_url(direct_url(value,base)) if value else None
+  if found and found not in candidates:candidates.append(found)
  for selector,attribute in IMAGE_META_SELECTORS:
-  node=soup.select_one(selector)
-  if node:
-   found=usable_image_url(direct_url(node.get(attribute),base))
-   if found:return found
+  for node in soup.select(selector):add(node.get(attribute))
  for script in soup.select('script[type="application/ld+json"]'):
   try:data=json.loads(script.string or script.get_text())
   except Exception:continue
-  candidate=image_value(data.get("image")) if isinstance(data,dict) else image_value(data)
-  found=usable_image_url(direct_url(candidate,base))
-  if found:return found
+  def walk(value):
+   if isinstance(value,dict):
+    for key in ("image","thumbnailUrl","contentUrl"):
+     candidate=image_value(value.get(key))
+     if candidate:add(candidate)
+    for child in value.values():walk(child)
+   elif isinstance(value,list):
+    for child in value:walk(child)
+  walk(data)
  for img in soup.find_all("img"):
   raw=img.get("src") or img.get("data-src") or img.get("data-original") or img.get("data-lazy-src")
   if not raw:
    srcset=img.get("srcset") or img.get("data-srcset")
    if srcset:
-    candidates=[part.strip().split(" ")[0] for part in str(srcset).split(",") if part.strip()]
-    raw=candidates[-1] if candidates else None
-  found=usable_image_url(direct_url(raw,base))
+    values=[part.strip().split(" ")[0] for part in str(srcset).split(",") if part.strip()]
+    raw=values[-1] if values else None
+  found=usable_image_url(direct_url(raw,base)) if raw else None
   if not found:continue
   marker=f"{found} {img.get('class') or ''} {img.get('alt') or ''}".lower()
   if any(word in marker for word in ("logo","icon","avatar","sprite","loading","blank","advert","banner")):continue
@@ -152,8 +160,12 @@ def article_image_from_soup(soup,base):
    width=int(re.sub(r"\D","",str(img.get("width") or "0")) or 0);height=int(re.sub(r"\D","",str(img.get("height") or "0")) or 0)
   except Exception:width=height=0
   if width and height and (width<240 or height<120):continue
-  return found
- return None
+  if found not in candidates:candidates.append(found)
+ return candidates[:10]
+
+def article_image_from_soup(soup,base):
+ candidates=article_image_candidates_from_soup(soup,base)
+ return candidates[0] if candidates else None
 
 def fallback_image_slug(title:Any,summary:Any="",category:Any=""):
  text=clean_text(f"{title or ''} {summary or ''} {category or ''}")
@@ -165,25 +177,29 @@ def fallback_image_slug(title:Any,summary:Any="",category:Any=""):
 def enrich_article_images(session,items,limit=48):
  cache={};attempts=0
  for item in items:
-  if usable_image_url(item.get("image_url")):
-   item["image_url"]=usable_image_url(item.get("image_url"));continue
-  item.pop("image_url",None)
+  candidates=[]
+  for value in [item.get("image_url"),*(item.get("image_candidates") or [])]:
+   found=usable_image_url(value)
+   if found and found not in candidates:candidates.append(found)
   url=item.get("url")
-  if not url or attempts>=limit:break
-  if url in cache:
-   if cache[url]:item["image_url"]=cache[url]
-   continue
-  attempts+=1;found=None
-  try:
-   response=session.get(url,headers=HEADERS,timeout=18,allow_redirects=True)
-   response.raise_for_status()
-   if "html" in str(response.headers.get("content-type") or "").lower():
-    soup=BeautifulSoup(decode_response(response),"lxml")
-    found=article_image_from_soup(soup,response.url or url)
-  except Exception:pass
-  found=usable_image_url(found)
-  cache[url]=found
-  if found:item["image_url"]=found
+  if url and attempts<limit:
+   if url in cache:page_candidates=cache[url]
+   else:
+    attempts+=1;page_candidates=[]
+    try:
+     response=session.get(url,headers=HEADERS,timeout=18,allow_redirects=True)
+     response.raise_for_status()
+     if "html" in str(response.headers.get("content-type") or "").lower():
+      soup=BeautifulSoup(decode_response(response),"lxml")
+      page_candidates=article_image_candidates_from_soup(soup,response.url or url)
+    except Exception:pass
+    cache[url]=page_candidates
+   for found in page_candidates:
+    if found not in candidates:candidates.append(found)
+  if candidates:
+   item["image_url"]=candidates[0];item["image_candidates"]=candidates[:6];item["image_status"]="remote-candidates"
+  else:
+   item.pop("image_url",None);item.pop("image_candidates",None);item["image_status"]="fallback-required"
   if not item.get("fallback_image_slug"):
    item["fallback_image_slug"]=fallback_image_slug(item.get("title"),item.get("summary"),item.get("ai_category") or item.get("source_name"))
  return items

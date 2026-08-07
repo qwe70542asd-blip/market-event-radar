@@ -8,6 +8,8 @@
   ]);
   $("#chipsDate").textContent=payload.metadata?.updated_at?formatTime(payload.metadata.updated_at):"等待盤後資料";
   const display=(value,digits=0)=>finite(value)==null?"—":fmt(value,digits);
+  const displayLots=value=>{const n=finite(value);return n==null?"—":`${n>0?"+":""}${fmt(n,0)} 張`};
+  const flowLabel=value=>{const n=finite(value);return n==null?"資料待補":n>0?"買超":n<0?"賣超":"持平"};
   const nonempty=value=>value!==null&&value!==undefined&&value!==""&&(!(Array.isArray(value))||value.length);
   const mergeObject=(primary={},fallback={})=>{
     const out={...fallback,...primary};
@@ -46,7 +48,8 @@
     const marketData=payload.markets?.[key]||{},institutional=marketData.institutional||{};
     const values=[institutional.foreign_net,institutional.trust_net,institutional.dealer_net,institutional.total_net];
     if(!values.some(value=>finite(value)!=null))return "";
-    return `<article class="stat"><small>${label} 外資</small><strong class="${cls(institutional.foreign_net)}">${display(institutional.foreign_net)}</strong></article><article class="stat"><small>${label} 投信</small><strong class="${cls(institutional.trust_net)}">${display(institutional.trust_net)}</strong></article><article class="stat"><small>${label} 自營商</small><strong class="${cls(institutional.dealer_net)}">${display(institutional.dealer_net)}</strong></article><article class="stat"><small>${label} 合計</small><strong class="${cls(institutional.total_net)}">${display(institutional.total_net)}</strong></article>`;
+    const card=(name,value)=>`<article class="stat market-flow-stat"><small>${label} ${name}</small><strong class="${cls(value)}">${displayLots(value)}</strong><span class="stat-detail">${flowLabel(value)} · 單位：張</span></article>`;
+    return card("外資",institutional.foreign_net)+card("投信",institutional.trust_net)+card("自營商",institutional.dealer_net)+card("合計",institutional.total_net);
   }
   const marketCards=marketCard("twse","上市");
   $("#marketFlowCards").innerHTML=marketCards||'<div class="empty compact-empty">市場法人彙總等待盤後資料；單一標的仍可使用下方搜尋。</div>';
@@ -56,7 +59,7 @@
     const history=item.history||item.recent||[];
     const rows=Array.isArray(history)?history.filter(row=>row?.date&&(hasAny(row.institutional,["foreign_net","trust_net","dealer_net"])||hasAny(row.margin,["balance","change"])||hasAny(row.short,["balance","change"]))):[];
     if(!rows.length)return "";
-    return `<div class="chip-trend"><h3>最近五日趨勢</h3><div class="table-wrap"><table><thead><tr><th>日期</th><th>外資</th><th>投信</th><th>自營商</th><th>融資增減</th><th>融券增減</th></tr></thead><tbody>${rows.slice(0,5).map(row=>`<tr><td>${escapeHtml(row.date||"—")}</td><td class="${cls(row.institutional?.foreign_net)}">${display(row.institutional?.foreign_net)}</td><td class="${cls(row.institutional?.trust_net)}">${display(row.institutional?.trust_net)}</td><td class="${cls(row.institutional?.dealer_net)}">${display(row.institutional?.dealer_net)}</td><td class="${cls(row.margin?.change)}">${display(row.margin?.change)}</td><td class="${cls(row.short?.change)}">${display(row.short?.change)}</td></tr>`).join("")}</tbody></table></div></div>`;
+    return `<div class="chip-trend"><h3>最近五日趨勢</h3><div class="table-wrap"><table><thead><tr><th>日期</th><th>外資（張）</th><th>投信（張）</th><th>自營商（張）</th><th>融資增減（張）</th><th>融券增減（張）</th></tr></thead><tbody>${rows.slice(0,5).map(row=>`<tr><td>${escapeHtml(row.date||"—")}</td><td class="${cls(row.institutional?.foreign_net)}">${displayLots(row.institutional?.foreign_net)}</td><td class="${cls(row.institutional?.trust_net)}">${displayLots(row.institutional?.trust_net)}</td><td class="${cls(row.institutional?.dealer_net)}">${displayLots(row.institutional?.dealer_net)}</td><td class="${cls(row.margin?.change)}">${display(row.margin?.change)}</td><td class="${cls(row.short?.change)}">${display(row.short?.change)}</td></tr>`).join("")}</tbody></table></div></div>`;
   };
   const sourceLine=item=>{
     const sources=(item.sources||[]).map(source=>source?.name).filter(Boolean);
@@ -68,8 +71,8 @@
     const institutionalAvailable=hasAny(institutional,["foreign_net","trust_net","dealer_net","total_net"]);
     const creditAvailable=hasAny(margin,["balance","change"])||hasAny(short,["balance","change","ratio"])||hasAny(dayTrade,["volume","ratio"]);
     const sections=[];
-    if(institutionalAvailable)sections.push(`<section><h3>三大法人</h3><div class="chip-metric-grid"><div><small>外資</small><strong class="${cls(institutional.foreign_net)}">${display(institutional.foreign_net)}</strong></div><div><small>投信</small><strong class="${cls(institutional.trust_net)}">${display(institutional.trust_net)}</strong></div><div><small>自營商</small><strong class="${cls(institutional.dealer_net)}">${display(institutional.dealer_net)}</strong></div><div><small>三大法人</small><strong class="${cls(institutional.total_net)}">${display(institutional.total_net)}</strong></div></div></section>`);
-    if(creditAvailable)sections.push(`<section><h3>信用交易與當沖</h3><div class="chip-metric-grid"><div><small>當沖量</small><strong>${display(dayTrade.volume)}</strong></div><div><small>當沖比</small><strong>${finite(dayTrade.ratio)==null?"—":pct(dayTrade.ratio)}</strong></div><div><small>融資餘額</small><strong>${display(margin.balance)}</strong></div><div><small>融資增減</small><strong class="${cls(margin.change)}">${display(margin.change)}</strong></div><div><small>融券餘額</small><strong>${display(short.balance)}</strong></div><div><small>融券增減</small><strong class="${cls(short.change)}">${display(short.change)}</strong></div></div></section>`);
+    if(institutionalAvailable)sections.push(`<section><h3>三大法人</h3><div class="chip-metric-grid"><div><small>外資買賣超</small><strong class="${cls(institutional.foreign_net)}">${displayLots(institutional.foreign_net)}</strong></div><div><small>投信買賣超</small><strong class="${cls(institutional.trust_net)}">${displayLots(institutional.trust_net)}</strong></div><div><small>自營商買賣超</small><strong class="${cls(institutional.dealer_net)}">${displayLots(institutional.dealer_net)}</strong></div><div><small>三大法人合計</small><strong class="${cls(institutional.total_net)}">${displayLots(institutional.total_net)}</strong></div></div></section>`);
+    if(creditAvailable)sections.push(`<section><h3>信用交易與當沖</h3><div class="chip-metric-grid"><div><small>當沖量</small><strong>${display(dayTrade.volume)}</strong></div><div><small>當沖比</small><strong>${finite(dayTrade.ratio)==null?"—":pct(dayTrade.ratio)}</strong></div><div><small>融資餘額（張）</small><strong>${display(margin.balance)}</strong></div><div><small>融資增減（張）</small><strong class="${cls(margin.change)}">${display(margin.change)}</strong></div><div><small>融券餘額（張）</small><strong>${display(short.balance)}</strong></div><div><small>融券增減（張）</small><strong class="${cls(short.change)}">${display(short.change)}</strong></div></div></section>`);
     const noData=!institutionalAvailable&&!creditAvailable;
     return `<article class="chip-detail-card"><div class="chip-detail-head"><div><span class="tag">${escapeHtml(quote.asset_class==="etf"?"ETF":"個股")}</span><strong>${escapeHtml(item.symbol)}</strong><span>${escapeHtml(item.name||quote.name||"")}</span></div><a class="btn" href="asset.html?symbol=${encodeURIComponent(item.symbol)}">查看標的 →</a></div><div class="chip-summary-line"><span>成交價 <b>${display(quote.price,2)}</b></span><span>漲跌幅 <b class="${cls(quote.change_percent)}">${pct(quote.change_percent)}</b></span><span>成交量 <b>${display(quote.volume)}</b></span><span>成交金額 <b>${display(quote.trade_value)}</b></span></div>${noData?'<div class="empty compact-empty chip-no-data">尚未取得此標的的法人、資券或當沖資料；行情資料仍可正常查看。資料通道會保留最後成功版本並分批補齊。</div>':`<div class="chip-section-grid">${sections.join("")}</div>`}${trendRows(item)}${sourceLine(item)}<p class="broker-note">${escapeHtml(item.broker_note||"公開分點與籌碼資料僅供觀察，不代表券商、外資或最終客戶的真實持倉。")}</p></article>`;
   };
@@ -120,7 +123,7 @@
       return {...item,score:Math.max(1,Math.round(item.rawScore/top*100))};
     });
   };
-  const hotHtml=rows=>rows.map((item,index)=>`<tr><td>${index+1}</td><td><a href="asset.html?symbol=${encodeURIComponent(item.symbol)}"><b>${escapeHtml(item.symbol)}</b><br><small>${escapeHtml(item.name||"")}</small></a></td><td><span class="hot-score">${item.score}</span></td><td class="${cls(item.change_percent)}">${pct(item.change_percent)}</td><td>${display(item.trade_value)}</td><td class="${cls(item.chip.institutional?.foreign_net)}">${display(item.chip.institutional?.foreign_net)}</td><td>${finite(item.chip.day_trade?.ratio)==null?"—":pct(item.chip.day_trade.ratio)}</td></tr>`).join("")||'<tr><td colspan="7" class="empty">等待市場資料</td></tr>';
+  const hotHtml=rows=>rows.map((item,index)=>`<tr><td>${index+1}</td><td><a href="asset.html?symbol=${encodeURIComponent(item.symbol)}"><b>${escapeHtml(item.symbol)}</b><br><small>${escapeHtml(item.name||"")}</small></a></td><td><span class="hot-score">${item.score}</span></td><td class="${cls(item.change_percent)}">${pct(item.change_percent)}</td><td>${display(item.trade_value)}</td><td class="${cls(item.chip.institutional?.foreign_net)}">${displayLots(item.chip.institutional?.foreign_net)}</td><td>${finite(item.chip.day_trade?.ratio)==null?"—":pct(item.chip.day_trade.ratio)}</td></tr>`).join("")||'<tr><td colspan="7" class="empty">等待市場資料</td></tr>';
   $("#hotStocks").innerHTML=hotHtml(hot(false));
   $("#hotEtfs").innerHTML=hotHtml(hot(true));
 })();

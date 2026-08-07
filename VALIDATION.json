@@ -1,31 +1,32 @@
 {
-  "version": "v11.4.25",
-  "validated_at": "2026-08-07T12:41:00+08:00",
-  "status": "local-release-candidate-passed",
-  "tests": 105,
+  "version": "v11.4.26",
+  "validated_at": "2026-08-07T17:01:46+08:00",
+  "status": "local-release-candidate-passed-with-post-deploy-15m-check",
+  "tests": 113,
   "http_pages": 7,
   "http_assets": 42,
   "workflow_yaml_files": 27,
   "checks": [
-    "All 105 automated tests passed",
+    "All 113 automated tests passed",
     "Strict public-data validation passed",
     "Python scripts compiled successfully",
     "JavaScript syntax checks passed",
     "All 27 GitHub Actions workflow YAML files parsed successfully",
     "HTTP smoke test passed for seven public pages and 42 referenced assets",
-    "The vertical stock ticker was replaced by five Taiwan sector heat cards",
-    "Each heat card contains at most two unique representative stocks",
-    "Industry classification no longer consumes news text and prioritizes official company fields",
-    "TAIEX-related sample classifications were checked: TSMC foundry, Taiwan Mobile telecom, Delta power management",
-    "The homepage displays the market-data timestamp and explicit freshness or delay status",
-    "Current and historical news rows share one post-merge article-image enrichment pass",
+    "Institutional flow values display signed lot counts (張) and buy/sell direction",
+    "Portfolio symbol/name autocomplete and unknown-symbol rejection are covered by release tests",
+    "Raw industry codes such as 26/28 are normalized to Chinese industry labels before rendering",
+    "Homepage selected-news grid fills 1/2/4/5/6-card states without the old right-side blank area",
+    "Homepage selected news is time-bounded; old stories remain in history rather than being used as filler",
+    "Current and historical news rows share one post-merge image enrichment pass with alternate image candidates",
     "Generic logos, default OG images and placeholders are rejected before publication",
-    "High-impact and recent missing-image stories receive priority in the image fetch queue",
-    "The release uses v11.4.25 asset URLs, service-worker cache names and browser data-cache keys"
+    "Nikkei official Daily Data CSV parser passed a regression fixture and completed sessions can be cross-validated",
+    "No bundled m4a/mp3/wav files, obvious embedded secrets, eval(), document.write(), or target=_blank links lacking noopener were found",
+    "Release data-channel metadata is v11.4.26"
   ],
-  "notes": [
-    "Third-party article images are fetched by GitHub Actions after push; this offline package cannot certify that every publisher is reachable.",
-    "Guaranteed 30-to-60-second market updates still require deployment of the included edge worker and configuration of assets/runtime-config.js.",
-    "Without the worker, the UI labels data as recent or delayed rather than claiming it is real-time."
+  "skipped_post_deploy_checks": [
+    "15-minute K-line runtime availability: external Yahoo/Edge Worker dependency; explicitly non-blocking locally and must be checked after deployment",
+    "True 30-60 second market refresh: liveMarketEndpoint is intentionally blank until the edge Worker is deployed and configured",
+    "Third-party publisher image reachability: requires the first online news Actions run; frontend retries alternate candidates and then falls back safely"
   ]
 }
