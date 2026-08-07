@@ -1,4 +1,4 @@
-name: Update v11.4.21 company disclosures
+name: Update v11.4.22 company disclosures
 on:
   push:
     branches: [main]

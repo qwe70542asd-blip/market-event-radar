@@ -26,7 +26,7 @@ from bs4 import BeautifulSoup
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.21"
+VERSION = "v11.4.22"
 TIMEOUT = 25
 YAHOO_BATCH = 48
 HEADERS = {
@@ -51,6 +51,10 @@ INDUSTRY_NAMES = {
 def normalized_industry(value: Any) -> tuple[str | None, str | None]:
     raw = clean(value)
     if not raw:
+        return None, None
+    # Four-to-six digit values are security codes accidentally copied into the
+    # industry field by a few upstream rows. Never expose them as industries.
+    if raw.isdigit() and len(raw) > 2:
         return None, None
     code = raw.zfill(2) if raw.isdigit() and len(raw) <= 2 else None
     return code, INDUSTRY_NAMES.get(code, raw)
@@ -379,7 +383,7 @@ def main() -> None:
         merged["currency"] = merged.get("currency") or "TWD"
         code, industry_name = normalized_industry(merged.get("industry_code") or merged.get("industry"))
         merged["industry_code"] = code or merged.get("industry_code")
-        merged["industry_name"] = industry_name or merged.get("industry_name") or merged.get("industry")
+        merged["industry_name"] = industry_name or merged.get("industry_name") or (merged.get("industry") if not str(merged.get("industry") or "").isdigit() else None) or "其他業"
         merged["industry"] = merged["industry_name"]
         merged["basic_coverage_percent"] = basic_coverage(merged)
         merged["financial_coverage_percent"] = financial_coverage(merged)

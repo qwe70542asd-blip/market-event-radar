@@ -26,7 +26,7 @@ from bs4 import BeautifulSoup
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.21"
+VERSION = "v11.4.22"
 BATCH = 24
 PRIORITY_SYMBOLS = ["00981A", "00403A", "00631L", "006208", "0050", "0056", "00878", "00919", "2330", "2317", "2454"]
 TIMEOUT = 24
@@ -421,6 +421,29 @@ def main() -> None:
         for future in as_completed(futures):
             symbol, row, error = future.result()
             if row:
+                previous_row = items.get(symbol) or {}
+                current_holdings = row.get("holdings") or []
+                previous_holdings = previous_row.get("holdings") or []
+                current_date = row.get("holdings_date")
+                previous_date = previous_row.get("holdings_date")
+                if current_holdings and previous_holdings and current_date and previous_date and current_date != previous_date:
+                    previous_map = {str(item.get("symbol") or "").upper(): item for item in previous_holdings if item.get("symbol")}
+                    for holding in current_holdings:
+                        old_holding = previous_map.get(str(holding.get("symbol") or "").upper()) or {}
+                        current_shares = number(holding.get("shares"))
+                        old_shares = number(old_holding.get("shares"))
+                        if current_shares is not None and old_shares is not None:
+                            holding["change_shares"] = current_shares - old_shares
+                    row["holdings_previous_date"] = previous_date
+                    history = list(previous_row.get("holdings_history") or [])
+                    history.insert(0, {"date": previous_date, "holdings": previous_holdings})
+                    row["holdings_history"] = history[:5]
+                elif current_date == previous_date and previous_holdings:
+                    old_map = {str(item.get("symbol") or "").upper(): item for item in previous_holdings if item.get("symbol")}
+                    for holding in current_holdings:
+                        old_holding = old_map.get(str(holding.get("symbol") or "").upper()) or {}
+                        if holding.get("change_shares") is None and old_holding.get("change_shares") is not None:
+                            holding["change_shares"] = old_holding.get("change_shares")
                 items[symbol] = row
                 success += 1
             elif error:

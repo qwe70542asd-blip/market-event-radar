@@ -5,7 +5,7 @@ from typing import Any
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.21"
+VERSION = "v11.4.22"
 
 
 def num(value: Any) -> float | None:
@@ -24,8 +24,22 @@ def close(a: Any, b: Any, tolerance: float = .005) -> bool:
     return abs(left - right) <= max(abs(left), abs(right), 1) * tolerance
 
 
-def latest(rows: list[dict], key: str = "period") -> dict:
-    return sorted((row for row in rows or [] if row.get(key)), key=lambda row: str(row.get(key)), reverse=True)[0] if rows else {}
+def normalize_rows(value: Any) -> list[dict]:
+    """Accept channel payloads stored either as a list or as {rows:[...]}.
+
+    Older branches used both shapes. Validation must never crash merely because a
+    retained last-known-good file uses the other representation.
+    """
+    if isinstance(value, dict):
+        value = value.get("rows") or value.get("items") or []
+    if not isinstance(value, list):
+        return []
+    return [row for row in value if isinstance(row, dict)]
+
+
+def latest(rows: Any, key: str = "period") -> dict:
+    normalized = normalize_rows(rows)
+    return sorted((row for row in normalized if row.get(key)), key=lambda row: str(row.get(key)), reverse=True)[0] if normalized else {}
 
 
 def status_for(official: Any, reference: Any, tolerance: float = .005, reference_status: str = "reference") -> tuple[str, list[Any]]:
@@ -66,7 +80,7 @@ def main() -> None:
             "values": quote_values,
         }
         embedded_revenue = latest(asset.get("monthly_revenue") or [])
-        channel_revenue = latest((revenue.get(symbol) or {}).get("rows") or revenue.get(symbol) or [])
+        channel_revenue = latest(revenue.get(symbol) or [])
         rev_status, rev_values = status_for(embedded_revenue.get("revenue"), channel_revenue.get("revenue"), .001)
         fields["monthly_revenue"] = {
             "status": rev_status,
@@ -75,7 +89,7 @@ def main() -> None:
             "values": rev_values,
         }
         embedded_dividend = latest(asset.get("dividends") or [])
-        channel_dividend = latest((dividends.get(symbol) or {}).get("rows") or dividends.get(symbol) or [])
+        channel_dividend = latest(dividends.get(symbol) or [])
         div_status, div_values = status_for(embedded_dividend.get("cash"), channel_dividend.get("cash"), .001)
         fields["dividends"] = {
             "status": div_status,

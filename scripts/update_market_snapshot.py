@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Refresh global-market quotes and continuous daily candlesticks.
 
-v11.4.21 data-quality policy
+v11.4.22 data-quality policy
 - A card may only combine price, change and OHLC from the same exchange session.
 - When Yahoo's live quote is newer than the last completed daily candle, the
   live-session OHLC comes from Yahoo meta fields; yesterday's daily candle is
@@ -21,30 +21,54 @@ import requests
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.21"
+VERSION = "v11.4.22"
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.21)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.22)",
     "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.6",
 }
 YAHOO_CHART = "https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"
 TWSE_TAIEX = "https://www.twse.com.tw/indicesReport/MI_5MINS_HIST"
 CANDLE_LIMIT = 70
-KLINE_SYMBOLS = {"^TWII", "^KS11", "^N225", "^IXIC", "^SOX", "^GSPC"}
+KLINE_SYMBOLS = {"^TWII", "^DJI", "^IXIC", "^SOX", "^GSPC", "^N225"}
 SYMBOLS = [
+    # Six index cards, in the same order used by the homepage.
     ("^TWII", "台灣加權", "TW", "index"),
-    ("^GSPC", "S&P 500", "US", "index"),
-    ("^DJI", "道瓊工業", "US", "index"),
+    ("^DJI", "道瓊工業平均指數", "US", "index"),
     ("^IXIC", "NASDAQ", "US", "index"),
     ("^SOX", "費城半導體", "US", "index"),
+    ("^GSPC", "S&P 500", "US", "index"),
     ("^N225", "日經 225", "JP", "index"),
-    ("^KS11", "韓國 KOSPI", "KR", "index"),
-    ("^KQ11", "韓國 KOSDAQ", "KR", "index"),
+    # Supporting macro indicators.
     ("^VIX", "VIX 恐慌指數", "US", "risk"),
     ("^TNX", "美國 10 年債殖利率", "US", "yield"),
     ("DX-Y.NYB", "美元指數 DXY", "US", "currency-index"),
     ("TWD=X", "美元兌新台幣", "FX", "fx"),
     ("KRW=X", "美元兌韓元", "FX", "fx"),
+    # Ten configurable global industry leaders used by the vertical ticker.
+    ("NVDA", "NVIDIA", "US", "equity"),
+    ("2330.TW", "台積電", "TW", "equity"),
+    ("2317.TW", "鴻海", "TW", "equity"),
+    ("2382.TW", "廣達", "TW", "equity"),
+    ("MSFT", "Microsoft", "US", "equity"),
+    ("GOOGL", "Alphabet", "US", "equity"),
+    ("000660.KS", "SK 海力士", "KR", "equity"),
+    ("MU", "Micron", "US", "equity"),
+    ("AVGO", "Broadcom", "US", "equity"),
+    ("AMD", "AMD", "US", "equity"),
 ]
+
+LEADER_META = {
+    "NVDA": {"leader_order": 1, "sector": "AI 晶片／晶圓代工", "display_symbol": "NVDA"},
+    "2330.TW": {"leader_order": 2, "sector": "AI 晶片／晶圓代工", "display_symbol": "2330"},
+    "2317.TW": {"leader_order": 3, "sector": "AI 伺服器／ODM", "display_symbol": "2317"},
+    "2382.TW": {"leader_order": 4, "sector": "AI 伺服器／ODM", "display_symbol": "2382"},
+    "MSFT": {"leader_order": 5, "sector": "雲端／AI 平台", "display_symbol": "MSFT"},
+    "GOOGL": {"leader_order": 6, "sector": "雲端／AI 平台", "display_symbol": "GOOGL"},
+    "000660.KS": {"leader_order": 7, "sector": "記憶體", "display_symbol": "000660"},
+    "MU": {"leader_order": 8, "sector": "記憶體", "display_symbol": "MU"},
+    "AVGO": {"leader_order": 9, "sector": "高速運算／網通", "display_symbol": "AVGO"},
+    "AMD": {"leader_order": 10, "sector": "高速運算／網通", "display_symbol": "AMD"},
+}
 
 MARKET_SCHEDULES = {
     "TW": {"tz": "Asia/Taipei", "sessions": ((time(9, 0), time(13, 30)),)},
@@ -150,7 +174,7 @@ def parse_yahoo_candles(chart: dict[str, Any], market: str, quote_kind: str | No
 def daily_reference(candles: list[dict[str, Any]], live_price: float | None, market_date: str | None = None) -> dict[str, Any]:
     """Compatibility helper for tests and downstream tools.
 
-    The v11.4.21 publisher uses same-session-price-vs-adjacent-close. This
+    The v11.4.22 publisher uses same-session-price-vs-adjacent-close. This
     helper preserves the old adjacent-daily-candles API without ever using
     Yahoo chartPreviousClose, which can refer to the beginning of a range.
     """
@@ -435,6 +459,9 @@ def main() -> None:
         previous = old_by_symbol.get(symbol)
         try:
             row = fetch_yahoo(session, symbol, name, market, quote_kind)
+            if symbol in LEADER_META:
+                row.update(LEADER_META[symbol])
+                row["leader_ticker"] = True
             if symbol == "^TWII":
                 try:
                     row = enrich_taiex_with_twse(session, row)
@@ -451,13 +478,16 @@ def main() -> None:
             warning = f"{symbol}: {exc}"; warnings.append(warning)
             cached = cached_row(previous, name, market, quote_kind, warning) if previous else empty_row(symbol, name, market, quote_kind, warning)
             cached["symbol"] = symbol
+            if symbol in LEADER_META:
+                cached.update(LEADER_META[symbol])
+                cached["leader_ticker"] = True
             rows.append(cached)
 
     payload = {
         "metadata": {
             "version": VERSION,
             "updated_at": NOW.isoformat(timespec="seconds"),
-            "source": "TWSE official TAIEX history + Yahoo same-session quote/OHLC",
+            "source": "TWSE official TAIEX history + Yahoo same-session quote/OHLC and leader equities",
             "warnings": warnings,
             "kline_symbols": sorted(KLINE_SYMBOLS),
             "kline_interval": "1d",

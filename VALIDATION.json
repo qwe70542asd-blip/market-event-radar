@@ -1,23 +1,32 @@
 {
-  "version": "v11.4.21",
-  "validated_at": "2026-08-06T17:52:00+08:00",
-  "tests": 92,
-  "status": "passed",
+  "version": "v11.4.22",
+  "validated_at": "2026-08-07T08:58:00+08:00",
+  "status": "local-integration-passed",
+  "tests": 99,
+  "http_pages": 7,
+  "http_assets": 41,
+  "workflow_yaml_files": 27,
   "checks": [
-    "Price, change and displayed OHLC must share one exchange session",
-    "Live price must be between the same-session high and low",
-    "Open-market data older than three minutes is marked stale",
-    "The browser checks every 60 seconds while tracked markets are open and every 15 minutes off-session",
-    "The included Cloudflare Worker supports one-minute market-specific scheduled refresh",
-    "Interactive K-line controls cover 5m, 15m, 30m, 1h, 4h, day, week and month",
-    "Homepage featured information is limited to today, tomorrow, the following day and recent 24-hour breaking news",
-    "TWSE and TPEx historical ex-dividend backfill starts at 2026-01-01",
-    "Material-event dates use labeled event dates or official announcement dates",
-    "News symbols must exist in the official full-market master",
-    "Python compilation, JavaScript syntax, workflow YAML, seed validation and automated tests passed"
+    "All 99 automated tests passed",
+    "Strict public-data validation passed",
+    "Python scripts compiled successfully",
+    "JavaScript syntax checks passed",
+    "All GitHub Actions workflow YAML files parsed successfully",
+    "HTTP smoke test passed for seven public pages and 41 referenced assets",
+    "The six index cards are TAIEX, Dow Jones, NASDAQ, Philadelphia Semiconductor, S&P 500 and Nikkei 225 in the requested order",
+    "KOSPI and KOSDAQ index cards are removed",
+    "The homepage top market summary is a ten-stock sector-grouped vertical leader ticker",
+    "Multi-interval K-lines use a GitHub-published static fallback channel before browser-side provider access",
+    "Four-hour candles are separated by exchange session and trading date",
+    "Known GitHub Actions failures for list/object verification, industry code 9103 and news code 8923 are fixed in code and covered by tests",
+    "Raw TXT/JSON announcement sources no longer trigger direct downloads from the event page",
+    "News cards display an immediate local topic image while remote images load",
+    "ETF holdings can show industry and previous-available-date share changes",
+    "Cryptocurrency assets are removed from the public asset master"
   ],
   "notes": [
-    "GitHub Actions remains a five-minute fallback and archive channel; guaranteed one-minute checks require deploying the included edge worker and setting assets/runtime-config.js.",
-    "Detected inconsistencies are withheld instead of displayed."
+    "The included release-verification GitHub Actions workflow repeats syntax, strict-data, test and HTTP checks after the package is pushed to main.",
+    "This offline build environment cannot truthfully certify third-party live endpoints. Their first real online run must be confirmed in GitHub Actions after push.",
+    "Guaranteed one-minute backend updates still require deploying the included edge worker and setting assets/runtime-config.js. GitHub Actions remains the scheduled fallback."
   ]
 }

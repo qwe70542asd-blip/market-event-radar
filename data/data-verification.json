@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "version": "v11.4.21",
-    "updated_at": "2026-08-05T11:23:02+08:00",
+    "version": "v11.4.22",
+    "updated_at": "2026-08-07T08:52:37+08:00",
     "status": "partial",
     "counts": {
       "official": 0,
@@ -104,7 +104,7 @@
         "moneydj_etf": "https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=00403A.TW",
         "histock_etf": "https://histock.tw/stock/active-etf.aspx"
       },
-      "updated_at": "2026-08-05T11:23:02+08:00"
+      "updated_at": "2026-08-07T08:52:37+08:00"
     },
     "0050": {
       "symbol": "0050",
@@ -194,7 +194,7 @@
         "moneydj_etf": "https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=0050.TW",
         "histock_etf": "https://histock.tw/stock/active-etf.aspx"
       },
-      "updated_at": "2026-08-05T11:23:02+08:00"
+      "updated_at": "2026-08-07T08:52:37+08:00"
     },
     "006208": {
       "symbol": "006208",
@@ -284,7 +284,7 @@
         "moneydj_etf": "https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=006208.TW",
         "histock_etf": "https://histock.tw/stock/active-etf.aspx"
       },
-      "updated_at": "2026-08-05T11:23:02+08:00"
+      "updated_at": "2026-08-07T08:52:37+08:00"
     },
     "00631L": {
       "symbol": "00631L",
@@ -374,7 +374,7 @@
         "moneydj_etf": "https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=00631L.TW",
         "histock_etf": "https://histock.tw/stock/active-etf.aspx"
       },
-      "updated_at": "2026-08-05T11:23:02+08:00"
+      "updated_at": "2026-08-07T08:52:37+08:00"
     },
     "00663L": {
       "symbol": "00663L",
@@ -464,7 +464,7 @@
         "moneydj_etf": "https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=00663L.TW",
         "histock_etf": "https://histock.tw/stock/active-etf.aspx"
       },
-      "updated_at": "2026-08-05T11:23:02+08:00"
+      "updated_at": "2026-08-07T08:52:37+08:00"
     },
     "00981A": {
       "symbol": "00981A",
@@ -554,7 +554,7 @@
         "moneydj_etf": "https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=00981A.TW",
         "histock_etf": "https://histock.tw/stock/active-etf.aspx"
       },
-      "updated_at": "2026-08-05T11:23:02+08:00"
+      "updated_at": "2026-08-07T08:52:37+08:00"
     },
     "009816": {
       "symbol": "009816",
@@ -644,7 +644,7 @@
         "moneydj_etf": "https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=009816.TW",
         "histock_etf": "https://histock.tw/stock/active-etf.aspx"
       },
-      "updated_at": "2026-08-05T11:23:02+08:00"
+      "updated_at": "2026-08-07T08:52:37+08:00"
     },
     "2317": {
       "symbol": "2317",
@@ -679,7 +679,7 @@
         "moneydj_etf": null,
         "histock_etf": null
       },
-      "updated_at": "2026-08-05T11:23:02+08:00"
+      "updated_at": "2026-08-07T08:52:37+08:00"
     },
     "2330": {
       "symbol": "2330",
@@ -714,7 +714,7 @@
         "moneydj_etf": null,
         "histock_etf": null
       },
-      "updated_at": "2026-08-05T11:23:02+08:00"
+      "updated_at": "2026-08-07T08:52:37+08:00"
     },
     "2382": {
       "symbol": "2382",
@@ -749,7 +749,7 @@
         "moneydj_etf": null,
         "histock_etf": null
       },
-      "updated_at": "2026-08-05T11:23:02+08:00"
+      "updated_at": "2026-08-07T08:52:37+08:00"
     },
     "2454": {
       "symbol": "2454",
@@ -784,7 +784,7 @@
         "moneydj_etf": null,
         "histock_etf": null
       },
-      "updated_at": "2026-08-05T11:23:02+08:00"
+      "updated_at": "2026-08-07T08:52:37+08:00"
     },
     "2603": {
       "symbol": "2603",
@@ -819,7 +819,7 @@
         "moneydj_etf": null,
         "histock_etf": null
       },
-      "updated_at": "2026-08-05T11:23:02+08:00"
+      "updated_at": "2026-08-07T08:52:37+08:00"
     },
     "2881": {
       "symbol": "2881",
@@ -854,7 +854,7 @@
         "moneydj_etf": null,
         "histock_etf": null
       },
-      "updated_at": "2026-08-05T11:23:02+08:00"
+      "updated_at": "2026-08-07T08:52:37+08:00"
     },
     "2882": {
       "symbol": "2882",
@@ -889,7 +889,7 @@
         "moneydj_etf": null,
         "histock_etf": null
       },
-      "updated_at": "2026-08-05T11:23:02+08:00"
+      "updated_at": "2026-08-07T08:52:37+08:00"
     },
     "2891": {
       "symbol": "2891",
@@ -924,7 +924,7 @@
         "moneydj_etf": null,
         "histock_etf": null
       },
-      "updated_at": "2026-08-05T11:23:02+08:00"
+      "updated_at": "2026-08-07T08:52:37+08:00"
     },
     "3231": {
       "symbol": "3231",
@@ -959,7 +959,7 @@
         "moneydj_etf": null,
         "histock_etf": null
       },
-      "updated_at": "2026-08-05T11:23:02+08:00"
+      "updated_at": "2026-08-07T08:52:37+08:00"
     },
     "6669": {
       "symbol": "6669",
@@ -994,7 +994,7 @@
         "moneydj_etf": null,
         "histock_etf": null
       },
-      "updated_at": "2026-08-05T11:23:02+08:00"
+      "updated_at": "2026-08-07T08:52:37+08:00"
     }
   }
 }

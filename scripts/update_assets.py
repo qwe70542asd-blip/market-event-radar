@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Update the v11.4.21 Taiwan stock and ETF master with detailed official data.
+"""Update the v11.4.22 Taiwan stock and ETF master with detailed official data.
 
 The updater is intentionally defensive:
 - official TWSE/TPEx endpoints are parsed with bilingual/format-tolerant keys;
@@ -22,8 +22,8 @@ from bs4 import BeautifulSoup
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.21"
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.21)"}
+VERSION = "v11.4.22"
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.22)"}
 SESSION = requests.Session()
 
 MASTER_SOURCES = [
@@ -672,7 +672,7 @@ def main() -> None:
     assets: dict[str, dict[str, Any]] = {
         str(row.get("id") or f"{row.get('market')}:{row.get('symbol')}"): dict(row)
         for row in old.get("assets", [])
-        if row.get("symbol")
+        if row.get("symbol") and row.get("asset_class") != "crypto" and row.get("market") != "CRYPTO"
     }
     health: list[dict[str, Any]] = []
     history_state_path = DATA / "asset-history-state.json"

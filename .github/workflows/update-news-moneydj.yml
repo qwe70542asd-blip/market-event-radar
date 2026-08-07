@@ -1,4 +1,4 @@
-name: Update v11.4.21 MoneyDJ news
+name: Update v11.4.22 MoneyDJ news
 on:
   push:
     branches: [main]

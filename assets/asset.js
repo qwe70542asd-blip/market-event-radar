@@ -183,10 +183,11 @@
     }
     const holdings=etf.holdings||yahooEtf.holdings||[];
     if(holdings.length){
-      $("#holdingRows").innerHTML=holdings.map(row=>`<tr><td>${escapeHtml(row.symbol||"—")}</td><td>${escapeHtml(row.name||"—")}</td><td>${escapeHtml(row.industry||"—")}</td><td>${finite(row.shares)==null?"—":fmt(row.shares,0)}</td><td>${finite(row.change_shares)==null?"—":fmt(row.change_shares,0)}</td><td>${finite(row.weight)==null?"—":`${fmt(row.weight,2)}%`}</td></tr>`).join("");
+      const basics=stockBasicsPayload.items||{};
+      $("#holdingRows").innerHTML=holdings.map(row=>{const basic=basics[String(row.symbol||"").toUpperCase()]||{};const industry=industryName(row.industry||row.industry_name||basic.industry_name||basic.industry||basic.industry_code)||"其他";const change=finite(row.change_shares);return `<tr><td><a href="asset.html?symbol=${encodeURIComponent(row.symbol||"")}">${escapeHtml(row.symbol||"—")}</a></td><td>${escapeHtml(row.name||basic.short_name||basic.company_name||"—")}</td><td>${escapeHtml(industry)}</td><td>${finite(row.shares)==null?"—":fmt(row.shares,0)}</td><td class="${cls(change)}">${change==null?'<span class="pending-value">待前一交易日</span>':`${change>0?"+":""}${fmt(change,0)}`}</td><td>${finite(row.weight)==null?"—":`${fmt(row.weight,2)}%`}</td></tr>`}).join("");
       const allocation=etf.allocations||etf.sector_allocation||yahooEtf.allocations||yahooEtf.sector_allocation||[];
       if(allocation.length)$("#allocationGrid").innerHTML=allocation.map(row=>`<div><span>${escapeHtml(row.name||row.industry||"其他")}</span><strong>${finite(row.weight)==null?"—":`${fmt(row.weight,2)}%`}</strong></div>`).join("");
-      $("#holdingsUpdated").textContent=etf.holdings_date?`持股資料日 ${formatDate(etf.holdings_date)} · ${etf.field_sources?.holdings||"來源已標示"}`:"依投信、TWSE、MoneyDJ、HiStock、Yahoo 與 ETF 資訊來源交叉整理";
+      $("#holdingsUpdated").textContent=etf.holdings_date?`持股資料日 ${formatDate(etf.holdings_date)}${etf.holdings_previous_date?` · 增減比較 ${formatDate(etf.holdings_previous_date)}`:" · 增減待下一個交易日快照"} · ${etf.field_sources?.holdings||"來源已標示"}`:"依投信、TWSE、MoneyDJ、HiStock、Yahoo 與 ETF 資訊來源交叉整理";
       showSection("#holdingsSection","持股");
     }
   }

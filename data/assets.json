@@ -1,28 +1,10 @@
 {
   "metadata": {
-    "version": "v11.4.21",
+    "version": "v11.4.22",
     "updated_at": null,
-    "note": "Seed master; Actions expands official assets."
+    "note": "Taiwan stocks and ETFs only; cryptocurrency assets are intentionally excluded."
   },
   "assets": [
-    {
-      "id": "CRYPTO:BTC",
-      "asset_class": "crypto",
-      "market": "CRYPTO",
-      "exchange": "Crypto",
-      "symbol": "BTC",
-      "name": "Bitcoin",
-      "currency": "USD"
-    },
-    {
-      "id": "CRYPTO:ETH",
-      "asset_class": "crypto",
-      "market": "CRYPTO",
-      "exchange": "Crypto",
-      "symbol": "ETH",
-      "name": "Ethereum",
-      "currency": "USD"
-    },
     {
       "id": "TW:00403A",
       "asset_class": "etf",

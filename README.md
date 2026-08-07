@@ -1,47 +1,47 @@
-# 市場事件雷達 v11.4.21
+# 市場事件雷達 v11.4.22
 
-本版優先修正「新價格與舊 OHLC 混在同一張卡片」以及 GitHub 排程無法保證每分鐘執行的問題。資料若無法確認屬於同一交易日，會保留上次驗證成功內容並標示延遲，不再冒充今日行情。
+本版是 App 上架前的整合強化版，重點不是增加更多按鈕，而是修正資料發布、頁面跳轉、圖片、公告閱讀與線上驗證流程。
 
-## v11.4.21 重點
+## 本版重點
 
-- 指數價格、開盤、最高、最低、收盤、成交量及漲跌，必須屬於同一個交易日。
-- 盤中價格必須位於當日最高與最低之間；不符合即拒絕發布。
-- 台灣、日本、韓國與美國市場依各自交易時段分開檢查。
-- 網頁開啟期間：任一市場開盤時每 60 秒重新讀取；休市期間每 15 分鐘；切回 App／頁面立即更新。
-- GitHub Actions 保留每 5 分鐘備援，但不再宣稱它能保證每分鐘即時。
-- 內附 Cloudflare Worker，可在市場開盤期間每分鐘更新，並每 15 分鐘執行完整健康檢查。
-- 六大指數新增 5 分、15 分、30 分、1 小時、4 小時、日、週、月 K。
-- K 線支援滑鼠／手指游標 OHLC、縮放、拖曳與雙指縮放。
-- 首頁精選只顯示今日、明日、後天重大事件，以及最近 24 小時突發新聞；不再用數月前舊聞補位。
-- 新增 TWSE、TPEx 歷史除權息結果回補，自 2026-01-01 起與未來預告表合併。
-- 不包含虛擬貨幣、永續合約或加密貨幣交易功能。
+- 六大指數依序為：台灣加權、道瓊工業、NASDAQ、費城半導體、S&P 500、日經 225。
+- 移除首頁 KOSPI／KOSDAQ 指數卡；日經 225 固定在最後一格。
+- 上方重複的即時指數摘要改成 10 檔、5 大產業分類的龍頭公司直式跑馬燈。
+- 5 分、15 分、30 分、1 小時、4 小時、日、週、月 K 優先讀取 GitHub 發布的 `market-kline.json`，不再只靠瀏覽器直接連線行情網站。
+- 4 小時 K 依交易所當地交易日與時段合併，不跨日、不跨午休。
+- 修正 GitHub Actions 已知失敗：資料格式 list/dict、產業代碼 `9103`、新聞誤判代碼 `8923`。
+- 公告詳情改為正常段落與數據卡；原始 TXT／JSON API 不再直接觸發下載。
+- 除權息金額未確認時顯示「金額待公告」，不再用破折號混淆零元與缺資料。
+- 新聞圖片先顯示本地主題圖，再載入遠端原圖；原圖失敗時不留空白。
+- ETF 成分股可補產業，並使用最近兩個可用持股日期計算增減股數。
+- 標的詳情資料預先載入，降低點選個股後的等待時間。
+- 公開資產主檔移除 Bitcoin、Ethereum 與 crypto 類別。
 
-## 一般部署
+## 覆蓋部署
 
 1. 解壓縮 ZIP。
-2. 將全部檔案複製到 repository 根目錄並覆蓋。
-3. 保留 `.git` 資料夾。
-4. Commit：`Update to v11.4.21`。
-5. Push 後等待 GitHub Actions 第一輪更新。
+2. 將 ZIP 內全部檔案直接覆蓋 repository 根目錄。
+3. 保留原本的 `.git` 資料夾。
+4. Commit：`market-event-radar-v11.4.22`。
+5. Push origin。
+6. 先確認 GitHub Actions 的 `Verify v11.4.22 app release` 成功，再檢查行情、事件、股票主檔、驗證及新聞工作流程。
 
-未部署即時 Worker 時，網站仍會使用 GitHub 資料分支與本機快取，但更新頻率仍受 GitHub Actions 排程限制。
+## 驗證結果
 
-## 啟用盤中每分鐘更新
+本包建立時已完成：
 
-1. 建立 Cloudflare Worker 與 KV namespace。
-2. 在 GitHub repository secrets 加入：
-   - `CLOUDFLARE_API_TOKEN`
-   - `CLOUDFLARE_ACCOUNT_ID`
-   - `CLOUDFLARE_KV_NAMESPACE_ID`
-3. 手動執行 `Deploy v11.4.21 live market worker` workflow。
-4. 將部署後的 Worker 網址填入 `assets/runtime-config.js`：
+- 99 項自動測試
+- 嚴格公開資料驗證
+- Python 與 JavaScript 語法檢查
+- 27 份 GitHub Actions YAML 解析
+- 透過本機 HTTP 伺服器檢查 7 個頁面與 41 個引用資源
 
-```js
-window.MR_RUNTIME={
-  liveMarketEndpoint:"https://你的-worker.workers.dev"
-};
-```
+外部行情與新聞來源的實際線上可用性，仍需在 Push 後由 GitHub Actions 第一輪執行確認；偵測到來源異常時會保留上一筆正確資料，不以可疑內容覆蓋。
 
-詳細步驟見 `docs/V11.4.21-live-market.md`。
+## 每分鐘後端更新
+
+GitHub Actions 提供排程備援與靜態資料發布，但不保證每分鐘準點。要保證盤中每分鐘後端更新，仍需部署 `edge/market-live-worker.js`，並把 Worker 網址填入 `assets/runtime-config.js`。
+
+詳細說明見 `docs/V11.4.22-live-market.md`。
 
 資料僅供市場觀察，不構成投資建議。

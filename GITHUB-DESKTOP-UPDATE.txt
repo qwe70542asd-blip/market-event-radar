@@ -1,12 +1,15 @@
-市場事件雷達 v11.4.21 覆蓋方式
+Market Event Radar v11.4.22 完整覆蓋方式
 
-1. GitHub Desktop 選擇 market-event-radar repository。
+1. 在 GitHub Desktop 開啟 market-event-radar repository。
 2. Repository → Show in Explorer。
-3. 解壓 ZIP，將全部檔案與資料夾複製到 repository 根目錄。
-4. 覆蓋同名檔案，但不要刪除 .git。
-5. Summary 填 Update to v11.4.21。
-6. Commit to main，再按 Push origin。
-7. 等待 global market、event calendar、stock basics 與新聞 Actions 完成。
-8. 頁面若仍顯示舊版，重新整理；v11.4.21 Service Worker 會清除舊快取。
+3. 將本 ZIP 內所有檔案直接覆蓋到 repository 根目錄。
+4. 不要刪除原本的 .git 資料夾。
+5. 回到 GitHub Desktop，Commit message 可填：market-event-radar-v11.4.22
+6. Push origin。
+7. 到 GitHub → Actions，先確認「Verify v11.4.22 app release」為綠色成功。
+8. 再確認 global market、events、stock basics、data verification 與各新聞來源的第一輪更新。
 
-重要：GitHub Actions 只能作五分鐘級備援。要達成盤中每分鐘檢查，請依 docs/V11.4.21-live-market.md 部署 edge/market-live-worker.js，並把 Worker 網址填入 assets/runtime-config.js。
+注意
+- 分鐘 K 線會先讀 live-global-market 分支發布的 market-kline.json，不再只靠瀏覽器直連 Yahoo。
+- 保證後端每分鐘更新仍需部署 edge/market-live-worker.js，並將網址填入 assets/runtime-config.js。
+- 未部署 Worker 時，GitHub Actions 是排程備援，不能保證每分鐘準點。

@@ -1,0 +1,11 @@
+{
+  "metadata": {
+    "version": "v11.4.22",
+    "updated_at": null,
+    "status": "waiting",
+    "symbols": ["^TWII", "^DJI", "^IXIC", "^SOX", "^GSPC", "^N225"],
+    "supported_intervals": ["5m", "15m", "30m", "60m", "4h", "1d", "1wk", "1mo"],
+    "note": "Waiting for the live-global-market workflow."
+  },
+  "items": {}
+}

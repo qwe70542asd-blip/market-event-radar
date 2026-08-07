@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Refresh Taiwan closing quotes and online historical market turnover.
 
-v11.4.21 always asks the official TWSE/TPEx network sources for historical
+v11.4.22 always asks the official TWSE/TPEx network sources for historical
 turnover from 2026-01-01. Local JSON is only a last-known-good cache; the
 20-session average no longer waits for the site to accumulate one day at a time.
 """
@@ -16,8 +16,8 @@ import requests
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.21"
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.21)"}
+VERSION = "v11.4.22"
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.22)"}
 TWSE_QUOTES = "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL"
 TPEX_QUOTES = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes"
 TWSE_FUNDS = "https://openapi.twse.com.tw/v1/opendata/t187ap47_L"
@@ -250,7 +250,7 @@ def merge_history(old_rows: list[dict], online_rows: list[dict], current_total: 
             value = number(raw.get(key))
             if value is not None and value > 0:
                 row[key] = value
-        # Old v11.4.21 files only had the total. Keep it as a fallback, but an
+        # Old v11.4.22 files only had the total. Keep it as a fallback, but an
         # online component sum wins whenever available.
         old_total = number(raw.get("trade_value"))
         if old_total is not None and old_total > 0:
