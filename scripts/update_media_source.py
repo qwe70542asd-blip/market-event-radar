@@ -238,6 +238,21 @@ def parse_html(cfg,aliases,profiles):
    if item:items.append(item)
  return enrich_article_images(session,items,int(cfg.get("image_fetch_limit",48)))
 
+def image_priority(item):
+ published=0.0
+ try:published=datetime.fromisoformat(str(item.get("published_at") or "").replace("Z","+00:00")).timestamp()
+ except Exception:pass
+ importance=float(item.get("importance_score") or 0)+(35 if item.get("impact")=="high" else 15 if item.get("impact")=="medium" else 0)
+ return (1 if usable_image_url(item.get("image_url")) else 0,importance,published)
+
+def enrich_merged_article_images(cfg,items):
+ # Current and historical rows share the same image pass. Missing high-impact and recent rows are attempted first.
+ ordered=sorted(items,key=image_priority,reverse=True)
+ session=requests.Session()
+ limit=max(int(cfg.get("image_fetch_limit",48)),120)
+ enrich_article_images(session,ordered,limit)
+ return items
+
 def main():
  ap=argparse.ArgumentParser();ap.add_argument("--channel",required=True);args=ap.parse_args()
  cfg=next(x for x in CONFIG["media"] if x["id"]==args.channel);aliases=asset_aliases();profiles=asset_profiles();error=None;items=[]
@@ -247,7 +262,10 @@ def main():
  try:history_items,history_health=parse_history_google_news(cfg,aliases,profiles)
  except Exception as exc:history_health={"enabled":True,"queries":0,"items":0,"error":str(exc)}
  items.extend(history_items)
- health={"status":"ok" if items else "warning","error":error,"requested_urls":cfg.get("urls",[]),"parsed_items":len(items),"history_backfill":history_health}
+ try:items=enrich_merged_article_images(cfg,items)
+ except Exception as exc:
+  history_health={**history_health,"image_enrichment_error":str(exc)}
+ health={"status":"ok" if items else "warning","error":error,"requested_urls":cfg.get("urls",[]),"parsed_items":len(items),"history_backfill":history_health,"image_policy":"current-and-history-merged; high-impact and recent missing images first; generic placeholders rejected"}
  payload=save_channel(cfg["file"],cfg["var"],cfg["id"],cfg["name"],items,health,cfg.get("retention_days",7),cfg.get("minimum_records",1))
  print(cfg["id"],payload["metadata"]["status"],payload["metadata"]["item_count"])
 if __name__=="__main__":main()

@@ -16,29 +16,36 @@
     for(const row of item?.companies||[])if(row?.symbol)symbols.add(String(row.symbol));
     return [...symbols].map(value=>value.toUpperCase().replace(/\.(?:TW|TWO)$/i,""));
   };
-  function classifySector(row={},basic={},newsText=""){
-    const text=`${row.name||""} ${row.industry||""} ${basic.industry_name||basic.industry||""} ${basic.business_scope||""} ${newsText||""}`;
-    const rules=[
-      [/散熱|風扇|熱交換|水冷|冷卻/,"散熱"],
-      [/印刷電路|PCB|銅箔基板|載板|ABF/,"PCB／載板"],
-      [/交換器|網路設備|網通|高速傳輸|光通訊|通訊網路/,"網通／高速傳輸"],
-      [/DRAM|NAND|記憶體|儲存裝置|快閃記憶體/,"記憶體／儲存"],
-      [/伺服器|筆記型電腦|電腦系統設備|電腦及週邊|ODM|EMS|代工/,"AI 伺服器／電腦"],
-      [/晶圓|積體電路|IC設計|IC 設計|封裝測試|半導體/,"半導體"],
-      [/電源供應|電源管理|變壓器|重電|電機機械|能源管理/,"電源／重電"],
-      [/金融|銀行|金控|證券|保險|壽險/,"金融"],
-      [/海運|航運|航空|貨櫃|散裝/,"航運"],
-      [/鋼鐵|水泥|塑膠|化工|玻璃|造紙|原物料/,"原物料"],
-      [/電信|通信服務|電信服務/,"電信"],
-      [/生技|醫療|製藥|醫材/,"生技醫療"],
-      [/汽車|車用|電動車/,"汽車／車電"],
-      [/機器人|自動化|工具機/,"自動化／機器人"],
-      [/電子零組件/,"電子零組件"],
-      [/其他電子/,"電子製造"],
+  function classifySector(row={},basic={}){
+    const symbol=String(row.symbol||basic.symbol||"");
+    const name=clean(row.name||basic.short_name||basic.company_name||"");
+    const official=clean(basic.industry_name||basic.industry||row.industry||"");
+    const scope=clean(basic.business_scope||"");
+    const canonical=`${name} ${official} ${scope}`;
+    const exact=[
+      [/台積電|聯電|世界先進|力積電|晶圓代工/,"晶圓代工"],
+      [/聯發科|瑞昱|創意|世芯|智原|IC設計|IC 設計/,"IC 設計"],
+      [/日月光|矽品|京元電子|力成|封裝|測試/,"封裝測試"],
+      [/奇鋐|雙鴻|健策|建準|散熱|風扇|水冷|冷卻/,"散熱"],
+      [/金像電|欣興|南電|臻鼎|健鼎|華通|PCB|印刷電路|載板|ABF/,"PCB／載板"],
+      [/智邦|啟碁|中磊|正文|交換器|網通|高速傳輸|光通訊/,"網通／高速傳輸"],
+      [/南亞科|華邦電|旺宏|群聯|威剛|DRAM|NAND|記憶體|儲存/,"記憶體／儲存"],
+      [/鴻海|廣達|緯創|英業達|緯穎|仁寶|伺服器|電腦系統|ODM|EMS/,"AI 伺服器／電腦"],
+      [/台達電|光寶科|康舒|群電|電源供應|電源管理|能源管理/,"電源／能源管理"],
+      [/華城|士電|中興電|亞力|重電|電機機械/,"重電／電機"],
+      [/中華電|台灣大|遠傳|電信|通信服務/,"電信"],
     ];
-    for(const [pattern,label] of rules)if(pattern.test(text))return label;
-    const raw=clean(basic.industry_name||basic.industry||row.industry||"其他產業").replace(/業$/," ").trim();
-    return raw||"其他產業";
+    for(const [pattern,label] of exact)if(pattern.test(canonical))return label;
+    const officialRules=[
+      [/半導體/,"半導體"],[/電子零組件/,"電子零組件"],[/其他電子/,"電子製造"],
+      [/金融|銀行|金控|證券|保險|壽險/,"金融"],[/航運|海運|航空/,"航運"],
+      [/鋼鐵|水泥|塑膠|化工|玻璃|造紙/,"原物料"],[/生技|醫療|製藥|醫材/,"生技醫療"],
+      [/汽車/,"汽車／車電"],[/電器電纜/,"電器電纜"],[/觀光|餐旅/,"觀光餐旅"],
+      [/建材營造/,"營建"],[/食品/,"食品"],[/貿易百貨/,"貿易百貨"],
+    ];
+    for(const [pattern,label] of officialRules)if(pattern.test(official))return label;
+    const raw=official.replace(/業$/," ").trim();
+    return raw||`其他產業${symbol?` ${symbol}`:""}`;
   }
   function buildNewsSignals(newsItems=[],now=Date.now()){
     const map=new Map();
@@ -64,7 +71,7 @@
       const price=finite(row.price)||0,shares=finite(basic.issued_shares)||(finite(basic.paid_in_capital)||0)/10;
       const marketCap=shares>0?shares*price:0,tradeValue=Math.max(0,finite(row.trade_value)||0),volume=Math.max(0,finite(row.volume)||0);
       const change=finite(row.change_percent)||0,foreignNet=finite(chip?.institutional?.foreign_net)||0;
-      return {...row,basic,chip,signal,marketCap,tradeValue,volume,change,foreignNet,sector:classifySector(row,basic,signal.text)};
+      return {...row,basic,chip,signal,marketCap,tradeValue,volume,change,foreignNet,sector:classifySector(row,basic)};
     });
     const maxima={
       marketCap:Math.max(1,...candidates.map(x=>x.marketCap)),tradeValue:Math.max(1,...candidates.map(x=>x.tradeValue)),
@@ -97,5 +104,31 @@
     for(const row of candidates){if(selected.length>=limit)break;add(row)}
     return selected.slice(0,limit).map((row,index)=>({...row,dynamic_order:index+1}));
   }
-  return {classifySector,buildNewsSignals,selectDynamicLeaders};
+  function buildSectorHeatGroups({leaders=[],marketItems=[],basicsItems={},limit=5,stocksPerSector=2}={}){
+    const basics=toMap(basicsItems),marketBySector=new Map();
+    const leaderBySector=new Map();
+    for(const row of leaders||[]){
+      const sector=row.sector||"其他產業";
+      const list=leaderBySector.get(sector)||[];if(!list.some(item=>item.symbol===row.symbol))list.push(row);leaderBySector.set(sector,list);
+    }
+    for(const row of marketItems||[]){
+      if(row?.asset_class!=="stock"||!/^\d{4}$/.test(String(row.symbol||"")))continue;
+      const symbol=String(row.symbol||"");
+      const sector=classifySector(row,basics.get(symbol)||{});
+      if(!leaderBySector.has(sector))continue;
+      const list=marketBySector.get(sector)||[];list.push(row);marketBySector.set(sector,list);
+    }
+    const groups=[];
+    for(const [sector,rows] of leaderBySector){
+      const members=marketBySector.get(sector)||rows;
+      const valid=members.filter(row=>finite(row.change_percent)!=null&&finite(row.trade_value)>0);
+      const totalValue=valid.reduce((sum,row)=>sum+(finite(row.trade_value)||0),0);
+      const weighted=totalValue?valid.reduce((sum,row)=>sum+(finite(row.change_percent)||0)*(finite(row.trade_value)||0),0)/totalValue:0;
+      const up=valid.filter(row=>(finite(row.change_percent)||0)>0).length,down=valid.filter(row=>(finite(row.change_percent)||0)<0).length;
+      const top=[...rows].sort((a,b)=>b.score-a.score||b.tradeValue-a.tradeValue).slice(0,stocksPerSector);
+      groups.push({sector,change_percent:weighted,trade_value:totalValue,up,down,stocks:top,heat_score:Math.abs(weighted)*15+Math.log1p(totalValue)});
+    }
+    return groups.sort((a,b)=>b.heat_score-a.heat_score||b.trade_value-a.trade_value).slice(0,limit);
+  }
+  return {classifySector,buildNewsSignals,selectDynamicLeaders,buildSectorHeatGroups};
 });

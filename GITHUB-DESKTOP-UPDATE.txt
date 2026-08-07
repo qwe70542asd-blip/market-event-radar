@@ -1,15 +1,7 @@
-Market Event Radar v11.4.24 動態台股龍頭完整覆蓋方式
+市場事件雷達 v11.4.25 完整覆蓋包
 
-1. 在 GitHub Desktop 開啟 market-event-radar repository。
-2. Repository → Show in Explorer。
-3. 將本 ZIP 內所有檔案直接覆蓋到 repository 根目錄。
-4. 不要刪除原本的 .git 資料夾。
-5. 回到 GitHub Desktop，Commit message 可填：market-event-radar-v11.4.24
-6. Push origin。
-7. 到 GitHub → Actions，先確認「Verify v11.4.24 app release」為綠色成功。
-8. 再確認 global market、events、stock basics、data verification 與各新聞來源的第一輪更新。
-
-注意
-- 分鐘 K 線會先讀 live-global-market 分支發布的 market-kline.json，不再只靠瀏覽器直連 Yahoo。
-- 保證後端每分鐘更新仍需部署 edge/market-live-worker.js，並將網址填入 assets/runtime-config.js。
-- 未部署 Worker 時，GitHub Actions 是排程備援，不能保證每分鐘準點。
+1. 解壓縮後，把包內所有檔案覆蓋到 GitHub repository 根目錄。
+2. 保留原本的 .git 資料夾。
+3. GitHub Desktop Commit 後 Push。
+4. 等待新聞 Actions 完成第一輪，歷史回補新聞才會重新補抓文章原圖。
+5. Cloudflare Worker 尚未部署時，行情會清楚標示最近資料或延遲，不會宣稱即時。

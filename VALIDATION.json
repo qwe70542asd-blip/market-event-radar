@@ -1,6 +1,6 @@
 {
-  "version": "v11.4.24",
-  "validated_at": "2026-08-07T10:28:00+08:00",
+  "version": "v11.4.25",
+  "validated_at": "2026-08-07T12:41:00+08:00",
   "status": "local-release-candidate-passed",
   "tests": 105,
   "http_pages": 7,
@@ -8,24 +8,24 @@
   "workflow_yaml_files": 27,
   "checks": [
     "All 105 automated tests passed",
-    "The dynamic Taiwan leader selection engine passed behavioral tests with ten results, at least six industries and no more than two stocks per industry",
     "Strict public-data validation passed",
     "Python scripts compiled successfully",
     "JavaScript syntax checks passed",
     "All 27 GitHub Actions workflow YAML files parsed successfully",
     "HTTP smoke test passed for seven public pages and 42 referenced assets",
-    "The homepage leader ticker no longer contains a fixed ten-stock list",
-    "The ticker ranks the full Taiwan stock market by market capitalization, trading value, volume, price movement, institutional flow, recent news and industry leadership",
-    "The selected list is held stable for each 15-minute bucket while prices continue to refresh",
-    "At most two stocks are selected from one industry and the selector prioritizes at least six industries when data permits",
-    "Fixed Taiwan leader equities were removed from the global market snapshot publisher and bundled seed",
-    "The six index cards remain TAIEX, Dow Jones, NASDAQ, Philadelphia Semiconductor, S&P 500 and Nikkei 225 in the requested order",
-    "The edge worker no longer contains KOSPI/KOSDAQ and uses session-aware four-hour aggregation",
-    "The release uses new v11.4.24 asset URLs and cache keys so earlier JavaScript cannot remain pinned by the browser"
+    "The vertical stock ticker was replaced by five Taiwan sector heat cards",
+    "Each heat card contains at most two unique representative stocks",
+    "Industry classification no longer consumes news text and prioritizes official company fields",
+    "TAIEX-related sample classifications were checked: TSMC foundry, Taiwan Mobile telecom, Delta power management",
+    "The homepage displays the market-data timestamp and explicit freshness or delay status",
+    "Current and historical news rows share one post-merge article-image enrichment pass",
+    "Generic logos, default OG images and placeholders are rejected before publication",
+    "High-impact and recent missing-image stories receive priority in the image fetch queue",
+    "The release uses v11.4.25 asset URLs, service-worker cache names and browser data-cache keys"
   ],
   "notes": [
-    "The included release-verification GitHub Actions workflow repeats syntax, strict-data, test and HTTP checks after the package is pushed to main.",
-    "This offline build environment cannot certify third-party live endpoints. Their first real online run must still be confirmed in GitHub Actions after push.",
-    "Guaranteed one-minute backend index updates still require deploying the included edge worker and setting assets/runtime-config.js. GitHub Actions remains the scheduled fallback."
+    "Third-party article images are fetched by GitHub Actions after push; this offline package cannot certify that every publisher is reachable.",
+    "Guaranteed 30-to-60-second market updates still require deployment of the included edge worker and configuration of assets/runtime-config.js.",
+    "Without the worker, the UI labels data as recent or delayed rather than claiming it is real-time."
   ]
 }

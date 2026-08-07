@@ -1,13 +1,13 @@
-Market Event Radar v11.4.24 validation
+Market Event Radar v11.4.25 validation
 
-- 105 automated tests passed
-- Dynamic Taiwan leader behavior test passed
-- Strict public-data validation passed
-- Python and JavaScript syntax checks passed
-- 27 workflow YAML files parsed
-- HTTP smoke: 7 pages, 42 referenced assets
-- Fixed ten-stock ticker removed
-- Full-market dynamic scoring with 15-minute stable selection
-- Maximum two stocks per industry; at least six industries when data permits
-- Fixed leader equities removed from market snapshot
-- Edge worker index set and 4-hour session aggregation corrected
+PASS: 105 automated tests
+PASS: strict public-data validation
+PASS: Python syntax
+PASS: JavaScript syntax
+PASS: 27 GitHub Actions YAML files
+PASS: HTTP smoke test (7 pages / 42 referenced assets)
+PASS: Taiwan sector heat-card rendering and unique-stock selection
+PASS: official-field-first industry classification
+PASS: current + historical news merged image enrichment
+
+Online note: publisher image availability and sub-minute market updates require the first GitHub Actions run and deployed edge worker respectively.
