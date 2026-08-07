@@ -16,6 +16,11 @@ def market():
    if change is None or abs(change-exp)>max(1e-6,abs(exp)*1e-8):fail(f"bad market change {row.get('symbol')}")
    ep=exp/prev*100 if prev else None
    if ep is not None and (pct is None or abs(pct-ep)>1e-7):fail(f"bad market percent {row.get('symbol')}")
+  o,h,l,cl=(row.get(k) for k in ("open","high","low","close"))
+  if None not in (o,h,l,cl):
+   if h<max(o,cl) or l>min(o,cl) or (price is not None and not l<=price<=h):fail(f"mixed-session market row {row.get('symbol')}")
+  dates=[row.get(k) for k in ("session_date","price_date","ohlc_date") if row.get(k)]
+  if dates and len(set(dates))!=1:fail(f"mixed-session dates {row.get('symbol')}")
   for c in row.get("candles") or []:
    o,h,l,cl=(c.get(k) for k in ("open","high","low","close"))
    if None in (o,h,l,cl) or h<max(o,cl) or l>min(o,cl):fail(f"bad candle {row.get('symbol')} {c.get('date')}")

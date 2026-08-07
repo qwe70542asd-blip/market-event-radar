@@ -7,7 +7,7 @@ class StaticTests(unittest.TestCase):
  def test_required_tree(self):
   for path in [".github/workflows","assets","data","docs","scripts","tests","index.html","news.html","asset.html","service-worker.js"]:self.assertTrue((ROOT/path).exists(),path)
  def test_version(self):
-  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.20")
+  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.21")
  def test_ascii_filenames(self):
   for path in ROOT.rglob("*"):self.assertTrue(all(ord(c)<128 for c in path.name),path)
  def test_no_audio(self):
@@ -80,18 +80,18 @@ class StaticTests(unittest.TestCase):
   texts="\n".join(self.read(p.relative_to(ROOT)) for p in (ROOT/".github/workflows").glob("update-news-*.yml"))
   for branch in ("live-news-cna","live-news-moneydj","live-news-cnyes","live-news-udn","live-news-ltn","live-news-wealth","live-news-yahoo","live-news-technews","live-news-ctee","live-news-asia-risk"):self.assertIn(branch,texts)
  def test_service_worker_cache(self):
-  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-20",sw)
+  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-21",sw)
   for seed in ("news-cna-seed.js","news-moneydj-seed.js","news-wealth-seed.js","news-yahoo-seed.js","news-technews-seed.js","news-ctee-seed.js","news-asia-risk-seed.js","stock-news-seed.js","company-disclosures-seed.js","monthly-revenue-seed.js","dividend-history-seed.js","secondary-reference-seed.js","data-verification-seed.js","yahoo-details-seed.js","etf-details-seed.js","stock-basics-seed.js","market-volume-history-seed.js"):self.assertIn(seed,sw)
  def test_market_snapshot_seed_schema(self):
   payload=json.loads(self.read("data/market-snapshot.json"))
-  self.assertEqual(payload.get("metadata",{}).get("version"),"v11.4.20")
+  self.assertEqual(payload.get("metadata",{}).get("version"),"v11.4.21")
   self.assertEqual(set(payload.get("metadata",{}).get("kline_symbols",[])),{"^TWII","^KS11","^N225","^IXIC","^SOX","^GSPC"})
   self.assertNotIn("^TWOII",{row.get("symbol") for row in payload.get("items",[])})
 
  def test_all_pages_current_version(self):
   for p in ROOT.glob("*.html"):
    body=p.read_text(encoding="utf-8")
-   self.assertIn("v11.4.20",body,p.name)
+   self.assertIn("v11.4.21",body,p.name)
    self.assertNotIn("v11.4.15",body,p.name)
 
 
@@ -154,7 +154,7 @@ class StaticTests(unittest.TestCase):
 
  def test_balanced_portfolio_summary_layout(self):
   css=self.read("assets/styles.css")
-  for token in ("v11.4.20 portfolio summary balance","grid-template-columns:repeat(3,minmax(0,1fr))","grid-template-rows:repeat(2,minmax(78px,1fr))","justify-content:center"):
+  for token in ("v11.4.21 portfolio summary balance","grid-template-columns:repeat(3,minmax(0,1fr))","grid-template-rows:repeat(2,minmax(78px,1fr))","justify-content:center"):
    self.assertIn(token,css)
 
  def test_home_summary_and_volume_momentum(self):
@@ -185,10 +185,10 @@ class StaticTests(unittest.TestCase):
  def test_compact_controls_before_calendar_layout(self):
   html=self.read("index.html")
   self.assertLess(html.index("compact-feature-strip"),html.index("我的資產總覽"))
-  self.assertLess(html.index("我的資產總覽"),html.index("六大指數日 K 與關鍵資訊"))
-  self.assertLess(html.index("六大指數日 K 與關鍵資訊"),html.index("市場事件月曆"))
+  self.assertLess(html.index("我的資產總覽"),html.index("六大指數互動 K 線與關鍵資訊"))
+  self.assertLess(html.index("六大指數互動 K 線與關鍵資訊"),html.index("市場事件月曆"))
   self.assertLess(html.index("市場事件月曆"),html.index("今日新公布日期"))
-  for token in ("home-summary-row","balanced-summary-row","dual-calendar-card","calendar-mode-switch","market-kline-panel","六大指數日 K 與關鍵資訊"):self.assertIn(token,html)
+  for token in ("home-summary-row","balanced-summary-row","dual-calendar-card","calendar-mode-switch","market-kline-panel","六大指數互動 K 線與關鍵資訊"):self.assertIn(token,html)
   for token in ("home-primary-grid","home-market-rail"):self.assertNotIn(token,html)
 
  def test_today_new_dates_jump_to_matching_calendar_mode(self):
@@ -338,7 +338,7 @@ class StaticTests(unittest.TestCase):
 
  def test_strict_data_quality_gates(self):
   market=self.read("scripts/update_market_snapshot.py");events=self.read("scripts/update_events.py");news=self.read("scripts/news_pipeline.py");validator=self.read("scripts/validate_public_data.py")
-  for token in ("adjacent-daily-candles","chartPreviousClose can refer","validate_market_row","quality_policy"):self.assertIn(token,market)
+  for token in ("same-session-price-vs-adjacent-close","mixed-session","validate_market_row","quality_policy"):self.assertIn(token,market)
   for token in ("choose_material_target_date","explicit-labeled-date","official-announcement-date","BLS_HTML_URL","BEA_FULL_URL"):self.assertIn(token,events)
   for token in ("valid_symbols=set(aliases.values())","Longest-name-first","official stock/ETF master"):self.assertIn(token,news)
   for token in ("bad market change","period start leaked","invalid news symbols"):self.assertIn(token,validator)
@@ -356,5 +356,19 @@ class StaticTests(unittest.TestCase):
  def test_seed_data_passes_strict_validator(self):
   import subprocess,sys
   subprocess.run([sys.executable,str(ROOT/"scripts/validate_public_data.py"),"all"],cwd=ROOT,check=True)
+
+ def test_v11421_live_market_and_interactive_kline(self):
+  home=self.read("assets/home.js");shared=self.read("assets/shared.js");worker=self.read("edge/market-live-worker.js")
+  for token in ("60000","anyTrackedMarketOpen","visibilitychange","freshness_status","session_date"):self.assertIn(token,home)
+  for token in ("loadMarketKline","5m","15m","30m","60m","4h","1wk","1mo","LIVE_MARKET_ENDPOINT"):self.assertIn(token,shared)
+  for token in ("scheduled(event,env,ctx)","* * * * *","same-session","marketOpen"):self.assertIn(token,worker+self.read("edge/wrangler.toml.example"))
+
+ def test_v11421_historical_exdiv_backfill(self):
+  events=self.read("scripts/update_events.py")
+  for token in ("TWSE_EXDIV_HISTORY_URL","TPEX_EXDIV_HISTORY_URL","fetch_twse_exdiv_history","fetch_tpex_exdiv_history","twse-exdiv-history","tpex-exdiv-history"):self.assertIn(token,events)
+
+ def test_home_featured_information_is_time_bounded(self):
+  home=self.read("assets/home.js")
+  for token in ("recentMajorNews","upcomingMajorEvents","tomorrowKey","afterTomorrowKey","86400000","目前沒有今日、明日或後天的重大資訊"):self.assertIn(token,home)
 
 if __name__=="__main__":unittest.main()

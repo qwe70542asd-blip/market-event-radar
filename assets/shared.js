@@ -1,5 +1,6 @@
 (()=>{"use strict";
 const OWNER="qwe70542asd-blip",REPO="market-event-radar";
+const LIVE_MARKET_ENDPOINT=String(window.MR_RUNTIME?.liveMarketEndpoint||"").replace(/\/$/,"");
 const CHANNELS={"assets.json":"live-assets","asset-audit.json":"live-assets","asset-coverage.json":"live-assets","events.json":"live-events","event-source-state.json":"live-events","tw-market.json":"live-tw-market","tw-chips.json":"live-tw-chips","market-snapshot.json":"live-global-market","news-cna.json":"live-news-cna","news-moneydj.json":"live-news-moneydj","news-cnyes.json":"live-news-cnyes","news-udn.json":"live-news-udn","news-ltn.json":"live-news-ltn","news-wealth.json":"live-news-wealth","news-yahoo.json":"live-news-yahoo","news-technews.json":"live-news-technews","news-ctee.json":"live-news-ctee","news-asia-risk.json":"live-news-asia-risk","stock-news.json":"live-stock-news","official-market-notices.json":"live-official-notices","company-disclosures.json":"live-company-disclosures","monthly-revenue.json":"live-monthly-revenue","dividend-history.json":"live-dividend-history","market-volume-history.json":"live-tw-market","secondary-reference.json":"live-secondary-reference","data-verification.json":"live-data-verification","yahoo-details.json":"live-yahoo-details","etf-details.json":"live-etf-details","stock-basics.json":"live-stock-basics"};
 const NEWS_FILES=[{"file":"news-cna.json","id":"cna","label":"中央社","seed":"__NEWS_CNA_SEED__","kind":"media"},{"file":"news-moneydj.json","id":"moneydj","label":"MoneyDJ","seed":"__NEWS_MONEYDJ_SEED__","kind":"media"},{"file":"news-cnyes.json","id":"cnyes","label":"鉅亨網","seed":"__NEWS_CNYES_SEED__","kind":"media"},{"file":"news-udn.json","id":"udn","label":"經濟日報","seed":"__NEWS_UDN_SEED__","kind":"media"},{"file":"news-ltn.json","id":"ltn","label":"自由財經","seed":"__NEWS_LTN_SEED__","kind":"media"},{"file":"news-wealth.json","id":"wealth","label":"財富自由","seed":"__NEWS_WEALTH_SEED__","kind":"media"},{"file":"news-yahoo.json","id":"yahoo","label":"Yahoo股市","seed":"__NEWS_YAHOO_SEED__","kind":"media"},{"file":"news-technews.json","id":"technews","label":"科技新報／財經新報","seed":"__NEWS_TECHNEWS_SEED__","kind":"media"},{"file":"news-ctee.json","id":"ctee","label":"工商時報","seed":"__NEWS_CTEE_SEED__","kind":"media"},{"file":"news-asia-risk.json","id":"asia-risk","label":"亞洲總體風險","seed":"__NEWS_ASIA_RISK_SEED__","kind":"media"},{"file":"official-market-notices.json","id":"official-notices","label":"官方市場公告","seed":"__OFFICIAL_NOTICE_SEED__","kind":"official"},{"file":"company-disclosures.json","id":"company-disclosures","label":"個股重大訊息","seed":"__COMPANY_DISCLOSURE_SEED__","kind":"company"}];
 const $=(q,r=document)=>r.querySelector(q),$$=(q,r=document)=>[...r.querySelectorAll(q)];
@@ -44,7 +45,7 @@ async function loadBranchApi(name,branch){
  if(meta?.download_url)return await getJson(`${meta.download_url}${meta.download_url.includes("?")?"&":"?"}sha=${encodeURIComponent(meta.sha||Date.now())}`,11000);
  throw Error("GitHub contents API returned no JSON content");
 }
-const snapshotCacheKey="mr-market-snapshot-last-good-v11.4.20";
+const snapshotCacheKey="mr-market-snapshot-last-good-v11.4.21";
 const snapshotCandleCount=row=>(Array.isArray(row?.candles)?row.candles:[]).filter(candle=>candle?.date&&[candle.open,candle.high,candle.low,candle.close].every(value=>finite(value)!=null)).length;
 function mergeSnapshotCache(payload){
  let cached=null;try{cached=JSON.parse(localStorage.getItem(snapshotCacheKey)||"null")}catch(e){}
@@ -56,7 +57,8 @@ function mergeSnapshotCache(payload){
 function rememberSnapshot(payload){const wanted=new Set(["^TWII","^KS11","^N225","^IXIC","^SOX","^GSPC"]),good=(payload?.items||[]).filter(row=>wanted.has(String(row.symbol||"").toUpperCase())&&snapshotCandleCount(row)>=10).length;if(good>=4){try{localStorage.setItem(snapshotCacheKey,JSON.stringify(payload))}catch(e){}}}
 async function loadData(name,fallback={}){
  const branch=CHANNELS[name];let payload=null;
- if(branch&&FRESH_BRANCH_FILES.has(name)){try{payload=await loadBranchApi(name,branch)}catch(e){}}
+ if(name==="market-snapshot.json"&&LIVE_MARKET_ENDPOINT){try{payload=await getJson(`${LIVE_MARKET_ENDPOINT}/market-snapshot.json?_=${Date.now()}`,8000)}catch(e){}}
+ if(branch&&FRESH_BRANCH_FILES.has(name)&&!payload){try{payload=await loadBranchApi(name,branch)}catch(e){}}
  if(!payload&&branch){try{payload=await getJson(`https://raw.githubusercontent.com/${OWNER}/${REPO}/${branch}/${name}?t=${Date.now()}`,11000)}catch(e){}}
  if(!payload){try{payload=await getJson(`data/${name}?t=${Date.now()}`,9000)}catch(e){payload=cloneValue(fallback)}}
  if(name==="market-snapshot.json"){payload=mergeSnapshotCache(payload||cloneValue(fallback));rememberSnapshot(payload)}
@@ -79,14 +81,14 @@ function officialBasicRecord(row,endpoint){
  record.updated_at=new Date().toISOString();return record;
 }
 async function loadStockBasics(){
- const fallback=window.__STOCK_BASICS_SEED__||{metadata:{version:"v11.4.20",status:"waiting",item_count:0},items:{}};
+ const fallback=window.__STOCK_BASICS_SEED__||{metadata:{version:"v11.4.21",status:"waiting",item_count:0},items:{}};
  const payload=await loadData("stock-basics.json",fallback),items={...(payload.items||{})};
  if(Object.keys(items).length>=500)return payload;
  const settled=await Promise.allSettled(STOCK_BASIC_ENDPOINTS.map(async endpoint=>({endpoint,rows:await getJson(endpoint.url,15000)})));
  let added=0;
  for(const result of settled){if(result.status!=="fulfilled"||!Array.isArray(result.value.rows))continue;for(const row of result.value.rows){const record=officialBasicRecord(row,result.value.endpoint);if(!record)continue;items[record.symbol]={...(items[record.symbol]||{}),...record};added++}}
  const values=Object.values(items),average=values.length?values.reduce((sum,row)=>sum+Number(row.basic_coverage_percent||0),0)/values.length:0;
- return {...payload,metadata:{...(payload.metadata||{}),version:"v11.4.20",item_count:values.length,average_basic_coverage_percent:Math.round(average*10)/10,scope:"all-currently-listed-twse-and-tpex-stocks",browser_official_fallback_added:added},items};
+ return {...payload,metadata:{...(payload.metadata||{}),version:"v11.4.21",item_count:values.length,average_basic_coverage_percent:Math.round(average*10)/10,scope:"all-currently-listed-twse-and-tpex-stocks",browser_official_fallback_added:added},items};
 }
 async function loadNewsChannels(){
  const channels=await Promise.all(NEWS_FILES.map(async cfg=>{
@@ -99,11 +101,43 @@ async function loadNewsChannels(){
  for(const channel of channels){for(const item of channel.items||[]){const key=String(item.id||`${item.title||""}|${item.url||""}`);if(!key||seen.has(key))continue;seen.add(key);items.push(item)}}
  items.sort((a,b)=>Date.parse(b.published_at||b.date||0)-Date.parse(a.published_at||a.date||0));
  const updated=channels.map(c=>c.metadata?.updated_at).filter(Boolean).sort().pop()||null;
- return {metadata:{version:"v11.4.20",updated_at:updated,item_count:items.length,channel_count:channels.length},channels,items};
+ return {metadata:{version:"v11.4.21",updated_at:updated,item_count:items.length,channel_count:channels.length},channels,items};
 }
 async function loadStockNews(){
- const fallback=window.__STOCK_NEWS_SEED__||{metadata:{version:"v11.4.20",status:"waiting",item_count:0},items:[]};
+ const fallback=window.__STOCK_NEWS_SEED__||{metadata:{version:"v11.4.21",status:"waiting",item_count:0},items:[]};
  return await loadData("stock-news.json",fallback);
+}
+
+
+const KLINE_INTERVALS={
+ "5m":{range:"5d",interval:"5m"},"15m":{range:"1mo",interval:"15m"},"30m":{range:"1mo",interval:"30m"},
+ "60m":{range:"3mo",interval:"60m"},"4h":{range:"3mo",interval:"60m",aggregate:4},
+ "1d":{range:"1y",interval:"1d"},"1wk":{range:"5y",interval:"1wk"},"1mo":{range:"10y",interval:"1mo"}
+};
+function chartCandles(payload){
+ const chart=payload?.chart?.result?.[0]||payload?.result?.[0]||payload;
+ const stamps=chart?.timestamp||[],quote=chart?.indicators?.quote?.[0]||chart?.quote||{};
+ const opens=quote.open||[],highs=quote.high||[],lows=quote.low||[],closes=quote.close||[],volumes=quote.volume||[];
+ const rows=[];for(let i=0;i<Math.min(stamps.length,opens.length,highs.length,lows.length,closes.length);i++){
+  const open=finite(opens[i]),high=finite(highs[i]),low=finite(lows[i]),close=finite(closes[i]);
+  if([open,high,low,close].some(value=>value==null))continue;
+  rows.push({time:Number(stamps[i]),open,high,low,close,volume:finite(volumes[i])});
+ }
+ return rows;
+}
+function aggregateCandles(rows,size){
+ const output=[];for(let i=0;i<rows.length;i+=size){const group=rows.slice(i,i+size);if(!group.length)continue;output.push({time:group[0].time,open:group[0].open,high:Math.max(...group.map(x=>x.high)),low:Math.min(...group.map(x=>x.low)),close:group.at(-1).close,volume:group.reduce((sum,x)=>sum+(x.volume||0),0)});}return output;
+}
+async function loadMarketKline(symbol,interval="1d"){
+ const spec=KLINE_INTERVALS[interval]||KLINE_INTERVALS["1d"],encoded=encodeURIComponent(symbol);
+ let payload=null;
+ if(LIVE_MARKET_ENDPOINT){try{payload=await getJson(`${LIVE_MARKET_ENDPOINT}/kline?symbol=${encoded}&interval=${encodeURIComponent(interval)}&_=${Date.now()}`,9000)}catch(e){}}
+ if(!payload){try{payload=await getJson(`https://query1.finance.yahoo.com/v8/finance/chart/${encoded}?range=${spec.range}&interval=${spec.interval}&events=div%2Csplits&_=${Date.now()}`,9000)}catch(e){}}
+ if(!payload)throw Error("K 線來源暫時無法連線");
+ let rows=Array.isArray(payload.candles)?payload.candles:chartCandles(payload);
+ rows=rows.map(row=>({time:Number(row.time||row.timestamp),open:finite(row.open),high:finite(row.high),low:finite(row.low),close:finite(row.close),volume:finite(row.volume)})).filter(row=>row.time&&[row.open,row.high,row.low,row.close].every(value=>value!=null));
+ if(spec.aggregate)rows=aggregateCandles(rows,spec.aggregate);
+ return {symbol,interval,candles:rows,source:payload.source||payload.metadata?.source||(LIVE_MARKET_ENDPOINT?"edge live market":"Yahoo chart")};
 }
 
 const portfolioKeys=["marketRadarPortfolioV2","marketRadarPortfolio","market-radar-portfolio","portfolio"];
@@ -149,5 +183,5 @@ function relatedNews(event,items,options={}){
     return score>=10?{...item,_relatedScore:score}:null;
   }).filter(Boolean).sort((a,b)=>b._relatedScore-a._relatedScore||Date.parse(b.published_at||0)-Date.parse(a.published_at||0)).slice(0,limit);
 }
-window.MR={$,$$,escapeHtml,finite,fmt,pct,cls,formatTime,stripHtml,normalizeText,newsHasImage,pickNewsFallbackSlug,renderNewsThumb,relatedNews,loadData,loadStockBasics,loadNewsChannels,loadStockNews,getJson,loadPortfolio,savePortfolio,mergeAssets,NEWS_FILES,OWNER,REPO};
+window.MR={$,$$,escapeHtml,finite,fmt,pct,cls,formatTime,stripHtml,normalizeText,newsHasImage,pickNewsFallbackSlug,renderNewsThumb,relatedNews,loadData,loadMarketKline,loadStockBasics,loadNewsChannels,loadStockNews,getJson,loadPortfolio,savePortfolio,mergeAssets,NEWS_FILES,OWNER,REPO,LIVE_MARKET_ENDPOINT,KLINE_INTERVALS};
 })();

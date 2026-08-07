@@ -220,5 +220,38 @@ class ParserTests(unittest.TestCase):
         row={"metrics":{"pe":10,"pb":1,"dividend_yield":3},"financials":[]}
         self.assertLess(update_stock_basics.financial_coverage(row),50)
 
+    def test_same_session_live_ohlc_replaces_previous_daily_display(self):
+        from datetime import datetime
+        from zoneinfo import ZoneInfo
+        old=int(datetime(2026,8,4,16,0,tzinfo=ZoneInfo("America/New_York")).timestamp())
+        current=int(datetime(2026,8,5,12,0,tzinfo=ZoneInfo("America/New_York")).timestamp())
+        chart={
+            "meta":{"regularMarketTime":current,"regularMarketPrice":107,"regularMarketOpen":103,"regularMarketDayHigh":108,"regularMarketDayLow":102,"regularMarketVolume":9000,"currency":"USD"},
+            "timestamp":[old],
+            "indicators":{"quote":[{"open":[100],"high":[105],"low":[98],"close":[102],"volume":[1000]}]}
+        }
+        row=market_snapshot.build_session_row(chart,"^GSPC","S&P 500","US","index")
+        self.assertEqual(row["session_date"],"2026-08-05")
+        self.assertEqual(row["open"],103)
+        self.assertEqual(row["high"],108)
+        self.assertEqual(row["previous_close"],102)
+        self.assertEqual(row["change"],5)
+
+    def test_same_session_validator_rejects_price_outside_high_low(self):
+        row={"symbol":"X","price":110,"previous_close":100,"change":10,"change_percent":10,"session_date":"2026-08-05","price_date":"2026-08-05","ohlc_date":"2026-08-05","open":101,"high":108,"low":99,"close":107,"candles":[]}
+        with self.assertRaises(ValueError):market_snapshot.validate_market_row(row)
+
+    def test_twse_historical_exdiv_parser(self):
+        payload={"fields":["日期","股票代號","股票名稱","除權息","息值"],"data":[["115/06/02","2330","台積電","除息","5.0"]]}
+        rows=event_updater.parse_twse_exdiv_history_payload(payload)
+        self.assertEqual(rows[0]["local_date"] if "local_date" in rows[0] else rows[0]["ex_date"],"2026-06-02")
+        self.assertEqual(rows[0]["symbol"],"2330")
+
+    def test_tpex_historical_exdiv_parser(self):
+        payload=[{"ExRrightsExDividendDate":"115/06/03","SecuritiesCompanyCode":"6488","CompanyName":"環球晶","ExRrightsExDividend":"除息","CashDividend":"10"}]
+        rows=event_updater.parse_tpex_exdiv_history_payload(payload)
+        self.assertEqual(rows[0]["ex_date"],"2026-06-03")
+        self.assertEqual(rows[0]["cash_dividend"],10)
+
 if __name__ == "__main__":
     unittest.main()

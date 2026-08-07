@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build Market Event Radar v11.4.20 event data from official schedules.
+"""Build Market Event Radar v11.4.21 event data from official schedules.
 
 The updater keeps the last verified archive, refreshes selected official sources,
 and records when an exact date first appears or changes. It never invents dates.
@@ -37,10 +37,12 @@ ARCHIVE_START = date(2026, 1, 1)
 ARCHIVE_START_DT = datetime.combine(ARCHIVE_START, time.min, tzinfo=TAIPEI)
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.20; +https://github.com/qwe70542asd-blip/market-event-radar)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.21; +https://github.com/qwe70542asd-blip/market-event-radar)",
     "Accept-Language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
 }
 TWSE_EXDIV_URL = "https://openapi.twse.com.tw/v1/exchangeReport/TWT48U_ALL"
+TWSE_EXDIV_HISTORY_URL = "https://www.twse.com.tw/exchangeReport/TWT49U"
+TPEX_EXDIV_HISTORY_URL = "https://www.tpex.org.tw/openapi/v1/tpex_exright_daily"
 TPEX_EXDIV_URL = "https://www.tpex.org.tw/openapi/v1/tpex_exright_prepost"
 TWSE_DIVIDEND_PLAN_URL = "https://openapi.twse.com.tw/v1/opendata/t187ap45_L"
 TPEX_DIVIDEND_PLAN_URL = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap45_O"
@@ -427,6 +429,102 @@ def fetch_tpex_exdiv(session: requests.Session) -> SourceResult:
     return SourceResult("tpex-exdiv", "TPEx OTC ex-right/ex-dividend", TPEX_EXDIV_URL, ("tpex-exdiv",), events)
 
 
+
+def _row_lookup(row: dict[str, Any], *needles: str) -> Any:
+    for key, value in row.items():
+        normalized = clean(key).lower()
+        if any(needle.lower() in normalized for needle in needles):
+            return value
+    return None
+
+
+def parse_twse_exdiv_history_payload(payload: Any, source_url: str = TWSE_EXDIV_HISTORY_URL) -> list[dict[str, Any]]:
+    """Parse TWSE TWT49U historical ex-right/ex-dividend calculation rows."""
+    fields: list[str] = []
+    raw_rows: list[Any] = []
+    if isinstance(payload, dict):
+        fields = [clean(value) for value in (payload.get("fields") or payload.get("fields9") or [])]
+        raw_rows = payload.get("data") or payload.get("data9") or payload.get("items") or []
+    elif isinstance(payload, list):
+        raw_rows = payload
+    events: list[dict[str, Any]] = []
+    for raw in raw_rows:
+        if isinstance(raw, dict):
+            row = raw
+        elif isinstance(raw, (list, tuple)):
+            row = {fields[index] if index < len(fields) else str(index): value for index, value in enumerate(raw)}
+        else:
+            continue
+        day = parse_market_date(_row_lookup(row, "日期", "date"))
+        symbol = clean(_row_lookup(row, "股票代號", "證券代號", "code"))
+        name = clean(_row_lookup(row, "股票名稱", "證券名稱", "name"))
+        if not day or day < ARCHIVE_START or day > NOW.date() or not symbol:
+            continue
+        cash = parse_number(_row_lookup(row, "息值", "現金股利", "cash"))
+        stock = parse_number(_row_lookup(row, "權值", "股票股利", "stock"))
+        kind_text = clean(_row_lookup(row, "除權息", "權息別", "type"))
+        if not kind_text:
+            kind_text = "除權息" if stock not in (None, 0) and cash not in (None, 0) else "除權" if stock not in (None, 0) else "除息"
+        events.append(make_exdiv_event(
+            "TWSE", symbol, name, day, kind_text, cash, stock,
+            "TWSE 除權除息計算結果表", source_url, "twse-exdiv-history",
+        ))
+    return events
+
+
+def fetch_twse_exdiv_history(session: requests.Session) -> SourceResult:
+    events: list[dict[str, Any]] = []
+    errors: list[str] = []
+    month = date(ARCHIVE_START.year, ARCHIVE_START.month, 1)
+    end = date(NOW.year, NOW.month, 1)
+    while month <= end:
+        try:
+            response = http_get(session, TWSE_EXDIV_HISTORY_URL, params={"response": "json", "date": month.strftime("%Y%m01")})
+            events.extend(parse_twse_exdiv_history_payload(response.json(), response.url))
+        except Exception as exc:
+            errors.append(f"{month:%Y-%m}: {exc}")
+        month = date(month.year + (month.month == 12), 1 if month.month == 12 else month.month + 1, 1)
+    events = list({row["id"]: row for row in events}.values())
+    if not events:
+        raise RuntimeError("TWSE historical ex-dividend returned no recognized rows: " + "; ".join(errors[:3]))
+    return SourceResult(
+        "twse-exdiv-history", "TWSE historical ex-right/ex-dividend", TWSE_EXDIV_HISTORY_URL,
+        ("twse-exdiv-history",), events, f"{len(events)} historical events since 2026-01-01",
+    )
+
+
+def parse_tpex_exdiv_history_payload(payload: Any, source_url: str = TPEX_EXDIV_HISTORY_URL) -> list[dict[str, Any]]:
+    events: list[dict[str, Any]] = []
+    for row in payload if isinstance(payload, list) else []:
+        if not isinstance(row, dict):
+            continue
+        day = parse_market_date(first_value(row, [
+            "ExRrightsExDividendDate", "Date", "資料日期", "除權息日期", "除權除息日期",
+        ]))
+        symbol = first_value(row, ["SecuritiesCompanyCode", "Code", "證券代號", "股票代號"])
+        name = first_value(row, ["CompanyName", "Name", "證券名稱", "股票名稱"])
+        if not day or day < ARCHIVE_START or day > NOW.date() or not symbol:
+            continue
+        kind = first_value(row, ["ExRrightsExDividend", "Type", "除權息", "權息別"]) or "除息"
+        cash = parse_number(first_value(row, ["CashDividend", "CashDividendValue", "息值", "現金股利"]))
+        stock = parse_number(first_value(row, ["StockDividendRatio", "StockDividendValue", "權值", "股票股利"]))
+        events.append(make_exdiv_event(
+            "TPEX", clean(symbol), clean(name), day, clean(kind), cash, stock,
+            "TPEx 上櫃除權除息計算結果表", source_url, "tpex-exdiv-history",
+        ))
+    return events
+
+
+def fetch_tpex_exdiv_history(session: requests.Session) -> SourceResult:
+    payload = http_json(session, TPEX_EXDIV_HISTORY_URL)
+    events = parse_tpex_exdiv_history_payload(payload)
+    if not events:
+        raise RuntimeError("TPEx historical ex-dividend returned no recognized rows")
+    return SourceResult(
+        "tpex-exdiv-history", "TPEx historical ex-right/ex-dividend", TPEX_EXDIV_HISTORY_URL,
+        ("tpex-exdiv-history",), events, f"{len(events)} historical events since 2026-01-01",
+    )
+
 def dividend_total(row: dict[str, Any], needle: str) -> float:
     total = 0.0
     for key, value in row.items():
@@ -648,6 +746,7 @@ def main() -> None:
 
     fetchers: list[Callable[[requests.Session], SourceResult]] = [
         fetch_bls, fetch_bea, fetch_fomc, fetch_twse_exdiv, fetch_tpex_exdiv,
+        fetch_twse_exdiv_history, fetch_tpex_exdiv_history,
         fetch_twse_dividend_plans, fetch_tpex_dividend_plans,
         fetch_twse_material, fetch_tpex_material,
     ]
@@ -672,6 +771,7 @@ def main() -> None:
             origins = (key,)
             mapping = {
                 "twse-exdiv": ("twse-exdiv",), "tpex-exdiv": ("tpex-exdiv",),
+                "twse-exdiv-history": ("twse-exdiv-history",), "tpex-exdiv-history": ("tpex-exdiv-history",),
                 "twse-dividend-plans": ("twse-dividend-plan",), "tpex-dividend-plans": ("tpex-dividend-plan",),
                 "twse-material": ("twse-material",), "tpex-material": ("tpex-material",),
                 "bls": ("bls",), "bea": ("bea",), "fomc": ("fomc",),
@@ -777,7 +877,7 @@ def main() -> None:
     )
     payload = {
         "metadata": {
-            "version": "v11.4.20",
+            "version": "v11.4.21",
             "updated_at": NOW.isoformat(timespec="seconds"),
             "timezone": "Asia/Taipei",
             "event_count": len(events),
@@ -796,7 +896,7 @@ def main() -> None:
     EVENTS_PATH.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     SEED_PATH.write_text("window.__EVENT_SEED__ = " + json.dumps(payload, ensure_ascii=False) + ";\n", encoding="utf-8")
     STATE_PATH.write_text(json.dumps({
-        "version": "v11.4.20", "initialized": True,
+        "version": "v11.4.21", "initialized": True,
         "initialized_origins": sorted(next_initialized_origins),
         "updated_at": NOW.isoformat(timespec="seconds"), "events": next_state,
     }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

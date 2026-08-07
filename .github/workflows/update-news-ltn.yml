@@ -1,4 +1,4 @@
-name: Update v11.4.20 自由財經 news
+name: Update v11.4.21 自由財經 news
 on:
   push:
     branches: [main]

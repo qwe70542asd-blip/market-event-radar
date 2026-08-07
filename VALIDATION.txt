@@ -1,15 +1,18 @@
-Market Event Radar v11.4.20 validation
+Market Event Radar v11.4.21 validation
 
 Status: PASSED
-Automated tests: 85
+Automated tests: 92
 
 Strict gates:
-- adjacent-session market change arithmetic
-- OHLC ordering
-- labeled material-event dates
-- no reporting-period date leakage
-- official-master-only news stock symbols
-- longest company-name matching
+- same-session price, OHLC and change arithmetic
+- live price must remain inside same-session high/low
+- stale intraday data is labeled and cannot replace a verified row
+- market-specific one-minute edge schedule and fifteen-minute health refresh
+- interactive 5m / 15m / 30m / 1h / 4h / day / week / month K-line controls
+- current-day, next-day and following-day homepage feature window
+- TWSE / TPEx historical ex-dividend backfill from 2026-01-01
+- labeled material-event dates and no reporting-period date leakage
+- official-master-only news stock symbols and longest company-name matching
 - separate company-master and financial-data completeness
 
-Policy: detected inconsistent data is not published; the last verified dataset is retained.
+Policy: detected mixed-session, stale or inconsistent data is not published; the last verified dataset is retained.

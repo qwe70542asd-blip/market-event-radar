@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
 """Refresh global-market quotes and continuous daily candlesticks.
 
-v11.4.20 source policy:
-- TAIEX daily OHLC: TWSE official historical index endpoint, with Yahoo as
-  the quote/candle fallback.
-- Overseas indices, rates, risk gauges and FX: Yahoo public chart endpoint.
-- Each row preserves its last successful payload when one source fails, so a
-  temporary outage does not blank every K-line card.
+v11.4.21 data-quality policy
+- A card may only combine price, change and OHLC from the same exchange session.
+- When Yahoo's live quote is newer than the last completed daily candle, the
+  live-session OHLC comes from Yahoo meta fields; yesterday's daily candle is
+  used only as previous close.
+- TAIEX history is sourced from TWSE. Yahoo is used for the live session and as
+  a history fallback.
+- Suspicious or mixed-session data fails closed and the last verified row is
+  retained with a stale/cached status.
 """
 from __future__ import annotations
 
-from calendar import monthrange
-from datetime import datetime
+from datetime import datetime, time, timedelta
 from typing import Any
 from zoneinfo import ZoneInfo
 
@@ -19,9 +21,9 @@ import requests
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.20"
+VERSION = "v11.4.21"
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.20)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.21)",
     "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.6",
 }
 YAHOO_CHART = "https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"
@@ -44,6 +46,13 @@ SYMBOLS = [
     ("KRW=X", "美元兌韓元", "FX", "fx"),
 ]
 
+MARKET_SCHEDULES = {
+    "TW": {"tz": "Asia/Taipei", "sessions": ((time(9, 0), time(13, 30)),)},
+    "JP": {"tz": "Asia/Tokyo", "sessions": ((time(9, 0), time(11, 30)), (time(12, 30), time(15, 30)))},
+    "KR": {"tz": "Asia/Seoul", "sessions": ((time(9, 0), time(15, 30)),)},
+    "US": {"tz": "America/New_York", "sessions": ((time(9, 30), time(16, 0)),)},
+}
+
 
 def number(value: Any) -> float | None:
     if value is None:
@@ -54,23 +63,53 @@ def number(value: Any) -> float | None:
         return None
 
 
-def iso_from_timestamp(value: Any) -> str | None:
+def convert_yield(value: float | None, quote_kind: str) -> float | None:
+    return value / 10 if quote_kind == "yield" and value is not None else value
+
+
+def market_timezone(market: str) -> ZoneInfo:
+    return ZoneInfo(MARKET_SCHEDULES.get(market, {}).get("tz", "Asia/Taipei"))
+
+
+def market_datetime_from_timestamp(value: Any, market: str) -> datetime | None:
+    try:
+        return datetime.fromtimestamp(int(value), market_timezone(market))
+    except (TypeError, ValueError, OSError):
+        return None
+
+
+def taipei_iso_from_timestamp(value: Any) -> str | None:
     try:
         return datetime.fromtimestamp(int(value), ZoneInfo("Asia/Taipei")).isoformat(timespec="seconds")
     except (TypeError, ValueError, OSError):
         return None
 
 
-def candle_date(value: Any) -> str | None:
-    stamp = iso_from_timestamp(value)
-    return stamp[:10] if stamp else None
+def market_session_state(market: str, now: datetime | None = None) -> dict[str, Any]:
+    now = now or NOW
+    local = now.astimezone(market_timezone(market))
+    weekday = local.weekday()
+    sessions = MARKET_SCHEDULES.get(market, {}).get("sessions", ())
+    is_weekday = weekday < 5
+    is_open = is_weekday and any(start <= local.time() <= end for start, end in sessions)
+    local_minutes = local.hour * 60 + local.minute
+    first_start = sessions[0][0].hour * 60 + sessions[0][0].minute if sessions else 0
+    preopen = bool(is_weekday and sessions and first_start - 5 <= local_minutes < first_start)
+    closed_today = bool(is_weekday and sessions and local.time() > sessions[-1][1])
+    return {
+        "market_now": local,
+        "market_date": local.date().isoformat(),
+        "is_open": bool(is_open),
+        "preopen": bool(preopen),
+        "closed_today": bool(closed_today),
+    }
 
 
-def convert_yield(value: float | None, quote_kind: str) -> float | None:
-    return value / 10 if quote_kind == "yield" and value is not None else value
-
-
-def parse_yahoo_candles(chart: dict[str, Any], quote_kind: str) -> list[dict[str, Any]]:
+def parse_yahoo_candles(chart: dict[str, Any], market: str, quote_kind: str | None = None) -> list[dict[str, Any]]:
+    # Backward-compatible two-argument form: parse_yahoo_candles(chart, quote_kind).
+    if quote_kind is None:
+        quote_kind = market
+        market = "US"
     timestamps = chart.get("timestamp") or []
     quote = (chart.get("indicators", {}).get("quote") or [{}])[0]
     opens = quote.get("open") or []
@@ -81,17 +120,20 @@ def parse_yahoo_candles(chart: dict[str, Any], quote_kind: str) -> list[dict[str
     size = min(len(timestamps), len(opens), len(highs), len(lows), len(closes))
     rows: list[dict[str, Any]] = []
     for index in range(size):
-        open_value = convert_yield(number(opens[index]), quote_kind)
-        high_value = convert_yield(number(highs[index]), quote_kind)
-        low_value = convert_yield(number(lows[index]), quote_kind)
-        close_value = convert_yield(number(closes[index]), quote_kind)
-        date = candle_date(timestamps[index])
-        if not date or any(value is None for value in (open_value, high_value, low_value, close_value)):
+        stamp = market_datetime_from_timestamp(timestamps[index], market)
+        values = [
+            convert_yield(number(opens[index]), quote_kind),
+            convert_yield(number(highs[index]), quote_kind),
+            convert_yield(number(lows[index]), quote_kind),
+            convert_yield(number(closes[index]), quote_kind),
+        ]
+        if stamp is None or any(value is None for value in values):
             continue
+        open_value, high_value, low_value, close_value = values
         if high_value < low_value:
             high_value, low_value = low_value, high_value
         rows.append({
-            "date": date,
+            "date": stamp.date().isoformat(),
             "timestamp": int(timestamps[index]),
             "open": open_value,
             "high": high_value,
@@ -105,80 +147,161 @@ def parse_yahoo_candles(chart: dict[str, Any], quote_kind: str) -> list[dict[str
 
 
 
-
-def market_timezone(market: str) -> ZoneInfo:
-    return ZoneInfo({"US": "America/New_York", "JP": "Asia/Tokyo", "KR": "Asia/Seoul", "TW": "Asia/Taipei"}.get(market, "Asia/Taipei"))
-
-
-def date_from_timestamp(value: Any, market: str) -> str | None:
-    try:
-        return datetime.fromtimestamp(int(value), market_timezone(market)).date().isoformat()
-    except (TypeError, ValueError, OSError):
-        return None
-
-
 def daily_reference(candles: list[dict[str, Any]], live_price: float | None, market_date: str | None = None) -> dict[str, Any]:
-    """Calculate one-session change only from adjacent daily candles.
+    """Compatibility helper for tests and downstream tools.
 
-    Yahoo's chartPreviousClose can refer to the beginning of the requested chart
-    range, so it is intentionally never used for daily change.
+    The v11.4.21 publisher uses same-session-price-vs-adjacent-close. This
+    helper preserves the old adjacent-daily-candles API without ever using
+    Yahoo chartPreviousClose, which can refer to the beginning of a range.
     """
-    valid = [row for row in candles if row.get("date") and number(row.get("close")) is not None]
-    valid = sorted({str(row["date"]): row for row in valid}.values(), key=lambda row: str(row["date"]))
+    valid = sorted(
+        {str(row.get("date")): row for row in candles if row.get("date") and number(row.get("close")) is not None}.values(),
+        key=lambda row: str(row.get("date")),
+    )
     if not valid:
-        return {"price": live_price, "previous_close": None, "change": None, "change_percent": None, "reference_date": None, "previous_reference_date": None}
+        return {"price": live_price, "previous_close": None, "change": None, "change_percent": None, "reference_date": market_date, "previous_reference_date": None}
     latest = valid[-1]
-    latest_close = number(latest.get("close"))
-    price = live_price if live_price is not None else latest_close
-    # When the quote is newer than the latest daily candle, that latest close is
-    # yesterday's close. Otherwise the latest candle is today's/current session.
+    price = live_price if live_price is not None else number(latest.get("close"))
     if market_date and str(latest.get("date")) < market_date:
-        previous = latest_close
-        previous_date = str(latest.get("date"))
-        reference_date = market_date
+        previous = number(latest.get("close")); previous_date = str(latest.get("date")); reference_date = market_date
     elif len(valid) >= 2:
-        previous = number(valid[-2].get("close"))
-        previous_date = str(valid[-2].get("date"))
-        reference_date = str(latest.get("date"))
+        previous = number(valid[-2].get("close")); previous_date = str(valid[-2].get("date")); reference_date = str(latest.get("date"))
     else:
-        previous = None
-        previous_date = None
-        reference_date = str(latest.get("date"))
+        previous = None; previous_date = None; reference_date = str(latest.get("date"))
     change = price - previous if price is not None and previous is not None else None
-    change_percent = change / previous * 100 if change is not None and previous not in (None, 0) else None
+    percent = change / previous * 100 if change is not None and previous not in (None, 0) else None
+    return {"price": price, "previous_close": previous, "change": change, "change_percent": percent, "reference_date": reference_date, "previous_reference_date": previous_date}
+
+def valid_ohlc(open_value: float | None, high_value: float | None, low_value: float | None, close_value: float | None) -> bool:
+    if any(value is None for value in (open_value, high_value, low_value, close_value)):
+        return False
+    return high_value >= max(open_value, close_value) and low_value <= min(open_value, close_value) and high_value >= low_value
+
+
+def meta_session_candle(meta: dict[str, Any], market: str, quote_kind: str) -> dict[str, Any] | None:
+    quote_dt = market_datetime_from_timestamp(meta.get("regularMarketTime"), market)
+    if quote_dt is None:
+        return None
+    price = convert_yield(number(meta.get("regularMarketPrice")), quote_kind)
+    open_value = convert_yield(number(meta.get("regularMarketOpen")), quote_kind)
+    high_value = convert_yield(number(meta.get("regularMarketDayHigh")), quote_kind)
+    low_value = convert_yield(number(meta.get("regularMarketDayLow")), quote_kind)
+    if not valid_ohlc(open_value, high_value, low_value, price):
+        return None
     return {
-        "price": price, "previous_close": previous, "change": change, "change_percent": change_percent,
-        "reference_date": reference_date, "previous_reference_date": previous_date,
+        "date": quote_dt.date().isoformat(),
+        "timestamp": int(meta.get("regularMarketTime")),
+        "open": open_value,
+        "high": high_value,
+        "low": low_value,
+        "close": price,
+        "volume": number(meta.get("regularMarketVolume")),
+        "source": "Yahoo live session",
     }
 
 
+def merge_candles(primary: list[dict[str, Any]], fallback: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    merged = {row.get("date"): row for row in fallback if row.get("date")}
+    for row in primary:
+        if row.get("date"):
+            merged[row["date"]] = row
+    return [merged[key] for key in sorted(merged)][-CANDLE_LIMIT:]
+
+
+def build_session_row(chart: dict[str, Any], symbol: str, name: str, market: str, quote_kind: str) -> dict[str, Any]:
+    meta = chart.get("meta") or {}
+    candles = parse_yahoo_candles(chart, market, quote_kind)
+    live_candle = meta_session_candle(meta, market, quote_kind)
+    if live_candle:
+        candles = merge_candles([live_candle], candles)
+
+    valid = [row for row in candles if valid_ohlc(number(row.get("open")), number(row.get("high")), number(row.get("low")), number(row.get("close")))]
+    valid.sort(key=lambda row: str(row.get("date")))
+    if not valid:
+        raise RuntimeError("Yahoo returned no valid daily candle or live-session OHLC")
+
+    latest = valid[-1]
+    session_date = str(latest["date"])
+    previous = number(valid[-2]["close"]) if len(valid) >= 2 else convert_yield(number(meta.get("regularMarketPreviousClose") or meta.get("previousClose")), quote_kind)
+    price = number(latest["close"])
+    change = price - previous if price is not None and previous is not None else None
+    change_percent = change / previous * 100 if change is not None and previous not in (None, 0) else None
+    quote_dt = market_datetime_from_timestamp(meta.get("regularMarketTime"), market)
+    quote_age = (NOW.astimezone(market_timezone(market)) - quote_dt).total_seconds() if quote_dt else None
+    schedule = market_session_state(market)
+    stale_reasons: list[str] = []
+    if schedule["is_open"]:
+        if session_date != schedule["market_date"]:
+            stale_reasons.append(f"盤中資料仍停留於 {session_date}")
+        if quote_age is None or quote_age > 180:
+            stale_reasons.append("盤中超過 3 分鐘未更新")
+    freshness_status = "stale" if stale_reasons else "live" if schedule["is_open"] else "closed"
+
+    row = {
+        "symbol": symbol,
+        "name": name,
+        "market": market,
+        "quote_kind": quote_kind,
+        "price": price,
+        "previous_close": previous,
+        "change": change,
+        "change_percent": change_percent,
+        "reference_date": session_date,
+        "previous_reference_date": str(valid[-2]["date"]) if len(valid) >= 2 else "source-meta",
+        "change_basis": "same-session-price-vs-adjacent-close",
+        "session_date": session_date,
+        "price_date": session_date,
+        "ohlc_date": session_date,
+        "open": latest["open"],
+        "high": latest["high"],
+        "low": latest["low"],
+        "close": latest["close"],
+        "volume": latest.get("volume"),
+        "currency": meta.get("currency"),
+        "market_at": taipei_iso_from_timestamp(meta.get("regularMarketTime")) or NOW.isoformat(timespec="seconds"),
+        "market_at_local": quote_dt.isoformat(timespec="seconds") if quote_dt else None,
+        "quote_age_seconds": quote_age,
+        "display_suffix": "%" if quote_kind == "yield" else "",
+        "candles": valid[-CANDLE_LIMIT:] if symbol in KLINE_SYMBOLS else [],
+        "candle_count": min(len(valid), CANDLE_LIMIT) if symbol in KLINE_SYMBOLS else 0,
+        "candle_interval": "1d" if symbol in KLINE_SYMBOLS else None,
+        "candle_range": "3mo" if symbol in KLINE_SYMBOLS else None,
+        "source": "Yahoo public chart API",
+        "candle_source": "Yahoo daily chart + same-session live OHLC",
+        "data_status": "stale" if stale_reasons else "live",
+        "freshness_status": freshness_status,
+        "stale_reason": "；".join(stale_reasons) or None,
+        "validation_status": "verified",
+        "market_open": schedule["is_open"],
+    }
+    validate_market_row(row)
+    return row
+
+
 def validate_market_row(row: dict[str, Any]) -> None:
-    candles = row.get("candles") or []
-    for candle in candles:
-        values = [number(candle.get(key)) for key in ("open", "high", "low", "close")]
-        if any(value is None for value in values):
-            raise ValueError(f"{row.get('symbol')} contains incomplete OHLC")
-        open_value, high_value, low_value, close_value = values
-        if high_value < max(open_value, close_value) or low_value > min(open_value, close_value) or high_value < low_value:
-            raise ValueError(f"{row.get('symbol')} contains invalid OHLC ordering")
     price, previous = number(row.get("price")), number(row.get("previous_close"))
+    open_value, high_value, low_value, close_value = (number(row.get(key)) for key in ("open", "high", "low", "close"))
+    if not valid_ohlc(open_value, high_value, low_value, close_value):
+        raise ValueError(f"{row.get('symbol')} display OHLC is incomplete or invalid")
+    if price is None or not (low_value <= price <= high_value):
+        raise ValueError(f"{row.get('symbol')} live price is outside same-session high/low")
+    session_dates = {str(row.get(key) or "") for key in ("session_date", "price_date", "ohlc_date")}
+    if len(session_dates) != 1 or "" in session_dates:
+        raise ValueError(f"{row.get('symbol')} mixed-session price/OHLC")
     change, percent = number(row.get("change")), number(row.get("change_percent"))
-    if price is not None and previous is not None:
+    if previous is not None:
         expected = price - previous
         expected_percent = expected / previous * 100 if previous else None
         if change is None or abs(change - expected) > max(1e-6, abs(expected) * 1e-8):
             raise ValueError(f"{row.get('symbol')} change arithmetic mismatch")
         if expected_percent is not None and (percent is None or abs(percent - expected_percent) > 1e-7):
             raise ValueError(f"{row.get('symbol')} percentage arithmetic mismatch")
+    for candle in row.get("candles") or []:
+        if not valid_ohlc(*(number(candle.get(key)) for key in ("open", "high", "low", "close"))):
+            raise ValueError(f"{row.get('symbol')} contains invalid candle")
 
 
-def fetch_yahoo(
-    session: requests.Session,
-    symbol: str,
-    name: str,
-    market: str,
-    quote_kind: str,
-) -> dict[str, Any]:
+def fetch_yahoo(session: requests.Session, symbol: str, name: str, market: str, quote_kind: str) -> dict[str, Any]:
     response = session.get(
         YAHOO_CHART.format(symbol=requests.utils.quote(symbol, safe="")),
         params={"range": "3mo", "interval": "1d", "events": "div,splits"},
@@ -189,54 +312,7 @@ def fetch_yahoo(
     result = response.json().get("chart", {}).get("result") or []
     if not result:
         raise RuntimeError("empty Yahoo chart result")
-    chart = result[0]
-    meta = chart.get("meta") or {}
-    candles = parse_yahoo_candles(chart, quote_kind)
-
-    live_price = convert_yield(number(meta.get("regularMarketPrice")), quote_kind)
-    market_timestamp = meta.get("regularMarketTime")
-    market_date = date_from_timestamp(market_timestamp, market)
-    reference = daily_reference(candles, live_price, market_date)
-    if reference["previous_close"] is None:
-        fallback_previous = convert_yield(number(meta.get("regularMarketPreviousClose") or meta.get("previousClose")), quote_kind)
-        if fallback_previous is not None:
-            reference["previous_close"] = fallback_previous
-            reference["change"] = reference["price"] - fallback_previous if reference["price"] is not None else None
-            reference["change_percent"] = reference["change"] / fallback_previous * 100 if fallback_previous else None
-            reference["previous_reference_date"] = "source-meta"
-    latest = candles[-1] if candles else {}
-    market_at = iso_from_timestamp(market_timestamp) or NOW.isoformat(timespec="seconds")
-    row = {
-        "symbol": symbol,
-        "name": name,
-        "market": market,
-        "quote_kind": quote_kind,
-        "price": reference["price"],
-        "previous_close": reference["previous_close"],
-        "change": reference["change"],
-        "change_percent": reference["change_percent"],
-        "reference_date": reference["reference_date"],
-        "previous_reference_date": reference["previous_reference_date"],
-        "change_basis": "adjacent-daily-candles",
-        "open": latest.get("open") if latest else convert_yield(number(meta.get("regularMarketOpen")), quote_kind),
-        "high": latest.get("high") if latest else convert_yield(number(meta.get("regularMarketDayHigh")), quote_kind),
-        "low": latest.get("low") if latest else convert_yield(number(meta.get("regularMarketDayLow")), quote_kind),
-        "close": latest.get("close") if latest else reference["price"],
-        "volume": latest.get("volume") if latest else number(meta.get("regularMarketVolume")),
-        "currency": meta.get("currency"),
-        "market_at": market_at,
-        "display_suffix": "%" if quote_kind == "yield" else "",
-        "candles": candles if symbol in KLINE_SYMBOLS else [],
-        "candle_count": len(candles) if symbol in KLINE_SYMBOLS else 0,
-        "candle_interval": "1d" if symbol in KLINE_SYMBOLS else None,
-        "candle_range": "3mo" if symbol in KLINE_SYMBOLS else None,
-        "source": "Yahoo public chart API",
-        "candle_source": "Yahoo chart",
-        "data_status": "live",
-        "validation_status": "verified",
-    }
-    validate_market_row(row)
-    return row
+    return build_session_row(result[0], symbol, name, market, quote_kind)
 
 
 def month_start(year: int, month: int, offset: int) -> tuple[int, int]:
@@ -269,46 +345,30 @@ def parse_twse_payload(payload: Any) -> list[dict[str, Any]]:
     for row in raw_rows:
         if isinstance(row, dict):
             date = parse_roc_date(row.get("Date") or row.get("日期") or row.get("date"))
-            open_value = number(row.get("OpeningIndex") or row.get("開盤指數") or row.get("open"))
-            high_value = number(row.get("HighestIndex") or row.get("最高指數") or row.get("high"))
-            low_value = number(row.get("LowestIndex") or row.get("最低指數") or row.get("low"))
-            close_value = number(row.get("ClosingIndex") or row.get("收盤指數") or row.get("close"))
+            values = [
+                number(row.get("OpeningIndex") or row.get("開盤指數") or row.get("open")),
+                number(row.get("HighestIndex") or row.get("最高指數") or row.get("high")),
+                number(row.get("LowestIndex") or row.get("最低指數") or row.get("low")),
+                number(row.get("ClosingIndex") or row.get("收盤指數") or row.get("close")),
+            ]
         elif isinstance(row, (list, tuple)) and len(row) >= 5:
-            date = parse_roc_date(row[0])
-            open_value, high_value, low_value, close_value = map(number, row[1:5])
+            date = parse_roc_date(row[0]); values = list(map(number, row[1:5]))
         else:
             continue
-        if not date or any(value is None for value in (open_value, high_value, low_value, close_value)):
+        if not date or not valid_ohlc(*values):
             continue
-        parsed.append({
-            "date": date,
-            "open": open_value,
-            "high": high_value,
-            "low": low_value,
-            "close": close_value,
-            "volume": None,
-            "source": "TWSE official TAIEX history",
-        })
+        parsed.append({"date": date, "open": values[0], "high": values[1], "low": values[2], "close": values[3], "volume": None, "source": "TWSE official TAIEX history"})
     return parsed
 
 
 def fetch_twse_taiex(session: requests.Session, months: int = 4) -> list[dict[str, Any]]:
-    rows: dict[str, dict[str, Any]] = {}
-    errors: list[str] = []
+    rows: dict[str, dict[str, Any]] = {}; errors: list[str] = []
     for offset in range(months):
         year, month = month_start(NOW.year, NOW.month, offset)
-        date = f"{year:04d}{month:02d}01"
         try:
-            response = session.get(
-                TWSE_TAIEX,
-                params={"response": "json", "date": date},
-                headers=HEADERS,
-                timeout=18,
-            )
+            response = session.get(TWSE_TAIEX, params={"response": "json", "date": f"{year:04d}{month:02d}01"}, headers=HEADERS, timeout=18)
             response.raise_for_status()
-            payload = response.json()
-            for candle in parse_twse_payload(payload):
-                rows[candle["date"]] = candle
+            for candle in parse_twse_payload(response.json()): rows[candle["date"]] = candle
         except Exception as exc:
             errors.append(f"{year:04d}-{month:02d}: {exc}")
     if not rows:
@@ -316,90 +376,61 @@ def fetch_twse_taiex(session: requests.Session, months: int = 4) -> list[dict[st
     return [rows[key] for key in sorted(rows)][-CANDLE_LIMIT:]
 
 
-def merge_candles(primary: list[dict[str, Any]], fallback: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    merged = {row.get("date"): row for row in fallback if row.get("date")}
-    for row in primary:
-        if row.get("date"):
-            merged[row["date"]] = row
-    return [merged[key] for key in sorted(merged)][-CANDLE_LIMIT:]
-
-
 def enrich_taiex_with_twse(session: requests.Session, yahoo_row: dict[str, Any]) -> dict[str, Any]:
     official = fetch_twse_taiex(session)
-    candles = merge_candles(official, yahoo_row.get("candles") or [])
-    latest = candles[-1] if candles else {}
-    market_date = str(yahoo_row.get("market_at") or "")[:10] or (latest.get("date") if latest else None)
-    reference = daily_reference(candles, number(yahoo_row.get("price")), market_date)
+    # Preserve Yahoo's current-session candle when TWSE's completed history has
+    # not published that session yet.
+    yahoo_candles = yahoo_row.get("candles") or []
+    candles = merge_candles(official, yahoo_candles)
+    session_date = str(yahoo_row.get("session_date") or "")
+    display = next((row for row in reversed(candles) if str(row.get("date")) == session_date), None)
+    if display is None:
+        raise ValueError("TWSE/Yahoo session date mismatch")
     row = {
         **yahoo_row,
-        "price": reference["price"],
-        "previous_close": reference["previous_close"],
-        "change": reference["change"],
-        "change_percent": reference["change_percent"],
-        "reference_date": reference["reference_date"],
-        "previous_reference_date": reference["previous_reference_date"],
-        "change_basis": "adjacent-official-daily-candles",
-        "open": latest.get("open") if latest.get("open") is not None else yahoo_row.get("open"),
-        "high": latest.get("high") if latest.get("high") is not None else yahoo_row.get("high"),
-        "low": latest.get("low") if latest.get("low") is not None else yahoo_row.get("low"),
-        "close": latest.get("close") if latest.get("close") is not None else yahoo_row.get("close") or reference["price"],
         "candles": candles,
         "candle_count": len(candles),
-        "source": "TWSE official history + Yahoo quote",
-        "candle_source": "TWSE official TAIEX history",
-        "data_status": "live",
-        "validation_status": "verified",
+        "candle_source": "TWSE official history + Yahoo same-session live candle",
+        "source": "TWSE official history + Yahoo live quote",
     }
     validate_market_row(row)
     return row
 
 
-def cached_row(previous: dict[str, Any], name: str, market: str, quote_kind: str, error: str) -> dict[str, Any]:
+def cached_row(previous: dict[str, Any] | None, name: str, market: str, quote_kind: str, error: str) -> dict[str, Any]:
+    if not previous:
+        return empty_row("", name, market, quote_kind, error)
     return {
         **previous,
         "name": name,
         "market": market,
         "quote_kind": quote_kind,
         "data_status": "cached",
+        "freshness_status": "stale",
+        "stale_reason": f"最新資料驗證失敗，保留上次正確資料：{error[:260]}",
         "last_error": error[:500],
-        "validation_status": previous.get("validation_status", "cached") if previous else "cached",
+        "validation_status": "cached-last-verified",
     }
 
 
 def empty_row(symbol: str, name: str, market: str, quote_kind: str, error: str) -> dict[str, Any]:
     return {
-        "symbol": symbol,
-        "name": name,
-        "market": market,
-        "quote_kind": quote_kind,
-        "price": None,
-        "previous_close": None,
-        "change": None,
-        "change_percent": None,
-        "open": None,
-        "high": None,
-        "low": None,
-        "close": None,
-        "volume": None,
-        "market_at": None,
-        "display_suffix": "%" if quote_kind == "yield" else "",
-        "candles": [],
-        "candle_count": 0,
+        "symbol": symbol, "name": name, "market": market, "quote_kind": quote_kind,
+        "price": None, "previous_close": None, "change": None, "change_percent": None,
+        "open": None, "high": None, "low": None, "close": None, "volume": None,
+        "market_at": None, "display_suffix": "%" if quote_kind == "yield" else "",
+        "candles": [], "candle_count": 0,
         "candle_interval": "1d" if symbol in KLINE_SYMBOLS else None,
         "candle_range": "3mo" if symbol in KLINE_SYMBOLS else None,
-        "data_status": "waiting",
-        "validation_status": "unavailable",
-        "last_error": error[:500],
+        "data_status": "waiting", "freshness_status": "unavailable",
+        "validation_status": "unavailable", "last_error": error[:500],
     }
 
 
 def main() -> None:
     old = read_json(DATA / "market-snapshot.json", {"items": []})
     old_by_symbol = {str(row.get("symbol")): row for row in old.get("items") or []}
-    session = requests.Session()
-    rows: list[dict[str, Any]] = []
-    warnings: list[str] = []
-
+    session = requests.Session(); rows: list[dict[str, Any]] = []; warnings: list[str] = []
     for symbol, name, market, quote_kind in SYMBOLS:
         previous = old_by_symbol.get(symbol)
         try:
@@ -409,30 +440,32 @@ def main() -> None:
                     row = enrich_taiex_with_twse(session, row)
                 except Exception as exc:
                     warnings.append(f"TWSE ^TWII: {exc}")
-                    row["candle_source"] = "Yahoo chart fallback"
-                    row["source"] = "Yahoo public chart API (TWSE unavailable)"
+                    row["candle_source"] = "Yahoo same-session chart fallback"
+                    row["source"] = "Yahoo public chart API (TWSE history unavailable)"
             if symbol in KLINE_SYMBOLS and len(row.get("candles") or []) < 10 and previous:
-                old_candles = previous.get("candles") or []
-                row["candles"] = merge_candles(row.get("candles") or [], old_candles)
+                row["candles"] = merge_candles(row.get("candles") or [], previous.get("candles") or [])
                 row["candle_count"] = len(row["candles"])
             validate_market_row(row)
             rows.append(row)
         except Exception as exc:
-            warning = f"{symbol}: {exc}"
-            warnings.append(warning)
-            rows.append(cached_row(previous, name, market, quote_kind, warning) if previous else empty_row(symbol, name, market, quote_kind, warning))
+            warning = f"{symbol}: {exc}"; warnings.append(warning)
+            cached = cached_row(previous, name, market, quote_kind, warning) if previous else empty_row(symbol, name, market, quote_kind, warning)
+            cached["symbol"] = symbol
+            rows.append(cached)
 
     payload = {
         "metadata": {
             "version": VERSION,
             "updated_at": NOW.isoformat(timespec="seconds"),
-            "source": "TWSE official TAIEX history + Yahoo public chart API",
+            "source": "TWSE official TAIEX history + Yahoo same-session quote/OHLC",
             "warnings": warnings,
             "kline_symbols": sorted(KLINE_SYMBOLS),
             "kline_interval": "1d",
             "kline_range": "3mo",
-            "note": "Daily change is calculated only from adjacent daily sessions, never Yahoo chartPreviousClose. Invalid arithmetic or OHLC is rejected before publication.",
-            "quality_policy": "fail-closed-on-invalid-ohlc-or-change",
+            "supported_intervals": ["5m", "15m", "30m", "60m", "4h", "1d", "1wk", "1mo"],
+            "note": "Price, change and OHLC must share one exchange session. Mixed-session or stale intraday payloads fail closed.",
+            "quality_policy": "fail-closed-on-mixed-session-stale-or-invalid-ohlc",
+            "polling_policy": "one-minute while any tracked market is open; fifteen-minute off-session health checks; GitHub Actions is fallback only",
         },
         "items": rows,
     }

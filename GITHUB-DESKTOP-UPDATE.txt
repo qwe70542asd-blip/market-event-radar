@@ -1,13 +1,12 @@
-市場事件雷達 v11.4.20 覆蓋方式
+市場事件雷達 v11.4.21 覆蓋方式
 
-1. 在 GitHub Desktop 選擇 market-event-radar repository。
-2. 點 Repository → Show in Explorer。
-3. 解壓本 ZIP，將 ZIP 內全部檔案與資料夾複製到 repository 根目錄。
-4. 選擇覆蓋同名檔案，不要刪除 .git 資料夾。
-5. 回到 GitHub Desktop，Summary 填 Update to v11.4.20。
+1. GitHub Desktop 選擇 market-event-radar repository。
+2. Repository → Show in Explorer。
+3. 解壓 ZIP，將全部檔案與資料夾複製到 repository 根目錄。
+4. 覆蓋同名檔案，但不要刪除 .git。
+5. Summary 填 Update to v11.4.21。
 6. Commit to main，再按 Push origin。
-7. 等待 global market、event calendar、stock basics 與各新聞 Actions 執行完成。
-8. Actions 若因資料驗證失敗而停止，代表該批資料不會發布；網站會保留上次通過驗證的資料。
-9. 若頁面仍顯示舊版，重新整理一次；v11.4.20 Service Worker 會清除舊快取。
+7. 等待 global market、event calendar、stock basics 與新聞 Actions 完成。
+8. 頁面若仍顯示舊版，重新整理；v11.4.21 Service Worker 會清除舊快取。
 
-本版重點：修正指數漲跌、日曆日期、BLS/BEA 排程、新聞股票誤判，並分開顯示公司主檔與財務資料完整度。
+重要：GitHub Actions 只能作五分鐘級備援。要達成盤中每分鐘檢查，請依 docs/V11.4.21-live-market.md 部署 edge/market-live-worker.js，並把 Worker 網址填入 assets/runtime-config.js。

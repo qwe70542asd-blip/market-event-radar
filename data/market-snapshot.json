@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "version": "v11.4.20",
+    "version": "v11.4.21",
     "updated_at": null,
     "source": "TWSE official TAIEX history + Yahoo public chart API",
     "note": "Daily change is calculated only from adjacent daily sessions, never Yahoo chartPreviousClose. Invalid arithmetic or OHLC is rejected before publication.",

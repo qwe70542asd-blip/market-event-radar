@@ -1,21 +1,23 @@
 {
-  "version": "v11.4.20",
-  "validated_at": "2026-08-05T18:06:00+08:00",
-  "tests": 85,
+  "version": "v11.4.21",
+  "validated_at": "2026-08-06T17:52:00+08:00",
+  "tests": 92,
   "status": "passed",
   "checks": [
-    "Daily index changes use adjacent trading sessions",
-    "Market arithmetic and OHLC validation block invalid publication",
+    "Price, change and displayed OHLC must share one exchange session",
+    "Live price must be between the same-session high and low",
+    "Open-market data older than three minutes is marked stale",
+    "The browser checks every 60 seconds while tracked markets are open and every 15 minutes off-session",
+    "The included Cloudflare Worker supports one-minute market-specific scheduled refresh",
+    "Interactive K-line controls cover 5m, 15m, 30m, 1h, 4h, day, week and month",
+    "Homepage featured information is limited to today, tomorrow, the following day and recent 24-hour breaking news",
+    "TWSE and TPEx historical ex-dividend backfill starts at 2026-01-01",
     "Material-event dates use labeled event dates or official announcement dates",
-    "Financial reporting-period dates cannot become calendar event dates",
-    "BLS official annual HTML fallback and BEA full schedule parser are present",
     "News symbols must exist in the official full-market master",
-    "Longest company-name matching prevents overlapping aliases",
-    "Company-master and financial-data coverage are separate",
-    "Seed datasets pass the strict public-data validator",
-    "Python compilation, JavaScript syntax, workflow YAML and automated tests passed"
+    "Python compilation, JavaScript syntax, workflow YAML, seed validation and automated tests passed"
   ],
   "notes": [
-    "No internet data system can honestly guarantee zero external-source errors. This version fails closed: detected inconsistencies are withheld instead of displayed."
+    "GitHub Actions remains a five-minute fallback and archive channel; guaranteed one-minute checks require deploying the included edge worker and setting assets/runtime-config.js.",
+    "Detected inconsistencies are withheld instead of displayed."
   ]
 }

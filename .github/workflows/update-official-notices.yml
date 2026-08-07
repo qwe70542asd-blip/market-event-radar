@@ -1,4 +1,4 @@
-name: Update v11.4.20 official market notices
+name: Update v11.4.21 official market notices
 on:
   push:
     branches: [main]
