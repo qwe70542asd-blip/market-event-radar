@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build Market Event Radar v11.4.22 event data from official schedules.
+"""Build Market Event Radar v11.4.24 event data from official schedules.
 
 The updater keeps the last verified archive, refreshes selected official sources,
 and records when an exact date first appears or changes. It never invents dates.
@@ -37,7 +37,7 @@ ARCHIVE_START = date(2026, 1, 1)
 ARCHIVE_START_DT = datetime.combine(ARCHIVE_START, time.min, tzinfo=TAIPEI)
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.22; +https://github.com/qwe70542asd-blip/market-event-radar)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.24; +https://github.com/qwe70542asd-blip/market-event-radar)",
     "Accept-Language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
 }
 TWSE_EXDIV_URL = "https://openapi.twse.com.tw/v1/exchangeReport/TWT48U_ALL"
@@ -877,7 +877,7 @@ def main() -> None:
     )
     payload = {
         "metadata": {
-            "version": "v11.4.22",
+            "version": "v11.4.24",
             "updated_at": NOW.isoformat(timespec="seconds"),
             "timezone": "Asia/Taipei",
             "event_count": len(events),
@@ -896,7 +896,7 @@ def main() -> None:
     EVENTS_PATH.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     SEED_PATH.write_text("window.__EVENT_SEED__ = " + json.dumps(payload, ensure_ascii=False) + ";\n", encoding="utf-8")
     STATE_PATH.write_text(json.dumps({
-        "version": "v11.4.22", "initialized": True,
+        "version": "v11.4.24", "initialized": True,
         "initialized_origins": sorted(next_initialized_origins),
         "updated_at": NOW.isoformat(timespec="seconds"), "events": next_state,
     }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

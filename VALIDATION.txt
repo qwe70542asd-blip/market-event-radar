@@ -1,25 +1,13 @@
-Market Event Radar v11.4.22 validation
+Market Event Radar v11.4.24 validation
 
-PASS  99 automated tests
-PASS  strict public-data validator
-PASS  Python compilation
-PASS  JavaScript syntax
-PASS  27 GitHub Actions YAML files parsed
-PASS  HTTP smoke: 7 pages / 41 referenced assets
-
-Key verified changes
-- Six index order: TAIEX, Dow, NASDAQ, SOX, S&P 500, Nikkei 225
-- KOSPI/KOSDAQ cards removed
-- Ten-company sector leader vertical ticker
-- Static multi-interval K-line fallback channel
-- Session-safe 4-hour candle aggregation
-- Data-verification list/dict crash fixed
-- Industry-code 9103 leak fixed
-- Invalid news-code 8923 tagging fixed
-- Event TXT/JSON direct-download behavior removed
-- Immediate local news-image fallback
-- ETF industry and previous-date holdings change support
-- Public crypto assets removed
-
-Online note
-The package includes a GitHub Actions release-verification workflow. The local HTTP integration suite passed, but third-party live source availability can only be confirmed after the user pushes the package and the first online workflows complete.
+- 105 automated tests passed
+- Dynamic Taiwan leader behavior test passed
+- Strict public-data validation passed
+- Python and JavaScript syntax checks passed
+- 27 workflow YAML files parsed
+- HTTP smoke: 7 pages, 42 referenced assets
+- Fixed ten-stock ticker removed
+- Full-market dynamic scoring with 15-minute stable selection
+- Maximum two stocks per industry; at least six industries when data permits
+- Fixed leader equities removed from market snapshot
+- Edge worker index set and 4-hour session aggregation corrected

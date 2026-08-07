@@ -1,32 +1,31 @@
 {
-  "version": "v11.4.22",
-  "validated_at": "2026-08-07T08:58:00+08:00",
-  "status": "local-integration-passed",
-  "tests": 99,
+  "version": "v11.4.24",
+  "validated_at": "2026-08-07T10:28:00+08:00",
+  "status": "local-release-candidate-passed",
+  "tests": 105,
   "http_pages": 7,
-  "http_assets": 41,
+  "http_assets": 42,
   "workflow_yaml_files": 27,
   "checks": [
-    "All 99 automated tests passed",
+    "All 105 automated tests passed",
+    "The dynamic Taiwan leader selection engine passed behavioral tests with ten results, at least six industries and no more than two stocks per industry",
     "Strict public-data validation passed",
     "Python scripts compiled successfully",
     "JavaScript syntax checks passed",
-    "All GitHub Actions workflow YAML files parsed successfully",
-    "HTTP smoke test passed for seven public pages and 41 referenced assets",
-    "The six index cards are TAIEX, Dow Jones, NASDAQ, Philadelphia Semiconductor, S&P 500 and Nikkei 225 in the requested order",
-    "KOSPI and KOSDAQ index cards are removed",
-    "The homepage top market summary is a ten-stock sector-grouped vertical leader ticker",
-    "Multi-interval K-lines use a GitHub-published static fallback channel before browser-side provider access",
-    "Four-hour candles are separated by exchange session and trading date",
-    "Known GitHub Actions failures for list/object verification, industry code 9103 and news code 8923 are fixed in code and covered by tests",
-    "Raw TXT/JSON announcement sources no longer trigger direct downloads from the event page",
-    "News cards display an immediate local topic image while remote images load",
-    "ETF holdings can show industry and previous-available-date share changes",
-    "Cryptocurrency assets are removed from the public asset master"
+    "All 27 GitHub Actions workflow YAML files parsed successfully",
+    "HTTP smoke test passed for seven public pages and 42 referenced assets",
+    "The homepage leader ticker no longer contains a fixed ten-stock list",
+    "The ticker ranks the full Taiwan stock market by market capitalization, trading value, volume, price movement, institutional flow, recent news and industry leadership",
+    "The selected list is held stable for each 15-minute bucket while prices continue to refresh",
+    "At most two stocks are selected from one industry and the selector prioritizes at least six industries when data permits",
+    "Fixed Taiwan leader equities were removed from the global market snapshot publisher and bundled seed",
+    "The six index cards remain TAIEX, Dow Jones, NASDAQ, Philadelphia Semiconductor, S&P 500 and Nikkei 225 in the requested order",
+    "The edge worker no longer contains KOSPI/KOSDAQ and uses session-aware four-hour aggregation",
+    "The release uses new v11.4.24 asset URLs and cache keys so earlier JavaScript cannot remain pinned by the browser"
   ],
   "notes": [
     "The included release-verification GitHub Actions workflow repeats syntax, strict-data, test and HTTP checks after the package is pushed to main.",
-    "This offline build environment cannot truthfully certify third-party live endpoints. Their first real online run must be confirmed in GitHub Actions after push.",
-    "Guaranteed one-minute backend updates still require deploying the included edge worker and setting assets/runtime-config.js. GitHub Actions remains the scheduled fallback."
+    "This offline build environment cannot certify third-party live endpoints. Their first real online run must still be confirmed in GitHub Actions after push.",
+    "Guaranteed one-minute backend index updates still require deploying the included edge worker and setting assets/runtime-config.js. GitHub Actions remains the scheduled fallback."
   ]
 }

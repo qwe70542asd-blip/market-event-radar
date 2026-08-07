@@ -1,7 +1,8 @@
 {
-  "version": "v11.4.22",
-  "name": "app-integration-hardening",
+  "version": "v11.4.24",
+  "name": "dynamic-taiwan-industry-leaders",
   "released_at": "2026-08-07",
-  "stage": "integrated",
-  "baseline_version": "11.4.22"
+  "stage": "release-candidate",
+  "baseline_version": "11.4.24",
+  "release_name": "dynamic-taiwan-industry-leaders"
 }

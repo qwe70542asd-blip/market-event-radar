@@ -1,4 +1,4 @@
-name: Update v11.4.22 科技新報／財經新報 news
+name: Update v11.4.24 科技新報／財經新報 news
 on:
   push:
     branches: [main]

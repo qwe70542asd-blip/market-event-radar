@@ -59,8 +59,16 @@ def parse_history_google_news(cfg,aliases,profiles):
    if item:items.append(item)
  return items,{"enabled":True,"queries":queries,"items":len(items),"archive_start":HISTORY_START.isoformat()}
 
+
+GENERIC_IMAGE_RE=re.compile(r"(?:og-image|default(?:_og)?|logo|placeholder|no[-_]?image|blank|icon|avatar|sprite|favicon)(?:[._/-]|$)",re.I)
+
+def usable_image_url(value:Any)->str|None:
+ url=direct_url(value) if value else None
+ if not url or GENERIC_IMAGE_RE.search(url):return None
+ return url
+
 def image_value(value:Any)->str|None:
- if isinstance(value,str):return value
+ if isinstance(value,str):return usable_image_url(value)
  if isinstance(value,list):
   for row in value:
    found=image_value(row)
@@ -106,9 +114,9 @@ def resolve_google_news(session,url):
 def rss_image(entry):
  for key in ("media_content","media_thumbnail","enclosures"):
   for row in entry.get(key,[]) or []:
-   if isinstance(row,dict) and row.get("url"):return row["url"]
+   if isinstance(row,dict) and usable_image_url(row.get("url")):return usable_image_url(row.get("url"))
  image=entry.get("image")
- if isinstance(image,dict):return image.get("href") or image.get("url")
+ if isinstance(image,dict):return usable_image_url(image.get("href") or image.get("url"))
  return None
 
 IMAGE_META_SELECTORS=(
@@ -121,16 +129,22 @@ def article_image_from_soup(soup,base):
  for selector,attribute in IMAGE_META_SELECTORS:
   node=soup.select_one(selector)
   if node:
-   found=direct_url(node.get(attribute),base)
+   found=usable_image_url(direct_url(node.get(attribute),base))
    if found:return found
  for script in soup.select('script[type="application/ld+json"]'):
   try:data=json.loads(script.string or script.get_text())
   except Exception:continue
-  found=direct_url(image_value(data.get("image")) if isinstance(data,dict) else None,base)
+  candidate=image_value(data.get("image")) if isinstance(data,dict) else image_value(data)
+  found=usable_image_url(direct_url(candidate,base))
   if found:return found
  for img in soup.find_all("img"):
   raw=img.get("src") or img.get("data-src") or img.get("data-original") or img.get("data-lazy-src")
-  found=direct_url(raw,base)
+  if not raw:
+   srcset=img.get("srcset") or img.get("data-srcset")
+   if srcset:
+    candidates=[part.strip().split(" ")[0] for part in str(srcset).split(",") if part.strip()]
+    raw=candidates[-1] if candidates else None
+  found=usable_image_url(direct_url(raw,base))
   if not found:continue
   marker=f"{found} {img.get('class') or ''} {img.get('alt') or ''}".lower()
   if any(word in marker for word in ("logo","icon","avatar","sprite","loading","blank","advert","banner")):continue
@@ -148,10 +162,12 @@ def fallback_image_slug(title:Any,summary:Any="",category:Any=""):
   if re.search(pattern,text,re.I):return slug
  return "stock"
 
-def enrich_article_images(session,items,limit=24):
+def enrich_article_images(session,items,limit=48):
  cache={};attempts=0
  for item in items:
-  if item.get("image_url"):continue
+  if usable_image_url(item.get("image_url")):
+   item["image_url"]=usable_image_url(item.get("image_url"));continue
+  item.pop("image_url",None)
   url=item.get("url")
   if not url or attempts>=limit:break
   if url in cache:
@@ -165,6 +181,7 @@ def enrich_article_images(session,items,limit=24):
     soup=BeautifulSoup(decode_response(response),"lxml")
     found=article_image_from_soup(soup,response.url or url)
   except Exception:pass
+  found=usable_image_url(found)
   cache[url]=found
   if found:item["image_url"]=found
   if not item.get("fallback_image_slug"):
@@ -182,7 +199,7 @@ def parse_rss(cfg,aliases,profiles):
    publisher=clean_text((entry.get("source") or {}).get("title") if isinstance(entry.get("source"),dict) else "") or cfg["name"]
    item=normalize_item(title=title,url=url,source_id=cfg["id"],source_name=publisher if cfg["id"]=="asia-risk" else cfg["name"],summary=entry.get("summary") or entry.get("description"),published_at=entry.get("published") or entry.get("updated"),aliases=aliases,profiles=profiles,forced_scope="media",extra={"image_url":rss_image(entry),"discovery_source":"google-news-search" if "news.google." in str(entry.get("link") or "") else "direct-feed","discovery_channel":cfg["name"],"publisher":publisher})
    if item:items.append(item)
- return enrich_article_images(session,items,int(cfg.get("image_fetch_limit",24)))
+ return enrich_article_images(session,items,int(cfg.get("image_fetch_limit",48)))
 
 def nearest_date(text:str):
  for p in [r"20\d{2}[/-]\d{1,2}[/-]\d{1,2}\s+\d{1,2}:\d{2}",r"20\d{2}[/-]\d{1,2}[/-]\d{1,2}"]:
@@ -219,7 +236,7 @@ def parse_html(cfg,aliases,profiles):
    image=direct_url(img.get("src") or img.get("data-src") or img.get("data-original"),page) if img else None
    item=normalize_item(title=title,url=href,source_id=cfg["id"],source_name=cfg["name"],summary=summary,published_at=nearest_date(context),aliases=aliases,profiles=profiles,forced_scope="media",extra={"image_url":image})
    if item:items.append(item)
- return enrich_article_images(session,items,int(cfg.get("image_fetch_limit",24)))
+ return enrich_article_images(session,items,int(cfg.get("image_fetch_limit",48)))
 
 def main():
  ap=argparse.ArgumentParser();ap.add_argument("--channel",required=True);args=ap.parse_args()
