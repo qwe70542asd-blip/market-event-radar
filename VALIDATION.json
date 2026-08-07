@@ -1,5 +1,5 @@
 {
-  "version": "v11.4.26",
+  "version": "v11.4.27",
   "validated_at": "2026-08-07T17:01:46+08:00",
   "status": "local-release-candidate-passed-with-post-deploy-15m-check",
   "tests": 113,
@@ -22,7 +22,7 @@
     "Generic logos, default OG images and placeholders are rejected before publication",
     "Nikkei official Daily Data CSV parser passed a regression fixture and completed sessions can be cross-validated",
     "No bundled m4a/mp3/wav files, obvious embedded secrets, eval(), document.write(), or target=_blank links lacking noopener were found",
-    "Release data-channel metadata is v11.4.26"
+    "Release data-channel metadata is v11.4.27"
   ],
   "skipped_post_deploy_checks": [
     "15-minute K-line runtime availability: external Yahoo/Edge Worker dependency; explicitly non-blocking locally and must be checked after deployment",

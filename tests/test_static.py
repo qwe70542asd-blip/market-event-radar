@@ -7,14 +7,14 @@ class StaticTests(unittest.TestCase):
  def test_required_tree(self):
   for path in [".github/workflows","assets","data","docs","scripts","tests","index.html","news.html","asset.html","service-worker.js"]:self.assertTrue((ROOT/path).exists(),path)
  def test_version(self):
-  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.26")
+  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.28")
  def test_ascii_filenames(self):
   for path in ROOT.rglob("*"):self.assertTrue(all(ord(c)<128 for c in path.name),path)
  def test_no_audio(self):
   self.assertFalse(any(p.suffix.lower() in {".m4a",".mp3",".wav"} for p in ROOT.rglob("*")))
  def test_home_market_focus(self):
   html=self.read("index.html")
-  for token in ("我的資產總覽","台股今日產業強弱","balanced-summary-row","marketList"):self.assertIn(token,html)
+  for token in ("我的資產總覽","今日台股狀態","balanced-summary-row","marketStateSummary","foreignDirectionDetail"):self.assertIn(token,html)
   self.assertNotIn("虛擬貨幣即時排行",html)
  def test_calendar_grouped(self):
   html=self.read("index.html");js=self.read("assets/home.js")
@@ -81,18 +81,18 @@ class StaticTests(unittest.TestCase):
   texts="\n".join(self.read(p.relative_to(ROOT)) for p in (ROOT/".github/workflows").glob("update-news-*.yml"))
   for branch in ("live-news-cna","live-news-moneydj","live-news-cnyes","live-news-udn","live-news-ltn","live-news-wealth","live-news-yahoo","live-news-technews","live-news-ctee","live-news-asia-risk"):self.assertIn(branch,texts)
  def test_service_worker_cache(self):
-  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-26",sw)
+  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-28",sw)
   for seed in ("news-cna-seed.js","news-moneydj-seed.js","news-wealth-seed.js","news-yahoo-seed.js","news-technews-seed.js","news-ctee-seed.js","news-asia-risk-seed.js","stock-news-seed.js","company-disclosures-seed.js","monthly-revenue-seed.js","dividend-history-seed.js","secondary-reference-seed.js","data-verification-seed.js","yahoo-details-seed.js","etf-details-seed.js","stock-basics-seed.js","market-volume-history-seed.js","market-kline-seed.js"):self.assertIn(seed,sw)
  def test_market_snapshot_seed_schema(self):
   payload=json.loads(self.read("data/market-snapshot.json"))
-  self.assertEqual(payload.get("metadata",{}).get("version"),"v11.4.26")
+  self.assertEqual(payload.get("metadata",{}).get("version"),"v11.4.28")
   self.assertEqual(set(payload.get("metadata",{}).get("kline_symbols",[])),{"^TWII","^DJI","^IXIC","^SOX","^GSPC","^N225"})
   self.assertNotIn("^TWOII",{row.get("symbol") for row in payload.get("items",[])})
 
  def test_all_pages_current_version(self):
   for p in ROOT.glob("*.html"):
    body=p.read_text(encoding="utf-8")
-   self.assertIn("v11.4.26",body,p.name)
+   self.assertIn("v11.4.28",body,p.name)
    self.assertNotIn("v11.4.15",body,p.name)
 
 
@@ -155,7 +155,7 @@ class StaticTests(unittest.TestCase):
 
  def test_balanced_portfolio_summary_layout(self):
   css=self.read("assets/styles.css")
-  for token in ("v11.4.26 portfolio summary balance","grid-template-columns:repeat(3,minmax(0,1fr))","grid-template-rows:repeat(2,minmax(78px,1fr))","justify-content:center"):
+  for token in ("v11.4.28 portfolio summary balance","grid-template-columns:repeat(3,minmax(0,1fr))","grid-template-rows:repeat(2,minmax(78px,1fr))","justify-content:center"):
    self.assertIn(token,css)
 
  def test_home_summary_and_volume_momentum(self):
@@ -378,11 +378,11 @@ class StaticTests(unittest.TestCase):
   self.assertIn('(\"^DJI\", \"道瓊工業平均指數\"',market)
   self.assertNotIn('(\"^KS11\",',market);self.assertNotIn('(\"^KQ11\",',market)
 
- def test_v11425_taiwan_sector_heat_cards(self):
-  html=self.read("index.html");home=self.read("assets/home.js");market=self.read("scripts/update_market_snapshot.py");css=self.read("assets/styles.css");engine=self.read("assets/dynamic-leaders.js")
-  for token in ("台股今日產業強弱","sector-heat-grid","sector-heat-card","selectDynamicLeaders","buildSectorHeatGroups","全市場動態評分"):self.assertIn(token,html+home+css+engine)
+ def test_v11428_sector_heat_removed_from_home_but_classifier_retained(self):
+  html=self.read("index.html");home=self.read("assets/home.js");market=self.read("scripts/update_market_snapshot.py");engine=self.read("assets/dynamic-leaders.js")
+  self.assertIn("今日台股狀態",html);self.assertNotIn('id="marketList"',html);self.assertNotIn("台股今日產業強弱",html)
   for forbidden in ("LEADER_META","leader_ticker",'"leader_order":',"const TW_LEADERS") :self.assertNotIn(forbidden,market+home)
-  for token in ("半導體","AI 伺服器／電腦","散熱","網通／高速傳輸","PCB／載板","記憶體／儲存"):self.assertIn(token,engine)
+  for token in ("半導體","AI 伺服器／電腦","散熱","網通／高速傳輸","PCB／載板","記憶體／儲存","INDUSTRY_CODE_MAP"):self.assertIn(token,engine)
   self.assertIn("const official=",engine);self.assertNotIn("classifySector(row,basic,signal.text)",engine)
 
  def test_v11422_static_multi_interval_kline_channel(self):
@@ -412,7 +412,7 @@ class StaticTests(unittest.TestCase):
  def test_v11424_release_verification_workflow(self):
   workflow=self.read(".github/workflows/release-verification.yml");smoke=self.read("scripts/http_smoke.py")
   for token in ("validate_public_data.py all","python -m pytest -q","http.server 8765","scripts/http_smoke.py"):self.assertIn(token,workflow)
-  for token in ("台股今日產業強弱","market-kline-seed.js","HTTP smoke passed"):self.assertIn(token,smoke)
+  for token in ("今日台股狀態","market-kline-seed.js","HTTP smoke passed"):self.assertIn(token,smoke)
 
  def test_v11424_home_news_is_photo_first_and_never_uses_old_news_as_filler(self):
   home=self.read("assets/home.js");shared=self.read("assets/shared.js")
@@ -426,15 +426,14 @@ class StaticTests(unittest.TestCase):
 
  def test_v11424_version_bump_prevents_same_version_asset_cache(self):
   for path in ("index.html","assets/shared.js","assets/home.js","assets/sw-register.js","service-worker.js","VERSION.json"):
-   content=self.read(path);self.assertIn("11.4.26",content);self.assertNotIn("11.4.23",content);self.assertNotIn("11.4.22",content)
+   content=self.read(path);self.assertIn("11.4.28",content);self.assertNotIn("11.4.23",content);self.assertNotIn("11.4.22",content)
 
- def test_v11425_dynamic_taiwan_sector_heat_is_not_fixed(self):
-  html=self.read("index.html");home=self.read("assets/home.js");engine=self.read("assets/dynamic-leaders.js");snapshot=self.read("scripts/update_market_snapshot.py")
-  for token in ("台股今日產業強弱","全市場動態評分","assets/dynamic-leaders.js"):self.assertIn(token,html)
-  for token in ("selectDynamicLeaders","buildSectorHeatGroups","leaderSelectionBucket","maxPerSector:2","minSectors:7","900000"):self.assertIn(token,home+engine)
-  self.assertNotIn("const TW_LEADERS",home)
+ def test_v11428_compact_market_state_replaces_sector_heat(self):
+  html=self.read("index.html");home=self.read("assets/home.js");snapshot=self.read("scripts/update_market_snapshot.py")
+  for token in ("今日台股狀態","盤勢方向","市場廣度","外資方向","成交動能","marketStateSummary"):self.assertIn(token,html)
+  for token in ("marketTone","breadthSummary","foreignDirectionDetail","volumeMomentum"):self.assertIn(token,home+html)
+  self.assertNotIn('id="marketList"',html);self.assertNotIn("台股今日產業強弱",html)
   for symbol in ("2330.TW","2454.TW","2317.TW","2382.TW","3017.TW","3324.TW","2345.TW","2368.TW","3037.TW","2408.TW"):self.assertNotIn(symbol,snapshot)
-  self.assertTrue((ROOT/"assets/dynamic-leaders.js").exists())
 
  def test_v11424_edge_worker_uses_current_six_indices(self):
   worker=self.read("edge/market-live-worker.js")
@@ -462,11 +461,10 @@ class StaticTests(unittest.TestCase):
   for token in ("newsImageCandidates","advanceNewsImage","data-candidates","remote-image-failed","no-referrer"):
    self.assertIn(token,shared)
 
- def test_v11426_news_grid_fills_width(self):
+ def test_v11428_featured_news_is_one_lead_plus_right_column(self):
   home=self.read("assets/home.js");css=self.read("assets/styles.css")
-  self.assertIn("home-news-compact-grid count-${Math.max(0,Math.min(featured.length,6))}",home)
-  for token in ("grid-template-columns:repeat(12,minmax(0,1fr))","count-5","grid-column:span 4"):
-   self.assertIn(token,css)
+  for token in ("home-news-feature-layout","home-feature-lead","home-feature-side-list","featured.slice(1,6)"):self.assertIn(token,home+css)
+  self.assertIn("grid-template-columns:minmax(0,1.75fr) minmax(330px,.85fr)",css)
 
  def test_v11426_industry_codes_are_normalized(self):
   engine=self.read("assets/dynamic-leaders.js")
@@ -479,8 +477,16 @@ class StaticTests(unittest.TestCase):
    self.assertIn(token,market)
 
  def test_v11426_15m_is_documented_as_post_deploy_nonblocking(self):
-  audit=self.read("docs/V11.4.26-release-audit.md")
+  audit=self.read("docs/V11.4.28-release-audit.md")
   for token in ("15 分鐘 K","非阻擋","部署後","不得偽造"):
    self.assertIn(token,audit)
+
+ def test_v11428_mobile_calendar_has_no_forced_horizontal_scroll(self):
+  css=self.read("assets/styles.css");html=self.read("index.html");manifest=json.loads(self.read("manifest.webmanifest"))
+  for token in (".calendar-weekdays,.calendar-grid{width:100%;min-width:0!important","overflow:visible!important","grid-template-columns:repeat(7,minmax(0,1fr))",".mobile-install-trigger","assets/pwa-install.js?v=11.4.28"):
+   self.assertIn(token,css+html)
+  self.assertEqual(manifest.get("display"),"standalone")
+  self.assertTrue(any(icon.get("sizes")=="192x192" for icon in manifest.get("icons",[])))
+  self.assertTrue(any(icon.get("sizes")=="512x512" for icon in manifest.get("icons",[])))
 
 if __name__=="__main__":unittest.main()

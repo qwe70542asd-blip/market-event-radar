@@ -1,4 +1,4 @@
-name: Update v11.4.26 中央社 news
+name: Update v11.4.28 中央社 news
 on:
   push:
     branches: [main]

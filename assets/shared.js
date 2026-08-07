@@ -49,9 +49,9 @@ async function loadBranchApi(name,branch){
  if(meta?.download_url)return await getJson(`${meta.download_url}${meta.download_url.includes("?")?"&":"?"}sha=${encodeURIComponent(meta.sha||Date.now())}`,11000);
  throw Error("GitHub contents API returned no JSON content");
 }
-const snapshotCacheKey="mr-market-snapshot-last-good-v11.4.26";
+const snapshotCacheKey="mr-market-snapshot-last-good-v11.4.28";
 const DATA_MEMORY=new Map();
-const dataCacheKey=name=>`mr-data-cache-v11.4.26:${name}`;
+const dataCacheKey=name=>`mr-data-cache-v11.4.28:${name}`;
 const dataCacheTtl=name=>["market-snapshot.json","market-kline.json","tw-market.json","events.json"].includes(name)?30000:300000;
 const snapshotCandleCount=row=>(Array.isArray(row?.candles)?row.candles:[]).filter(candle=>candle?.date&&[candle.open,candle.high,candle.low,candle.close].every(value=>finite(value)!=null)).length;
 function mergeSnapshotCache(payload){
@@ -94,14 +94,14 @@ function officialBasicRecord(row,endpoint){
  record.updated_at=new Date().toISOString();return record;
 }
 async function loadStockBasics(){
- const fallback=window.__STOCK_BASICS_SEED__||{metadata:{version:"v11.4.26",status:"waiting",item_count:0},items:{}};
+ const fallback=window.__STOCK_BASICS_SEED__||{metadata:{version:"v11.4.28",status:"waiting",item_count:0},items:{}};
  const payload=await loadData("stock-basics.json",fallback),items={...(payload.items||{})};
  if(Object.keys(items).length>=500)return payload;
  const settled=await Promise.allSettled(STOCK_BASIC_ENDPOINTS.map(async endpoint=>({endpoint,rows:await getJson(endpoint.url,15000)})));
  let added=0;
  for(const result of settled){if(result.status!=="fulfilled"||!Array.isArray(result.value.rows))continue;for(const row of result.value.rows){const record=officialBasicRecord(row,result.value.endpoint);if(!record)continue;items[record.symbol]={...(items[record.symbol]||{}),...record};added++}}
  const values=Object.values(items),average=values.length?values.reduce((sum,row)=>sum+Number(row.basic_coverage_percent||0),0)/values.length:0;
- return {...payload,metadata:{...(payload.metadata||{}),version:"v11.4.26",item_count:values.length,average_basic_coverage_percent:Math.round(average*10)/10,scope:"all-currently-listed-twse-and-tpex-stocks",browser_official_fallback_added:added},items};
+ return {...payload,metadata:{...(payload.metadata||{}),version:"v11.4.28",item_count:values.length,average_basic_coverage_percent:Math.round(average*10)/10,scope:"all-currently-listed-twse-and-tpex-stocks",browser_official_fallback_added:added},items};
 }
 async function loadNewsChannels(){
  const channels=await Promise.all(NEWS_FILES.map(async cfg=>{
@@ -114,10 +114,10 @@ async function loadNewsChannels(){
  for(const channel of channels){for(const item of channel.items||[]){const key=String(item.id||`${item.title||""}|${item.url||""}`);if(!key||seen.has(key))continue;seen.add(key);items.push(item)}}
  items.sort((a,b)=>Date.parse(b.published_at||b.date||0)-Date.parse(a.published_at||a.date||0));
  const updated=channels.map(c=>c.metadata?.updated_at).filter(Boolean).sort().pop()||null;
- return {metadata:{version:"v11.4.26",updated_at:updated,item_count:items.length,channel_count:channels.length},channels,items};
+ return {metadata:{version:"v11.4.28",updated_at:updated,item_count:items.length,channel_count:channels.length},channels,items};
 }
 async function loadStockNews(){
- const fallback=window.__STOCK_NEWS_SEED__||{metadata:{version:"v11.4.26",status:"waiting",item_count:0},items:[]};
+ const fallback=window.__STOCK_NEWS_SEED__||{metadata:{version:"v11.4.28",status:"waiting",item_count:0},items:[]};
  return await loadData("stock-news.json",fallback);
 }
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Update the isolated dividend-history channel for v11.4.26.
+"""Update the isolated dividend-history channel for v11.4.28.
 
 Current official dividend rows are merged with a bounded MOPS company batch.
 The main cursor advances even when individual companies fail; failures enter a
@@ -25,7 +25,7 @@ from update_assets import (
     text_value,
 )
 
-VERSION = "v11.4.26"
+VERSION = "v11.4.28"
 NEW_BATCH = 15
 RETRY_BATCH = 5
 MAX_RECORDS = 40

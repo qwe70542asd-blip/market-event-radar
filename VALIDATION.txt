@@ -1,4 +1,4 @@
-Market Event Radar v11.4.26 validation
+Market Event Radar v11.4.27 validation
 
 PASS: 113 automated tests
 PASS: strict public-data validation

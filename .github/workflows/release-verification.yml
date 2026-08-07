@@ -1,4 +1,4 @@
-name: Verify v11.4.26 app release
+name: Verify v11.4.28 app release
 on:
   push:
     branches: [main]

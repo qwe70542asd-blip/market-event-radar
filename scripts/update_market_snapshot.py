@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Refresh global-market quotes and continuous daily candlesticks.
 
-v11.4.26 data-quality policy
+v11.4.28 data-quality policy
 - A card may only combine price, change and OHLC from the same exchange session.
 - When Yahoo's live quote is newer than the last completed daily candle, the
   live-session OHLC comes from Yahoo meta fields; yesterday's daily candle is
@@ -23,9 +23,9 @@ import requests
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.26"
+VERSION = "v11.4.28"
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.26)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.28)",
     "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.6",
 }
 YAHOO_CHART = "https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"
@@ -154,7 +154,7 @@ def parse_yahoo_candles(chart: dict[str, Any], market: str, quote_kind: str | No
 def daily_reference(candles: list[dict[str, Any]], live_price: float | None, market_date: str | None = None) -> dict[str, Any]:
     """Compatibility helper for tests and downstream tools.
 
-    The v11.4.26 publisher uses same-session-price-vs-adjacent-close. This
+    The v11.4.28 publisher uses same-session-price-vs-adjacent-close. This
     helper preserves the old adjacent-daily-candles API without ever using
     Yahoo chartPreviousClose, which can refer to the beginning of a range.
     """
