@@ -1,4 +1,4 @@
-# 市場事件雷達 v11.4.28
+# 市場事件雷達 v11.4.29
 
 本版整合首頁台股產業熱度卡、行情新鮮度提示，以及即時／歷史新聞共用的文章原圖擷取流程。
 
@@ -16,16 +16,16 @@
 - 高影響、近期且缺圖的新聞優先抓取文章 OG Image、Twitter Image、JSON-LD、srcset 或內文主圖。
 - 網站共用 Logo、預設 OG 圖、placeholder、icon 與過小圖片不會被當成新聞照片。
 - 原圖確實不可用時才顯示本地主題備援圖。
-- 全站資源與快取版本升級至 v11.4.28，避免舊版首頁與新聞卡繼續留在瀏覽器。
+- 全站資源與快取版本升級至 v11.4.29，避免舊版首頁與新聞卡繼續留在瀏覽器。
 
 ## 覆蓋部署
 
 1. 解壓縮 ZIP。
 2. 將包內全部檔案直接覆蓋 repository 根目錄。
 3. 保留原本的 `.git` 資料夾。
-4. GitHub Desktop Commit：`market-event-radar-v11.4.28`。
+4. GitHub Desktop Commit：`market-event-radar-v11.4.29`。
 5. Push origin。
-6. 等待 `Verify v11.4.28 app release` 與各新聞工作流程完成。
+6. 等待 `Verify v11.4.29 app release` 與各新聞工作流程完成。
 
 歷史新聞照片會在 Push 後的新聞 Actions 重新處理；壓縮包本身不會假裝已完成第三方網站的線上抓圖。
 

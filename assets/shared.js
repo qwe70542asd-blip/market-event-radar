@@ -49,32 +49,69 @@ async function loadBranchApi(name,branch){
  if(meta?.download_url)return await getJson(`${meta.download_url}${meta.download_url.includes("?")?"&":"?"}sha=${encodeURIComponent(meta.sha||Date.now())}`,11000);
  throw Error("GitHub contents API returned no JSON content");
 }
-const snapshotCacheKey="mr-market-snapshot-last-good-v11.4.28";
+const snapshotCacheKeys=["mr-market-snapshot-last-good-v1","mr-market-snapshot-last-good-v11.4.29","mr-market-snapshot-last-good-v11.4.28","mr-market-snapshot-last-good-v11.4.27"];
+const snapshotCacheKey=snapshotCacheKeys[0];
 const DATA_MEMORY=new Map();
-const dataCacheKey=name=>`mr-data-cache-v11.4.28:${name}`;
+const dataCacheKey=name=>`mr-data-cache-v1:${name}`;
+const lastGoodKey=name=>`mr-data-last-good-v1:${name}`;
 const dataCacheTtl=name=>["market-snapshot.json","market-kline.json","tw-market.json","events.json"].includes(name)?30000:300000;
 const snapshotCandleCount=row=>(Array.isArray(row?.candles)?row.candles:[]).filter(candle=>candle?.date&&[candle.open,candle.high,candle.low,candle.close].every(value=>finite(value)!=null)).length;
+const loadStored=(keys=[])=>{for(const key of keys){try{const value=JSON.parse(localStorage.getItem(key)||"null");if(value)return value}catch(e){}}return null};
+const isUsablePayload=(name,payload)=>{
+ if(!payload||typeof payload!=="object")return false;
+ if(name==="market-snapshot.json")return (payload.items||[]).filter(row=>finite(row?.price)!=null&&snapshotCandleCount(row)>=10).length>=4;
+ if(name==="tw-market.json")return (payload.items||[]).filter(row=>finite(row?.price)!=null).length>=10;
+ if(name==="market-kline.json"){const items=payload.items||{};return !!payload.metadata?.updated_at&&typeof items==="object"&&Object.keys(items).length>0;}
+ if(name==="events.json")return Array.isArray(payload.events)&&payload.events.length>0;
+ if(Array.isArray(payload.items))return payload.items.length>0||!!payload.metadata?.updated_at;
+ if(payload.items&&typeof payload.items==="object")return Object.keys(payload.items).length>0||!!payload.metadata?.updated_at;
+ if(Array.isArray(payload.assets))return payload.assets.length>0;
+ return !!payload.metadata?.updated_at||Object.keys(payload).length>1;
+};
 function mergeSnapshotCache(payload){
- let cached=null;try{cached=JSON.parse(localStorage.getItem(snapshotCacheKey)||"null")}catch(e){}
+ const cached=loadStored(snapshotCacheKeys);
  if(!cached?.items?.length)return payload;
  const oldMap=new Map(cached.items.map(row=>[String(row.symbol||"").toUpperCase(),row]));
  const items=(payload?.items||[]).map(row=>{const old=oldMap.get(String(row.symbol||"").toUpperCase());if(snapshotCandleCount(row)>=10||!old)return row;return {...old,...row,candles:old.candles||[],candle_count:snapshotCandleCount(old),candle_source:`${row.candle_source||row.source||"線上行情"}／瀏覽器上次成功 K 線`,data_status:row.data_status==="live"?"cached-kline":row.data_status};});
  return {...payload,items};
 }
-function rememberSnapshot(payload){const wanted=new Set(["^TWII","^DJI","^IXIC","^SOX","^GSPC","^N225"]),good=(payload?.items||[]).filter(row=>wanted.has(String(row.symbol||"").toUpperCase())&&snapshotCandleCount(row)>=10).length;if(good>=4){try{localStorage.setItem(snapshotCacheKey,JSON.stringify(payload))}catch(e){}}}
+function rememberLastGood(name,payload){
+ if(!isUsablePayload(name,payload))return;
+ try{localStorage.setItem(lastGoodKey(name),JSON.stringify(payload));if(name==="market-snapshot.json")localStorage.setItem(snapshotCacheKey,JSON.stringify(payload))}catch(e){}
+}
+function readLastGood(name){
+ try{const value=JSON.parse(localStorage.getItem(lastGoodKey(name))||"null");if(isUsablePayload(name,value))return value}catch(e){}
+ for(const legacy of [`mr-data-cache-v11.4.28:${name}`,`mr-data-cache-v11.4.27:${name}`,`mr-data-cache-v11.4.26:${name}`]){try{const entry=JSON.parse(sessionStorage.getItem(legacy)||"null");if(isUsablePayload(name,entry?.payload)){rememberLastGood(name,entry.payload);return entry.payload}}catch(e){}}
+ if(name==="market-snapshot.json"){const value=loadStored(snapshotCacheKeys);if(isUsablePayload(name,value))return value}
+ return null;
+}
+async function loadRawBranch(name,branch,timeout=10000){return await getJson(`https://raw.githubusercontent.com/${OWNER}/${REPO}/${branch}/${name}?t=${Date.now()}`,timeout)}
+async function loadJsDelivr(name,branch,timeout=10000){return await getJson(`https://cdn.jsdelivr.net/gh/${OWNER}/${REPO}@${branch}/${name}?t=${Date.now()}`,timeout)}
+async function loadLiveBranchFast(name,branch){
+ const attempts=[
+  loadRawBranch(name,branch).then(payload=>isUsablePayload(name,payload)?{payload,source:"raw-live-branch"}:Promise.reject(Error("raw unusable"))),
+  loadJsDelivr(name,branch).then(payload=>isUsablePayload(name,payload)?{payload,source:"jsdelivr-live-branch"}:Promise.reject(Error("jsdelivr unusable"))),
+  loadBranchApi(name,branch).then(payload=>isUsablePayload(name,payload)?{payload,source:"github-api-live-branch"}:Promise.reject(Error("api unusable")))
+ ];
+ return await Promise.any(attempts);
+}
 async function loadData(name,fallback={},options={}){
  const ttl=dataCacheTtl(name),now=Date.now();
  if(!options.force){
-  const memory=DATA_MEMORY.get(name);if(memory&&now-memory.at<ttl)return cloneValue(memory.payload);
-  try{const cached=JSON.parse(sessionStorage.getItem(dataCacheKey(name))||"null");if(cached&&now-cached.at<ttl){DATA_MEMORY.set(name,cached);return cloneValue(cached.payload)}}catch(e){}
+  const memory=DATA_MEMORY.get(name);if(memory&&now-memory.at<ttl&&isUsablePayload(name,memory.payload))return cloneValue(memory.payload);
+  try{const cached=JSON.parse(sessionStorage.getItem(dataCacheKey(name))||"null");if(cached&&now-cached.at<ttl&&isUsablePayload(name,cached.payload)){DATA_MEMORY.set(name,cached);return cloneValue(cached.payload)}}catch(e){}
  }
- const branch=CHANNELS[name];let payload=null;
- if(name==="market-snapshot.json"&&LIVE_MARKET_ENDPOINT){try{payload=await getJson(`${LIVE_MARKET_ENDPOINT}/market-snapshot.json?_=${Date.now()}`,8000)}catch(e){}}
- if(branch&&FRESH_BRANCH_FILES.has(name)&&!payload){try{payload=await loadBranchApi(name,branch)}catch(e){}}
- if(!payload&&branch){try{payload=await getJson(`https://raw.githubusercontent.com/${OWNER}/${REPO}/${branch}/${name}?t=${Date.now()}`,11000)}catch(e){}}
- if(!payload){try{payload=await getJson(`data/${name}?t=${Date.now()}`,9000)}catch(e){payload=cloneValue(fallback)}}
- if(name==="market-snapshot.json"){payload=mergeSnapshotCache(payload||cloneValue(fallback));rememberSnapshot(payload)}
- payload=payload||cloneValue(fallback);const entry={at:now,payload};DATA_MEMORY.set(name,entry);try{sessionStorage.setItem(dataCacheKey(name),JSON.stringify(entry))}catch(e){}
+ const branch=CHANNELS[name];let payload=null,source="";
+ if(name==="market-snapshot.json"&&LIVE_MARKET_ENDPOINT){try{const candidate=await getJson(`${LIVE_MARKET_ENDPOINT}/market-snapshot.json?_=${Date.now()}`,8000);if(isUsablePayload(name,candidate)){payload=candidate;source="worker"}}catch(e){}}
+ // Query all public live-branch mirrors concurrently; first verified payload wins.
+ if(branch&&!payload){try{const live=await loadLiveBranchFast(name,branch);payload=live.payload;source=live.source}catch(e){}}
+ if(!payload){const cached=readLastGood(name);if(cached){payload=cached;source="browser-last-good"}}
+ if(!payload){try{const candidate=await getJson(`data/${name}?t=${Date.now()}`,7000);if(isUsablePayload(name,candidate)){payload=candidate;source="same-origin-main"}}catch(e){}}
+ if(!payload)payload=cloneValue(fallback);
+ if(name==="market-snapshot.json")payload=mergeSnapshotCache(payload||cloneValue(fallback));
+ if(payload?.metadata&&source)payload={...payload,metadata:{...payload.metadata,frontend_load_source:source}};
+ if(isUsablePayload(name,payload))rememberLastGood(name,payload);
+ const entry={at:now,payload};DATA_MEMORY.set(name,entry);try{sessionStorage.setItem(dataCacheKey(name),JSON.stringify(entry))}catch(e){}
  return cloneValue(payload);
 }
 const STOCK_BASIC_ENDPOINTS=[
@@ -94,14 +131,14 @@ function officialBasicRecord(row,endpoint){
  record.updated_at=new Date().toISOString();return record;
 }
 async function loadStockBasics(){
- const fallback=window.__STOCK_BASICS_SEED__||{metadata:{version:"v11.4.28",status:"waiting",item_count:0},items:{}};
+ const fallback=window.__STOCK_BASICS_SEED__||{metadata:{version:"v11.4.29",status:"waiting",item_count:0},items:{}};
  const payload=await loadData("stock-basics.json",fallback),items={...(payload.items||{})};
  if(Object.keys(items).length>=500)return payload;
  const settled=await Promise.allSettled(STOCK_BASIC_ENDPOINTS.map(async endpoint=>({endpoint,rows:await getJson(endpoint.url,15000)})));
  let added=0;
  for(const result of settled){if(result.status!=="fulfilled"||!Array.isArray(result.value.rows))continue;for(const row of result.value.rows){const record=officialBasicRecord(row,result.value.endpoint);if(!record)continue;items[record.symbol]={...(items[record.symbol]||{}),...record};added++}}
  const values=Object.values(items),average=values.length?values.reduce((sum,row)=>sum+Number(row.basic_coverage_percent||0),0)/values.length:0;
- return {...payload,metadata:{...(payload.metadata||{}),version:"v11.4.28",item_count:values.length,average_basic_coverage_percent:Math.round(average*10)/10,scope:"all-currently-listed-twse-and-tpex-stocks",browser_official_fallback_added:added},items};
+ return {...payload,metadata:{...(payload.metadata||{}),version:"v11.4.29",item_count:values.length,average_basic_coverage_percent:Math.round(average*10)/10,scope:"all-currently-listed-twse-and-tpex-stocks",browser_official_fallback_added:added},items};
 }
 async function loadNewsChannels(){
  const channels=await Promise.all(NEWS_FILES.map(async cfg=>{
@@ -114,10 +151,10 @@ async function loadNewsChannels(){
  for(const channel of channels){for(const item of channel.items||[]){const key=String(item.id||`${item.title||""}|${item.url||""}`);if(!key||seen.has(key))continue;seen.add(key);items.push(item)}}
  items.sort((a,b)=>Date.parse(b.published_at||b.date||0)-Date.parse(a.published_at||a.date||0));
  const updated=channels.map(c=>c.metadata?.updated_at).filter(Boolean).sort().pop()||null;
- return {metadata:{version:"v11.4.28",updated_at:updated,item_count:items.length,channel_count:channels.length},channels,items};
+ return {metadata:{version:"v11.4.29",updated_at:updated,item_count:items.length,channel_count:channels.length},channels,items};
 }
 async function loadStockNews(){
- const fallback=window.__STOCK_NEWS_SEED__||{metadata:{version:"v11.4.28",status:"waiting",item_count:0},items:[]};
+ const fallback=window.__STOCK_NEWS_SEED__||{metadata:{version:"v11.4.29",status:"waiting",item_count:0},items:[]};
  return await loadData("stock-news.json",fallback);
 }
 
