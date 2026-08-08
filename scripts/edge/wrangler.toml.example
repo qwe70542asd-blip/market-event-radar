@@ -1,0 +1,10 @@
+name = "market-event-radar-live"
+main = "market-live-worker.js"
+compatibility_date = "2026-08-01"
+
+[triggers]
+crons = ["* * * * *"]
+
+[[kv_namespaces]]
+binding = "MARKET_CACHE"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"

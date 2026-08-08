@@ -1,0 +1,12 @@
+(async()=>{
+  "use strict";
+  const {$,escapeHtml,formatTime,loadData}=MR;
+  const base=[["assets.json","標的與財報"],["tw-market.json","台股行情"],["tw-chips.json","法人籌碼"],["market-snapshot.json","全球行情"],["events.json","事件月曆"],["monthly-revenue.json","月營收歷史"],["dividend-history.json","股利歷史"],["stock-news.json","個股媒體新聞"],["secondary-reference.json","股票網站參考行情"],["data-verification.json","資料交叉驗證"],["yahoo-details.json","Yahoo 詳細資料補充"],["etf-details.json","ETF 多來源資料補充"]];
+  const news=MR.NEWS_FILES.map(x=>[x.file,x.label]);
+  const rows=await Promise.all([...base,...news].map(async([file,label])=>{const p=await loadData(file,{});return{file,label,metadata:p.metadata||{},count:(p.items||p.assets||p.events||[]).length||Object.keys(p.items||{}).length,health:p.health||{}}}));
+  const verification=rows.find(x=>x.file==="data-verification.json")?.metadata||{};
+  const counts=verification.counts||{};
+  const summary=`<section class="panel content data-quality-summary"><div class="section-head"><div><p class="eyebrow">QUALITY CONTROL</p><h2>資料可信度摘要</h2></div><small>${escapeHtml(formatTime(verification.updated_at))}</small></div><div class="stat-grid"><article class="stat"><small>官方確認</small><strong>${Number(counts.official||0).toLocaleString("zh-TW")}</strong></article><article class="stat"><small>多來源一致</small><strong>${Number(counts.multi_source||0).toLocaleString("zh-TW")}</strong></article><article class="stat"><small>參考資料</small><strong>${Number(counts.reference||0).toLocaleString("zh-TW")}</strong></article><article class="stat"><small>資料衝突</small><strong class="${counts.conflict?"up":"flat"}">${Number(counts.conflict||0).toLocaleString("zh-TW")}</strong></article><article class="stat"><small>缺漏</small><strong>${Number(counts.missing||0).toLocaleString("zh-TW")}</strong></article></div><p class="status-warning">櫃買中心網頁新聞與公告來源已暫停；上櫃行情、估值、財務與其他可驗證結構化資料仍保留。</p></section>`;
+  $("#channelGrid").insertAdjacentHTML("beforebegin",summary);
+  $("#channelGrid").innerHTML=rows.map(x=>`<article class="panel content"><h3>${escapeHtml(x.label)}</h3><p>${escapeHtml(x.file)}</p><p>筆數：${x.count}</p><p>更新：${escapeHtml(formatTime(x.metadata.updated_at))}</p><span class="${["warning","partial","fallback"].includes(x.metadata.status)?"badge-warn":x.metadata.updated_at?"badge-ok":"badge-warn"}">${escapeHtml(x.metadata.status||(x.metadata.updated_at?"已載入":"等待第一次更新"))}</span>${x.file==="official-market-notices.json"?'<p class="status-warning">TPEx 網頁新聞已停用</p>':""}</article>`).join("");
+})();
