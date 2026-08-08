@@ -1,0 +1,2725 @@
+{
+  "metadata": {
+    "version": "v11.4.32",
+    "source_id": "ctee",
+    "source_name": "工商時報",
+    "updated_at": "2026-08-09T04:59:35+08:00",
+    "status": "fallback",
+    "fresh_count": 0,
+    "fetched_count": 0,
+    "recent_24h_count": 0,
+    "item_count": 50,
+    "used_archive_fallback": true,
+    "legacy_archive_removed": 0,
+    "recent_full_retention_days": 30,
+    "archive_start": "2026-01-01",
+    "archive_limit": 600,
+    "archive_policy": "newest-first; older than 30 days requires higher importance; before 2026-01-01 is deleted",
+    "sort_order": "published_at_desc",
+    "language_policy": "zh-Hant-only",
+    "encoding_policy": "utf8-big5-cp950-auto"
+  },
+  "health": {
+    "status": "warning",
+    "error": "403 Client Error: Forbidden for url: https://www.ctee.com.tw/livenews",
+    "requested_urls": [
+      "https://www.ctee.com.tw/livenews"
+    ],
+    "parsed_items": 0,
+    "history_backfill": {
+      "enabled": false,
+      "queries": 0,
+      "items": 0
+    },
+    "image_policy": "current-and-history-merged; high-impact and recent missing images first; generic placeholders rejected"
+  },
+  "items": [
+    {
+      "id": "2a08d98a9b45ef492b",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "台股一口氣站回季線分析師：別被漲勢沖昏頭、「這點位」是關鍵- 證券",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9haXh2Z0JMRi0za0xvY0ZSd2p3TGZSYU5kQV81MmxIdnVaWUhJazZ2N25TS0dYV3AyYXdiUEFRbkFBQXJCZUREMHdpZHN4dzhJVjMyNDExV3NnOWV2NFlr?oc=5",
+      "url_valid": true,
+      "published_at": "2026-08-05T15:29:00+08:00",
+      "summary": "台股一口氣站回季線分析師：別被漲勢沖昏頭、「這點位」是關鍵- 證券 工商時報",
+      "ai_summary": "台股一口氣站回季線分析師：別被漲勢沖昏頭、「這點位」是關鍵- 證券 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "個股新聞",
+      "ai_topic": "stock",
+      "topic": "stock",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 16,
+      "symbols": [
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-08"
+    },
+    {
+      "id": "d71f8b9ad5ea02fbef",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "台股大漲1,250點收復月、季線這檔記憶體亮紅燈8.5萬張買單高掛- 證券",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE84MVM0UTZZRUM4UHhNU2dXVGxNbUdwa3hNd1RuTldjLWpCTU5hcGdJbHZyem9DRzVzdkZGVExrbGdIMEh4bmpUbkxWXzNLY0p2bHphMUJwUVo0TGRza21Z?oc=5",
+      "url_valid": true,
+      "published_at": "2026-08-05T14:02:00+08:00",
+      "summary": "台股大漲1,250點收復月、季線這檔記憶體亮紅燈8.5萬張買單高掛- 證券 工商時報",
+      "ai_summary": "台股大漲1,250點收復月、季線這檔記憶體亮紅燈8.5萬張買單高掛- 證券 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "半導體與 AI",
+      "ai_topic": "technology",
+      "topic": "technology",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 18,
+      "symbols": [
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-08"
+    },
+    {
+      "id": "ebeb938819ea149a58",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "聖暉、竹陞科技重返千元台股千金股增為46檔欣興差一點- 證券",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1JamQ3ZlRqckZ1Z0U5Wkt2T2dxR0NrZjNvZG9qS0oxUGRTSmZYSHV0MlYxOVlUZjQyaVZHM25wQlAzUTQ1OHZxaEJYd3Jubk9uS3JYWm5lVkR4S18zM3Zr?oc=5",
+      "url_valid": true,
+      "published_at": "2026-08-05T13:15:00+08:00",
+      "summary": "聖暉、竹陞科技重返千元台股千金股增為46檔欣興差一點- 證券 工商時報",
+      "ai_summary": "聖暉、竹陞科技重返千元台股千金股增為46檔欣興差一點- 證券 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "3037",
+          "name": "欣興",
+          "industry": "電子零組件業",
+          "asset_class": "stock"
+        },
+        {
+          "symbol": "6739",
+          "name": "竹陞科技",
+          "industry": "其他電子業",
+          "asset_class": "stock"
+        },
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "個股新聞",
+      "ai_topic": "stock",
+      "topic": "stock",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "3037",
+        "6739",
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 0,
+      "symbols": [
+        "3037",
+        "6739",
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響3037、6739、8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-08"
+    },
+    {
+      "id": "5fa08b134426eaba80",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "《國際產業》油價連3跌等待美伊談判結果- 國際",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFB0NU5rcEtJZFN4ak0tRWxScTdPZVg1S0ZYWFZMZ2VWcmtoOEVScGZrRGQxLXYwc2hjME96Q2x0aDRPdm9FZHlJN1o4WkgzbmJGQUhQZHl2ajVROGV1eHVJ?oc=5",
+      "url_valid": true,
+      "published_at": "2026-08-05T13:14:00+08:00",
+      "summary": "《國際產業》油價連3跌等待美伊談判結果- 國際 工商時報",
+      "ai_summary": "《國際產業》油價連3跌等待美伊談判結果- 國際 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": false
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "個股新聞",
+      "ai_topic": "stock",
+      "topic": "stock",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 0,
+      "symbols": [
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-08"
+    },
+    {
+      "id": "5ab74c72da0c61022b",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "台中銀投信：基本面、籌碼面優於韓股台股是亞股首選- 證券",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1lNlNXeVhLc0ZNa0JFN1E1d1NFTkQzUE1VUWlodzRMWF9ETm9NZG5hQXltSTlmbndzUl8wcjVaMG5LcG5tQUtEVi0wcE1xakQ1SklmVlpkVWNzZmsweG84?oc=5",
+      "url_valid": true,
+      "published_at": "2026-08-05T11:57:00+08:00",
+      "summary": "台中銀投信：基本面、籌碼面優於韓股台股是亞股首選- 證券 工商時報",
+      "ai_summary": "台中銀投信：基本面、籌碼面優於韓股台股是亞股首選- 證券 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "2812",
+          "name": "台中銀",
+          "industry": "金融保險業",
+          "asset_class": "stock"
+        },
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "個股新聞",
+      "ai_topic": "stock",
+      "topic": "stock",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "2812",
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 0,
+      "symbols": [
+        "2812",
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響2812、8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-08"
+    },
+    {
+      "id": "b1a3afc52fd6a2d6d8",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "台股8月震盪格局如何度過？專家喊遇這區間要加碼9月5大利多助攻高- 日報",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE4wNWpQRlJ4ek44X3A0VnQyVTNDUThvTzFpSmxMRFZjMmhsNk9IVlB2X1Y1ZDlCd2RkbVFFMU5JazM0TW4xeDNxdTdHRGhsaDlSZkdKcEdVR3VGOTdfcEdr?oc=5",
+      "url_valid": true,
+      "published_at": "2026-08-05T03:00:00+08:00",
+      "summary": "台股8月震盪格局如何度過？專家喊遇這區間要加碼9月5大利多助攻高- 日報 工商時報",
+      "ai_summary": "台股8月震盪格局如何度過？專家喊遇這區間要加碼9月5大利多助攻高- 日報 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "個股新聞",
+      "ai_topic": "stock",
+      "topic": "stock",
+      "impact": "low",
+      "market_direction": "偏多",
+      "affected_markets": [
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 0,
+      "symbols": [
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-08"
+    },
+    {
+      "id": "260d3e806511ec2042",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "台股開盤下跌近500點台積電續挫記憶體、被動元件走強- 證券",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE4zN1VRZ3hfSXJwSzVUOHZHSk9Zc29YVVFiUF9KZ3hiUUFRMWFidnNDMW1raDN6aUloYUIzMlduOEhpc3ZwbWlwUFhSRzVwWVNuTTJLMWtkMFdCNGIxMk44?oc=5",
+      "url_valid": true,
+      "published_at": "2026-08-04T09:21:00+08:00",
+      "summary": "台股開盤下跌近500點台積電續挫記憶體、被動元件走強- 證券 工商時報",
+      "ai_summary": "台股開盤下跌近500點台積電續挫記憶體、被動元件走強- 證券 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "2330",
+          "name": "台積電",
+          "industry": "半導體業",
+          "asset_class": "stock"
+        },
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "半導體與 AI",
+      "ai_topic": "technology",
+      "topic": "technology",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "2330",
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 42,
+      "symbols": [
+        "2330",
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響2330、8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-08"
+    },
+    {
+      "id": "ff3ef491f08ea3da2d",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "8／3台股雷達｜聯發科、國巨、華邦電股價飆原因一次看- 證券",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1QSzlYNzZfOFROZGxKMFlkNTRLbXpQUnV6TDd2UkU4WDJOY25LbWNsWFBManNkUFZGcE5pU2RBM3B0VXhnM0pjWFNUeFJ2aTJtX3ZBYXYxWXJNMkVqS25n?oc=5",
+      "url_valid": true,
+      "published_at": "2026-08-03T19:19:00+08:00",
+      "summary": "8／3台股雷達｜聯發科、國巨、華邦電股價飆原因一次看- 證券 工商時報",
+      "ai_summary": "8／3台股雷達｜聯發科、國巨、華邦電股價飆原因一次看- 證券 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "1459",
+          "name": "聯發",
+          "industry": "紡織纖維",
+          "asset_class": "stock"
+        },
+        {
+          "symbol": "2344",
+          "name": "華邦電",
+          "industry": "半導體業",
+          "asset_class": "stock"
+        },
+        {
+          "symbol": "2454",
+          "name": "聯發科",
+          "industry": "半導體業",
+          "asset_class": "stock"
+        },
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "個股新聞",
+      "ai_topic": "stock",
+      "topic": "stock",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "1459",
+        "2344",
+        "2454",
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 24,
+      "symbols": [
+        "1459",
+        "2344",
+        "2454",
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響1459、2344、2454，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-08"
+    },
+    {
+      "id": "68c97d6f88250d5ae7",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "賣不掉惹民怨！台股處置期10日起減半為5天 撮合縮至2分鐘",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1sNEVsUVhPdHZsb2YtN1NlRGQ0MDMzYjNhY09aU1hPMElPMnNyZm1zRXBZSEU3azZabHJNdDJHdzVwdTViWUQ0cGJ4SGVEcWgzenVQbE9JVThFNThpQW5F?oc=5",
+      "url_valid": true,
+      "published_at": "2026-08-03T17:58:00+08:00",
+      "summary": "賣不掉惹民怨！台股處置期10日起減半為5天 撮合縮至2分鐘 工商時報",
+      "ai_summary": "賣不掉惹民怨！台股處置期10日起減半為5天 撮合縮至2分鐘 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "個股新聞",
+      "ai_topic": "stock",
+      "topic": "stock",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 0,
+      "symbols": [
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-08"
+    },
+    {
+      "id": "37b266abde81aaa83e",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "台股逆轉再漲266點多頭回來了？分析師：真正考驗才剛開始- 證券",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9ndndVNGZMVEl1ZTg3bWdYSG1Db3RsTmwzdm85OHlWbkVSblAwc1hzanRKcEtlRkktSVY2WDNuMWROWUt2Q2NyLTJPeUJ4R1M4UjBndXJnTUo3QnZBc3pB?oc=5",
+      "url_valid": true,
+      "published_at": "2026-08-03T15:20:00+08:00",
+      "summary": "台股逆轉再漲266點多頭回來了？分析師：真正考驗才剛開始- 證券 工商時報",
+      "ai_summary": "台股逆轉再漲266點多頭回來了？分析師：真正考驗才剛開始- 證券 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "個股新聞",
+      "ai_topic": "stock",
+      "topic": "stock",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 16,
+      "symbols": [
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-08"
+    },
+    {
+      "id": "0b462d279fc37b466c",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "台積電休兵聯發科頂上台股漲266點這檔亮紅燈逾3.7萬張買單高掛- 證券",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5yeFo0UkQ0S0RrbjY5clBYcDZnTjlRaFA2SnhDQ21uMnZzOHZTWHhaQ010R3h1bkNlSlJoXzhlaHJSLXAwRTVwMGw2M3hYZUc1dkJwMzZTbUdCWUVSMzA0?oc=5",
+      "url_valid": true,
+      "published_at": "2026-08-03T14:06:00+08:00",
+      "summary": "台積電休兵聯發科頂上台股漲266點這檔亮紅燈逾3.7萬張買單高掛- 證券 工商時報",
+      "ai_summary": "台積電休兵聯發科頂上台股漲266點這檔亮紅燈逾3.7萬張買單高掛- 證券 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "1459",
+          "name": "聯發",
+          "industry": "紡織纖維",
+          "asset_class": "stock"
+        },
+        {
+          "symbol": "2330",
+          "name": "台積電",
+          "industry": "半導體業",
+          "asset_class": "stock"
+        },
+        {
+          "symbol": "2454",
+          "name": "聯發科",
+          "industry": "半導體業",
+          "asset_class": "stock"
+        },
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "半導體與 AI",
+      "ai_topic": "technology",
+      "topic": "technology",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "1459",
+        "2330",
+        "2454",
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 24,
+      "symbols": [
+        "1459",
+        "2330",
+        "2454",
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響1459、2330、2454，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-08"
+    },
+    {
+      "id": "1c7e50206e232e0197",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "台股去槓桿近尾聲9檔績優股外資點燈 台光電榮登萬金股候選人- 日報",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9ONUtDNUd4N0UwOUpTRlotbWgwZ2dkRF93OXA4ZXhPR05aMDdTcXFmLWlLdGEtUFcwaUhsRi1kVXVfN1BpRmdPVzBITDBUU1ZZOHFuam1aZkx3R1FPUEln?oc=5",
+      "url_valid": true,
+      "published_at": "2026-08-03T03:00:00+08:00",
+      "summary": "台股去槓桿近尾聲9檔績優股外資點燈 台光電榮登萬金股候選人- 日報 工商時報",
+      "ai_summary": "台股去槓桿近尾聲9檔績優股外資點燈 台光電榮登萬金股候選人- 日報 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "2383",
+          "name": "台光電",
+          "industry": "電子零組件業",
+          "asset_class": "stock"
+        },
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "個股新聞",
+      "ai_topic": "stock",
+      "topic": "stock",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "2383",
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 0,
+      "symbols": [
+        "2383",
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響2383、8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-08"
+    },
+    {
+      "id": "da2d5e8ee6af031a66",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "台股7月慘跌逾3千點！專家估最快8月止穩點名2類股反彈宜減碼、台積電逢低加碼- 理財",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1VYnpsRkM4LUwwRE50Rjl4UDh2Rm10VnllSDEwSElySHFYZmN0YzlVTlhJekJpb2FhenowclZMQ2Yzem1neWxfQ1hqVTlIXzFzaENVUGd4dmVEMEVhRUFN?oc=5",
+      "url_valid": true,
+      "published_at": "2026-08-01T12:05:00+08:00",
+      "summary": "台股7月慘跌逾3千點！專家估最快8月止穩點名2類股反彈宜減碼、台積電逢低加碼- 理財 工商時報",
+      "ai_summary": "台股7月慘跌逾3千點！專家估最快8月止穩點名2類股反彈宜減碼、台積電逢低加碼- 理財 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "2330",
+          "name": "台積電",
+          "industry": "半導體業",
+          "asset_class": "stock"
+        },
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "半導體與 AI",
+      "ai_topic": "technology",
+      "topic": "technology",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "2330",
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 24,
+      "symbols": [
+        "2330",
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響2330、8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-07"
+    },
+    {
+      "id": "2048b49cd35d50e73d",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "暴跌後狂彈3,000點台股8月會V轉？五大投顧點名台積電、鴻海等16檔有甜甜價- 日報",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE4tZnkyeEJYSUpERDViSXlJYTJ6c2t5OTU0Q3ljSU1FSEJFZ0tqUzdQUWdhS1ZDMk1xZi02UXoza0dWZ1lnNHA1c3N5N2lUTGE5OU9ManpKZllGTkdtM29j?oc=5",
+      "url_valid": true,
+      "published_at": "2026-08-01T03:00:00+08:00",
+      "summary": "暴跌後狂彈3,000點台股8月會V轉？五大投顧點名台積電、鴻海等16檔有甜甜價- 日報 工商時報",
+      "ai_summary": "暴跌後狂彈3,000點台股8月會V轉？五大投顧點名台積電、鴻海等16檔有甜甜價- 日報 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "2317",
+          "name": "鴻海",
+          "industry": "其他電子業",
+          "asset_class": "stock"
+        },
+        {
+          "symbol": "2330",
+          "name": "台積電",
+          "industry": "半導體業",
+          "asset_class": "stock"
+        },
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": true,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "半導體與 AI",
+      "ai_topic": "technology",
+      "topic": "technology",
+      "impact": "low",
+      "market_direction": "偏空",
+      "affected_markets": [
+        "2317",
+        "2330",
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 24,
+      "symbols": [
+        "2317",
+        "2330",
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響2317、2330、8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-07"
+    },
+    {
+      "id": "b34cff92b5f9140f46",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "台股跌深反彈誰先衝？15檔法人回頭加碼股出列- 日報",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5KYnVyM2xmS29KVWRya3ozS0hmdTNqLVBkMTEzYkIwTTJHa3RxcTBYSDJPcV9LTkgyOFd0bjludlQ0LXZwbDNfazB1ZXRWdElwS19id05tem0xVTR6eWQ4?oc=5",
+      "url_valid": true,
+      "published_at": "2026-08-01T03:00:00+08:00",
+      "summary": "台股跌深反彈誰先衝？15檔法人回頭加碼股出列- 日報 工商時報",
+      "ai_summary": "台股跌深反彈誰先衝？15檔法人回頭加碼股出列- 日報 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "個股新聞",
+      "ai_topic": "stock",
+      "topic": "stock",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 0,
+      "symbols": [
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-07"
+    },
+    {
+      "id": "707e894532d380cf05",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "75萬人砍在阿呆谷！錯過台股暴漲3,000點大行情 籌碼洗乾淨了嗎？",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1xT0FnSnhhV1lzajlMM3NPdFZVY0Jmd1RSNGFYRXVEZERJS1hiczd5QVRkQUI5RnhSSk5oTUp4VjRjV0FxcUo3Vm5lbE1SejY2VU1iUGZNMUFSZVN3RmxF?oc=5",
+      "url_valid": true,
+      "published_at": "2026-07-31T15:29:00+08:00",
+      "summary": "75萬人砍在阿呆谷！錯過台股暴漲3,000點大行情 籌碼洗乾淨了嗎？ 工商時報",
+      "ai_summary": "75萬人砍在阿呆谷！錯過台股暴漲3,000點大行情 籌碼洗乾淨了嗎？ 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "個股新聞",
+      "ai_topic": "stock",
+      "topic": "stock",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 0,
+      "symbols": [
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-07"
+    },
+    {
+      "id": "4333e3d5792dfdbb5a",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "台股狂噴3,186點創史上最大漲點「雙王」發功「這檔」亮唯一綠燈- 證券",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBKckJaTGpoT0hNeDlnTFJHS2lGT2lBVUkyTmlKeEItYVk5WDZKbDZ0T3RqUGZMQTNkR1dsTTZXZEdiYld2R3M2d0k5ODI5SXpNVlFVNjBDeGxPeWZoMHdR?oc=5",
+      "url_valid": true,
+      "published_at": "2026-07-31T14:20:00+08:00",
+      "summary": "台股狂噴3,186點創史上最大漲點「雙王」發功「這檔」亮唯一綠燈- 證券 工商時報",
+      "ai_summary": "台股狂噴3,186點創史上最大漲點「雙王」發功「這檔」亮唯一綠燈- 證券 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "個股新聞",
+      "ai_topic": "stock",
+      "topic": "stock",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 0,
+      "symbols": [
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-07"
+    },
+    {
+      "id": "fe3c68a486473ee731",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "台積電領軍大漲！台股勁揚2,800點記憶體開趴南亞科、華邦電飆漲停- 證券",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBNX2xybU1TUG5lZVhia1NrMVZJTTA5cFkxamEwb3ppX0hib2RNQW9QZ1RGbDRCMjEzMERQZXFsNXYzQzlva3lJRl9JZW9pRzFLZHVWV1ZLaVVGQXNzNW1Z?oc=5",
+      "url_valid": true,
+      "published_at": "2026-07-31T09:12:00+08:00",
+      "summary": "台積電領軍大漲！台股勁揚2,800點記憶體開趴南亞科、華邦電飆漲停- 證券 工商時報",
+      "ai_summary": "台積電領軍大漲！台股勁揚2,800點記憶體開趴南亞科、華邦電飆漲停- 證券 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "1303",
+          "name": "南亞",
+          "industry": "塑膠工業",
+          "asset_class": "stock"
+        },
+        {
+          "symbol": "2330",
+          "name": "台積電",
+          "industry": "半導體業",
+          "asset_class": "stock"
+        },
+        {
+          "symbol": "2344",
+          "name": "華邦電",
+          "industry": "半導體業",
+          "asset_class": "stock"
+        },
+        {
+          "symbol": "2408",
+          "name": "南亞科",
+          "industry": "半導體業",
+          "asset_class": "stock"
+        },
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "半導體與 AI",
+      "ai_topic": "technology",
+      "topic": "technology",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "1303",
+        "2330",
+        "2344",
+        "2408",
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 42,
+      "symbols": [
+        "1303",
+        "2330",
+        "2344",
+        "2408",
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響1303、2330、2344，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-07"
+    },
+    {
+      "id": "f1ff24985ae65de65a",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "台股多頭反攻一軍成形聯電等Q2獲利創高有底氣這檔PCB法人撿起來- 日報",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1VYnlKTWZLWTlyOF8zbFBRaHFBWkpPWXY0dEdFRHJPSmNKcU01bkZHTDljUjJyTWRwU0JSNVA5ZHVXVWlOUUMxNkhlOEtOckI2Wmp4Y3JFRW5NNVljMUlz?oc=5",
+      "url_valid": true,
+      "published_at": "2026-07-31T03:00:00+08:00",
+      "summary": "台股多頭反攻一軍成形聯電等Q2獲利創高有底氣這檔PCB法人撿起來- 日報 工商時報",
+      "ai_summary": "台股多頭反攻一軍成形聯電等Q2獲利創高有底氣這檔PCB法人撿起來- 日報 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "2303",
+          "name": "聯電",
+          "industry": "半導體業",
+          "asset_class": "stock"
+        },
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "企業財報",
+      "ai_topic": "earnings",
+      "topic": "earnings",
+      "impact": "low",
+      "market_direction": "偏多",
+      "affected_markets": [
+        "2303",
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 32,
+      "symbols": [
+        "2303",
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響2303、8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-07"
+    },
+    {
+      "id": "179cf1cfa5212841b3",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "台股月、季線將「死亡交叉」 反彈時候到了？名師看多空分水嶺在這一「點」",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5DZWswTFYyZU5OaUxBanFtYUdOYlFvUHhGbjZnR05VRFByOVFvYzFRbWU0QW9VZnNFMjYxUC03V2RDb3JjM1FiR0RzbHZPT3VfbU40eEVjaEFKcVNHZnN3?oc=5",
+      "url_valid": true,
+      "published_at": "2026-07-31T03:00:00+08:00",
+      "summary": "台股月、季線將「死亡交叉」 反彈時候到了？名師看多空分水嶺在這一「點」 工商時報",
+      "ai_summary": "台股月、季線將「死亡交叉」 反彈時候到了？名師看多空分水嶺在這一「點」 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "個股新聞",
+      "ai_topic": "stock",
+      "topic": "stock",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 0,
+      "symbols": [
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-07"
+    },
+    {
+      "id": "f9222d3b9cda729eb5",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "千點反彈只是逃命波？台股失守4萬點分析師曝「1投資陷阱」很多人都中招- 證券",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5GMDVmN1paSVhXbGdwd09NR2VZSThlb0ZTSFpCZFg5UWxCVGY0T3NkQXZja0RnVDQ2WktLTEJWZm85UkhTREU2dkNyR2JYeVVoTGVvOFMtQ3hhY0pYQk5R?oc=5",
+      "url_valid": true,
+      "published_at": "2026-07-30T15:38:00+08:00",
+      "summary": "千點反彈只是逃命波？台股失守4萬點分析師曝「1投資陷阱」很多人都中招- 證券 工商時報",
+      "ai_summary": "千點反彈只是逃命波？台股失守4萬點分析師曝「1投資陷阱」很多人都中招- 證券 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "個股新聞",
+      "ai_topic": "stock",
+      "topic": "stock",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 30,
+      "symbols": [
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-07"
+    },
+    {
+      "id": "d1e0cb97ea5a885684",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "台股融資大退散短線反彈契機已到？專家估8月有望戰季線- 日報",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1XTG9EcDhONmROUDIyVGRlZ3ZfUEFuXzVTaWRLQnNyQTVHeVZpU01iTmRjdXlmbUViS3pvY0IyTFdYeWVFSWxwM095aHhLRFlKUlowdDh1ZDctR01SREMw?oc=5",
+      "url_valid": true,
+      "published_at": "2026-07-30T03:00:00+08:00",
+      "summary": "台股融資大退散短線反彈契機已到？專家估8月有望戰季線- 日報 工商時報",
+      "ai_summary": "台股融資大退散短線反彈契機已到？專家估8月有望戰季線- 日報 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "個股新聞",
+      "ai_topic": "stock",
+      "topic": "stock",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 0,
+      "symbols": [
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-07"
+    },
+    {
+      "id": "bf171dd80f38e41dea",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "115檔跌停！台股殺到底了嗎？分析師曝反彈先做「這件事」",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBTZmI5dWVTNmxkM3Jhb1FVQThWM0FEVER1aE4ybGtuU08xMEdobTVCN2hxUlVhOTA4MVZ3aGg2cmJuTVNxYlZMT1dHekFjbkd0NjVmLUVOM1llRF9QRDJN?oc=5",
+      "url_valid": true,
+      "published_at": "2026-07-29T15:22:00+08:00",
+      "summary": "115檔跌停！台股殺到底了嗎？分析師曝反彈先做「這件事」 工商時報",
+      "ai_summary": "115檔跌停！台股殺到底了嗎？分析師曝反彈先做「這件事」 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "個股新聞",
+      "ai_topic": "stock",
+      "topic": "stock",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 16,
+      "symbols": [
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-07"
+    },
+    {
+      "id": "d47d5b0d2844446c67",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "台股兩天暴殺3,500點！前金管會主委示警「五大隱憂」 台積電恐面臨套現危機- 證券",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBoNmZFdXREVGtNcks3Tl83VXREdXoxXzlha1ZsdFM4cGVPR2EzemdLcUdVZ3Y4ME1aVHlOTENjcDZFTlROd2R0ZFdVS05OYlRsckRFUmJxQnU3a0VmYkNv?oc=5",
+      "url_valid": true,
+      "published_at": "2026-07-29T14:10:00+08:00",
+      "summary": "台股兩天暴殺3,500點！前金管會主委示警「五大隱憂」 台積電恐面臨套現危機- 證券 工商時報",
+      "ai_summary": "台股兩天暴殺3,500點！前金管會主委示警「五大隱憂」 台積電恐面臨套現危機- 證券 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "2330",
+          "name": "台積電",
+          "industry": "半導體業",
+          "asset_class": "stock"
+        },
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "半導體與 AI",
+      "ai_topic": "technology",
+      "topic": "technology",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "2330",
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 24,
+      "symbols": [
+        "2330",
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響2330、8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-07"
+    },
+    {
+      "id": "38247639265a4f2f69",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "國防暨軍民技術主題館10月台中亮相 秀軍民通用產業鏈 - ctms-tc.ctee.com.tw",
+      "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxPOVFIR2hvdlJUTkExbWVBYTkxckw0dFNZNnlJcTFOSGdXbHRlLTdDQlZWc3NOR2RiWlVmX0V4clBldXNpTjhZblh2YmVTMVFiaUQzYThYcURaYW90SFR4T3pyaG9UWGpBeTBUWk9KQ3RaUTVvQnpqdWF4dkRqazlhUzdJSU5EZWtIS2xYNF9xOW8?oc=5",
+      "url_valid": true,
+      "published_at": "2026-06-24T15:00:00+08:00",
+      "summary": "國防暨軍民技術主題館10月台中亮相 秀軍民通用產業鏈 ctms-tc.ctee.com.tw",
+      "ai_summary": "國防暨軍民技術主題館10月台中亮相 秀軍民通用產業鏈 ctms-tc.ctee.com.tw",
+      "language": "zh-Hant",
+      "companies": [],
+      "scope": "general",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": false
+      },
+      "company_announcement": false,
+      "is_stock_news": false,
+      "is_major": false,
+      "ai_category": "市場動態",
+      "ai_topic": "market",
+      "topic": "market",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "整體市場"
+      ],
+      "confidence": "中",
+      "importance_score": 0,
+      "symbols": [],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響整體市場，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "ctms-tc.ctee.com.tw",
+      "history_month": "2026-06"
+    },
+    {
+      "id": "cf67ce21393394af89",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "台股創新高之後？尹崇堯警告：下半年3大風險金融市場變化大- 產業",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5NUHZIcHJoZDJGUXBVYlA0bko4ZHRlNG9XdFh2UndpR3l2WGYwOTN2M3l1OE9sNGJNSWd0YW14Wno0eE5IRjlmWEdlRXVKeGFBRGpucmpxbFFaODQtWmx3?oc=5",
+      "url_valid": true,
+      "published_at": "2026-06-23T15:00:00+08:00",
+      "summary": "台股創新高之後？尹崇堯警告：下半年3大風險金融市場變化大- 產業 工商時報",
+      "ai_summary": "台股創新高之後？尹崇堯警告：下半年3大風險金融市場變化大- 產業 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "個股新聞",
+      "ai_topic": "stock",
+      "topic": "stock",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 18,
+      "symbols": [
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-06"
+    },
+    {
+      "id": "c91c517ca2d2f6f1e2",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "台股重返45K！分析師點名卡位「四大族群」",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1sSHpoOFprUnlMcEFKOUdXblpiUk4xek5ibDllRWJEQ0MtU01XQUZOcGtsM3FQWGFQTm4yUDBCZFZSYkNYLVM1Ykpjd21lUnpJUUt4YzAxSlVLVzV6elBv?oc=5",
+      "url_valid": true,
+      "published_at": "2026-06-15T15:00:00+08:00",
+      "summary": "台股重返45K！分析師點名卡位「四大族群」 工商時報",
+      "ai_summary": "台股重返45K！分析師點名卡位「四大族群」 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "個股新聞",
+      "ai_topic": "stock",
+      "topic": "stock",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 16,
+      "symbols": [
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-06"
+    },
+    {
+      "id": "35228735ce7400adda",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "台股震盪切忌恐慌與激進- 日報",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE80UzJUQ1ZiblFnVklwRHRUaHRNTkVFX0hzT3VuTG1YVHA1UFVldU5uMTFzOUhha3JHQmU0Y1BicDRzbmpCVGY1NGdyY0cwdEVPRWVUeU5HeFR1QmNOUWkw?oc=5",
+      "url_valid": true,
+      "published_at": "2026-06-15T15:00:00+08:00",
+      "summary": "台股震盪切忌恐慌與激進- 日報 工商時報",
+      "ai_summary": "台股震盪切忌恐慌與激進- 日報 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "個股新聞",
+      "ai_topic": "stock",
+      "topic": "stock",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 0,
+      "symbols": [
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-06"
+    },
+    {
+      "id": "a57624c0cf52c0011b",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "台股急轉彎反彈千點！端午前迎3大考驗專家揭下一個防線位置- 日報",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBZU011RmVZdlBHU2gtTWMwS3EyMDY5RWJVbFM2YWlHdnNRR1VDZHpFLTdOTlRyU1lyN0xlRXY1S1hHX1M0a2dsdkxNcHdKdnMxd0pZNF82ZWFZX2UyU1E0?oc=5",
+      "url_valid": true,
+      "published_at": "2026-06-14T15:00:00+08:00",
+      "summary": "台股急轉彎反彈千點！端午前迎3大考驗專家揭下一個防線位置- 日報 工商時報",
+      "ai_summary": "台股急轉彎反彈千點！端午前迎3大考驗專家揭下一個防線位置- 日報 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "個股新聞",
+      "ai_topic": "stock",
+      "topic": "stock",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 0,
+      "symbols": [
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-06"
+    },
+    {
+      "id": "18471b02fab26ab484",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "台股愈震愈熱！10大人氣ETF排行榜大搬風這幾檔爆百萬張巨量- 日報",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFB5LS0xMGxWdUJWVDEtQl9qcGtFMEJldW9sM3g1ZFJ0Qm40U0YwSlZtekNhRkpSLTYtbGpBdV9LTmdHUkNUc1NDTl9fUzZjVEVVNEZDZVZaRUh0TUlDcEVB?oc=5",
+      "url_valid": true,
+      "published_at": "2026-06-14T15:00:00+08:00",
+      "summary": "台股愈震愈熱！10大人氣ETF排行榜大搬風這幾檔爆百萬張巨量- 日報 工商時報",
+      "ai_summary": "台股愈震愈熱！10大人氣ETF排行榜大搬風這幾檔爆百萬張巨量- 日報 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "個股新聞",
+      "ai_topic": "stock",
+      "topic": "stock",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 0,
+      "symbols": [
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-06"
+    },
+    {
+      "id": "748dac07c93df407e5",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "6／12群益早安｜全球財經時事深度解說- 證券",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1aUFRycThoNVNOUTE1X3hsOW4wMXRFTTdkY012X1VuejdvU05PYmMxT1N0V0dyc1h1eWw0ZzdSbjlmUG00ZlhKUnhxM2VxZERtVFgxNENLUWRWNC1ib0pn?oc=5",
+      "url_valid": true,
+      "published_at": "2026-06-12T15:00:00+08:00",
+      "summary": "6／12群益早安｜全球財經時事深度解說- 證券 工商時報",
+      "ai_summary": "6／12群益早安｜全球財經時事深度解說- 證券 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": false
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "個股新聞",
+      "ai_topic": "stock",
+      "topic": "stock",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 0,
+      "symbols": [
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-06"
+    },
+    {
+      "id": "1469ee38e992a72dd6",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "中東局勢升溫台積電、聯發科聯袂回檔台股走弱買盤浮現- 證券",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5FWTE1N0xoOHoxSE5aNGVFbWdIWWgyWDU1ZFdtcVRlZUU4eWxJamRzM3JiX241SGhnRnpGdE9YVTRxS3dPYTlxR0lJN2F5aExjZXdsR0J2bkNYR2M5V1JB?oc=5",
+      "url_valid": true,
+      "published_at": "2026-06-10T15:00:00+08:00",
+      "summary": "中東局勢升溫台積電、聯發科聯袂回檔台股走弱買盤浮現- 證券 工商時報",
+      "ai_summary": "中東局勢升溫台積電、聯發科聯袂回檔台股走弱買盤浮現- 證券 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "1459",
+          "name": "聯發",
+          "industry": "紡織纖維",
+          "asset_class": "stock"
+        },
+        {
+          "symbol": "2330",
+          "name": "台積電",
+          "industry": "半導體業",
+          "asset_class": "stock"
+        },
+        {
+          "symbol": "2454",
+          "name": "聯發科",
+          "industry": "半導體業",
+          "asset_class": "stock"
+        },
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "半導體與 AI",
+      "ai_topic": "technology",
+      "topic": "technology",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "1459",
+        "2330",
+        "2454",
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 24,
+      "symbols": [
+        "1459",
+        "2330",
+        "2454",
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響1459、2330、2454，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-06"
+    },
+    {
+      "id": "d205eb31792cae988b",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "台股逐洞賽｜避險情緒升溫留意止跌訊號- 證券",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9FMU93RVpQTzVKZXVfY19tcnl2NmJtcmpSVWxTUk9lZk0tU3NvVFkzUEF6UlU1bnFFa0pUb3NDa3NybXV0b2NlaVU0SXJDWjRzbXlNekU2aFNuNmlPNy1V?oc=5",
+      "url_valid": true,
+      "published_at": "2026-06-08T15:00:00+08:00",
+      "summary": "台股逐洞賽｜避險情緒升溫留意止跌訊號- 證券 工商時報",
+      "ai_summary": "台股逐洞賽｜避險情緒升溫留意止跌訊號- 證券 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "個股新聞",
+      "ai_topic": "stock",
+      "topic": "stock",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 0,
+      "symbols": [
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-06"
+    },
+    {
+      "id": "c2d6a05f93e3e99fc7",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "無畏台股盤中閃崩1400點 6檔台股ETF逆勢收紅- 產業",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBJWTFTdUtmWnhpWk5RTTU3S2RCM2gzN1l6d3lnMFFOM1pMUUJ3cHdRZkNzQzRZT0twbkwxcjVwYkpSTFJLOGgwSlg2WlVST1NTanRIZVkxdXA2T0h2WFdZ?oc=5",
+      "url_valid": true,
+      "published_at": "2026-06-05T15:00:00+08:00",
+      "summary": "無畏台股盤中閃崩1400點 6檔台股ETF逆勢收紅- 產業 工商時報",
+      "ai_summary": "無畏台股盤中閃崩1400點 6檔台股ETF逆勢收紅- 產業 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "個股新聞",
+      "ai_topic": "stock",
+      "topic": "stock",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "1400",
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 0,
+      "symbols": [
+        "1400",
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響1400、8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-06"
+    },
+    {
+      "id": "336a8aca419607b8b6",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "台股頻創高該怕？分析師：別再看指數！從戴爾財報找新AI飆股- 證券",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE0wREpwa0YyQ1RjOWw2blVTbUQxeDhSZGpaNXY2Z2tPTVFKN0o1WXZ1ZVJSa0tXMmR3QVdCdm5qcExETUV0Y0Z0bjloU3ZmWHczRWZQb3NTTG9BcUs2ZDZn?oc=5",
+      "url_valid": true,
+      "published_at": "2026-06-03T15:00:00+08:00",
+      "summary": "台股頻創高該怕？分析師：別再看指數！從戴爾財報找新AI飆股- 證券 工商時報",
+      "ai_summary": "台股頻創高該怕？分析師：別再看指數！從戴爾財報找新AI飆股- 證券 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "企業財報",
+      "ai_topic": "earnings",
+      "topic": "earnings",
+      "impact": "medium",
+      "market_direction": "偏多",
+      "affected_markets": [
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 35,
+      "symbols": [
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-06"
+    },
+    {
+      "id": "fed3222b53a0feec22",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "台股急攻期貨商ANC再拉警報- 證券",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBjSHFtaXhjbTlyRy1nVUg5WVE1MEJzaUtsODdCYW1UZU5sMkc0S2hPRjFXWDJVMWVQUVRXRktUWmlzTWh3V2R2T3VWaDNXWFdGdzEtb3g4LTZoQi1wQjNN?oc=5",
+      "url_valid": true,
+      "published_at": "2026-06-03T15:00:00+08:00",
+      "summary": "台股急攻期貨商ANC再拉警報- 證券 工商時報",
+      "ai_summary": "台股急攻期貨商ANC再拉警報- 證券 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "個股新聞",
+      "ai_topic": "stock",
+      "topic": "stock",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 0,
+      "symbols": [
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-06"
+    },
+    {
+      "id": "e0761eb2e4e5a47ca0",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "10檔台股基金淨值逾500元登高- 日報",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1GZnlMSmxkakdLLXpLTTZTTHVkdS13TTdCSWdKOG1ndWQ3MnBUWlpGdXNFTkNka2FwMWRmMzF3Uzhzd2VsaXpZU3F2a3FydTFMcXpVX3hlNTFYS1VNS0E4?oc=5",
+      "url_valid": true,
+      "published_at": "2026-05-28T15:00:00+08:00",
+      "summary": "10檔台股基金淨值逾500元登高- 日報 工商時報",
+      "ai_summary": "10檔台股基金淨值逾500元登高- 日報 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "個股新聞",
+      "ai_topic": "stock",
+      "topic": "stock",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 0,
+      "symbols": [
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-05"
+    },
+    {
+      "id": "255386b755ab2d2e1d",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "印度股市失血240億美元！台股躍全球市值第五大股市 熱錢為何轉向台韓？",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5YN1h3S201eFRmalRvOTQ0YmlPM0dYemFnd2xKU0RoTE5uazNiWUdfNWtjUHBOWFVYVUFCUWtFbWQtaXFOeVNRT0lHU2dzdk1yVkRWTGpTQVpOUVlxWTE4?oc=5",
+      "url_valid": true,
+      "published_at": "2026-05-27T15:00:00+08:00",
+      "summary": "印度股市失血240億美元！台股躍全球市值第五大股市 熱錢為何轉向台韓？ 工商時報",
+      "ai_summary": "印度股市失血240億美元！台股躍全球市值第五大股市 熱錢為何轉向台韓？ 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "匯率與債券",
+      "ai_topic": "rates",
+      "topic": "rates",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 0,
+      "symbols": [
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-05"
+    },
+    {
+      "id": "b4b33e15a5c22d33df",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "《盤後解析》新高行情炸裂！台股收盤衝上42267點周線也翻紅- 證券",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9TSWZ0ZlZCRWwtdXZKLUw0NkFpMlNLS1FJSGdMZ0RSSlFsa3MzcmRiMFV4Y1RQVVp2UjBicFU5Q3ZlQmVJUGFWVGxTMDgwYzY1eU5uY2VMS0RfVDFGQXA4?oc=5",
+      "url_valid": true,
+      "published_at": "2026-05-22T15:00:00+08:00",
+      "summary": "《盤後解析》新高行情炸裂！台股收盤衝上42267點周線也翻紅- 證券 工商時報",
+      "ai_summary": "《盤後解析》新高行情炸裂！台股收盤衝上42267點周線也翻紅- 證券 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "個股新聞",
+      "ai_topic": "stock",
+      "topic": "stock",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 0,
+      "symbols": [
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-05"
+    },
+    {
+      "id": "da76b62769e532e5e9",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "台股漲1,347點史上第五大IC設計、PCB衝鋒 「這檔」出關大暴走- 證券",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFB2ZTVCeDFuZkJFdHNfS1FiWi1lRi10OE1PeElnV0NhSlBWcDc5VmcwRmhnQ29NTHp5Q2xYd28wV3lOOUg4TEx0ZXRuZnJzXzhxSktvbWl3QVVpTFl3YTdR?oc=5",
+      "url_valid": true,
+      "published_at": "2026-05-21T15:00:00+08:00",
+      "summary": "台股漲1,347點史上第五大IC設計、PCB衝鋒 「這檔」出關大暴走- 證券 工商時報",
+      "ai_summary": "台股漲1,347點史上第五大IC設計、PCB衝鋒 「這檔」出關大暴走- 證券 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "個股新聞",
+      "ai_topic": "stock",
+      "topic": "stock",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 18,
+      "symbols": [
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-05"
+    },
+    {
+      "id": "ea682ef9e8e6ba9d9e",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "台股多殺多、記憶體成最大苦主！4萬點告急？分析師示警短線3大風險- 證券",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5fSHlNMnRkcFlnczdWdWpKd3UwQ3F0aHUxUjVTaDVJM2VVX2luSVd2U2daakZYTExYenYxVWxHSnN2bVBodTdLaEpKTmszVUVlNW55cmdrNHI2MVJPRmxJ?oc=5",
+      "url_valid": true,
+      "published_at": "2026-05-19T15:00:00+08:00",
+      "summary": "台股多殺多、記憶體成最大苦主！4萬點告急？分析師示警短線3大風險- 證券 工商時報",
+      "ai_summary": "台股多殺多、記憶體成最大苦主！4萬點告急？分析師示警短線3大風險- 證券 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "半導體與 AI",
+      "ai_topic": "technology",
+      "topic": "technology",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 34,
+      "symbols": [
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-05"
+    },
+    {
+      "id": "0194f24b2fa61d432c",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "台股三天重摔1,576點、投資人嚇瘋金管會出面穩軍心：基本面仍穩健- 金融",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9fOXVTcEs2VTB4UGJ2WUp3cXc3ZzRyMWVCV2k5NERqMG1QT2lxODM1ZGNCeExiQmpGOERpTXBUcjFHTTdhUmNzNXdwbzcyNzNncmx6RTRIRU04ZlNpMjhF?oc=5",
+      "url_valid": true,
+      "published_at": "2026-05-19T15:00:00+08:00",
+      "summary": "台股三天重摔1,576點、投資人嚇瘋金管會出面穩軍心：基本面仍穩健- 金融 工商時報",
+      "ai_summary": "台股三天重摔1,576點、投資人嚇瘋金管會出面穩軍心：基本面仍穩健- 金融 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "政策與法規",
+      "ai_topic": "policy",
+      "topic": "policy",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 32,
+      "symbols": [
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-05"
+    },
+    {
+      "id": "8fdea8115e9846fca0",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "台股Q1財報亮眼！上市公司獲利年增飆近五成證交所：基本面穩健- 證券",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1jVFZxQ01NQmVRVmdwT3FFMjFLWWFDVVU4Zzc3dDBwSFpkMDNlZkh0SVhxRXUtcjM5UVRpekduUzMzYXE2Sm5SUmtuRy1DT2phY2JKcm80NC1kVWRFUjFv?oc=5",
+      "url_valid": true,
+      "published_at": "2026-05-18T15:00:00+08:00",
+      "summary": "台股Q1財報亮眼！上市公司獲利年增飆近五成證交所：基本面穩健- 證券 工商時報",
+      "ai_summary": "台股Q1財報亮眼！上市公司獲利年增飆近五成證交所：基本面穩健- 證券 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "企業財報",
+      "ai_topic": "earnings",
+      "topic": "earnings",
+      "impact": "medium",
+      "market_direction": "中性",
+      "affected_markets": [
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 19,
+      "symbols": [
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-05"
+    },
+    {
+      "id": "a9a695a5a390b74ac4",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "台股的「長跑冠軍」！14檔EPS連5季成長AI股占大宗- 日報",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE41T3gtQ21BZHZqdDJ6MkJLMlg5djI2anRtOTk3M3VPcnVrNGFFdEZfNDZOeE9CVlJTby1SR1JjWDk0cEl3NkYtbFdkbzJPYUFwbllmdlg2X3dWWDNlM2dN?oc=5",
+      "url_valid": true,
+      "published_at": "2026-05-16T15:00:00+08:00",
+      "summary": "台股的「長跑冠軍」！14檔EPS連5季成長AI股占大宗- 日報 工商時報",
+      "ai_summary": "台股的「長跑冠軍」！14檔EPS連5季成長AI股占大宗- 日報 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "1806",
+          "name": "冠軍",
+          "industry": "玻璃陶瓷",
+          "asset_class": "stock"
+        },
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "企業財報",
+      "ai_topic": "earnings",
+      "topic": "earnings",
+      "impact": "medium",
+      "market_direction": "偏多",
+      "affected_markets": [
+        "1806",
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 19,
+      "symbols": [
+        "1806",
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響1806、8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-05"
+    },
+    {
+      "id": "a28353578530d1fabd",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "通膨升溫市場擔憂攀升 台股早盤走弱 00403A跌逾4％",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5JM296LTNjMDFsRGppbmRRQkM0eHIzOW10RVFfMkdyNFFkd0NMajFYMk9wQlpGNk5MNnFnV0oyZ2U4LVVBRGg1VFZvd0ppMGptVEdFQnpJLW5wanY4eWhF?oc=5",
+      "url_valid": true,
+      "published_at": "2026-05-13T15:00:00+08:00",
+      "summary": "通膨升溫市場擔憂攀升 台股早盤走弱 00403A跌逾4％ 工商時報",
+      "ai_summary": "通膨升溫市場擔憂攀升 台股早盤走弱 00403A跌逾4％ 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "00403A",
+          "name": "主動統一升級50",
+          "industry": "國內成分證券主動式交易所交易基金(股票)",
+          "asset_class": "etf"
+        },
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "總體經濟",
+      "ai_topic": "macro",
+      "topic": "macro",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "00403A",
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 0,
+      "symbols": [
+        "00403A",
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響00403A、8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-05"
+    },
+    {
+      "id": "106c39fd2a276f095f",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "一個台股兩個世界？市場看走眼莫慌仁寶等7家祭庫藏股- 日報",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1VVHRodDhrNGZRVkJzWllscEs1WHRLMjhNMXJUVFF4Q0p2UlVDM0RrSnUtYnV0Vy1Gd2lSMEdMR21pWmpseDJjRTk2NDdDbkVPLWk0QTRWQTdJbDFyaGp3?oc=5",
+      "url_valid": true,
+      "published_at": "2026-05-13T15:00:00+08:00",
+      "summary": "一個台股兩個世界？市場看走眼莫慌仁寶等7家祭庫藏股- 日報 工商時報",
+      "ai_summary": "一個台股兩個世界？市場看走眼莫慌仁寶等7家祭庫藏股- 日報 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "2324",
+          "name": "仁寶",
+          "industry": "電腦及週邊設備業",
+          "asset_class": "stock"
+        },
+        {
+          "symbol": "5347",
+          "name": "世界",
+          "industry": "半導體業",
+          "asset_class": "stock"
+        },
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": false,
+      "ai_category": "個股新聞",
+      "ai_topic": "stock",
+      "topic": "stock",
+      "impact": "low",
+      "market_direction": "中性",
+      "affected_markets": [
+        "2324",
+        "5347",
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 0,
+      "symbols": [
+        "2324",
+        "5347",
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響2324、5347、8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-05"
+    },
+    {
+      "id": "b3d2e78a551f410b92",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "川普喊戰爭快結束 台股暴漲千點 台積電強拉65元",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTFBGSEY5a01mVDhnUnllRTB5YmJsOGxLVV9FdzhpSnptRzFhYmhhamhhTnB3TXdxZnotcGkySXRnblhlSzFtR2xBUnJYbVdySUJJeXdhNmh5aUhVRV91QzZz?oc=5",
+      "url_valid": true,
+      "published_at": "2026-03-10T15:00:00+08:00",
+      "summary": "川普喊戰爭快結束 台股暴漲千點 台積電強拉65元 工商時報",
+      "ai_summary": "川普喊戰爭快結束 台股暴漲千點 台積電強拉65元 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "2330",
+          "name": "台積電",
+          "industry": "24",
+          "asset_class": "stock"
+        },
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "32",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": true,
+      "ai_category": "半導體與 AI",
+      "ai_topic": "technology",
+      "topic": "technology",
+      "impact": "high",
+      "market_direction": "中性",
+      "affected_markets": [
+        "2330",
+        "8923"
+      ],
+      "confidence": "高",
+      "importance_score": 78,
+      "symbols": [
+        "2330",
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響2330、8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-03",
+      "image_url": "https://lh3.googleusercontent.com/J6_coFbogxhRI9iM864NL_liGXvsQp2AupsKei7z0cNNfDvGUmWUy20nuUhkREQyrpY4bEeIBuc=s0-w300",
+      "image_candidates": [
+        "https://lh3.googleusercontent.com/J6_coFbogxhRI9iM864NL_liGXvsQp2AupsKei7z0cNNfDvGUmWUy20nuUhkREQyrpY4bEeIBuc=s0-w300"
+      ],
+      "image_status": "remote-candidates",
+      "fallback_image_slug": "technology"
+    },
+    {
+      "id": "15ebbf015539ec479a",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "美伊戰爭衝擊台股「這條件下」油價及市場情緒有望快速回穩- 證券",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE1fMjFsWThkaGJUalhjeHBwYXhPd1c3clA1MXduWXJNSVVmSWt6WHo5TkJOQXFwemExcnB0bTdZZHh6YWNTSHFCdVZ3MzNKQ3YzWW0yNUlSaTBEOF9Qbkpz?oc=5",
+      "url_valid": true,
+      "published_at": "2026-03-09T15:00:00+08:00",
+      "summary": "美伊戰爭衝擊台股「這條件下」油價及市場情緒有望快速回穩- 證券 工商時報",
+      "ai_summary": "美伊戰爭衝擊台股「這條件下」油價及市場情緒有望快速回穩- 證券 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "32",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": true
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": true,
+      "ai_category": "地緣政治",
+      "ai_topic": "geopolitics",
+      "topic": "geopolitics",
+      "impact": "high",
+      "market_direction": "中性",
+      "affected_markets": [
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 54,
+      "symbols": [
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊主要影響8923，仍需配合正式數據與市場預期判斷。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-03",
+      "image_url": "https://lh3.googleusercontent.com/J6_coFbogxhRI9iM864NL_liGXvsQp2AupsKei7z0cNNfDvGUmWUy20nuUhkREQyrpY4bEeIBuc=s0-w300",
+      "image_candidates": [
+        "https://lh3.googleusercontent.com/J6_coFbogxhRI9iM864NL_liGXvsQp2AupsKei7z0cNNfDvGUmWUy20nuUhkREQyrpY4bEeIBuc=s0-w300"
+      ],
+      "image_status": "remote-candidates",
+      "fallback_image_slug": "geopolitics"
+    },
+    {
+      "id": "ba49c0679f45802b48",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "中東戰雲密布！該抄底AI還是戰爭股？法人解析產業影響「受惠股」名單曝光- 證券",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE5hUVlObTZNdC1XQU01M05KOWw2Zm9nM3kwb1FNVHRTNGI0LTZRcEV4UkJwNDZlTkx3MnhhUFU4V0xYODV2UEhGUy0yZmJUVUlJRzZkMmx2SDZucnJ0RzU4?oc=5",
+      "url_valid": true,
+      "published_at": "2026-03-08T16:00:00+08:00",
+      "summary": "中東戰雲密布！該抄底AI還是戰爭股？法人解析產業影響「受惠股」名單曝光- 證券 工商時報",
+      "ai_summary": "中東戰雲密布！該抄底AI還是戰爭股？法人解析產業影響「受惠股」名單曝光- 證券 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": false
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": true,
+      "ai_category": "半導體與 AI",
+      "ai_topic": "technology",
+      "topic": "technology",
+      "impact": "high",
+      "market_direction": "中性",
+      "affected_markets": [
+        "8923"
+      ],
+      "confidence": "中",
+      "importance_score": 54,
+      "symbols": [
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊可能影響8923的風險偏好、產業展望、估值或資金流向。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-03"
+    },
+    {
+      "id": "57b21efc426c478741",
+      "source_id": "ctee",
+      "source": "工商時報",
+      "title": "1／18本周國內外財經焦點｜英特爾、SK海力士財報、日央利率決策、科技廠尾牙季、外銷訂單- 要聞",
+      "url": "https://news.google.com/rss/articles/CBMiX0FVX3lxTE9FWWlQV3ViSUtJTVBkaFZkRmI1UjhFdnROZFdWc0x3Wk9jWVlTdm1nWnJQY0d4RUF2TE1PRFZJT0VuZndmZXZBaTZ6TWRVOXgzX1dUVElvQXo2dk5nUUpz?oc=5",
+      "url_valid": true,
+      "published_at": "2026-01-18T16:00:00+08:00",
+      "summary": "1／18本周國內外財經焦點｜英特爾、SK海力士財報、日央利率決策、科技廠尾牙季、外銷訂單- 要聞 工商時報",
+      "ai_summary": "1／18本周國內外財經焦點｜英特爾、SK海力士財報、日央利率決策、科技廠尾牙季、外銷訂單- 要聞 工商時報",
+      "language": "zh-Hant",
+      "companies": [
+        {
+          "symbol": "4923",
+          "name": "力士",
+          "industry": "半導體業",
+          "asset_class": "stock"
+        },
+        {
+          "symbol": "8923",
+          "name": "時報",
+          "industry": "文化創意業",
+          "asset_class": "stock"
+        }
+      ],
+      "scope": "stock",
+      "regional_risk": null,
+      "risk_signals": {
+        "asia_topic": false,
+        "stress": false,
+        "cross_border": false
+      },
+      "company_announcement": false,
+      "is_stock_news": true,
+      "is_major": true,
+      "ai_category": "央行與利率",
+      "ai_topic": "macro",
+      "topic": "macro",
+      "impact": "high",
+      "market_direction": "中性",
+      "affected_markets": [
+        "4923",
+        "8923"
+      ],
+      "confidence": "高",
+      "importance_score": 92,
+      "symbols": [
+        "4923",
+        "8923"
+      ],
+      "verification_status": "reference",
+      "why_it_matters": "此資訊可能影響4923、8923的風險偏好、產業展望、估值或資金流向。",
+      "discovery_source": "google-news-history",
+      "discovery_channel": "工商時報",
+      "publisher": "工商時報",
+      "history_month": "2026-01"
+    }
+  ]
+}
