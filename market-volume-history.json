@@ -1,0 +1,1132 @@
+{
+  "metadata": {
+    "version": "v11.4.32",
+    "updated_at": "2026-08-09T04:59:00+08:00",
+    "history_start": "2026-01-01",
+    "history_end": "2026-08-07",
+    "retention_policy": "2026-01-01 through latest verified trading date",
+    "source_policy": "direct-online-official backfill at most once per day; restored rows are session-validated before reuse",
+    "migration": "v11.4.32 removes legacy weekend/future turnover rows before publishing",
+    "last_full_backfill_date": "2026-08-09",
+    "session_count": 101,
+    "warnings": []
+  },
+  "items": [
+    {
+      "date": "2026-08-07",
+      "trade_value": 850815189087.0,
+      "twse_trade_value": 850815189087.0,
+      "tpex_trade_value": null,
+      "source": "TWSE/TPEx official close quote sum + TWSE OpenAPI FMTQIK + TWSE/TPEx official latest-close quote sum",
+      "sources": [
+        "TWSE/TPEx official close quote sum",
+        "TWSE OpenAPI FMTQIK",
+        "TWSE/TPEx official latest-close quote sum"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-08-06",
+      "trade_value": 974054973424.0,
+      "twse_trade_value": 974054973424.0,
+      "tpex_trade_value": null,
+      "source": "TWSE/TPEx official close quote sum + TWSE OpenAPI FMTQIK",
+      "sources": [
+        "TWSE/TPEx official close quote sum",
+        "TWSE OpenAPI FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-08-05",
+      "trade_value": 1200212510521.0,
+      "twse_trade_value": 1200212510521.0,
+      "tpex_trade_value": null,
+      "source": "TWSE／TPEx official close + TWSE/TPEx official close quote sum + TWSE OpenAPI FMTQIK",
+      "sources": [
+        "TWSE／TPEx official close",
+        "TWSE/TPEx official close quote sum",
+        "TWSE OpenAPI FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-08-04",
+      "trade_value": 1087045875836.0,
+      "twse_trade_value": 1087045875836.0,
+      "tpex_trade_value": null,
+      "source": "TWSE OpenAPI FMTQIK",
+      "sources": [
+        "TWSE OpenAPI FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-08-03",
+      "trade_value": 885506043091.0,
+      "twse_trade_value": 885506043091.0,
+      "tpex_trade_value": null,
+      "source": "TWSE OpenAPI FMTQIK",
+      "sources": [
+        "TWSE OpenAPI FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-06-30",
+      "trade_value": 1266062228020.0,
+      "twse_trade_value": 1266062228020.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-06-29",
+      "trade_value": 1045439448015.0,
+      "twse_trade_value": 1045439448015.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-06-26",
+      "trade_value": 1672832488417.0,
+      "twse_trade_value": 1672832488417.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-06-25",
+      "trade_value": 1368076901597.0,
+      "twse_trade_value": 1368076901597.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-06-24",
+      "trade_value": 1539046268153.0,
+      "twse_trade_value": 1539046268153.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-06-23",
+      "trade_value": 1672355337665.0,
+      "twse_trade_value": 1672355337665.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-06-22",
+      "trade_value": 1515817959773.0,
+      "twse_trade_value": 1515817959773.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-06-18",
+      "trade_value": 1606195402305.0,
+      "twse_trade_value": 1606195402305.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-06-17",
+      "trade_value": 1154595951473.0,
+      "twse_trade_value": 1154595951473.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-06-16",
+      "trade_value": 1262185518120.0,
+      "twse_trade_value": 1262185518120.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-06-15",
+      "trade_value": 1115744351199.0,
+      "twse_trade_value": 1115744351199.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-06-12",
+      "trade_value": 1169186958350.0,
+      "twse_trade_value": 1169186958350.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-06-11",
+      "trade_value": 1338516691099.0,
+      "twse_trade_value": 1338516691099.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-06-10",
+      "trade_value": 1424069567256.0,
+      "twse_trade_value": 1424069567256.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-06-09",
+      "trade_value": 1224062987846.0,
+      "twse_trade_value": 1224062987846.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-06-08",
+      "trade_value": 1216574603939.0,
+      "twse_trade_value": 1216574603939.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-06-05",
+      "trade_value": 1319821926499.0,
+      "twse_trade_value": 1319821926499.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-06-04",
+      "trade_value": 1325597743625.0,
+      "twse_trade_value": 1325597743625.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-06-03",
+      "trade_value": 1517535663789.0,
+      "twse_trade_value": 1517535663789.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-06-02",
+      "trade_value": 1696398095158.0,
+      "twse_trade_value": 1696398095158.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-06-01",
+      "trade_value": 1611133989740.0,
+      "twse_trade_value": 1611133989740.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-04-30",
+      "trade_value": 1074901891496.0,
+      "twse_trade_value": 1074901891496.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-04-29",
+      "trade_value": 915272695535.0,
+      "twse_trade_value": 915272695535.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-04-28",
+      "trade_value": 1057488155712.0,
+      "twse_trade_value": 1057488155712.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-04-27",
+      "trade_value": 1248027623513.0,
+      "twse_trade_value": 1248027623513.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-04-24",
+      "trade_value": 1081153827550.0,
+      "twse_trade_value": 1081153827550.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-04-23",
+      "trade_value": 1460103003620.0,
+      "twse_trade_value": 1460103003620.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-04-22",
+      "trade_value": 979876044142.0,
+      "twse_trade_value": 979876044142.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-04-21",
+      "trade_value": 1021704705351.0,
+      "twse_trade_value": 1021704705351.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-04-20",
+      "trade_value": 960963966853.0,
+      "twse_trade_value": 960963966853.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-04-17",
+      "trade_value": 985525733386.0,
+      "twse_trade_value": 985525733386.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-04-16",
+      "trade_value": 927314900440.0,
+      "twse_trade_value": 927314900440.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-04-15",
+      "trade_value": 1025905609552.0,
+      "twse_trade_value": 1025905609552.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-04-14",
+      "trade_value": 1017277556839.0,
+      "twse_trade_value": 1017277556839.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-04-13",
+      "trade_value": 805701457540.0,
+      "twse_trade_value": 805701457540.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-04-10",
+      "trade_value": 871808149506.0,
+      "twse_trade_value": 871808149506.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-04-09",
+      "trade_value": 872275954561.0,
+      "twse_trade_value": 872275954561.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-04-08",
+      "trade_value": 894100450046.0,
+      "twse_trade_value": 894100450046.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-04-07",
+      "trade_value": 584692254383.0,
+      "twse_trade_value": 584692254383.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-04-02",
+      "trade_value": 702608705100.0,
+      "twse_trade_value": 702608705100.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-04-01",
+      "trade_value": 652608970719.0,
+      "twse_trade_value": 652608970719.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-03-31",
+      "trade_value": 882453969577.0,
+      "twse_trade_value": 882453969577.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-03-30",
+      "trade_value": 678152191949.0,
+      "twse_trade_value": 678152191949.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-03-27",
+      "trade_value": 658273529008.0,
+      "twse_trade_value": 658273529008.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-03-26",
+      "trade_value": 766599119592.0,
+      "twse_trade_value": 766599119592.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-03-25",
+      "trade_value": 652340765184.0,
+      "twse_trade_value": 652340765184.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-03-24",
+      "trade_value": 690091065536.0,
+      "twse_trade_value": 690091065536.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-03-23",
+      "trade_value": 712578117331.0,
+      "twse_trade_value": 712578117331.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-03-20",
+      "trade_value": 1004234872968.0,
+      "twse_trade_value": 1004234872968.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-03-19",
+      "trade_value": 893918756213.0,
+      "twse_trade_value": 893918756213.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-03-18",
+      "trade_value": 924101194833.0,
+      "twse_trade_value": 924101194833.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-03-17",
+      "trade_value": 846176534881.0,
+      "twse_trade_value": 846176534881.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-03-16",
+      "trade_value": 755420348265.0,
+      "twse_trade_value": 755420348265.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-03-13",
+      "trade_value": 752682671944.0,
+      "twse_trade_value": 752682671944.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-03-12",
+      "trade_value": 784007384475.0,
+      "twse_trade_value": 784007384475.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-03-11",
+      "trade_value": 693435834178.0,
+      "twse_trade_value": 693435834178.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-03-10",
+      "trade_value": 728225719000.0,
+      "twse_trade_value": 728225719000.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-03-09",
+      "trade_value": 868304737884.0,
+      "twse_trade_value": 868304737884.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-03-06",
+      "trade_value": 655472934511.0,
+      "twse_trade_value": 655472934511.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-03-05",
+      "trade_value": 793545602327.0,
+      "twse_trade_value": 793545602327.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-03-04",
+      "trade_value": 1099338575770.0,
+      "twse_trade_value": 1099338575770.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-03-03",
+      "trade_value": 1113233319063.0,
+      "twse_trade_value": 1113233319063.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-03-02",
+      "trade_value": 1014040137978.0,
+      "twse_trade_value": 1014040137978.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-02-26",
+      "trade_value": 1207836722507.0,
+      "twse_trade_value": 1207836722507.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-02-25",
+      "trade_value": 1020570870136.0,
+      "twse_trade_value": 1020570870136.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-02-24",
+      "trade_value": 861808912768.0,
+      "twse_trade_value": 861808912768.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-02-23",
+      "trade_value": 949992767170.0,
+      "twse_trade_value": 949992767170.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-02-11",
+      "trade_value": 699292298413.0,
+      "twse_trade_value": 699292298413.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-02-10",
+      "trade_value": 678490714672.0,
+      "twse_trade_value": 678490714672.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-02-09",
+      "trade_value": 653957736705.0,
+      "twse_trade_value": 653957736705.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-02-06",
+      "trade_value": 700313173141.0,
+      "twse_trade_value": 700313173141.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-02-05",
+      "trade_value": 715168705076.0,
+      "twse_trade_value": 715168705076.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-02-04",
+      "trade_value": 704644032693.0,
+      "twse_trade_value": 704644032693.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-02-03",
+      "trade_value": 821574120123.0,
+      "twse_trade_value": 821574120123.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-02-02",
+      "trade_value": 771419543919.0,
+      "twse_trade_value": 771419543919.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-01-30",
+      "trade_value": 941320964545.0,
+      "twse_trade_value": 941320964545.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-01-29",
+      "trade_value": 959652045839.0,
+      "twse_trade_value": 959652045839.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-01-28",
+      "trade_value": 853922428449.0,
+      "twse_trade_value": 853922428449.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-01-27",
+      "trade_value": 817604546187.0,
+      "twse_trade_value": 817604546187.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-01-26",
+      "trade_value": 747339306040.0,
+      "twse_trade_value": 747339306040.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-01-23",
+      "trade_value": 818428930073.0,
+      "twse_trade_value": 818428930073.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-01-22",
+      "trade_value": 814595841360.0,
+      "twse_trade_value": 814595841360.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-01-21",
+      "trade_value": 899309076186.0,
+      "twse_trade_value": 899309076186.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-01-20",
+      "trade_value": 799639371793.0,
+      "twse_trade_value": 799639371793.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-01-19",
+      "trade_value": 823428003269.0,
+      "twse_trade_value": 823428003269.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-01-16",
+      "trade_value": 851452408675.0,
+      "twse_trade_value": 851452408675.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-01-15",
+      "trade_value": 671953720007.0,
+      "twse_trade_value": 671953720007.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-01-14",
+      "trade_value": 681983353722.0,
+      "twse_trade_value": 681983353722.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-01-13",
+      "trade_value": 749179436618.0,
+      "twse_trade_value": 749179436618.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-01-12",
+      "trade_value": 626408176303.0,
+      "twse_trade_value": 626408176303.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-01-09",
+      "trade_value": 704371387415.0,
+      "twse_trade_value": 704371387415.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-01-08",
+      "trade_value": 759270755036.0,
+      "twse_trade_value": 759270755036.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-01-07",
+      "trade_value": 881736707216.0,
+      "twse_trade_value": 881736707216.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-01-06",
+      "trade_value": 763236739665.0,
+      "twse_trade_value": 763236739665.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-01-05",
+      "trade_value": 800793653955.0,
+      "twse_trade_value": 800793653955.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    },
+    {
+      "date": "2026-01-02",
+      "trade_value": 669781989470.0,
+      "twse_trade_value": 669781989470.0,
+      "tpex_trade_value": null,
+      "source": "TWSE official monthly FMTQIK",
+      "sources": [
+        "TWSE official monthly FMTQIK"
+      ],
+      "updated_at": "2026-08-09T04:59:00+08:00"
+    }
+  ]
+}
