@@ -49,7 +49,7 @@ async function loadBranchApi(name,branch){
  if(meta?.download_url)return await getJson(`${meta.download_url}${meta.download_url.includes("?")?"&":"?"}sha=${encodeURIComponent(meta.sha||Date.now())}`,11000);
  throw Error("GitHub contents API returned no JSON content");
 }
-const snapshotCacheKeys=["mr-market-snapshot-last-good-v1","mr-market-snapshot-last-good-v11.4.30","mr-market-snapshot-last-good-v11.4.28","mr-market-snapshot-last-good-v11.4.27"];
+const snapshotCacheKeys=["mr-market-snapshot-last-good-v1","mr-market-snapshot-last-good-v11.4.31","mr-market-snapshot-last-good-v11.4.28","mr-market-snapshot-last-good-v11.4.27"];
 const snapshotCacheKey=snapshotCacheKeys[0];
 const DATA_MEMORY=new Map();
 const dataCacheKey=name=>`mr-data-cache-v1:${name}`;
@@ -85,34 +85,57 @@ function readLastGood(name){
  if(name==="market-snapshot.json"){const value=loadStored(snapshotCacheKeys);if(isUsablePayload(name,value))return value}
  return null;
 }
-async function loadRawBranch(name,branch,timeout=10000){return await getJson(`https://raw.githubusercontent.com/${OWNER}/${REPO}/${branch}/${name}?t=${Date.now()}`,timeout)}
-async function loadJsDelivr(name,branch,timeout=10000){return await getJson(`https://cdn.jsdelivr.net/gh/${OWNER}/${REPO}@${branch}/${name}?t=${Date.now()}`,timeout)}
+async function loadRawBranch(name,branch,timeout=5200){return await getJson(`https://raw.githubusercontent.com/${OWNER}/${REPO}/${branch}/${name}?t=${Date.now()}`,timeout)}
+async function loadJsDelivr(name,branch,timeout=5200){return await getJson(`https://cdn.jsdelivr.net/gh/${OWNER}/${REPO}@${branch}/${name}?t=${Date.now()}`,timeout)}
+async function loadStatically(name,branch,timeout=5200){return await getJson(`https://cdn.statically.io/gh/${OWNER}/${REPO}/${branch}/${name}?t=${Date.now()}`,timeout)}
+// GitHub Contents API is rate-limited for anonymous clients and is a poor
+// fallback for large generated JSON.  Large channels use three direct/CDN
+// mirrors instead; smaller payloads keep the API as a final metadata-aware
+// fallback.
+const LARGE_BRANCH_FILES=new Set(["events.json","market-kline.json","assets.json","asset-audit.json","stock-basics.json","yahoo-details.json","etf-details.json","data-verification.json","company-disclosures.json","stock-news.json"]);
 async function loadLiveBranchFast(name,branch){
- const attempts=[
-  loadRawBranch(name,branch).then(payload=>isUsablePayload(name,payload)?{payload,source:"raw-live-branch"}:Promise.reject(Error("raw unusable"))),
-  loadJsDelivr(name,branch).then(payload=>isUsablePayload(name,payload)?{payload,source:"jsdelivr-live-branch"}:Promise.reject(Error("jsdelivr unusable"))),
-  loadBranchApi(name,branch).then(payload=>isUsablePayload(name,payload)?{payload,source:"github-api-live-branch"}:Promise.reject(Error("api unusable")))
+ // Mirrors are intentionally tried one-by-one.  v11.4.30 started Raw,
+ // jsDelivr and GitHub Contents API simultaneously for every channel, so a
+ // news page could create 30+ duplicate downloads and decode multi-megabyte
+ // JSON more than once.  Sequential failover keeps the same resilience while
+ // making one verified payload the normal case.
+ const loaders=[
+  ["raw-live-branch",()=>loadRawBranch(name,branch)],
+  ["jsdelivr-live-branch",()=>loadJsDelivr(name,branch)],
+  ["statically-live-branch",()=>loadStatically(name,branch)],
  ];
- return await Promise.any(attempts);
+ if(!LARGE_BRANCH_FILES.has(name))loaders.push(["github-api-live-branch",()=>loadBranchApi(name,branch)]);
+ let lastError=null;
+ for(const [source,loader] of loaders){
+  try{const payload=await loader();if(isUsablePayload(name,payload))return{payload,source};lastError=Error(`${source} unusable`)}catch(error){lastError=error}
+ }
+ throw lastError||Error("live branch unavailable");
 }
-async function loadData(name,fallback={},options={}){
+const DATA_INFLIGHT=new Map();
+async function _loadData(name,fallback={},options={}){
  const ttl=dataCacheTtl(name),now=Date.now();
  if(!options.force){
   const memory=DATA_MEMORY.get(name);if(memory&&now-memory.at<ttl&&isUsablePayload(name,memory.payload))return cloneValue(memory.payload);
   try{const cached=JSON.parse(sessionStorage.getItem(dataCacheKey(name))||"null");if(cached&&now-cached.at<ttl&&isUsablePayload(name,cached.payload)){DATA_MEMORY.set(name,cached);return cloneValue(cached.payload)}}catch(e){}
  }
  const branch=CHANNELS[name];let payload=null,source="";
- if(name==="market-snapshot.json"&&LIVE_MARKET_ENDPOINT){try{const candidate=await getJson(`${LIVE_MARKET_ENDPOINT}/market-snapshot.json?_=${Date.now()}`,8000);if(isUsablePayload(name,candidate)){payload=candidate;source="worker"}}catch(e){}}
- // Query all public live-branch mirrors concurrently; first verified payload wins.
+ if(name==="market-snapshot.json"&&LIVE_MARKET_ENDPOINT){try{const candidate=await getJson(`${LIVE_MARKET_ENDPOINT}/market-snapshot.json?_=${Date.now()}`,6000);if(isUsablePayload(name,candidate)){payload=candidate;source="worker"}}catch(e){}}
  if(branch&&!payload){try{const live=await loadLiveBranchFast(name,branch);payload=live.payload;source=live.source}catch(e){}}
  if(!payload){const cached=readLastGood(name);if(cached){payload=cached;source="browser-last-good"}}
- if(!payload){try{const candidate=await getJson(`data/${name}?t=${Date.now()}`,7000);if(isUsablePayload(name,candidate)){payload=candidate;source="same-origin-main"}}catch(e){}}
+ if(!payload){try{const candidate=await getJson(`data/${name}?t=${Date.now()}`,5000);if(isUsablePayload(name,candidate)){payload=candidate;source="same-origin-main"}}catch(e){}}
  if(!payload)payload=cloneValue(fallback);
  if(name==="market-snapshot.json")payload=mergeSnapshotCache(payload||cloneValue(fallback));
  if(payload?.metadata&&source)payload={...payload,metadata:{...payload.metadata,frontend_load_source:source}};
  if(isUsablePayload(name,payload))rememberLastGood(name,payload);
- const entry={at:now,payload};DATA_MEMORY.set(name,entry);try{sessionStorage.setItem(dataCacheKey(name),JSON.stringify(entry))}catch(e){}
+ const entry={at:Date.now(),payload};DATA_MEMORY.set(name,entry);try{sessionStorage.setItem(dataCacheKey(name),JSON.stringify(entry))}catch(e){}
  return cloneValue(payload);
+}
+async function loadData(name,fallback={},options={}){
+ if(options.force)return await _loadData(name,fallback,options);
+ const active=DATA_INFLIGHT.get(name);if(active)return cloneValue(await active);
+ const promise=_loadData(name,fallback,options).finally(()=>DATA_INFLIGHT.delete(name));
+ DATA_INFLIGHT.set(name,promise);
+ return cloneValue(await promise);
 }
 const STOCK_BASIC_ENDPOINTS=[
  {url:"https://openapi.twse.com.tw/v1/opendata/t187ap03_L",exchange:"TWSE",source:"TWSE 上市公司基本資料"},
@@ -131,14 +154,14 @@ function officialBasicRecord(row,endpoint){
  record.updated_at=new Date().toISOString();return record;
 }
 async function loadStockBasics(){
- const fallback=window.__STOCK_BASICS_SEED__||{metadata:{version:"v11.4.30",status:"waiting",item_count:0},items:{}};
+ const fallback=window.__STOCK_BASICS_SEED__||{metadata:{version:"v11.4.31",status:"waiting",item_count:0},items:{}};
  const payload=await loadData("stock-basics.json",fallback),items={...(payload.items||{})};
  if(Object.keys(items).length>=500)return payload;
  const settled=await Promise.allSettled(STOCK_BASIC_ENDPOINTS.map(async endpoint=>({endpoint,rows:await getJson(endpoint.url,15000)})));
  let added=0;
  for(const result of settled){if(result.status!=="fulfilled"||!Array.isArray(result.value.rows))continue;for(const row of result.value.rows){const record=officialBasicRecord(row,result.value.endpoint);if(!record)continue;items[record.symbol]={...(items[record.symbol]||{}),...record};added++}}
  const values=Object.values(items),average=values.length?values.reduce((sum,row)=>sum+Number(row.basic_coverage_percent||0),0)/values.length:0;
- return {...payload,metadata:{...(payload.metadata||{}),version:"v11.4.30",item_count:values.length,average_basic_coverage_percent:Math.round(average*10)/10,scope:"all-currently-listed-twse-and-tpex-stocks",browser_official_fallback_added:added},items};
+ return {...payload,metadata:{...(payload.metadata||{}),version:"v11.4.31",item_count:values.length,average_basic_coverage_percent:Math.round(average*10)/10,scope:"all-currently-listed-twse-and-tpex-stocks",browser_official_fallback_added:added},items};
 }
 async function loadNewsChannels(){
  const channels=await Promise.all(NEWS_FILES.map(async cfg=>{
@@ -151,10 +174,10 @@ async function loadNewsChannels(){
  for(const channel of channels){for(const item of channel.items||[]){const key=String(item.id||`${item.title||""}|${item.url||""}`);if(!key||seen.has(key))continue;seen.add(key);items.push(item)}}
  items.sort((a,b)=>Date.parse(b.published_at||b.date||0)-Date.parse(a.published_at||a.date||0));
  const updated=channels.map(c=>c.metadata?.updated_at).filter(Boolean).sort().pop()||null;
- return {metadata:{version:"v11.4.30",updated_at:updated,item_count:items.length,channel_count:channels.length},channels,items};
+ return {metadata:{version:"v11.4.31",updated_at:updated,item_count:items.length,channel_count:channels.length},channels,items};
 }
 async function loadStockNews(){
- const fallback=window.__STOCK_NEWS_SEED__||{metadata:{version:"v11.4.30",status:"waiting",item_count:0},items:[]};
+ const fallback=window.__STOCK_NEWS_SEED__||{metadata:{version:"v11.4.31",status:"waiting",item_count:0},items:[]};
  return await loadData("stock-news.json",fallback);
 }
 
@@ -189,7 +212,9 @@ async function loadMarketKline(symbol,interval="1d"){
  const spec=KLINE_INTERVALS[interval]||KLINE_INTERVALS["1d"],encoded=encodeURIComponent(symbol);let payload=null;
  if(LIVE_MARKET_ENDPOINT){try{payload=await getJson(`${LIVE_MARKET_ENDPOINT}/kline?symbol=${encoded}&interval=${encodeURIComponent(interval)}&_=${Date.now()}`,9000)}catch(e){}}
  if(!payload){const staticPayload=await staticMarketKline(symbol,interval);if(staticPayload)payload=staticPayload}
- if(!payload){try{payload=await getJson(`https://query1.finance.yahoo.com/v8/finance/chart/${encoded}?range=${spec.range}&interval=${spec.interval}&events=div%2Csplits&_=${Date.now()}`,9000)}catch(e){}}
+ // Do not fall back to browser-to-Yahoo requests.  Besides being CORS-unstable,
+ // client-side 4h aggregation can cross exchange sessions.  Verified edge or
+ // published static candles are the only K-line authorities.
  if(!payload)throw Error("此週期尚未同步；請等待下一次行情更新");
  let rows=Array.isArray(payload.candles)?payload.candles:chartCandles(payload);
  rows=rows.map(row=>{const raw=row.time??row.timestamp??row.date;const time=typeof raw==="string"&&!/^\d+$/.test(raw)?raw:Number(raw);return {time,open:finite(row.open),high:finite(row.high),low:finite(row.low),close:finite(row.close),volume:finite(row.volume)}}).filter(row=>row.time&&[row.open,row.high,row.low,row.close].every(value=>value!=null));
@@ -243,8 +268,9 @@ function relatedNews(event,items,options={}){
 }
 
 function scheduleAssetPrefetch(){
- const run=()=>Promise.allSettled(["stock-basics.json","yahoo-details.json","etf-details.json","monthly-revenue.json","dividend-history.json","secondary-reference.json","data-verification.json"].map(name=>loadData(name,{}))).catch(()=>{});
- (window.requestIdleCallback||((fn)=>setTimeout(fn,900)))(run,{timeout:3500});
+ // Do not preload seven data channels on every page.  The old idle prefetch
+ // could download several megabytes even when the user never opened a stock.
+ // Only warm the actual asset page after the user shows intent.
  const warm=event=>{const link=event.target?.closest?.('a[href*="asset.html?symbol="]');if(!link||link.dataset.prefetched)return;link.dataset.prefetched="1";const tag=document.createElement("link");tag.rel="prefetch";tag.href=link.href;document.head.appendChild(tag)};
  document.addEventListener("pointerover",warm,{passive:true});document.addEventListener("touchstart",warm,{passive:true});
 }

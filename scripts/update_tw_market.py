@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Refresh Taiwan closing quotes and online historical market turnover.
 
-v11.4.30 always asks the official TWSE/TPEx network sources for historical
+v11.4.31 always asks the official TWSE/TPEx network sources for historical
 turnover from 2026-01-01. Local JSON is only a last-known-good cache; the
 20-session average no longer waits for the site to accumulate one day at a time.
 """
@@ -16,8 +16,8 @@ import requests
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.30"
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.30)"}
+VERSION = "v11.4.31"
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.31)"}
 TWSE_QUOTES = "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL"
 TPEX_QUOTES = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes"
 TWSE_FUNDS = "https://openapi.twse.com.tw/v1/opendata/t187ap47_L"
@@ -138,9 +138,10 @@ def fetch_quotes(session: requests.Session, url: str, exchange: str, etf_codes: 
             "low": number(first(row, ("LowestPrice", "Low", "最低價"))),
             "volume": number(first(row, ("TradeVolume", "TradingShares", "TradingVolume", "成交股數"))),
             "trade_value": number(first(row, ("TradeValue", "TransactionAmount", "成交金額"))),
-            "quote_date": NOW.date().isoformat(),
-            "quote_time": NOW.strftime("%H:%M"),
-            "status": "official-close",
+            "source_date": parse_market_date(first(row, ("Date", "日期", "資料日期", "TradeDate", "TradingDate"))),
+            "quote_date": None,
+            "quote_time": "",
+            "status": "latest-close",
         })
     return output
 
@@ -236,7 +237,7 @@ def online_history(session: requests.Session) -> tuple[list[dict[str, Any]], lis
     return rows, warnings
 
 
-def merge_history(old_rows: list[dict], online_rows: list[dict], current_total: float | None) -> list[dict]:
+def merge_history(old_rows: list[dict], online_rows: list[dict], current_total: float | None, current_date: str | None = None) -> list[dict]:
     by_date: dict[str, dict[str, Any]] = {}
     for raw in [*old_rows, *online_rows]:
         day = parse_market_date(raw.get("date"))
@@ -258,12 +259,14 @@ def merge_history(old_rows: list[dict], online_rows: list[dict], current_total: 
         for source in raw.get("sources") or ([raw.get("source")] if raw.get("source") else []):
             if source and source not in row["sources"]:
                 row["sources"].append(source)
-    today = NOW.date().isoformat()
-    if current_total is not None and current_total > 0:
-        row = by_date.setdefault(today, {"date": today, "sources": []})
+    # Never fabricate a weekend/holiday turnover row.  The quote endpoints are
+    # latest-close feeds, so their aggregate belongs to the verified trading
+    # date from the official turnover history (or an explicit source date).
+    if current_date and current_total is not None and current_total > 0:
+        row = by_date.setdefault(current_date, {"date": current_date, "sources": []})
         row["live_quote_sum"] = current_total
-        if "TWSE/TPEx official close quote sum" not in row["sources"]:
-            row["sources"].append("TWSE/TPEx official close quote sum")
+        if "TWSE/TPEx official latest-close quote sum" not in row["sources"]:
+            row["sources"].append("TWSE/TPEx official latest-close quote sum")
     output = []
     for day, row in by_date.items():
         components = [number(row.get("twse_trade_value")), number(row.get("tpex_trade_value"))]
@@ -310,12 +313,31 @@ def main() -> None:
 
     history_path = DATA / "market-volume-history.json"
     history = read_json(history_path, {"metadata": {}, "items": []})
-    fetched_history, history_warnings = online_history(session)
+    # Full online backfill is needed only when the archive is incomplete or has
+    # not been refreshed today.  This removes dozens of redundant historical
+    # HTTP requests from every five-minute market refresh.
+    old_history_rows = history.get("items") or []
+    history_checked_today = str((history.get("metadata") or {}).get("last_full_backfill_date") or "") == NOW.date().isoformat()
+    enough_history = len(old_history_rows) >= 20
+    if history_checked_today and enough_history:
+        fetched_history, history_warnings = [], []
+    else:
+        fetched_history, history_warnings = online_history(session)
     warnings.extend(history_warnings)
-    history_rows = merge_history(history.get("items") or [], fetched_history, current_quote_total)
-    previous_values = [number(item.get("trade_value")) for item in history_rows if item.get("date") != NOW.date().isoformat()]
+    source_dates = [str(row.get("source_date")) for row in ranked_rows if row.get("source_date")]
+    history_dates = [str(row.get("date")) for row in [*fetched_history, *old_history_rows] if row.get("date")]
+    trading_date = max(source_dates or history_dates, default=str((old.get("metadata") or {}).get("trading_date") or "")) or None
+    if not trading_date:
+        warnings.append("Unable to verify latest Taiwan trading date; retained quote rows without a fabricated date")
+    for row in rows:
+        row.pop("source_date", None)
+        row["quote_date"] = trading_date
+        row["quote_time"] = ""
+        row["status"] = "latest-close"
+    history_rows = merge_history(old_history_rows, fetched_history, current_quote_total, trading_date)
+    previous_values = [number(item.get("trade_value")) for item in history_rows if item.get("date") != trading_date]
     previous_values = [value for value in previous_values if value is not None and value > 0]
-    latest_row = next((item for item in history_rows if item.get("date") == NOW.date().isoformat()), None)
+    latest_row = next((item for item in history_rows if item.get("date") == trading_date), None)
     total_trade_value = number(latest_row.get("trade_value")) if latest_row else current_quote_total
     average_5d = average(previous_values, 5)
     average_20d = average(previous_values, 20)
@@ -327,9 +349,10 @@ def main() -> None:
             "version": VERSION,
             "updated_at": NOW.isoformat(timespec="seconds"),
             "history_start": HISTORY_START.isoformat(),
-            "history_end": NOW.date().isoformat(),
-            "retention_policy": "2026-01-01 through today",
-            "source_policy": "direct official network backfill every run; local JSON is fallback only",
+            "history_end": trading_date,
+            "retention_policy": "2026-01-01 through latest verified trading date",
+            "source_policy": "direct-online-official backfill at most once per day; local last-known-good archive is retained between refreshes",
+            "last_full_backfill_date": NOW.date().isoformat() if fetched_history else (history.get("metadata") or {}).get("last_full_backfill_date"),
             "session_count": len(history_rows),
             "warnings": history_warnings,
         },
@@ -345,8 +368,8 @@ def main() -> None:
         "metadata": {
             "version": VERSION,
             "updated_at": NOW.isoformat(timespec="seconds"),
-            "trading_date": NOW.date().isoformat(),
-            "market_status": "official-close",
+            "trading_date": trading_date,
+            "market_status": "latest-close",
             "source": "TWSE/TPEx official online open data",
             "warnings": warnings,
             "etf_count": sum(row.get("asset_class") == "etf" for row in rows),
@@ -359,7 +382,7 @@ def main() -> None:
             "volume_ratio_20d": volume_ratio_20d,
             "volume_history_sessions": len(previous_values),
             "volume_history_start": HISTORY_START.isoformat(),
-            "volume_history_source": "direct-online-official",
+            "volume_history_source": "official-online-last-verified-session",
             "volume_history_complete": len(previous_values) >= 20,
         },
         "breadth": {"up": up, "down": down, "flat": len(ranked_rows) - up - down},

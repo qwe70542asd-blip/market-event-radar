@@ -1,0 +1,61 @@
+name: Update v11.4.31 official feeds
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/update-official-feeds.yml"
+      - "scripts/update_company_disclosures.py"
+      - "scripts/update_official_notices.py"
+      - "scripts/news_pipeline.py"
+      - "scripts/publish_data_branch.sh"
+      - "scripts/restore_data_branch.sh"
+      - "requirements.txt"
+  schedule:
+    - cron: "7,22,37,52 * * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: live-official-feeds
+  cancel-in-progress: true
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Restore last-good feeds and symbol masters
+        run: |
+          bash scripts/restore_data_branch.sh live-company-disclosures "company-disclosures.json:data/company-disclosures.json" "company-disclosures-seed.js:data/company-disclosures-seed.js"
+          bash scripts/restore_data_branch.sh live-official-notices "official-market-notices.json:data/official-market-notices.json" "official-market-notices-seed.js:data/official-market-notices-seed.js"
+          bash scripts/restore_data_branch.sh live-assets "assets.json:data/assets.json"
+          bash scripts/restore_data_branch.sh live-stock-basics "stock-basics.json:data/stock-basics.json"
+      - run: python scripts/update_company_disclosures.py
+      - run: python scripts/update_official_notices.py
+      - name: Verify publication timestamps are source-derived
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          for file in ("company-disclosures.json","official-market-notices.json"):
+              p=json.loads((Path("data")/file).read_text(encoding="utf-8"))
+              assert p.get("metadata",{}).get("version")=="v11.4.31"
+              rows=p.get("items",[])
+              assert all(row.get("published_at") for row in rows)
+              print(file,len(rows),p.get("metadata",{}).get("recent_24h_count"))
+          PY
+      - name: Publish company disclosures
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/publish_data_branch.sh live-company-disclosures company-disclosures data/company-disclosures.json data/company-disclosures-seed.js
+      - name: Publish official notices
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/publish_data_branch.sh live-official-notices official-notices data/official-market-notices.json data/official-market-notices-seed.js

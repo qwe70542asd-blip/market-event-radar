@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Update the v11.4.30 Taiwan stock and ETF master with detailed official data.
+"""Update the v11.4.31 Taiwan stock and ETF master with detailed official data.
 
 The updater is intentionally defensive:
 - official TWSE/TPEx endpoints are parsed with bilingual/format-tolerant keys;
@@ -22,8 +22,8 @@ from bs4 import BeautifulSoup
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.30"
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.30)"}
+VERSION = "v11.4.31"
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.31)"}
 SESSION = requests.Session()
 
 MASTER_SOURCES = [
@@ -329,7 +329,7 @@ def parse_fund_row(row: dict[str, Any], source_name: str, exchange: str) -> tupl
     is_active = "主動" in combined
     fund = {
         "formal_name": formal_name or None,
-        "issuer": text_value(row, "投信事業", "證券投資信託事業", "基金經理公司", "發行公司", "發行人", "Issuer") or None,
+        "issuer": text_value(row, "投信事業", "投信公司", "證券投資信託事業", "證券投資信託公司", "基金公司", "基金經理公司", "發行公司", "發行人", "Issuer") or None,
         "manager": text_value(row, "基金經理人", "經理人", "FundManager", "Manager") or None,
         "custodian": text_value(row, "基金保管機構", "保管機構", "保管銀行", "Custodian") or None,
         "inception_date": format_date(row_value(row, ("成立日期", "基金成立日", "InceptionDate"))),
@@ -723,7 +723,7 @@ def main() -> None:
             company_name = row_value(row, ("公司名稱", "CompanyName", "CompanyFullName"))
             short_name = row_value(row, ("公司簡稱", "CompanyAbbreviation", "證券名稱", "Name"))
             listed_date = format_date(row_value(row, ("上市日期", "上櫃日期", "ListingDate", "DateOfListing")))
-            issued_shares = number(row_value(row, ("已發行普通股數或TDR原發行股數", "發行股數", "IssuedShares", "SharesOutstanding")))
+            issued_shares = number(row_value(row, ("已發行普通股數或TDR原發行股數", "已發行普通股數或TDR原股發行股數", "已發行普通股數", "發行股數", "IssuedShares", "SharesOutstanding")))
             paid_in_capital = number(row_value(row, ("實收資本額", "PaidInCapital", "Capital")))
             industry = industry_name(row_value(row, ("產業別", "產業類別", "Industry", "IndustryName")))
             assets[key] = {

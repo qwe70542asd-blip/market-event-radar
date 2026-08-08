@@ -1,13 +1,7 @@
-name: Update v11.4.30 data verification
+name: Update v11.4.31 data verification
 on:
-  push:
-    branches: [main]
-    paths:
-      - ".github/workflows/update-data-verification.yml"
-      - "scripts/update_data_verification.py"
-      - "scripts/common.py"
   schedule:
-    - cron: "45 * * * *"
+    - cron: "58 * * * *"
   workflow_dispatch:
 permissions:
   contents: write
@@ -27,7 +21,7 @@ jobs:
           python-version: "3.12"
       - name: Restore source channels
         run: |
-          bash scripts/restore_data_branch.sh live-assets "assets.json:data/assets.json"
+          bash scripts/restore_data_branch.sh live-assets "assets.json:data/assets.json" "asset-audit.json:data/asset-audit.json"
           bash scripts/restore_data_branch.sh live-tw-market "tw-market.json:data/tw-market.json"
           bash scripts/restore_data_branch.sh live-monthly-revenue "monthly-revenue.json:data/monthly-revenue.json"
           bash scripts/restore_data_branch.sh live-dividend-history "dividend-history.json:data/dividend-history.json"

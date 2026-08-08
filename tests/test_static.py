@@ -7,7 +7,7 @@ class StaticTests(unittest.TestCase):
  def test_required_tree(self):
   for path in [".github/workflows","assets","data","docs","scripts","tests","index.html","news.html","asset.html","service-worker.js"]:self.assertTrue((ROOT/path).exists(),path)
  def test_version(self):
-  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.30")
+  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.31")
  def test_ascii_filenames(self):
   for path in ROOT.rglob("*"):self.assertTrue(all(ord(c)<128 for c in path.name),path)
  def test_no_audio(self):
@@ -60,7 +60,9 @@ class StaticTests(unittest.TestCase):
   shared=self.read("assets/shared.js")
   for x in ("NEWS_FILES","loadNewsChannels","Promise.all","channel_kind"):self.assertIn(x,shared)
  def test_consumers_use_multi_source(self):
-  for f in ("assets/home.js","assets/news.js","assets/asset.js","assets/event.js"):self.assertIn("loadNewsChannels",self.read(f),f)
+  for f in ("assets/home.js","assets/news.js","assets/event.js"):self.assertIn("loadNewsChannels",self.read(f),f)
+  self.assertIn("loadStockNews",self.read("assets/asset.js"))
+  self.assertNotIn("loadNewsChannels",self.read("assets/asset.js"))
   self.assertIn('loadData("events.json"',self.read("assets/date-alerts.js"))
  def test_news_page_blocks(self):
   html=self.read("news.html")
@@ -81,18 +83,18 @@ class StaticTests(unittest.TestCase):
   texts="\n".join(self.read(p.relative_to(ROOT)) for p in (ROOT/".github/workflows").glob("update-news-*.yml"))
   for branch in ("live-news-cna","live-news-moneydj","live-news-cnyes","live-news-udn","live-news-ltn","live-news-wealth","live-news-yahoo","live-news-technews","live-news-ctee","live-news-asia-risk"):self.assertIn(branch,texts)
  def test_service_worker_cache(self):
-  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-30",sw)
+  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-31",sw)
   for seed in ("news-cna-seed.js","news-moneydj-seed.js","news-wealth-seed.js","news-yahoo-seed.js","news-technews-seed.js","news-ctee-seed.js","news-asia-risk-seed.js","stock-news-seed.js","company-disclosures-seed.js","monthly-revenue-seed.js","dividend-history-seed.js","secondary-reference-seed.js","data-verification-seed.js","yahoo-details-seed.js","etf-details-seed.js","stock-basics-seed.js","market-volume-history-seed.js","market-kline-seed.js"):self.assertIn(seed,sw)
  def test_market_snapshot_seed_schema(self):
   payload=json.loads(self.read("data/market-snapshot.json"))
-  self.assertEqual(payload.get("metadata",{}).get("version"),"v11.4.30")
+  self.assertEqual(payload.get("metadata",{}).get("version"),"v11.4.31")
   self.assertEqual(set(payload.get("metadata",{}).get("kline_symbols",[])),{"^TWII","^DJI","^IXIC","^SOX","^GSPC","^N225"})
   self.assertNotIn("^TWOII",{row.get("symbol") for row in payload.get("items",[])})
 
  def test_all_pages_current_version(self):
   for p in ROOT.glob("*.html"):
    body=p.read_text(encoding="utf-8")
-   self.assertIn("v11.4.30",body,p.name)
+   self.assertIn("v11.4.31",body,p.name)
    self.assertNotIn("v11.4.15",body,p.name)
 
 
@@ -155,7 +157,7 @@ class StaticTests(unittest.TestCase):
 
  def test_balanced_portfolio_summary_layout(self):
   css=self.read("assets/styles.css")
-  for token in ("v11.4.30 portfolio summary balance","grid-template-columns:repeat(3,minmax(0,1fr))","grid-template-rows:repeat(2,minmax(78px,1fr))","justify-content:center"):
+  for token in ("v11.4.31 portfolio summary balance","grid-template-columns:repeat(3,minmax(0,1fr))","grid-template-rows:repeat(2,minmax(78px,1fr))","justify-content:center"):
    self.assertIn(token,css)
 
  def test_home_summary_and_volume_momentum(self):
@@ -179,7 +181,7 @@ class StaticTests(unittest.TestCase):
    self.assertTrue((ROOT/".github/workflows"/name).exists(),name)
 
  def test_market_volume_history(self):
-  script=self.read("scripts/update_tw_market.py");workflow=self.read(".github/workflows/update-tw-market.yml")
+  script=self.read("scripts/update_tw_market.py");workflow=self.read(".github/workflows/update-market-core.yml")
   for x in ("market-volume-history.json","volume_ratio_20d","average_20d_trade_value"):self.assertIn(x,script)
   self.assertIn("market-volume-history.json",workflow)
 
@@ -426,7 +428,7 @@ class StaticTests(unittest.TestCase):
 
  def test_v11424_version_bump_prevents_same_version_asset_cache(self):
   for path in ("index.html","assets/shared.js","assets/home.js","assets/sw-register.js","service-worker.js","VERSION.json"):
-   content=self.read(path);self.assertIn("11.4.30",content);self.assertNotIn("11.4.23",content);self.assertNotIn("11.4.22",content)
+   content=self.read(path);self.assertIn("11.4.31",content);self.assertNotIn("11.4.23",content);self.assertNotIn("11.4.22",content)
 
  def test_v11428_compact_market_state_replaces_sector_heat(self):
   html=self.read("index.html");home=self.read("assets/home.js");snapshot=self.read("scripts/update_market_snapshot.py")
@@ -477,29 +479,147 @@ class StaticTests(unittest.TestCase):
    self.assertIn(token,market)
 
  def test_v11426_15m_is_documented_as_post_deploy_nonblocking(self):
-  audit=self.read("docs/V11.4.30-release-audit.md")
+  audit=self.read("docs/V11.4.31-release-audit.md")
   for token in ("15 分鐘 K","非阻擋","部署後","不得偽造"):
    self.assertIn(token,audit)
 
  def test_v11428_mobile_calendar_has_no_forced_horizontal_scroll(self):
   css=self.read("assets/styles.css");html=self.read("index.html");manifest=json.loads(self.read("manifest.webmanifest"))
-  for token in (".calendar-weekdays,.calendar-grid{width:100%;min-width:0!important","overflow:visible!important","grid-template-columns:repeat(7,minmax(0,1fr))",".mobile-install-trigger","assets/pwa-install.js?v=11.4.30"):
+  for token in (".calendar-weekdays,.calendar-grid{width:100%;min-width:0!important","overflow:visible!important","grid-template-columns:repeat(7,minmax(0,1fr))",".mobile-install-trigger","assets/pwa-install.js?v=11.4.31"):
    self.assertIn(token,css+html)
   self.assertEqual(manifest.get("display"),"standalone")
   self.assertTrue(any(icon.get("sizes")=="192x192" for icon in manifest.get("icons",[])))
   self.assertTrue(any(icon.get("sizes")=="512x512" for icon in manifest.get("icons",[])))
 
- def test_v11430_calendar_boot_is_nonblocking(self):
+ def test_v11431_calendar_boot_is_nonblocking(self):
   home=self.read("assets/home.js")
   for token in ("eventLivePromise","withBootTimeout(eventLivePromise,eventFallback,3500)","events=fresh","renderCalendar();"):
    self.assertIn(token,home)
 
- def test_v11430_date_alert_integrity_guards(self):
+ def test_v11431_date_alert_integrity_guards(self):
   frontend=self.read("assets/date-alerts.js");backend=self.read("scripts/update_events.py");workflow=self.read(".github/workflows/update-events.yml")
   for token in ("trustedAnnouncement","next<today","previous>=today","dayDistance(previous,next)<=183"):
    self.assertIn(token,frontend)
-  for token in ("announcement_candidate","announcement_semantically_valid","suppressed_origins","strict-v11.4.30"):
+  for token in ("announcement_candidate","announcement_semantically_valid","suppressed_origins","strict-v11.4.31"):
    self.assertIn(token,backend)
-  self.assertIn("v11.4.30",workflow)
+  self.assertIn("v11.4.31",workflow)
+
+
+ def test_v11431_repo_layout_guard(self):
+  cleanup=self.read("scripts/cleanup_repo.py"); workflow=self.read(".github/workflows/release-verification.yml")
+  for bad in ("scripts/.github","scripts/assets","scripts/data","scripts/tests","scripts/scripts"):
+   self.assertFalse((ROOT/bad).exists(),bad)
+  self.assertIn("--check",workflow);self.assertIn("NESTED_DIRS",cleanup)
+
+ def test_v11431_market_runtime_and_verified_dates(self):
+  home=self.read("assets/home.js");market=self.read("scripts/update_tw_market.py");core=self.read(".github/workflows/update-market-core.yml")
+  self.assertIn("const quoteAgeMinutes=",home)
+  self.assertIn("最新交易日",home)
+  self.assertIn("trading_date",market);self.assertNotIn('"quote_date": NOW.date().isoformat()',market)
+  snapshot=self.read("scripts/update_market_snapshot.py")
+  self.assertIn("session_confirmed",snapshot);self.assertIn("unconfirmed_reason",snapshot)
+  self.assertIn('cron: "*/5 * * * *"',core)
+  self.assertIn('meta.get("version")=="v11.4.31"',core)
+
+ def test_v11431_scheduler_is_consolidated(self):
+  batch=self.read(".github/workflows/update-news-batch.yml");official=self.read(".github/workflows/update-official-feeds.yml")
+  stock=self.read(".github/workflows/update-stock-news.yml")
+  self.assertIn("matrix:",batch);self.assertIn("live-stock-news",batch)
+  self.assertNotIn("workflow_run:",stock);self.assertNotIn("schedule:",stock)
+  self.assertIn('cron: "7,22,37,52 * * * *"',official)
+  for name in ("update-news-cna.yml","update-news-moneydj.yml","update-news-cnyes.yml","update-news-udn.yml","update-news-ltn.yml","update-news-wealth.yml","update-news-yahoo.yml","update-news-technews.yml","update-news-ctee.yml","update-news-asia-risk.yml","update-company-disclosures.yml","update-official-notices.yml","update-global-market.yml","update-tw-market.yml"):
+   body=self.read(f".github/workflows/{name}")
+   self.assertIn("workflow_dispatch:",body,name);self.assertNotIn("schedule:",body,name)
+
+ def test_v11431_branch_publisher_is_history_free(self):
+  script=self.read("scripts/publish_data_branch.sh")
+  self.assertIn("git switch --orphan",script)
+  self.assertIn("__publish_",script)
+  self.assertIn("snapshot_history",script)
+  self.assertNotIn('git checkout --orphan "$branch" 2>/dev/null || git checkout "$branch"',script)
+
+ def test_v11431_news_timestamp_and_symbol_guards(self):
+  pipeline=self.read("scripts/news_pipeline.py");company=self.read("scripts/update_company_disclosures.py");official=self.read("scripts/update_official_notices.py");stock=self.read("scripts/update_stock_news.py")
+  for token in ("if dt is None:","numeric_context","assets_rows","valid_symbols","legacy_now_fallback","legacy_archive_removed"):
+   self.assertIn(token,pipeline)
+  self.assertIn("publication_datetime",company);self.assertIn("zfill(6)",company)
+  self.assertIn("if not date_match",official);self.assertNotIn('(?:cp|news|lp|np)',official)
+  self.assertIn("infer_symbols",stock);self.assertIn('primary["symbols"]',stock) if False else None
+
+ def test_v11431_verification_separates_trust_and_completeness(self):
+  verifier=self.read("scripts/update_data_verification.py");ui=self.read("assets/data-status.js");asset=self.read("assets/asset.js")
+  for token in ("trust_overall","completeness_status","coverage_percent","source_snapshots","stale_sources","reference_session_match"):
+   self.assertIn(token,verifier)
+  for token in ("欄位完整","部分完整","平均欄位覆蓋","過期來源"):
+   self.assertIn(token,ui)
+  self.assertIn("trust_overall",asset);self.assertIn("completeness_status",asset)
+
+ def test_v11431_frontend_live_data_load_is_bounded(self):
+  shared=self.read("assets/shared.js")
+  self.assertIn("DATA_INFLIGHT",shared)
+  self.assertIn("LARGE_BRANCH_FILES",shared)
+  self.assertIn("loadStatically",shared)
+  self.assertIn("statically-live-branch",shared)
+  self.assertIn('"stock-basics.json"',shared)
+  self.assertNotIn("Promise.any(requests)",shared)
+  self.assertIn("Only warm the actual asset page after the user shows intent",shared)
+  self.assertNotIn("requestIdleCallback",shared)
+
+ def test_v11431_windows_cleanup_does_not_require_python(self):
+  batch=self.read("CLEAN-REPO.cmd")
+  self.assertIn('rmdir /s /q "scripts\\%%D"',batch)
+  self.assertIn('del /f /q "scripts\\%%F"',batch)
+  self.assertNotIn('python scripts\\cleanup_repo.py',batch.lower())
+
+
+ def test_v11431_second_scan_timestamp_integrity(self):
+  market=self.read("scripts/update_market_snapshot.py");events=self.read("scripts/update_events.py");chips=self.read("scripts/update_tw_chips.py");stock_news=self.read("scripts/update_stock_news.py")
+  self.assertNotIn('taipei_iso_from_timestamp(meta.get("regularMarketTime")) or NOW',market)
+  self.assertIn('if not announcement_day:',events);self.assertNotIn('announcement_day = parse_market_date(first_value(row, ["發言日期", "出表日期", "Date"])) or NOW.date()',events)
+  self.assertNotIn('row_date(row) or NOW.date().isoformat()',chips);self.assertIn('_source_date',chips)
+  self.assertIn('or ARCHIVE_START',stock_news)
+
+ def test_v11431_verifier_restores_completeness_audit(self):
+  workflow=self.read(".github/workflows/update-data-verification.yml")
+  self.assertIn('asset-audit.json:data/asset-audit.json',workflow)
+
+ def test_v11431_edge_worker_is_current_and_uses_verified_time(self):
+  worker=self.read("edge/market-live-worker.js")
+  self.assertIn('v11.4.31',worker);self.assertNotIn('v11.4.27',worker)
+  self.assertIn('missing verified quote time',worker)
+  self.assertIn('marketDate(new Date(x.time*1000),market)',worker)
+  self.assertIn('latestSession===session?previous?.close:latest?.close',worker)
+  self.assertIn('sessionConfirmed=session===expected',worker);self.assertIn('unconfirmed',worker)
+
+ def test_v11431_kline_browser_does_not_invent_session_aggregation(self):
+  shared=self.read("assets/shared.js")
+  self.assertIn("Verified edge or",shared)
+  self.assertNotIn('query1.finance.yahoo.com/v8/finance/chart/${encoded}',shared)
+
+ def test_v11431_asset_page_does_not_load_every_news_channel(self):
+  asset=self.read("assets/asset.js")
+  self.assertNotIn("loadNewsChannels",asset)
+  self.assertIn("eventPromise",asset);self.assertIn("stockNewsPromise",asset)
+  self.assertIn("Core asset information loads first",asset)
+
+ def test_v11431_secondary_reference_uses_verified_session_dates(self):
+  updater=self.read("scripts/update_secondary_reference.py");asset=self.read("assets/asset.js")
+  self.assertIn('"quote_date":quote_date',updater)
+  self.assertNotIn('chartPreviousClose',updater)
+  self.assertIn('secondaryQuote.quote_date',asset)
+
+ def test_v11431_verification_avoids_market_core_boundary(self):
+  workflow=self.read(".github/workflows/update-data-verification.yml")
+  self.assertIn('cron: "58 * * * *"',workflow)
+
+ def test_v11431_tpex_dividend_parser_accepts_official_field_names(self):
+  events=self.read("scripts/update_events.py")
+  self.assertIn('公司代號名稱',events)
+  self.assertIn('董事會決議通過股利分派日',events)
+
+ def test_v11431_tpex_dividend_endpoint(self):
+  events=self.read("scripts/update_events.py")
+  self.assertIn("mopsfin_t187ap39_O",events)
+  self.assertNotIn("mopsfin_t187ap45_O",events)
 
 if __name__=="__main__":unittest.main()

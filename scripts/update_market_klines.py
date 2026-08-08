@@ -16,9 +16,9 @@ import requests
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.30"
+VERSION = "v11.4.31"
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.30)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.31)",
     "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.6",
 }
 YAHOO_CHART = "https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"
@@ -34,6 +34,33 @@ SPECS = {
     "1wk": ("5y", "1wk"),
     "1mo": ("10y", "1mo"),
 }
+
+
+REFRESH_SECONDS = {
+    "5m": 5 * 60,
+    "15m": 10 * 60,
+    "30m": 15 * 60,
+    "60m": 30 * 60,
+    "1d": 60 * 60,
+    "1wk": 6 * 60 * 60,
+    "1mo": 12 * 60 * 60,
+}
+
+
+def retained_is_fresh(entry: dict[str, Any] | None, interval: str) -> bool:
+    if not entry or len(entry.get("candles") or []) < 2:
+        return False
+    raw = entry.get("updated_at")
+    if not raw:
+        return False
+    try:
+        stamp = datetime.fromisoformat(str(raw).replace("Z", "+00:00"))
+        if stamp.tzinfo is None:
+            stamp = stamp.replace(tzinfo=NOW.tzinfo)
+        age = (NOW - stamp.astimezone(NOW.tzinfo)).total_seconds()
+        return 0 <= age < REFRESH_SECONDS.get(interval, 0)
+    except (TypeError, ValueError):
+        return False
 
 
 def num(value: Any) -> float | None:
@@ -140,15 +167,19 @@ def main() -> None:
     for symbol in SYMBOLS:
         market = MARKETS[symbol]
         intervals: dict[str, Any] = {}
+        old_intervals = ((old_items.get(symbol) or {}).get("intervals") or {})
         for interval in SPECS:
+            retained = old_intervals.get(interval)
+            if retained_is_fresh(retained, interval):
+                intervals[interval] = {**retained, "status": "fresh-cache"}
+                continue
             try:
                 rows = fetch_interval(session, symbol, interval)
                 if len(rows) < 2:
                     raise RuntimeError(f"only {len(rows)} candles")
-                intervals[interval] = {"candles": rows, "source": "Yahoo chart via GitHub Actions", "updated_at": NOW.isoformat(timespec="seconds")}
+                intervals[interval] = {"candles": rows, "source": "Yahoo chart via GitHub Actions", "updated_at": NOW.isoformat(timespec="seconds"), "status": "ok"}
             except Exception as exc:
                 warnings.append(f"{symbol} {interval}: {exc}")
-                retained = ((old_items.get(symbol) or {}).get("intervals") or {}).get(interval)
                 if retained:
                     intervals[interval] = {**retained, "status": "cached", "last_error": str(exc)[:300]}
         hourly = (intervals.get("60m") or {}).get("candles") or []
@@ -167,7 +198,8 @@ def main() -> None:
             "symbols": SYMBOLS,
             "supported_intervals": ["5m", "15m", "30m", "60m", "4h", "1d", "1wk", "1mo"],
             "warnings": warnings[:100],
-            "note": "Static multi-interval fallback. 4-hour candles never cross exchange sessions.",
+            "note": "Static multi-interval fallback. Interval-specific refresh TTLs reduce redundant upstream calls; 4-hour candles never cross exchange sessions.",
+            "refresh_seconds": REFRESH_SECONDS,
         },
         "items": items,
     }

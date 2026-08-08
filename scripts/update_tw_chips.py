@@ -18,7 +18,7 @@ from bs4 import BeautifulSoup
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.30"
+VERSION = "v11.4.31"
 TIMEOUT = 24
 YAHOO_BATCH = 24
 PRIORITY_SYMBOLS = [
@@ -102,6 +102,9 @@ def date_value(value: Any) -> str | None:
 
 
 def row_date(row: dict[str, Any]) -> str | None:
+    explicit = date_value(row.get("_source_date"))
+    if explicit:
+        return explicit
     for key, value in row.items():
         if "日期" in str(key) or normalized_key(key) in {"date", "tradedate"}:
             parsed = date_value(value)
@@ -130,13 +133,17 @@ def get_rows(url: str) -> list[dict[str, Any]]:
         return [row for row in payload if isinstance(row, dict)]
     if not isinstance(payload, dict):
         return []
+    source_date = date_value(payload.get("date") or payload.get("Date") or payload.get("tradeDate") or payload.get("stat") or "")
     if isinstance(payload.get("data"), list) and payload.get("fields"):
         fields = payload.get("fields") or []
-        return [dict(zip(fields, row)) for row in payload.get("data") or [] if isinstance(row, list)]
+        rows = [dict(zip(fields, row)) for row in payload.get("data") or [] if isinstance(row, list)]
+        if source_date:
+            rows = [{**row, "_source_date": source_date} for row in rows]
+        return rows
     for key in ("data", "items", "results"):
         rows = payload.get(key)
         if isinstance(rows, list) and all(isinstance(row, dict) for row in rows):
-            return rows
+            return [{**row, "_source_date": source_date} if source_date else row for row in rows]
     return []
 
 
@@ -178,7 +185,9 @@ def parse_institutional(rows: list[dict[str, Any]], assets: dict[str, dict[str, 
         if total is None:
             values = [value for value in (foreign, trust, dealer) if value is not None]
             total = integer_or_float(sum(values)) if values else None
-        traded = row_date(row) or NOW.date().isoformat()
+        traded = row_date(row)
+        if not traded:
+            continue
         latest_date = max(latest_date or traded, traded)
         institutional = {key: value for key, value in {
             "foreign_net": foreign, "trust_net": trust, "dealer_net": dealer, "total_net": total,
@@ -227,7 +236,9 @@ def parse_margin(rows: list[dict[str, Any]], assets: dict[str, dict[str, Any]], 
             short_change = integer_or_float(float(short_balance) - float(previous_short))
         if all(value is None for value in (margin_balance, margin_change, short_balance, short_change)):
             continue
-        traded = row_date(row) or NOW.date().isoformat()
+        traded = row_date(row)
+        if not traded:
+            continue
         latest_date = max(latest_date or traded, traded)
         offset = as_lots(field(row, "資券互抵"), "張")
         output[symbol] = {
@@ -260,7 +271,9 @@ def parse_day_trade(rows: list[dict[str, Any]], assets: dict[str, dict[str, Any]
         ratio_value = number(ratio_raw)
         if volume is None and ratio_value is None:
             continue
-        traded = row_date(row) or NOW.date().isoformat()
+        traded = row_date(row)
+        if not traded:
+            continue
         latest_date = max(latest_date or traded, traded)
         output[symbol] = {
             "symbol": symbol,

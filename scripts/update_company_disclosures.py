@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
+from datetime import datetime
 import re,requests
 from common import NOW
 from news_pipeline import HEADERS,asset_aliases,normalize_item,save_channel,clean_text
@@ -17,6 +18,18 @@ def val(row,*aliases):
    if n and (n in k or k in n):return v
  return None
 
+
+
+def publication_datetime(date_value,time_value):
+ date_digits=re.sub(r"\D","",str(date_value or ""));time_digits=re.sub(r"\D","",str(time_value or ""))
+ try:
+  if len(date_digits)==7:y,mo,day=int(date_digits[:3])+1911,int(date_digits[3:5]),int(date_digits[5:7])
+  elif len(date_digits)>=8:y,mo,day=int(date_digits[:4]),int(date_digits[4:6]),int(date_digits[6:8])
+  else:return None
+  clock=time_digits.zfill(6)[-6:] if time_digits else "000000"
+  hour,minute,second=int(clock[:2]),int(clock[2:4]),int(clock[4:6])
+  return datetime(y,mo,day,hour,minute,second,tzinfo=NOW.tzinfo).isoformat(timespec="seconds")
+ except (TypeError,ValueError):return None
 
 def format_fact_date(value):
  text=str(value or "").strip()
@@ -62,7 +75,8 @@ def main():
      official=f"https://mops.twse.com.tw/mops/web/t05sr01_1?step=1&firstin=1&off=1&TYPEK=all&co_id={code}&spoke_date={date or ''}&spoke_time={spoke_time or ''}&seq_no={seq or ''}"
     if not official:official=url
     short_summary=concise_disclosure_summary(subject,body,name)
-    item=normalize_item(title=title,url=official,source_id="company-disclosures",source_name=source,summary=short_summary,published_at=f"{date or ''} {spoke_time or ''}",aliases=ALIASES,forced_scope="company",extra={"symbols":[code] if code else [],"short_summary":short_summary,"full_text":body[:6000],"key_facts":[fact for fact in [{"label":"股票代碼","value":code},{"label":"公司","value":name},{"label":"事實發生日","value":format_fact_date(fact_date)},{"label":"符合條款","value":str(clause or '')}] if fact["value"]],"official_sequence":seq,"fact_date":fact_date,"clause":clause})
+    published=publication_datetime(date,spoke_time)
+    item=normalize_item(title=title,url=official,source_id="company-disclosures",source_name=source,summary=short_summary,published_at=published,aliases=ALIASES,forced_scope="company",extra={"symbols":[code] if code else [],"short_summary":short_summary,"full_text":body[:6000],"key_facts":[fact for fact in [{"label":"股票代碼","value":code},{"label":"公司","value":name},{"label":"事實發生日","value":format_fact_date(fact_date)},{"label":"符合條款","value":str(clause or '')}] if fact["value"]],"official_sequence":seq,"fact_date":fact_date,"clause":clause,"publication_date_verified":bool(published)})
     if item:items.append(item);count+=1
    health.append({"name":source,"status":"ok" if count else "warning","count":count,"url":url})
   except Exception as exc:health.append({"name":source,"status":"warning","error":str(exc),"url":url})

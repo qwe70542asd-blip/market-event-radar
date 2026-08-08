@@ -1,14 +1,5 @@
-name: Update v11.4.30 經濟日報 news
+name: Update v11.4.31 經濟日報 news
 on:
-  push:
-    branches: [main]
-    paths:
-      - ".github/workflows/update-news-udn.yml"
-      - "scripts/update_media_source.py"
-      - "scripts/news_pipeline.py"
-      - "data/news-channels.json"
-  schedule:
-    - cron: "9-59/15 * * * *"
   workflow_dispatch:
 permissions:
   contents: write
@@ -35,6 +26,8 @@ jobs:
             "news-udn-seed.js:data/news-udn-seed.js"
           bash scripts/restore_data_branch.sh live-assets \
             "assets.json:data/assets.json"
+          bash scripts/restore_data_branch.sh live-stock-basics \
+            "stock-basics.json:data/stock-basics.json"
       - run: python scripts/update_media_source.py --channel udn
         env:
           NEWS_HISTORY_BACKFILL: ${{ github.event_name == 'schedule' && '0' || '1' }}

@@ -1,11 +1,12 @@
-name: Update v11.4.30 Taiwan chips
+name: Update v11.4.31 Taiwan chips
 on:
   push:
     branches: [main]
     paths:
-      - ".github/workflows/**"
-      - "scripts/**"
-      - "data/**"
+      - ".github/workflows/update-tw-chips.yml"
+      - "scripts/update_tw_chips.py"
+      - "scripts/common.py"
+      - "requirements.txt"
   schedule:
     - cron: "20 10 * * 1-5"
   workflow_dispatch:

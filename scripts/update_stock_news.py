@@ -75,14 +75,10 @@ def main() -> None:
             candidate_for_archive={**original,"title":title,"summary":summary or title,"ai_summary":summary or title}
             if not published or not keep_in_archive(candidate_for_archive,published) or not readable_chinese(title, summary):
                 continue
-            symbols = [
-                symbol
-                for symbol in (
-                    original.get("symbols")
-                    or infer_symbols(f"{title} {summary}", aliases)
-                )
-                if symbol in profiles
-            ]
+            # Re-run symbol inference against the full current master.  Do not
+            # trust a sparse upstream seed's symbol list: it can both miss the
+            # headline company and preserve numeric false positives.
+            symbols = [symbol for symbol in infer_symbols(f"{title} {summary}", aliases) if symbol in profiles]
             symbols = list(dict.fromkeys(symbols))
             if not symbols:
                 continue
@@ -95,6 +91,8 @@ def main() -> None:
                     "ai_summary": summary or title,
                     "symbols": symbols,
                     "companies": [profiles[symbol] for symbol in symbols],
+                    "affected_markets": symbols[:5],
+                    "why_it_matters": f"此資訊主要影響{'、'.join(symbols[:3])}，仍需配合正式數據與市場預期判斷。",
                     "is_stock_news": True,
                     "scope": "stock",
                     "company_announcement": False,
@@ -144,7 +142,7 @@ def main() -> None:
         primary["verification_sources"] = [item.get("source") for item in ranked if item.get("source")]
         output.append(primary)
 
-    output.sort(key=lambda row: (str(row.get("published_at") or ""), archive_priority(row,parse_datetime(row.get("published_at")) or NOW)), reverse=True)
+    output.sort(key=lambda row: (str(row.get("published_at") or ""), archive_priority(row,parse_datetime(row.get("published_at")) or ARCHIVE_START)), reverse=True)
     output = output[:600]
     old = read_json(DATA / "stock-news.json", {"items": []})
     fallback = False

@@ -1,13 +1,5 @@
-name: Update v11.4.30 global market
+name: Update v11.4.31 global market
 on:
-  push:
-    branches: [main]
-    paths:
-      - ".github/workflows/**"
-      - "scripts/**"
-      - "data/**"
-  schedule:
-    - cron: "*/5 * * * *"
   workflow_dispatch:
 permissions:
   contents: write

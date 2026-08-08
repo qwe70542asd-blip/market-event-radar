@@ -1,0 +1,105 @@
+name: Update v11.4.31 media news batch
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/update-news-batch.yml"
+      - "scripts/update_media_source.py"
+      - "scripts/update_stock_news.py"
+      - "scripts/news_pipeline.py"
+      - "scripts/publish_data_branch.sh"
+      - "scripts/restore_data_branch.sh"
+      - "data/news-channels.json"
+      - "requirements.txt"
+  schedule:
+    - cron: "2,17,32,47 * * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: live-media-news-batch
+  cancel-in-progress: true
+jobs:
+  media:
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        include:
+          - { id: cna, file: news-cna, branch: live-news-cna }
+          - { id: moneydj, file: news-moneydj, branch: live-news-moneydj }
+          - { id: cnyes, file: news-cnyes, branch: live-news-cnyes }
+          - { id: udn, file: news-udn, branch: live-news-udn }
+          - { id: ltn, file: news-ltn, branch: live-news-ltn }
+          - { id: wealth, file: news-wealth, branch: live-news-wealth }
+          - { id: yahoo, file: news-yahoo, branch: live-news-yahoo }
+          - { id: technews, file: news-technews, branch: live-news-technews }
+          - { id: ctee, file: news-ctee, branch: live-news-ctee }
+          - { id: asia-risk, file: news-asia-risk, branch: live-news-asia-risk }
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Restore source archive and full symbol masters
+        run: |
+          bash scripts/restore_data_branch.sh "${{ matrix.branch }}" \
+            "${{ matrix.file }}.json:data/${{ matrix.file }}.json" \
+            "${{ matrix.file }}-seed.js:data/${{ matrix.file }}-seed.js"
+          bash scripts/restore_data_branch.sh live-assets "assets.json:data/assets.json"
+          bash scripts/restore_data_branch.sh live-stock-basics "stock-basics.json:data/stock-basics.json"
+      - name: Refresh source
+        env:
+          NEWS_HISTORY_BACKFILL: ${{ github.event_name == 'schedule' && '0' || '1' }}
+        run: python scripts/update_media_source.py --channel "${{ matrix.id }}"
+      - name: Validate source shape
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          file=os.environ["NEWS_FILE"]
+          p=json.loads(Path(file).read_text(encoding="utf-8"))
+          assert isinstance(p.get("items"),list)
+          assert p.get("metadata",{}).get("version")=="v11.4.31"
+          print(file,len(p.get("items",[])),p.get("metadata",{}).get("status"))
+          PY
+        env:
+          NEWS_FILE: data/${{ matrix.file }}.json
+      - name: Publish source snapshot
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/publish_data_branch.sh "${{ matrix.branch }}" "${{ matrix.id }}" "data/${{ matrix.file }}.json" "data/${{ matrix.file }}-seed.js"
+
+  stock-news:
+    if: ${{ always() }}
+    needs: media
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Restore current media snapshots and full symbol masters
+        run: |
+          bash scripts/restore_data_branch.sh live-stock-news "stock-news.json:data/stock-news.json" "stock-news-seed.js:data/stock-news-seed.js"
+          bash scripts/restore_data_branch.sh live-assets "assets.json:data/assets.json"
+          bash scripts/restore_data_branch.sh live-stock-basics "stock-basics.json:data/stock-basics.json"
+          for id in cna moneydj cnyes udn ltn wealth yahoo technews ctee asia-risk; do
+            bash scripts/restore_data_branch.sh "live-news-$id" "news-$id.json:data/news-$id.json"
+          done
+      - run: python scripts/update_stock_news.py
+      - name: Publish stock media snapshot
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash scripts/publish_data_branch.sh live-stock-news stock-news data/stock-news.json data/stock-news-seed.js

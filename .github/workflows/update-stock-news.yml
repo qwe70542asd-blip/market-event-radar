@@ -1,10 +1,5 @@
-name: Update v11.4.30 stock media news
+name: Update v11.4.31 stock media news
 on:
-  workflow_run:
-    workflows: ["Update v11.4.30 中央社 news", "Update v11.4.30 MoneyDJ news", "Update v11.4.30 鉅亨網 news", "Update v11.4.30 經濟日報 news", "Update v11.4.30 自由財經 news", "Update v11.4.30 財富自由 news", "Update v11.4.30 Yahoo股市 news", "Update v11.4.30 科技新報／財經新報 news", "Update v11.4.30 工商時報 news", "Update v11.4.30 亞洲總體風險 news"]
-    types: [completed]
-  schedule:
-    - cron: "14-59/15 * * * *"
   workflow_dispatch:
 permissions:
   contents: write

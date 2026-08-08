@@ -1,4 +1,4 @@
-name: Update v11.4.30 event calendar and announced dates
+name: Update v11.4.31 event calendar and announced dates
 
 on:
   push:
@@ -12,7 +12,7 @@ on:
       - "data/event-source-state.json"
       - "requirements.txt"
   schedule:
-    - cron: "*/10 * * * *"
+    - cron: "12,27,42,57 * * * *"
   workflow_dispatch:
     inputs:
       clean_rebuild:
@@ -35,10 +35,10 @@ jobs:
     env:
       DATA_BRANCH: live-events
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: pip
@@ -86,7 +86,7 @@ jobs:
           events=payload.get("events") or []
           metadata=payload.get("metadata") or {}
           assert events, "empty event calendar after official-source refresh"
-          assert metadata.get("version")=="v11.4.30", metadata
+          assert metadata.get("version")=="v11.4.31", metadata
           assert metadata.get("state_initialized") is True, metadata
           assert metadata.get("archive_start")=="2026-01-01", metadata
           assert isinstance(metadata.get("announced_today_count"), int), metadata
@@ -104,7 +104,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          bash scripts/publish_data_branch.sh "$DATA_BRANCH" "event-calendar-v11.4.30" \
+          bash scripts/publish_data_branch.sh "$DATA_BRANCH" "event-calendar-v11.4.31" \
             data/events.json \
             data/events-seed.js \
             data/event-source-state.json

@@ -97,15 +97,21 @@
     return Math.max(score,Number(item.importance_score||0));
   };
   const verificationLabel=item=>item.source_id==="official-notices"||item.source_id==="company-disclosures"?"官方來源":(item.other_reports||[]).length?"多來源佐證":item.source_id==="cna"?"主要媒體":"單一來源";
+  const quoteAgeMinutes=()=>{
+    const stamps=[tw.metadata?.updated_at,snapshot.metadata?.updated_at,...(snapshot.items||[]).map(row=>row.market_at)].map(value=>Date.parse(value||0)).filter(Number.isFinite);
+    return stamps.length?Math.max(0,(Date.now()-Math.max(...stamps))/60000):null;
+  };
 
   function renderMarketList(){
     const updated=tw.metadata?.updated_at||snapshot.metadata?.updated_at,age=quoteAgeMinutes();
     const updatedNode=$("#marketUpdated"),freshNode=$("#marketFreshness");
     if(updatedNode)updatedNode.textContent=updated?`資料時間 ${formatTime(updated)}`:"等待資料";
     if(freshNode){
-      const fresh=age!=null&&age<=1.5,delayed=age!=null&&age>3;
-      freshNode.textContent=fresh?"近即時":delayed?`延遲 ${Math.round(age)} 分鐘`:"最近行情";
-      freshNode.className=`status-pill ${fresh?"fresh":delayed?"stale":""}`;
+      const tradeDate=String(tw.metadata?.trading_date||"");
+      const closed=["latest-close","official-close","market-closed"].includes(String(tw.metadata?.market_status||""));
+      const fresh=age!=null&&age<=2,delayed=age!=null&&age>8;
+      freshNode.textContent=closed&&tradeDate?`最新交易日 ${tradeDate.slice(5)}`:fresh?"近即時":delayed?`資料延遲 ${Math.round(age)} 分鐘`:"最近行情";
+      freshNode.className=`status-pill ${!closed&&fresh?"fresh":!closed&&delayed?"stale":""}`;
     }
   }
   renderMarketList();
@@ -208,8 +214,8 @@
       const open=safeNumber(latest.open??row.open),high=safeNumber(latest.high??row.high),low=safeNumber(latest.low??row.low),close=safeNumber(row.price??latest.close),changePct=safeNumber(row.change_percent),change=safeNumber(row.change);
       const priceLabel=close!=null?`${fmt(close)}${escapeHtml(row.display_suffix||"")}`:"—";
       const changeLabel=change!=null?`${change>=0?'+':''}${fmt(change)}${escapeHtml(row.display_suffix||"")}`:"—";
-      const cached=row.data_status==="cached",cachedKline=row.data_status==="cached-kline",stale=row.freshness_status==="stale"||row.data_status==="stale";
-      const statusLabel=stale?(row.stale_reason||`資料停留於 ${row.session_date||"舊交易日"}`):cached?"整筆使用快取":cachedKline?"K 線使用上次成功資料":row.market_open?"盤中每分鐘檢查":"收盤資料已驗證";
+      const cached=row.data_status==="cached",cachedKline=row.data_status==="cached-kline",stale=row.freshness_status==="stale"||row.data_status==="stale",unconfirmed=row.freshness_status==="unconfirmed";
+      const statusLabel=stale?(row.stale_reason||`資料停留於 ${row.session_date||"舊交易日"}`):unconfirmed?(row.stale_reason||"尚未確認今日交易資料"):cached?"整筆使用快取":cachedKline?"K 線使用上次成功資料":row.market_open?"盤中每分鐘檢查":"收盤資料已驗證";
       const statusClass=stale?"waiting":(cached||cachedKline)?"cached":candles.length>=10?"live":"waiting";
       const source=row.candle_source||row.source||"資料來源待更新";
       return `<article class="market-kline-card"><div class="market-kline-head"><div><small>${escapeHtml(row.market||"MARKET")}</small><h3>${escapeHtml(row.name||row.symbol)}</h3></div><div class="market-kline-price"><strong>${priceLabel}</strong><span class="${cls(changePct)}">${pct(changePct)}</span></div></div><div class="market-kline-status"><span class="kline-status ${statusClass}">${escapeHtml(statusLabel)}</span><small>近 ${candles.length||0} 個交易日</small></div><div class="kline-timeframes" data-kline-symbol="${escapeHtml(String(row.symbol||"").toUpperCase())}">${timeframeOptions.map(([value,label])=>`<button type="button" class="${value==="1d"?"active":""}" data-kline-interval="${value}">${label}</button>`).join("")}</div><div class="kline-hover-readout" data-kline-tooltip="${escapeHtml(String(row.symbol||"").toUpperCase())}">日 K · 移動游標查看 OHLC</div><div class="market-kline-visual market-kline-interactive" data-kline-chart="${escapeHtml(String(row.symbol||"").toUpperCase())}">${buildCandlestickSvg(row)}</div><div class="market-kline-stats"><span><small>開</small><b>${open!=null?fmt(open):"—"}</b></span><span><small>高</small><b>${high!=null?fmt(high):"—"}</b></span><span><small>低</small><b>${low!=null?fmt(low):"—"}</b></span><span><small>差</small><b class="${cls(change)}">${changeLabel}</b></span></div><div class="market-kline-source"><span>${escapeHtml(source)}${row.session_date?` · 交易日 ${escapeHtml(row.session_date)}`:""}</span><time>${escapeHtml(formatTime(row.market_at))}</time></div></article>`;
@@ -305,7 +311,7 @@
   const todayFocus=$("#todayFocusList");if(todayFocus)todayFocus.innerHTML=majorToday.length?majorToday.slice(0,6).map(event=>`<a class="today-focus-item" href="event.html?id=${encodeURIComponent(event.id)}"><span class="impact-dot ${escapeHtml(event.impact||"medium")}"></span><span><strong>${escapeHtml(strip(event.title))}</strong><small>${escapeHtml(formatTime(event.start))}</small></span></a>`).join(""):'<div class="empty">今天沒有已確認的重大事件</div>';
   $("#focusUpdated").textContent=events.metadata?.updated_at?formatTime(events.metadata.updated_at):"等待資料";
 
-  let current=new Date(),calendarMode=localStorage.getItem("mr-calendar-mode-v11.4.30")==="dividend"?"dividend":"market",pendingJumpDate="";
+  let current=new Date(),calendarMode=localStorage.getItem("mr-calendar-mode-v11.4.31")==="dividend"?"dividend":"market",pendingJumpDate="";
   const calendar=$("#calendarGrid"),dialog=$("#dayDialog");
   const marketFilters=()=>({q:$("#eventSearch").value.trim().toLowerCase(),region:$("#eventRegion").value,type:$("#eventType").value,impact:$("#eventImpact").value});
   const dividendFilters=()=>({q:$("#eventSearch").value.trim().toLowerCase(),kind:$("#dividendKind").value,asset:$("#dividendAsset").value,amount:$("#dividendAmount").value});
@@ -444,7 +450,7 @@
   }
   function setCalendarMode(mode,{render=true}={}){
     calendarMode=mode==="dividend"?"dividend":"market";
-    localStorage.setItem("mr-calendar-mode-v11.4.30",calendarMode);
+    localStorage.setItem("mr-calendar-mode-v11.4.31",calendarMode);
     document.querySelectorAll("[data-calendar-mode]").forEach(button=>{const active=button.dataset.calendarMode===calendarMode;button.classList.toggle("active",active);button.setAttribute("aria-selected",String(active))});
     document.querySelectorAll("[data-calendar-filter]").forEach(panel=>panel.hidden=panel.dataset.calendarFilter!==calendarMode);
     $("#calendarHeading").textContent=calendarMode==="market"?"市場事件月曆":"股利股息月曆";

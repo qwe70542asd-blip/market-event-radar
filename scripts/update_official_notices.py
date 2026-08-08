@@ -37,12 +37,15 @@ def scrape_official_list(page:str,source_name:str,agency:str,href_hint:re.Patter
   context=clean_text(parent.get_text(" ",strip=True)) if parent else title
   if not MARKET_RE.search(f"{title} {context}"):continue
   date_match=re.search(r"(?:20\d{2}|\d{3})[./-]\d{1,2}[./-]\d{1,2}",context)
-  item=normalize_item(title=title,url=href,source_id="official-notices",source_name=source_name,summary=context.replace(title,"",1),published_at=date_match.group(0) if date_match else None,aliases=ALIASES,forced_scope="market",extra={"verification_status":"official","official_agency":agency})
+  if not date_match:continue
+  item=normalize_item(title=title,url=href,source_id="official-notices",source_name=source_name,summary=context.replace(title,"",1),published_at=date_match.group(0),aliases=ALIASES,forced_scope="market",extra={"verification_status":"official","official_agency":agency,"publication_date_verified":True})
   if item:items.append(item);seen.add(href)
  return items
 
 def cbc_news():
- return scrape_official_list("https://www.cbc.gov.tw/tw/np-1040-1.html","中央銀行","CBC",re.compile(r"cbc\.gov\.tw/tw/(?:cp|news|lp|np)-",re.I))
+ # Only article/news content pages are eligible.  np/lp category pages have no
+ # publication semantics and previously appeared as "today's" major news.
+ return scrape_official_list("https://www.cbc.gov.tw/tw/np-1040-1.html","中央銀行","CBC",re.compile(r"cbc\.gov\.tw/tw/(?:cp|news)-",re.I))
 
 def dgbas_news():
  return scrape_official_list("https://www.dgbas.gov.tw/News.aspx?n=3602","行政院主計總處","DGBAS",re.compile(r"dgbas\.gov\.tw/News_Content\.aspx|dgbas\.gov\.tw/News\.aspx",re.I))

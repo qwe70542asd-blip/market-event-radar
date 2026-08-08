@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Refresh global-market quotes and continuous daily candlesticks.
 
-v11.4.30 data-quality policy
+v11.4.31 data-quality policy
 - A card may only combine price, change and OHLC from the same exchange session.
 - When Yahoo's live quote is newer than the last completed daily candle, the
   live-session OHLC comes from Yahoo meta fields; yesterday's daily candle is
@@ -23,9 +23,9 @@ import requests
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.30"
+VERSION = "v11.4.31"
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.30)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.31)",
     "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.6",
 }
 YAHOO_CHART = "https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"
@@ -154,7 +154,7 @@ def parse_yahoo_candles(chart: dict[str, Any], market: str, quote_kind: str | No
 def daily_reference(candles: list[dict[str, Any]], live_price: float | None, market_date: str | None = None) -> dict[str, Any]:
     """Compatibility helper for tests and downstream tools.
 
-    The v11.4.30 publisher uses same-session-price-vs-adjacent-close. This
+    The v11.4.31 publisher uses same-session-price-vs-adjacent-close. This
     helper preserves the old adjacent-daily-candles API without ever using
     Yahoo chartPreviousClose, which can refer to the beginning of a range.
     """
@@ -233,13 +233,16 @@ def build_session_row(chart: dict[str, Any], symbol: str, name: str, market: str
     quote_dt = market_datetime_from_timestamp(meta.get("regularMarketTime"), market)
     quote_age = (NOW.astimezone(market_timezone(market)) - quote_dt).total_seconds() if quote_dt else None
     schedule = market_session_state(market)
+    window_open = bool(schedule["is_open"])
+    session_confirmed = session_date == schedule["market_date"]
+    verified_open = window_open and session_confirmed
     stale_reasons: list[str] = []
-    if schedule["is_open"]:
-        if session_date != schedule["market_date"]:
-            stale_reasons.append(f"盤中資料仍停留於 {session_date}")
-        if quote_age is None or quote_age > 180:
-            stale_reasons.append("盤中超過 3 分鐘未更新")
-    freshness_status = "stale" if stale_reasons else "live" if schedule["is_open"] else "closed"
+    unconfirmed_reason = None
+    if window_open and not session_confirmed:
+        unconfirmed_reason = f"尚未確認 {schedule['market_date']} 交易資料；可能休市或行情尚未開出"
+    elif verified_open and (quote_age is None or quote_age > 180):
+        stale_reasons.append("盤中超過 3 分鐘未更新")
+    freshness_status = "stale" if stale_reasons else "live" if verified_open else "unconfirmed" if unconfirmed_reason else "closed"
 
     row = {
         "symbol": symbol,
@@ -262,7 +265,7 @@ def build_session_row(chart: dict[str, Any], symbol: str, name: str, market: str
         "close": latest["close"],
         "volume": latest.get("volume"),
         "currency": meta.get("currency"),
-        "market_at": taipei_iso_from_timestamp(meta.get("regularMarketTime")) or NOW.isoformat(timespec="seconds"),
+        "market_at": taipei_iso_from_timestamp(meta.get("regularMarketTime")),
         "market_at_local": quote_dt.isoformat(timespec="seconds") if quote_dt else None,
         "quote_age_seconds": quote_age,
         "display_suffix": "%" if quote_kind == "yield" else "",
@@ -272,11 +275,11 @@ def build_session_row(chart: dict[str, Any], symbol: str, name: str, market: str
         "candle_range": "3mo" if symbol in KLINE_SYMBOLS else None,
         "source": "Yahoo public chart API",
         "candle_source": "Yahoo daily chart + same-session live OHLC",
-        "data_status": "stale" if stale_reasons else "live",
+        "data_status": "stale" if stale_reasons else "cached" if unconfirmed_reason else "live",
         "freshness_status": freshness_status,
-        "stale_reason": "；".join(stale_reasons) or None,
+        "stale_reason": "；".join(stale_reasons) or unconfirmed_reason,
         "validation_status": "verified",
-        "market_open": schedule["is_open"],
+        "market_open": verified_open,
     }
     validate_market_row(row)
     return row

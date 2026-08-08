@@ -12,11 +12,11 @@ from dateutil import parser as date_parser
 
 from common import DATA, NOW, read_json
 
-VERSION="v11.4.30"
+VERSION="v11.4.31"
 ARCHIVE_START=datetime(2026,1,1,tzinfo=NOW.tzinfo)
 RECENT_FULL_DAYS=30
 MID_ARCHIVE_DAYS=90
-HEADERS={"User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.4.30; +https://github.com/qwe70542asd-blip/market-event-radar)"}
+HEADERS={"User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.4.31; +https://github.com/qwe70542asd-blip/market-event-radar)"}
 COMPANY_EVENT_RE=re.compile(r"增資|減資|除權|除息|股利|法說|財報|財務報告|股東會|停牌|復牌|公開收購|併購|合併|處分資產|取得資產|重大合約|融資融券|注意股票|處置股票|庫藏股|董事會|重大訊息",re.I)
 MARKET_HIGH_RE=re.compile(r"FOMC|聯準會|Fed\b|央行|CPI|PCE|GDP|非農|JOLTS|PMI|利率決策|升息|降息|關稅|制裁|戰爭|金融危機|熔斷|重大法規|匯率干預|資本管制|銀行危機|債務危機|財政危機|信用危機",re.I)
 ASIA_RISK_RE=re.compile(r"日本銀行|日銀|BOJ|日圓|日債|日本國債|日本政府債務|日本企業倒閉|日本企業破產|匯市干預|韓國央行|韓元|KOSPI|KOSDAQ|中國房地產|中國房企|地方債|人民幣|亞洲貨幣|亞洲資金外流|貨幣競貶",re.I)
@@ -143,14 +143,18 @@ def parse_datetime(value:Any)->datetime|None:
  return None
 
 def _stock_master_rows()->list[dict[str,Any]]:
- # The full official stock-basics channel is the only symbol authority once it
- # exists. Falling back to assets.json is allowed only during first bootstrap;
- # otherwise delisted/stale seed codes can leak into news tagging.
+ # The full official stock-basics channel is authoritative for current listed stocks,
+ # while assets.json remains the official stock/ETF master and ETF authority.  Never let a tiny bootstrap
+ # stock-basics seed replace the larger official assets master, and never drop
+ # ETFs merely because the stock-only channel is healthy.
  payload=read_json(DATA/"stock-basics.json",{"items":{}});items=payload.get("items") or {}
- if isinstance(items,dict) and items:
-  return [value for value in items.values() if isinstance(value,dict)]
+ stock_rows=[value for value in items.values() if isinstance(value,dict)] if isinstance(items,dict) else []
  assets=read_json(DATA/"assets.json",{"assets":[]}).get("assets",[])
- return [value for value in assets if isinstance(value,dict) and value.get("market")=="TW" and value.get("asset_class") in {"stock","etf"}]
+ assets_rows=[value for value in assets if isinstance(value,dict) and value.get("market")=="TW" and value.get("asset_class") in {"stock","etf"}]
+ if len(stock_rows)>=500:
+  etf_rows=[value for value in assets_rows if value.get("asset_class")=="etf"]
+  return [*stock_rows,*etf_rows]
+ return assets_rows or stock_rows
 
 def asset_aliases()->dict[str,str]:
  out={}
@@ -174,14 +178,21 @@ def asset_profiles()->dict[str,dict[str,Any]]:
  return out
 
 def infer_symbols(text:str,aliases:dict[str,str])->list[str]:
- valid_symbols=set(aliases.values())
- found=[]
- # A four-to-six-character number is accepted only when it exists in the
- # official stock/ETF master. Revenue, prices and years can never become codes.
+ valid_symbols=set(aliases.values());low=text.lower();found=[]
+ aliases_by_symbol={}
+ for name,symbol in aliases.items():aliases_by_symbol.setdefault(symbol,[]).append(name)
+ # A number that happens to equal a real stock code is not enough.  Accept a
+ # numeric code only when the article gives explicit stock-code context,
+ # puts it in brackets, or names the matching company close to the code.  This
+ # prevents phrases such as「上漲1250點、1270家上漲」from becoming securities.
  for m in CODE_RE.finditer(text):
   code=m.group(1).upper()
-  if code in valid_symbols:found.append(code)
- low=text.lower();occupied=[]
+  if code not in valid_symbols:continue
+  start,end=m.span();context=low[max(0,start-24):min(len(low),end+24)]
+  numeric_context=bool(re.search(rf"(?:股票|證券|代號|stock|ticker|etf)[^0-9a-z]{{0,8}}{re.escape(code.lower())}",context,re.I) or re.search(rf"[（(\[]\s*{re.escape(code.lower())}\s*[）)\]]",context,re.I))
+  named=any(name and name in context for name in aliases_by_symbol.get(code,[]))
+  if numeric_context or named:found.append(code)
+ occupied=[]
  # Longest-name-first matching prevents 南亞 from matching inside 南亞科.
  for name,symbol in sorted(aliases.items(),key=lambda item:(-len(item[0]),item[0])):
   if symbol in found:continue
@@ -238,12 +249,21 @@ def classify(title:str,summary:str,aliases:dict[str,str],forced_scope:str|None=N
 def normalize_item(*,title:Any,url:Any,source_id:str,source_name:str,summary:Any="",published_at:Any=None,aliases:dict[str,str]|None=None,profiles:dict[str,dict[str,Any]]|None=None,forced_scope:str|None=None,base_url:str|None=None,extra:dict[str,Any]|None=None)->dict[str,Any]|None:
  title=clean_title(title);url=direct_url(url,base_url);summary=clean_text(summary)
  if len(title)<6 or GENERIC_RE.fullmatch(title) or not url or not readable_chinese(title,summary):return None
- dt=parse_datetime(published_at) or NOW
+ # Unknown publication time is not equivalent to "published now".  The old
+ # fallback polluted today's feed with undated navigation/category pages.
+ dt=parse_datetime(published_at)
+ if dt is None:return None
  analysis=classify(title,summary,aliases or {},forced_scope)
  profiles=profiles or {}
  companies=[profiles[symbol] for symbol in analysis.get("symbols",[]) if symbol in profiles]
  item={"id":hashlib.sha1(f"{source_id}|{title}|{url}".encode()).hexdigest()[:18],"source_id":source_id,"source":source_name,"title":title[:180],"url":url,"url_valid":True,"published_at":dt.isoformat(timespec="seconds"),"summary":summary[:400] or title,"ai_summary":summary[:400] or title,"language":"zh-Hant","companies":companies,**analysis}
  if extra:item.update(extra)
+ final_symbols=[str(symbol).upper() for symbol in item.get("symbols") or [] if symbol]
+ if forced_scope in {"company","media"} and final_symbols:
+  item["symbols"]=list(dict.fromkeys(final_symbols))[:10]
+  item["companies"]=[profiles[symbol] for symbol in item["symbols"] if symbol in profiles]
+  item["affected_markets"]=item["symbols"][:5]
+  item["why_it_matters"]=f"此資訊主要影響{'、'.join(item['affected_markets'][:3])}，仍需配合正式數據與市場預期判斷。"
  image=direct_url(item.get("image_url")) if item.get("image_url") else None
  if image:item["image_url"]=image
  else:item.pop("image_url",None)
@@ -292,14 +312,31 @@ def dedupe(items:list[dict[str,Any]],days:int=14,limit:int=600)->list[dict[str,A
  prepared.sort(key=lambda row:(row[0],row[1]),reverse=True)
  return [item for _,__,item in prepared[:limit]]
 
+def legacy_now_fallback(item:dict[str,Any],old_metadata:dict[str,Any])->bool:
+ # v11.4.30 and older normalized an unknown publication timestamp to the
+ # updater's NOW.  On migration, any archived row stamped within five seconds
+ # of that updater run is untrustworthy and must not outrank corrected source
+ # timestamps in the new feed.
+ if str(old_metadata.get("version") or "")==VERSION:return False
+ updated=_news_datetime({"published_at":old_metadata.get("updated_at")})
+ published=_news_datetime(item)
+ return bool(updated and published and abs((published-updated).total_seconds())<=5)
+
 def save_channel(filename:str,varname:str,source_id:str,source_name:str,items:list[dict[str,Any]],health:dict[str,Any],retention_days:int=14,min_records:int=1)->dict[str,Any]:
- path=DATA/filename;old=read_json(path,{"items":[]})
- fresh=dedupe(items,retention_days)
- old_items=dedupe(old.get("items",[]),retention_days)
- combined=dedupe(fresh+old_items,retention_days)
- used=bool(old_items and (not fresh or len(combined)>len(fresh)))
- status="ok" if len(fresh)>=min_records else "partial" if fresh else "fallback" if old_items else "warning"
- payload={"metadata":{"version":VERSION,"source_id":source_id,"source_name":source_name,"updated_at":NOW.isoformat(timespec="seconds"),"status":status,"fresh_count":len(fresh),"item_count":len(combined),"used_archive_fallback":used,"recent_full_retention_days":RECENT_FULL_DAYS,"archive_start":ARCHIVE_START.date().isoformat(),"archive_limit":600,"archive_policy":"newest-first; older than 30 days requires higher importance; before 2026-01-01 is deleted","sort_order":"published_at_desc","language_policy":"zh-Hant-only","encoding_policy":"utf8-big5-cp950-auto"},"health":health,"items":combined}
+ path=DATA/filename;old=read_json(path,{"items":[]});old_metadata=old.get("metadata") or {}
+ fetched=dedupe(items,retention_days)
+ old_raw=[];legacy_removed=0
+ for row in old.get("items",[]):
+  suspicious_official=source_id=="official-notices" and bool(re.search(r"/(?:np|lp)-\d",str(row.get("url") or ""),re.I))
+  if legacy_now_fallback(row,old_metadata) or suspicious_official:
+   legacy_removed+=1;continue
+  old_raw.append(row)
+ old_items=dedupe(old_raw,retention_days)
+ combined=dedupe(fetched+old_items,retention_days)
+ used=bool(old_items and (not fetched or len(combined)>len(fetched)))
+ recent_24h=sum(1 for item in combined if (lambda dt: bool(dt and timedelta(0)<=NOW-dt<=timedelta(hours=24)))(_news_datetime(item)))
+ status="ok" if len(fetched)>=min_records else "partial" if fetched else "fallback" if old_items else "warning"
+ payload={"metadata":{"version":VERSION,"source_id":source_id,"source_name":source_name,"updated_at":NOW.isoformat(timespec="seconds"),"status":status,"fresh_count":recent_24h,"fetched_count":len(fetched),"recent_24h_count":recent_24h,"item_count":len(combined),"used_archive_fallback":used,"legacy_archive_removed":legacy_removed,"recent_full_retention_days":RECENT_FULL_DAYS,"archive_start":ARCHIVE_START.date().isoformat(),"archive_limit":600,"archive_policy":"newest-first; older than 30 days requires higher importance; before 2026-01-01 is deleted","sort_order":"published_at_desc","language_policy":"zh-Hant-only","encoding_policy":"utf8-big5-cp950-auto"},"health":health,"items":combined}
  path.write_text(json.dumps(payload,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
  (DATA/(path.stem+"-seed.js")).write_text(f"window.{varname}="+json.dumps(payload,ensure_ascii=False,separators=(",",":"))+";\n",encoding="utf-8")
  return payload

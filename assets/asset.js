@@ -1,14 +1,14 @@
 (async()=>{
   "use strict";
-  const {$,$$,escapeHtml,fmt,pct,cls,formatTime,loadData,loadStockBasics,loadNewsChannels,loadStockNews,finite,stripHtml,normalizeText,renderNewsThumb}=MR;
+  const {$,$$,escapeHtml,fmt,pct,cls,formatTime,loadData,loadStockBasics,loadStockNews,finite,stripHtml,normalizeText,renderNewsThumb}=MR;
   const symbol=(new URLSearchParams(location.search).get("symbol")||"2330").toUpperCase();
-  const [assetPayload,marketPayload,chipPayload,eventPayload,newsPayload,stockNewsPayload,revenuePayload,dividendPayload,secondaryPayload,verificationPayload,yahooPayload,etfPayload,stockBasicsPayload]=await Promise.all([
+  // Core asset information loads first.  Large event/news archives are started
+  // only after the primary profile/quote channels resolve and are awaited near
+  // their own sections, so a slow 3+ MB archive cannot block the whole page.
+  const [assetPayload,marketPayload,chipPayload,revenuePayload,dividendPayload,secondaryPayload,verificationPayload,yahooPayload,etfPayload,stockBasicsPayload]=await Promise.all([
     loadData("assets.json",window.__ASSET_SEED__||{assets:[]}),
     loadData("tw-market.json",window.__TW_MARKET_SEED__||{items:[]}),
     loadData("tw-chips.json",window.__TW_CHIPS_SEED__||{items:{},history:{}}),
-    loadData("events.json",window.__EVENT_SEED__||{events:[]}),
-    loadNewsChannels(),
-    loadStockNews(),
     loadData("monthly-revenue.json",window.__MONTHLY_REVENUE_SEED__||{metadata:{status:"waiting"},items:{}}),
     loadData("dividend-history.json",window.__DIVIDEND_HISTORY_SEED__||{metadata:{status:"waiting"},items:{}}),
     loadData("secondary-reference.json",window.__SECONDARY_REFERENCE_SEED__||{metadata:{status:"waiting"},items:{}}),
@@ -17,9 +17,12 @@
     loadData("etf-details.json",window.__ETF_DETAILS_SEED__||{metadata:{status:"waiting"},items:{}}),
     loadStockBasics()
   ]);
+  const eventPromise=loadData("events.json",window.__EVENT_SEED__||{events:[]});
+  const stockNewsPromise=loadStockNews();
   const officialQuote=(marketPayload.items||[]).find(row=>String(row.symbol||"").toUpperCase()===symbol)||{};
   const secondaryQuote=(secondaryPayload.items||{})[symbol]||{};
-  const quote=Object.keys(officialQuote).length?officialQuote:(secondaryQuote.price!=null?{symbol,name:symbol,price:secondaryQuote.price,previous_close:secondaryQuote.previous_close,status:"secondary-reference",quote_time:secondaryQuote.updated_at,quote_date:secondaryQuote.updated_at}:{});
+  const secondaryTime=String(secondaryQuote.market_at||"").match(/T(\d{2}:\d{2})/)?.[1]||"";
+  const quote=Object.keys(officialQuote).length?officialQuote:(secondaryQuote.price!=null?{symbol,name:symbol,price:secondaryQuote.price,previous_close:secondaryQuote.previous_close,status:"secondary-reference",quote_time:secondaryTime,quote_date:secondaryQuote.quote_date||""}:{});
   const found=(assetPayload.assets||[]).find(row=>String(row.symbol||"").toUpperCase()===symbol);
   const yahoo=(yahooPayload.items||{})[symbol]||{};
   const etfReference=(etfPayload.items||{})[symbol]||{};
@@ -84,9 +87,11 @@
   $("#assetChange").textContent=pct(quote.change_percent);
   $("#assetChange").className=cls(quote.change_percent);
   $("#assetQuoteTime").textContent=quote.quote_date?`${formatDate(quote.quote_date)} ${quote.quote_time||""}`:marketPayload.metadata?.updated_at?formatTime(marketPayload.metadata.updated_at):"";
-  const overallTrust=Number(stockBasic.basic_coverage_percent||0)>=90?"multi_source":(verification.overall||"missing");
+  const overallTrust=verification.trust_overall||verification.overall||"missing";
   const trustText=trustLabel(overallTrust)||"資料驗證中";
-  $("#assetTrust").innerHTML=`<span class="verification-badge ${trustClass(overallTrust)}">${escapeHtml(trustText)}</span><span>官方資料優先；Yahoo、MoneyDJ、HiStock 僅補空白欄位，計算值會標示公式。</span>${stockBasic.basic_coverage_percent?`<span class="verification-badge official">公司主檔 ${escapeHtml(stockBasic.basic_coverage_percent)}%</span>`:""}${stockBasic.financial_coverage_percent!=null?`<span class="verification-badge reference">財務資料 ${escapeHtml(stockBasic.financial_coverage_percent)}%</span>`:""}${yahoo.updated_at?`<span class="verification-badge reference">Yahoo 已補充</span>`:""}${etfReference.updated_at?`<span class="verification-badge reference">ETF 多來源已補充</span>`:""}${(verification.reference_links?.yahoo||yahoo.source_url)?`<a href="${escapeHtml(verification.reference_links?.yahoo||yahoo.source_url)}" target="_blank" rel="noreferrer noopener">Yahoo 查閱 ↗</a>`:""}${verification.reference_links?.goodinfo?`<a href="${escapeHtml(verification.reference_links.goodinfo)}" target="_blank" rel="noreferrer noopener">Goodinfo 查閱 ↗</a>`:""}`;
+  const completeness=verification.completeness_status||"",coverage=finite(verification.coverage_percent);
+  const completenessText=coverage!=null?`欄位完整度 ${fmt(coverage,1)}%${completeness==="complete"?" · 完整":completeness==="partial"?" · 部分完整":""}`:"";
+  $("#assetTrust").innerHTML=`<span class="verification-badge ${trustClass(overallTrust)}">${escapeHtml(trustText)}</span>${completenessText?`<span class="verification-badge ${completeness==="complete"?"confirmed":"reference"}">${escapeHtml(completenessText)}</span>`:""}<span>可信度與欄位完整度分開計算；官方資料優先，Yahoo、MoneyDJ、HiStock 僅補空白欄位，計算值會標示公式。</span>${stockBasic.basic_coverage_percent?`<span class="verification-badge official">公司主檔 ${escapeHtml(stockBasic.basic_coverage_percent)}%</span>`:""}${stockBasic.financial_coverage_percent!=null?`<span class="verification-badge reference">財務資料 ${escapeHtml(stockBasic.financial_coverage_percent)}%</span>`:""}${yahoo.updated_at?`<span class="verification-badge reference">Yahoo 已補充</span>`:""}${etfReference.updated_at?`<span class="verification-badge reference">ETF 多來源已補充</span>`:""}${(verification.reference_links?.yahoo||yahoo.source_url)?`<a href="${escapeHtml(verification.reference_links?.yahoo||yahoo.source_url)}" target="_blank" rel="noreferrer noopener">Yahoo 查閱 ↗</a>`:""}${verification.reference_links?.goodinfo?`<a href="${escapeHtml(verification.reference_links.goodinfo)}" target="_blank" rel="noreferrer noopener">Goodinfo 查閱 ↗</a>`:""}`;
 
   const overview=[];
   const pushCard=(label,value,source,options={})=>{const html=metricCard(label,value,source,options);if(html)overview.push(html)};
@@ -296,28 +301,6 @@
     showSection("#distributionSection",isEtf?"配息":"股利");
   }
 
-  const assetNames=[symbol,displayName,asset.company_name,etf.formal_name].filter(Boolean).map(normalizeText);
-  const relatedEvents=(eventPayload.events||[]).filter(event=>{
-    const symbols=[event.symbol,...(event.symbols||[]),...(event.assets||[])].filter(Boolean).map(value=>String(value).toUpperCase());
-    const text=normalizeText(`${event.title||""} ${event.description||event.summary||""}`);
-    return symbols.includes(symbol)||assetNames.some(name=>name&&text.includes(name));
-  }).sort((a,b)=>Date.parse(b.start||0)-Date.parse(a.start||0)).slice(0,20);
-  if(relatedEvents.length){
-    $("#assetEvents").innerHTML=relatedEvents.map(event=>`<article class="asset-event-card"><div><span class="tag">${escapeHtml(event.category||event.kind||"公司資訊")}</span><time>${escapeHtml(formatTime(event.start))}</time></div><h3>${escapeHtml(event.title||"公司事件")}</h3>${event.summary||event.description?`<p>${escapeHtml(stripHtml(event.summary||event.description).slice(0,220))}</p>`:""}${event.source_url?`<a href="${escapeHtml(event.source_url)}" target="_blank" rel="noreferrer noopener">查看官方來源 ↗</a>`:""}</article>`).join("");
-    showSection("#eventsSection","事件公告");
-  }
-
-  const relatedNews=[...(stockNewsPayload.items||[]),...(newsPayload.items||[])].filter(item=>{
-    if(item.url_valid===false||item.source_id==="company-disclosures"||item.source_id==="official-notices")return false;
-    const itemSymbols=(item.symbols||[]).map(value=>String(value).toUpperCase());
-    const text=normalizeText(`${item.title||""} ${item.ai_summary||item.summary||""}`);
-    return itemSymbols.includes(symbol)||assetNames.some(name=>name&&text.includes(name));
-  }).filter((item,index,list)=>list.findIndex(x=>x.url===item.url||x.id===item.id)===index).slice(0,12);
-  if(relatedNews.length){
-    $("#assetNews").innerHTML=relatedNews.map(item=>`<article class="asset-media-card">${renderNewsThumb(item,"asset",{alt:item.title}).replace('class="news-thumb asset','class="asset-media-image news-thumb asset')}<div><div class="news-meta"><span>${escapeHtml(item.source||"")}</span><time>${escapeHtml(formatTime(item.published_at))}</time></div><div class="ai-badges"><span class="tag">${escapeHtml(item.ai_category||"個股新聞")}</span>${item.impact?`<span class="impact-badge ${escapeHtml(item.impact)}">${item.impact==="high"?"高影響":item.impact==="low"?"低影響":"中影響"}</span>`:""}<span class="direction-badge">${escapeHtml(item.market_direction||"中性")}</span></div><h3><a href="${escapeHtml(item.url||"#")}" target="_blank" rel="noreferrer noopener">${escapeHtml(item.title)}</a></h3><p>${escapeHtml(stripHtml(item.ai_summary||item.summary||"").slice(0,190))}</p>${(item.other_reports||[]).length?`<small>另有 ${item.other_reports.length} 家媒體報導同一事件</small>`:""}</div></article>`).join("");
-    showSection("#newsSection","個股新聞");
-  }
-
   const parseRocDate=value=>{
     const match=String(value||"").match(/(\d{2,3})\/(\d{1,2})\/(\d{1,2})/);if(!match)return null;
     return `${Number(match[1])+1911}-${String(match[2]).padStart(2,"0")}-${String(match[3]).padStart(2,"0")}`;
@@ -342,7 +325,8 @@
     const suffix=(asset.exchange||quote.exchange)==="TPEx"?"TWO":"TW";
     const payload=await fetchJson(`https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}.${suffix}?range=1y&interval=1d`,11000);
     const result=payload?.chart?.result?.[0],times=result?.timestamp||[],q=result?.indicators?.quote?.[0]||{};
-    return times.map((time,index)=>({date:new Date(time*1000).toISOString().slice(0,10),open:q.open?.[index],high:q.high?.[index],low:q.low?.[index],close:q.close?.[index],volume:q.volume?.[index]})).filter(row=>finite(row.close)!=null);
+    const taipeiDate=time=>{const parts=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Taipei",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date(time*1000));const map=Object.fromEntries(parts.map(part=>[part.type,part.value]));return `${map.year}-${map.month}-${map.day}`};
+    return times.map((time,index)=>({date:taipeiDate(time),open:q.open?.[index],high:q.high?.[index],low:q.low?.[index],close:q.close?.[index],volume:q.volume?.[index]})).filter(row=>finite(row.close)!=null);
   };
   let history=[];
   try{history=(asset.exchange||quote.exchange)==="TPEx"?await fetchTpexHistory():await fetchTwseHistory()}catch(e){}
@@ -370,6 +354,31 @@
     showSection("#chartSection","K 線");drawChart(30);
     $("#chartSource").textContent=history.length?`資料來源：${(asset.exchange||quote.exchange)==="TPEx"?"TPEx／Yahoo 備援":"TWSE／Yahoo 備援"}；最近 ${history.length} 個交易日。`:`目前僅有最新行情。`;
     $$("#chartPeriods button").forEach(button=>button.addEventListener("click",()=>{$$("#chartPeriods button").forEach(item=>item.classList.remove("active"));button.classList.add("active");drawChart(Number(button.dataset.days||30))}));
+  }
+
+  // Related event/news archives finish in the background while the price-history
+  // chart is prepared; they cannot delay the primary quote or chart anymore.
+  const assetNames=[symbol,displayName,asset.company_name,etf.formal_name].filter(Boolean).map(normalizeText);
+  const [eventPayload,stockNewsPayload]=await Promise.all([eventPromise,stockNewsPromise]);
+  const relatedEvents=(eventPayload.events||[]).filter(event=>{
+    const symbols=[event.symbol,...(event.symbols||[]),...(event.assets||[])].filter(Boolean).map(value=>String(value).toUpperCase());
+    const text=normalizeText(`${event.title||""} ${event.description||event.summary||""}`);
+    return symbols.includes(symbol)||assetNames.some(name=>name&&text.includes(name));
+  }).sort((a,b)=>Date.parse(b.start||0)-Date.parse(a.start||0)).slice(0,20);
+  if(relatedEvents.length){
+    $("#assetEvents").innerHTML=relatedEvents.map(event=>`<article class="asset-event-card"><div><span class="tag">${escapeHtml(event.category||event.kind||"公司資訊")}</span><time>${escapeHtml(formatTime(event.start))}</time></div><h3>${escapeHtml(event.title||"公司事件")}</h3>${event.summary||event.description?`<p>${escapeHtml(stripHtml(event.summary||event.description).slice(0,220))}</p>`:""}${event.source_url?`<a href="${escapeHtml(event.source_url)}" target="_blank" rel="noreferrer noopener">查看官方來源 ↗</a>`:""}</article>`).join("");
+    showSection("#eventsSection","事件公告");
+  }
+
+  const relatedNews=[...(stockNewsPayload.items||[])].filter(item=>{
+    if(item.url_valid===false||item.source_id==="company-disclosures"||item.source_id==="official-notices")return false;
+    const itemSymbols=(item.symbols||[]).map(value=>String(value).toUpperCase());
+    const text=normalizeText(`${item.title||""} ${item.ai_summary||item.summary||""}`);
+    return itemSymbols.includes(symbol)||assetNames.some(name=>name&&text.includes(name));
+  }).filter((item,index,list)=>list.findIndex(x=>x.url===item.url||x.id===item.id)===index).slice(0,12);
+  if(relatedNews.length){
+    $("#assetNews").innerHTML=relatedNews.map(item=>`<article class="asset-media-card">${renderNewsThumb(item,"asset",{alt:item.title}).replace('class="news-thumb asset','class="asset-media-image news-thumb asset')}<div><div class="news-meta"><span>${escapeHtml(item.source||"")}</span><time>${escapeHtml(formatTime(item.published_at))}</time></div><div class="ai-badges"><span class="tag">${escapeHtml(item.ai_category||"個股新聞")}</span>${item.impact?`<span class="impact-badge ${escapeHtml(item.impact)}">${item.impact==="high"?"高影響":item.impact==="low"?"低影響":"中影響"}</span>`:""}<span class="direction-badge">${escapeHtml(item.market_direction||"中性")}</span></div><h3><a href="${escapeHtml(item.url||"#")}" target="_blank" rel="noreferrer noopener">${escapeHtml(item.title)}</a></h3><p>${escapeHtml(stripHtml(item.ai_summary||item.summary||"").slice(0,190))}</p>${(item.other_reports||[]).length?`<small>另有 ${item.other_reports.length} 家媒體報導同一事件</small>`:""}</div></article>`).join("");
+    showSection("#newsSection","個股新聞");
   }
 
   const navOrder=[...document.querySelectorAll(".asset-section")].map(section=>section.id);

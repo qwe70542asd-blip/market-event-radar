@@ -1,4 +1,4 @@
-name: Update v11.4.30 ETF detail references
+name: Update v11.4.31 ETF detail references
 on:
   push:
     branches: [main]
@@ -8,7 +8,7 @@ on:
       - "scripts/common.py"
       - "requirements.txt"
   schedule:
-    - cron: "15 */2 * * *"
+    - cron: "15 */4 * * *"
   workflow_dispatch:
 permissions:
   contents: write

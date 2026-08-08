@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build Market Event Radar v11.4.30 event data from official schedules.
+"""Build Market Event Radar v11.4.31 event data from official schedules.
 
 The updater keeps the last verified archive, refreshes selected official sources,
 and records when an exact date first appears or changes. It never invents dates.
@@ -37,7 +37,7 @@ ARCHIVE_START = date(2026, 1, 1)
 ARCHIVE_START_DT = datetime.combine(ARCHIVE_START, time.min, tzinfo=TAIPEI)
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.30; +https://github.com/qwe70542asd-blip/market-event-radar)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.31; +https://github.com/qwe70542asd-blip/market-event-radar)",
     "Accept-Language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
 }
 TWSE_EXDIV_URL = "https://openapi.twse.com.tw/v1/exchangeReport/TWT48U_ALL"
@@ -45,7 +45,7 @@ TWSE_EXDIV_HISTORY_URL = "https://www.twse.com.tw/exchangeReport/TWT49U"
 TPEX_EXDIV_HISTORY_URL = "https://www.tpex.org.tw/openapi/v1/tpex_exright_daily"
 TPEX_EXDIV_URL = "https://www.tpex.org.tw/openapi/v1/tpex_exright_prepost"
 TWSE_DIVIDEND_PLAN_URL = "https://openapi.twse.com.tw/v1/opendata/t187ap45_L"
-TPEX_DIVIDEND_PLAN_URL = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap45_O"
+TPEX_DIVIDEND_PLAN_URL = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap39_O"
 TWSE_MATERIAL_URL = "https://openapi.twse.com.tw/v1/opendata/t187ap04_L"
 TPEX_MATERIAL_URL = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap04_O"
 BLS_URL = "https://www.bls.gov/schedule/news_release/bls.ics"
@@ -533,18 +533,36 @@ def dividend_total(row: dict[str, Any], needle: str) -> float:
     return total
 
 
+def dividend_company_identity(row: dict[str, Any]) -> tuple[str, str]:
+    """Read company identity from both split and combined MOPS/TPEx schemas."""
+    symbol = first_value(row, ["公司代號", "CompanyCode", "SecuritiesCompanyCode", "Code"])
+    name = first_value(row, ["公司名稱", "CompanyName", "Name"])
+    if symbol:
+        return symbol, name
+    combined = first_value(row, ["公司代號名稱", "公司代號及名稱", "CompanyCodeName", "SecuritiesCompanyCodeName"])
+    match = re.match(r"^\s*([0-9A-Za-z]{4,8})\s*[-－—:：]?\s*(.*?)\s*$", combined)
+    if not match:
+        return "", name
+    return match.group(1), name or clean(match.group(2))
+
+
 def parse_dividend_plans(rows: Any, market: str, source_url: str, origin: str) -> list[dict[str, Any]]:
     events = []
     if not isinstance(rows, list):
         return events
     for row in rows:
-        symbol = first_value(row, ["公司代號", "CompanyCode", "SecuritiesCompanyCode", "Code"])
-        name = first_value(row, ["公司名稱", "CompanyName", "Name"])
+        symbol, name = dividend_company_identity(row)
         if not symbol:
             continue
         period = first_value(row, ["股利所屬年(季)度", "股利年度", "DividendYear"])
+        term = first_value(row, ["期別", "股利期別", "DividendPeriod"])
+        if term and term not in period:
+            period = clean(f"{period} {term}")
         shareholder_day = parse_market_date(first_value(row, ["股東會日期", "ShareholdersMeetingDate"]))
-        decision_day = parse_market_date(first_value(row, ["董事會（擬議）股利分派日", "董事會股利分派日", "BoardMeetingDate"]))
+        decision_day = parse_market_date(first_value(row, [
+            "董事會決議通過股利分派日", "董事會（擬議）股利分派日",
+            "董事會股利分派日", "BoardMeetingDate",
+        ]))
         cash, stock = dividend_total(row, "現金"), dividend_total(row, "配股")
         if shareholder_day and ARCHIVE_START <= shareholder_day <= NOW.date() + timedelta(days=370):
             tracking = f"{origin}|{symbol}|shareholder-meeting|{period}"
@@ -670,7 +688,9 @@ def parse_material(rows: Any, market: str, source_url: str, origin: str) -> list
         subject = first_value(row, ["主旨", "Subject", "說明", "Description"]) or text[:220]
         if not symbol:
             continue
-        announcement_day = parse_market_date(first_value(row, ["發言日期", "出表日期", "Date"])) or NOW.date()
+        announcement_day = parse_market_date(first_value(row, ["發言日期", "出表日期", "Date"]))
+        if not announcement_day:
+            continue  # source announcement date missing; never substitute today
         target_day, date_basis = choose_material_target_date(subject, event_type, announcement_day)
         if not target_day:
             continue  # exact event date unavailable; do not publish a guessed period date
@@ -992,14 +1012,14 @@ def main() -> None:
     )
     payload = {
         "metadata": {
-            "version": "v11.4.30",
+            "version": "v11.4.31",
             "updated_at": NOW.isoformat(timespec="seconds"),
             "timezone": "Asia/Taipei",
             "event_count": len(events),
             "announced_today_count": announced_today,
             "announced_recent_count": announced_recent,
             "state_initialized": True,
-            "announcement_integrity": "strict-v11.4.30",
+            "announcement_integrity": "strict-v11.4.31",
             "announcement_suppressed_origins": sorted(suppressed_origins),
             "source_ok_count": sum(1 for source in sources if source.get("status") == "ok"),
             "source_warning_count": sum(1 for source in sources if source.get("status") != "ok"),
@@ -1013,7 +1033,7 @@ def main() -> None:
     EVENTS_PATH.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     SEED_PATH.write_text("window.__EVENT_SEED__ = " + json.dumps(payload, ensure_ascii=False) + ";\n", encoding="utf-8")
     STATE_PATH.write_text(json.dumps({
-        "version": "v11.4.30", "initialized": True,
+        "version": "v11.4.31", "initialized": True,
         "initialized_origins": sorted(next_initialized_origins),
         "updated_at": NOW.isoformat(timespec="seconds"), "events": next_state,
     }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

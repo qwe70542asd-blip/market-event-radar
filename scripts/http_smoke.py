@@ -15,7 +15,7 @@ from urllib.request import Request, urlopen
 BASE = (sys.argv[1] if len(sys.argv) > 1 else "http://127.0.0.1:8765").rstrip("/") + "/"
 PAGES = ["index.html", "portfolio.html", "tw-market.html", "asset.html?symbol=2330", "news.html", "institutional.html", "event.html"]
 REQUIRED = {
-    "index.html": ["v11.4.30", "今日台股狀態", "六大指數互動 K 線與關鍵資訊"],
+    "index.html": ["v11.4.31", "今日台股狀態", "六大指數互動 K 線與關鍵資訊"],
     "tw-market.html": ["台股四大排行", "搜尋全部股票與 ETF"],
     "news.html": ["財經新聞"],
     "asset.html?symbol=2330": ["標的詳情"],
@@ -36,7 +36,7 @@ class AssetParser(HTMLParser):
 
 def get(path: str) -> tuple[int, str, str]:
     url = urljoin(BASE, path)
-    request = Request(url, headers={"User-Agent": "MarketEventRadarReleaseSmoke/11.4.30"})
+    request = Request(url, headers={"User-Agent": "MarketEventRadarReleaseSmoke/11.4.31"})
     with urlopen(request, timeout=12) as response:
         return response.status, response.headers.get("Content-Type", ""), response.read().decode("utf-8", errors="replace")
 
@@ -47,7 +47,7 @@ def main() -> None:
         status, content_type, body = get(page)
         assert status == 200, (page, status)
         assert "text/html" in content_type, (page, content_type)
-        assert "v11.4.30" in body, page
+        assert "v11.4.31" in body, page
         for token in REQUIRED.get(page, []):
             assert token in body, (page, token)
         parser = AssetParser(); parser.feed(body); assets.update(parser.urls)
@@ -60,7 +60,7 @@ def main() -> None:
         assert status == 200, (raw, status)
     for path in ("data/market-snapshot-seed.js", "data/market-kline-seed.js", "data/events-seed.js", "data/stock-basics-seed.js"):
         status, _, body = get(path)
-        assert status == 200 and "v11.4.30" in body, path
+        assert status == 200 and "v11.4.31" in body, path
     print(f"HTTP smoke passed: {len(PAGES)} pages, {len(assets)} referenced assets")
 
 

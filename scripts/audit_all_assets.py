@@ -7,7 +7,7 @@ from typing import Any
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.30"
+VERSION = "v11.4.31"
 
 
 def present(value: Any) -> bool:
@@ -45,10 +45,12 @@ def merge_nonempty(*objects: dict[str, Any]) -> dict[str, Any]:
     return result
 
 
-def derive_allocations(holdings: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def derive_allocations(holdings: list[dict[str, Any]], sector_by_symbol: dict[str, str] | None = None) -> list[dict[str, Any]]:
     totals: dict[str, float] = {}
+    sector_by_symbol = sector_by_symbol or {}
     for holding in holdings or []:
-        sector = holding.get("sector") or holding.get("industry") or holding.get("industry_name")
+        symbol = str(holding.get("symbol") or "").upper()
+        sector = holding.get("sector") or holding.get("industry") or holding.get("industry_name") or sector_by_symbol.get(symbol)
         try:
             weight = float(holding.get("weight"))
         except (TypeError, ValueError):
@@ -82,7 +84,7 @@ def stock_checks(asset: dict[str, Any], yahoo: dict[str, Any]) -> list[tuple[str
     return checks
 
 
-def etf_checks(asset: dict[str, Any], yahoo: dict[str, Any], details: dict[str, Any], dividend_channel: Any) -> list[tuple[str, bool, str]]:
+def etf_checks(asset: dict[str, Any], yahoo: dict[str, Any], details: dict[str, Any], dividend_channel: Any, sector_by_symbol: dict[str, str] | None = None) -> list[tuple[str, bool, str]]:
     official = asset.get("etf") or {}
     yahoo_etf = yahoo.get("etf") or {}
     etf = merge_nonempty(official, details, yahoo_etf)
@@ -90,7 +92,7 @@ def etf_checks(asset: dict[str, Any], yahoo: dict[str, Any], details: dict[str, 
     holdings = first_rows(official.get("holdings"), details.get("holdings"), yahoo_etf.get("holdings"))
     allocations = first_rows(official.get("allocations"), official.get("sector_allocation"), details.get("allocations"), details.get("sector_allocation"), yahoo_etf.get("allocations"), yahoo_etf.get("sector_allocation"))
     if not allocations:
-        allocations = derive_allocations(holdings)
+        allocations = derive_allocations(holdings, sector_by_symbol)
     category = first_value(official.get("category"), asset.get("sub_industry"), details.get("category"), yahoo_etf.get("category"))
     strategy = first_value(official.get("strategy"), details.get("strategy"), yahoo_etf.get("strategy"))
     active = "主動" in str(category or strategy or asset.get("name") or "")
@@ -116,6 +118,7 @@ def main() -> None:
     yahoo_items = read_json(DATA / "yahoo-details.json", {"items": {}}).get("items", {})
     etf_items = read_json(DATA / "etf-details.json", {"items": {}}).get("items", {})
     dividend_items = read_json(DATA / "dividend-history.json", {"items": {}}).get("items", {})
+    sector_by_symbol = {str(asset.get("symbol") or "").upper(): str(asset.get("official_industry") or asset.get("sub_industry") or "").strip() for asset in payload.get("assets", []) if asset.get("asset_class") == "stock"}
     audit_rows = []
     field_totals: dict[str, dict[str, int]] = {}
     for asset in payload.get("assets", []):
@@ -126,7 +129,7 @@ def main() -> None:
         if asset.get("asset_class") == "stock":
             checks = stock_checks(asset, yahoo)
         else:
-            checks = etf_checks(asset, yahoo, etf_items.get(symbol) or {}, dividend_items.get(symbol) or {})
+            checks = etf_checks(asset, yahoo, etf_items.get(symbol) or {}, dividend_items.get(symbol) or {}, sector_by_symbol)
         missing = [label for label, ok, _reason in checks if not ok]
         reasons = [reason for _label, ok, reason in checks if not ok]
         coverage = round((len(checks) - len(missing)) / len(checks) * 100, 2)

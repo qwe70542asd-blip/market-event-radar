@@ -1,4 +1,4 @@
-name: Update v11.4.30 dividend history
+name: Update v11.4.31 dividend history
 on:
   push:
     branches: [main]
@@ -7,7 +7,7 @@ on:
       - "scripts/update_dividend_history.py"
       - "scripts/update_assets.py"
   schedule:
-    - cron: "38 * * * *"
+    - cron: "38 2,8,14,20 * * *"
   workflow_dispatch:
 permissions:
   contents: write

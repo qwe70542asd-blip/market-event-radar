@@ -1,20 +1,32 @@
-Market Event Radar v11.4.30 validation
+Market Event Radar v11.4.31 validation
 
-PASS: 121 automated tests
-PASS: event-alert integrity regression tests
-PASS: historical backfill is not treated as a new date
-PASS: recurring past occurrence is not treated as a reschedule
-PASS: genuine future reschedule is still retained
-PASS: nonblocking calendar boot + late live-events refresh
-PASS: frontend semantic guard for today-new-date panel
+PASS: 154 automated tests
+PASS: full event/date-alert integrity regression suite
+PASS: verified Taiwan trading-date / history integrity
+PASS: disclosure source-time parsing; invalid timestamps fail closed
+PASS: official-news date/category-page guard + legacy NOW archive migration
+PASS: stock-symbol false-positive guard and authoritative company remapping
+PASS: TPEx mopsfin_t187ap39_O board-dividend parser field compatibility
+PASS: trust/completeness/source-snapshot verification model
+PASS: consolidated Actions scheduling; no workflow_run fan-out
+PASS: history-free live-* publisher
+PASS: bounded sequential frontend mirrors + persistent last-good fallback
+PASS: asset-page core-first loading
+PASS: Edge session/previous-close/local-date integrity
 PASS: strict public-data validation
-PASS: Python syntax
-PASS: JavaScript syntax
-PASS: 27 GitHub Actions YAML files
+PASS: Python compileall
+PASS: JavaScript syntax (16 files)
+PASS: shell syntax (2 files)
+PASS: 30 GitHub Actions YAML files
+PASS: repository layout guard
+PASS: app shell smoke
 PASS: HTTP smoke test (7 pages / 42 referenced assets)
-PASS: Service Worker cache namespace v11.4.30
+PASS: audio scan (0 m4a/mp3/wav)
+PASS: Service Worker cache namespace v11.4.31
 
-POST-DEPLOY: run the v11.4.30 event workflow once so live-events is republished with strict-v11.4.30 metadata.
-POST-DEPLOY: verify today-new-date count after that live scan.
-NON-BLOCKING: 15-minute K runtime still depends on Yahoo/Edge Worker and must never be fabricated.
-Validated at: 2026-08-07T18:45:35+08:00
+DEPLOY: overlay the ZIP, run CLEAN-REPO.cmd once, review deletions in GitHub Desktop, then Commit / Push.
+POST-DEPLOY: the next live-* publications replace old generated-data branch history with orphan snapshots.
+POST-DEPLOY: verify live-events metadata reports strict-v11.4.31 after its first run.
+EXTERNAL LIMIT: GitHub cron is best-effort; a late scheduled start must be shown as stale/unconfirmed, never filled with invented current data.
+NON-BLOCKING: 15-minute K uses verified static/Edge data only; no fabricated browser K candles.
+Validated at: 2026-08-08T11:05:06+08:00

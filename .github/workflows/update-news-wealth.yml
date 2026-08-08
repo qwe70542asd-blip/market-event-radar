@@ -1,14 +1,5 @@
-name: Update v11.4.30 財富自由 news
+name: Update v11.4.31 財富自由 news
 on:
-  push:
-    branches: [main]
-    paths:
-      - ".github/workflows/update-news-wealth.yml"
-      - "scripts/update_media_source.py"
-      - "scripts/news_pipeline.py"
-      - "data/news-channels.json"
-  schedule:
-    - cron: "2-59/15 * * * *"
   workflow_dispatch:
 permissions:
   contents: write
@@ -35,6 +26,8 @@ jobs:
             "news-wealth-seed.js:data/news-wealth-seed.js"
           bash scripts/restore_data_branch.sh live-assets \
             "assets.json:data/assets.json"
+          bash scripts/restore_data_branch.sh live-stock-basics \
+            "stock-basics.json:data/stock-basics.json"
       - run: python scripts/update_media_source.py --channel wealth
         env:
           NEWS_HISTORY_BACKFILL: ${{ github.event_name == 'schedule' && '0' || '1' }}

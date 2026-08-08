@@ -1,11 +1,17 @@
-市場事件雷達 v11.4.30 完整覆蓋包
+市場事件雷達 v11.4.31 — GitHub Desktop 更新方式
 
-1. 解壓縮後，把包內所有檔案覆蓋到 GitHub repository 根目錄。
-2. 保留原本的 .git 資料夾。
-3. GitHub Desktop Commit：market-event-radar-v11.4.30，然後 Push。
-4. 這版保留 v11.4.29 全部功能，重點修正首頁月曆卡在讀取中與「今日新公布日期」大量誤判。
-5. 月曆現在先用 seed 啟動，live-events 較慢時不會被其他行情／新聞來源一起拖住；線上事件完成後會自動刷新。
-6. 日期提醒只接受真正的未來新日期或尚未發生事件的改期；歷史回補、上一週期已發生的同名事件、普通財報公告不再混入。
-7. Push 後等待 Update v11.4.30 event calendar and announced dates 成功一次，live-events 就會改用 strict-v11.4.30 規則。
-8. Service Worker cache 已換代；舊手機分頁若仍顯示 v11.4.29，關閉分頁後重新開站。
-9. 15 分鐘 K 線仍屬部署後非阻擋驗證；來源失敗時不得偽造 K 棒。
+1. 先把這個 ZIP 解壓縮到一個暫存資料夾。
+2. 用解壓後的內容覆蓋你的 market-event-radar 本機 repository 根目錄。
+3. 【重要】雙擊根目錄 CLEAN-REPO.cmd 一次。
+   - 不需要安裝 Python；它是可直接雙擊執行的 Windows 批次檔。
+   - 它只會清掉先前誤複製到 scripts/ 裡的整套 repository 副本。
+   - 正常的 scripts/*.py 不會刪除。
+4. 回到 GitHub Desktop，確認變更包含：
+   - v11.4.31 檔案
+   - scripts/ 下那些錯誤巢狀檔案被刪除
+   - 新的 update-market-core.yml / update-news-batch.yml / update-official-feeds.yml
+5. Commit 訊息可用：market-event-radar-v11.4.31
+6. Push origin。
+7. Push 後 release verification 會自檢；主要 live-* 分支會由新的整合排程重新發布成 history-free snapshot。
+
+注意：GitHub Actions cron 是 best-effort，不保證每個 5 分鐘刻度精準啟動。v11.4.31 已降低 workflow 數量與重複 fan-out，並在資料驗證中標記 stale source。

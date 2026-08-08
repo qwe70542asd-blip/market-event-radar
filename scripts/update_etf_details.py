@@ -26,7 +26,7 @@ from bs4 import BeautifulSoup
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.30"
+VERSION = "v11.4.31"
 BATCH = 24
 PRIORITY_SYMBOLS = ["00981A", "00403A", "00631L", "006208", "0050", "0056", "00878", "00919", "2330", "2317", "2454"]
 TIMEOUT = 24
@@ -391,8 +391,28 @@ def parse_one(asset: dict[str, Any], histock: dict[str, dict[str, Any]]) -> tupl
     return symbol, merged, None
 
 
+
+def derive_allocations_from_holdings(row: dict[str, Any], sector_by_symbol: dict[str, str]) -> None:
+    if row.get("allocations") or not row.get("holdings"):
+        return
+    totals: dict[str, float] = {}
+    for holding in row.get("holdings") or []:
+        symbol = str(holding.get("symbol") or "").upper()
+        sector = clean(holding.get("sector") or holding.get("industry") or sector_by_symbol.get(symbol))
+        weight = number(holding.get("weight"))
+        if not sector or weight is None:
+            continue
+        totals[sector] = totals.get(sector, 0.0) + weight
+    if not totals:
+        return
+    row["allocations"] = [{"name": name, "weight": weight, "source": "持股×官方產業分類計算"} for name, weight in sorted(totals.items(), key=lambda item: item[1], reverse=True)]
+    row.setdefault("field_sources", {})["allocations"] = "持股×官方產業分類計算"
+    row.setdefault("verification", {})["allocations"] = {"status": "calculated", "source": "持股×官方產業分類計算", "matches": 1}
+
+
 def main() -> None:
     assets = read_json(DATA / "assets.json", {"assets": []}).get("assets", [])
+    sector_by_symbol = {str(asset.get("symbol") or "").upper(): clean(asset.get("official_industry") or asset.get("sub_industry") or asset.get("industry")) for asset in assets if asset.get("asset_class") == "stock"}
     old = read_json(DATA / "etf-details.json", {"items": {}, "state": {}})
     items = dict(old.get("items") or {})
     state = dict(old.get("state") or {})
@@ -448,6 +468,9 @@ def main() -> None:
                 success += 1
             elif error:
                 errors.append({"symbol": symbol, "error": error[:400]})
+    for row in items.values():
+        if isinstance(row, dict):
+            derive_allocations_from_holdings(row, sector_by_symbol)
     next_cursor = (cursor + len(batch)) % len(candidates) if candidates else 0
     payload = {
         "metadata": {

@@ -241,6 +241,22 @@ class ParserTests(unittest.TestCase):
         row={"symbol":"X","price":110,"previous_close":100,"change":10,"change_percent":10,"session_date":"2026-08-05","price_date":"2026-08-05","ohlc_date":"2026-08-05","open":101,"high":108,"low":99,"close":107,"candles":[]}
         with self.assertRaises(ValueError):market_snapshot.validate_market_row(row)
 
+    def test_tpex_dividend_plan_combined_company_schema(self):
+        payload=[{
+            "公司代號名稱":"6488 環球晶",
+            "股利年度":"115",
+            "期別":"年度",
+            "董事會決議通過股利分派日":"115/08/07",
+            "股東配發內容-盈餘分配之現金股利(元/股)":"10.5",
+        }]
+        rows=event_updater.parse_dividend_plans(payload,"TPEX",event_updater.TPEX_DIVIDEND_PLAN_URL,"tpex-dividend-plan")
+        self.assertEqual(len(rows),1)
+        self.assertEqual(rows[0]["symbol"],"6488")
+        self.assertEqual(rows[0]["asset_name"],"環球晶")
+        self.assertEqual(rows[0]["local_date"],"2026-08-07")
+        self.assertEqual(rows[0]["cash_dividend"],10.5)
+        self.assertIn("115 年度",rows[0]["fiscal_period"])
+
     def test_twse_historical_exdiv_parser(self):
         payload={"fields":["日期","股票代號","股票名稱","除權息","息值"],"data":[["115/06/02","2330","台積電","除息","5.0"]]}
         rows=event_updater.parse_twse_exdiv_history_payload(payload)

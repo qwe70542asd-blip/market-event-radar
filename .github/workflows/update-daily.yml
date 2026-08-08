@@ -1,11 +1,13 @@
-name: Update v11.4.30 assets and audit
+name: Update v11.4.31 assets and audit
 on:
   push:
     branches: [main]
     paths:
-      - ".github/workflows/**"
-      - "scripts/**"
-      - "data/**"
+      - ".github/workflows/update-daily.yml"
+      - "scripts/update_assets.py"
+      - "scripts/audit_all_assets.py"
+      - "scripts/common.py"
+      - "requirements.txt"
   schedule:
     - cron: "30 0,12 * * *"
   workflow_dispatch:
