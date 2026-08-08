@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "version": "v11.4.31",
+    "version": "v11.4.32",
     "updated_at": null,
     "timezone": "Asia/Taipei",
     "state_initialized": false,
@@ -8,7 +8,9 @@
     "note": "Official-source date monitor; material events use labeled event dates or the official announcement date. Reporting-period dates are never calendar dates.",
     "archive_start": "2026-01-01",
     "archive_policy": "retain verified events from 2026-01-01 through the official future horizon",
-    "event_count": 0
+    "event_count": 0,
+    "announcement_integrity": "strict-v11.4.32-series-safe",
+    "announcement_suppressed_origins": []
   },
   "sources": [],
   "events": []

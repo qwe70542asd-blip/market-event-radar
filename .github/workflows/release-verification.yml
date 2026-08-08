@@ -1,4 +1,4 @@
-name: Verify v11.4.31 app release
+name: Verify v11.4.32 app release
 on:
   push:
     branches: [main]
@@ -6,7 +6,7 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: verify-v11-4-31-main
+  group: verify-v11-4-32-main
   cancel-in-progress: true
 jobs:
   verify:

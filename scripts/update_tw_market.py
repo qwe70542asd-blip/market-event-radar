@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Refresh Taiwan closing quotes and online historical market turnover.
 
-v11.4.31 always asks the official TWSE/TPEx network sources for historical
+v11.4.32 validates the restored archive before reuse and asks the official TWSE/TPEx network sources for historical
 turnover from 2026-01-01. Local JSON is only a last-known-good cache; the
 20-session average no longer waits for the site to accumulate one day at a time.
 """
@@ -16,8 +16,8 @@ import requests
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.31"
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.31)"}
+VERSION = "v11.4.32"
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.32)"}
 TWSE_QUOTES = "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL"
 TPEX_QUOTES = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes"
 TWSE_FUNDS = "https://openapi.twse.com.tw/v1/opendata/t187ap47_L"
@@ -66,6 +66,17 @@ def parse_market_date(value: Any) -> str | None:
         return parsed.isoformat()
     except (ValueError, TypeError):
         return None
+
+
+def valid_session_date(value: Any) -> str | None:
+    """Return a verified-shaped weekday date, rejecting legacy weekend/future pollution."""
+    day = parse_market_date(value)
+    if not day:
+        return None
+    parsed = date.fromisoformat(day)
+    if parsed < HISTORY_START or parsed > NOW.date() or parsed.weekday() >= 5:
+        return None
+    return day
 
 
 def official_etf_codes(session: requests.Session, old_rows: list[dict]) -> tuple[set[str], list[str]]:
@@ -178,10 +189,8 @@ def history_records(payload: Any, component: str, source: str) -> list[dict[str,
             "TradeValue", "成交金額", "成交金額(元)", "Amount", "TradingValue",
             "成交值", "TotalAmount", "TransactionAmount",
         )))
+        day = valid_session_date(day)
         if not day or value is None or value <= 0:
-            continue
-        parsed_day = date.fromisoformat(day)
-        if not HISTORY_START <= parsed_day <= NOW.date():
             continue
         output.append({"date": day, component: value, "sources": [source]})
     return output
@@ -240,11 +249,8 @@ def online_history(session: requests.Session) -> tuple[list[dict[str, Any]], lis
 def merge_history(old_rows: list[dict], online_rows: list[dict], current_total: float | None, current_date: str | None = None) -> list[dict]:
     by_date: dict[str, dict[str, Any]] = {}
     for raw in [*old_rows, *online_rows]:
-        day = parse_market_date(raw.get("date"))
+        day = valid_session_date(raw.get("date"))
         if not day:
-            continue
-        parsed_day = date.fromisoformat(day)
-        if not HISTORY_START <= parsed_day <= NOW.date():
             continue
         row = by_date.setdefault(day, {"date": day, "sources": []})
         for key in ("twse_trade_value", "tpex_trade_value"):
@@ -262,6 +268,7 @@ def merge_history(old_rows: list[dict], online_rows: list[dict], current_total: 
     # Never fabricate a weekend/holiday turnover row.  The quote endpoints are
     # latest-close feeds, so their aggregate belongs to the verified trading
     # date from the official turnover history (or an explicit source date).
+    current_date = valid_session_date(current_date)
     if current_date and current_total is not None and current_total > 0:
         row = by_date.setdefault(current_date, {"date": current_date, "sources": []})
         row["live_quote_sum"] = current_total
@@ -284,6 +291,16 @@ def merge_history(old_rows: list[dict], online_rows: list[dict], current_total: 
             "updated_at": NOW.isoformat(timespec="seconds"),
         })
     return sorted(output, key=lambda item: item["date"], reverse=True)
+
+
+def trim_history_to_trading_date(rows: list[dict], trading_date: str | None) -> list[dict]:
+    verified = valid_session_date(trading_date)
+    if not verified:
+        return [row for row in rows if valid_session_date(row.get("date"))]
+    return [
+        row for row in rows
+        if (day := valid_session_date(row.get("date"))) and day <= verified
+    ]
 
 
 def average(values: list[float], sessions: int) -> float | None:
@@ -316,19 +333,31 @@ def main() -> None:
     # Full online backfill is needed only when the archive is incomplete or has
     # not been refreshed today.  This removes dozens of redundant historical
     # HTTP requests from every five-minute market refresh.
-    old_history_rows = history.get("items") or []
+    raw_old_history_rows = history.get("items") or []
+    old_history_rows = [row for row in raw_old_history_rows if valid_session_date(row.get("date"))]
+    legacy_history_polluted = len(old_history_rows) != len(raw_old_history_rows)
+    old_trading_date = valid_session_date((old.get("metadata") or {}).get("trading_date"))
     history_checked_today = str((history.get("metadata") or {}).get("last_full_backfill_date") or "") == NOW.date().isoformat()
     enough_history = len(old_history_rows) >= 20
-    if history_checked_today and enough_history:
+    if history_checked_today and enough_history and not legacy_history_polluted and old_trading_date:
         fetched_history, history_warnings = [], []
     else:
         fetched_history, history_warnings = online_history(session)
+    if legacy_history_polluted:
+        history_warnings.insert(0, "Removed legacy weekend/future turnover rows before selecting the trading session")
     warnings.extend(history_warnings)
-    source_dates = [str(row.get("source_date")) for row in ranked_rows if row.get("source_date")]
-    history_dates = [str(row.get("date")) for row in [*fetched_history, *old_history_rows] if row.get("date")]
-    trading_date = max(source_dates or history_dates, default=str((old.get("metadata") or {}).get("trading_date") or "")) or None
+    source_dates = [day for row in ranked_rows if (day := valid_session_date(row.get("source_date")))]
+    fetched_dates = [day for row in fetched_history if (day := valid_session_date(row.get("date")))]
+    retained_dates = [day for row in old_history_rows if (day := valid_session_date(row.get("date")))]
+    verified_dates = source_dates or fetched_dates or retained_dates or ([old_trading_date] if old_trading_date else [])
+    trading_date = max(verified_dates, default=None)
     if not trading_date:
         warnings.append("Unable to verify latest Taiwan trading date; retained quote rows without a fabricated date")
+    elif old_history_rows:
+        trimmed_history = trim_history_to_trading_date(old_history_rows, trading_date)
+        if len(trimmed_history) != len(old_history_rows):
+            warnings.append("Removed retained turnover rows newer than the latest verified trading session")
+        old_history_rows = trimmed_history
     for row in rows:
         row.pop("source_date", None)
         row["quote_date"] = trading_date
@@ -351,7 +380,8 @@ def main() -> None:
             "history_start": HISTORY_START.isoformat(),
             "history_end": trading_date,
             "retention_policy": "2026-01-01 through latest verified trading date",
-            "source_policy": "direct-online-official backfill at most once per day; local last-known-good archive is retained between refreshes",
+            "source_policy": "direct-online-official backfill at most once per day; restored rows are session-validated before reuse",
+            "migration": "v11.4.32 removes legacy weekend/future turnover rows before publishing",
             "last_full_backfill_date": NOW.date().isoformat() if fetched_history else (history.get("metadata") or {}).get("last_full_backfill_date"),
             "session_count": len(history_rows),
             "warnings": history_warnings,

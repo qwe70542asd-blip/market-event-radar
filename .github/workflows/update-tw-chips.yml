@@ -1,4 +1,4 @@
-name: Update v11.4.31 Taiwan chips
+name: Update v11.4.32 Taiwan chips
 on:
   push:
     branches: [main]
@@ -35,12 +35,20 @@ jobs:
         run: |
           python - <<'PYCODE'
           import json
+          from datetime import date
           from pathlib import Path
           path = Path("data/tw-chips.json")
           payload = json.loads(path.read_text(encoding="utf-8"))
           assert isinstance(payload, dict) and isinstance(payload.get("items"), dict)
+          meta=payload.get("metadata",{})
+          assert meta.get("version")=="v11.4.32", meta
+          assert meta.get("schema")=="symbol-keyed-v2", meta
+          for key,row in payload.get("items",{}).items():
+              assert ":" not in key and key == str(row.get("symbol") or "").upper(), (key,row.get("symbol"))
+              if row.get("date"): assert date.fromisoformat(row["date"]).weekday() < 5, row["date"]
+          assert all(date.fromisoformat(day).weekday() < 5 for day in payload.get("available_dates",[]))
           assert path.stat().st_size > 20
-          print(payload.get("metadata", {}))
+          print(meta)
           PYCODE
       - name: Publish data channel
         env:

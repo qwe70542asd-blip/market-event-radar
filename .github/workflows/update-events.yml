@@ -1,4 +1,4 @@
-name: Update v11.4.31 event calendar and announced dates
+name: Update v11.4.32 event calendar and announced dates
 
 on:
   push:
@@ -53,11 +53,13 @@ jobs:
             "event-source-state.json:data/event-source-state.json"
 
       - name: Bootstrap verified events when the isolated channel is empty
+        if: ${{ !(github.event_name == 'workflow_dispatch' && inputs.clean_rebuild) }}
         shell: bash
         run: |
           set -euo pipefail
           EVENT_COUNT="$(python - <<'PY'
           import json
+          import re
           from pathlib import Path
           try:
               payload=json.loads(Path("data/events.json").read_text(encoding="utf-8"))
@@ -86,13 +88,22 @@ jobs:
           events=payload.get("events") or []
           metadata=payload.get("metadata") or {}
           assert events, "empty event calendar after official-source refresh"
-          assert metadata.get("version")=="v11.4.31", metadata
+          assert metadata.get("version")=="v11.4.32", metadata
           assert metadata.get("state_initialized") is True, metadata
           assert metadata.get("archive_start")=="2026-01-01", metadata
           assert isinstance(metadata.get("announced_today_count"), int), metadata
           assert all(str(row.get("local_date") or row.get("start") or "")[:10] >= "2026-01-01" for row in events)
           assert state.get("initialized") is True, state
+          assert int(state.get("tracking_key_version") or 0) >= 2, state
+          assert metadata.get("announcement_integrity") == "strict-v11.4.32-series-safe", metadata
           assert all(row.get("id") and row.get("title") and row.get("start") for row in events)
+          for row in events:
+              if row.get("origin") in {"bea","bls"} and row.get("announcement_kind") in {"new-date","date-changed"}:
+                  key=str(row.get("tracking_key", ""))
+                  if row.get("origin") == "bea":
+                      assert re.match(r"^bea\|[^|]+\|20\d{2}\|[^|]+$", key), row
+                  else:
+                      assert re.match(r"^bls\|[^|]+\|[^|]+$", key), row
           print("events",len(events))
           print("today newly announced",metadata.get("announced_today_count"))
           print("sources ok",metadata.get("source_ok_count"))
@@ -104,7 +115,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          bash scripts/publish_data_branch.sh "$DATA_BRANCH" "event-calendar-v11.4.31" \
+          bash scripts/publish_data_branch.sh "$DATA_BRANCH" "event-calendar-v11.4.32" \
             data/events.json \
             data/events-seed.js \
             data/event-source-state.json

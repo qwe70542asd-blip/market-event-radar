@@ -3,3 +3,22 @@ __pycache__/
 .DS_Store
 Thumbs.db
 .env
+
+# Prevent accidental full-repository copies from being staged under scripts/.
+/scripts/.github/
+/scripts/assets/
+/scripts/data/
+/scripts/docs/
+/scripts/tests/
+/scripts/scripts/
+/scripts/edge/
+/scripts/*.html
+/scripts/README.md
+/scripts/GITHUB-DESKTOP-UPDATE.txt
+/scripts/VALIDATION.json
+/scripts/VALIDATION.txt
+/scripts/VERSION.json
+/scripts/manifest.webmanifest
+/scripts/service-worker.js
+/scripts/requirements.txt
+/scripts/CLEAN-REPO.cmd

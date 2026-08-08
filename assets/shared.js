@@ -49,11 +49,23 @@ async function loadBranchApi(name,branch){
  if(meta?.download_url)return await getJson(`${meta.download_url}${meta.download_url.includes("?")?"&":"?"}sha=${encodeURIComponent(meta.sha||Date.now())}`,11000);
  throw Error("GitHub contents API returned no JSON content");
 }
-const snapshotCacheKeys=["mr-market-snapshot-last-good-v1","mr-market-snapshot-last-good-v11.4.31","mr-market-snapshot-last-good-v11.4.28","mr-market-snapshot-last-good-v11.4.27"];
+const snapshotCacheKeys=["mr-market-snapshot-last-good-v1","mr-market-snapshot-last-good-v11.4.32","mr-market-snapshot-last-good-v11.4.31","mr-market-snapshot-last-good-v11.4.28","mr-market-snapshot-last-good-v11.4.27"];
 const snapshotCacheKey=snapshotCacheKeys[0];
 const DATA_MEMORY=new Map();
+const WEB_STORAGE_CACHE_FILES=new Set(["market-snapshot.json"]);
 const dataCacheKey=name=>`mr-data-cache-v1:${name}`;
 const lastGoodKey=name=>`mr-data-last-good-v1:${name}`;
+const STORAGE_CLEANUP_KEY="mr-storage-cleanup-v11.4.32";
+try{
+ if(localStorage.getItem(STORAGE_CLEANUP_KEY)!=="1"){
+  for(const name of Object.keys(CHANNELS)){
+   if(WEB_STORAGE_CACHE_FILES.has(name))continue;
+   localStorage.removeItem(lastGoodKey(name));sessionStorage.removeItem(dataCacheKey(name));
+   for(const version of ["v11.4.31","v11.4.28","v11.4.27","v11.4.26"])sessionStorage.removeItem(`mr-data-cache-${version}:${name}`);
+  }
+  localStorage.setItem(STORAGE_CLEANUP_KEY,"1");
+ }
+}catch(e){}
 const dataCacheTtl=name=>["market-snapshot.json","market-kline.json","tw-market.json","events.json"].includes(name)?30000:300000;
 const snapshotCandleCount=row=>(Array.isArray(row?.candles)?row.candles:[]).filter(candle=>candle?.date&&[candle.open,candle.high,candle.low,candle.close].every(value=>finite(value)!=null)).length;
 const loadStored=(keys=[])=>{for(const key of keys){try{const value=JSON.parse(localStorage.getItem(key)||"null");if(value)return value}catch(e){}}return null};
@@ -76,12 +88,13 @@ function mergeSnapshotCache(payload){
  return {...payload,items};
 }
 function rememberLastGood(name,payload){
- if(!isUsablePayload(name,payload))return;
- try{localStorage.setItem(lastGoodKey(name),JSON.stringify(payload));if(name==="market-snapshot.json")localStorage.setItem(snapshotCacheKey,JSON.stringify(payload))}catch(e){}
+ if(!WEB_STORAGE_CACHE_FILES.has(name)||!isUsablePayload(name,payload))return;
+ try{const serialized=JSON.stringify(payload);localStorage.setItem(lastGoodKey(name),serialized);if(name==="market-snapshot.json")localStorage.setItem(snapshotCacheKey,serialized)}catch(e){}
 }
 function readLastGood(name){
+ if(!WEB_STORAGE_CACHE_FILES.has(name))return null;
  try{const value=JSON.parse(localStorage.getItem(lastGoodKey(name))||"null");if(isUsablePayload(name,value))return value}catch(e){}
- for(const legacy of [`mr-data-cache-v11.4.28:${name}`,`mr-data-cache-v11.4.27:${name}`,`mr-data-cache-v11.4.26:${name}`]){try{const entry=JSON.parse(sessionStorage.getItem(legacy)||"null");if(isUsablePayload(name,entry?.payload)){rememberLastGood(name,entry.payload);return entry.payload}}catch(e){}}
+ for(const legacy of [`mr-data-cache-v11.4.31:${name}`,`mr-data-cache-v11.4.28:${name}`,`mr-data-cache-v11.4.27:${name}`,`mr-data-cache-v11.4.26:${name}`]){try{const entry=JSON.parse(sessionStorage.getItem(legacy)||"null");if(isUsablePayload(name,entry?.payload)){rememberLastGood(name,entry.payload);return entry.payload}}catch(e){}}
  if(name==="market-snapshot.json"){const value=loadStored(snapshotCacheKeys);if(isUsablePayload(name,value))return value}
  return null;
 }
@@ -116,7 +129,7 @@ async function _loadData(name,fallback={},options={}){
  const ttl=dataCacheTtl(name),now=Date.now();
  if(!options.force){
   const memory=DATA_MEMORY.get(name);if(memory&&now-memory.at<ttl&&isUsablePayload(name,memory.payload))return cloneValue(memory.payload);
-  try{const cached=JSON.parse(sessionStorage.getItem(dataCacheKey(name))||"null");if(cached&&now-cached.at<ttl&&isUsablePayload(name,cached.payload)){DATA_MEMORY.set(name,cached);return cloneValue(cached.payload)}}catch(e){}
+  if(WEB_STORAGE_CACHE_FILES.has(name)){try{const cached=JSON.parse(sessionStorage.getItem(dataCacheKey(name))||"null");if(cached&&now-cached.at<ttl&&isUsablePayload(name,cached.payload)){DATA_MEMORY.set(name,cached);return cloneValue(cached.payload)}}catch(e){}}
  }
  const branch=CHANNELS[name];let payload=null,source="";
  if(name==="market-snapshot.json"&&LIVE_MARKET_ENDPOINT){try{const candidate=await getJson(`${LIVE_MARKET_ENDPOINT}/market-snapshot.json?_=${Date.now()}`,6000);if(isUsablePayload(name,candidate)){payload=candidate;source="worker"}}catch(e){}}
@@ -127,7 +140,7 @@ async function _loadData(name,fallback={},options={}){
  if(name==="market-snapshot.json")payload=mergeSnapshotCache(payload||cloneValue(fallback));
  if(payload?.metadata&&source)payload={...payload,metadata:{...payload.metadata,frontend_load_source:source}};
  if(isUsablePayload(name,payload))rememberLastGood(name,payload);
- const entry={at:Date.now(),payload};DATA_MEMORY.set(name,entry);try{sessionStorage.setItem(dataCacheKey(name),JSON.stringify(entry))}catch(e){}
+ const entry={at:Date.now(),payload};DATA_MEMORY.set(name,entry);if(WEB_STORAGE_CACHE_FILES.has(name)){try{sessionStorage.setItem(dataCacheKey(name),JSON.stringify(entry))}catch(e){}}
  return cloneValue(payload);
 }
 async function loadData(name,fallback={},options={}){
@@ -154,14 +167,14 @@ function officialBasicRecord(row,endpoint){
  record.updated_at=new Date().toISOString();return record;
 }
 async function loadStockBasics(){
- const fallback=window.__STOCK_BASICS_SEED__||{metadata:{version:"v11.4.31",status:"waiting",item_count:0},items:{}};
+ const fallback=window.__STOCK_BASICS_SEED__||{metadata:{version:"v11.4.32",status:"waiting",item_count:0},items:{}};
  const payload=await loadData("stock-basics.json",fallback),items={...(payload.items||{})};
  if(Object.keys(items).length>=500)return payload;
  const settled=await Promise.allSettled(STOCK_BASIC_ENDPOINTS.map(async endpoint=>({endpoint,rows:await getJson(endpoint.url,15000)})));
  let added=0;
  for(const result of settled){if(result.status!=="fulfilled"||!Array.isArray(result.value.rows))continue;for(const row of result.value.rows){const record=officialBasicRecord(row,result.value.endpoint);if(!record)continue;items[record.symbol]={...(items[record.symbol]||{}),...record};added++}}
  const values=Object.values(items),average=values.length?values.reduce((sum,row)=>sum+Number(row.basic_coverage_percent||0),0)/values.length:0;
- return {...payload,metadata:{...(payload.metadata||{}),version:"v11.4.31",item_count:values.length,average_basic_coverage_percent:Math.round(average*10)/10,scope:"all-currently-listed-twse-and-tpex-stocks",browser_official_fallback_added:added},items};
+ return {...payload,metadata:{...(payload.metadata||{}),version:"v11.4.32",item_count:values.length,average_basic_coverage_percent:Math.round(average*10)/10,scope:"all-currently-listed-twse-and-tpex-stocks",browser_official_fallback_added:added},items};
 }
 async function loadNewsChannels(){
  const channels=await Promise.all(NEWS_FILES.map(async cfg=>{
@@ -174,10 +187,10 @@ async function loadNewsChannels(){
  for(const channel of channels){for(const item of channel.items||[]){const key=String(item.id||`${item.title||""}|${item.url||""}`);if(!key||seen.has(key))continue;seen.add(key);items.push(item)}}
  items.sort((a,b)=>Date.parse(b.published_at||b.date||0)-Date.parse(a.published_at||a.date||0));
  const updated=channels.map(c=>c.metadata?.updated_at).filter(Boolean).sort().pop()||null;
- return {metadata:{version:"v11.4.31",updated_at:updated,item_count:items.length,channel_count:channels.length},channels,items};
+ return {metadata:{version:"v11.4.32",updated_at:updated,item_count:items.length,channel_count:channels.length},channels,items};
 }
 async function loadStockNews(){
- const fallback=window.__STOCK_NEWS_SEED__||{metadata:{version:"v11.4.31",status:"waiting",item_count:0},items:[]};
+ const fallback=window.__STOCK_NEWS_SEED__||{metadata:{version:"v11.4.32",status:"waiting",item_count:0},items:[]};
  return await loadData("stock-news.json",fallback);
 }
 

@@ -1,4 +1,4 @@
-name: Update v11.4.31 market core
+name: Update v11.4.32 market core
 on:
   push:
     branches: [main]
@@ -85,15 +85,18 @@ jobs:
         run: |
           python - <<'PY'
           import json
+          from datetime import date
           from pathlib import Path
           market=json.loads(Path("data/tw-market.json").read_text(encoding="utf-8"))
           history=json.loads(Path("data/market-volume-history.json").read_text(encoding="utf-8"))
           meta=market.get("metadata",{})
-          assert meta.get("version")=="v11.4.31", meta.get("version")
+          assert meta.get("version")=="v11.4.32", meta.get("version")
           trading_date=meta.get("trading_date")
           assert trading_date, "verified trading date missing"
+          assert date.fromisoformat(trading_date).weekday() < 5, trading_date
           assert all(str(row.get("quote_date") or trading_date) <= trading_date for row in market.get("items",[]))
           assert all(str(row.get("date", "")) <= trading_date for row in history.get("items",[]))
+          assert all(date.fromisoformat(str(row.get("date"))).weekday() < 5 for row in history.get("items",[]) if row.get("date"))
           print("trading_date",trading_date,"turnover sessions",len(history.get("items",[])))
           PY
       - name: Publish Taiwan market

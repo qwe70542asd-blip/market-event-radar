@@ -1,4 +1,4 @@
-市場事件雷達 v11.4.31 — GitHub Desktop 更新方式
+市場事件雷達 v11.4.32 — GitHub Desktop 更新方式
 
 1. 先把這個 ZIP 解壓縮到一個暫存資料夾。
 2. 用解壓後的內容覆蓋你的 market-event-radar 本機 repository 根目錄。
@@ -7,11 +7,11 @@
    - 它只會清掉先前誤複製到 scripts/ 裡的整套 repository 副本。
    - 正常的 scripts/*.py 不會刪除。
 4. 回到 GitHub Desktop，確認變更包含：
-   - v11.4.31 檔案
+   - v11.4.32 檔案
    - scripts/ 下那些錯誤巢狀檔案被刪除
    - 新的 update-market-core.yml / update-news-batch.yml / update-official-feeds.yml
-5. Commit 訊息可用：market-event-radar-v11.4.31
+5. Commit 訊息可用：market-event-radar-v11.4.32
 6. Push origin。
 7. Push 後 release verification 會自檢；主要 live-* 分支會由新的整合排程重新發布成 history-free snapshot。
 
-注意：GitHub Actions cron 是 best-effort，不保證每個 5 分鐘刻度精準啟動。v11.4.31 已降低 workflow 數量與重複 fan-out，並在資料驗證中標記 stale source。
+注意：GitHub Actions cron 是 best-effort，不保證每個 5 分鐘刻度精準啟動。v11.4.32 已降低 workflow 數量與重複 fan-out，並在資料驗證中標記 stale source。

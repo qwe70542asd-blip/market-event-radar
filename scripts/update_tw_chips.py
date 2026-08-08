@@ -18,7 +18,7 @@ from bs4 import BeautifulSoup
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.31"
+VERSION = "v11.4.32"
 TIMEOUT = 24
 YAHOO_BATCH = 24
 PRIORITY_SYMBOLS = [
@@ -113,6 +113,16 @@ def row_date(row: dict[str, Any]) -> str | None:
     return None
 
 
+def valid_chip_date(value: Any) -> str | None:
+    day = date_value(value)
+    if not day:
+        return None
+    parsed = date.fromisoformat(day)
+    if parsed > NOW.date() or parsed.weekday() >= 5:
+        return None
+    return day
+
+
 def as_lots(value: Any, key: str | None = None) -> int | float | None:
     parsed = number(value)
     if parsed is None:
@@ -185,7 +195,7 @@ def parse_institutional(rows: list[dict[str, Any]], assets: dict[str, dict[str, 
         if total is None:
             values = [value for value in (foreign, trust, dealer) if value is not None]
             total = integer_or_float(sum(values)) if values else None
-        traded = row_date(row)
+        traded = valid_chip_date(row_date(row))
         if not traded:
             continue
         latest_date = max(latest_date or traded, traded)
@@ -236,7 +246,7 @@ def parse_margin(rows: list[dict[str, Any]], assets: dict[str, dict[str, Any]], 
             short_change = integer_or_float(float(short_balance) - float(previous_short))
         if all(value is None for value in (margin_balance, margin_change, short_balance, short_change)):
             continue
-        traded = row_date(row)
+        traded = valid_chip_date(row_date(row))
         if not traded:
             continue
         latest_date = max(latest_date or traded, traded)
@@ -271,7 +281,7 @@ def parse_day_trade(rows: list[dict[str, Any]], assets: dict[str, dict[str, Any]
         ratio_value = number(ratio_raw)
         if volume is None and ratio_value is None:
             continue
-        traded = row_date(row)
+        traded = valid_chip_date(row_date(row))
         if not traded:
             continue
         latest_date = max(latest_date or traded, traded)
@@ -464,6 +474,85 @@ def merge_item(old: dict[str, Any], new: dict[str, Any], official_first: bool = 
     return result
 
 
+def normalize_legacy_chip_row(key: str, row: dict[str, Any]) -> tuple[str, dict[str, Any]] | None:
+    if not isinstance(row, dict):
+        return None
+    symbol = re.sub(r"[^0-9A-Za-z]", "", str(row.get("symbol") or key.split(":")[-1] or "")).upper()
+    if not symbol:
+        return None
+    value = dict(row)
+    value["symbol"] = symbol
+    if not value.get("exchange") and ":" in key:
+        prefix = key.split(":", 1)[0].lower()
+        if prefix == "twse": value["exchange"] = "TWSE"
+        elif prefix == "tpex": value["exchange"] = "TPEx"
+    if not value.get("institutional"):
+        institutional = {name: value.get(name) for name in ("foreign_net", "trust_net", "dealer_net", "total_net") if value.get(name) is not None}
+        if institutional:
+            value["institutional"] = institutional
+    if not value.get("day_trade") and isinstance(value.get("day_trading"), dict):
+        old_day = value.get("day_trading") or {}
+        day_trade = {
+            "volume": old_day.get("volume"),
+            "ratio": old_day.get("volume_ratio_percent") if old_day.get("volume_ratio_percent") is not None else old_day.get("amount_ratio_percent"),
+        }
+        value["day_trade"] = {k: v for k, v in day_trade.items() if v is not None}
+    if value.get("date"):
+        valid = valid_chip_date(value.get("date"))
+        if valid: value["date"] = valid
+        else: value.pop("date", None)
+    history = []
+    for snapshot in value.get("history") or value.get("recent") or []:
+        if not isinstance(snapshot, dict):
+            continue
+        valid = valid_chip_date(snapshot.get("date"))
+        if not valid:
+            continue
+        history.append({**snapshot, "date": valid})
+    value["history"] = merge_history(history, [])
+    value["recent"] = value["history"][:5]
+    for obsolete in ("foreign_net", "foreign_buy", "foreign_sell", "trust_net", "trust_buy", "trust_sell", "dealer_net", "dealer_buy", "dealer_sell", "total_net", "day_trading"):
+        value.pop(obsolete, None)
+    return symbol, value
+
+
+def migrate_legacy_items(raw_items: Any) -> tuple[dict[str, dict[str, Any]], int]:
+    if not isinstance(raw_items, dict):
+        return {}, 0
+    output: dict[str, dict[str, Any]] = {}
+    migrated = 0
+    for key, row in raw_items.items():
+        normalized = normalize_legacy_chip_row(str(key), row)
+        if not normalized:
+            continue
+        symbol, value = normalized
+        if str(key).upper() != symbol:
+            migrated += 1
+        if symbol in output:
+            prefer_value = str(key).upper() == symbol
+            output[symbol] = merge_item(value if prefer_value else output[symbol], output[symbol] if prefer_value else value, official_first=True)
+        else:
+            output[symbol] = value
+    return output, migrated
+
+
+def sanitize_market_dates(markets: Any) -> tuple[dict[str, Any], int]:
+    output = dict(markets or {}) if isinstance(markets, dict) else {}
+    removed = 0
+    for market, raw in list(output.items()):
+        if not isinstance(raw, dict):
+            continue
+        value = dict(raw)
+        for key in list(value):
+            if key.endswith("_date") and value.get(key):
+                valid = valid_chip_date(value.get(key))
+                if valid: value[key] = valid
+                else:
+                    value.pop(key, None); removed += 1
+        output[market] = value
+    return output, removed
+
+
 def yahoo_one(asset: dict[str, Any]) -> tuple[str, dict[str, Any] | None, str | None]:
     symbol = str(asset.get("symbol") or "").upper()
     try:
@@ -521,7 +610,7 @@ def main() -> None:
     old = read_json(DATA / "tw-chips.json", default)
     if not isinstance(old, dict):
         old = default
-    items = dict(old.get("items") or {})
+    items, migrated_legacy_keys = migrate_legacy_items(old.get("items") or {})
     state = dict(old.get("state") or {})
     assets_list = read_json(DATA / "assets.json", {"assets": []}).get("assets", [])
     asset_map = {str(asset.get("symbol") or "").upper(): asset for asset in assets_list if asset.get("symbol")}
@@ -565,18 +654,21 @@ def main() -> None:
             elif error:
                 yahoo_errors.append({"symbol": symbol, "error": error[:320]})
 
-    dates = set(old.get("available_dates") or [])
+    raw_available_dates = old.get("available_dates") or []
+    dates = {day for value in raw_available_dates if (day := valid_chip_date(value))}
+    removed_invalid_dates = len(raw_available_dates) - len(dates)
     for value in (institutional_date, margin_date, day_date):
         if value:
             dates.add(value)
     for row in items.values():
-        if row.get("date"):
-            dates.add(str(row["date"]))
+        if (day := valid_chip_date(row.get("date"))):
+            dates.add(day)
         for history_row in row.get("history") or []:
-            if history_row.get("date"):
-                dates.add(str(history_row["date"]))
-    trading_date = max(dates) if dates else (old.get("metadata") or {}).get("trading_date")
-    old_markets = dict(old.get("markets") or {})
+            if (day := valid_chip_date(history_row.get("date"))):
+                dates.add(day)
+    fallback_trading_date = valid_chip_date((old.get("metadata") or {}).get("trading_date"))
+    trading_date = max(dates) if dates else fallback_trading_date
+    old_markets, removed_market_dates = sanitize_market_dates(old.get("markets") or {})
     twse_market = dict(old_markets.get("twse") or {})
     if market_inst:
         twse_market["institutional"] = market_inst
@@ -595,7 +687,10 @@ def main() -> None:
             "official_item_count": len(official_symbols),
             "yahoo_batch_size": len(batch),
             "yahoo_batch_success": yahoo_success,
-            "note": "官方資料優先；第三方只補缺漏。失敗時保留最後成功資料，缺值不以 0 代替。",
+            "legacy_key_migrations": migrated_legacy_keys,
+            "invalid_legacy_dates_removed": removed_invalid_dates + removed_market_dates,
+            "schema": "symbol-keyed-v2",
+            "note": "官方資料優先；第三方只補缺漏。v11.4.32 會先遷移舊 twse:/tpex: key 並移除週末/未來假日期。",
         },
         "markets": markets,
         "items": items,

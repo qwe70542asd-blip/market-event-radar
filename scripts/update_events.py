@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build Market Event Radar v11.4.31 event data from official schedules.
+"""Build Market Event Radar v11.4.32 event data from official schedules.
 
 The updater keeps the last verified archive, refreshes selected official sources,
 and records when an exact date first appears or changes. It never invents dates.
@@ -33,12 +33,17 @@ NOW = datetime.now(ZoneInfo("Asia/Taipei"))
 TAIPEI = NOW.tzinfo
 NEW_YORK = ZoneInfo("America/New_York")
 OFFLINE = os.getenv("EVENT_OFFLINE", "").strip() == "1"
+VERSION = "v11.4.32"
+TRACKING_KEY_VERSION = 2
 ARCHIVE_START = date(2026, 1, 1)
 ARCHIVE_START_DT = datetime.combine(ARCHIVE_START, time.min, tzinfo=TAIPEI)
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.31; +https://github.com/qwe70542asd-blip/market-event-radar)",
-    "Accept-Language": "zh-TW,zh;q=0.9,en-US;q=0.8,en;q=0.7",
+    # Some official schedule sites reject explicit crawler-style user agents even
+    # though the same public page is available to normal browsers.
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,application/json,text/calendar;q=0.8,*/*;q=0.7",
+    "Accept-Language": "en-US,en;q=0.9,zh-TW;q=0.8,zh;q=0.7",
 }
 TWSE_EXDIV_URL = "https://openapi.twse.com.tw/v1/exchangeReport/TWT48U_ALL"
 TWSE_EXDIV_HISTORY_URL = "https://www.twse.com.tw/exchangeReport/TWT49U"
@@ -50,6 +55,14 @@ TWSE_MATERIAL_URL = "https://openapi.twse.com.tw/v1/opendata/t187ap04_L"
 TPEX_MATERIAL_URL = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap04_O"
 BLS_URL = "https://www.bls.gov/schedule/news_release/bls.ics"
 BLS_HTML_URL = f"https://www.bls.gov/schedule/{NOW.year}/home.htm"
+BLS_RELEASE_PAGES = {
+    "Employment Situation": "https://www.bls.gov/schedule/news_release/empsit.htm",
+    "Consumer Price Index": "https://www.bls.gov/schedule/news_release/cpi.htm",
+    "Producer Price Index": "https://www.bls.gov/schedule/news_release/ppi.htm",
+    "Job Openings and Labor Turnover Survey": "https://www.bls.gov/schedule/news_release/jolts.htm",
+    "Employment Cost Index": "https://www.bls.gov/schedule/news_release/eci.htm",
+    "Productivity and Costs": "https://www.bls.gov/schedule/news_release/prod2.htm",
+}
 BEA_URL = "https://www.bea.gov/news/schedule"
 BEA_FULL_URL = "https://www.bea.gov/index.php/news/schedule/full"
 FOMC_URL = "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
@@ -237,18 +250,48 @@ def parse_ics_datetime(key: str, value: str) -> datetime:
     return parsed.replace(tzinfo=zone).astimezone(TAIPEI)
 
 
-def _bls_event(summary: str, start: datetime, uid: str) -> dict[str, Any] | None:
+def release_period_token(value: str) -> str:
+    text = clean(value)
+    month = re.search(r"\b(January|February|March|April|May|June|July|August|September|October|November|December)\s+(20\d{2})\b", text, re.I)
+    if month:
+        return f"{month.group(2)}-{month.group(1)[:3].lower()}"
+    quarter = re.search(r"\b(?:first|1st|q1|second|2nd|q2|third|3rd|q3|fourth|4th|q4)\s*(?:quarter)?\s*(20\d{2})\b", text, re.I)
+    if quarter:
+        prefix = quarter.group(0).lower()
+        q = "q1" if re.search(r"first|1st|q1", prefix) else "q2" if re.search(r"second|2nd|q2", prefix) else "q3" if re.search(r"third|3rd|q3", prefix) else "q4"
+        return f"{quarter.group(1)}-{q}"
+    annual = re.search(r"\b(?:annual|calendar year)?\s*(20\d{2})\b", text, re.I)
+    return annual.group(1) if annual else ""
+
+
+def bls_series_key(summary: str) -> str:
+    lowered = clean(summary).lower()
+    mapping = (
+        ("employment situation", "employment-situation"),
+        ("consumer price index", "cpi"),
+        ("producer price index", "ppi"),
+        ("job openings and labor turnover survey", "jolts"),
+        ("employment cost index", "eci"),
+        ("productivity and costs", "productivity"),
+    )
+    return next((slug for needle, slug in mapping if needle in lowered), re.sub(r"[^0-9a-z]+", "-", lowered).strip("-")[:64])
+
+
+def _bls_event(summary: str, start: datetime, uid: str = "") -> dict[str, Any] | None:
     translated = translate(summary, BLS_TRANSLATIONS)
     if not translated or not ARCHIVE_START_DT <= start <= NOW + timedelta(days=370):
         return None
     title, impact, assets = translated
-    key = f"bls|{clean(uid)}"
+    period = release_period_token(summary)
+    uid_key = re.sub(r"[^0-9a-z]+", "-", clean(uid).lower()).strip("-")[:80] if uid else ""
+    occurrence = period or uid_key or start.strftime("%Y-%m")
+    key = f"bls|{bls_series_key(summary)}|{occurrence}"
     return make_event(
-        event_id=stable_id("bls", key, start.date()), tracking_key=key, title=title, start=start,
+        event_id=stable_id("bls", key), tracking_key=key, title=title, start=start,
         category="macro", event_type="economic-release", event_group="macro", region="US", impact=impact,
         description=f"BLS 發布 {summary}。", market_effect="數據與市場預期的落差可能改變聯準會政策、美債殖利率、美元與股票評價。",
         source_name="U.S. BLS", source_url=BLS_HTML_URL, origin="bls", assets=assets, tags=["BLS", summary],
-        date_basis="BLS official release schedule",
+        date_basis="BLS official release schedule", release_period=period or None,
     )
 
 
@@ -285,6 +328,42 @@ def fetch_bls_html(session: requests.Session) -> list[dict[str, Any]]:
     return list({row["id"]: row for row in events}.values())
 
 
+def fetch_bls_release_pages(session: requests.Session) -> list[dict[str, Any]]:
+    events: list[dict[str, Any]] = []
+    errors: list[str] = []
+    month_names = "January|February|March|April|May|June|July|August|September|October|November|December|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec"
+    date_pattern = re.compile(rf"({month_names})\.?\s+(\d{{1,2}}),?\s*(20\d{{2}})\s+(\d{{1,2}}:\d{{2}})\s*(AM|PM)", re.I)
+    for release_name, url in BLS_RELEASE_PAGES.items():
+        try:
+            soup = BeautifulSoup(http_get(session, url).text, "html.parser")
+            for row in soup.select("tr"):
+                cells = [clean(cell.get_text(" ", strip=True)) for cell in row.select("th,td")]
+                if len(cells) < 3:
+                    continue
+                # Keep the reference period separate. Joining cells with a
+                # literal pipe made the official "Release Date" / "Release Time"
+                # columns fail the contiguous date-time regex.
+                release_text = " ".join(cells[1:])
+                match = date_pattern.search(release_text)
+                if not match:
+                    continue
+                reference = cells[0]
+                try:
+                    start = date_parser.parse(f"{match.group(1)} {match.group(2)}, {match.group(3)} {match.group(4)} {match.group(5)}").replace(tzinfo=NEW_YORK).astimezone(TAIPEI)
+                except Exception:
+                    continue
+                summary = f"{release_name} for {reference}"
+                event = _bls_event(summary, start, f"{release_name}|{reference}")
+                if event:
+                    event["source_url"] = url
+                    events.append(event)
+        except Exception as exc:  # noqa: BLE001
+            errors.append(f"{release_name}: {exc}")
+    if not events and errors:
+        raise RuntimeError("; ".join(errors[:3]))
+    return list({row["tracking_key"]: row for row in events}.values())
+
+
 def fetch_bls(session: requests.Session) -> SourceResult:
     events: list[dict[str, Any]] = []
     errors: list[str] = []
@@ -305,37 +384,144 @@ def fetch_bls(session: requests.Session) -> SourceResult:
     except Exception as exc:
         errors.append(str(exc))
     if not events:
+        try: events = fetch_bls_release_pages(session)
+        except Exception as exc: errors.append(str(exc))
+    if not events:
         try: events = fetch_bls_html(session)
         except Exception as exc: errors.append(str(exc))
-    if not events: raise RuntimeError("BLS official calendars returned no recognized events: " + "; ".join(errors[:2]))
-    return SourceResult("bls", "U.S. BLS release calendar", BLS_HTML_URL, ("bls",), events, "ICS with official annual HTML fallback")
+    if not events: raise RuntimeError("BLS official calendars returned no recognized events: " + "; ".join(errors[:3]))
+    return SourceResult("bls", "U.S. BLS release calendar", BLS_HTML_URL, ("bls",), events, "ICS, per-release official schedule pages and annual HTML fallbacks")
+
+def bea_series_key(raw_title: str) -> str:
+    text = clean(raw_title).lower()
+    if "personal income and outlays" in text:
+        return "pce"
+    if "international trade in goods and services" in text:
+        return "trade"
+    if "gross domestic product" in text or re.search(r"\bgdp\b", text):
+        # Estimate stage and reference quarter are different concepts.  A title
+        # such as "GDP (Third Estimate) ... 2nd Quarter" must remain third-estimate.
+        if re.search(r"\badvance\s+estimate\b", text):
+            return "gdp-advance"
+        if re.search(r"\b(?:second|2nd)\s+estimate\b", text):
+            return "gdp-second"
+        if re.search(r"\b(?:third|3rd)\s+estimate\b", text):
+            return "gdp-third"
+        if "county" in text:
+            return "gdp-county"
+        return "gdp"
+    if "corporate profits" in text:
+        return "corporate-profits"
+    return re.sub(r"[^0-9a-z]+", "-", text).strip("-")[:80]
+
+
+def assign_bea_tracking(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for event in events:
+        grouped.setdefault(clean(event.pop("_tracking_series", "bea")), []).append(event)
+    output: list[dict[str, Any]] = []
+    for series, rows in grouped.items():
+        rows.sort(key=lambda row: str(row.get("start") or ""))
+        for index, event in enumerate(rows, start=1):
+            start = parse_start(event)
+            period = clean(event.pop("_tracking_period", ""))
+            year = start.year if start else NOW.year
+            occurrence = period or f"occ-{index:02d}"
+            key = f"bea|{series}|{year}|{occurrence}"
+            event["tracking_key"] = key
+            event["id"] = stable_id("bea", key)
+            output.append(event)
+    return output
+
+
+def _bea_event(raw_title: str, start: datetime, url: str) -> dict[str, Any] | None:
+    translated = translate(raw_title, BEA_TRANSLATIONS)
+    if not translated or not ARCHIVE_START_DT <= start <= NOW + timedelta(days=370):
+        return None
+    title, impact, assets = translated
+    series = bea_series_key(raw_title)
+    period = release_period_token(raw_title)
+    temporary = f"bea|{series}|pending"
+    return make_event(
+        event_id=stable_id("bea", temporary, start.date()), tracking_key=temporary,
+        title=title, start=start, category="macro", event_type="economic-release",
+        event_group="macro", region="US", impact=impact,
+        description=f"BEA 發布 {raw_title}。",
+        market_effect="成長、所得、消費與通膨資料可能改變美債、美元及風險資產定價。",
+        source_name="U.S. BEA", source_url=url, origin="bea", assets=assets,
+        tags=["BEA", raw_title], date_basis="BEA official release schedule",
+        release_period=period or None, _tracking_series=series, _tracking_period=period,
+    )
+
 
 def fetch_bea(session: requests.Session) -> SourceResult:
-    errors=[];events=[]
+    errors: list[str] = []
+    events: list[dict[str, Any]] = []
+    months = "January|February|March|April|May|June|July|August|September|October|November|December"
+    row_date_pattern = re.compile(
+        rf"({months})\s+(\d{{1,2}})(?:,\s*(20\d{{2}}))?\s+(\d{{1,2}}:\d{{2}})\s*(AM|PM)", re.I
+    )
+    # The fallback terminator requires a complete *next release timestamp*.
+    # A title fragment such as "Personal Income and Outlays, July 2026" must
+    # never be mistaken for the next row merely because it starts with a month.
+    text_pattern = re.compile(
+        rf"({months})\s+(\d{{1,2}})(?:,\s*(20\d{{2}}))?\s+(\d{{1,2}}:\d{{2}})\s*(AM|PM)"
+        rf"\s*(?:\|\s*)?(?:N\s*ews|D\s*ata|News|Data)?\s*(?:\|\s*)?"
+        rf"(.{{3,220}}?)(?=(?:{months})\s+\d{{1,2}}(?:,\s*20\d{{2}})?\s+\d{{1,2}}:\d{{2}}\s*(?:AM|PM)|$)",
+        re.I,
+    )
     for url in (BEA_URL, BEA_FULL_URL):
         try:
             soup = BeautifulSoup(http_get(session, url).text, "html.parser")
-            candidates=[]
+            # Prefer the actual table cells.  This preserves reference periods
+            # inside titles and avoids brittle regex parsing across row borders.
             for row in soup.select("tr"):
-                cells=[clean(cell.get_text(" ",strip=True)) for cell in row.select("th,td")]
-                if len(cells)>=2:candidates.append(" | ".join(cells))
-            candidates.append(soup.get_text(" ",strip=True))
-            pattern = re.compile(r"(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{1,2})(?:,\s*(20\d{2}))?\s+(\d{1,2}:\d{2})\s*(AM|PM)\s+(?:N\s*ews|D\s*ata|News|Data)?\s*[|:-]*\s*(.{3,180}?)(?=(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2}|$)",re.I)
-            for content in candidates:
-                for match in pattern.finditer(content):
-                    raw_title=clean(match.group(6)).strip(" |-")
-                    translated=translate(raw_title,BEA_TRANSLATIONS)
-                    if not translated:continue
-                    year=int(match.group(3) or NOW.year)
-                    start=date_parser.parse(f"{match.group(1)} {match.group(2)}, {year} {match.group(4)} {match.group(5)}").replace(tzinfo=NEW_YORK).astimezone(TAIPEI)
-                    if not ARCHIVE_START_DT<=start<=NOW+timedelta(days=370):continue
-                    title,impact,assets=translated;key=f"bea|{raw_title.lower()}"
-                    events.append(make_event(event_id=stable_id("bea",key,start.date()),tracking_key=key,title=title,start=start,category="macro",event_type="economic-release",event_group="macro",region="US",impact=impact,description=f"BEA 發布 {raw_title}。",market_effect="成長、所得、消費與通膨資料可能改變美債、美元及風險資產定價。",source_name="U.S. BEA",source_url=url,origin="bea",assets=assets,tags=["BEA",raw_title],date_basis="BEA official release schedule"))
-            if events:break
-        except Exception as exc:errors.append(str(exc))
-    events=list({row["id"]:row for row in events}.values())
-    if not events:raise RuntimeError("BEA official schedules returned no recognized events: "+"; ".join(errors[:2]))
-    return SourceResult("bea","U.S. BEA release schedule",BEA_URL,("bea",),events,"primary and full official schedule parsers")
+                cells = [clean(cell.get_text(" ", strip=True)) for cell in row.select("th,td")]
+                if len(cells) < 2:
+                    continue
+                match = row_date_pattern.search(" ".join(cells))
+                raw_title = next((cell for cell in reversed(cells) if translate(cell, BEA_TRANSLATIONS)), "")
+                if not match or not raw_title:
+                    continue
+                year = int(match.group(3) or NOW.year)
+                try:
+                    start_at = date_parser.parse(
+                        f"{match.group(1)} {match.group(2)}, {year} {match.group(4)} {match.group(5)}"
+                    ).replace(tzinfo=NEW_YORK).astimezone(TAIPEI)
+                except Exception:
+                    continue
+                event = _bea_event(raw_title, start_at, url)
+                if event:
+                    events.append(event)
+
+            # Some BEA layouts flatten the schedule instead of using table rows.
+            if not events:
+                content = clean(soup.get_text(" ", strip=True))
+                for match in text_pattern.finditer(content):
+                    raw_title = clean(match.group(6)).strip(" |-")
+                    if not translate(raw_title, BEA_TRANSLATIONS):
+                        continue
+                    year = int(match.group(3) or NOW.year)
+                    start_at = date_parser.parse(
+                        f"{match.group(1)} {match.group(2)}, {year} {match.group(4)} {match.group(5)}"
+                    ).replace(tzinfo=NEW_YORK).astimezone(TAIPEI)
+                    event = _bea_event(raw_title, start_at, url)
+                    if event:
+                        events.append(event)
+            if events:
+                break
+        except Exception as exc:  # noqa: BLE001
+            errors.append(str(exc))
+    events = assign_bea_tracking(list({
+        (row.get("_tracking_series"), row.get("_tracking_period"), row.get("start"), row.get("title")): row
+        for row in events
+    }.values()))
+    if not events:
+        raise RuntimeError("BEA official schedules returned no recognized events: " + "; ".join(errors[:2]))
+    return SourceResult(
+        "bea", "U.S. BEA release schedule", BEA_URL, ("bea",), events,
+        "official table parser with timestamp-safe text fallback and occurrence-stable keys",
+    )
 
 
 def fetch_fomc(session: requests.Session) -> SourceResult:
@@ -438,6 +624,16 @@ def _row_lookup(row: dict[str, Any], *needles: str) -> Any:
     return None
 
 
+def _row_exact_lookup(row: dict[str, Any], *names: str) -> Any:
+    def normalized(value: Any) -> str:
+        return re.sub(r"[^0-9a-z\u3400-\u9fff]+", "", clean(value).lower())
+    wanted = {normalized(name) for name in names}
+    for key, value in row.items():
+        if normalized(key) in wanted:
+            return value
+    return None
+
+
 def parse_twse_exdiv_history_payload(payload: Any, source_url: str = TWSE_EXDIV_HISTORY_URL) -> list[dict[str, Any]]:
     """Parse TWSE TWT49U historical ex-right/ex-dividend calculation rows."""
     fields: list[str] = []
@@ -460,11 +656,18 @@ def parse_twse_exdiv_history_payload(payload: Any, source_url: str = TWSE_EXDIV_
         name = clean(_row_lookup(row, "股票名稱", "證券名稱", "name"))
         if not day or day < ARCHIVE_START or day > NOW.date() or not symbol:
             continue
-        cash = parse_number(_row_lookup(row, "息值", "現金股利", "cash"))
-        stock = parse_number(_row_lookup(row, "權值", "股票股利", "stock"))
-        kind_text = clean(_row_lookup(row, "除權息", "權息別", "type"))
+        kind_text = clean(_row_exact_lookup(row, "權/息", "權息", "權/息別", "除權息", "權息別", "type"))
+        cash = parse_number(_row_exact_lookup(row, "息值", "現金股利", "cash"))
+        stock = parse_number(_row_exact_lookup(row, "無償配股率", "股票股利", "stock"))
+        combined_value = parse_number(_row_exact_lookup(row, "權值+息值", "權值＋息值"))
         if not kind_text:
             kind_text = "除權息" if stock not in (None, 0) and cash not in (None, 0) else "除權" if stock not in (None, 0) else "除息"
+        # Since the 2026-04-27 TWSE format change, the public report exposes a
+        # combined price-impact field instead of separate right/dividend values.
+        # It is safe to use that combined value as cash only for a pure ex-dividend
+        # row; it is not a stock-dividend ratio and must never be labelled as one.
+        if cash is None and combined_value is not None and "息" in kind_text and "權" not in kind_text:
+            cash = combined_value
         events.append(make_exdiv_event(
             "TWSE", symbol, name, day, kind_text, cash, stock,
             "TWSE 除權除息計算結果表", source_url, "twse-exdiv-history",
@@ -473,20 +676,18 @@ def parse_twse_exdiv_history_payload(payload: Any, source_url: str = TWSE_EXDIV_
 
 
 def fetch_twse_exdiv_history(session: requests.Session) -> SourceResult:
-    events: list[dict[str, Any]] = []
-    errors: list[str] = []
-    month = date(ARCHIVE_START.year, ARCHIVE_START.month, 1)
-    end = date(NOW.year, NOW.month, 1)
-    while month <= end:
-        try:
-            response = http_get(session, TWSE_EXDIV_HISTORY_URL, params={"response": "json", "date": month.strftime("%Y%m01")})
-            events.extend(parse_twse_exdiv_history_payload(response.json(), response.url))
-        except Exception as exc:
-            errors.append(f"{month:%Y-%m}: {exc}")
-        month = date(month.year + (month.month == 12), 1 if month.month == 12 else month.month + 1, 1)
+    try:
+        response = http_get(session, TWSE_EXDIV_HISTORY_URL, params={
+            "response": "json",
+            "strDate": ARCHIVE_START.strftime("%Y%m%d"),
+            "endDate": NOW.date().strftime("%Y%m%d"),
+        })
+        events = parse_twse_exdiv_history_payload(response.json(), response.url)
+    except Exception as exc:
+        raise RuntimeError(f"TWSE historical ex-dividend request failed: {exc}") from exc
     events = list({row["id"]: row for row in events}.values())
     if not events:
-        raise RuntimeError("TWSE historical ex-dividend returned no recognized rows: " + "; ".join(errors[:3]))
+        raise RuntimeError("TWSE historical ex-dividend returned no recognized rows")
     return SourceResult(
         "twse-exdiv-history", "TWSE historical ex-right/ex-dividend", TWSE_EXDIV_HISTORY_URL,
         ("twse-exdiv-history",), events, f"{len(events)} historical events since 2026-01-01",
@@ -554,14 +755,18 @@ def parse_dividend_plans(rows: Any, market: str, source_url: str, origin: str) -
         symbol, name = dividend_company_identity(row)
         if not symbol:
             continue
-        period = first_value(row, ["股利所屬年(季)度", "股利年度", "DividendYear"])
+        period_year = first_value(row, ["股利所屬年(季)度", "股利年度", "年度", "DividendYear"])
+        period_scope = first_value(row, ["股利所屬期間", "Period"])
+        period = period_year or period_scope
+        if period_scope and period_scope not in period:
+            period = clean(f"{period} {period_scope}")
         term = first_value(row, ["期別", "股利期別", "DividendPeriod"])
         if term and term not in period:
             period = clean(f"{period} {term}")
         shareholder_day = parse_market_date(first_value(row, ["股東會日期", "ShareholdersMeetingDate"]))
         decision_day = parse_market_date(first_value(row, [
             "董事會決議通過股利分派日", "董事會（擬議）股利分派日",
-            "董事會股利分派日", "BoardMeetingDate",
+            "董事會股利分派日", "董事會決議日", "董事會日期", "BoardMeetingDate",
         ]))
         cash, stock = dividend_total(row, "現金"), dividend_total(row, "配股")
         if shareholder_day and ARCHIVE_START <= shareholder_day <= NOW.date() + timedelta(days=370):
@@ -595,12 +800,18 @@ def parse_dividend_plans(rows: Any, market: str, source_url: str, origin: str) -
 
 
 def fetch_twse_dividend_plans(session: requests.Session) -> SourceResult:
-    events = parse_dividend_plans(http_json(session, TWSE_DIVIDEND_PLAN_URL), "TWSE", TWSE_DIVIDEND_PLAN_URL, "twse-dividend-plan")
+    rows = http_json(session, TWSE_DIVIDEND_PLAN_URL)
+    events = parse_dividend_plans(rows, "TWSE", TWSE_DIVIDEND_PLAN_URL, "twse-dividend-plan")
+    if isinstance(rows, list) and rows and not events:
+        raise RuntimeError(f"TWSE dividend source returned {len(rows)} rows but parser recognized 0 events")
     return SourceResult("twse-dividend-plan", "TWSE/MOPS listed dividend plans", TWSE_DIVIDEND_PLAN_URL, ("twse-dividend-plan",), events)
 
 
 def fetch_tpex_dividend_plans(session: requests.Session) -> SourceResult:
-    events = parse_dividend_plans(http_json(session, TPEX_DIVIDEND_PLAN_URL), "TPEX", TPEX_DIVIDEND_PLAN_URL, "tpex-dividend-plan")
+    rows = http_json(session, TPEX_DIVIDEND_PLAN_URL)
+    events = parse_dividend_plans(rows, "TPEX", TPEX_DIVIDEND_PLAN_URL, "tpex-dividend-plan")
+    if isinstance(rows, list) and rows and not events:
+        raise RuntimeError(f"TPEx dividend source returned {len(rows)} rows but parser recognized 0 events")
     return SourceResult("tpex-dividend-plan", "TPEx/MOPS OTC dividend plans", TPEX_DIVIDEND_PLAN_URL, ("tpex-dividend-plan",), events)
 
 
@@ -741,6 +952,30 @@ DATE_ALERT_SCHEDULE_ORIGINS = {"bls", "bea", "fomc", "twse-exdiv", "tpex-exdiv"}
 DATE_ALERT_TYPES = {"economic-release", "central-bank-decision", "ex-dividend", "ex-right", "investor-conference", "shareholder-meeting", "dividend-payment"}
 
 
+INCREMENTAL_ARCHIVE_ORIGINS = {"tpex-exdiv-history", "twse-material", "tpex-material"}
+
+
+def merge_incremental_archive(previous_events: list[dict[str, Any]], refreshed_events: list[dict[str, Any]], origins: Iterable[str]) -> list[dict[str, Any]]:
+    origin_set = {clean(value) for value in origins}
+    refreshed_trackings = {fallback_tracking_key(row) for row in refreshed_events}
+    retained: list[dict[str, Any]] = []
+    for row in previous_events:
+        if clean(row.get("origin")) not in origin_set:
+            continue
+        start = parse_start(row)
+        if start is None or start < ARCHIVE_START_DT:
+            continue
+        tracking = fallback_tracking_key(row)
+        # Snapshot-style official feeds only expose the latest publication/day.
+        # Keep older verified rows.  If a future row with the same tracking key
+        # reappears at a new date, the refreshed row replaces that old future copy.
+        if start.date() >= NOW.date() and tracking in refreshed_trackings:
+            continue
+        retained.append(row)
+    combined = [*retained, *refreshed_events]
+    return list({str(row.get("id") or stable_id("event", fallback_tracking_key(row), row.get("start"))): row for row in combined}.values())
+
+
 def parse_optional_datetime(value: Any) -> datetime | None:
     if not value:
         return None
@@ -812,6 +1047,38 @@ def announcement_semantically_valid(row: dict[str, Any], today: date) -> bool:
     return date_alert_eligible(row)
 
 
+def canonical_event_key(row: dict[str, Any]) -> str:
+    start = parse_start(row)
+    day = clean(row.get("local_date") or row.get("target_date") or row.get("ex_date"))[:10] or (start.date().isoformat() if start else clean(row.get("start"))[:10])
+    group = clean(row.get("event_group") or row.get("category") or "event").lower()
+    symbol = clean(row.get("symbol") or "").upper()
+    title = clean(row.get("title") or "")
+    if group == "dividend" or "dividend" in clean(row.get("category")).lower():
+        type_text = clean(row.get("category") or row.get("event_type")).lower()
+        if "payment" in type_text or "發放" in title:
+            kind = "payment"
+        elif "decision" in type_text or "方案" in title or "決議" in title:
+            kind = "decision"
+        elif "ex-right" in type_text or "除權" in title:
+            kind = "ex-right"
+        elif "ex-div" in type_text or "distribution" in type_text or "除息" in title:
+            kind = "ex-dividend"
+        else:
+            kind = re.sub(r"[^0-9a-z-]+", "-", type_text).strip("-") or "dividend-event"
+        return f"{day}|dividend|{symbol}|{kind}"
+    title_without_amount = re.sub(r"[（(][^）)]*(?:元|%)[^）)]*[）)]", "", title)
+    semantic_text = clean(" ".join([title_without_amount, *(row.get("tags") or [])])).lower()
+    if clean(row.get("region")).upper() == "US" and (re.search(r"\bgdp\b", semantic_text) or "gross domestic product" in semantic_text or "國內生產毛額" in semantic_text):
+        normalized = "us-gdp-county" if "county" in semantic_text else "us-gdp-state" if "state gdp" in semantic_text and not re.search(r"(?:advance|second|third|2nd|3rd) estimate", semantic_text) else "us-gdp"
+    elif clean(row.get("region")).upper() == "US" and ("personal income and outlays" in semantic_text or "pce" in semantic_text or "個人所得與支出" in semantic_text):
+        normalized = "us-pce"
+    elif clean(row.get("region")).upper() == "US" and ("international trade" in semantic_text or "貿易收支" in semantic_text):
+        normalized = "us-trade"
+    else:
+        normalized = re.sub(r"[^0-9a-zA-Z\u4e00-\u9fff]+", "", title_without_amount.lower())[:180]
+    return f"{day}|{group}|{symbol}|{normalized}"
+
+
 def source_snapshot(result: SourceResult, previous_source: dict[str, Any] | None, status: str, message: str) -> dict[str, Any]:
     previous_source = previous_source or {}
     return {
@@ -837,6 +1104,8 @@ def main() -> None:
     state_initialized = bool(state_payload.get("initialized"))
     initialized_origins = set(state_payload.get("initialized_origins") or [])
     prior_state: dict[str, dict[str, Any]] = state_payload.get("events") or {}
+    prior_tracking_version = int(state_payload.get("tracking_key_version") or 1)
+    tracking_migration_origins = {"bea", "bls"} if prior_tracking_version < TRACKING_KEY_VERSION else set()
     previous_by_tracking = {fallback_tracking_key(row): row for row in previous_events}
 
     fetchers: list[Callable[[requests.Session], SourceResult]] = [
@@ -858,6 +1127,10 @@ def main() -> None:
             result = fetcher(session)
             refreshed_origins.update(result.origins)
             successful_origins.update(result.origins)
+            if any(origin in INCREMENTAL_ARCHIVE_ORIGINS for origin in result.origins):
+                current_count = len(result.events)
+                result.events = merge_incremental_archive(previous_events, result.events, result.origins)
+                result.message = clean(f"{result.message} current {current_count}; archive {len(result.events)}".strip())
             official_events.extend(result.events)
             previous_source = previous_sources.get(result.key) or previous_sources.get(result.name)
             sources.append(source_snapshot(result, previous_source, "ok", result.message or f"{len(result.events)} verified events"))
@@ -885,7 +1158,14 @@ def main() -> None:
     rows = [*untouched, *official_events, *manual]
     cutoff, horizon = ARCHIVE_START_DT, NOW + timedelta(days=370)
     merged: dict[str, dict[str, Any]] = {}
-    next_state: dict[str, dict[str, Any]] = dict(prior_state)
+    if tracking_migration_origins:
+        next_state = {
+            key: value for key, value in prior_state.items()
+            if clean((value or {}).get("origin")) not in tracking_migration_origins
+            and not any(str(key).startswith(f"{origin}|") for origin in tracking_migration_origins)
+        }
+    else:
+        next_state = dict(prior_state)
     next_initialized_origins = set(initialized_origins)
     announced_today = 0
 
@@ -907,7 +1187,7 @@ def main() -> None:
 
         is_successfully_refreshed = origin in successful_origins
         source_has_baseline = origin in initialized_origins
-        if state_initialized and source_has_baseline and is_successfully_refreshed:
+        if state_initialized and source_has_baseline and is_successfully_refreshed and origin not in tracking_migration_origins:
             candidate = announcement_candidate(row, old_state, NOW.date())
             if candidate:
                 kind, previous_start = candidate
@@ -935,26 +1215,18 @@ def main() -> None:
     # events are unique by Taipei date + group + symbol + normalized title.
     canonical: dict[str, dict[str, Any]] = {}
     for row in merged.values():
-        start = parse_start(row)
-        day = clean(row.get("local_date") or row.get("target_date") or row.get("ex_date"))[:10] or (start.date().isoformat() if start else clean(row.get("start"))[:10])
-        group = clean(row.get("event_group") or row.get("category") or "event").lower()
-        symbol = clean(row.get("symbol") or "").upper()
-        title = clean(row.get("title") or "")
-        if group == "dividend" or "dividend" in clean(row.get("category")).lower():
-            kind = "ex-right" if "除權" in title else "ex-dividend"
-            key = f"{day}|dividend|{symbol}|{kind}"
-        else:
-            title_without_amount = re.sub(r"[（(][^）)]*(?:元|%)[^）)]*[）)]", "", title)
-            normalized = re.sub(r"[^0-9a-zA-Z\u4e00-\u9fff]+", "", title_without_amount.lower())[:180]
-            key = f"{day}|{group}|{symbol}|{normalized}"
+        key = canonical_event_key(row)
         existing = canonical.get(key)
         if existing is None:
             canonical[key] = row
             continue
         # Prefer the richer, directly sourced record while retaining announcement metadata.
-        score = lambda value: sum(bool(value.get(field)) for field in (
-            "source_url", "source_name", "description", "market_effect", "announced_at", "cash_dividend"
-        ))
+        def score(value: dict[str, Any]) -> int:
+            origin_value = clean(value.get("origin"))
+            direct_official = origin_value not in {"", "manual"} and clean(value.get("verification_status")) == "confirmed"
+            return (20 if direct_official else 0) + sum(bool(value.get(field)) for field in (
+                "source_url", "source_name", "description", "market_effect", "announced_at", "cash_dividend"
+            ))
         winner, loser = (row, existing) if score(row) > score(existing) else (existing, row)
         for field in ("announced_at", "announcement_kind", "announcement_status", "previous_start"):
             if loser.get(field) and not winner.get(field):
@@ -980,6 +1252,17 @@ def main() -> None:
     if suppressed_origins:
         for row in canonical.values():
             if clean(row.get("origin")) not in suppressed_origins:
+                continue
+            announced = parse_optional_datetime(row.get("announced_at"))
+            if announced and announced.date() == NOW.date():
+                for field in ("announced_at", "announcement_kind", "announcement_status", "previous_start"):
+                    row.pop(field, None)
+
+    # Tracking-key migrations intentionally baseline recurring BLS/BEA series once.
+    # This removes false same-title cross-occurrence alerts restored from v11.4.31 or older live state.
+    if tracking_migration_origins:
+        for row in canonical.values():
+            if clean(row.get("origin")) not in tracking_migration_origins:
                 continue
             announced = parse_optional_datetime(row.get("announced_at"))
             if announced and announced.date() == NOW.date():
@@ -1012,14 +1295,14 @@ def main() -> None:
     )
     payload = {
         "metadata": {
-            "version": "v11.4.31",
+            "version": VERSION,
             "updated_at": NOW.isoformat(timespec="seconds"),
             "timezone": "Asia/Taipei",
             "event_count": len(events),
             "announced_today_count": announced_today,
             "announced_recent_count": announced_recent,
             "state_initialized": True,
-            "announcement_integrity": "strict-v11.4.31",
+            "announcement_integrity": "strict-v11.4.32-series-safe",
             "announcement_suppressed_origins": sorted(suppressed_origins),
             "source_ok_count": sum(1 for source in sources if source.get("status") == "ok"),
             "source_warning_count": sum(1 for source in sources if source.get("status") != "ok"),
@@ -1033,7 +1316,7 @@ def main() -> None:
     EVENTS_PATH.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     SEED_PATH.write_text("window.__EVENT_SEED__ = " + json.dumps(payload, ensure_ascii=False) + ";\n", encoding="utf-8")
     STATE_PATH.write_text(json.dumps({
-        "version": "v11.4.31", "initialized": True,
+        "version": VERSION, "initialized": True, "tracking_key_version": TRACKING_KEY_VERSION,
         "initialized_origins": sorted(next_initialized_origins),
         "updated_at": NOW.isoformat(timespec="seconds"), "events": next_state,
     }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
