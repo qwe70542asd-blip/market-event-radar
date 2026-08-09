@@ -1,0 +1,35 @@
+市場事件雷達 v11.4.33 — Git tracked stale-path deletion manifest
+
+在舊 GitHub working tree 中，若下列路徑仍存在，請由 CLEAN-REPO.cmd 移除並讓 GitHub Desktop 將它們以 deletion commit：
+
+scripts/.github/
+scripts/assets/
+scripts/data/
+scripts/docs/
+scripts/tests/
+scripts/scripts/
+scripts/edge/
+
+以及 scripts/ 內任何誤複製的 repository 根檔：
+scripts/.gitignore
+scripts/.nojekyll
+scripts/404.html
+scripts/asset.html
+scripts/data-status.html
+scripts/event.html
+scripts/index.html
+scripts/institutional.html
+scripts/news.html
+scripts/portfolio.html
+scripts/tw-market.html
+scripts/README.md
+scripts/GITHUB-DESKTOP-UPDATE.txt
+scripts/VALIDATION.json
+scripts/VALIDATION.txt
+scripts/VERSION.json
+scripts/manifest.webmanifest
+scripts/service-worker.js
+scripts/requirements.txt
+scripts/CLEAN-REPO.cmd
+
+注意：本 ZIP 本身不包含這些 stale copies。這份 manifest 是用來處理「覆蓋 ZIP 不會自動刪除 Git 已追蹤舊檔」的問題。

@@ -257,6 +257,38 @@ class ParserTests(unittest.TestCase):
         self.assertEqual(rows[0]["cash_dividend"],10.5)
         self.assertIn("115 年度",rows[0]["fiscal_period"])
 
+
+    def test_stock_basics_never_restores_numeric_industry_name(self):
+        import update_stock_basics
+        code,name=update_stock_basics.normalized_industry_candidates('9103','9103','9103')
+        self.assertIsNone(code)
+        self.assertEqual(name,'其他業')
+        code,name=update_stock_basics.normalized_industry_candidates('24','9103','半導體業')
+        self.assertEqual(code,'24')
+        self.assertEqual(name,'半導體業')
+
+    def test_tpex_dividend_plan_accepts_current_board_date_alias(self):
+        payload=[{
+            '公司代號名稱':'5206 坤悅',
+            '股利所屬年(季)度':'114年 年度',
+            '股利所屬期間':'114/01/01 至 114/12/31',
+            '董事會擬議日期':'115/04/15',
+            '股東配發內容－盈餘分配之現金股利（元／股）':'1.0',
+            '股東配發內容－盈餘轉增資配股（元／股）':'0.5',
+        }]
+        rows=event_updater.parse_dividend_plans(payload,'TPEX',event_updater.TPEX_DIVIDEND_PLAN_URL,'tpex-dividend-plan')
+        self.assertEqual(len(rows),1)
+        self.assertEqual(rows[0]['symbol'],'5206')
+        self.assertEqual(rows[0]['local_date'],'2026-04-15')
+        self.assertEqual(rows[0]['cash_dividend'],1.0)
+        self.assertEqual(rows[0]['stock_dividend'],0.5)
+
+    def test_tpex_historical_exdiv_empty_payload_is_healthy_empty(self):
+        with patch.object(event_updater,'http_json',return_value=[]):
+            result=event_updater.fetch_tpex_exdiv_history(object())
+        self.assertEqual(result.events,[])
+        self.assertIn('no rows',result.message)
+
     def test_twse_historical_exdiv_parser(self):
         payload={"fields":["日期","股票代號","股票名稱","除權息","息值"],"data":[["115/06/02","2330","台積電","除息","5.0"]]}
         rows=event_updater.parse_twse_exdiv_history_payload(payload)

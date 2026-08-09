@@ -26,7 +26,7 @@ from bs4 import BeautifulSoup
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.32"
+VERSION = "v11.4.33"
 TIMEOUT = 25
 YAHOO_BATCH = 48
 HEADERS = {
@@ -58,6 +58,20 @@ def normalized_industry(value: Any) -> tuple[str | None, str | None]:
         return None, None
     code = raw.zfill(2) if raw.isdigit() and len(raw) <= 2 else None
     return code, INDUSTRY_NAMES.get(code, raw)
+
+
+def normalized_industry_candidates(*values: Any) -> tuple[str | None, str]:
+    """Return the first valid industry from code/name/archive candidates.
+
+    Old archives can contain a security code in both ``industry`` and
+    ``industry_name``.  v11.4.32 only sanitized the first candidate, then could
+    accidentally restore the numeric value from ``industry_name``.
+    """
+    for value in values:
+        code, name = normalized_industry(value)
+        if name and not str(name).isdigit():
+            return code, name
+    return None, "其他業"
 
 OFFICIAL_ENDPOINTS = [
     ("TWSE 上市公司基本資料", "https://openapi.twse.com.tw/v1/opendata/t187ap03_L", "TWSE"),
@@ -381,10 +395,14 @@ def main() -> None:
         merged["asset_class"] = "stock"
         merged["market"] = "TW"
         merged["currency"] = merged.get("currency") or "TWD"
-        code, industry_name = normalized_industry(merged.get("industry_code") or merged.get("industry"))
-        merged["industry_code"] = code or merged.get("industry_code")
-        merged["industry_name"] = industry_name or merged.get("industry_name") or (merged.get("industry") if not str(merged.get("industry") or "").isdigit() else None) or "其他業"
-        merged["industry"] = merged["industry_name"]
+        code, industry_name = normalized_industry_candidates(
+            merged.get("industry_code"),
+            merged.get("industry"),
+            merged.get("industry_name"),
+        )
+        merged["industry_code"] = code
+        merged["industry_name"] = industry_name
+        merged["industry"] = industry_name
         merged["basic_coverage_percent"] = basic_coverage(merged)
         merged["financial_coverage_percent"] = financial_coverage(merged)
         merged["updated_at"] = NOW.isoformat(timespec="seconds")

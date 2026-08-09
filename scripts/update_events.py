@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build Market Event Radar v11.4.32 event data from official schedules.
+"""Build Market Event Radar v11.4.33 event data from official schedules.
 
 The updater keeps the last verified archive, refreshes selected official sources,
 and records when an exact date first appears or changes. It never invents dates.
@@ -33,7 +33,7 @@ NOW = datetime.now(ZoneInfo("Asia/Taipei"))
 TAIPEI = NOW.tzinfo
 NEW_YORK = ZoneInfo("America/New_York")
 OFFLINE = os.getenv("EVENT_OFFLINE", "").strip() == "1"
-VERSION = "v11.4.32"
+VERSION = "v11.4.33"
 TRACKING_KEY_VERSION = 2
 ARCHIVE_START = date(2026, 1, 1)
 ARCHIVE_START_DT = datetime.combine(ARCHIVE_START, time.min, tzinfo=TAIPEI)
@@ -55,6 +55,7 @@ TWSE_MATERIAL_URL = "https://openapi.twse.com.tw/v1/opendata/t187ap04_L"
 TPEX_MATERIAL_URL = "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap04_O"
 BLS_URL = "https://www.bls.gov/schedule/news_release/bls.ics"
 BLS_HTML_URL = f"https://www.bls.gov/schedule/{NOW.year}/home.htm"
+BLS_YEAR_URL = f"https://www.bls.gov/schedule/{NOW.year}/"
 BLS_RELEASE_PAGES = {
     "Employment Situation": "https://www.bls.gov/schedule/news_release/empsit.htm",
     "Consumer Price Index": "https://www.bls.gov/schedule/news_release/cpi.htm",
@@ -158,11 +159,25 @@ def parse_market_date(value: Any) -> date | None:
         return None
 
 
+def normalized_field_name(value: Any) -> str:
+    return re.sub(r"[^0-9a-z\u3400-\u9fff]+", "", clean(value).lower())
+
+
 def first_value(row: dict[str, Any], names: Iterable[str]) -> str:
-    for name in names:
+    # Fast exact lookup first, then punctuation/spacing-insensitive exact lookup.
+    # MOPS/TPEX frequently renames headers by changing full-width punctuation or
+    # inserting spaces without changing the field's meaning.
+    aliases = list(names)
+    for name in aliases:
         value = clean(row.get(name))
         if value:
             return value
+    wanted = {normalized_field_name(name) for name in aliases}
+    for key, raw in row.items():
+        if normalized_field_name(key) in wanted:
+            value = clean(raw)
+            if value:
+                return value
     return ""
 
 
@@ -296,7 +311,16 @@ def _bls_event(summary: str, start: datetime, uid: str = "") -> dict[str, Any] |
 
 
 def fetch_bls_html(session: requests.Session) -> list[dict[str, Any]]:
-    soup = BeautifulSoup(http_get(session, BLS_HTML_URL).text, "html.parser")
+    last_error: Exception | None = None
+    soup = None
+    for url in (BLS_YEAR_URL, BLS_HTML_URL):
+        try:
+            soup = BeautifulSoup(http_get(session, url).text, "html.parser")
+            break
+        except Exception as exc:  # noqa: BLE001
+            last_error = exc
+    if soup is None:
+        raise RuntimeError(str(last_error or "BLS annual schedule unavailable"))
     events: list[dict[str, Any]] = []
     for row in soup.select("tr"):
         cells = [clean(cell.get_text(" ", strip=True)) for cell in row.select("th,td")]
@@ -675,6 +699,20 @@ def parse_twse_exdiv_history_payload(payload: Any, source_url: str = TWSE_EXDIV_
     return events
 
 
+def payload_has_rows(payload: Any) -> bool:
+    if isinstance(payload, list):
+        return any(isinstance(row, (dict, list, tuple)) for row in payload)
+    if isinstance(payload, dict):
+        for key in ("data", "data9", "items", "aaData"):
+            value = payload.get(key)
+            if isinstance(value, list) and value:
+                return True
+        tables = payload.get("tables")
+        if isinstance(tables, list):
+            return any(isinstance(table, dict) and isinstance(table.get("data"), list) and table.get("data") for table in tables)
+    return False
+
+
 def fetch_twse_exdiv_history(session: requests.Session) -> SourceResult:
     try:
         response = http_get(session, TWSE_EXDIV_HISTORY_URL, params={
@@ -682,15 +720,17 @@ def fetch_twse_exdiv_history(session: requests.Session) -> SourceResult:
             "strDate": ARCHIVE_START.strftime("%Y%m%d"),
             "endDate": NOW.date().strftime("%Y%m%d"),
         })
-        events = parse_twse_exdiv_history_payload(response.json(), response.url)
+        payload = response.json()
+        events = parse_twse_exdiv_history_payload(payload, response.url)
     except Exception as exc:
         raise RuntimeError(f"TWSE historical ex-dividend request failed: {exc}") from exc
     events = list({row["id"]: row for row in events}.values())
-    if not events:
-        raise RuntimeError("TWSE historical ex-dividend returned no recognized rows")
+    if not events and payload_has_rows(payload):
+        raise RuntimeError("TWSE historical ex-dividend returned rows but parser recognized 0 events")
+    message = f"{len(events)} historical events since 2026-01-01" if events else "official endpoint returned no rows for the requested window"
     return SourceResult(
         "twse-exdiv-history", "TWSE historical ex-right/ex-dividend", TWSE_EXDIV_HISTORY_URL,
-        ("twse-exdiv-history",), events, f"{len(events)} historical events since 2026-01-01",
+        ("twse-exdiv-history",), events, message,
     )
 
 
@@ -700,15 +740,16 @@ def parse_tpex_exdiv_history_payload(payload: Any, source_url: str = TPEX_EXDIV_
         if not isinstance(row, dict):
             continue
         day = parse_market_date(first_value(row, [
-            "ExRrightsExDividendDate", "Date", "資料日期", "除權息日期", "除權除息日期",
+            "ExRrightsExDividendDate", "ExRightsExDividendDate", "ExDate", "Date",
+            "資料日期", "交易日期", "除權息日期", "除權除息日期",
         ]))
-        symbol = first_value(row, ["SecuritiesCompanyCode", "Code", "證券代號", "股票代號"])
-        name = first_value(row, ["CompanyName", "Name", "證券名稱", "股票名稱"])
+        symbol = first_value(row, ["SecuritiesCompanyCode", "SecuritiesCode", "CompanyCode", "Code", "證券代號", "股票代號"])
+        name = first_value(row, ["CompanyName", "SecuritiesName", "Name", "公司名稱", "證券名稱", "股票名稱"])
         if not day or day < ARCHIVE_START or day > NOW.date() or not symbol:
             continue
-        kind = first_value(row, ["ExRrightsExDividend", "Type", "除權息", "權息別"]) or "除息"
-        cash = parse_number(first_value(row, ["CashDividend", "CashDividendValue", "息值", "現金股利"]))
-        stock = parse_number(first_value(row, ["StockDividendRatio", "StockDividendValue", "權值", "股票股利"]))
+        kind = first_value(row, ["ExRrightsExDividend", "ExRightsExDividend", "Type", "除權息", "權息別", "權/息"]) or "除息"
+        cash = parse_number(first_value(row, ["CashDividend", "CashDividendValue", "DividendValue", "息值", "現金股利"]))
+        stock = parse_number(first_value(row, ["StockDividendRatio", "StockDividendValue", "RightValue", "權值", "股票股利"]))
         events.append(make_exdiv_event(
             "TPEX", clean(symbol), clean(name), day, clean(kind), cash, stock,
             "TPEx 上櫃除權除息計算結果表", source_url, "tpex-exdiv-history",
@@ -719,25 +760,31 @@ def parse_tpex_exdiv_history_payload(payload: Any, source_url: str = TPEX_EXDIV_
 def fetch_tpex_exdiv_history(session: requests.Session) -> SourceResult:
     payload = http_json(session, TPEX_EXDIV_HISTORY_URL)
     events = parse_tpex_exdiv_history_payload(payload)
-    if not events:
-        raise RuntimeError("TPEx historical ex-dividend returned no recognized rows")
+    if not events and payload_has_rows(payload):
+        raise RuntimeError("TPEx historical ex-dividend returned rows but parser recognized 0 events")
+    message = f"{len(events)} historical events since 2026-01-01" if events else "official endpoint returned no rows on this run"
     return SourceResult(
         "tpex-exdiv-history", "TPEx historical ex-right/ex-dividend", TPEX_EXDIV_HISTORY_URL,
-        ("tpex-exdiv-history",), events, f"{len(events)} historical events since 2026-01-01",
+        ("tpex-exdiv-history",), events, message,
     )
 
 def dividend_total(row: dict[str, Any], needle: str) -> float:
     total = 0.0
     for key, value in row.items():
-        if needle in key and ("元/股" in key or "每股" in key):
+        key_text = clean(key)
+        key_norm = normalized_field_name(key)
+        if needle in key_text and ("元股" in key_norm or "每股" in key_text):
             total += parse_number(value) or 0.0
     return total
 
 
 def dividend_company_identity(row: dict[str, Any]) -> tuple[str, str]:
     """Read company identity from both split and combined MOPS/TPEx schemas."""
-    symbol = first_value(row, ["公司代號", "CompanyCode", "SecuritiesCompanyCode", "Code"])
-    name = first_value(row, ["公司名稱", "CompanyName", "Name"])
+    symbol = first_value(row, [
+        "公司代號", "公司代碼", "證券代號", "股票代號",
+        "CompanyCode", "SecuritiesCompanyCode", "SecuritiesCode", "StockNo", "Code",
+    ])
+    name = first_value(row, ["公司名稱", "證券名稱", "股票名稱", "CompanyName", "SecuritiesName", "Name"])
     if symbol:
         return symbol, name
     combined = first_value(row, ["公司代號名稱", "公司代號及名稱", "CompanyCodeName", "SecuritiesCompanyCodeName"])
@@ -765,8 +812,10 @@ def parse_dividend_plans(rows: Any, market: str, source_url: str, origin: str) -
             period = clean(f"{period} {term}")
         shareholder_day = parse_market_date(first_value(row, ["股東會日期", "ShareholdersMeetingDate"]))
         decision_day = parse_market_date(first_value(row, [
-            "董事會決議通過股利分派日", "董事會（擬議）股利分派日",
-            "董事會股利分派日", "董事會決議日", "董事會日期", "BoardMeetingDate",
+            "董事會決議通過股利分派日", "董事會通過股利分派日",
+            "董事會（擬議）股利分派日", "董事會(擬議)股利分派日",
+            "董事會股利分派日", "董事會擬議日期", "董事會決議日期",
+            "董事會決議日", "董事會日期", "BoardMeetingDate", "BoardDecisionDate",
         ]))
         cash, stock = dividend_total(row, "現金"), dividend_total(row, "配股")
         if shareholder_day and ARCHIVE_START <= shareholder_day <= NOW.date() + timedelta(days=370):
@@ -1302,7 +1351,7 @@ def main() -> None:
             "announced_today_count": announced_today,
             "announced_recent_count": announced_recent,
             "state_initialized": True,
-            "announcement_integrity": "strict-v11.4.32-series-safe",
+            "announcement_integrity": "strict-v11.4.33-series-safe",
             "announcement_suppressed_origins": sorted(suppressed_origins),
             "source_ok_count": sum(1 for source in sources if source.get("status") == "ok"),
             "source_warning_count": sum(1 for source in sources if source.get("status") != "ok"),

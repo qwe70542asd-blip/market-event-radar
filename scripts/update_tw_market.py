@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
 """Refresh Taiwan closing quotes and online historical market turnover.
 
-v11.4.32 validates the restored archive before reuse and asks the official TWSE/TPEx network sources for historical
-turnover from 2026-01-01. Local JSON is only a last-known-good cache; the
-20-session average no longer waits for the site to accumulate one day at a time.
+v11.4.33 validates the restored archive before reuse and backfills every calendar month from the official TWSE/TPEx network sources.
+Local JSON is only a last-known-good cache. Turnover averages are published only from complete market totals, so a missing TPEx component can no longer silently bias volume momentum.
 """
 from __future__ import annotations
 
@@ -16,8 +15,8 @@ import requests
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.32"
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.32)"}
+VERSION = "v11.4.33"
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.33)"}
 TWSE_QUOTES = "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL"
 TPEX_QUOTES = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes"
 TWSE_FUNDS = "https://openapi.twse.com.tw/v1/opendata/t187ap47_L"
@@ -80,6 +79,12 @@ def valid_session_date(value: Any) -> str | None:
 
 
 def official_etf_codes(session: requests.Session, old_rows: list[dict]) -> tuple[set[str], list[str]]:
+    """Load ETF symbols per exchange and fail over per exchange, not globally.
+
+    v11.4.32 used a single shared set.  If the TWSE fund endpoint succeeded but
+    the TPEx fund endpoint changed schema, the shared set was already non-empty
+    and the TPEx last-known-good ETF list was never restored.
+    """
     codes: set[str] = set()
     warnings: list[str] = []
     sources = [
@@ -87,27 +92,34 @@ def official_etf_codes(session: requests.Session, old_rows: list[dict]) -> tuple
         (TPEX_FUNDS, ("SecuritiesCompanyCode", "SecuritiesCode", "Code", "證券代號", "基金代號"), "TPEx"),
     ]
     for url, keys, label in sources:
+        source_codes: set[str] = set()
         try:
             response = session.get(url, headers=HEADERS, timeout=20)
             response.raise_for_status()
             rows = response.json()
             if not isinstance(rows, list):
                 raise RuntimeError("unexpected response")
-            before = len(codes)
             for row in rows:
+                if not isinstance(row, dict):
+                    continue
                 code = first(row, keys)
                 if code:
-                    codes.add(code.upper())
-            if len(codes) == before:
-                warnings.append(f"{label} ETF list returned no recognized code")
+                    source_codes.add(code.upper())
         except Exception as exc:  # noqa: BLE001
             warnings.append(f"{label} ETF list: {exc}")
-    if not codes:
-        codes.update(
-            str(row.get("symbol") or "").upper()
-            for row in old_rows
-            if row.get("asset_class") == "etf" and str(row.get("symbol") or "").upper().startswith("00")
-        )
+        if not source_codes:
+            source_codes.update(
+                str(row.get("symbol") or "").upper()
+                for row in old_rows
+                if str(row.get("exchange") or "").upper() == label.upper()
+                and row.get("asset_class") == "etf"
+                and str(row.get("symbol") or "").strip()
+            )
+            if source_codes:
+                warnings.append(f"{label} ETF list returned no recognized code; reused {len(source_codes)} last-known-good ETF symbols")
+            else:
+                warnings.append(f"{label} ETF list returned no recognized code and no last-known-good ETF symbols were available")
+        codes.update(source_codes)
     return {code for code in codes if code}, warnings
 
 
@@ -162,12 +174,28 @@ def rows_and_fields(payload: Any) -> tuple[list[Any], list[str]]:
         return payload, []
     if not isinstance(payload, dict):
         return [], []
-    rows = payload.get("data") or payload.get("items") or payload.get("tables") or []
-    fields = payload.get("fields") or payload.get("columns") or []
+    rows = payload.get("data") or payload.get("items") or payload.get("aaData") or payload.get("tables") or []
+    fields = payload.get("fields") or payload.get("columns") or payload.get("columnNames") or []
     if isinstance(rows, list) and rows and isinstance(rows[0], dict) and "data" in rows[0]:
         table = rows[0]
-        return table.get("data") or [], table.get("fields") or []
+        return table.get("data") or table.get("items") or [], table.get("fields") or table.get("columns") or []
     return rows if isinstance(rows, list) else [], fields if isinstance(fields, list) else []
+
+
+def normalized_field(value: Any) -> str:
+    return re.sub(r"[^0-9a-z\u3400-\u9fff]+", "", str(value or "").strip().lower())
+
+
+def field_value(row: dict[str, Any], aliases: tuple[str, ...]) -> tuple[Any, str]:
+    wanted = {normalized_field(alias) for alias in aliases}
+    for key, value in row.items():
+        if normalized_field(key) in wanted and str(value or "").strip():
+            return value, str(key)
+    for key, value in row.items():
+        norm = normalized_field(key)
+        if any(alias and alias in norm for alias in wanted) and str(value or "").strip():
+            return value, str(key)
+    return None, ""
 
 
 def history_records(payload: Any, component: str, source: str) -> list[dict[str, Any]]:
@@ -182,14 +210,18 @@ def history_records(payload: Any, component: str, source: str) -> list[dict[str,
             row = raw
         else:
             continue
-        day = parse_market_date(first(row, (
-            "Date", "日期", "資料日期", "TradeDate", "TradingDate", "成交日期",
-        )))
-        value = number(first(row, (
-            "TradeValue", "成交金額", "成交金額(元)", "Amount", "TradingValue",
-            "成交值", "TotalAmount", "TransactionAmount",
-        )))
-        day = valid_session_date(day)
+        date_raw, _ = field_value(row, (
+            "Date", "日期", "資料日期", "TradeDate", "TradingDate", "成交日期", "年月日", "交易日期",
+        ))
+        amount_raw, amount_key = field_value(row, (
+            "TradeValue", "成交金額", "成交金額(元)", "成交金額（元）", "Amount", "TradingValue",
+            "成交值", "TotalAmount", "TransactionAmount", "TradeAmount", "TotalTradeValue",
+        ))
+        day = valid_session_date(parse_market_date(date_raw))
+        value = number(amount_raw)
+        key_norm = normalized_field(amount_key)
+        if value is not None and ("千元" in amount_key or "仟元" in amount_key or "thousand" in key_norm):
+            value *= 1000
         if not day or value is None or value <= 0:
             continue
         output.append({"date": day, component: value, "sources": [source]})
@@ -217,28 +249,29 @@ def online_history(session: requests.Session) -> tuple[list[dict[str, Any]], lis
         except Exception as exc:  # noqa: BLE001
             warnings.append(f"{label}: {exc}")
 
-    # The monthly official endpoints are a second online path. They are queried
-    # when OpenAPI does not yield enough sessions, and they also fill missing months.
-    twse_count = sum("twse_trade_value" in row for row in rows)
-    tpex_count = sum("tpex_trade_value" in row for row in rows)
+    # The monthly official endpoints are the archive backfill path. v11.4.32
+    # stopped requesting later months once a *global* row count crossed 40,
+    # which allowed entire months (notably May/July) to remain missing forever.
+    # A full backfill runs at most once per day, so querying every month is both
+    # bounded and much safer than a count-based shortcut.
     year, month = HISTORY_START.year, HISTORY_START.month
     while (year, month) <= (NOW.year, NOW.month):
-        if twse_count < 40:
-            try:
-                payload = fetch_json(session, TWSE_HISTORY_MONTH, params={"response": "json", "date": f"{year:04d}{month:02d}01"})
-                parsed = history_records(payload, "twse_trade_value", "TWSE official monthly FMTQIK")
-                rows.extend(parsed)
-                twse_count += len(parsed)
-            except Exception as exc:  # noqa: BLE001
-                warnings.append(f"TWSE monthly {year:04d}-{month:02d}: {exc}")
-        if tpex_count < 40:
-            try:
-                payload = fetch_json(session, TPEX_HISTORY_MONTH, params={"date": f"{year:04d}/{month:02d}/01", "id": "", "response": "json"})
-                parsed = history_records(payload, "tpex_trade_value", "TPEx official monthly daily-indices")
-                rows.extend(parsed)
-                tpex_count += len(parsed)
-            except Exception as exc:  # noqa: BLE001
-                warnings.append(f"TPEx monthly {year:04d}-{month:02d}: {exc}")
+        try:
+            payload = fetch_json(session, TWSE_HISTORY_MONTH, params={"response": "json", "date": f"{year:04d}{month:02d}01"})
+            parsed = history_records(payload, "twse_trade_value", "TWSE official monthly FMTQIK")
+            rows.extend(parsed)
+            if not parsed:
+                warnings.append(f"TWSE monthly {year:04d}-{month:02d}: no recognized historical rows")
+        except Exception as exc:  # noqa: BLE001
+            warnings.append(f"TWSE monthly {year:04d}-{month:02d}: {exc}")
+        try:
+            payload = fetch_json(session, TPEX_HISTORY_MONTH, params={"date": f"{year:04d}/{month:02d}/01", "id": "", "response": "json"})
+            parsed = history_records(payload, "tpex_trade_value", "TPEx official monthly daily-indices")
+            rows.extend(parsed)
+            if not parsed:
+                warnings.append(f"TPEx monthly {year:04d}-{month:02d}: no recognized historical rows")
+        except Exception as exc:  # noqa: BLE001
+            warnings.append(f"TPEx monthly {year:04d}-{month:02d}: {exc}")
         if month == 12:
             year, month = year + 1, 1
         else:
@@ -257,11 +290,17 @@ def merge_history(old_rows: list[dict], online_rows: list[dict], current_total: 
             value = number(raw.get(key))
             if value is not None and value > 0:
                 row[key] = value
-        # Old v11.4.30 files only had the total. Keep it as a fallback, but an
-        # online component sum wins whenever available.
+        # Older files may only have a total. Preserve an explicit v11.4.33
+        # completeness flag, but never infer completeness from a source label:
+        # v11.4.32 could say "TWSE/TPEx quote sum" while its stored total had
+        # already been overwritten by the lone TWSE component.
         old_total = number(raw.get("trade_value"))
         if old_total is not None and old_total > 0:
             row["legacy_trade_value"] = old_total
+            old_coverage = str(raw.get("total_coverage") or "")
+            row["legacy_complete_total"] = raw.get("complete_total") is True and old_coverage in {
+                "twse+tpex-components", "twse+tpex-quote-sum", "legacy-total-complete"
+            }
         for source in raw.get("sources") or ([raw.get("source")] if raw.get("source") else []):
             if source and source not in row["sources"]:
                 row["sources"].append(source)
@@ -276,17 +315,36 @@ def merge_history(old_rows: list[dict], online_rows: list[dict], current_total: 
             row["sources"].append("TWSE/TPEx official latest-close quote sum")
     output = []
     for day, row in by_date.items():
-        components = [number(row.get("twse_trade_value")), number(row.get("tpex_trade_value"))]
-        components = [value for value in components if value is not None and value > 0]
-        total = sum(components) if components else number(row.get("live_quote_sum")) or number(row.get("legacy_trade_value"))
+        twse = number(row.get("twse_trade_value"))
+        tpex = number(row.get("tpex_trade_value"))
+        quote_total = number(row.get("live_quote_sum"))
+        legacy_total = number(row.get("legacy_trade_value"))
+        source_text = " + ".join(row.get("sources") or ["official online history"])
+        if twse not in (None, 0) and tpex not in (None, 0):
+            total, coverage, complete_total = twse + tpex, "twse+tpex-components", True
+        elif quote_total not in (None, 0):
+            # Latest-close quote sum includes ranked TWSE and TPEx securities and
+            # is more complete than a lone TWSE component.
+            total, coverage, complete_total = quote_total, "twse+tpex-quote-sum", True
+        elif legacy_total not in (None, 0):
+            total = legacy_total
+            complete_total = row.get("legacy_complete_total") is True
+            coverage = "legacy-total-complete" if complete_total else "legacy-total-unverified"
+        elif twse not in (None, 0) or tpex not in (None, 0):
+            total = twse if twse not in (None, 0) else tpex
+            coverage, complete_total = "partial-single-market", False
+        else:
+            total, coverage, complete_total = None, "missing", False
         if total is None or total <= 0:
             continue
         output.append({
             "date": day,
             "trade_value": total,
-            "twse_trade_value": number(row.get("twse_trade_value")),
-            "tpex_trade_value": number(row.get("tpex_trade_value")),
-            "source": " + ".join(row.get("sources") or ["official online history"]),
+            "twse_trade_value": twse,
+            "tpex_trade_value": tpex,
+            "total_coverage": coverage,
+            "complete_total": complete_total,
+            "source": source_text,
             "sources": row.get("sources") or [],
             "updated_at": NOW.isoformat(timespec="seconds"),
         })
@@ -305,7 +363,23 @@ def trim_history_to_trading_date(rows: list[dict], trading_date: str | None) -> 
 
 def average(values: list[float], sessions: int) -> float | None:
     selected = values[:sessions]
-    return sum(selected) / len(selected) if selected else None
+    return sum(selected) / sessions if len(selected) == sessions else None
+
+
+def recent_history_complete(rows: list[dict], trading_date: str | None, sessions: int, max_calendar_days: int) -> bool:
+    """Require enough complete totals and a recent time span, not just row count."""
+    end = valid_session_date(trading_date)
+    if not end:
+        return False
+    dates = [
+        date.fromisoformat(str(row.get("date")))
+        for row in rows
+        if row.get("complete_total") is True and valid_session_date(row.get("date")) and str(row.get("date")) <= end
+    ]
+    dates = sorted(set(dates), reverse=True)
+    if len(dates) < sessions:
+        return False
+    return (date.fromisoformat(end) - dates[sessions - 1]).days <= max_calendar_days
 
 
 def main() -> None:
@@ -337,11 +411,15 @@ def main() -> None:
     old_history_rows = [row for row in raw_old_history_rows if valid_session_date(row.get("date"))]
     legacy_history_polluted = len(old_history_rows) != len(raw_old_history_rows)
     old_trading_date = valid_session_date((old.get("metadata") or {}).get("trading_date"))
-    history_checked_today = str((history.get("metadata") or {}).get("last_full_backfill_date") or "") == NOW.date().isoformat()
+    history_meta = history.get("metadata") or {}
+    history_checked_today = str(history_meta.get("last_full_backfill_date") or "") == NOW.date().isoformat()
+    history_current_version = str(history_meta.get("version") or "") == VERSION
     enough_history = len(old_history_rows) >= 20
-    if history_checked_today and enough_history and not legacy_history_polluted and old_trading_date:
+    if history_checked_today and history_current_version and enough_history and not legacy_history_polluted and old_trading_date:
         fetched_history, history_warnings = [], []
     else:
+        # A version upgrade always forces one fresh archive pass even if the
+        # previous version already stamped today's backfill date.
         fetched_history, history_warnings = online_history(session)
     if legacy_history_polluted:
         history_warnings.insert(0, "Removed legacy weekend/future turnover rows before selecting the trading session")
@@ -364,13 +442,20 @@ def main() -> None:
         row["quote_time"] = ""
         row["status"] = "latest-close"
     history_rows = merge_history(old_history_rows, fetched_history, current_quote_total, trading_date)
-    previous_values = [number(item.get("trade_value")) for item in history_rows if item.get("date") != trading_date]
+    previous_values = [
+        number(item.get("trade_value"))
+        for item in history_rows
+        if item.get("date") != trading_date and item.get("complete_total") is True
+    ]
     previous_values = [value for value in previous_values if value is not None and value > 0]
     latest_row = next((item for item in history_rows if item.get("date") == trading_date), None)
-    total_trade_value = number(latest_row.get("trade_value")) if latest_row else current_quote_total
-    average_5d = average(previous_values, 5)
-    average_20d = average(previous_values, 20)
-    average_60d = average(previous_values, 60)
+    total_trade_value = number(latest_row.get("trade_value")) if latest_row and latest_row.get("complete_total") is True else current_quote_total
+    history_complete_5d = recent_history_complete(history_rows, trading_date, 6, 20)  # current + five prior sessions
+    history_complete_20d = recent_history_complete(history_rows, trading_date, 21, 45)
+    history_complete_60d = recent_history_complete(history_rows, trading_date, 61, 110)
+    average_5d = average(previous_values, 5) if history_complete_5d else None
+    average_20d = average(previous_values, 20) if history_complete_20d else None
+    average_60d = average(previous_values, 60) if history_complete_60d else None
     volume_ratio_20d = total_trade_value / average_20d if total_trade_value not in (None, 0) and average_20d not in (None, 0) else None
 
     volume_payload = {
@@ -381,8 +466,8 @@ def main() -> None:
             "history_end": trading_date,
             "retention_policy": "2026-01-01 through latest verified trading date",
             "source_policy": "direct-online-official backfill at most once per day; restored rows are session-validated before reuse",
-            "migration": "v11.4.32 removes legacy weekend/future turnover rows before publishing",
-            "last_full_backfill_date": NOW.date().isoformat() if fetched_history else (history.get("metadata") or {}).get("last_full_backfill_date"),
+            "migration": "v11.4.33 backfills every month, rejects partial-market averages, and removes legacy weekend/future turnover rows",
+            "last_full_backfill_date": NOW.date().isoformat() if fetched_history else history_meta.get("last_full_backfill_date"),
             "session_count": len(history_rows),
             "warnings": history_warnings,
         },
@@ -413,7 +498,10 @@ def main() -> None:
             "volume_history_sessions": len(previous_values),
             "volume_history_start": HISTORY_START.isoformat(),
             "volume_history_source": "official-online-last-verified-session",
-            "volume_history_complete": len(previous_values) >= 20,
+            "volume_history_complete": history_complete_20d,
+            "volume_history_complete_5d": history_complete_5d,
+            "volume_history_complete_20d": history_complete_20d,
+            "volume_history_complete_60d": history_complete_60d,
         },
         "breadth": {"up": up, "down": down, "flat": len(ranked_rows) - up - down},
         "items": rows,

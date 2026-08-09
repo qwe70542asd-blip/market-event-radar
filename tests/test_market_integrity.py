@@ -55,6 +55,42 @@ class MarketIntegrityTests(unittest.TestCase):
         )
         self.assertEqual([row['date'] for row in rows], ['2026-08-07'])
 
+
+    def test_quote_total_beats_partial_single_market_component(self):
+        rows=update_tw_market.merge_history(
+            [],
+            [{'date':'2026-08-07','twse_trade_value':1000,'sources':['TWSE OpenAPI']}],
+            1250,
+            '2026-08-07',
+        )
+        self.assertEqual(rows[0]['trade_value'],1250)
+        self.assertTrue(rows[0]['complete_total'])
+        self.assertEqual(rows[0]['total_coverage'],'twse+tpex-quote-sum')
+
+    def test_partial_single_market_is_not_complete(self):
+        rows=update_tw_market.merge_history(
+            [],
+            [{'date':'2026-08-07','twse_trade_value':1000,'sources':['TWSE OpenAPI']}],
+            None,
+            None,
+        )
+        self.assertEqual(rows[0]['trade_value'],1000)
+        self.assertFalse(rows[0]['complete_total'])
+        self.assertEqual(rows[0]['total_coverage'],'partial-single-market')
+
+    def test_recent_history_completeness_rejects_large_gap(self):
+        from datetime import date
+        end=date(2026,8,7)
+        good=[]
+        cursor=end
+        while len(good)<21:
+            if cursor.weekday()<5:
+                good.append({'date':cursor.isoformat(),'complete_total':True,'trade_value':1})
+            cursor-=timedelta(days=1)
+        self.assertTrue(update_tw_market.recent_history_complete(good,'2026-08-07',21,45))
+        gapped=good[:5]+[{'date':(date(2026,6,30)-timedelta(days=i)).isoformat(),'complete_total':True,'trade_value':1} for i in range(30) if (date(2026,6,30)-timedelta(days=i)).weekday()<5]
+        self.assertFalse(update_tw_market.recent_history_complete(gapped,'2026-08-07',21,45))
+
     def test_tw_chips_prefixed_key_and_old_schema_migrate(self):
         items,migrated=update_tw_chips.migrate_legacy_items({
             'twse:2330': {
@@ -75,6 +111,20 @@ class MarketIntegrityTests(unittest.TestCase):
         markets,removed=update_tw_chips.sanitize_market_dates({'twse':{'institutional_date':'2026-08-08','stock_count':1000}})
         self.assertEqual(removed,1)
         self.assertNotIn('institutional_date',markets['twse'])
+
+
+    def test_legacy_source_label_does_not_make_partial_total_complete(self):
+        old = [{
+            "date": "2026-08-06",
+            "trade_value": 974054973424,
+            "twse_trade_value": 974054973424,
+            "tpex_trade_value": None,
+            "source": "TWSE/TPEx official close quote sum + TWSE OpenAPI FMTQIK",
+        }]
+        rows = update_tw_market.merge_history(old, [], None, "2026-08-07")
+        row = next(item for item in rows if item["date"] == "2026-08-06")
+        self.assertFalse(row["complete_total"])
+        self.assertEqual(row["total_coverage"], "legacy-total-unverified")
 
 
 if __name__=='__main__': unittest.main()

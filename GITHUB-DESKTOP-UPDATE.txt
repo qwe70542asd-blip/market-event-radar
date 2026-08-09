@@ -1,17 +1,22 @@
-市場事件雷達 v11.4.32 — GitHub Desktop 更新方式
+市場事件雷達 v11.4.33 — GitHub Desktop 更新方式
 
 1. 先把這個 ZIP 解壓縮到一個暫存資料夾。
 2. 用解壓後的內容覆蓋你的 market-event-radar 本機 repository 根目錄。
 3. 【重要】雙擊根目錄 CLEAN-REPO.cmd 一次。
-   - 不需要安裝 Python；它是可直接雙擊執行的 Windows 批次檔。
+   - 不需要安裝 Python。
    - 它只會清掉先前誤複製到 scripts/ 裡的整套 repository 副本。
    - 正常的 scripts/*.py 不會刪除。
-4. 回到 GitHub Desktop，確認變更包含：
-   - v11.4.32 檔案
-   - scripts/ 下那些錯誤巢狀檔案被刪除
-   - 新的 update-market-core.yml / update-news-batch.yml / update-official-feeds.yml
-5. Commit 訊息可用：market-event-radar-v11.4.32
+   - 可對照 DELETION-MANIFEST-v11.4.33.txt 檢查應刪路徑。
+4. 回到 GitHub Desktop，確認變更同時包含：
+   - v11.4.33 新檔／修改檔
+   - scripts/ 下錯誤巢狀 repository 檔案顯示為 deletions
+   - update_tw_market.py / update_stock_basics.py / update_events.py / validate_public_data.py 修正
+   - release-verification.yml 新增 Chromium runtime gate
+   - deploy-live-market-worker.yml 修正 Cloudflare secrets 判斷
+5. Commit 訊息可用：market-event-radar-v11.4.33
 6. Push origin。
-7. Push 後 release verification 會自檢；主要 live-* 分支會由新的整合排程重新發布成 history-free snapshot。
+7. Push 後先確認 Verify v11.4.33 app release 綠燈，再檢查 market core、events、stock basics 等 live workflow。
 
-注意：GitHub Actions cron 是 best-effort，不保證每個 5 分鐘刻度精準啟動。v11.4.32 已降低 workflow 數量與重複 fan-out，並在資料驗證中標記 stale source。
+本版重點：成交歷史缺月與完整性、TPEx 成交額 fail-closed、TPEx 股利 parser、numeric industry、Cloudflare deploy workflow、真正瀏覽器 runtime CI。
+
+注意：GitHub Actions cron 是 best-effort，不保證每個 5 分鐘刻度精準啟動；資料過舊必須顯示 stale/unconfirmed，不得用推測值補成即時資料。

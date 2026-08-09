@@ -1,42 +1,40 @@
-Market Event Radar v11.4.32 validation
+Market Event Radar v11.4.33 validation
 
-PASS: 178 automated tests
+PASS: 187 automated tests
+PASS: full-month turnover backfill / recent-session completeness regressions
+PASS: complete TWSE+TPEx quote total outranks partial single-market turnover
+PASS: TPEx ETF per-exchange last-known-good fallback
+PASS: stock-basics numeric industry sanitization
+PASS: TPEx dividend current-field/full-width-punctuation parser regression
+PASS: historical ex-dividend healthy-empty vs non-empty-zero-parse health logic
+PASS: market_at/session/latest-candle and turnover completeness strict validation
+PASS: Cloudflare deploy workflow step-level secret gate / safe unconfigured skip
+PASS: Playwright Chromium homepage runtime gate added to GitHub release verification
 PASS: BEA recurring-series / title / GDP-stage regression suite
-PASS: BLS official per-release table fallback regression suite
+PASS: BLS official per-release and annual-page fallback regression suite
 PASS: TWSE TWT49U range-query and 2026 schema regression suite
 PASS: canonical event dedupe without dividend-kind collision
 PASS: incremental event archive retention / future reschedule replacement
 PASS: verified Taiwan trading-date / polluted-history migration integrity
 PASS: tw-chips symbol-keyed-v2 migration and date integrity
-PASS: disclosure source-time parsing; invalid timestamps fail closed
-PASS: official-news date/category-page guard + legacy NOW archive migration
-PASS: stock-symbol false-positive guard and authoritative company remapping
-PASS: TPEx dividend parser field compatibility + zero-row warning guard
-PASS: trust/completeness/source-snapshot verification model
-PASS: consolidated Actions scheduling; no workflow_run fan-out
-PASS: history-free live-* publisher
-PASS: bounded sequential frontend mirrors; persistent last-good limited to small market snapshot
-PASS: non-blocking Lightweight Charts loader + SVG fallback path
-PASS: mobile compact date-alert/day-dialog layout and enlarged touch targets
-PASS: asset-page core-first loading
-PASS: Edge session/previous-close/local-date integrity
 PASS: strict public-data validation
 PASS: Python compileall
 PASS: JavaScript syntax (17 files)
 PASS: shell syntax (2 files)
 PASS: 30 GitHub Actions YAML files
 PASS: repository layout guard
-PASS: app shell smoke
 PASS: HTTP smoke test (7 pages / 43 referenced assets)
-PASS: audio scan (0 m4a/mp3/wav)
-PASS: Service Worker cache namespace v11.4.32
+PASS: release hygiene (0 m4a/mp3/wav/tmp/bak/editor backup files)
+PASS: Service Worker cache namespace v11.4.33
 
-DEPLOY: overlay the ZIP, run CLEAN-REPO.cmd once, review deletions in GitHub Desktop, then Commit / Push.
-POST-DEPLOY: first live-events v11.4.32 run baselines BEA/BLS recurring tracking state and removes legacy false current-day alerts.
-POST-DEPLOY: first live-tw-market v11.4.32 run purges the old invalid 2026-08-08 session before publication.
-POST-DEPLOY: live-tw-chips must publish schema symbol-keyed-v2 after migration.
-POST-DEPLOY: the next live-* publications replace old generated-data branch history with orphan snapshots.
-EXTERNAL LIMIT: BLS may still reject GitHub runners with HTTP 403; this must remain warning/last-known-good, never guessed dates.
-EXTERNAL LIMIT: GitHub cron is best-effort; a late scheduled start must be shown as stale/unconfirmed, never filled with invented current data.
-NON-BLOCKING: K-line UI may start with verified SVG/static data while Lightweight Charts loads; no fabricated browser K candles.
-Validated at: 2026-08-08T13:06:49+08:00
+LOCAL LIMIT: Chromium navigation is blocked by this execution environment, so the browser runtime test is not falsely marked as locally passed.
+CI GATE: Verify v11.4.33 installs Playwright Chromium and requires no pageerror, 42 calendar cells, initialized calendar title and working market/dividend mode switching.
+
+DEPLOY: overlay the ZIP, run CLEAN-REPO.cmd once, verify deletions against DELETION-MANIFEST-v11.4.33.txt, then Commit / Push.
+POST-DEPLOY: live-tw-market must force the v11.4.33 monthly turnover backfill and publish honest completeness flags.
+POST-DEPLOY: live-stock-basics must publish without numeric industry labels.
+POST-DEPLOY: live-events should parse current TPEx dividend-board rows; BLS 403 remains warning/last-known-good if the official site blocks GitHub runners.
+EXTERNAL LIMIT: unavailable TPEx turnover data must stay partial/incomplete; TWSE alone must not be presented as full-market turnover.
+EXTERNAL LIMIT: GitHub cron is best-effort; stale/unconfirmed states remain authoritative instead of invented current data.
+NON-BLOCKING: 15-minute K-line/external chart availability may complete after deployment; no fabricated browser K candles.
+Validated at: 2026-08-09T09:16:44+08:00

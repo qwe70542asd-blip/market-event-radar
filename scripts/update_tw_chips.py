@@ -18,7 +18,7 @@ from bs4 import BeautifulSoup
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.32"
+VERSION = "v11.4.33"
 TIMEOUT = 24
 YAHOO_BATCH = 24
 PRIORITY_SYMBOLS = [
@@ -690,7 +690,7 @@ def main() -> None:
             "legacy_key_migrations": migrated_legacy_keys,
             "invalid_legacy_dates_removed": removed_invalid_dates + removed_market_dates,
             "schema": "symbol-keyed-v2",
-            "note": "官方資料優先；第三方只補缺漏。v11.4.32 會先遷移舊 twse:/tpex: key 並移除週末/未來假日期。",
+            "note": "官方資料優先；第三方只補缺漏。v11.4.33 會先遷移舊 twse:/tpex: key 並移除週末/未來假日期。",
         },
         "markets": markets,
         "items": items,
