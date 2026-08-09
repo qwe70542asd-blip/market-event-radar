@@ -13,4 +13,4 @@
 5. Commit 可用：market-event-radar-v11.4.36
 6. Push origin 後，先確認 `Verify v11.4.36 app release` 綠燈，再確認 market core / events / tw-chips / data verification。
 
-注意：Cloudflare secrets 未設定時 edge-worker deploy 仍會安全 skip；GitHub Actions 為主要 fallback。外部官方來源可能 403、空資料或改 schema，資料不足時維持 partial / warning / last-known-good，不得以推測值補成即時資料。
+注意：v11.4.36 起，若 Cloudflare edge-worker deployment workflow 被觸發但 CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID / CLOUDFLARE_KV_NAMESPACE_ID 未完整設定，該 deploy workflow 會明確失敗，避免「實際未部署卻顯示成功」；這不代表 GitHub Pages 本體部署失敗。外部官方來源可能 403、空資料或改 schema，資料不足時維持 partial / warning / last-known-good，不得以推測值補成即時資料。

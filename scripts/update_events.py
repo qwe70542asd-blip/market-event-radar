@@ -157,7 +157,7 @@ def parse_market_date(value: Any) -> date | None:
     if not text:
         return None
 
-    token_match = re.search(r"(?<!\\d)(\\d{3,4})[./-](\\d{1,2})[./-](\\d{1,2})(?!\\d)", text)
+    token_match = re.search(r"(?<!\d)(\d{3,4})[./-](\d{1,2})[./-](\d{1,2})(?!\d)", text)
     if token_match:
         year, month, day_value = map(int, token_match.groups())
         if year < 1911:
@@ -167,7 +167,7 @@ def parse_market_date(value: Any) -> date | None:
         except ValueError:
             return None
 
-    compact_match = re.search(r"(?<!\\d)(\\d{7}|\\d{8})(?!\\d)", text)
+    compact_match = re.search(r"(?<!\d)(\d{7}|\d{8})(?!\d)", text)
     if compact_match:
         compact = compact_match.group(1)
         try:

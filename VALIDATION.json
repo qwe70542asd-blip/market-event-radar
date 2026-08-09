@@ -1,9 +1,9 @@
 {
   "version": "v11.4.36",
-  "validated_at": "2026-08-09T12:54:36+08:00",
+  "validated_at": "2026-08-09T17:23:00+08:00",
   "pytest": {
     "status": "pass",
-    "passed": 202
+    "passed": 206
   },
   "strict_public_data": {
     "status": "pass",
@@ -38,7 +38,7 @@
   },
   "browser_smoke_local": {
     "status": "environment-blocked",
-    "detail": "Local Chromium navigation is blocked by the execution sandbox; GitHub release-verification retains the Chromium runtime gate."
+    "detail": "Local Chromium runtime was not executed in this sandbox; GitHub release-verification retains the Chromium homepage runtime gate."
   },
   "release_hygiene": {
     "audio_files": 0,
@@ -46,5 +46,5 @@
     "nested_repo_dirs": 0,
     "cache_artifacts": 0
   },
-  "external_source_note": "Network-dependent TPEx/BLS live behavior must be rechecked by GitHub Actions after deployment; parsers fail closed and keep last-known-good data."
+  "external_source_note": "TPEx live source gate could not be executed in this sandbox because external DNS/network access is blocked; GitHub Actions will execute it after push. Local parser contract tests pass."
 }

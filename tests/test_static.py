@@ -679,7 +679,7 @@ class StaticTests(unittest.TestCase):
   deploy=self.read(".github/workflows/deploy-live-market-worker.yml")
   self.assertNotIn("if: ${{ secrets.",deploy)
   self.assertIn("CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}",deploy)
-  self.assertIn("Cloudflare secrets are not configured; skipping optional edge-worker deployment",deploy)
+  self.assertIn("Require Cloudflare deployment configuration",deploy); self.assertIn("exit 2",deploy)
 
  def test_v11433_release_has_real_browser_runtime_gate(self):
   verify=self.read(".github/workflows/release-verification.yml"); smoke=self.read("scripts/browser_smoke.py")
