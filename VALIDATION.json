@@ -1,9 +1,13 @@
 {
-  "version": "v11.4.34",
-  "validated_at": "2026-08-09T11:00:59+08:00",
+  "version": "v11.4.35",
+  "validated_at": "2026-08-09T12:54:36+08:00",
   "pytest": {
     "status": "pass",
-    "passed": 196
+    "passed": 202
+  },
+  "strict_public_data": {
+    "status": "pass",
+    "detail": "validation ok all"
   },
   "python_compileall": {
     "status": "pass"
@@ -20,17 +24,13 @@
     "status": "pass",
     "files": 30
   },
+  "workflow_run_block_shell_syntax": {
+    "status": "pass",
+    "run_blocks": 180
+  },
   "cleanup_repo": {
     "status": "pass",
     "detail": "repository layout clean"
-  },
-  "strict_public_data": {
-    "status": "pass",
-    "detail": "validation ok all"
-  },
-  "smoke": {
-    "status": "pass",
-    "detail": "PASS"
   },
   "http_smoke": {
     "status": "pass",
@@ -38,10 +38,11 @@
   },
   "browser_smoke_local": {
     "status": "environment-blocked",
-    "detail": "System Chromium launch works, but local HTTP navigation is blocked by the execution sandbox administrator. GitHub release-verification retains the Chromium runtime gate."
+    "detail": "Local Chromium navigation is blocked by the execution sandbox; GitHub release-verification retains the Chromium runtime gate."
   },
   "release_hygiene": {
     "audio_files": 0,
+    "temporary_or_editor_backup_files": 0,
     "nested_repo_dirs": 0,
     "cache_artifacts": 0
   },

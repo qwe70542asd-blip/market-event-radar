@@ -1,5 +1,5 @@
 {
-  "version": "v11.4.34",
-  "baseline_version": "11.4.34",
-  "name": "cross-market-timezone-tpex-data-pipeline-hardening"
+  "version": "v11.4.35",
+  "baseline_version": "11.4.35",
+  "name": "tpex-dividend-exdiv-daytrade-bls-verification-barrier"
 }

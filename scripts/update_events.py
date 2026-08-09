@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build Market Event Radar v11.4.34 event data from official schedules.
+"""Build Market Event Radar v11.4.35 event data from official schedules.
 
 The updater keeps the last verified archive, refreshes selected official sources,
 and records when an exact date first appears or changes. It never invents dates.
@@ -29,11 +29,12 @@ EVENTS_PATH = DATA / "events.json"
 SEED_PATH = DATA / "events-seed.js"
 MANUAL_PATH = DATA / "manual-events.json"
 STATE_PATH = DATA / "event-source-state.json"
+BLS_SNAPSHOT_PATH = DATA / "bls-official-schedule-2026.json"
 NOW = datetime.now(ZoneInfo("Asia/Taipei"))
 TAIPEI = NOW.tzinfo
 NEW_YORK = ZoneInfo("America/New_York")
 OFFLINE = os.getenv("EVENT_OFFLINE", "").strip() == "1"
-VERSION = "v11.4.34"
+VERSION = "v11.4.35"
 TRACKING_KEY_VERSION = 2
 ARCHIVE_START = date(2026, 1, 1)
 ARCHIVE_START_DT = datetime.combine(ARCHIVE_START, time.min, tzinfo=TAIPEI)
@@ -159,6 +160,19 @@ def parse_market_date(value: Any) -> date | None:
         return None
 
 
+def first_market_date(value: Any) -> date | None:
+    """Extract the first ROC/Gregorian date from a decorated official field."""
+    text = clean(value)
+    direct = parse_market_date(text)
+    if direct:
+        return direct
+    for token in re.findall(r"(?<!\d)(?:\d{3}|\d{4})[年./-]\d{1,2}[月./-]\d{1,2}日?(?!\d)|(?<!\d)(?:\d{7}|\d{8})(?!\d)", text):
+        parsed = parse_market_date(token)
+        if parsed:
+            return parsed
+    return None
+
+
 def normalized_field_name(value: Any) -> str:
     return re.sub(r"[^0-9a-z\u3400-\u9fff]+", "", clean(value).lower())
 
@@ -281,6 +295,11 @@ def release_period_token(value: str) -> str:
 
 def bls_series_key(summary: str) -> str:
     lowered = clean(summary).lower()
+    if "productivity and costs" in lowered:
+        if re.search(r"\(p\)|\bpreliminary\b", lowered):
+            return "productivity-preliminary"
+        if re.search(r"\(r\)|\brevised?\b|\brevision\b", lowered):
+            return "productivity-revised"
     mapping = (
         ("employment situation", "employment-situation"),
         ("consumer price index", "cpi"),
@@ -388,6 +407,41 @@ def fetch_bls_release_pages(session: requests.Session) -> list[dict[str, Any]]:
     return list({row["tracking_key"]: row for row in events}.values())
 
 
+def fetch_bls_snapshot() -> list[dict[str, Any]]:
+    """Load a bundled snapshot transcribed from official BLS 2026 schedule pages.
+
+    This is only used when GitHub-hosted runners are blocked by BLS.  Snapshot
+    rows preserve their official source URL and never infer or extrapolate dates.
+    """
+    payload = load_json(BLS_SNAPSHOT_PATH, {})
+    rows = payload.get("events") if isinstance(payload, dict) else []
+    if not isinstance(rows, list):
+        return []
+    output: list[dict[str, Any]] = []
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        summary = clean(row.get("summary"))
+        release_day = first_market_date(row.get("release_date"))
+        release_time = clean(row.get("release_time") or "08:30 AM")
+        if not summary or not release_day or not translate(summary, BLS_TRANSLATIONS):
+            continue
+        try:
+            local_clock = date_parser.parse(f"{release_day.isoformat()} {release_time}")
+            start = local_clock.replace(tzinfo=NEW_YORK).astimezone(TAIPEI)
+        except Exception:
+            continue
+        event = _bls_event(summary, start, f"snapshot|{summary}|{release_day.isoformat()}")
+        if not event:
+            continue
+        event["source_url"] = clean(row.get("source_url")) or BLS_YEAR_URL
+        event["source_name"] = "U.S. BLS"
+        event["date_basis"] = "BLS official 2026 schedule bundled snapshot"
+        event["schedule_snapshot_verified_at"] = clean(payload.get("verified_at"))
+        output.append(event)
+    return list({row["tracking_key"]: row for row in output}.values())
+
+
 def fetch_bls(session: requests.Session) -> SourceResult:
     events: list[dict[str, Any]] = []
     errors: list[str] = []
@@ -413,8 +467,18 @@ def fetch_bls(session: requests.Session) -> SourceResult:
     if not events:
         try: events = fetch_bls_html(session)
         except Exception as exc: errors.append(str(exc))
-    if not events: raise RuntimeError("BLS official calendars returned no recognized events: " + "; ".join(errors[:3]))
-    return SourceResult("bls", "U.S. BLS release calendar", BLS_HTML_URL, ("bls",), events, "ICS, per-release official schedule pages and annual HTML fallbacks")
+    used_snapshot = False
+    if not events:
+        events = fetch_bls_snapshot()
+        used_snapshot = bool(events)
+    if not events:
+        raise RuntimeError("BLS official calendars returned no recognized events and bundled snapshot is unavailable: " + "; ".join(errors[:3]))
+    message = (
+        "official live calendars unavailable; using bundled official BLS 2026 schedule snapshot"
+        if used_snapshot else
+        "ICS, per-release official schedule pages and annual HTML fallbacks"
+    )
+    return SourceResult("bls", "U.S. BLS release calendar", BLS_HTML_URL, ("bls",), events, message)
 
 def bea_series_key(raw_title: str) -> str:
     text = clean(raw_title).lower()
@@ -791,23 +855,33 @@ def parse_tpex_exdiv_history_payload(payload: Any, source_url: str = TPEX_EXDIV_
         ]) or semantic_field(row, all_terms=("日期",), any_terms=("除權", "除息", "權息"))
         day = parse_market_date(date_raw)
         symbol, name = dividend_company_identity(row)
+        # The documented TPEx historical schema uses the generic headers
+        # 「代號」/「名稱」 rather than the MOPS company-code headers.
         if not symbol:
-            symbol = semantic_field(row, any_terms=("證券代號", "股票代號", "公司代號", "securitycode", "companycode"))
+            symbol = first_value(row, ["代號", "Symbol"]) or semantic_field(row, any_terms=("證券代號", "股票代號", "公司代號", "securitycode", "companycode"))
         if not name:
-            name = semantic_field(row, any_terms=("證券名稱", "股票名稱", "公司名稱", "securityname", "companyname"))
+            name = first_value(row, ["名稱", "ShortName"]) or semantic_field(row, any_terms=("證券名稱", "股票名稱", "公司名稱", "securityname", "companyname"))
         if not day or day < ARCHIVE_START or day > NOW.date() or not symbol:
             continue
-        kind = first_value(row, ["ExRrightsExDividend", "ExRightsExDividend", "Type", "除權息", "權息別", "權/息"])
+        kind = first_value(row, ["ExRrightsExDividend", "ExRightsExDividend", "Type", "除權息", "權息別", "權/息", "權或息"])
         if not kind:
             kind = semantic_field(row, any_terms=("權息別", "除權息", "exrightsexdividend", "type")) or "除息"
         cash_raw = first_value(row, ["CashDividend", "CashDividendValue", "DividendValue", "息值", "現金股利"])
         if not cash_raw:
             cash_raw = semantic_field(row, any_terms=("現金股利", "cashdividend", "息值"), exclude_terms=("股票", "配股"))
-        stock_raw = first_value(row, ["StockDividendRatio", "StockDividendValue", "RightValue", "權值", "股票股利"])
+        stock_per_thousand = first_value(row, ["每仟股無償配股"])
+        stock_raw = first_value(row, ["StockDividendRatio", "StockDividendValue", "股票股利", "RightValue", "權值"])
         if not stock_raw:
-            stock_raw = semantic_field(row, any_terms=("股票股利", "配股", "stockdividend", "無償配股率"))
+            stock_raw = semantic_field(row, any_terms=("股票股利", "stockdividend", "無償配股率"))
+        stock_ratio = parse_number(stock_raw)
+        # TPEx documents 「每仟股無償配股」 as shares granted per 1,000 shares.
+        # Convert it to a per-share ratio instead of exposing the raw per-thousand
+        # count as if it were already a ratio.
+        if stock_ratio is None and stock_per_thousand not in (None, ""):
+            shares_per_thousand = parse_number(stock_per_thousand)
+            stock_ratio = (shares_per_thousand / 1000.0) if shares_per_thousand is not None else None
         events.append(make_exdiv_event(
-            "TPEX", clean(symbol), clean(name), day, clean(kind), parse_number(cash_raw), parse_number(stock_raw),
+            "TPEX", clean(symbol), clean(name), day, clean(kind), parse_number(cash_raw), stock_ratio,
             "TPEx 上櫃除權除息計算結果表", source_url, "tpex-exdiv-history",
         ))
     return events
@@ -860,10 +934,16 @@ def dividend_company_identity(row: dict[str, Any]) -> tuple[str, str]:
 
 def parse_dividend_plans(rows: Any, market: str, source_url: str, origin: str) -> list[dict[str, Any]]:
     events = []
-    if not isinstance(rows, list):
+    normalized_rows = payload_dict_rows(rows)
+    if not normalized_rows:
         return events
-    for row in rows:
+    for row in normalized_rows:
         symbol, name = dividend_company_identity(row)
+        if not symbol:
+            # Some TPEx exports split the identifier into generic headers.
+            symbol = first_value(row, ["代號", "Code"])
+        if not name:
+            name = first_value(row, ["名稱", "公司簡稱", "SecuritiesName", "ShortName"])
         if not symbol:
             continue
         period_year = first_value(row, ["股利所屬年(季)度", "股利年度", "年度", "DividendYear"]) or semantic_field(row, all_terms=("股利",), any_terms=("年度", "年季度", "dividendyear"))
@@ -875,16 +955,19 @@ def parse_dividend_plans(rows: Any, market: str, source_url: str, origin: str) -
         if term and term not in period:
             period = clean(f"{period} {term}")
         shareholder_raw = first_value(row, ["股東會日期", "ShareholdersMeetingDate"]) or semantic_field(row, all_terms=("股東會",), any_terms=("日期", "date"))
-        shareholder_day = parse_market_date(shareholder_raw)
+        shareholder_day = first_market_date(shareholder_raw)
         decision_raw = first_value(row, [
             "董事會決議通過股利分派日", "董事會通過股利分派日",
             "董事會（擬議）股利分派日", "董事會(擬議)股利分派日",
             "董事會股利分派日", "董事會擬議日期", "董事會決議日期",
-            "董事會決議日", "董事會日期", "BoardMeetingDate", "BoardDecisionDate",
+            "董事會決議日", "董事會日期",
+            "現金股利經董事會決議、增資配股經董事會擬議日期",
+            "現金股利經董事會決議增資配股經董事會擬議日期",
+            "BoardMeetingDate", "BoardDecisionDate",
         ])
         if not decision_raw:
             decision_raw = semantic_field(row, all_terms=("董事會",), any_terms=("決議", "擬議", "通過", "股利", "board"))
-        decision_day = parse_market_date(decision_raw)
+        decision_day = first_market_date(decision_raw)
         cash, stock = dividend_total(row, "現金"), dividend_total(row, "配股")
         if shareholder_day and ARCHIVE_START <= shareholder_day <= NOW.date() + timedelta(days=370):
             tracking = f"{origin}|{symbol}|shareholder-meeting|{period}"
@@ -916,6 +999,41 @@ def parse_dividend_plans(rows: Any, market: str, source_url: str, origin: str) -
     return events
 
 
+def parse_material_dividend_decisions(rows: Any, market: str, source_url: str, origin: str) -> list[dict[str, Any]]:
+    """Fallback for board-dividend announcements in the official material feed."""
+    events: list[dict[str, Any]] = []
+    for row in payload_dict_rows(rows):
+        text = " ".join(clean(value) for value in row.values())
+        if "股利" not in text or "董事會" not in text or not re.search(r"決議|擬議|通過", text):
+            continue
+        symbol, name = dividend_company_identity(row)
+        if not symbol:
+            symbol = first_value(row, ["代號", "Code"])
+        if not name:
+            name = first_value(row, ["名稱", "公司簡稱", "ShortName"])
+        if not symbol:
+            continue
+        announcement_day = first_market_date(first_value(row, ["發言日期", "出表日期", "Date", "發布日期"]))
+        if not announcement_day or not (ARCHIVE_START <= announcement_day <= NOW.date() + timedelta(days=1)):
+            continue
+        subject = first_value(row, ["主旨", "Subject", "說明", "Description"]) or text[:240]
+        period_match = re.search(r"(?:股利所屬年\(季\)度|年度)[：:]?\s*([^；;。]{1,30})", text)
+        period = clean(period_match.group(1)) if period_match else ""
+        tracking = f"{origin}|{symbol}|dividend-decision|{period or announcement_day.year}"
+        events.append(make_event(
+            event_id=stable_id("tw-dividend-plan", tracking, announcement_day), tracking_key=tracking,
+            title=f"{symbol} {name} 股利方案決議", start=at_taipei(announcement_day),
+            category="dividend-decision", event_type="dividend-decision", event_group="dividend",
+            region="TW", impact="medium", description=subject,
+            market_effect="股利方案影響現金殖利率、保留盈餘與市場對公司資本配置的評價。",
+            source_name=f"{market} 每日重大訊息（股利決議備援）", source_url=source_url, origin=origin,
+            all_day=True, assets=[symbol, name], tags=["股利方案", "官方重大訊息備援"], market=market,
+            symbol=symbol, asset_name=name, asset_id=f"TW:{symbol}", currency="TWD", fiscal_period=period,
+            source_published_at=iso_taipei(at_taipei(announcement_day)), date_basis="official-material-announcement-date",
+        ))
+    return events
+
+
 def fetch_twse_dividend_plans(session: requests.Session) -> SourceResult:
     rows = http_json(session, TWSE_DIVIDEND_PLAN_URL)
     events = parse_dividend_plans(rows, "TWSE", TWSE_DIVIDEND_PLAN_URL, "twse-dividend-plan")
@@ -926,10 +1044,26 @@ def fetch_twse_dividend_plans(session: requests.Session) -> SourceResult:
 
 def fetch_tpex_dividend_plans(session: requests.Session) -> SourceResult:
     rows = http_json(session, TPEX_DIVIDEND_PLAN_URL)
+    normalized_rows = payload_dict_rows(rows)
     events = parse_dividend_plans(rows, "TPEX", TPEX_DIVIDEND_PLAN_URL, "tpex-dividend-plan")
-    if isinstance(rows, list) and rows and not events:
-        raise RuntimeError(f"TPEx dividend source returned {len(rows)} rows but parser recognized 0 events")
-    return SourceResult("tpex-dividend-plan", "TPEx/MOPS OTC dividend plans", TPEX_DIVIDEND_PLAN_URL, ("tpex-dividend-plan",), events)
+    message = f"{len(events)} verified board/shareholder dividend events from TPEx dividend table"
+    if normalized_rows and not events:
+        # TPEx has changed this legacy MOPS export several times.  If the table
+        # still cannot yield current-window dates, fall back to the separate
+        # official daily material feed rather than publishing zero coverage.
+        material_rows = http_json(session, TPEX_MATERIAL_URL)
+        events = parse_material_dividend_decisions(
+            material_rows, "TPEX", TPEX_MATERIAL_URL, "tpex-dividend-plan"
+        )
+        if events:
+            message = f"dividend table returned {len(normalized_rows)} rows outside/unrecognized current schema; official material fallback produced {len(events)} verified decisions"
+        else:
+            sample_keys = sorted({clean(key) for row in normalized_rows[:3] for key in row.keys()})[:24]
+            raise RuntimeError(
+                f"TPEx dividend source returned {len(normalized_rows)} rows but parser recognized 0 events; "
+                f"material fallback also empty; keys={sample_keys}"
+            )
+    return SourceResult("tpex-dividend-plan", "TPEx/MOPS OTC dividend plans", TPEX_DIVIDEND_PLAN_URL, ("tpex-dividend-plan",), events, message)
 
 
 def extract_candidate_dates(text: str) -> list[date]:
@@ -1419,7 +1553,7 @@ def main() -> None:
             "announced_today_count": announced_today,
             "announced_recent_count": announced_recent,
             "state_initialized": True,
-            "announcement_integrity": "strict-v11.4.34-series-safe",
+            "announcement_integrity": "strict-v11.4.35-series-safe",
             "announcement_suppressed_origins": sorted(suppressed_origins),
             "source_ok_count": sum(1 for source in sources if source.get("status") == "ok"),
             "source_warning_count": sum(1 for source in sources if source.get("status") != "ok"),

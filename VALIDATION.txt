@@ -1,16 +1,16 @@
-Market Event Radar v11.4.34 validation
-Validated: 2026-08-09T11:00:59+08:00
+Market Event Radar v11.4.35 validation
+Validated: 2026-08-09T12:54:36+08:00
 
-PASS: pytest 196 passed
+PASS: pytest 202 passed
+PASS: strict public-data validation (validation ok all)
 PASS: Python compileall
 PASS: JavaScript syntax (17 files)
 PASS: shell syntax (2 files)
 PASS: GitHub Actions YAML (30 workflows)
+PASS: embedded workflow run-block shell syntax (180 run blocks)
 PASS: cleanup_repo --check (repository layout clean)
-PASS: strict public-data validation (validation ok all)
-PASS: smoke (PASS)
 PASS: HTTP smoke (HTTP smoke passed: 7 pages, 43 referenced assets)
-PASS: release hygiene (audio=0, nested=0, cache=0)
+PASS: release hygiene (audio=0, temp/editor-backup=0, nested=0, cache=0)
 
-LOCAL BROWSER SMOKE: environment-blocked. System Chromium starts, but this execution sandbox blocks navigation to local HTTP. The GitHub release-verification workflow still contains the Chromium homepage runtime gate.
+LOCAL BROWSER SMOKE: environment-blocked. This execution sandbox blocks local Chromium navigation; the GitHub release-verification workflow still contains the real Chromium homepage runtime gate.
 LIVE SOURCE NOTE: TPEx/BLS network-dependent behavior must be verified after deployment. The release does not fabricate missing upstream data.

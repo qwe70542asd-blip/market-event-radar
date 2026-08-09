@@ -356,6 +356,59 @@ class ParserTests(unittest.TestCase):
         self.assertEqual(rows[0]["ex_date"],"2026-06-03")
         self.assertEqual(rows[0]["cash_dividend"],10)
 
+    def test_tpex_historical_exdiv_documented_generic_headers(self):
+        payload=[{
+            "除權息日期":"115/06/03", "代號":"6488", "名稱":"環球晶",
+            "權或息":"息", "現金股利":"10", "每仟股無償配股":"0",
+        }]
+        rows=event_updater.parse_tpex_exdiv_history_payload(payload)
+        self.assertEqual(len(rows),1)
+        self.assertEqual(rows[0]["symbol"],"6488")
+        self.assertEqual(rows[0]["ex_date"],"2026-06-03")
+        self.assertEqual(rows[0]["cash_dividend"],10)
+        self.assertEqual(rows[0]["stock_dividend_ratio"],0)
+
+    def test_tpex_historical_exdiv_converts_shares_per_thousand_to_ratio(self):
+        payload=[{
+            "除權息日期":"115/06/03", "代號":"6488", "名稱":"環球晶",
+            "權或息":"權", "現金股利":"0", "每仟股無償配股":"100",
+        }]
+        rows=event_updater.parse_tpex_exdiv_history_payload(payload)
+        self.assertEqual(len(rows),1)
+        self.assertEqual(rows[0]["stock_dividend_ratio"],0.1)
+
+    def test_tpex_dividend_plan_accepts_long_current_decision_header(self):
+        payload=[{
+            "公司代號名稱":"6752 叡揚",
+            "股利所屬年(季)度":"114年 年度",
+            "現金股利經董事會決議、增資配股經董事會擬議日期":"115/03/05",
+            "股東配發內容-盈餘分配之現金股利(元/股)":"4.5",
+            "股東配發內容-資本公積轉增資配股(元/股)":"0.3",
+        }]
+        rows=event_updater.parse_dividend_plans(payload,"TPEX",event_updater.TPEX_DIVIDEND_PLAN_URL,"tpex-dividend-plan")
+        self.assertEqual(len(rows),1)
+        self.assertEqual(rows[0]["local_date"],"2026-03-05")
+        self.assertEqual(rows[0]["cash_dividend"],4.5)
+        self.assertEqual(rows[0]["stock_dividend"],0.3)
+
+    def test_tpex_daytrade_selects_latest_roc_session(self):
+        payload=[
+            {"資料日期":"115/08/06","當日沖銷交易總成交股數":"9,000,000"},
+            {"資料日期":"115/08/07","當日沖銷交易總成交股數":"12,000,000","當日沖銷交易總買進成交金額占市場比重":"20.5"},
+        ]
+        market,day=chips.parse_tpex_day_trade_market(payload,"2026-08-07")
+        self.assertEqual(day,"2026-08-07")
+        self.assertEqual(market["volume"],12000)
+        self.assertEqual(market["buy_amount_ratio_percent"],20.5)
+        self.assertEqual(chips.date_value("民國115/08/07"),"2026-08-07")
+
+    def test_bls_official_snapshot_fallback(self):
+        with patch.object(event_updater,"http_get",side_effect=RuntimeError("403")):
+            result=event_updater.fetch_bls(object())
+        self.assertGreaterEqual(len(result.events),60)
+        self.assertIn("bundled official BLS 2026",result.message)
+        self.assertTrue(all("bundled snapshot" in row.get("date_basis","") for row in result.events))
+
 if __name__ == "__main__":
     unittest.main()
 

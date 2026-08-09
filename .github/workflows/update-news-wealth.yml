@@ -1,4 +1,4 @@
-name: Update v11.4.34 財富自由 news
+name: Update v11.4.35 財富自由 news
 on:
   workflow_dispatch:
 permissions:

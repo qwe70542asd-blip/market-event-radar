@@ -1,4 +1,4 @@
-/* v11.4.34 runtime endpoints.
+/* v11.4.35 runtime endpoints.
  * Deploy edge/market-live-worker.js, then place its HTTPS base URL below.
  * Example: https://market-live.example.workers.dev
  */

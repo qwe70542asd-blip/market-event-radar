@@ -1,0 +1,387 @@
+{
+  "schema_version": 1,
+  "verified_at": "2026-08-09",
+  "timezone": "America/New_York",
+  "source": "U.S. Bureau of Labor Statistics official release schedules",
+  "note": "Fallback snapshot only. Do not extrapolate dates beyond rows explicitly listed here.",
+  "events": [
+    {
+      "summary": "Employment Situation for December 2025",
+      "release_date": "2026-01-09",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/empsit.htm"
+    },
+    {
+      "summary": "Employment Situation for January 2026",
+      "release_date": "2026-02-11",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/empsit.htm"
+    },
+    {
+      "summary": "Employment Situation for February 2026",
+      "release_date": "2026-03-06",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/empsit.htm"
+    },
+    {
+      "summary": "Employment Situation for March 2026",
+      "release_date": "2026-04-03",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/empsit.htm"
+    },
+    {
+      "summary": "Employment Situation for April 2026",
+      "release_date": "2026-05-08",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/empsit.htm"
+    },
+    {
+      "summary": "Employment Situation for May 2026",
+      "release_date": "2026-06-05",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/empsit.htm"
+    },
+    {
+      "summary": "Employment Situation for June 2026",
+      "release_date": "2026-07-02",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/empsit.htm"
+    },
+    {
+      "summary": "Employment Situation for July 2026",
+      "release_date": "2026-08-07",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/empsit.htm"
+    },
+    {
+      "summary": "Employment Situation for August 2026",
+      "release_date": "2026-09-04",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/empsit.htm"
+    },
+    {
+      "summary": "Employment Situation for September 2026",
+      "release_date": "2026-10-02",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/empsit.htm"
+    },
+    {
+      "summary": "Employment Situation for October 2026",
+      "release_date": "2026-11-06",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/empsit.htm"
+    },
+    {
+      "summary": "Employment Situation for November 2026",
+      "release_date": "2026-12-04",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/empsit.htm"
+    },
+    {
+      "summary": "Consumer Price Index for December 2025",
+      "release_date": "2026-01-13",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm"
+    },
+    {
+      "summary": "Consumer Price Index for January 2026",
+      "release_date": "2026-02-13",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm"
+    },
+    {
+      "summary": "Consumer Price Index for February 2026",
+      "release_date": "2026-03-11",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm"
+    },
+    {
+      "summary": "Consumer Price Index for March 2026",
+      "release_date": "2026-04-10",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm"
+    },
+    {
+      "summary": "Consumer Price Index for April 2026",
+      "release_date": "2026-05-12",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm"
+    },
+    {
+      "summary": "Consumer Price Index for May 2026",
+      "release_date": "2026-06-10",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm"
+    },
+    {
+      "summary": "Consumer Price Index for June 2026",
+      "release_date": "2026-07-14",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm"
+    },
+    {
+      "summary": "Consumer Price Index for July 2026",
+      "release_date": "2026-08-12",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm"
+    },
+    {
+      "summary": "Consumer Price Index for August 2026",
+      "release_date": "2026-09-11",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm"
+    },
+    {
+      "summary": "Consumer Price Index for September 2026",
+      "release_date": "2026-10-14",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm"
+    },
+    {
+      "summary": "Consumer Price Index for October 2026",
+      "release_date": "2026-11-10",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm"
+    },
+    {
+      "summary": "Consumer Price Index for November 2026",
+      "release_date": "2026-12-10",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/cpi.htm"
+    },
+    {
+      "summary": "Producer Price Index for November 2025",
+      "release_date": "2026-01-14",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/ppi.htm"
+    },
+    {
+      "summary": "Producer Price Index for December 2025",
+      "release_date": "2026-01-30",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/ppi.htm"
+    },
+    {
+      "summary": "Producer Price Index for January 2026",
+      "release_date": "2026-02-27",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/ppi.htm"
+    },
+    {
+      "summary": "Producer Price Index for February 2026",
+      "release_date": "2026-03-18",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/ppi.htm"
+    },
+    {
+      "summary": "Producer Price Index for March 2026",
+      "release_date": "2026-04-14",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/ppi.htm"
+    },
+    {
+      "summary": "Producer Price Index for April 2026",
+      "release_date": "2026-05-13",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/ppi.htm"
+    },
+    {
+      "summary": "Producer Price Index for May 2026",
+      "release_date": "2026-06-11",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/ppi.htm"
+    },
+    {
+      "summary": "Producer Price Index for June 2026",
+      "release_date": "2026-07-15",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/ppi.htm"
+    },
+    {
+      "summary": "Producer Price Index for July 2026",
+      "release_date": "2026-08-13",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/ppi.htm"
+    },
+    {
+      "summary": "Producer Price Index for August 2026",
+      "release_date": "2026-09-10",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/ppi.htm"
+    },
+    {
+      "summary": "Producer Price Index for September 2026",
+      "release_date": "2026-10-15",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/ppi.htm"
+    },
+    {
+      "summary": "Producer Price Index for October 2026",
+      "release_date": "2026-11-13",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/ppi.htm"
+    },
+    {
+      "summary": "Producer Price Index for November 2026",
+      "release_date": "2026-12-15",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/ppi.htm"
+    },
+    {
+      "summary": "Job Openings and Labor Turnover Survey for November 2025",
+      "release_date": "2026-01-07",
+      "release_time": "10:00 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/jolts.htm"
+    },
+    {
+      "summary": "Job Openings and Labor Turnover Survey for December 2025",
+      "release_date": "2026-02-05",
+      "release_time": "10:00 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/jolts.htm"
+    },
+    {
+      "summary": "Job Openings and Labor Turnover Survey for January 2026",
+      "release_date": "2026-03-13",
+      "release_time": "10:00 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/jolts.htm"
+    },
+    {
+      "summary": "Job Openings and Labor Turnover Survey for February 2026",
+      "release_date": "2026-03-31",
+      "release_time": "10:00 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/jolts.htm"
+    },
+    {
+      "summary": "Job Openings and Labor Turnover Survey for March 2026",
+      "release_date": "2026-05-05",
+      "release_time": "10:00 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/jolts.htm"
+    },
+    {
+      "summary": "Job Openings and Labor Turnover Survey for April 2026",
+      "release_date": "2026-06-02",
+      "release_time": "10:00 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/jolts.htm"
+    },
+    {
+      "summary": "Job Openings and Labor Turnover Survey for May 2026",
+      "release_date": "2026-06-30",
+      "release_time": "10:00 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/jolts.htm"
+    },
+    {
+      "summary": "Job Openings and Labor Turnover Survey for June 2026",
+      "release_date": "2026-08-04",
+      "release_time": "10:00 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/jolts.htm"
+    },
+    {
+      "summary": "Job Openings and Labor Turnover Survey for July 2026",
+      "release_date": "2026-09-01",
+      "release_time": "10:00 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/jolts.htm"
+    },
+    {
+      "summary": "Job Openings and Labor Turnover Survey for August 2026",
+      "release_date": "2026-09-29",
+      "release_time": "10:00 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/jolts.htm"
+    },
+    {
+      "summary": "Job Openings and Labor Turnover Survey for September 2026",
+      "release_date": "2026-11-03",
+      "release_time": "10:00 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/jolts.htm"
+    },
+    {
+      "summary": "Job Openings and Labor Turnover Survey for October 2026",
+      "release_date": "2026-12-01",
+      "release_time": "10:00 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/jolts.htm"
+    },
+    {
+      "summary": "Employment Cost Index for Fourth Quarter 2025",
+      "release_date": "2026-02-10",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/eci.htm"
+    },
+    {
+      "summary": "Employment Cost Index for First Quarter 2026",
+      "release_date": "2026-04-30",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/eci.htm"
+    },
+    {
+      "summary": "Employment Cost Index for Second Quarter 2026",
+      "release_date": "2026-07-31",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/eci.htm"
+    },
+    {
+      "summary": "Employment Cost Index for Third Quarter 2026",
+      "release_date": "2026-10-30",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/eci.htm"
+    },
+    {
+      "summary": "Productivity and Costs for Third Quarter 2025 (P)",
+      "release_date": "2026-01-08",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/prod2.htm"
+    },
+    {
+      "summary": "Productivity and Costs for Third Quarter 2025 (R)",
+      "release_date": "2026-01-29",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/prod2.htm"
+    },
+    {
+      "summary": "Productivity and Costs for Fourth Quarter 2025 (P)",
+      "release_date": "2026-03-05",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/prod2.htm"
+    },
+    {
+      "summary": "Productivity and Costs for Fourth Quarter 2025 (R)",
+      "release_date": "2026-03-24",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/prod2.htm"
+    },
+    {
+      "summary": "Productivity and Costs for First Quarter 2026 (P)",
+      "release_date": "2026-05-07",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/prod2.htm"
+    },
+    {
+      "summary": "Productivity and Costs for First Quarter 2026 (R)",
+      "release_date": "2026-06-04",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/prod2.htm"
+    },
+    {
+      "summary": "Productivity and Costs for Second Quarter 2026 (P)",
+      "release_date": "2026-08-06",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/prod2.htm"
+    },
+    {
+      "summary": "Productivity and Costs for Second Quarter 2026 (R)",
+      "release_date": "2026-09-03",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/prod2.htm"
+    },
+    {
+      "summary": "Productivity and Costs for Third Quarter 2026 (P)",
+      "release_date": "2026-11-05",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/prod2.htm"
+    },
+    {
+      "summary": "Productivity and Costs for Third Quarter 2026 (R)",
+      "release_date": "2026-12-08",
+      "release_time": "08:30 AM",
+      "source_url": "https://www.bls.gov/schedule/news_release/prod2.htm"
+    }
+  ]
+}

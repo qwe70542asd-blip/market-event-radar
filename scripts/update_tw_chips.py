@@ -18,7 +18,7 @@ from bs4 import BeautifulSoup
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.34"
+VERSION = "v11.4.35"
 TIMEOUT = 24
 YAHOO_BATCH = 24
 PRIORITY_SYMBOLS = [
@@ -32,7 +32,7 @@ HEADERS = {
 }
 SESSION = requests.Session()
 SESSION.headers.update(HEADERS)
-DATE_RE = re.compile(r"20\d{2}[/-]\d{1,2}[/-]\d{1,2}")
+DATE_RE = re.compile(r"(?:20\d{2}|\d{3})[年./-]\d{1,2}[月./-]\d{1,2}日?")
 NUMBER_RE = re.compile(r"^[+\-−]?[\d,.]+(?:\.\d+)?%?$")
 TPEX_INSTITUTIONAL = "https://www.tpex.org.tw/openapi/v1/tpex_3insti_daily_trading"
 TPEX_MARGIN = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_margin_balance"
@@ -93,15 +93,32 @@ def symbol_from_row(row: dict[str, Any]) -> str:
 
 
 def date_value(value: Any) -> str | None:
+    """Normalize Gregorian and ROC market dates to YYYY-MM-DD."""
     text = clean(value)
     match = DATE_RE.search(text)
-    if not match:
-        compact = re.search(r"(20\d{2})(\d{2})(\d{2})", text)
-        if compact:
-            return f"{compact.group(1)}-{compact.group(2)}-{compact.group(3)}"
-        return None
-    parts = re.split(r"[/-]", match.group())
-    return f"{int(parts[0]):04d}-{int(parts[1]):02d}-{int(parts[2]):02d}"
+    if match:
+        token = match.group().replace("年", "/").replace("月", "/").replace("日", "").replace(".", "/").replace("-", "/")
+        parts = [part for part in token.split("/") if part]
+        if len(parts) == 3:
+            year = int(parts[0])
+            if year < 1911:
+                year += 1911
+            try:
+                return date(year, int(parts[1]), int(parts[2])).isoformat()
+            except ValueError:
+                return None
+    compact = re.search(r"(?<!\d)(20\d{6}|\d{7})(?!\d)", text)
+    if compact:
+        token = compact.group(1)
+        if len(token) == 8:
+            year, month, day = int(token[:4]), int(token[4:6]), int(token[6:8])
+        else:
+            year, month, day = int(token[:3]) + 1911, int(token[3:5]), int(token[5:7])
+        try:
+            return date(year, month, day).isoformat()
+        except ValueError:
+            return None
+    return None
 
 
 def row_date(row: dict[str, Any]) -> str | None:
@@ -283,36 +300,40 @@ def parse_tpex_margin(rows: list[dict[str, Any]], assets: dict[str, dict[str, An
 
 
 def parse_tpex_day_trade_market(rows: list[dict[str, Any]], fallback_date: str | None) -> tuple[dict[str, Any], str | None]:
-    """TPEx intraday statistics are market aggregates, not per-security rows."""
+    """Parse the documented TPEx market-aggregate day-trading series.
+
+    The OpenAPI dataset contains multiple dates and is not a per-security feed,
+    so always select the latest valid session at or before the verified market
+    date instead of returning the first row in the payload.
+    """
+    candidates: list[tuple[str, dict[str, Any]]] = []
+    ceiling = valid_chip_date(fallback_date)
     for row in rows:
-        traded = tpex_verified_date(row, fallback_date)
-        if not traded:
+        explicit = valid_chip_date(row_date(row))
+        traded = explicit or (ceiling if len(rows) == 1 else None)
+        if not traded or (ceiling and traded > ceiling):
             continue
         volume_raw = field(row, "當日沖銷交易總成交股數", "TotalIntradayTradingVolume", "IntradayTradingVolume")
         volume = shares_to_lots(volume_raw)
         buy_amount = number(field(row, "當日沖銷交易總買進成交金額", "TotalIntradayTradingBuyAmount", "IntradayTradingBuyAmount"))
         sell_amount = number(field(row, "當日沖銷交易總賣出成交金額", "TotalIntradayTradingSellAmount", "IntradayTradingSellAmount"))
         ratio = number(field(row, "當日沖銷交易總成交股數占市場比重", "IntradayTradingVolumeRatio", "VolumeRatio"))
-        values={"volume":volume,"buy_amount":buy_amount,"sell_amount":sell_amount,"volume_ratio_percent":ratio}
-        values={k:v for k,v in values.items() if v is not None}
+        buy_ratio = number(field(row, "當日沖銷交易總買進成交金額占市場比重", "IntradayTradingBuyAmountRatio"))
+        sell_ratio = number(field(row, "當日沖銷交易總賣出成交金額占市場比重", "IntradayTradingSellAmountRatio"))
+        values = {
+            "volume": volume, "buy_amount": buy_amount, "sell_amount": sell_amount,
+            "volume_ratio_percent": ratio, "buy_amount_ratio_percent": buy_ratio,
+            "sell_amount_ratio_percent": sell_ratio,
+        }
+        values = {key: value for key, value in values.items() if value is not None}
         if values:
-            return values, traded
-    return {}, None
+            candidates.append((traded, values))
+    if not candidates:
+        return {}, None
+    traded, values = max(candidates, key=lambda item: item[0])
+    return values, traded
 
 
-def parse_tpex_day_trade(rows: list[dict[str, Any]], assets: dict[str, dict[str, Any]], source_url: str | None, fallback_date: str | None) -> tuple[dict[str, dict[str, Any]], str | None]:
-    output: dict[str, dict[str, Any]] = {}; latest_date = None
-    for row in rows:
-        symbol=symbol_from_row(row); traded=tpex_verified_date(row,fallback_date)
-        if not symbol or not traded: continue
-        volume_key, volume_raw = semantic_pair(row, any_terms=("daytradevolume","intradaytradingvolume","當沖成交股數","當日沖銷成交股數"))
-        ratio_key, ratio_raw = semantic_pair(row, any_terms=("daytraderatio","intradaytradingratio","當沖比率","當沖比例","占市場比重"))
-        volume=as_lots(volume_raw,volume_key); ratio=number(ratio_raw)
-        if volume is None and ratio is None: continue
-        name=clean(field(row,"CompanyName","SecuritiesName","Name","公司名稱","證券名稱")) or (assets.get(symbol) or {}).get("name")
-        output[symbol]={"symbol":symbol,"name":name,"asset_class":(assets.get(symbol) or {}).get("asset_class","stock"),"exchange":"TPEx","date":traded,"unit":"張","day_trade":{k:v for k,v in {"volume":volume,"ratio":ratio}.items() if v is not None},"sources":[{"name":"TPEx 當沖統計","url":source_url,"level":"official","date":traded}]}
-        latest_date=max(latest_date or traded,traded)
-    return output, latest_date
 
 
 def parse_institutional(rows: list[dict[str, Any]], assets: dict[str, dict[str, Any]], source_url: str | None) -> tuple[dict[str, dict[str, Any]], dict[str, Any], str | None]:
@@ -818,8 +839,11 @@ def main() -> None:
     tpex_inst, tpex_market_inst, tpex_inst_date = parse_tpex_institutional(tpex_inst_rows, asset_map, tpex_inst_url, verified_market_date)
     tpex_margin, tpex_margin_date = parse_tpex_margin(tpex_margin_rows, asset_map, tpex_margin_url, verified_market_date)
     tpex_day_market, tpex_day_market_date = parse_tpex_day_trade_market(tpex_day_rows, verified_market_date)
-    tpex_day, tpex_day_date = parse_tpex_day_trade(tpex_day_rows, asset_map, tpex_day_url, verified_market_date)
-    official_symbols = set(official_inst) | set(official_margin) | set(official_day) | set(tpex_inst) | set(tpex_margin) | set(tpex_day)
+    # TPEx OpenAPI documents this endpoint as a market aggregate; do not invent
+    # per-security day-trading rows from it.
+    tpex_day: dict[str, dict[str, Any]] = {}
+    tpex_day_date = None
+    official_symbols = set(official_inst) | set(official_margin) | set(official_day) | set(tpex_inst) | set(tpex_margin)
     for symbol in official_symbols:
         combined = {}
         for source in (official_inst.get(symbol), official_margin.get(symbol), official_day.get(symbol), tpex_inst.get(symbol), tpex_margin.get(symbol), tpex_day.get(symbol)):
@@ -869,6 +893,8 @@ def main() -> None:
     if tpex_day_market:
         tpex_market["day_trading"] = tpex_day_market
         tpex_market["day_trading_date"] = tpex_day_market_date
+        tpex_market["day_trading_scope"] = "market-aggregate"
+        tpex_market["day_trading_source"] = tpex_day_url
     tpex_market["stock_count"] = sum(1 for row in items.values() if str(row.get("exchange") or "").upper() == "TPEX")
     markets = {**old_markets, "twse": twse_market, "tpex": tpex_market}
 
@@ -887,7 +913,7 @@ def main() -> None:
             "invalid_legacy_dates_removed": removed_invalid_dates + removed_market_dates + removed_nested_dates,
             "invalid_nested_dates_removed": removed_nested_dates,
             "schema": "symbol-keyed-v2",
-            "note": "官方資料優先；第三方只補缺漏。v11.4.34 同步 TWSE/TPEx 官方籌碼並清除巢狀來源中的週末/未來假日期。",
+            "note": "官方資料優先；第三方只補缺漏。v11.4.35 正確解析民國日期，TPEx 當沖採官方市場彙總口徑，不偽造個股當沖資料。",
         },
         "markets": markets,
         "items": items,

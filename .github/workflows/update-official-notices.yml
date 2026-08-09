@@ -1,4 +1,4 @@
-name: Update v11.4.34 official market notices
+name: Update v11.4.35 official market notices
 on:
   workflow_dispatch:
 permissions:
