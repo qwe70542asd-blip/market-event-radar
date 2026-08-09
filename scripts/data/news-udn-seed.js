@@ -1,1 +1,0 @@
-window.__NEWS_UDN_SEED__={"metadata":{"version":"v11.4.30","source_id":"udn","source_name":"經濟日報","updated_at":null,"status":"waiting","item_count":0,"archive_start":"2026-01-01","sort_order":"published_at_desc","archive_policy":"recent complete; older requires higher importance; pre-2026 deleted"},"health":{},"items":[]};

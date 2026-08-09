@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-label="利率新聞預設圖">
-<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#213554"/><stop offset="1" stop-color="#0a1525"/></linearGradient><pattern id="p" width="72" height="72" patternUnits="userSpaceOnUse"><path d="M0 71.5h72M71.5 0v72" stroke="#8fc7e8" stroke-opacity=".055"/></pattern></defs>
-<rect width="1200" height="675" fill="url(#g)"/><rect width="1200" height="675" fill="url(#p)"/>
-<g fill="none" stroke="#76c5e8" stroke-opacity=".55" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
-<path d="M120 510l150-120 105 62 170-225 120 91 210-170 205 92"/><path d="M120 555h960" stroke-opacity=".24"/><circle cx="270" cy="390" r="17" fill="#76c5e8" stroke="none"/><circle cx="545" cy="227" r="17" fill="#76c5e8" stroke="none"/><circle cx="875" cy="148" r="17" fill="#76c5e8" stroke="none"/></g>
-<g fill="#e7f6ff"><text x="84" y="118" font-size="34" font-family="Arial, sans-serif" letter-spacing="9" opacity=".72">MARKET EVENT RADAR</text><text x="84" y="210" font-size="82" font-family="Arial, sans-serif" font-weight="700">利率</text><text x="88" y="267" font-size="28" font-family="Arial, sans-serif" opacity=".62">繁體中文財經新聞</text></g>
-</svg>
