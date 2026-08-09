@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build Market Event Radar v11.4.33 event data from official schedules.
+"""Build Market Event Radar v11.4.34 event data from official schedules.
 
 The updater keeps the last verified archive, refreshes selected official sources,
 and records when an exact date first appears or changes. It never invents dates.
@@ -33,7 +33,7 @@ NOW = datetime.now(ZoneInfo("Asia/Taipei"))
 TAIPEI = NOW.tzinfo
 NEW_YORK = ZoneInfo("America/New_York")
 OFFLINE = os.getenv("EVENT_OFFLINE", "").strip() == "1"
-VERSION = "v11.4.33"
+VERSION = "v11.4.34"
 TRACKING_KEY_VERSION = 2
 ARCHIVE_START = date(2026, 1, 1)
 ARCHIVE_START_DT = datetime.combine(ARCHIVE_START, time.min, tzinfo=TAIPEI)
@@ -734,24 +734,80 @@ def fetch_twse_exdiv_history(session: requests.Session) -> SourceResult:
     )
 
 
+def semantic_field(row: dict[str, Any], *, all_terms: tuple[str, ...] = (), any_terms: tuple[str, ...] = (), exclude_terms: tuple[str, ...] = ()) -> str:
+    """Return a value by semantic field-name matching after punctuation normalization."""
+    for key, raw in row.items():
+        norm = normalized_field_name(key)
+        if not norm or not clean(raw):
+            continue
+        if exclude_terms and any(normalized_field_name(term) in norm for term in exclude_terms):
+            continue
+        if all_terms and not all(normalized_field_name(term) in norm for term in all_terms):
+            continue
+        if any_terms and not any(normalized_field_name(term) in norm for term in any_terms):
+            continue
+        return clean(raw)
+    return ""
+
+
+def payload_dict_rows(payload: Any) -> list[dict[str, Any]]:
+    """Normalize common TWSE/TPEx OpenAPI table/list response shapes to dict rows."""
+    if isinstance(payload, list):
+        return [row for row in payload if isinstance(row, dict)]
+    if not isinstance(payload, dict):
+        return []
+    for key in ("data", "data9", "items", "aaData", "results"):
+        rows = payload.get(key)
+        if isinstance(rows, list) and rows and all(isinstance(row, dict) for row in rows):
+            return rows
+    tables = payload.get("tables")
+    if isinstance(tables, list):
+        output: list[dict[str, Any]] = []
+        for table in tables:
+            if not isinstance(table, dict):
+                continue
+            raw_fields = table.get("fields") or table.get("columns") or []
+            fields = []
+            for field in raw_fields:
+                if isinstance(field, dict):
+                    fields.append(clean(field.get("name") or field.get("title") or field.get("field") or field.get("key")))
+                else:
+                    fields.append(clean(field))
+            for raw in table.get("data") or table.get("items") or []:
+                if isinstance(raw, dict):
+                    output.append(raw)
+                elif isinstance(raw, (list, tuple)) and fields:
+                    output.append({fields[i]: value for i, value in enumerate(raw) if i < len(fields) and fields[i]})
+        return output
+    return []
+
+
 def parse_tpex_exdiv_history_payload(payload: Any, source_url: str = TPEX_EXDIV_HISTORY_URL) -> list[dict[str, Any]]:
     events: list[dict[str, Any]] = []
-    for row in payload if isinstance(payload, list) else []:
-        if not isinstance(row, dict):
-            continue
-        day = parse_market_date(first_value(row, [
+    for row in payload_dict_rows(payload):
+        date_raw = first_value(row, [
             "ExRrightsExDividendDate", "ExRightsExDividendDate", "ExDate", "Date",
             "資料日期", "交易日期", "除權息日期", "除權除息日期",
-        ]))
-        symbol = first_value(row, ["SecuritiesCompanyCode", "SecuritiesCode", "CompanyCode", "Code", "證券代號", "股票代號"])
-        name = first_value(row, ["CompanyName", "SecuritiesName", "Name", "公司名稱", "證券名稱", "股票名稱"])
+        ]) or semantic_field(row, all_terms=("日期",), any_terms=("除權", "除息", "權息"))
+        day = parse_market_date(date_raw)
+        symbol, name = dividend_company_identity(row)
+        if not symbol:
+            symbol = semantic_field(row, any_terms=("證券代號", "股票代號", "公司代號", "securitycode", "companycode"))
+        if not name:
+            name = semantic_field(row, any_terms=("證券名稱", "股票名稱", "公司名稱", "securityname", "companyname"))
         if not day or day < ARCHIVE_START or day > NOW.date() or not symbol:
             continue
-        kind = first_value(row, ["ExRrightsExDividend", "ExRightsExDividend", "Type", "除權息", "權息別", "權/息"]) or "除息"
-        cash = parse_number(first_value(row, ["CashDividend", "CashDividendValue", "DividendValue", "息值", "現金股利"]))
-        stock = parse_number(first_value(row, ["StockDividendRatio", "StockDividendValue", "RightValue", "權值", "股票股利"]))
+        kind = first_value(row, ["ExRrightsExDividend", "ExRightsExDividend", "Type", "除權息", "權息別", "權/息"])
+        if not kind:
+            kind = semantic_field(row, any_terms=("權息別", "除權息", "exrightsexdividend", "type")) or "除息"
+        cash_raw = first_value(row, ["CashDividend", "CashDividendValue", "DividendValue", "息值", "現金股利"])
+        if not cash_raw:
+            cash_raw = semantic_field(row, any_terms=("現金股利", "cashdividend", "息值"), exclude_terms=("股票", "配股"))
+        stock_raw = first_value(row, ["StockDividendRatio", "StockDividendValue", "RightValue", "權值", "股票股利"])
+        if not stock_raw:
+            stock_raw = semantic_field(row, any_terms=("股票股利", "配股", "stockdividend", "無償配股率"))
         events.append(make_exdiv_event(
-            "TPEX", clean(symbol), clean(name), day, clean(kind), cash, stock,
+            "TPEX", clean(symbol), clean(name), day, clean(kind), parse_number(cash_raw), parse_number(stock_raw),
             "TPEx 上櫃除權除息計算結果表", source_url, "tpex-exdiv-history",
         ))
     return events
@@ -785,13 +841,21 @@ def dividend_company_identity(row: dict[str, Any]) -> tuple[str, str]:
         "CompanyCode", "SecuritiesCompanyCode", "SecuritiesCode", "StockNo", "Code",
     ])
     name = first_value(row, ["公司名稱", "證券名稱", "股票名稱", "CompanyName", "SecuritiesName", "Name"])
+    if not symbol:
+        symbol = semantic_field(row, any_terms=("公司代號", "公司代碼", "證券代號", "股票代號", "companycode", "securitycode", "stockno"), exclude_terms=("名稱",))
+    if not name:
+        name = semantic_field(row, any_terms=("公司名稱", "證券名稱", "股票名稱", "companyname", "securityname"), exclude_terms=("代號", "代碼"))
     if symbol:
-        return symbol, name
+        return clean(symbol), clean(name)
     combined = first_value(row, ["公司代號名稱", "公司代號及名稱", "CompanyCodeName", "SecuritiesCompanyCodeName"])
+    if not combined:
+        combined = semantic_field(row, all_terms=("代號", "名稱")) or semantic_field(row, all_terms=("代碼", "名稱"))
     match = re.match(r"^\s*([0-9A-Za-z]{4,8})\s*[-－—:：]?\s*(.*?)\s*$", combined)
     if not match:
-        return "", name
-    return match.group(1), name or clean(match.group(2))
+        match = re.search(r"(?<![0-9A-Za-z])([0-9A-Za-z]{4,8})(?![0-9A-Za-z])(?:\s*[-－—:：]?\s*)?(.*)", combined)
+    if not match:
+        return "", clean(name)
+    return clean(match.group(1)), clean(name or match.group(2))
 
 
 def parse_dividend_plans(rows: Any, market: str, source_url: str, origin: str) -> list[dict[str, Any]]:
@@ -802,21 +866,25 @@ def parse_dividend_plans(rows: Any, market: str, source_url: str, origin: str) -
         symbol, name = dividend_company_identity(row)
         if not symbol:
             continue
-        period_year = first_value(row, ["股利所屬年(季)度", "股利年度", "年度", "DividendYear"])
-        period_scope = first_value(row, ["股利所屬期間", "Period"])
+        period_year = first_value(row, ["股利所屬年(季)度", "股利年度", "年度", "DividendYear"]) or semantic_field(row, all_terms=("股利",), any_terms=("年度", "年季度", "dividendyear"))
+        period_scope = first_value(row, ["股利所屬期間", "Period"]) or semantic_field(row, all_terms=("股利",), any_terms=("期間", "period"))
         period = period_year or period_scope
         if period_scope and period_scope not in period:
             period = clean(f"{period} {period_scope}")
-        term = first_value(row, ["期別", "股利期別", "DividendPeriod"])
+        term = first_value(row, ["期別", "股利期別", "DividendPeriod"]) or semantic_field(row, any_terms=("期別", "dividendperiod"))
         if term and term not in period:
             period = clean(f"{period} {term}")
-        shareholder_day = parse_market_date(first_value(row, ["股東會日期", "ShareholdersMeetingDate"]))
-        decision_day = parse_market_date(first_value(row, [
+        shareholder_raw = first_value(row, ["股東會日期", "ShareholdersMeetingDate"]) or semantic_field(row, all_terms=("股東會",), any_terms=("日期", "date"))
+        shareholder_day = parse_market_date(shareholder_raw)
+        decision_raw = first_value(row, [
             "董事會決議通過股利分派日", "董事會通過股利分派日",
             "董事會（擬議）股利分派日", "董事會(擬議)股利分派日",
             "董事會股利分派日", "董事會擬議日期", "董事會決議日期",
             "董事會決議日", "董事會日期", "BoardMeetingDate", "BoardDecisionDate",
-        ]))
+        ])
+        if not decision_raw:
+            decision_raw = semantic_field(row, all_terms=("董事會",), any_terms=("決議", "擬議", "通過", "股利", "board"))
+        decision_day = parse_market_date(decision_raw)
         cash, stock = dividend_total(row, "現金"), dividend_total(row, "配股")
         if shareholder_day and ARCHIVE_START <= shareholder_day <= NOW.date() + timedelta(days=370):
             tracking = f"{origin}|{symbol}|shareholder-meeting|{period}"
@@ -1351,7 +1419,7 @@ def main() -> None:
             "announced_today_count": announced_today,
             "announced_recent_count": announced_recent,
             "state_initialized": True,
-            "announcement_integrity": "strict-v11.4.33-series-safe",
+            "announcement_integrity": "strict-v11.4.34-series-safe",
             "announcement_suppressed_origins": sorted(suppressed_origins),
             "source_ok_count": sum(1 for source in sources if source.get("status") == "ok"),
             "source_warning_count": sum(1 for source in sources if source.get("status") != "ok"),

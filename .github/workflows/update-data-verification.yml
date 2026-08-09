@@ -1,5 +1,12 @@
-name: Update v11.4.33 data verification
+name: Update v11.4.34 data verification
 on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/update-data-verification.yml"
+      - "scripts/update_data_verification.py"
+      - "scripts/restore_data_branch.sh"
+      - "scripts/publish_data_branch.sh"
   schedule:
     - cron: "58 * * * *"
   workflow_dispatch:

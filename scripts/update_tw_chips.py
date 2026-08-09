@@ -18,7 +18,7 @@ from bs4 import BeautifulSoup
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.33"
+VERSION = "v11.4.34"
 TIMEOUT = 24
 YAHOO_BATCH = 24
 PRIORITY_SYMBOLS = [
@@ -34,6 +34,9 @@ SESSION = requests.Session()
 SESSION.headers.update(HEADERS)
 DATE_RE = re.compile(r"20\d{2}[/-]\d{1,2}[/-]\d{1,2}")
 NUMBER_RE = re.compile(r"^[+\-−]?[\d,.]+(?:\.\d+)?%?$")
+TPEX_INSTITUTIONAL = "https://www.tpex.org.tw/openapi/v1/tpex_3insti_daily_trading"
+TPEX_MARGIN = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_margin_balance"
+TPEX_DAY_TRADE = "https://www.tpex.org.tw/openapi/v1/tpex_intraday_trading_statistics"
 
 
 def number(value: Any) -> float | None:
@@ -85,7 +88,7 @@ def field(row: dict[str, Any], *needles: str) -> Any:
 
 
 def symbol_from_row(row: dict[str, Any]) -> str:
-    value = field(row, "證券代號", "股票代號", "證券代碼", "股票代碼", "代號")
+    value = field(row, "證券代號", "股票代號", "證券代碼", "股票代碼", "代號", "SecuritiesCompanyCode", "SecuritiesCode", "SecurityCode", "StockCode", "Code")
     return re.sub(r"[^0-9A-Za-z]", "", str(value or "")).upper()
 
 
@@ -166,6 +169,150 @@ def try_rows(urls: Iterable[str], errors: list[dict[str, str]], label: str) -> t
         except Exception as exc:
             errors.append({"source": label, "url": url, "error": str(exc)[:220]})
     return [], None
+
+
+def semantic_pair(row: dict[str, Any], *, all_terms: tuple[str, ...] = (), any_terms: tuple[str, ...] = (), exclude_terms: tuple[str, ...] = ()) -> tuple[str | None, Any]:
+    for key, value in row.items():
+        norm = normalized_key(key)
+        if exclude_terms and any(normalized_key(term) in norm for term in exclude_terms):
+            continue
+        if all_terms and not all(normalized_key(term) in norm for term in all_terms):
+            continue
+        if any_terms and not any(normalized_key(term) in norm for term in any_terms):
+            continue
+        if str(value or "").strip():
+            return key, value
+    return None, None
+
+
+def tpex_verified_date(row: dict[str, Any], fallback_date: str | None) -> str | None:
+    return valid_chip_date(row_date(row)) or valid_chip_date(fallback_date)
+
+
+def shares_to_lots(value: Any) -> int | float | None:
+    parsed = number(value)
+    return integer_or_float(parsed / 1000) if parsed is not None else None
+
+
+def difference_from_fields(row: dict[str, Any], prefix_terms: tuple[str, ...], exclude_terms: tuple[str, ...] = ()) -> int | float | None:
+    key, raw = semantic_pair(row, all_terms=prefix_terms, any_terms=("difference", "net", "買賣超", "差額"), exclude_terms=exclude_terms)
+    if raw is not None:
+        return shares_to_lots(raw)
+    buy_excludes = tuple(exclude_terms) + ("difference", "net")
+    sell_excludes = tuple(exclude_terms) + ("difference", "net")
+    _, buy_raw = semantic_pair(row, all_terms=prefix_terms, any_terms=("buy", "買進", "買"), exclude_terms=buy_excludes)
+    _, sell_raw = semantic_pair(row, all_terms=prefix_terms, any_terms=("sell", "賣出", "賣"), exclude_terms=sell_excludes)
+    buy, sell = number(buy_raw), number(sell_raw)
+    return integer_or_float((buy - sell) / 1000) if buy is not None and sell is not None else None
+
+
+def parse_tpex_institutional(rows: list[dict[str, Any]], assets: dict[str, dict[str, Any]], source_url: str | None, fallback_date: str | None) -> tuple[dict[str, dict[str, Any]], dict[str, Any], str | None]:
+    output: dict[str, dict[str, Any]] = {}; latest_date = None
+    totals = {"foreign_net": 0.0, "trust_net": 0.0, "dealer_net": 0.0, "total_net": 0.0}; seen = {key: False for key in totals}
+    for row in rows:
+        symbol = symbol_from_row(row)
+        traded = tpex_verified_date(row, fallback_date)
+        if not symbol or not traded:
+            continue
+        _, foreign_raw = field_pair(row, "外資及陸資不含外資自營商買賣超股數", "外陸資買賣超股數不含外資自營商")
+        foreign = shares_to_lots(foreign_raw) if foreign_raw is not None else difference_from_fields(row, ("foreign",))
+        if foreign is None:
+            foreign = difference_from_fields(row, ("外資及陸資",), exclude_terms=("自營商",))
+        _, trust_raw = field_pair(row, "投信買賣超股數")
+        trust = shares_to_lots(trust_raw) if trust_raw is not None else difference_from_fields(row, ("securitiesinvestmenttrust",))
+        if trust is None:
+            trust = difference_from_fields(row, ("投信",))
+        _, dealer_raw = field_pair(row, "自營商買賣超股數")
+        dealer = shares_to_lots(dealer_raw) if dealer_raw is not None else difference_from_fields(row, ("dealer",), exclude_terms=("foreign",))
+        if dealer is None:
+            dealer = difference_from_fields(row, ("自營商",), exclude_terms=("外資",))
+        _, total_raw = field_pair(row, "三大法人買賣超股數合計", "三大法人買賣超股數")
+        if total_raw is None:
+            _, total_raw = semantic_pair(row, any_terms=("totaldifference", "三大法人買賣超", "合計買賣超", "totalnet"))
+        total = shares_to_lots(total_raw) if total_raw is not None else None
+        if total is None:
+            values = [value for value in (foreign, trust, dealer) if value is not None]
+            total = integer_or_float(sum(values)) if values else None
+        institutional = {key:value for key,value in {"foreign_net":foreign,"trust_net":trust,"dealer_net":dealer,"total_net":total}.items() if value is not None}
+        if not institutional:
+            continue
+        name = clean(field(row, "CompanyName", "SecuritiesName", "Name", "公司名稱", "證券名稱", "股票名稱")) or (assets.get(symbol) or {}).get("name")
+        output[symbol] = {"symbol":symbol,"name":name,"asset_class":(assets.get(symbol) or {}).get("asset_class","stock"),"exchange":"TPEx","date":traded,"unit":"張","institutional":institutional,"sources":[{"name":"TPEx 三大法人","url":source_url,"level":"official","date":traded}]}
+        latest_date = max(latest_date or traded, traded)
+        for key,value in institutional.items(): totals[key] += float(value); seen[key] = True
+    return output, {key:integer_or_float(value) for key,value in totals.items() if seen[key]}, latest_date
+
+
+def parse_tpex_margin(rows: list[dict[str, Any]], assets: dict[str, dict[str, Any]], source_url: str | None, fallback_date: str | None) -> tuple[dict[str, dict[str, Any]], str | None]:
+    """Parse TPEx margin data. Official balances are expressed in 千股, equivalent to 張."""
+    output: dict[str, dict[str, Any]] = {}; latest_date = None
+    for row in rows:
+        symbol = symbol_from_row(row); traded = tpex_verified_date(row, fallback_date)
+        if not symbol or symbol in {"TOTSHR", "TOTAMT"} or not traded:
+            continue
+        def lots_value(*aliases: str, semantic_all: tuple[str, ...] = (), semantic_any: tuple[str, ...] = ()):
+            key, raw = field_pair(row, *aliases)
+            if raw is None and (semantic_all or semantic_any):
+                key, raw = semantic_pair(row, all_terms=semantic_all, any_terms=semantic_any)
+            parsed = number(raw)
+            return integer_or_float(parsed) if parsed is not None else None
+        margin_balance = lots_value("資餘額", "本日融資餘額", "MarginPurchaseTodayBalance", semantic_all=("margin",), semantic_any=("todaybalance", "balance"))
+        previous_margin = lots_value("前資餘額", "前日融資餘額", "MarginPurchasePreviousBalance", semantic_all=("margin",), semantic_any=("previousbalance", "yesbalance"))
+        short_balance = lots_value("券餘額", "本日融券餘額", "ShortSaleTodayBalance", semantic_all=("short",), semantic_any=("todaybalance", "balance"))
+        previous_short = lots_value("前券餘額", "前日融券餘額", "ShortSalePreviousBalance", semantic_all=("short",), semantic_any=("previousbalance", "yesbalance"))
+        margin_buy = lots_value("資買", "融資買進", "MarginPurchaseBuy")
+        margin_sell = lots_value("資賣", "融資賣出", "MarginPurchaseSell")
+        margin_redeem = lots_value("現償", "現金償還", "CashRedemption")
+        short_sell = lots_value("券賣", "融券賣出", "ShortSaleSell")
+        short_buy = lots_value("券買", "融券買進", "ShortSaleBuy")
+        short_redeem = lots_value("券償", "現券償還", "ShortSaleRedemption")
+        margin_change = integer_or_float(float(margin_balance)-float(previous_margin)) if margin_balance is not None and previous_margin is not None else None
+        short_change = integer_or_float(float(short_balance)-float(previous_short)) if short_balance is not None and previous_short is not None else None
+        if margin_change is None and all(v is not None for v in (margin_buy, margin_sell, margin_redeem)):
+            margin_change = integer_or_float(float(margin_buy)-float(margin_sell)-float(margin_redeem))
+        if short_change is None and all(v is not None for v in (short_sell, short_buy, short_redeem)):
+            short_change = integer_or_float(float(short_sell)-float(short_buy)-float(short_redeem))
+        if all(value is None for value in (margin_balance, short_balance, margin_change, short_change)):
+            continue
+        name = clean(field(row, "CompanyName", "SecuritiesName", "Name", "名稱", "公司名稱", "證券名稱")) or (assets.get(symbol) or {}).get("name")
+        offset = lots_value("資券相抵", "Offset")
+        out={"symbol":symbol,"name":name,"asset_class":(assets.get(symbol) or {}).get("asset_class","stock"),"exchange":"TPEx","date":traded,"unit":"張","margin":{k:v for k,v in {"balance":margin_balance,"previous_balance":previous_margin,"change":margin_change}.items() if v is not None},"short":{k:v for k,v in {"balance":short_balance,"previous_balance":previous_short,"change":short_change}.items() if v is not None},"offset_volume":offset,"sources":[{"name":"TPEx 融資融券","url":source_url,"level":"official","date":traded}]}
+        if margin_balance not in (None,0) and short_balance is not None: out["short"]["ratio"] = round(float(short_balance)/float(margin_balance)*100,4)
+        output[symbol]=out; latest_date=max(latest_date or traded,traded)
+    return output, latest_date
+
+
+def parse_tpex_day_trade_market(rows: list[dict[str, Any]], fallback_date: str | None) -> tuple[dict[str, Any], str | None]:
+    """TPEx intraday statistics are market aggregates, not per-security rows."""
+    for row in rows:
+        traded = tpex_verified_date(row, fallback_date)
+        if not traded:
+            continue
+        volume_raw = field(row, "當日沖銷交易總成交股數", "TotalIntradayTradingVolume", "IntradayTradingVolume")
+        volume = shares_to_lots(volume_raw)
+        buy_amount = number(field(row, "當日沖銷交易總買進成交金額", "TotalIntradayTradingBuyAmount", "IntradayTradingBuyAmount"))
+        sell_amount = number(field(row, "當日沖銷交易總賣出成交金額", "TotalIntradayTradingSellAmount", "IntradayTradingSellAmount"))
+        ratio = number(field(row, "當日沖銷交易總成交股數占市場比重", "IntradayTradingVolumeRatio", "VolumeRatio"))
+        values={"volume":volume,"buy_amount":buy_amount,"sell_amount":sell_amount,"volume_ratio_percent":ratio}
+        values={k:v for k,v in values.items() if v is not None}
+        if values:
+            return values, traded
+    return {}, None
+
+
+def parse_tpex_day_trade(rows: list[dict[str, Any]], assets: dict[str, dict[str, Any]], source_url: str | None, fallback_date: str | None) -> tuple[dict[str, dict[str, Any]], str | None]:
+    output: dict[str, dict[str, Any]] = {}; latest_date = None
+    for row in rows:
+        symbol=symbol_from_row(row); traded=tpex_verified_date(row,fallback_date)
+        if not symbol or not traded: continue
+        volume_key, volume_raw = semantic_pair(row, any_terms=("daytradevolume","intradaytradingvolume","當沖成交股數","當日沖銷成交股數"))
+        ratio_key, ratio_raw = semantic_pair(row, any_terms=("daytraderatio","intradaytradingratio","當沖比率","當沖比例","占市場比重"))
+        volume=as_lots(volume_raw,volume_key); ratio=number(ratio_raw)
+        if volume is None and ratio is None: continue
+        name=clean(field(row,"CompanyName","SecuritiesName","Name","公司名稱","證券名稱")) or (assets.get(symbol) or {}).get("name")
+        output[symbol]={"symbol":symbol,"name":name,"asset_class":(assets.get(symbol) or {}).get("asset_class","stock"),"exchange":"TPEx","date":traded,"unit":"張","day_trade":{k:v for k,v in {"volume":volume,"ratio":ratio}.items() if v is not None},"sources":[{"name":"TPEx 當沖統計","url":source_url,"level":"official","date":traded}]}
+        latest_date=max(latest_date or traded,traded)
+    return output, latest_date
 
 
 def parse_institutional(rows: list[dict[str, Any]], assets: dict[str, dict[str, Any]], source_url: str | None) -> tuple[dict[str, dict[str, Any]], dict[str, Any], str | None]:
@@ -553,6 +700,38 @@ def sanitize_market_dates(markets: Any) -> tuple[dict[str, Any], int]:
     return output, removed
 
 
+def sanitize_item_dates(items: dict[str, dict[str, Any]]) -> tuple[dict[str, dict[str, Any]], int]:
+    """Remove weekend/future dates from nested source/history structures without inventing replacements."""
+    removed = 0; output: dict[str, dict[str, Any]] = {}
+    for symbol, raw in (items or {}).items():
+        if not isinstance(raw, dict): continue
+        row = dict(raw)
+        if row.get("date"):
+            valid = valid_chip_date(row.get("date"))
+            if valid: row["date"] = valid
+            else: row.pop("date", None); removed += 1
+        sources=[]
+        for source in row.get("sources") or []:
+            if not isinstance(source, dict): continue
+            value=dict(source)
+            if value.get("date"):
+                valid=valid_chip_date(value.get("date"))
+                if not valid: removed += 1; continue
+                value["date"]=valid
+            sources.append(value)
+        row["sources"]=sources
+        history=[]
+        for snapshot in row.get("history") or row.get("recent") or []:
+            if not isinstance(snapshot, dict): continue
+            valid=valid_chip_date(snapshot.get("date"))
+            if not valid: removed += 1; continue
+            history.append({**snapshot,"date":valid})
+        row["history"]=merge_history(history,[])
+        row["recent"]=row["history"][:5]
+        output[symbol]=row
+    return output, removed
+
+
 def yahoo_one(asset: dict[str, Any]) -> tuple[str, dict[str, Any] | None, str | None]:
     symbol = str(asset.get("symbol") or "").upper()
     try:
@@ -615,6 +794,7 @@ def main() -> None:
     assets_list = read_json(DATA / "assets.json", {"assets": []}).get("assets", [])
     asset_map = {str(asset.get("symbol") or "").upper(): asset for asset in assets_list if asset.get("symbol")}
     errors: list[dict[str, str]] = []
+    verified_market_date = valid_chip_date((read_json(DATA / "tw-market.json", {"metadata": {}}).get("metadata") or {}).get("trading_date"))
 
     institutional_rows, institutional_url = try_rows([
         "https://openapi.twse.com.tw/v1/fund/T86",
@@ -628,14 +808,21 @@ def main() -> None:
         "https://openapi.twse.com.tw/v1/exchangeReport/TWTB4U",
         "https://www.twse.com.tw/rwd/zh/afterTrading/TWTB4U?response=json&selectType=All",
     ], errors, "TWSE 當沖")
+    tpex_inst_rows, tpex_inst_url = try_rows([TPEX_INSTITUTIONAL], errors, "TPEx 三大法人")
+    tpex_margin_rows, tpex_margin_url = try_rows([TPEX_MARGIN], errors, "TPEx 融資融券")
+    tpex_day_rows, tpex_day_url = try_rows([TPEX_DAY_TRADE], errors, "TPEx 當沖")
 
     official_inst, market_inst, institutional_date = parse_institutional(institutional_rows, asset_map, institutional_url)
     official_margin, margin_date = parse_margin(margin_rows, asset_map, margin_url)
     official_day, day_date = parse_day_trade(day_rows, asset_map, day_url)
-    official_symbols = set(official_inst) | set(official_margin) | set(official_day)
+    tpex_inst, tpex_market_inst, tpex_inst_date = parse_tpex_institutional(tpex_inst_rows, asset_map, tpex_inst_url, verified_market_date)
+    tpex_margin, tpex_margin_date = parse_tpex_margin(tpex_margin_rows, asset_map, tpex_margin_url, verified_market_date)
+    tpex_day_market, tpex_day_market_date = parse_tpex_day_trade_market(tpex_day_rows, verified_market_date)
+    tpex_day, tpex_day_date = parse_tpex_day_trade(tpex_day_rows, asset_map, tpex_day_url, verified_market_date)
+    official_symbols = set(official_inst) | set(official_margin) | set(official_day) | set(tpex_inst) | set(tpex_margin) | set(tpex_day)
     for symbol in official_symbols:
         combined = {}
-        for source in (official_inst.get(symbol), official_margin.get(symbol), official_day.get(symbol)):
+        for source in (official_inst.get(symbol), official_margin.get(symbol), official_day.get(symbol), tpex_inst.get(symbol), tpex_margin.get(symbol), tpex_day.get(symbol)):
             if source:
                 combined = merge_item(combined, source, official_first=True)
         items[symbol] = merge_item(combined, items.get(symbol) or {}, official_first=True)
@@ -654,10 +841,11 @@ def main() -> None:
             elif error:
                 yahoo_errors.append({"symbol": symbol, "error": error[:320]})
 
+    items, removed_nested_dates = sanitize_item_dates(items)
     raw_available_dates = old.get("available_dates") or []
     dates = {day for value in raw_available_dates if (day := valid_chip_date(value))}
     removed_invalid_dates = len(raw_available_dates) - len(dates)
-    for value in (institutional_date, margin_date, day_date):
+    for value in (institutional_date, margin_date, day_date, tpex_inst_date, tpex_margin_date, tpex_day_market_date, tpex_day_date):
         if value:
             dates.add(value)
     for row in items.values():
@@ -674,7 +862,15 @@ def main() -> None:
         twse_market["institutional"] = market_inst
         twse_market["institutional_date"] = institutional_date
     twse_market["stock_count"] = sum(1 for row in items.values() if str(row.get("exchange") or "").upper() == "TWSE")
-    markets = {**old_markets, "twse": twse_market}
+    tpex_market = dict(old_markets.get("tpex") or {})
+    if tpex_market_inst:
+        tpex_market["institutional"] = tpex_market_inst
+        tpex_market["institutional_date"] = tpex_inst_date
+    if tpex_day_market:
+        tpex_market["day_trading"] = tpex_day_market
+        tpex_market["day_trading_date"] = tpex_day_market_date
+    tpex_market["stock_count"] = sum(1 for row in items.values() if str(row.get("exchange") or "").upper() == "TPEX")
+    markets = {**old_markets, "twse": twse_market, "tpex": tpex_market}
 
     payload = {
         "metadata": {
@@ -682,15 +878,16 @@ def main() -> None:
             "updated_at": NOW.isoformat(timespec="seconds"),
             "trading_date": trading_date,
             "status": "ok" if official_symbols and yahoo_success == len(batch) else "partial" if items else "warning",
-            "source": "TWSE official structured data; Yahoo Taiwan reference fallback",
+            "source": "TWSE/TPEx official structured data; Yahoo Taiwan reference fallback",
             "item_count": len(items),
             "official_item_count": len(official_symbols),
             "yahoo_batch_size": len(batch),
             "yahoo_batch_success": yahoo_success,
             "legacy_key_migrations": migrated_legacy_keys,
-            "invalid_legacy_dates_removed": removed_invalid_dates + removed_market_dates,
+            "invalid_legacy_dates_removed": removed_invalid_dates + removed_market_dates + removed_nested_dates,
+            "invalid_nested_dates_removed": removed_nested_dates,
             "schema": "symbol-keyed-v2",
-            "note": "官方資料優先；第三方只補缺漏。v11.4.33 會先遷移舊 twse:/tpex: key 並移除週末/未來假日期。",
+            "note": "官方資料優先；第三方只補缺漏。v11.4.34 同步 TWSE/TPEx 官方籌碼並清除巢狀來源中的週末/未來假日期。",
         },
         "markets": markets,
         "items": items,

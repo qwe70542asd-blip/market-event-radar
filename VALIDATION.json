@@ -1,54 +1,49 @@
 {
-  "version": "v11.4.33",
-  "validated_at": "2026-08-09T09:16:44+08:00",
-  "status": "local-release-candidate-passed-browser-runtime-gate-added-post-deploy-live-checks-remain",
-  "tests": 187,
-  "http_pages": 7,
-  "http_assets": 43,
-  "javascript_files": 17,
-  "shell_files": 2,
-  "workflow_yaml_files": 30,
-  "browser_runtime_local": "not-executed-environment-blocks-chromium-navigation",
-  "browser_runtime_ci": "playwright-gate-configured",
-  "checks": [
-    "All 187 automated tests passed",
-    "Turnover monthly backfill regression prevents whole-month gaps from being skipped by global row-count gates",
-    "Complete TWSE+TPEx quote totals outrank partial single-market turnover components; partial totals are explicitly incomplete",
-    "5/20/60-day turnover averages only use complete totals and recent-session completeness rejects large calendar gaps",
-    "TPEx ETF last-known-good fallback is independent from TWSE ETF discovery",
-    "Stock basics normalizes industry fields and prevents numeric security/legacy codes such as 9103 from leaking into industry labels",
-    "TPEx dividend parser accepts current board-date aliases and full-width punctuation; non-empty source rows parsing to zero remain warning",
-    "TWSE/TPEx historical ex-dividend empty payloads are healthy-empty while non-empty zero-parse payloads remain warning",
-    "BLS official annual schedule root was added as a fallback; blocked official access remains warning/last-known-good with no guessed dates",
-    "Market validator checks market_at/session/latest-candle consistency, verified Taiwan quote dates, turnover session validity and completeness claims",
-    "Cloudflare Worker deployment no longer uses secrets directly in a job-level if; missing secrets safely skip the optional edge deployment",
-    "Release verification includes a Playwright Chromium runtime gate for pageerror, 42 calendar cells, initialized calendar title and mode switching",
-    "BEA recurring-series / title / GDP-stage regression suite passed",
-    "BLS official per-release table fallback regression suite passed",
-    "TWSE TWT49U range-query and 2026 schema regression suite passed",
-    "Canonical event dedupe without dividend-kind collision passed",
-    "Incremental event archive retention / future reschedule replacement passed",
-    "Verified Taiwan trading-date / polluted-history migration integrity passed",
-    "tw-chips symbol-keyed-v2 migration and date integrity passed",
-    "Strict public-data validation passed",
-    "Python compileall passed",
-    "17 JavaScript files passed node --check",
-    "2 shell scripts passed bash -n",
-    "All 30 GitHub Actions workflow YAML files parsed successfully",
-    "Repository nested-copy layout guard passed",
-    "HTTP smoke passed for 7 public pages and 43 referenced assets",
-    "Release hygiene passed: no m4a/mp3/wav/tmp/bak/editor backup files bundled",
-    "Service Worker cache namespace is v11.4.33"
-  ],
-  "post_deploy_checks": [
-    "Overlay the ZIP on the existing repository, run CLEAN-REPO.cmd once, and commit the stale scripts/ nested-repository deletions listed in DELETION-MANIFEST-v11.4.33.txt",
-    "After push, Verify v11.4.33 app release must pass including the Playwright Chromium runtime step",
-    "The first live-tw-market v11.4.33 run must force a full monthly turnover backfill even if v11.4.32 already stamped the same calendar day",
-    "Confirm missing May/July turnover sessions are restored when official endpoints provide them; if TPEx history is unavailable the metadata must remain incomplete rather than treating TWSE alone as total market turnover",
-    "The first live-stock-basics v11.4.33 publication must succeed without numeric industry labels",
-    "The first live-events v11.4.33 publication should parse current TPEx dividend-board rows; non-empty/zero-parse remains a warning",
-    "Observe BLS from GitHub-hosted runners; HTTP 403 remains warning/last-known-good and must never create guessed dates",
-    "Cloudflare edge deployment is optional; without configured secrets its workflow should complete as a documented skip/no-op while GitHub fallback remains available",
-    "15-minute K-line availability remains deployment-time non-blocking; unverified or missing external data must not be fabricated"
-  ]
+  "version": "v11.4.34",
+  "validated_at": "2026-08-09T11:00:59+08:00",
+  "pytest": {
+    "status": "pass",
+    "passed": 196
+  },
+  "python_compileall": {
+    "status": "pass"
+  },
+  "javascript_syntax": {
+    "status": "pass",
+    "files": 17
+  },
+  "shell_syntax": {
+    "status": "pass",
+    "files": 2
+  },
+  "workflow_yaml": {
+    "status": "pass",
+    "files": 30
+  },
+  "cleanup_repo": {
+    "status": "pass",
+    "detail": "repository layout clean"
+  },
+  "strict_public_data": {
+    "status": "pass",
+    "detail": "validation ok all"
+  },
+  "smoke": {
+    "status": "pass",
+    "detail": "PASS"
+  },
+  "http_smoke": {
+    "status": "pass",
+    "detail": "HTTP smoke passed: 7 pages, 43 referenced assets"
+  },
+  "browser_smoke_local": {
+    "status": "environment-blocked",
+    "detail": "System Chromium launch works, but local HTTP navigation is blocked by the execution sandbox administrator. GitHub release-verification retains the Chromium runtime gate."
+  },
+  "release_hygiene": {
+    "audio_files": 0,
+    "nested_repo_dirs": 0,
+    "cache_artifacts": 0
+  },
+  "external_source_note": "Network-dependent TPEx/BLS live behavior must be rechecked by GitHub Actions after deployment; parsers fail closed and keep last-known-good data."
 }

@@ -1,4 +1,4 @@
-name: Update v11.4.33 market core
+name: Update v11.4.34 market core
 on:
   push:
     branches: [main]
@@ -73,8 +73,9 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: pip install -r requirements.txt
-      - name: Restore market volume history
+      - name: Restore asset master and market volume history
         run: |
+          bash scripts/restore_data_branch.sh live-assets "assets.json:data/assets.json"
           bash scripts/restore_data_branch.sh live-tw-market \
             "tw-market.json:data/tw-market.json" \
             "tw-market-seed.js:data/tw-market-seed.js" \
@@ -90,7 +91,7 @@ jobs:
           market=json.loads(Path("data/tw-market.json").read_text(encoding="utf-8"))
           history=json.loads(Path("data/market-volume-history.json").read_text(encoding="utf-8"))
           meta=market.get("metadata",{})
-          assert meta.get("version")=="v11.4.33", meta.get("version")
+          assert meta.get("version")=="v11.4.34", meta.get("version")
           trading_date=meta.get("trading_date")
           assert trading_date, "verified trading date missing"
           assert date.fromisoformat(trading_date).weekday() < 5, trading_date

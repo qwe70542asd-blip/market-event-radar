@@ -56,6 +56,14 @@ class MarketIntegrityTests(unittest.TestCase):
         self.assertEqual([row['date'] for row in rows], ['2026-08-07'])
 
 
+
+    def test_nested_weekend_chip_sources_are_removed(self):
+        items={"00403A":{"symbol":"00403A","date":"2026-08-07","sources":[{"name":"bad","date":"2026-08-08"},{"name":"good","date":"2026-08-07"}],"history":[{"date":"2026-08-08"},{"date":"2026-08-07"}]}}
+        cleaned,removed=update_tw_chips.sanitize_item_dates(items)
+        self.assertGreaterEqual(removed,2)
+        self.assertEqual([row["date"] for row in cleaned["00403A"]["sources"]],["2026-08-07"])
+        self.assertEqual([row["date"] for row in cleaned["00403A"]["history"]],["2026-08-07"])
+
     def test_quote_total_beats_partial_single_market_component(self):
         rows=update_tw_market.merge_history(
             [],

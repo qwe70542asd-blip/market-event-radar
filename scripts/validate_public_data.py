@@ -25,9 +25,9 @@ def market():
    if h<max(o,cl) or l>min(o,cl) or (price is not None and not l<=price<=h):fail(f"mixed-session market row {row.get('symbol')}")
   dates=[row.get(k) for k in ("session_date","price_date","ohlc_date") if row.get(k)]
   if dates and len(set(dates))!=1:fail(f"mixed-session dates {row.get('symbol')}")
-  market_at=str(row.get("market_at") or "")[:10]
-  if dates and market_at and re.fullmatch(r"\d{4}-\d{2}-\d{2}",market_at) and market_at!=dates[0]:
-   fail(f"market timestamp/session mismatch {row.get('symbol')}: {market_at} != {dates[0]}")
+  market_at_local=str(row.get("market_at_local") or "")[:10]
+  if dates and market_at_local and re.fullmatch(r"\d{4}-\d{2}-\d{2}",market_at_local) and market_at_local!=dates[0]:
+   fail(f"market local timestamp/session mismatch {row.get('symbol')}: {market_at_local} != {dates[0]}")
   candles=row.get("candles") or []
   for c in candles:
    o,h,l,cl=(c.get(k) for k in ("open","high","low","close"))

@@ -1,4 +1,4 @@
-name: Update v11.4.33 Taiwan chips
+name: Update v11.4.34 Taiwan chips
 on:
   push:
     branches: [main]
@@ -28,8 +28,11 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: pip install -r requirements.txt
-      - name: Restore previous chips
-        run: bash scripts/restore_data_branch.sh live-tw-chips "tw-chips.json:data/tw-chips.json" "tw-chips-seed.js:data/tw-chips-seed.js"
+      - name: Restore live asset master, verified market date and previous chips
+        run: |
+          bash scripts/restore_data_branch.sh live-assets "assets.json:data/assets.json"
+          bash scripts/restore_data_branch.sh live-tw-market "tw-market.json:data/tw-market.json"
+          bash scripts/restore_data_branch.sh live-tw-chips "tw-chips.json:data/tw-chips.json" "tw-chips-seed.js:data/tw-chips-seed.js"
       - run: python scripts/update_tw_chips.py
       - name: Validate chips payload
         run: |
@@ -41,11 +44,15 @@ jobs:
           payload = json.loads(path.read_text(encoding="utf-8"))
           assert isinstance(payload, dict) and isinstance(payload.get("items"), dict)
           meta=payload.get("metadata",{})
-          assert meta.get("version")=="v11.4.33", meta
+          assert meta.get("version")=="v11.4.34", meta
           assert meta.get("schema")=="symbol-keyed-v2", meta
           for key,row in payload.get("items",{}).items():
               assert ":" not in key and key == str(row.get("symbol") or "").upper(), (key,row.get("symbol"))
               if row.get("date"): assert date.fromisoformat(row["date"]).weekday() < 5, row["date"]
+              for source in row.get("sources") or []:
+                  if source.get("date"): assert date.fromisoformat(source["date"]).weekday() < 5, (key,source)
+              for snapshot in row.get("history") or []:
+                  if snapshot.get("date"): assert date.fromisoformat(snapshot["date"]).weekday() < 5, (key,snapshot.get("date"))
           assert all(date.fromisoformat(day).weekday() < 5 for day in payload.get("available_dates",[]))
           assert path.stat().st_size > 20
           print(meta)

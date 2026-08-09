@@ -1,4 +1,4 @@
-name: Update v11.4.33 Taiwan market
+name: Update v11.4.34 Taiwan market
 on:
   workflow_dispatch:
 permissions:
@@ -19,8 +19,9 @@ jobs:
           python-version: "3.12"
           cache: pip
       - run: pip install -r requirements.txt
-      - name: Restore market volume history
+      - name: Restore asset master and market volume history
         run: |
+          bash scripts/restore_data_branch.sh live-assets "assets.json:data/assets.json"
           bash scripts/restore_data_branch.sh live-tw-market \
             "tw-market.json:data/tw-market.json" \
             "tw-market-seed.js:data/tw-market-seed.js" \
@@ -35,7 +36,7 @@ jobs:
           from pathlib import Path
           market=json.loads(Path("data/tw-market.json").read_text(encoding="utf-8"))
           history=json.loads(Path("data/market-volume-history.json").read_text(encoding="utf-8"))
-          assert market.get("metadata",{}).get("version")=="v11.4.33"
+          assert market.get("metadata",{}).get("version")=="v11.4.34"
           assert history.get("metadata",{}).get("history_start")=="2026-01-01"
           trading_date=market.get("metadata",{}).get("trading_date")
           assert trading_date and date.fromisoformat(trading_date).weekday() < 5, trading_date

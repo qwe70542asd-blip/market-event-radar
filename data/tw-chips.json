@@ -1,10 +1,13 @@
 {
   "metadata": {
-    "version": "v11.4.33",
+    "version": "v11.4.34",
     "updated_at": null,
     "trading_date": null,
     "source": "TWSE official structured data; Yahoo Taiwan reference fallback",
-    "note": "官方資料優先；第三方只補缺漏。失敗時保留最後成功資料，缺值不以 0 代替。"
+    "note": "Bundled fallback sanitized for v11.4.34; live updater refreshes TWSE/TPEx official channels and removes invalid nested dates.",
+    "invalid_nested_dates_removed": 0,
+    "invalid_legacy_dates_removed": 0,
+    "schema": "symbol-keyed-v2"
   },
   "markets": {
     "twse": {

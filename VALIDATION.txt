@@ -1,40 +1,16 @@
-Market Event Radar v11.4.33 validation
+Market Event Radar v11.4.34 validation
+Validated: 2026-08-09T11:00:59+08:00
 
-PASS: 187 automated tests
-PASS: full-month turnover backfill / recent-session completeness regressions
-PASS: complete TWSE+TPEx quote total outranks partial single-market turnover
-PASS: TPEx ETF per-exchange last-known-good fallback
-PASS: stock-basics numeric industry sanitization
-PASS: TPEx dividend current-field/full-width-punctuation parser regression
-PASS: historical ex-dividend healthy-empty vs non-empty-zero-parse health logic
-PASS: market_at/session/latest-candle and turnover completeness strict validation
-PASS: Cloudflare deploy workflow step-level secret gate / safe unconfigured skip
-PASS: Playwright Chromium homepage runtime gate added to GitHub release verification
-PASS: BEA recurring-series / title / GDP-stage regression suite
-PASS: BLS official per-release and annual-page fallback regression suite
-PASS: TWSE TWT49U range-query and 2026 schema regression suite
-PASS: canonical event dedupe without dividend-kind collision
-PASS: incremental event archive retention / future reschedule replacement
-PASS: verified Taiwan trading-date / polluted-history migration integrity
-PASS: tw-chips symbol-keyed-v2 migration and date integrity
-PASS: strict public-data validation
+PASS: pytest 196 passed
 PASS: Python compileall
 PASS: JavaScript syntax (17 files)
 PASS: shell syntax (2 files)
-PASS: 30 GitHub Actions YAML files
-PASS: repository layout guard
-PASS: HTTP smoke test (7 pages / 43 referenced assets)
-PASS: release hygiene (0 m4a/mp3/wav/tmp/bak/editor backup files)
-PASS: Service Worker cache namespace v11.4.33
+PASS: GitHub Actions YAML (30 workflows)
+PASS: cleanup_repo --check (repository layout clean)
+PASS: strict public-data validation (validation ok all)
+PASS: smoke (PASS)
+PASS: HTTP smoke (HTTP smoke passed: 7 pages, 43 referenced assets)
+PASS: release hygiene (audio=0, nested=0, cache=0)
 
-LOCAL LIMIT: Chromium navigation is blocked by this execution environment, so the browser runtime test is not falsely marked as locally passed.
-CI GATE: Verify v11.4.33 installs Playwright Chromium and requires no pageerror, 42 calendar cells, initialized calendar title and working market/dividend mode switching.
-
-DEPLOY: overlay the ZIP, run CLEAN-REPO.cmd once, verify deletions against DELETION-MANIFEST-v11.4.33.txt, then Commit / Push.
-POST-DEPLOY: live-tw-market must force the v11.4.33 monthly turnover backfill and publish honest completeness flags.
-POST-DEPLOY: live-stock-basics must publish without numeric industry labels.
-POST-DEPLOY: live-events should parse current TPEx dividend-board rows; BLS 403 remains warning/last-known-good if the official site blocks GitHub runners.
-EXTERNAL LIMIT: unavailable TPEx turnover data must stay partial/incomplete; TWSE alone must not be presented as full-market turnover.
-EXTERNAL LIMIT: GitHub cron is best-effort; stale/unconfirmed states remain authoritative instead of invented current data.
-NON-BLOCKING: 15-minute K-line/external chart availability may complete after deployment; no fabricated browser K candles.
-Validated at: 2026-08-09T09:16:44+08:00
+LOCAL BROWSER SMOKE: environment-blocked. System Chromium starts, but this execution sandbox blocks navigation to local HTTP. The GitHub release-verification workflow still contains the Chromium homepage runtime gate.
+LIVE SOURCE NOTE: TPEx/BLS network-dependent behavior must be verified after deployment. The release does not fabricate missing upstream data.

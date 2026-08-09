@@ -1,8 +1,8 @@
-# 市場事件雷達 v11.4.33
+# 市場事件雷達 v11.4.34
 
 以雙模式事件月曆為核心，整合台股行情、六大指數 K 線、多來源財經新聞、法人籌碼、完整台股／ETF 主檔與個人投資組合的靜態 PWA。
 
-## v11.4.33 重點
+## v11.4.34 重點
 
 這版是 **成交歷史完整性 + TPEx 股利解析 + Stock Basics + 發版 CI 修正版**，專門處理 v11.4.32 部署後仍可確認的資料缺口。
 
@@ -16,7 +16,7 @@
 - **更嚴格市場驗證**：檢查 `market_at`、session、最新 candle、台股 quote date、成交歷史週末／未來／重複 session 與 completeness claim。
 - **Cloudflare deploy workflow 修正**：移除 job-level `secrets` 判斷；未設定 secrets 時安全跳過 optional edge deployment。
 - **真正瀏覽器 CI**：Release verification 新增 Playwright Chromium runtime gate，實際要求首頁無 `pageerror`、月曆 42 格、標題初始化與雙模式可切換。
-- **repository 清理**：`CLEAN-REPO.cmd` + `DELETION-MANIFEST-v11.4.33.txt` 用來把 GitHub 上仍追蹤的舊 `scripts/` 巢狀專案真正提交為 deletions。
+- **repository 清理**：`CLEAN-REPO.cmd` + `DELETION-MANIFEST-v11.4.34.txt` 用來把 GitHub 上仍追蹤的舊 `scripts/` 巢狀專案真正提交為 deletions。
 
 ## 覆蓋舊 repository 時一定要做
 
@@ -28,6 +28,6 @@ CLEAN-REPO.cmd
 
 再到 GitHub Desktop 確認有大量舊 `scripts/assets`、`scripts/data`、`scripts/scripts` 等刪除項目，和本版修改一起 Commit / Push。
 
-完整修正與部署檢查見 `docs/V11.4.33.md`、`docs/V11.4.33-release-audit.md` 與 `VALIDATION.txt`。
+完整修正與部署檢查見 `docs/V11.4.34.md`、`docs/V11.4.34-release-audit.md` 與 `VALIDATION.txt`。
 
 資料僅供市場觀察，不構成投資建議。所有市場與事件資料都應保留來源、時間與狀態；無法驗證的資料不得偽造成即時或正式值。

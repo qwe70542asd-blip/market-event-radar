@@ -1,22 +1,17 @@
-市場事件雷達 v11.4.33 — GitHub Desktop 更新方式
+市場事件雷達 v11.4.34 — GitHub Desktop 更新方式
 
-1. 先把這個 ZIP 解壓縮到一個暫存資料夾。
-2. 用解壓後的內容覆蓋你的 market-event-radar 本機 repository 根目錄。
-3. 【重要】雙擊根目錄 CLEAN-REPO.cmd 一次。
-   - 不需要安裝 Python。
-   - 它只會清掉先前誤複製到 scripts/ 裡的整套 repository 副本。
-   - 正常的 scripts/*.py 不會刪除。
-   - 可對照 DELETION-MANIFEST-v11.4.33.txt 檢查應刪路徑。
-4. 回到 GitHub Desktop，確認變更同時包含：
-   - v11.4.33 新檔／修改檔
-   - scripts/ 下錯誤巢狀 repository 檔案顯示為 deletions
-   - update_tw_market.py / update_stock_basics.py / update_events.py / validate_public_data.py 修正
-   - release-verification.yml 新增 Chromium runtime gate
-   - deploy-live-market-worker.yml 修正 Cloudflare secrets 判斷
-5. Commit 訊息可用：market-event-radar-v11.4.33
-6. Push origin。
-7. Push 後先確認 Verify v11.4.33 app release 綠燈，再檢查 market core、events、stock basics 等 live workflow。
+1. 解壓縮 ZIP，將根目錄內容覆蓋本機 market-event-radar repository。
+2. 雙擊根目錄 CLEAN-REPO.cmd，清除舊版可能殘留的 scripts/ 巢狀 repository；正常 scripts/*.py 不會刪除。
+3. GitHub Desktop 檢查本版核心變更：
+   - 全球行情跨時區驗證改用 exchange-local market_at_local，不再把美股週五誤判成台灣週六錯誤。
+   - TPEx 股利／歷史除權息 parser 增加欄位名稱與全形標點容錯。
+   - TPEx 成交額歷史 parser 支援 table field descriptor 與更多交易金額欄位。
+   - 台股市場更新先還原 live-assets，TPEx ETF 清單異常時使用已驗證資產主檔 fallback。
+   - 籌碼更新先還原 live-assets + live-tw-market，新增 TPEx 官方法人／融資與市場當沖來源，並清除巢狀週末／未來日期。
+   - data verification 在相關 release code push 後立即執行，仍保留每小時排程。
+4. Commit 可用：market-event-radar-v11.4.34
+5. Push origin 後，先確認 Verify v11.4.34 app release 綠燈，再確認 market core / events / tw-chips 等 live workflow。
 
-本版重點：成交歷史缺月與完整性、TPEx 成交額 fail-closed、TPEx 股利 parser、numeric industry、Cloudflare deploy workflow、真正瀏覽器 runtime CI。
+本地驗證：196 tests passed；strict data validation、HTTP smoke、JS/Python/shell/YAML syntax 全通過。此執行環境禁止 Chromium 導航到 localhost，因此本地 browser smoke 無法完成；GitHub release workflow 仍保留真實 Chromium runtime gate。
 
-注意：GitHub Actions cron 是 best-effort，不保證每個 5 分鐘刻度精準啟動；資料過舊必須顯示 stale/unconfirmed，不得用推測值補成即時資料。
+注意：GitHub Actions cron 與外部官方來源都可能延遲、403 或改 schema。資料不足時維持 stale / partial / warning，不得用推測值補成即時資料。

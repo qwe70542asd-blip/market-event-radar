@@ -1,4 +1,4 @@
-name: Update v11.4.33 MoneyDJ news
+name: Update v11.4.34 MoneyDJ news
 on:
   workflow_dispatch:
 permissions:

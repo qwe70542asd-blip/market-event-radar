@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Refresh Taiwan closing quotes and online historical market turnover.
 
-v11.4.33 validates the restored archive before reuse and backfills every calendar month from the official TWSE/TPEx network sources.
+v11.4.34 validates the restored archive before reuse and backfills every calendar month from the official TWSE/TPEx network sources.
 Local JSON is only a last-known-good cache. Turnover averages are published only from complete market totals, so a missing TPEx component can no longer silently bias volume momentum.
 """
 from __future__ import annotations
@@ -15,8 +15,8 @@ import requests
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.33"
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.33)"}
+VERSION = "v11.4.34"
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.34)"}
 TWSE_QUOTES = "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL"
 TPEX_QUOTES = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes"
 TWSE_FUNDS = "https://openapi.twse.com.tw/v1/opendata/t187ap47_L"
@@ -79,17 +79,21 @@ def valid_session_date(value: Any) -> str | None:
 
 
 def official_etf_codes(session: requests.Session, old_rows: list[dict]) -> tuple[set[str], list[str]]:
-    """Load ETF symbols per exchange and fail over per exchange, not globally.
-
-    v11.4.32 used a single shared set.  If the TWSE fund endpoint succeeded but
-    the TPEx fund endpoint changed schema, the shared set was already non-empty
-    and the TPEx last-known-good ETF list was never restored.
-    """
-    codes: set[str] = set()
+    """Load ETF symbols per exchange with the merged official asset master as fail-closed fallback."""
     warnings: list[str] = []
+    master_assets = read_json(DATA / "assets.json", {"assets": []}).get("assets") or []
+    master_by_exchange: dict[str, set[str]] = {"TWSE": set(), "TPEX": set()}
+    for asset in master_assets:
+        if not isinstance(asset, dict) or str(asset.get("asset_class") or "").lower() != "etf":
+            continue
+        exchange = str(asset.get("exchange") or "").upper()
+        code = str(asset.get("symbol") or "").upper().strip()
+        if exchange in master_by_exchange and code:
+            master_by_exchange[exchange].add(code)
+    codes: set[str] = set().union(*master_by_exchange.values())
     sources = [
-        (TWSE_FUNDS, ("基金代號", "證券代號", "Code", "SecuritiesCode", "基金證券代號"), "TWSE"),
-        (TPEX_FUNDS, ("SecuritiesCompanyCode", "SecuritiesCode", "Code", "證券代號", "基金代號"), "TPEx"),
+        (TWSE_FUNDS, ("基金代號", "證券代號", "Code", "SecuritiesCode", "FundCode", "SecurityCode", "StockCode", "基金證券代號"), "TWSE"),
+        (TPEX_FUNDS, ("SecuritiesCompanyCode", "SecuritiesCode", "Code", "FundCode", "SecurityCode", "StockCode", "證券代號", "基金代號"), "TPEx"),
     ]
     for url, keys, label in sources:
         source_codes: set[str] = set()
@@ -104,21 +108,26 @@ def official_etf_codes(session: requests.Session, old_rows: list[dict]) -> tuple
                     continue
                 code = first(row, keys)
                 if code:
-                    source_codes.add(code.upper())
+                    source_codes.add(re.sub(r"[^0-9A-Za-z]", "", code).upper())
         except Exception as exc:  # noqa: BLE001
             warnings.append(f"{label} ETF list: {exc}")
+        exchange_key = label.upper()
         if not source_codes:
-            source_codes.update(
-                str(row.get("symbol") or "").upper()
-                for row in old_rows
-                if str(row.get("exchange") or "").upper() == label.upper()
-                and row.get("asset_class") == "etf"
-                and str(row.get("symbol") or "").strip()
-            )
+            source_codes.update(master_by_exchange.get(exchange_key, set()))
             if source_codes:
-                warnings.append(f"{label} ETF list returned no recognized code; reused {len(source_codes)} last-known-good ETF symbols")
+                warnings.append(f"{label} ETF endpoint returned no recognized code; reused {len(source_codes)} official asset-master ETF symbols")
             else:
-                warnings.append(f"{label} ETF list returned no recognized code and no last-known-good ETF symbols were available")
+                source_codes.update(
+                    str(row.get("symbol") or "").upper()
+                    for row in old_rows
+                    if str(row.get("exchange") or "").upper() == exchange_key
+                    and row.get("asset_class") == "etf"
+                    and str(row.get("symbol") or "").strip()
+                )
+                if source_codes:
+                    warnings.append(f"{label} ETF endpoint returned no recognized code; reused {len(source_codes)} last-known-good ETF symbols")
+                else:
+                    warnings.append(f"{label} ETF endpoint returned no recognized code and no verified fallback ETF symbols were available")
         codes.update(source_codes)
     return {code for code in codes if code}, warnings
 
@@ -174,12 +183,19 @@ def rows_and_fields(payload: Any) -> tuple[list[Any], list[str]]:
         return payload, []
     if not isinstance(payload, dict):
         return [], []
-    rows = payload.get("data") or payload.get("items") or payload.get("aaData") or payload.get("tables") or []
-    fields = payload.get("fields") or payload.get("columns") or payload.get("columnNames") or []
-    if isinstance(rows, list) and rows and isinstance(rows[0], dict) and "data" in rows[0]:
+    rows = payload.get("data") or payload.get("items") or payload.get("aaData") or payload.get("results") or payload.get("tables") or []
+    raw_fields = payload.get("fields") or payload.get("columns") or payload.get("columnNames") or []
+    if isinstance(rows, list) and rows and isinstance(rows[0], dict) and ("data" in rows[0] or "items" in rows[0]):
         table = rows[0]
-        return table.get("data") or table.get("items") or [], table.get("fields") or table.get("columns") or []
-    return rows if isinstance(rows, list) else [], fields if isinstance(fields, list) else []
+        rows = table.get("data") or table.get("items") or []
+        raw_fields = table.get("fields") or table.get("columns") or raw_fields
+    fields: list[str] = []
+    for field in raw_fields if isinstance(raw_fields, list) else []:
+        if isinstance(field, dict):
+            fields.append(str(field.get("name") or field.get("title") or field.get("field") or field.get("key") or ""))
+        else:
+            fields.append(str(field))
+    return rows if isinstance(rows, list) else [], fields
 
 
 def normalized_field(value: Any) -> str:
@@ -213,10 +229,26 @@ def history_records(payload: Any, component: str, source: str) -> list[dict[str,
         date_raw, _ = field_value(row, (
             "Date", "日期", "資料日期", "TradeDate", "TradingDate", "成交日期", "年月日", "交易日期",
         ))
+        if not str(date_raw or "").strip():
+            for key, value in row.items():
+                norm = normalized_field(key)
+                if ("date" in norm or "日期" in norm or "年月日" in norm) and str(value or "").strip():
+                    date_raw = value; break
         amount_raw, amount_key = field_value(row, (
             "TradeValue", "成交金額", "成交金額(元)", "成交金額（元）", "Amount", "TradingValue",
             "成交值", "TotalAmount", "TransactionAmount", "TradeAmount", "TotalTradeValue",
+            "TransactionValue", "TotalTransactionAmount", "TradingAmount", "交易金額", "金額", "金額(元)", "金額（元）",
         ))
+        if number(amount_raw) is None:
+            candidates = []
+            for key, value in row.items():
+                norm = normalized_field(key)
+                if any(term in norm for term in ("amount", "value", "金額", "成交值", "交易值")) and not any(term in norm for term in ("index", "指數", "volume", "數量", "股數", "筆數", "change", "漲跌")):
+                    parsed = number(value)
+                    if parsed is not None and parsed > 0:
+                        candidates.append((parsed, str(key), value))
+            if candidates:
+                _, amount_key, amount_raw = max(candidates, key=lambda item: item[0])
         day = valid_session_date(parse_market_date(date_raw))
         value = number(amount_raw)
         key_norm = normalized_field(amount_key)
@@ -290,7 +322,7 @@ def merge_history(old_rows: list[dict], online_rows: list[dict], current_total: 
             value = number(raw.get(key))
             if value is not None and value > 0:
                 row[key] = value
-        # Older files may only have a total. Preserve an explicit v11.4.33
+        # Older files may only have a total. Preserve an explicit v11.4.34
         # completeness flag, but never infer completeness from a source label:
         # v11.4.32 could say "TWSE/TPEx quote sum" while its stored total had
         # already been overwritten by the lone TWSE component.
@@ -466,7 +498,7 @@ def main() -> None:
             "history_end": trading_date,
             "retention_policy": "2026-01-01 through latest verified trading date",
             "source_policy": "direct-online-official backfill at most once per day; restored rows are session-validated before reuse",
-            "migration": "v11.4.33 backfills every month, rejects partial-market averages, and removes legacy weekend/future turnover rows",
+            "migration": "v11.4.34 backfills every month, rejects partial-market averages, and removes legacy weekend/future turnover rows",
             "last_full_backfill_date": NOW.date().isoformat() if fetched_history else history_meta.get("last_full_backfill_date"),
             "session_count": len(history_rows),
             "warnings": history_warnings,

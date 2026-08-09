@@ -155,6 +155,61 @@ class ParserTests(unittest.TestCase):
         ], None)
         self.assertEqual(rows[0]["trade_value"],125)
 
+
+    def test_tpex_turnover_table_descriptor_schema(self):
+        payload={"tables":[{"fields":[{"name":"日期"},{"name":"金額(元)"}],"data":[["115/08/07","206,043,637,049"]]}]}
+        rows=tw_market.history_records(payload,"tpex_trade_value","TPEx test")
+        self.assertEqual(rows[0]["date"],"2026-08-07")
+        self.assertEqual(rows[0]["tpex_trade_value"],206043637049)
+
+    def test_tpex_dividend_semantic_long_field_schema(self):
+        payload=[{
+            "公司代號及名稱":"6488－環球晶",
+            "股利年度（民國年）":"115",
+            "董事會決議通過股利分派之日期":"115/08/07",
+            "股東配發內容－盈餘分配之現金股利（元／股）":"10.5",
+        }]
+        rows=event_updater.parse_dividend_plans(payload,"TPEX",event_updater.TPEX_DIVIDEND_PLAN_URL,"tpex-dividend-plan")
+        self.assertEqual(len(rows),1)
+        self.assertEqual(rows[0]["symbol"],"6488")
+        self.assertEqual(rows[0]["local_date"],"2026-08-07")
+
+    def test_tpex_exdiv_semantic_chinese_schema(self):
+        payload=[{"除權除息日期":"115/06/03","公司代號及名稱":"6488 環球晶","權息別":"除息","現金股利（元／股）":"10"}]
+        rows=event_updater.parse_tpex_exdiv_history_payload(payload)
+        self.assertEqual(len(rows),1)
+        self.assertEqual(rows[0]["symbol"],"6488")
+        self.assertEqual(rows[0]["local_date"],"2026-06-03")
+
+    def test_tpex_official_institutional_english_schema(self):
+        assets={"6488":{"name":"環球晶","asset_class":"stock"}}
+        payload=[{
+            "SecuritiesCompanyCode":"6488","CompanyName":"環球晶",
+            "Foreign Investors include Mainland Area Investors (Foreign Dealers excluded)-Difference":"-2,000,000",
+            "Securities Investment Trust Companies-Difference":"500,000",
+            "Dealers-Difference":"250,000","Total Difference":"-1,250,000",
+        }]
+        rows,market,day=chips.parse_tpex_institutional(payload,assets,chips.TPEX_INSTITUTIONAL,"2026-08-07")
+        self.assertEqual(day,"2026-08-07")
+        self.assertEqual(rows["6488"]["institutional"]["foreign_net"],-2000)
+        self.assertEqual(market["total_net"],-1250)
+
+    def test_tpex_margin_chinese_official_schema_is_already_in_lots(self):
+        assets={"6488":{"name":"環球晶","asset_class":"stock"}}
+        payload=[{"代號":"6488","名稱":"環球晶","前資餘額":"1200","資買":"100","資賣":"50","現償":"10","資餘額":"1240","前券餘額":"80","券賣":"15","券買":"5","券償":"0","券餘額":"90","資券相抵":"3"}]
+        rows,day=chips.parse_tpex_margin(payload,assets,chips.TPEX_MARGIN,"2026-08-07")
+        self.assertEqual(day,"2026-08-07")
+        self.assertEqual(rows["6488"]["margin"]["balance"],1240)
+        self.assertEqual(rows["6488"]["margin"]["change"],40)
+        self.assertEqual(rows["6488"]["short"]["balance"],90)
+
+    def test_tpex_daytrade_market_aggregate_schema(self):
+        payload=[{"資料日期":"115/08/07","當日沖銷交易總成交股數":"12,000,000","當日沖銷交易總成交股數占市場比重":"18.5","當日沖銷交易總買進成交金額":"900000000","當日沖銷交易總賣出成交金額":"910000000"}]
+        market,day=chips.parse_tpex_day_trade_market(payload,"2026-08-07")
+        self.assertEqual(day,"2026-08-07")
+        self.assertEqual(market["volume"],12000)
+        self.assertEqual(market["volume_ratio_percent"],18.5)
+
     def test_news_archive_drops_pre_2026_and_keeps_old_major(self):
         base={"title":"聯準會重大利率決策影響全球市場","summary":"聯準會政策聲明可能影響美債、美元與全球股票市場。","url":"https://example.com/a","impact":"high","is_major":True,"importance_score":80}
         old={**base,"published_at":"2025-12-31T12:00:00+08:00"}

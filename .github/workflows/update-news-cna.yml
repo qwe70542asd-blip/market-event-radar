@@ -1,4 +1,4 @@
-name: Update v11.4.33 中央社 news
+name: Update v11.4.34 中央社 news
 on:
   workflow_dispatch:
 permissions:
