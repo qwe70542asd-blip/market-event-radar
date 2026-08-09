@@ -1,10 +1,10 @@
 {
   "metadata": {
-    "version": "v11.4.35",
+    "version": "v11.4.36",
     "updated_at": null,
     "trading_date": null,
     "source": "TWSE official structured data; Yahoo Taiwan reference fallback",
-    "note": "Bundled fallback sanitized for v11.4.35; live updater refreshes TWSE/TPEx official channels and removes invalid nested dates.",
+    "note": "Bundled fallback sanitized for v11.4.36; live updater refreshes TWSE/TPEx official channels and removes invalid nested dates.",
     "invalid_nested_dates_removed": 0,
     "invalid_legacy_dates_removed": 0,
     "schema": "symbol-keyed-v2"

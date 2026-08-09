@@ -1,4 +1,4 @@
-市場事件雷達 v11.4.35 — Git tracked stale-path deletion manifest
+市場事件雷達 v11.4.36 — Git tracked stale-path deletion manifest
 
 在舊 GitHub working tree 中，若下列路徑仍存在，請由 CLEAN-REPO.cmd 移除並讓 GitHub Desktop 將它們以 deletion commit：
 

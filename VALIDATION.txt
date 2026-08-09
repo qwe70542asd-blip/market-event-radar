@@ -1,4 +1,4 @@
-Market Event Radar v11.4.35 validation
+Market Event Radar v11.4.36 validation
 Validated: 2026-08-09T12:54:36+08:00
 
 PASS: pytest 202 passed

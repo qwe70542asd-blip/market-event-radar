@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Update the v11.4.35 Taiwan stock and ETF master with detailed official data.
+"""Update the v11.4.36 Taiwan stock and ETF master with detailed official data.
 
 The updater is intentionally defensive:
 - official TWSE/TPEx endpoints are parsed with bilingual/format-tolerant keys;
@@ -22,8 +22,8 @@ from bs4 import BeautifulSoup
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.35"
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.35)"}
+VERSION = "v11.4.36"
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.36)"}
 SESSION = requests.Session()
 
 MASTER_SOURCES = [

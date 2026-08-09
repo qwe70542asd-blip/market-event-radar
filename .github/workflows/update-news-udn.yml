@@ -1,4 +1,4 @@
-name: Update v11.4.35 經濟日報 news
+name: Update v11.4.36 經濟日報 news
 on:
   workflow_dispatch:
 permissions:

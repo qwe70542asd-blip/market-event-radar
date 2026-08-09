@@ -1,4 +1,4 @@
-市場事件雷達 v11.4.35 — GitHub Desktop 更新方式
+市場事件雷達 v11.4.36 — GitHub Desktop 更新方式
 
 1. 解壓縮 ZIP，將 ZIP 內「所有根目錄內容」覆蓋本機 market-event-radar repository；不要把 ZIP 本身放進 repository。
 2. 雙擊根目錄 CLEAN-REPO.cmd，清除舊版可能殘留的 scripts/ 巢狀 repository；正常 scripts/*.py 不會刪除。
@@ -6,11 +6,11 @@
    - TPEx 歷史除權息支援官方 `代號` / `名稱` / `權或息` 等實際欄位。
    - TPEx 董事會股利支援 current long-form board-date 欄位，legacy table schema 異常時只允許用另一個 TPEx 官方重大訊息來源備援，不猜日期。
    - TPEx 當沖修正民國日期與多日 payload 選擇，只發布官方 market aggregate，不再把彙總資料當個股資料。
-   - data verification 在 release push 時先等 live-tw-market 更新到 v11.4.35，避免搶跑讀到舊版市場資料。
+   - data verification 在 release push 時先等 live-tw-market 更新到 v11.4.36，避免搶跑讀到舊版市場資料。
    - BLS live 官方頁若在 GitHub Runner 全部 403，改用逐筆由 BLS 官方 2026 schedule 驗證後內建的 snapshot；不外推未公告日期。
    - Productivity and Costs preliminary / revised 使用不同 tracking key，避免同季事件互相覆蓋。
 4. GitHub Desktop 應同時包含 Modified / Added / Deleted；若 CLEAN-REPO.cmd 產生舊 scripts/... deletions，這是預期行為。
-5. Commit 可用：market-event-radar-v11.4.35
-6. Push origin 後，先確認 `Verify v11.4.35 app release` 綠燈，再確認 market core / events / tw-chips / data verification。
+5. Commit 可用：market-event-radar-v11.4.36
+6. Push origin 後，先確認 `Verify v11.4.36 app release` 綠燈，再確認 market core / events / tw-chips / data verification。
 
 注意：Cloudflare secrets 未設定時 edge-worker deploy 仍會安全 skip；GitHub Actions 為主要 fallback。外部官方來源可能 403、空資料或改 schema，資料不足時維持 partial / warning / last-known-good，不得以推測值補成即時資料。

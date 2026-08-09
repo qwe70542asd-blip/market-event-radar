@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build Market Event Radar v11.4.35 event data from official schedules.
+"""Build Market Event Radar v11.4.36 event data from official schedules.
 
 The updater keeps the last verified archive, refreshes selected official sources,
 and records when an exact date first appears or changes. It never invents dates.
@@ -34,7 +34,7 @@ NOW = datetime.now(ZoneInfo("Asia/Taipei"))
 TAIPEI = NOW.tzinfo
 NEW_YORK = ZoneInfo("America/New_York")
 OFFLINE = os.getenv("EVENT_OFFLINE", "").strip() == "1"
-VERSION = "v11.4.35"
+VERSION = "v11.4.36"
 TRACKING_KEY_VERSION = 2
 ARCHIVE_START = date(2026, 1, 1)
 ARCHIVE_START_DT = datetime.combine(ARCHIVE_START, time.min, tzinfo=TAIPEI)
@@ -147,18 +147,42 @@ def fmt_number(value: float | None) -> str:
 
 
 def parse_market_date(value: Any) -> date | None:
+    """Normalize ROC/Gregorian dates, including non-zero-padded components.
+
+    Examples accepted: 115/08/07, 115/8/7, 1150807, 2026/08/07,
+    2026/8/7 and 20260807.  Separated forms are parsed by components first so
+    a Gregorian date such as 2026/8/7 is never mistaken for a 3-digit ROC year.
+    """
     text = clean(value).replace("年", "/").replace("月", "/").replace("日", "")
-    compact = re.sub(r"[^0-9]", "", text)
-    try:
-        if len(compact) == 7:
-            return date(int(compact[:3]) + 1911, int(compact[3:5]), int(compact[5:7]))
-        if len(compact) == 8:
-            return date(int(compact[:4]), int(compact[4:6]), int(compact[6:8]))
-        parsed = date_parser.parse(text, fuzzy=False)
-        return parsed.date()
-    except (ValueError, TypeError, OverflowError):
+    if not text:
         return None
 
+    token_match = re.search(r"(?<!\\d)(\\d{3,4})[./-](\\d{1,2})[./-](\\d{1,2})(?!\\d)", text)
+    if token_match:
+        year, month, day_value = map(int, token_match.groups())
+        if year < 1911:
+            year += 1911
+        try:
+            return date(year, month, day_value)
+        except ValueError:
+            return None
+
+    compact_match = re.search(r"(?<!\\d)(\\d{7}|\\d{8})(?!\\d)", text)
+    if compact_match:
+        compact = compact_match.group(1)
+        try:
+            if len(compact) == 7:
+                return date(int(compact[:3]) + 1911, int(compact[3:5]), int(compact[5:7]))
+            return date(int(compact[:4]), int(compact[4:6]), int(compact[6:8]))
+        except ValueError:
+            return None
+
+    try:
+        parsed = date_parser.parse(text, fuzzy=True)
+        year = parsed.year + 1911 if parsed.year < 1911 else parsed.year
+        return date(year, parsed.month, parsed.day)
+    except (ValueError, TypeError, OverflowError):
+        return None
 
 def first_market_date(value: Any) -> date | None:
     """Extract the first ROC/Gregorian date from a decorated official field."""
@@ -851,48 +875,69 @@ def parse_tpex_exdiv_history_payload(payload: Any, source_url: str = TPEX_EXDIV_
     for row in payload_dict_rows(payload):
         date_raw = first_value(row, [
             "ExRrightsExDividendDate", "ExRightsExDividendDate", "ExDate", "Date",
-            "資料日期", "交易日期", "除權息日期", "除權除息日期",
+            "資料日期", "交易日期", "除權息日期", "除權除息日期", "除權息交易日",
         ]) or semantic_field(row, all_terms=("日期",), any_terms=("除權", "除息", "權息"))
-        day = parse_market_date(date_raw)
+        day = first_market_date(date_raw)
         symbol, name = dividend_company_identity(row)
-        # The documented TPEx historical schema uses the generic headers
-        # 「代號」/「名稱」 rather than the MOPS company-code headers.
         if not symbol:
-            symbol = first_value(row, ["代號", "Symbol"]) or semantic_field(row, any_terms=("證券代號", "股票代號", "公司代號", "securitycode", "companycode"))
+            symbol = first_value(row, ["代號", "Symbol", "股票代號", "證券代號"])
         if not name:
-            name = first_value(row, ["名稱", "ShortName"]) or semantic_field(row, any_terms=("證券名稱", "股票名稱", "公司名稱", "securityname", "companyname"))
+            name = first_value(row, ["名稱", "ShortName", "股票名稱", "證券名稱"])
         if not day or day < ARCHIVE_START or day > NOW.date() or not symbol:
             continue
-        kind = first_value(row, ["ExRrightsExDividend", "ExRightsExDividend", "Type", "除權息", "權息別", "權/息", "權或息"])
-        if not kind:
-            kind = semantic_field(row, any_terms=("權息別", "除權息", "exrightsexdividend", "type")) or "除息"
-        cash_raw = first_value(row, ["CashDividend", "CashDividendValue", "DividendValue", "息值", "現金股利"])
-        if not cash_raw:
-            cash_raw = semantic_field(row, any_terms=("現金股利", "cashdividend", "息值"), exclude_terms=("股票", "配股"))
-        stock_per_thousand = first_value(row, ["每仟股無償配股"])
-        stock_raw = first_value(row, ["StockDividendRatio", "StockDividendValue", "股票股利", "RightValue", "權值"])
-        if not stock_raw:
-            stock_raw = semantic_field(row, any_terms=("股票股利", "stockdividend", "無償配股率"))
+
+        kind = first_value(row, [
+            "ExRrightsExDividend", "ExRightsExDividend", "Type", "除權息", "權息別",
+            "權/息", "權或息", "除權息別",
+        ]) or semantic_field(row, any_terms=("權息別", "除權息", "權或息", "exrightsexdividend", "type"))
+
+        cash_raw = first_value(row, [
+            "CashDividend", "CashDividendValue", "DividendValue", "息值", "現金股利", "現金股利(元)",
+        ]) or semantic_field(row, any_terms=("現金股利", "cashdividend", "息值"), exclude_terms=("股票", "配股"))
+        stock_per_thousand = first_value(row, ["每仟股無償配股", "每千股無償配股"])
+        stock_raw = first_value(row, [
+            "StockDividendRatio", "StockDividendValue", "股票股利", "RightValue", "權值", "無償配股率",
+        ]) or semantic_field(row, any_terms=("股票股利", "stockdividend", "無償配股率"))
         stock_ratio = parse_number(stock_raw)
-        # TPEx documents 「每仟股無償配股」 as shares granted per 1,000 shares.
-        # Convert it to a per-share ratio instead of exposing the raw per-thousand
-        # count as if it were already a ratio.
         if stock_ratio is None and stock_per_thousand not in (None, ""):
             shares_per_thousand = parse_number(stock_per_thousand)
             stock_ratio = (shares_per_thousand / 1000.0) if shares_per_thousand is not None else None
+
+        if not kind:
+            cash_value = parse_number(cash_raw)
+            kind = "除權息" if stock_ratio not in (None, 0) and cash_value not in (None, 0) else "除權" if stock_ratio not in (None, 0) else "除息"
         events.append(make_exdiv_event(
             "TPEX", clean(symbol), clean(name), day, clean(kind), parse_number(cash_raw), stock_ratio,
             "TPEx 上櫃除權除息計算結果表", source_url, "tpex-exdiv-history",
         ))
     return events
 
-
 def fetch_tpex_exdiv_history(session: requests.Session) -> SourceResult:
     payload = http_json(session, TPEX_EXDIV_HISTORY_URL)
+    rows = payload_dict_rows(payload)
     events = parse_tpex_exdiv_history_payload(payload)
-    if not events and payload_has_rows(payload):
-        raise RuntimeError("TPEx historical ex-dividend returned rows but parser recognized 0 events")
-    message = f"{len(events)} historical events since 2026-01-01" if events else "official endpoint returned no rows on this run"
+    if not events and rows:
+        parsed_days = []
+        for row in rows:
+            raw = first_value(row, [
+                "ExRrightsExDividendDate", "ExRightsExDividendDate", "ExDate", "Date",
+                "資料日期", "交易日期", "除權息日期", "除權除息日期", "除權息交易日",
+            ]) or semantic_field(row, all_terms=("日期",), any_terms=("除權", "除息", "權息"))
+            day = first_market_date(raw)
+            if day:
+                parsed_days.append(day)
+        eligible = [day for day in parsed_days if ARCHIVE_START <= day <= NOW.date()]
+        if eligible:
+            raise RuntimeError(
+                f"TPEx historical ex-dividend returned {len(rows)} rows and {len(eligible)} in-window dates but parser recognized 0 events"
+            )
+        message = (
+            f"official endpoint returned {len(rows)} rows but none fall inside the verified archive window"
+            if parsed_days else
+            f"official endpoint returned {len(rows)} rows but no recognizable date field"
+        )
+    else:
+        message = f"{len(events)} historical events since 2026-01-01" if events else "official endpoint returned no rows on this run"
     return SourceResult(
         "tpex-exdiv-history", "TPEx historical ex-right/ex-dividend", TPEX_EXDIV_HISTORY_URL,
         ("tpex-exdiv-history",), events, message,
@@ -954,13 +999,13 @@ def parse_dividend_plans(rows: Any, market: str, source_url: str, origin: str) -
         term = first_value(row, ["期別", "股利期別", "DividendPeriod"]) or semantic_field(row, any_terms=("期別", "dividendperiod"))
         if term and term not in period:
             period = clean(f"{period} {term}")
-        shareholder_raw = first_value(row, ["股東會日期", "ShareholdersMeetingDate"]) or semantic_field(row, all_terms=("股東會",), any_terms=("日期", "date"))
+        shareholder_raw = first_value(row, ["股東會日期", "ShareholdersMeetingDate"]) or semantic_field(row, all_terms=("股東會",), any_terms=("日期", "date"), exclude_terms=("配盈餘", "待彌補", "金額", "元"))
         shareholder_day = first_market_date(shareholder_raw)
         decision_raw = first_value(row, [
             "董事會決議通過股利分派日", "董事會通過股利分派日",
             "董事會（擬議）股利分派日", "董事會(擬議)股利分派日",
             "董事會股利分派日", "董事會擬議日期", "董事會決議日期",
-            "董事會決議日", "董事會日期",
+            "董事會決議日", "董事會日期", "董事會決議通過股利分派日期",
             "現金股利經董事會決議、增資配股經董事會擬議日期",
             "現金股利經董事會決議增資配股經董事會擬議日期",
             "BoardMeetingDate", "BoardDecisionDate",
@@ -1004,7 +1049,7 @@ def parse_material_dividend_decisions(rows: Any, market: str, source_url: str, o
     events: list[dict[str, Any]] = []
     for row in payload_dict_rows(rows):
         text = " ".join(clean(value) for value in row.values())
-        if "股利" not in text or "董事會" not in text or not re.search(r"決議|擬議|通過", text):
+        if not re.search(r"股利|盈餘分派|盈餘分配|配息|配股", text) or "董事會" not in text or not re.search(r"決議|擬議|通過", text):
             continue
         symbol, name = dividend_company_identity(row)
         if not symbol:
@@ -1553,7 +1598,7 @@ def main() -> None:
             "announced_today_count": announced_today,
             "announced_recent_count": announced_recent,
             "state_initialized": True,
-            "announcement_integrity": "strict-v11.4.35-series-safe",
+            "announcement_integrity": "strict-v11.4.36-series-safe",
             "announcement_suppressed_origins": sorted(suppressed_origins),
             "source_ok_count": sum(1 for source in sources if source.get("status") == "ok"),
             "source_warning_count": sum(1 for source in sources if source.get("status") != "ok"),

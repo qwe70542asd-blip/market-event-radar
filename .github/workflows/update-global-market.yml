@@ -1,4 +1,4 @@
-name: Update v11.4.35 global market
+name: Update v11.4.36 global market
 on:
   workflow_dispatch:
 permissions:

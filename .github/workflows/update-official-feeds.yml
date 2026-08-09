@@ -1,4 +1,4 @@
-name: Update v11.4.35 official feeds
+name: Update v11.4.36 official feeds
 on:
   push:
     branches: [main]
@@ -46,7 +46,7 @@ jobs:
           from pathlib import Path
           for file in ("company-disclosures.json","official-market-notices.json"):
               p=json.loads((Path("data")/file).read_text(encoding="utf-8"))
-              assert p.get("metadata",{}).get("version")=="v11.4.35"
+              assert p.get("metadata",{}).get("version")=="v11.4.36"
               rows=p.get("items",[])
               assert all(row.get("published_at") for row in rows)
               print(file,len(rows),p.get("metadata",{}).get("recent_24h_count"))
