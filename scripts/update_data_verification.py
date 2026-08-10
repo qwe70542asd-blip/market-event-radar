@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Cross-source trust + completeness verification for Market Event Radar.
 
-v11.4.37 separates two concepts that v11.4.30 mixed together:
+v11.4.38 separates two concepts that v11.4.30 mixed together:
 1. trust: official / multi-source / reference / conflict;
 2. completeness: complete / partial / unresolved, using the full asset audit.
 
@@ -16,7 +16,7 @@ from typing import Any
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.37"
+VERSION = "v11.4.38"
 
 SOURCE_FILES = {
     "assets": "assets.json",

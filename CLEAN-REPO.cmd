@@ -15,6 +15,9 @@ for %%F in (.gitignore .nojekyll 404.html asset.html data-status.html event.html
     del /f /q "scripts\%%F"
   )
 )
-echo Repository nested-copy cleanup complete.
+for %%F in (DELETION-MANIFEST-v11.4.36.txt DELETION-MANIFEST-v11.4.37.txt scripts\verify_v11_4_36_live_sources.py scripts\verify_v11_4_37_live_sources.py tests\test_v11_4_36_contracts.py tests\test_v11_4_37_contracts.py tests\test_v11_4_37_core.py docs\V11.4.36-tpex-live-diagnostic.md docs\V11.4.37-tpex-live-diagnostic.md) do (
+  if exist "%%F" del /f /q "%%F"
+)
+echo Repository nested-copy and obsolete-release cleanup complete.
 echo You can now review the deletions in GitHub Desktop before committing.
 endlocal

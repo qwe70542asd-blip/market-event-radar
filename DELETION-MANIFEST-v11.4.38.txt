@@ -1,0 +1,9 @@
+v11.4.38 release cleanup
+
+Run CLEAN-REPO.cmd after overlaying this ZIP. It removes obsolete v11.4.36/v11.4.37 release helper files plus accidental nested copies.
+
+Current release files:
+- scripts/verify_v11_4_38_live_sources.py
+- tests/test_v11_4_38_contracts.py
+- tests/test_v11_4_38_core.py
+- docs/V11.4.38-tpex-live-diagnostic.md

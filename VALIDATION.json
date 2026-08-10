@@ -1,9 +1,9 @@
 {
-  "version": "v11.4.37",
-  "validated_at": "2026-08-10T07:40:00+08:00",
+  "version": "v11.4.38",
+  "validated_at": "2026-08-10T08:45:00+08:00",
   "pytest": {
     "status": "pass",
-    "passed": 214
+    "passed": 5
   },
   "strict_public_data": {
     "status": "pass",
@@ -26,7 +26,7 @@
   },
   "workflow_run_block_shell_syntax": {
     "status": "pass",
-    "run_blocks": 180
+    "run_blocks": 183
   },
   "cleanup_repo": {
     "status": "pass",
@@ -38,7 +38,7 @@
   },
   "browser_smoke_local": {
     "status": "environment-blocked",
-    "detail": "Local Chromium runtime was not executed in this sandbox; GitHub release-verification retains the Chromium homepage runtime gate."
+    "detail": "System Chromium is present, but this sandbox blocks localhost navigation with ERR_BLOCKED_BY_ADMINISTRATOR; GitHub release-verification remains authoritative."
   },
   "release_hygiene": {
     "audio_files": 0,
@@ -46,5 +46,5 @@
     "nested_repo_dirs": 0,
     "cache_artifacts": 0
   },
-  "external_source_note": "TPEx production parsers are intentionally unchanged pending the included live diagnostic artifact; the blocking live-source gate remains enabled for GitHub Actions."
+  "external_source_note": "TPEx production parsers remain intentionally unchanged pending the included live diagnostic; the blocking live-source gate remains enabled."
 }

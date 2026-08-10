@@ -141,21 +141,24 @@
         if(previous!=null){dayPL+=(price-previous)*qty*fx;dayValued++}
       }
     }
-    const cumulative=valued?totalValue-valuedCost:null,returnPct=cumulative!=null&&valuedCost?cumulative/valuedCost*100:null;
-    const dayBase=dayValued?totalValue-dayPL:null,dayPct=dayBase?dayPL/dayBase*100:null;
-    $("#portfolioTotalValue").textContent=valued?`NT$ ${fmt(totalValue,0)}`:"—";
-    $("#portfolioTotalCost").textContent=rows.length&&totalCost?`NT$ ${fmt(totalCost,0)}`:"—";
+    // Aggregate NT$ totals fail closed when any holding lacks a quote or usable FX conversion.
+    const totalsComplete=rows.length>0&&valued===rows.length&&unconverted===0;
+    const dayComplete=totalsComplete&&dayValued===rows.length;
+    const cumulative=totalsComplete?totalValue-valuedCost:null,returnPct=cumulative!=null&&valuedCost?cumulative/valuedCost*100:null;
+    const dayBase=dayComplete?totalValue-dayPL:null,dayPct=dayBase?dayPL/dayBase*100:null;
+    $("#portfolioTotalValue").textContent=totalsComplete?`NT$ ${fmt(totalValue,0)}`:"—";
+    $("#portfolioTotalCost").textContent=totalsComplete?`NT$ ${fmt(totalCost,0)}`:"—";
     $("#portfolioTotalPL").textContent=cumulative==null?"—":`${cumulative>=0?"+":"-"}NT$ ${fmt(Math.abs(cumulative),0)}`;
-    $("#portfolioTotalPL").className=cls(cumulative);
-    $("#portfolioReturn").textContent=pct(returnPct);$("#portfolioReturn").className=cls(returnPct);
-    $("#portfolioDayPL").textContent=dayValued?`${dayPL>=0?"+":"-"}NT$ ${fmt(Math.abs(dayPL),0)}`:"—";$("#portfolioDayPL").className=cls(dayPL);
-    $("#portfolioDayReturn").textContent=dayValued?pct(dayPct):"—";$("#portfolioDayReturn").className=cls(dayPct);
-    $("#portfolioStatus").textContent=!rows.length?"尚未設定":unconverted?`未換匯 ${unconverted} 項`:valued===rows.length?"行情完整":`暫估 ${valued}/${rows.length}`;
+    $("#portfolioTotalPL").className=cumulative==null?"flat":cls(cumulative);
+    $("#portfolioReturn").textContent=totalsComplete?pct(returnPct):"—";$("#portfolioReturn").className=totalsComplete?cls(returnPct):"flat";
+    $("#portfolioDayPL").textContent=dayComplete?`${dayPL>=0?"+":"-"}NT$ ${fmt(Math.abs(dayPL),0)}`:"—";$("#portfolioDayPL").className=dayComplete?cls(dayPL):"flat";
+    $("#portfolioDayReturn").textContent=dayComplete?pct(dayPct):"—";$("#portfolioDayReturn").className=dayComplete?cls(dayPct):"flat";
+    $("#portfolioStatus").textContent=!rows.length?"尚未設定":unconverted?`未換匯 ${unconverted} 項`:totalsComplete?"行情完整":`行情不完整 ${valued}/${rows.length}`;
     const totalAllocated=[...allocation.values()].reduce((a,b)=>a+b,0);
-    $("#portfolioAllocation").innerHTML=totalAllocated?`<div class="allocation-bar">${[...allocation.entries()].map(([name,value])=>`<span style="flex:${Math.max(value,1)}" title="${escapeHtml(name)} ${((value/totalAllocated)*100).toFixed(1)}%"></span>`).join("")}</div><div class="allocation-labels">${[...allocation.entries()].sort((a,b)=>b[1]-a[1]).map(([name,value])=>`<span><i></i>${escapeHtml(name)} <b>${((value/totalAllocated)*100).toFixed(1)}%</b></span>`).join("")}</div>`:'<div class="empty">尚未加入投資標的。</div>';
+    $("#portfolioAllocation").innerHTML=totalsComplete&&totalAllocated?`<div class="allocation-bar">${[...allocation.entries()].map(([name,value])=>`<span style="flex:${Math.max(value,1)}" title="${escapeHtml(name)} ${((value/totalAllocated)*100).toFixed(1)}%"></span>`).join("")}</div><div class="allocation-labels">${[...allocation.entries()].sort((a,b)=>b[1]-a[1]).map(([name,value])=>`<span><i></i>${escapeHtml(name)} <b>${((value/totalAllocated)*100).toFixed(1)}%</b></span>`).join("")}</div>`:rows.length?'<div class="empty">資料不完整時不顯示部分配置比例。</div>':'<div class="empty">尚未加入投資標的。</div>';
     const missingQuote=Math.max(0,rows.length-valued-unconverted);
     const notes=[];
-    if(unconverted)notes.push(`${unconverted} 項資產缺少可用匯率，未納入 NT$ 總資產與損益`);
+    if(unconverted)notes.push(`${unconverted} 項資產缺少可用匯率，因此 NT$ 總資產與損益暫不顯示`);
     if(missingQuote)notes.push(`${missingQuote} 項資產尚未取得最新行情`);
     $("#portfolioEstimateNote").textContent=notes.length?`${notes.join("；")}。`:"";
   }
@@ -326,7 +329,7 @@
   const todayFocus=$("#todayFocusList");if(todayFocus)todayFocus.innerHTML=majorToday.length?majorToday.slice(0,6).map(event=>`<a class="today-focus-item" href="event.html?id=${encodeURIComponent(event.id)}"><span class="impact-dot ${escapeHtml(event.impact||"medium")}"></span><span><strong>${escapeHtml(strip(event.title))}</strong><small>${escapeHtml(formatTime(event.start))}</small></span></a>`).join(""):'<div class="empty">今天沒有已確認的重大事件</div>';
   $("#focusUpdated").textContent=events.metadata?.updated_at?formatTime(events.metadata.updated_at):"等待資料";
 
-  let current=new Date(),calendarMode=localStorage.getItem("mr-calendar-mode-v11.4.37")==="dividend"?"dividend":"market",pendingJumpDate="";
+  let current=new Date(),calendarMode=localStorage.getItem("mr-calendar-mode-v11.4.38")==="dividend"?"dividend":"market",pendingJumpDate="";
   const calendar=$("#calendarGrid"),dialog=$("#dayDialog");
   const marketFilters=()=>({q:$("#eventSearch").value.trim().toLowerCase(),region:$("#eventRegion").value,type:$("#eventType").value,impact:$("#eventImpact").value});
   const dividendFilters=()=>({q:$("#eventSearch").value.trim().toLowerCase(),kind:$("#dividendKind").value,asset:$("#dividendAsset").value,amount:$("#dividendAmount").value});
@@ -465,7 +468,7 @@
   }
   function setCalendarMode(mode,{render=true}={}){
     calendarMode=mode==="dividend"?"dividend":"market";
-    localStorage.setItem("mr-calendar-mode-v11.4.37",calendarMode);
+    localStorage.setItem("mr-calendar-mode-v11.4.38",calendarMode);
     document.querySelectorAll("[data-calendar-mode]").forEach(button=>{const active=button.dataset.calendarMode===calendarMode;button.classList.toggle("active",active);button.setAttribute("aria-selected",String(active))});
     document.querySelectorAll("[data-calendar-filter]").forEach(panel=>panel.hidden=panel.dataset.calendarFilter!==calendarMode);
     $("#calendarHeading").textContent=calendarMode==="market"?"市場事件月曆":"股利股息月曆";

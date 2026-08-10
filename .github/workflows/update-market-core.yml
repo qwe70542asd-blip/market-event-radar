@@ -1,4 +1,4 @@
-name: Update v11.4.37 market core
+name: Update v11.4.38 market core
 on:
   push:
     branches: [main]
@@ -91,7 +91,7 @@ jobs:
           market=json.loads(Path("data/tw-market.json").read_text(encoding="utf-8"))
           history=json.loads(Path("data/market-volume-history.json").read_text(encoding="utf-8"))
           meta=market.get("metadata",{})
-          assert meta.get("version")=="v11.4.37", meta.get("version")
+          assert meta.get("version")=="v11.4.38", meta.get("version")
           trading_date=meta.get("trading_date")
           assert trading_date, "verified trading date missing"
           assert date.fromisoformat(trading_date).weekday() < 5, trading_date

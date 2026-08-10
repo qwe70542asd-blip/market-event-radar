@@ -1,4 +1,4 @@
-市場事件雷達 v11.4.37 — 核心資料修正 + TPEx 診斷版
+市場事件雷達 v11.4.38 — 核心資料修正 + TPEx 診斷版
 
 1. 解壓縮 ZIP，將 ZIP 內「所有根目錄內容」覆蓋本機 market-event-radar repository；不要把 ZIP 本身放進 repository。
 2. 雙擊根目錄 CLEAN-REPO.cmd，清除舊版巢狀 repository / cache；正常 scripts/*.py 不會刪除。
@@ -11,10 +11,10 @@
    - Data Verification 優先記錄每一檔自己的 source timestamp，channel timestamp 另存，不再把整批更新時間冒充個股更新時間。
    - 投資組合 NT$ 總資產加入 FX guard；可換匯才納入台幣總額，缺匯率時 fail closed，不再直接把不同幣別數字相加。
    - 保留 Diagnose TPEx live schemas；本版沒有先改 TPEx 當沖 / 股利 production parser。
-4. Commit 可用：market-event-radar-v11.4.37-core
+4. Commit 可用：market-event-radar-v11.4.38-core
 5. Push origin 後：
    - `Diagnose TPEx live schemas` 會蒐集真實 TPEx schema 與 parser 決策。
-   - `Verify v11.4.37 app release` 的 TPEx live gate 仍保持 blocking；若 TPEx production parser 仍無法解析真實資料，該 gate 會紅燈，這是預期的 fail-closed 行為，不是假綠燈。
+   - `Verify v11.4.38 app release` 的 TPEx live gate 仍保持 blocking；若 TPEx production parser 仍無法解析真實資料，該 gate 會紅燈，這是預期的 fail-closed 行為，不是假綠燈。
 6. TPEx 診斷結果確認前，不再用猜測方式修改 TPEx parser。
 
 Cloudflare edge-worker deployment 若缺 CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID / CLOUDFLARE_KV_NAMESPACE_ID 仍會明確失敗；這與 GitHub Pages 本體分開。外部來源不足時維持 partial / warning / last-known-good，不得以推測值補成即時資料。
