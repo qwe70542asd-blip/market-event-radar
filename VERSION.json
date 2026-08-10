@@ -1,5 +1,5 @@
 {
-  "version": "v11.4.36",
-  "baseline_version": "11.4.36",
-  "name": "tpex-live-contracts-cloudflare-release-gate"
+  "version": "v11.4.37",
+  "baseline_version": "11.4.37",
+  "name": "core-data-correctness-and-tpex-diagnostics"
 }

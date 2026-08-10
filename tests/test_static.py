@@ -7,7 +7,7 @@ class StaticTests(unittest.TestCase):
  def test_required_tree(self):
   for path in [".github/workflows","assets","data","docs","scripts","tests","index.html","news.html","asset.html","service-worker.js"]:self.assertTrue((ROOT/path).exists(),path)
  def test_version(self):
-  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.36")
+  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.37")
  def test_ascii_filenames(self):
   for path in ROOT.rglob("*"):self.assertTrue(all(ord(c)<128 for c in path.name),path)
  def test_no_audio(self):
@@ -97,14 +97,14 @@ class StaticTests(unittest.TestCase):
 
  def test_market_snapshot_seed_schema(self):
   payload=json.loads(self.read("data/market-snapshot.json"))
-  self.assertEqual(payload.get("metadata",{}).get("version"),"v11.4.36")
+  self.assertEqual(payload.get("metadata",{}).get("version"),"v11.4.37")
   self.assertEqual(set(payload.get("metadata",{}).get("kline_symbols",[])),{"^TWII","^DJI","^IXIC","^SOX","^GSPC","^N225"})
   self.assertNotIn("^TWOII",{row.get("symbol") for row in payload.get("items",[])})
 
  def test_all_pages_current_version(self):
   for p in ROOT.glob("*.html"):
    body=p.read_text(encoding="utf-8")
-   self.assertIn("v11.4.36",body,p.name)
+   self.assertIn("v11.4.37",body,p.name)
    self.assertNotIn("v11.4.15",body,p.name)
 
 
@@ -167,7 +167,7 @@ class StaticTests(unittest.TestCase):
 
  def test_balanced_portfolio_summary_layout(self):
   css=self.read("assets/styles.css")
-  for token in ("v11.4.36 portfolio summary balance","grid-template-columns:repeat(3,minmax(0,1fr))","grid-template-rows:repeat(2,minmax(78px,1fr))","justify-content:center"):
+  for token in ("v11.4.37 portfolio summary balance","grid-template-columns:repeat(3,minmax(0,1fr))","grid-template-rows:repeat(2,minmax(78px,1fr))","justify-content:center"):
    self.assertIn(token,css)
 
  def test_home_summary_and_volume_momentum(self):
@@ -439,7 +439,7 @@ class StaticTests(unittest.TestCase):
 
  def test_v11424_version_bump_prevents_same_version_asset_cache(self):
   for path in ("index.html","assets/shared.js","assets/home.js","assets/sw-register.js","service-worker.js","VERSION.json"):
-   content=self.read(path);self.assertIn("11.4.36",content);self.assertNotIn("11.4.23",content);self.assertNotIn("11.4.22",content)
+   content=self.read(path);self.assertIn("11.4.37",content);self.assertNotIn("11.4.23",content);self.assertNotIn("11.4.22",content)
 
  def test_v11428_compact_market_state_replaces_sector_heat(self):
   html=self.read("index.html");home=self.read("assets/home.js");snapshot=self.read("scripts/update_market_snapshot.py")
@@ -490,13 +490,13 @@ class StaticTests(unittest.TestCase):
    self.assertIn(token,market)
 
  def test_v11426_15m_is_documented_as_post_deploy_nonblocking(self):
-  audit=self.read("docs/V11.4.36-release-audit.md")
+  audit=self.read("docs/V11.4.37-release-audit.md")
   for token in ("15 分鐘 K","非阻擋","部署後","不得偽造"):
    self.assertIn(token,audit)
 
  def test_v11428_mobile_calendar_has_no_forced_horizontal_scroll(self):
   css=self.read("assets/styles.css");html=self.read("index.html");manifest=json.loads(self.read("manifest.webmanifest"))
-  for token in (".calendar-weekdays,.calendar-grid{width:100%;min-width:0!important","overflow:visible!important","grid-template-columns:repeat(7,minmax(0,1fr))",".mobile-install-trigger","assets/pwa-install.js?v=11.4.36"):
+  for token in (".calendar-weekdays,.calendar-grid{width:100%;min-width:0!important","overflow:visible!important","grid-template-columns:repeat(7,minmax(0,1fr))",".mobile-install-trigger","assets/pwa-install.js?v=11.4.37"):
    self.assertIn(token,css+html)
   self.assertEqual(manifest.get("display"),"standalone")
   self.assertTrue(any(icon.get("sizes")=="192x192" for icon in manifest.get("icons",[])))
@@ -511,9 +511,9 @@ class StaticTests(unittest.TestCase):
   frontend=self.read("assets/date-alerts.js");backend=self.read("scripts/update_events.py");workflow=self.read(".github/workflows/update-events.yml")
   for token in ("trustedAnnouncement","next<today","previous>=today","dayDistance(previous,next)<=183"):
    self.assertIn(token,frontend)
-  for token in ("announcement_candidate","announcement_semantically_valid","suppressed_origins","strict-v11.4.36"):
+  for token in ("announcement_candidate","announcement_semantically_valid","suppressed_origins","strict-v11.4.37"):
    self.assertIn(token,backend)
-  self.assertIn("v11.4.36",workflow)
+  self.assertIn("v11.4.37",workflow)
 
 
  def test_v11431_repo_layout_guard(self):
@@ -530,7 +530,7 @@ class StaticTests(unittest.TestCase):
   snapshot=self.read("scripts/update_market_snapshot.py")
   self.assertIn("session_confirmed",snapshot);self.assertIn("unconfirmed_reason",snapshot)
   self.assertIn('cron: "*/5 * * * *"',core)
-  self.assertIn('meta.get("version")=="v11.4.36"',core)
+  self.assertIn('meta.get("version")=="v11.4.37"',core)
 
  def test_v11431_scheduler_is_consolidated(self):
   batch=self.read(".github/workflows/update-news-batch.yml");official=self.read(".github/workflows/update-official-feeds.yml")
@@ -596,7 +596,7 @@ class StaticTests(unittest.TestCase):
 
  def test_v11431_edge_worker_is_current_and_uses_verified_time(self):
   worker=self.read("edge/market-live-worker.js")
-  self.assertIn('v11.4.36',worker);self.assertNotIn('v11.4.27',worker)
+  self.assertIn('v11.4.37',worker);self.assertNotIn('v11.4.27',worker)
   self.assertIn('missing verified quote time',worker)
   self.assertIn('marketDate(new Date(x.time*1000),market)',worker)
   self.assertIn('latestSession===session?previous?.close:latest?.close',worker)
@@ -636,15 +636,15 @@ class StaticTests(unittest.TestCase):
  def test_v11432_chart_library_is_not_boot_blocking(self):
   html=self.read("index.html"); loader=self.read("assets/chart-loader.js"); home=self.read("assets/home.js"); sw=self.read("service-worker.js")
   self.assertNotIn('<script src="https://unpkg.com/lightweight-charts',html)
-  self.assertIn('assets/chart-loader.js?v=11.4.36',html)
-  self.assertLess(html.index('assets/chart-loader.js?v=11.4.36'),html.index('assets/shared.js?v=11.4.36'))
+  self.assertIn('assets/chart-loader.js?v=11.4.37',html)
+  self.assertLess(html.index('assets/chart-loader.js?v=11.4.37'),html.index('assets/shared.js?v=11.4.37'))
   self.assertIn('market-radar:chart-lib-ready',loader);self.assertIn('market-radar:chart-lib-ready',home)
-  self.assertIn('assets/chart-loader.js?v=11.4.36',sw)
+  self.assertIn('assets/chart-loader.js?v=11.4.37',sw)
 
  def test_v11432_large_payloads_do_not_use_web_storage(self):
   shared=self.read("assets/shared.js")
   self.assertIn('WEB_STORAGE_CACHE_FILES=new Set(["market-snapshot.json"])',shared)
-  self.assertIn('STORAGE_CLEANUP_KEY="mr-storage-cleanup-v11.4.36"',shared)
+  self.assertIn('STORAGE_CLEANUP_KEY="mr-storage-cleanup-v11.4.37"',shared)
   self.assertIn('if(!WEB_STORAGE_CACHE_FILES.has(name))return null',shared)
 
  def test_v11432_event_series_tracking_and_clean_rebuild(self):
@@ -652,7 +652,7 @@ class StaticTests(unittest.TestCase):
   for token in ('TRACKING_KEY_VERSION = 2','bea_series_key','bls_series_key','assign_bea_tracking','canonical_event_key','tracking_migration_origins'):
    self.assertIn(token,events)
   self.assertGreaterEqual(workflow.count("inputs.clean_rebuild"),2)
-  self.assertIn('strict-v11.4.36-series-safe',workflow)
+  self.assertIn('strict-v11.4.37-series-safe',workflow)
   self.assertIn('reject legacy recurring-series keys',alerts)
 
  def test_v11432_market_and_chip_state_migrations(self):
@@ -697,7 +697,7 @@ class StaticTests(unittest.TestCase):
   self.assertIn("BLS_SNAPSHOT_PATH",events); self.assertEqual(len(snapshot.get("events") or []),63)
   self.assertIn('day_trading_scope',chips)
   self.assertNotIn("def parse_tpex_day_trade(rows:",chips)
-  self.assertIn("Wait for v11.4.36 Taiwan market release barrier",verify)
-  self.assertIn('if [ "$VERSION" = "v11.4.36" ]',verify)
+  self.assertIn("Wait for v11.4.37 Taiwan market release barrier",verify)
+  self.assertIn('if [ "$VERSION" = "v11.4.37" ]',verify)
 
 if __name__=="__main__":unittest.main()

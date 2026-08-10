@@ -1,1 +1,1 @@
-window.__STOCK_NEWS_SEED__={"metadata":{"version":"v11.4.36","status":"waiting","item_count":0,"source_count":9,"archive_start":"2026-01-01","sort_order":"published_at_desc","archive_policy":"recent complete; older requires higher importance; pre-2026 deleted"},"sources":[],"items":[]};
+window.__STOCK_NEWS_SEED__={"metadata":{"version":"v11.4.37","status":"waiting","item_count":0,"source_count":9,"archive_start":"2026-01-01","sort_order":"published_at_desc","archive_policy":"recent complete; older requires higher importance; pre-2026 deleted"},"sources":[],"items":[]};

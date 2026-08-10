@@ -1,4 +1,4 @@
-name: Verify v11.4.36 app release
+name: Verify v11.4.37 app release
 on:
   push:
     branches: [main]
@@ -46,8 +46,8 @@ jobs:
               yaml.safe_load(path.read_text(encoding='utf-8'))
           print('workflow yaml',len(files))
           PY
-      - name: TPEx v11.4.36 live source contract gate
-        run: python scripts/verify_v11_4_36_live_sources.py
+      - name: TPEx v11.4.37 live source contract gate
+        run: python scripts/verify_v11_4_37_live_sources.py
       - name: Strict data validation
         run: python scripts/validate_public_data.py all
       - name: Automated tests

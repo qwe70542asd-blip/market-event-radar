@@ -1,4 +1,4 @@
-name: Update v11.4.36 data verification
+name: Update v11.4.37 data verification
 on:
   push:
     branches: [main]
@@ -26,7 +26,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Wait for v11.4.36 Taiwan market release barrier
+      - name: Wait for v11.4.37 Taiwan market release barrier
         if: github.event_name == 'push'
         run: |
           set -euo pipefail
@@ -34,13 +34,13 @@ jobs:
             git fetch --quiet origin live-tw-market || true
             if git show origin/live-tw-market:tw-market.json > /tmp/tw-market.json 2>/dev/null; then
               VERSION=$(python -c "import json; print((json.load(open('/tmp/tw-market.json', encoding='utf-8')).get('metadata') or {}).get('version') or '')" 2>/dev/null || true)
-              if [ "$VERSION" = "v11.4.36" ]; then
+              if [ "$VERSION" = "v11.4.37" ]; then
                 echo "live-tw-market reached $VERSION"
                 break
               fi
             fi
             if [ "$attempt" -eq 30 ]; then
-              echo "Timed out waiting for live-tw-market v11.4.36" >&2
+              echo "Timed out waiting for live-tw-market v11.4.37" >&2
               exit 1
             fi
             sleep 10

@@ -1,4 +1,4 @@
-name: Update v11.4.36 secondary quote references
+name: Update v11.4.37 secondary quote references
 on:
   push:
     branches: [main]

@@ -5,18 +5,18 @@ from datetime import datetime, timedelta
 from email.utils import parsedate_to_datetime
 from pathlib import Path
 from typing import Any
-from urllib.parse import urljoin, urlsplit, urlunsplit
+from urllib.parse import parse_qsl, urlencode, urljoin, urlsplit, urlunsplit
 
 from bs4 import BeautifulSoup
 from dateutil import parser as date_parser
 
 from common import DATA, NOW, read_json
 
-VERSION="v11.4.36"
+VERSION="v11.4.37"
 ARCHIVE_START=datetime(2026,1,1,tzinfo=NOW.tzinfo)
 RECENT_FULL_DAYS=30
 MID_ARCHIVE_DAYS=90
-HEADERS={"User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.4.36; +https://github.com/qwe70542asd-blip/market-event-radar)"}
+HEADERS={"User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.4.37; +https://github.com/qwe70542asd-blip/market-event-radar)"}
 COMPANY_EVENT_RE=re.compile(r"增資|減資|除權|除息|股利|法說|財報|財務報告|股東會|停牌|復牌|公開收購|併購|合併|處分資產|取得資產|重大合約|融資融券|注意股票|處置股票|庫藏股|董事會|重大訊息",re.I)
 MARKET_HIGH_RE=re.compile(r"FOMC|聯準會|Fed\b|央行|CPI|PCE|GDP|非農|JOLTS|PMI|利率決策|升息|降息|關稅|制裁|戰爭|金融危機|熔斷|重大法規|匯率干預|資本管制|銀行危機|債務危機|財政危機|信用危機",re.I)
 ASIA_RISK_RE=re.compile(r"日本銀行|日銀|BOJ|日圓|日債|日本國債|日本政府債務|日本企業倒閉|日本企業破產|匯市干預|韓國央行|韓元|KOSPI|KOSDAQ|中國房地產|中國房企|地方債|人民幣|亞洲貨幣|亞洲資金外流|貨幣競貶",re.I)
@@ -27,7 +27,7 @@ MEDIUM_RE=re.compile(r"財報|營收|法說|政策|匯率|債券|半導體|AI|�
 LEADER_RE=re.compile(r"台積電|鴻海|聯發科|廣達|緯創|國巨|川湖|日月光|台達電|中華電|長榮|陽明|NVIDIA|輝達|Microsoft|微軟|Apple|蘋果|Amazon|亞馬遜|Meta|Google|Alphabet|AMD|Intel|Tesla|三星|SK\s*海力士|海力士|Sony|Toyota",re.I)
 LEADING_SECTOR_RE=re.compile(r"AI\s*伺服器|人工智慧|半導體|晶圓代工|記憶體|HBM|封裝測試|散熱|PCB|電源供應|雲端|資料中心|金融|航運|能源|原物料|機器人",re.I)
 EXECUTIVE_RE=re.compile(r"執行長|董事長|財務長|總經理|基金經理人|分析師|首席經濟學家|央行總裁|官員|法說會|投資人會議|發表會|開發者大會|展覽|論壇|供應鏈會議",re.I)
-BUSINESS_RE=re.compile(r"財報|財測|展望|營收|獲利|EPS|訂單|資本支出|擴產|漲價|降價|新品|新產品|合作|併購|投資",re.I)
+BUSINESS_RE=re.compile(r"財報|財測|營收|獲利|EPS|訂單|資本支出|擴產|漲價|降價|新品|新產品|合作|併購|投資計畫|投資案",re.I)
 POSITIVE_RE=re.compile(r"優於預期|上修|成長|創高|大增|獲利增加|降息|擴產|訂單增加|買超|利多|回升|改善",re.I)
 NEGATIVE_RE=re.compile(r"低於預期|下修|衰退|虧損|暴跌|大跌|升息|制裁|關稅|減產|賣超|利空|違約|下滑|惡化|倒閉|破產|重貶|急貶|資金外流|信用風險",re.I)
 GENERIC_RE=re.compile(r"^(?:TWSE\s*)?(?:(?:臺灣|台灣)證券交易所[>：:\-\s]*)?(?:首頁|新聞|最新消息|公文公告|公告查詢|新聞中心|個股資訊|台股新聞|財經新聞|即時新聞)$",re.I)
@@ -36,11 +36,36 @@ MOJIBAKE_RE=re.compile(r"(?:Ã|Â|â€|å[\x80-\xff]|æ[\x80-\xff]|ç[\x80-\xff
 SITE_SUFFIX_RE=re.compile(r"\s*(?:[-｜|]\s*)?(?:中央社|MoneyDJ(?:理財網)?|鉅亨網|經濟日報|自由財經|財富自由|Yahoo(?:奇摩)?股市|科技新報|財經新報|工商時報|twse\.com\.tw|tpex\.org\.tw|Google News)\s*$",re.I)
 CODE_RE=re.compile(r"(?<!\d)(\d{4}|00\d{3}[A-Z]|00\d{4})(?!\d)",re.I)
 
+TRACKING_QUERY_KEYS={
+ "utm_source","utm_medium","utm_campaign","utm_term","utm_content","utm_id","gclid","fbclid","yclid","mc_cid","mc_eid","ref","ref_src"
+}
+AMBIGUOUS_ALIAS_NAMES={"時報","及成"}
+SHORT_ALIAS_CONTEXT_RE=re.compile(r"公司|股票|股價|漲停|跌停|營收|獲利|財報|財測|法說|EPS|每股盈餘|毛利率|營益率|訂單|資本支出|配息|股利|除權|除息|董事會|董事長|總經理|公告|增資|減資|併購|處分|買超|賣超|目標價",re.I)
+
+def canonical_news_url(value:Any)->str|None:
+ url=direct_url(value) if value else None
+ if not url:return None
+ try:p=urlsplit(url)
+ except Exception:return url
+ host=(p.hostname or p.netloc or "").lower()
+ if p.port:host=f"{host}:{p.port}"
+ path=re.sub(r"/+","/",p.path or "/")
+ if path!="/":path=path.rstrip("/")
+ query=[]
+ for key,val in parse_qsl(p.query,keep_blank_values=True):
+  if key.lower() in TRACKING_QUERY_KEYS or key.lower().startswith("utm_"):continue
+  query.append((key,val))
+ query.sort()
+ return urlunsplit(((p.scheme or "https").lower(),host,path,urlencode(query,doseq=True),""))
+
+def normalized_text_identity(value:Any)->str:
+ return re.sub(r"[^0-9a-z\u3400-\u9fff]+","",clean_text(value).lower())
+
 CATEGORY_RULES=[
  ("日本與亞洲風險","asia-risk",ASIA_RISK_RE),
  ("央行與利率","macro",re.compile(r"聯準會|Fed\b|FOMC|央行|升息|降息|利率|殖利率",re.I)),
  ("總體經濟","macro",re.compile(r"CPI|PCE|GDP|非農|JOLTS|就業|失業|通膨|景氣|PMI|出口|進口",re.I)),
- ("企業財報","earnings",re.compile(r"財報|營收|獲利|EPS|法說|展望|財測|季報|年報",re.I)),
+ ("企業財報","earnings",re.compile(r"財報|營收|獲利|EPS|法說|財測|季報|年報|每股盈餘|毛利率|營益率",re.I)),
  ("半導體與 AI","technology",re.compile(r"AI|人工智慧|半導體|晶片|晶圓|GPU|伺服器|台積電|NVIDIA|輝達|記憶體",re.I)),
  ("政策與法規","policy",re.compile(r"政策|法規|關稅|制裁|補貼|金管會|行政院|立法院|交易制度",re.I)),
  ("地緣政治","geopolitics",re.compile(r"戰爭|衝突|軍事|地緣|停火|攻擊|選舉",re.I)),
@@ -181,17 +206,21 @@ def infer_symbols(text:str,aliases:dict[str,str])->list[str]:
  valid_symbols=set(aliases.values());low=text.lower();found=[]
  aliases_by_symbol={}
  for name,symbol in aliases.items():aliases_by_symbol.setdefault(symbol,[]).append(name)
- # A number that happens to equal a real stock code is not enough.  Accept a
- # numeric code only when the article gives explicit stock-code context,
- # puts it in brackets, or names the matching company close to the code.  This
- # prevents phrases such as「上漲1250點、1270家上漲」from becoming securities.
+ # A bare 4-digit number is never a stock code.  Require a dedicated code label,
+ # bracketed ticker form, or the matching company name near the number.  Generic
+ # words such as「股票」are intentionally insufficient because phrases like
+ #「購入1470萬美元的台積電股票」otherwise become false stock 1470 matches.
  for m in CODE_RE.finditer(text):
   code=m.group(1).upper()
   if code not in valid_symbols:continue
-  start,end=m.span();context=low[max(0,start-24):min(len(low),end+24)]
-  numeric_context=bool(re.search(rf"(?:股票|證券|代號|stock|ticker|etf)[^0-9a-z]{{0,8}}{re.escape(code.lower())}",context,re.I) or re.search(rf"[（(\[]\s*{re.escape(code.lower())}\s*[）)\]]",context,re.I))
+  start,end=m.span();context=low[max(0,start-28):min(len(low),end+28)]
+  numeric_context=bool(
+   re.search(rf"(?:股票|證券)?(?:代號|代碼)|ticker|stock\s*code",context,re.I)
+   and re.search(rf"(?:代號|代碼|ticker|stock\s*code)[^0-9a-z]{{0,8}}{re.escape(code.lower())}",context,re.I)
+  )
+  bracketed=bool(re.search(rf"[（(\[]\s*{re.escape(code.lower())}\s*[）)\]]",context,re.I))
   named=any(name and name in context for name in aliases_by_symbol.get(code,[]))
-  if numeric_context or named:found.append(code)
+  if numeric_context or bracketed or named:found.append(code)
  occupied=[]
  # Longest-name-first matching prevents 南亞 from matching inside 南亞科.
  for name,symbol in sorted(aliases.items(),key=lambda item:(-len(item[0]),item[0])):
@@ -199,6 +228,13 @@ def infer_symbols(text:str,aliases:dict[str,str])->list[str]:
   for match in re.finditer(re.escape(name),low):
    span=match.span()
    if any(not (span[1]<=old[0] or span[0]>=old[1]) for old in occupied):continue
+   # Two-character aliases are inherently ambiguous in Chinese prose.  Require
+   # nearby company/market context, and suppress a small set of known collision
+   # words that repeatedly matched publishers or ordinary phrases.  Longer
+   # aliases continue to match normally.
+   if name in AMBIGUOUS_ALIAS_NAMES:
+    context=low[max(0,span[0]-10):min(len(low),span[1]+12)]
+    if not SHORT_ALIAS_CONTEXT_RE.search(context):continue
    found.append(symbol);occupied.append(span);break
  return list(dict.fromkeys(found))[:10]
 
@@ -256,7 +292,8 @@ def normalize_item(*,title:Any,url:Any,source_id:str,source_name:str,summary:Any
  analysis=classify(title,summary,aliases or {},forced_scope)
  profiles=profiles or {}
  companies=[profiles[symbol] for symbol in analysis.get("symbols",[]) if symbol in profiles]
- item={"id":hashlib.sha1(f"{source_id}|{title}|{url}".encode()).hexdigest()[:18],"source_id":source_id,"source":source_name,"title":title[:180],"url":url,"url_valid":True,"published_at":dt.isoformat(timespec="seconds"),"summary":summary[:400] or title,"ai_summary":summary[:400] or title,"language":"zh-Hant","companies":companies,**analysis}
+ canonical_url=canonical_news_url(url) or url
+ item={"id":hashlib.sha1(f"{source_id}|{canonical_url}".encode()).hexdigest()[:18],"source_id":source_id,"source":source_name,"title":title[:180],"url":url,"canonical_url":canonical_url,"url_valid":True,"published_at":dt.isoformat(timespec="seconds"),"summary":summary[:400] or title,"ai_summary":summary[:400] or title,"language":"zh-Hant","companies":companies,**analysis}
  if extra:item.update(extra)
  final_symbols=[str(symbol).upper() for symbol in item.get("symbols") or [] if symbol]
  if forced_scope in {"company","media"} and final_symbols:
@@ -295,20 +332,29 @@ def keep_in_archive(item:dict[str,Any],dt:datetime)->bool:
  return priority>=58 or bool(item.get("is_major")) or item.get("impact")=="high"
 
 def dedupe(items:list[dict[str,Any]],days:int=14,limit:int=600)->list[dict[str,Any]]:
- prepared=[];seen=set();month_counts={}
+ prepared=[];seen_urls=set();seen_titles=set();month_counts={}
  for raw in sorted(items,key=lambda x:str(x.get("published_at") or x.get("date") or ""),reverse=True):
   title=clean_title(raw.get("title"));summary=clean_text(raw.get("ai_summary") or raw.get("summary"))
   if not readable_chinese(title,summary):continue
+  canonical=canonical_news_url(raw.get("canonical_url") or raw.get("url"))
   item={**raw,"title":title,"summary":summary or title,"ai_summary":summary or title,"language":"zh-Hant"}
+  if canonical:item["canonical_url"]=canonical
   dt=_news_datetime(item)
   if not dt or not keep_in_archive(item,dt):continue
-  key=re.sub(r"\W+","",str(item.get("title") or "").lower())[:150]
-  if not key or key in seen:continue
+  title_key=normalized_text_identity(title)[:180]
+  url_key=canonical or ""
+  # Canonical URL is the strongest identity.  This catches publisher headline
+  # edits where the same article URL is retained.  Title identity remains the
+  # fallback for feeds that omit or rewrite URLs.
+  if url_key and url_key in seen_urls:continue
+  if not title_key or title_key in seen_titles:continue
   age=max(0,(NOW-dt).days);month=dt.strftime("%Y-%m")
   quota=9999 if age<=RECENT_FULL_DAYS else 90 if age<=MID_ARCHIVE_DAYS else 24
   if month_counts.get(month,0)>=quota:continue
   month_counts[month]=month_counts.get(month,0)+1
-  seen.add(key);prepared.append((dt,archive_priority(item,dt),item))
+  if url_key:seen_urls.add(url_key)
+  if title_key:seen_titles.add(title_key)
+  prepared.append((dt,archive_priority(item,dt),item))
  prepared.sort(key=lambda row:(row[0],row[1]),reverse=True)
  return [item for _,__,item in prepared[:limit]]
 

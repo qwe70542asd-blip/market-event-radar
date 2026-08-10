@@ -26,7 +26,7 @@ from bs4 import BeautifulSoup
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.36"
+VERSION = "v11.4.37"
 BATCH = 24
 PRIORITY_SYMBOLS = ["00981A", "00403A", "00631L", "006208", "0050", "0056", "00878", "00919", "2330", "2317", "2454"]
 TIMEOUT = 24
@@ -114,17 +114,33 @@ def parse_twse(symbol: str) -> dict[str, Any]:
     heading_text = next((value for value in headings if "基金" in value and len(value) >= 8), None)
     if heading_text:
         result["formal_name"] = heading_text
+    pairs = pair_map(soup)
     patterns = {
         "short_name": r"證券簡稱\s+(.+?)\s+證券類別",
         "category": r"證券類別\s+(.+?)\s+發行公司",
         "issuer": r"發行公司\s+(.+?)\s+基金經理人",
-        "manager": r"基金經理人\s+(.+?)\s+標的指數",
-        "benchmark": r"標的指數\s+(.+?)\s+主題/因子",
+        "manager": r"基金經理人\s+(.+?)\s+(?:標的指數|追蹤指數)",
+        # Active ETFs put「投資策略」immediately after 標的指數.  The old
+        # boundary only stopped at「主題/因子」and swallowed the entire strategy.
+        "benchmark": r"(?:標的指數|追蹤指數)\s+(.+?)\s+(?:投資策略|主題/因子|基金特色|資產規模|受益人次)",
     }
     for key, pattern in patterns.items():
         match = re.search(pattern, text)
         if match:
             result[key] = clean(match.group(1))
+    structured = {
+        "short_name": pick(pairs, "證券簡稱", "基金簡稱"),
+        "category": pick(pairs, "證券類別", "基金類型"),
+        "issuer": pick(pairs, "發行公司", "投信公司", "基金公司"),
+        "manager": pick(pairs, "基金經理人", "經理人"),
+        "benchmark": pick(pairs, "標的指數", "追蹤指數"),
+    }
+    for key, value in structured.items():
+        if value and not result.get(key):
+            result[key] = clean(value)
+    if result.get("benchmark"):
+        benchmark = re.split(r"\s+(?=投資策略|主題/因子|基金特色|資產規模|受益人次)", clean(result["benchmark"]), maxsplit=1)[0]
+        result["benchmark"] = "不適用" if benchmark in {"無", "不適用", "N/A", "NA", "-", "—"} else benchmark
     aum = re.search(r"資產規模(?:\(億元\))?\s*([\d,.]+)\s*億元", text)
     if aum:
         result["aum"] = number(aum.group(1))

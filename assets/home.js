@@ -118,32 +118,46 @@
 
   function renderPortfolioSummary(){
     const rows=loadPortfolio();
-    let totalCost=0,valuedCost=0,totalValue=0,dayPL=0,valued=0,dayValued=0;
+    const usdTwd=finite(quotes.get("TWD=X")?.price);
+    const fxToTwd=currency=>{
+      const code=String(currency||"TWD").toUpperCase();
+      if(code==="TWD")return 1;
+      if(code==="USD")return usdTwd&&usdTwd>0?usdTwd:null;
+      const usdCross=finite(quotes.get(`${code}=X`)?.price);
+      return usdTwd&&usdCross&&usdTwd>0&&usdCross>0?usdTwd/usdCross:null;
+    };
+    let totalCost=0,valuedCost=0,totalValue=0,dayPL=0,valued=0,dayValued=0,unconverted=0;
     const allocation=new Map();
     for(const holding of rows){
       const symbol=String(holding.symbol||"").toUpperCase(),quote=quotes.get(symbol),asset=assetMap.get(symbol)||{};
       const qty=finite(holding.quantity??holding.qty),cost=finite(holding.cost??holding.average_cost),price=finite(quote?.price),previous=finite(quote?.previous_close);
-      if(qty!=null&&cost!=null)totalCost+=qty*cost;
+      const currency=String(holding.currency||quote?.currency||asset.currency||"TWD").toUpperCase(),fx=fxToTwd(currency);
+      if(fx==null){if(qty!=null&&(cost!=null||price!=null))unconverted++;continue}
+      if(qty!=null&&cost!=null)totalCost+=qty*cost*fx;
       if(qty!=null&&price!=null){
-        const value=qty*price;totalValue+=value;valued++;if(cost!=null)valuedCost+=qty*cost;
+        const value=qty*price*fx;totalValue+=value;valued++;if(cost!=null)valuedCost+=qty*cost*fx;
         const category=asset.asset_class==="etf"?"ETF":asset.asset_class==="stock"?"個股":"其他";
         allocation.set(category,(allocation.get(category)||0)+value);
-        if(previous!=null){dayPL+=(price-previous)*qty;dayValued++}
+        if(previous!=null){dayPL+=(price-previous)*qty*fx;dayValued++}
       }
     }
     const cumulative=valued?totalValue-valuedCost:null,returnPct=cumulative!=null&&valuedCost?cumulative/valuedCost*100:null;
     const dayBase=dayValued?totalValue-dayPL:null,dayPct=dayBase?dayPL/dayBase*100:null;
     $("#portfolioTotalValue").textContent=valued?`NT$ ${fmt(totalValue,0)}`:"—";
-    $("#portfolioTotalCost").textContent=rows.length?`NT$ ${fmt(totalCost,0)}`:"—";
+    $("#portfolioTotalCost").textContent=rows.length&&totalCost?`NT$ ${fmt(totalCost,0)}`:"—";
     $("#portfolioTotalPL").textContent=cumulative==null?"—":`${cumulative>=0?"+":"-"}NT$ ${fmt(Math.abs(cumulative),0)}`;
     $("#portfolioTotalPL").className=cls(cumulative);
     $("#portfolioReturn").textContent=pct(returnPct);$("#portfolioReturn").className=cls(returnPct);
     $("#portfolioDayPL").textContent=dayValued?`${dayPL>=0?"+":"-"}NT$ ${fmt(Math.abs(dayPL),0)}`:"—";$("#portfolioDayPL").className=cls(dayPL);
     $("#portfolioDayReturn").textContent=dayValued?pct(dayPct):"—";$("#portfolioDayReturn").className=cls(dayPct);
-    $("#portfolioStatus").textContent=!rows.length?"尚未設定":valued===rows.length?"行情完整":`暫估 ${valued}/${rows.length}`;
+    $("#portfolioStatus").textContent=!rows.length?"尚未設定":unconverted?`未換匯 ${unconverted} 項`:valued===rows.length?"行情完整":`暫估 ${valued}/${rows.length}`;
     const totalAllocated=[...allocation.values()].reduce((a,b)=>a+b,0);
     $("#portfolioAllocation").innerHTML=totalAllocated?`<div class="allocation-bar">${[...allocation.entries()].map(([name,value])=>`<span style="flex:${Math.max(value,1)}" title="${escapeHtml(name)} ${((value/totalAllocated)*100).toFixed(1)}%"></span>`).join("")}</div><div class="allocation-labels">${[...allocation.entries()].sort((a,b)=>b[1]-a[1]).map(([name,value])=>`<span><i></i>${escapeHtml(name)} <b>${((value/totalAllocated)*100).toFixed(1)}%</b></span>`).join("")}</div>`:'<div class="empty">尚未加入投資標的。</div>';
-    $("#portfolioEstimateNote").textContent=rows.length&&valued<rows.length?`${rows.length-valued} 項資產尚未取得最新行情；總資產與損益為已取得行情部分的暫估值。`:"";
+    const missingQuote=Math.max(0,rows.length-valued-unconverted);
+    const notes=[];
+    if(unconverted)notes.push(`${unconverted} 項資產缺少可用匯率，未納入 NT$ 總資產與損益`);
+    if(missingQuote)notes.push(`${missingQuote} 項資產尚未取得最新行情`);
+    $("#portfolioEstimateNote").textContent=notes.length?`${notes.join("；")}。`:"";
   }
   renderPortfolioSummary();window.addEventListener("portfoliochange",renderPortfolioSummary);
 
@@ -258,7 +272,7 @@
   const safeNews=[];const seenNews=new Set();
   for(const item of mediaItems){
     if(item.source_id==="company-disclosures"||item.source_id==="official-notices")continue;
-    const title=strip(item.title),key=strip(`${title}|${item.url||""}`).toLowerCase();
+    const title=strip(item.title),key=strip(item.canonical_url||item.url||title).toLowerCase();
     if(!title||!/^https?:\/\//i.test(String(item.url||""))||seenNews.has(key))continue;
     seenNews.add(key);safeNews.push({...item,title,_majorScore:majorScore(item)});
   }
@@ -312,7 +326,7 @@
   const todayFocus=$("#todayFocusList");if(todayFocus)todayFocus.innerHTML=majorToday.length?majorToday.slice(0,6).map(event=>`<a class="today-focus-item" href="event.html?id=${encodeURIComponent(event.id)}"><span class="impact-dot ${escapeHtml(event.impact||"medium")}"></span><span><strong>${escapeHtml(strip(event.title))}</strong><small>${escapeHtml(formatTime(event.start))}</small></span></a>`).join(""):'<div class="empty">今天沒有已確認的重大事件</div>';
   $("#focusUpdated").textContent=events.metadata?.updated_at?formatTime(events.metadata.updated_at):"等待資料";
 
-  let current=new Date(),calendarMode=localStorage.getItem("mr-calendar-mode-v11.4.36")==="dividend"?"dividend":"market",pendingJumpDate="";
+  let current=new Date(),calendarMode=localStorage.getItem("mr-calendar-mode-v11.4.37")==="dividend"?"dividend":"market",pendingJumpDate="";
   const calendar=$("#calendarGrid"),dialog=$("#dayDialog");
   const marketFilters=()=>({q:$("#eventSearch").value.trim().toLowerCase(),region:$("#eventRegion").value,type:$("#eventType").value,impact:$("#eventImpact").value});
   const dividendFilters=()=>({q:$("#eventSearch").value.trim().toLowerCase(),kind:$("#dividendKind").value,asset:$("#dividendAsset").value,amount:$("#dividendAmount").value});
@@ -451,7 +465,7 @@
   }
   function setCalendarMode(mode,{render=true}={}){
     calendarMode=mode==="dividend"?"dividend":"market";
-    localStorage.setItem("mr-calendar-mode-v11.4.36",calendarMode);
+    localStorage.setItem("mr-calendar-mode-v11.4.37",calendarMode);
     document.querySelectorAll("[data-calendar-mode]").forEach(button=>{const active=button.dataset.calendarMode===calendarMode;button.classList.toggle("active",active);button.setAttribute("aria-selected",String(active))});
     document.querySelectorAll("[data-calendar-filter]").forEach(panel=>panel.hidden=panel.dataset.calendarFilter!==calendarMode);
     $("#calendarHeading").textContent=calendarMode==="market"?"市場事件月曆":"股利股息月曆";

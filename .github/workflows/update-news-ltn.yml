@@ -1,4 +1,4 @@
-name: Update v11.4.36 自由財經 news
+name: Update v11.4.37 自由財經 news
 on:
   workflow_dispatch:
 permissions:

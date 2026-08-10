@@ -61,7 +61,7 @@ def parse_history_google_news(cfg,aliases,profiles):
  return items,{"enabled":True,"queries":queries,"items":len(items),"archive_start":HISTORY_START.isoformat()}
 
 
-GENERIC_IMAGE_RE=re.compile(r"(?:og-image|default(?:_og)?|logo|placeholder|no[-_]?image|blank|icon|avatar|sprite|favicon)(?:[._/-]|$)",re.I)
+GENERIC_IMAGE_RE=re.compile(r"(?:og-image|default(?:_og)?|logo|placeholder|no[-_]?image|blank|icon|avatar|sprite|favicon|google-prefer(?:ed|red)-source-illustration|pic_fb|line-ad)(?:[._/-]|$)",re.I)
 
 def usable_image_url(value:Any)->str|None:
  url=direct_url(value) if value else None

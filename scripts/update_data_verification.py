@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Cross-source trust + completeness verification for Market Event Radar.
 
-v11.4.36 separates two concepts that v11.4.30 mixed together:
+v11.4.37 separates two concepts that v11.4.30 mixed together:
 1. trust: official / multi-source / reference / conflict;
 2. completeness: complete / partial / unresolved, using the full asset audit.
 
@@ -11,11 +11,12 @@ verification run can never pretend that an older upstream snapshot was current.
 from __future__ import annotations
 
 from datetime import datetime
+import re
 from typing import Any
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.36"
+VERSION = "v11.4.37"
 
 SOURCE_FILES = {
     "assets": "assets.json",
@@ -80,6 +81,52 @@ def status_for(official: Any, reference: Any, tolerance: float = .005, reference
     if reference_number is not None:
         return reference_status, [reference_number]
     return "missing", []
+
+
+def clean_text_value(value: Any) -> str | None:
+    if value is None:
+        return None
+    text = re.sub(r"\s+", " ", str(value)).strip()
+    return None if text in {"", "-", "—"} else text
+
+
+def normalized_text_value(value: Any) -> str:
+    text = clean_text_value(value) or ""
+    return re.sub(r"[^0-9A-Za-z\u3400-\u9fff]+", "", text).lower()
+
+
+def normalize_benchmark_value(value: Any) -> str | None:
+    text = clean_text_value(value)
+    if not text:
+        return None
+    text = re.split(r"\s+(?=投資策略|主題/因子|基金特色|資產規模|受益人次)", text, maxsplit=1)[0].strip()
+    return "不適用" if text in {"無", "不適用", "N/A", "NA", "-", "—"} else text
+
+
+def text_status_for(official: Any, reference: Any, reference_status: str = "reference") -> tuple[str, list[Any]]:
+    left, right = clean_text_value(official), clean_text_value(reference)
+    if left:
+        if right:
+            a, b = normalized_text_value(left), normalized_text_value(right)
+            equivalent = bool(a and b and (a == b or (min(len(a), len(b)) >= 3 and (a in b or b in a))))
+            if equivalent:
+                return "multi_source", [left, right]
+            # Only call a text mismatch a conflict when the second source is also
+            # official. Reference-only wording differences do not override the
+            # official master.
+            if reference_status == "official":
+                return "conflict", [left, right]
+        return "official", [left]
+    if right:
+        return reference_status, [right]
+    return "missing", []
+
+
+def row_stamp(row: dict[str, Any], fallback: Any = None, *keys: str) -> Any:
+    for key in keys:
+        if row.get(key):
+            return row.get(key)
+    return fallback
 
 
 def parse_stamp(value: Any) -> datetime | None:
@@ -199,18 +246,24 @@ def main() -> None:
             official_etf = asset.get("etf") or {}
             reference_etf = etf_details.get(symbol) or {}
             checks = {}
+            text_fields = {"issuer", "manager", "benchmark"}
             for key in ("issuer", "manager", "benchmark", "aum", "beneficiary_count", "nav", "premium_discount", "holdings", "allocations", "distributions"):
                 official_value, reference_value = official_etf.get(key), reference_etf.get(key)
+                if key == "benchmark":
+                    official_value, reference_value = normalize_benchmark_value(official_value), normalize_benchmark_value(reference_value)
+                reference_status = reference_etf.get("verification", {}).get(key, {}).get("status", "reference")
                 if isinstance(official_value, (list, dict)) or isinstance(reference_value, (list, dict)):
                     if official_value:
                         status = "official"
                     elif reference_value:
-                        status = reference_etf.get("verification", {}).get(key, {}).get("status", "reference")
+                        status = reference_status
                     else:
                         status = "missing"
                     values = [len(value) if isinstance(value, list) else bool(value) for value in (official_value, reference_value) if value]
+                elif key in text_fields:
+                    status, values = text_status_for(official_value, reference_value, reference_status)
                 else:
-                    status, values = status_for(official_value, reference_value, .02, reference_etf.get("verification", {}).get(key, {}).get("status", "reference"))
+                    status, values = status_for(official_value, reference_value, .02, reference_status)
                 checks[key] = {"status": status, "values": values, "source": reference_etf.get("field_sources", {}).get(key)}
             statuses = [row["status"] for row in checks.values()]
             fields["etf"] = {
@@ -250,7 +303,17 @@ def main() -> None:
                 "moneydj_etf": f"https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid={symbol}.TW" if asset_class == "etf" else None,
                 "histock_etf": "https://histock.tw/stock/active-etf.aspx" if asset_class == "etf" else None,
             },
-            "verified_against": {key: row.get("updated_at") for key, row in source_snapshots.items()},
+            "verified_against": {
+                "assets": row_stamp(asset, source_snapshots["assets"].get("updated_at"), "master_updated_at", "updated_at"),
+                "asset_audit": row_stamp(audit, source_snapshots["asset_audit"].get("updated_at"), "updated_at"),
+                "tw_market": row_stamp(official_quote, source_snapshots["tw_market"].get("updated_at"), "updated_at", "market_at", "market_at_local"),
+                "monthly_revenue": row_stamp(channel_revenue, source_snapshots["monthly_revenue"].get("updated_at"), "source_updated_at", "updated_at"),
+                "dividend_history": row_stamp(channel_dividend, source_snapshots["dividend_history"].get("updated_at"), "source_updated_at", "updated_at"),
+                "secondary_reference": row_stamp(secondary_quote, source_snapshots["secondary_reference"].get("updated_at"), "updated_at", "market_at"),
+                "yahoo_details": row_stamp(yahoo_row, source_snapshots["yahoo_details"].get("updated_at"), "updated_at"),
+                "etf_details": row_stamp(reference_etf, source_snapshots["etf_details"].get("updated_at"), "updated_at"),
+            },
+            "snapshot_verified_against": {key: row.get("updated_at") for key, row in source_snapshots.items()},
             "updated_at": NOW.isoformat(timespec="seconds"),
         }
 
@@ -265,7 +328,7 @@ def main() -> None:
             "average_field_coverage_percent": audit_summary.get("average_field_coverage_percent"),
             "source_snapshots": source_snapshots,
             "stale_sources": stale_sources,
-            "verification_basis": "exact live-channel snapshot timestamps recorded; trust and field completeness are separate",
+            "verification_basis": "per-symbol source timestamps are recorded when available; channel snapshots are retained separately; trust and field completeness are separate",
             "note": "Official values are primary. Trust status does not imply field completeness; see completeness_counts and coverage_percent.",
         },
         "items": output,

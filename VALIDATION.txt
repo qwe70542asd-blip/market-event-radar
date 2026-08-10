@@ -1,15 +1,15 @@
-Market Event Radar v11.4.36 validation
-Validated: 2026-08-09T17:23:00+08:00
+Market Event Radar v11.4.37 validation
+Validated: 2026-08-10T07:40:00+08:00
 
-PASS: pytest 206 passed
+PASS: pytest 214 passed
 PASS: strict public-data validation (validation ok all)
 PASS: Python compileall
 PASS: JavaScript syntax (17 files)
 PASS: shell syntax (2 files)
-PASS: GitHub Actions YAML (30 workflows)
+PASS: GitHub Actions YAML (31 workflows)
 PASS: cleanup_repo --check (repository layout clean)
 PASS: HTTP smoke (HTTP smoke passed: 7 pages, 43 referenced assets)
 PASS: release hygiene (audio=0, temp/editor-backup=0, nested=0, cache=0)
 
-LOCAL BROWSER SMOKE: not executed in this sandbox; the GitHub release-verification workflow still contains the real Chromium homepage runtime gate.
-LIVE SOURCE GATE: local execution was blocked by sandbox DNS/network restrictions. GitHub Actions will execute TPEx live-source verification after push; local v11.4.36 parser contract tests passed.
+LOCAL BROWSER SMOKE: Chromium executable is not installed in this sandbox; the GitHub release-verification workflow retains the real Chromium homepage runtime gate.
+TPEx LIVE SOURCE: production parsers were intentionally not changed before diagnostics. The blocking live gate remains enabled and the included Diagnose TPEx live schemas workflow will capture the real response schema after push.

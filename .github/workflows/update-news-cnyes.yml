@@ -1,4 +1,4 @@
-name: Update v11.4.36 鉅亨網 news
+name: Update v11.4.37 鉅亨網 news
 on:
   workflow_dispatch:
 permissions:

@@ -1,0 +1,50 @@
+name: Diagnose TPEx live schemas
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - scripts/diagnose_tpex_live.py
+      - .github/workflows/diagnose-tpex-live.yml
+      - docs/V11.4.37-tpex-live-diagnostic.md
+
+permissions:
+  contents: read
+
+concurrency:
+  group: diagnose-tpex-live-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Capture TPEx live HTTP, schema, date and parser diagnostics
+        run: |
+          mkdir -p artifacts
+          python scripts/diagnose_tpex_live.py --output artifacts/tpex-live-diagnostic.json | tee artifacts/tpex-live-diagnostic.log
+
+      - name: Upload diagnostic artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tpex-live-diagnostic-${{ github.run_id }}
+          path: |
+            artifacts/tpex-live-diagnostic.json
+            artifacts/tpex-live-diagnostic.log
+          if-no-files-found: error
+          retention-days: 7

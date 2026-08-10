@@ -1,13 +1,13 @@
 .date-alert-panel{margin-bottom:16px;padding:18px}.date-alert-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:12px}.date-alert-title{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.date-alert-title h2{margin:0}.date-alert-count{display:inline-flex;align-items:center;min-height:28px;padding:3px 10px;border:1px solid #5de1a955;border-radius:999px;background:#143a324d;color:#7af0bc;font-size:13px}.date-alert-updated{color:var(--muted,#93a8b7);font-size:12px}.date-alert-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.date-alert-item{display:grid;gap:8px;min-width:0;padding:13px;border:1px solid #264358;border-radius:13px;background:#0b1a29}.date-alert-item.changed{border-color:#f1b85c66}.date-alert-label{width:max-content;padding:3px 8px;border-radius:999px;background:#153d34;color:#7af0bc;font-size:11px;font-weight:800;letter-spacing:.05em}.date-alert-item.changed .date-alert-label{background:#49381d;color:#ffd189}.date-alert-main{display:grid;gap:5px;color:inherit;text-decoration:none}.date-alert-main strong{overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;font-size:15px;line-height:1.45}.date-alert-main span{color:#dceaf3;font-size:13px}.date-alert-main small{color:#f2c879}.date-alert-meta{display:flex;justify-content:space-between;gap:10px;color:#8fa6b6;font-size:11px}.date-alert-meta a{color:#7af0bc;text-decoration:none}.date-alert-empty{grid-column:1/-1;display:flex;justify-content:space-between;gap:16px;padding:14px;border:1px dashed #29475c;border-radius:12px;color:#91a9b8}.date-alert-empty strong{color:#dceaf3}@media(max-width:900px){.date-alert-list{grid-template-columns:1fr}.date-alert-head,.date-alert-empty{align-items:flex-start;flex-direction:column}}
 
-/* v11.4.36 newly announced date actions */
+/* v11.4.37 newly announced date actions */
 .date-alert-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 .date-alert-actions button{border:0;background:transparent;color:#7af0bc;padding:0;font:inherit;font-weight:800;cursor:pointer}
 .date-alert-actions button:hover{text-decoration:underline}
 .date-alert-more{grid-column:1/-1;padding:11px;border:1px dashed #35536c;border-radius:11px;color:#9fb4c3;text-align:center;font-size:12px}
 @media(max-width:900px){.date-alert-actions{justify-content:flex-start}}
 
-/* v11.4.36 mobile compact alerts and touch targets */
+/* v11.4.37 mobile compact alerts and touch targets */
 @media(max-width:720px){
   .date-alert-panel{margin-bottom:10px;padding:10px}
   .date-alert-head{gap:6px;margin-bottom:8px}
