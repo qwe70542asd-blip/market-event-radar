@@ -393,12 +393,14 @@ class ParserTests(unittest.TestCase):
 
     def test_tpex_daytrade_selects_latest_roc_session(self):
         payload=[
-            {"資料日期":"115/08/06","當日沖銷交易總成交股數":"9,000,000"},
-            {"資料日期":"115/08/07","當日沖銷交易總成交股數":"12,000,000","當日沖銷交易總買進成交金額占市場比重":"20.5"},
+            {"資料日期":"115/08/06","當日沖銷交易總成交股數":"9,000,000","當日沖銷交易總買進成交金額":"100000000","當日沖銷交易總賣出成交金額":"99000000"},
+            {"資料日期":"115/08/07","當日沖銷交易總成交股數":"12,000,000","當日沖銷交易總買進成交金額":"120000000","當日沖銷交易總賣出成交金額":"119000000","當日沖銷交易總買進成交金額占市場比重":"20.5"},
         ]
         market,day=chips.parse_tpex_day_trade_market(payload,"2026-08-07")
         self.assertEqual(day,"2026-08-07")
         self.assertEqual(market["volume"],12000)
+        self.assertEqual(market["buy_amount"],120000000)
+        self.assertEqual(market["sell_amount"],119000000)
         self.assertEqual(market["buy_amount_ratio_percent"],20.5)
         self.assertEqual(chips.date_value("民國115/08/07"),"2026-08-07")
 

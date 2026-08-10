@@ -18,7 +18,7 @@ from bs4 import BeautifulSoup
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.38"
+VERSION = "v11.4.39"
 TIMEOUT = 24
 YAHOO_BATCH = 24
 PRIORITY_SYMBOLS = [
@@ -300,82 +300,110 @@ def parse_tpex_margin(rows: list[dict[str, Any]], assets: dict[str, dict[str, An
 
 
 def parse_tpex_day_trade_market(rows: list[dict[str, Any]], fallback_date: str | None) -> tuple[dict[str, Any], str | None]:
-    """Parse TPEx official market-aggregate day-trading statistics.
+    """Parse TPEx market-wide intraday/day-trading statistics.
 
-    This endpoint is market aggregate data, never per-security data.  Field
-    matching intentionally accepts both current Chinese labels and documented
-    English aliases, while the selected session must not exceed the verified
-    market date.
+    v11.4.39 is schema-first: it recognises the current official OpenAPI fields
+    observed from ``tpex_intraday_trading_statistics`` and only then falls back
+    to legacy aliases.  A row is published only when all three core measures
+    (volume, buy value and sell value) are present, preventing a partial schema
+    match from being mistaken for valid market data.
     """
-    candidates: list[tuple[str, dict[str, Any]]] = []
     ceiling = valid_chip_date(fallback_date)
+    candidates: list[tuple[str, dict[str, Any]]] = []
 
-    def market_value(row: dict[str, Any], aliases: tuple[str, ...], *, semantic_any: tuple[str, ...] = (), exclude: tuple[str, ...] = ()) -> tuple[str | None, Any]:
-        key, raw = field_pair(row, *aliases)
-        if raw is None and semantic_any:
-            key, raw = semantic_pair(row, any_terms=semantic_any, exclude_terms=exclude)
-        return key, raw
+    exact_aliases = {
+        "volume": ("DayTradingVolume",),
+        "buy_amount": ("DayTradingValueOfBuys",),
+        "sell_amount": ("DayTradingValueOfSells",),
+        "volume_ratio_percent": ("DayTradingVolumeOfTheMarket",),
+        "buy_amount_ratio_percent": ("DayTradingValueOfBuyOfTheMarket",),
+        "sell_amount_ratio_percent": ("DayTradingValueOfSellsOfTheMarket",),
+    }
+    legacy_aliases = {
+        "volume": (
+            "當日沖銷交易總成交股數", "當日沖銷交易成交股數", "現股當沖成交股數",
+            "TotalIntradayTradingVolume", "IntradayTradingVolume",
+        ),
+        "buy_amount": (
+            "當日沖銷交易總買進成交金額", "當日沖銷交易買進成交金額", "現股當沖買進成交金額",
+            "TotalIntradayTradingBuyAmount", "IntradayTradingBuyAmount",
+        ),
+        "sell_amount": (
+            "當日沖銷交易總賣出成交金額", "當日沖銷交易賣出成交金額", "現股當沖賣出成交金額",
+            "TotalIntradayTradingSellAmount", "IntradayTradingSellAmount",
+        ),
+        "volume_ratio_percent": (
+            "當日沖銷交易總成交股數占市場比重", "當日沖銷交易成交股數占市場比重",
+            "當沖成交股數占市場比重", "IntradayTradingVolumeRatio", "VolumeRatio",
+        ),
+        "buy_amount_ratio_percent": (
+            "當日沖銷交易總買進成交金額占市場比重", "當日沖銷交易買進成交金額占市場比重",
+            "IntradayTradingBuyAmountRatio",
+        ),
+        "sell_amount_ratio_percent": (
+            "當日沖銷交易總賣出成交金額占市場比重", "當日沖銷交易賣出成交金額占市場比重",
+            "IntradayTradingSellAmountRatio",
+        ),
+    }
 
-    def market_volume_lots(raw: Any, key: str | None) -> int | float | None:
+    def pair(row: dict[str, Any], field_name: str) -> tuple[str | None, Any]:
+        key, raw = field_pair(row, *exact_aliases[field_name])
+        if raw is not None:
+            return key, raw
+        key, raw = field_pair(row, *legacy_aliases[field_name])
+        if raw is not None:
+            return key, raw
+        semantics = {
+            "volume": (("當沖成交股數", "沖銷成交股數", "intradaytradingvolume", "daytradingvolume"), ("比重", "比例", "ratio", "ofthemarket")),
+            "buy_amount": (("當沖買進成交金額", "沖銷買進成交金額", "intradaytradingbuyamount", "daytradingvalueofbuys"), ("比重", "比例", "ratio", "ofthemarket")),
+            "sell_amount": (("當沖賣出成交金額", "沖銷賣出成交金額", "intradaytradingsellamount", "daytradingvalueofsells"), ("比重", "比例", "ratio", "ofthemarket")),
+            "volume_ratio_percent": (("成交股數占市場比重", "成交股數比重", "volumeratio", "daytradingvolumeofthemarket"), ()),
+            "buy_amount_ratio_percent": (("買進成交金額占市場比重", "buyamountratio", "daytradingvalueofbuyofthemarket"), ()),
+            "sell_amount_ratio_percent": (("賣出成交金額占市場比重", "sellamountratio", "daytradingvalueofsellsofthemarket"), ()),
+        }
+        any_terms, excludes = semantics[field_name]
+        return semantic_pair(row, any_terms=any_terms, exclude_terms=excludes)
+
+    def volume_lots(raw: Any, key: str | None) -> int | float | None:
         parsed = number(raw)
         if parsed is None:
             return None
         label = normalized_key(key or "")
-        if any(token in label for token in ("仟股", "千股", "張")):
+        if any(token in label for token in ("仟股", "千股", "張", "lots", "lot")):
             return integer_or_float(parsed)
+        # Current TPEx DayTradingVolume is shares.
         return integer_or_float(parsed / 1000.0)
 
     for row in rows:
+        if not isinstance(row, dict):
+            continue
         explicit = valid_chip_date(row_date(row))
         traded = explicit or (ceiling if len(rows) == 1 else None)
         if not traded or (ceiling and traded > ceiling):
             continue
 
-        volume_key, volume_raw = market_value(
-            row,
-            ("當日沖銷交易總成交股數", "當日沖銷交易成交股數", "現股當沖成交股數", "TotalIntradayTradingVolume", "IntradayTradingVolume"),
-            semantic_any=("當沖成交股數", "沖銷成交股數", "intradaytradingvolume"),
-            exclude=("比重", "比例", "ratio"),
-        )
-        _, buy_raw = market_value(
-            row,
-            ("當日沖銷交易總買進成交金額", "當日沖銷交易買進成交金額", "現股當沖買進成交金額", "TotalIntradayTradingBuyAmount", "IntradayTradingBuyAmount"),
-            semantic_any=("當沖買進成交金額", "沖銷買進成交金額", "intradaytradingbuyamount"),
-            exclude=("比重", "比例", "ratio"),
-        )
-        _, sell_raw = market_value(
-            row,
-            ("當日沖銷交易總賣出成交金額", "當日沖銷交易賣出成交金額", "現股當沖賣出成交金額", "TotalIntradayTradingSellAmount", "IntradayTradingSellAmount"),
-            semantic_any=("當沖賣出成交金額", "沖銷賣出成交金額", "intradaytradingsellamount"),
-            exclude=("比重", "比例", "ratio"),
-        )
-        _, ratio_raw = market_value(
-            row,
-            ("當日沖銷交易總成交股數占市場比重", "當日沖銷交易成交股數占市場比重", "當沖成交股數占市場比重", "IntradayTradingVolumeRatio", "VolumeRatio"),
-            semantic_any=("成交股數占市場比重", "成交股數比重", "volumeratio"),
-        )
-        _, buy_ratio_raw = market_value(
-            row,
-            ("當日沖銷交易總買進成交金額占市場比重", "當日沖銷交易買進成交金額占市場比重", "IntradayTradingBuyAmountRatio"),
-            semantic_any=("買進成交金額占市場比重", "buyamountratio"),
-        )
-        _, sell_ratio_raw = market_value(
-            row,
-            ("當日沖銷交易總賣出成交金額占市場比重", "當日沖銷交易賣出成交金額占市場比重", "IntradayTradingSellAmountRatio"),
-            semantic_any=("賣出成交金額占市場比重", "sellamountratio"),
-        )
-
-        values = {
-            "volume": market_volume_lots(volume_raw, volume_key),
+        volume_key, volume_raw = pair(row, "volume")
+        _, buy_raw = pair(row, "buy_amount")
+        _, sell_raw = pair(row, "sell_amount")
+        core = {
+            "volume": volume_lots(volume_raw, volume_key),
             "buy_amount": number(buy_raw),
             "sell_amount": number(sell_raw),
-            "volume_ratio_percent": number(ratio_raw),
+        }
+        # Fail closed on a partial core match.  Ratios are supplementary only.
+        if any(value is None for value in core.values()):
+            continue
+
+        _, volume_ratio_raw = pair(row, "volume_ratio_percent")
+        _, buy_ratio_raw = pair(row, "buy_amount_ratio_percent")
+        _, sell_ratio_raw = pair(row, "sell_amount_ratio_percent")
+        values: dict[str, Any] = {
+            **core,
+            "volume_ratio_percent": number(volume_ratio_raw),
             "buy_amount_ratio_percent": number(buy_ratio_raw),
             "sell_amount_ratio_percent": number(sell_ratio_raw),
         }
-        values = {key: value for key, value in values.items() if value is not None}
-        if values:
-            candidates.append((traded, values))
+        candidates.append((traded, {key: value for key, value in values.items() if value is not None}))
 
     if not candidates:
         return {}, None
@@ -959,7 +987,7 @@ def main() -> None:
             "invalid_legacy_dates_removed": removed_invalid_dates + removed_market_dates + removed_nested_dates,
             "invalid_nested_dates_removed": removed_nested_dates,
             "schema": "symbol-keyed-v2",
-            "note": "官方資料優先；第三方只補缺漏。v11.4.38 強化 ROC/Gregorian 日期、TPEx 市場彙總當沖欄位與線上 schema gate，不偽造個股當沖資料。",
+            "note": "官方資料優先；第三方只補缺漏。v11.4.39 強化 ROC/Gregorian 日期、TPEx 市場彙總當沖欄位與線上 schema gate，不偽造個股當沖資料。",
         },
         "markets": markets,
         "items": items,

@@ -172,20 +172,20 @@ def diagnose_day_trade(rows: list[dict[str, Any]]) -> dict[str, Any]:
             "dropped_before_field_parse": not bool(selected) or bool(ceiling and selected and selected > ceiling),
             "volume_match": match_field(
                 row,
-                ("當日沖銷交易總成交股數", "當日沖銷交易成交股數", "現股當沖成交股數", "TotalIntradayTradingVolume", "IntradayTradingVolume"),
-                semantic_any=("當沖成交股數", "沖銷成交股數", "intradaytradingvolume"),
+                ("DayTradingVolume", "當日沖銷交易總成交股數", "當日沖銷交易成交股數", "現股當沖成交股數", "TotalIntradayTradingVolume", "IntradayTradingVolume"),
+                semantic_any=("當沖成交股數", "沖銷成交股數", "intradaytradingvolume", "daytradingvolume"),
                 exclude=("比重", "比例", "ratio"),
             ),
             "buy_match": match_field(
                 row,
-                ("當日沖銷交易總買進成交金額", "當日沖銷交易買進成交金額", "現股當沖買進成交金額", "TotalIntradayTradingBuyAmount", "IntradayTradingBuyAmount"),
-                semantic_any=("當沖買進成交金額", "沖銷買進成交金額", "intradaytradingbuyamount"),
+                ("DayTradingValueOfBuys", "當日沖銷交易總買進成交金額", "當日沖銷交易買進成交金額", "現股當沖買進成交金額", "TotalIntradayTradingBuyAmount", "IntradayTradingBuyAmount"),
+                semantic_any=("當沖買進成交金額", "沖銷買進成交金額", "intradaytradingbuyamount", "daytradingvalueofbuys"),
                 exclude=("比重", "比例", "ratio"),
             ),
             "sell_match": match_field(
                 row,
-                ("當日沖銷交易總賣出成交金額", "當日沖銷交易賣出成交金額", "現股當沖賣出成交金額", "TotalIntradayTradingSellAmount", "IntradayTradingSellAmount"),
-                semantic_any=("當沖賣出成交金額", "沖銷賣出成交金額", "intradaytradingsellamount"),
+                ("DayTradingValueOfSells", "當日沖銷交易總賣出成交金額", "當日沖銷交易賣出成交金額", "現股當沖賣出成交金額", "TotalIntradayTradingSellAmount", "IntradayTradingSellAmount"),
+                semantic_any=("當沖賣出成交金額", "沖銷賣出成交金額", "intradaytradingsellamount", "daytradingvalueofsells"),
                 exclude=("比重", "比例", "ratio"),
             ),
         })
@@ -232,12 +232,12 @@ def main() -> int:
 
     session = requests.Session()
     headers = dict(getattr(ev, "HEADERS", {}) or {})
-    headers.setdefault("User-Agent", "Mozilla/5.0 (compatible; market-event-radar-diagnostic/11.4.38)")
+    headers.setdefault("User-Agent", "Mozilla/5.0 (compatible; market-event-radar-diagnostic/11.4.39)")
     headers.setdefault("Accept", "application/json,text/plain,*/*")
     session.headers.update(headers)
 
     report: dict[str, Any] = {
-        "diagnostic_version": "v11.4.38-tpex-live-schema-1",
+        "diagnostic_version": "v11.4.39-tpex-stable-schema-1",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "purpose": "Read-only TPEx live source diagnosis. No parser or site behavior is modified.",
         "endpoints": {},

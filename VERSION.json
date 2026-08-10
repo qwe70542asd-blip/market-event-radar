@@ -1,5 +1,5 @@
 {
-  "version": "v11.4.38",
-  "baseline_version": "11.4.38",
-  "name": "core-correctness-release-hygiene-fix"
+  "version": "v11.4.39",
+  "baseline_version": "11.4.39",
+  "name": "stable-data-contract-core-rebuild"
 }

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Refresh Taiwan closing quotes and online historical market turnover.
 
-v11.4.38 validates the restored archive before reuse and backfills every calendar month from the official TWSE/TPEx network sources.
+v11.4.39 validates the restored archive before reuse and backfills every calendar month from the official TWSE/TPEx network sources.
 Local JSON is only a last-known-good cache. Turnover averages are published only from complete market totals, so a missing TPEx component can no longer silently bias volume momentum.
 """
 from __future__ import annotations
@@ -15,8 +15,8 @@ import requests
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.38"
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.38)"}
+VERSION = "v11.4.39"
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.39)"}
 TWSE_QUOTES = "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL"
 TPEX_QUOTES = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes"
 TWSE_FUNDS = "https://openapi.twse.com.tw/v1/opendata/t187ap47_L"
@@ -322,7 +322,7 @@ def merge_history(old_rows: list[dict], online_rows: list[dict], current_total: 
             value = number(raw.get(key))
             if value is not None and value > 0:
                 row[key] = value
-        # Older files may only have a total. Preserve an explicit v11.4.38
+        # Older files may only have a total. Preserve an explicit v11.4.39
         # completeness flag, but never infer completeness from a source label:
         # v11.4.32 could say "TWSE/TPEx quote sum" while its stored total had
         # already been overwritten by the lone TWSE component.
@@ -498,7 +498,7 @@ def main() -> None:
             "history_end": trading_date,
             "retention_policy": "2026-01-01 through latest verified trading date",
             "source_policy": "direct-online-official backfill at most once per day; restored rows are session-validated before reuse",
-            "migration": "v11.4.38 backfills every month, rejects partial-market averages, and removes legacy weekend/future turnover rows",
+            "migration": "v11.4.39 backfills every month, rejects partial-market averages, and removes legacy weekend/future turnover rows",
             "last_full_backfill_date": NOW.date().isoformat() if fetched_history else history_meta.get("last_full_backfill_date"),
             "session_count": len(history_rows),
             "warnings": history_warnings,

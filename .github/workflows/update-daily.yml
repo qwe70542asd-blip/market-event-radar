@@ -1,4 +1,4 @@
-name: Update v11.4.38 assets and audit
+name: Update v11.4.39 assets and audit
 on:
   push:
     branches: [main]

@@ -1,34 +1,148 @@
 {
   "metadata": {
-    "version": "v11.4.38",
-    "updated_at": "2026-08-07T08:52:37+08:00",
+    "version": "v11.4.39",
+    "updated_at": "2026-08-10T09:53:46+08:00",
     "status": "partial",
     "counts": {
-      "official": 0,
+      "conflict": 0,
       "multi_source": 0,
-      "reference": 0,
+      "official": 7,
       "calculated": 0,
       "estimated": 0,
-      "conflict": 0,
-      "missing": 17,
-      "expired": 0
+      "reference": 0,
+      "missing": 10
     },
-    "note": "Official values are primary. Yahoo, MoneyDJ and HiStock fill gaps; formulas and estimates are explicitly labeled."
+    "trust_counts": {
+      "conflict": 0,
+      "multi_source": 0,
+      "official": 7,
+      "calculated": 0,
+      "estimated": 0,
+      "reference": 0,
+      "missing": 10
+    },
+    "completeness_counts": {
+      "complete": 0,
+      "partial": 17,
+      "unresolved": 0
+    },
+    "average_field_coverage_percent": 30.7,
+    "source_snapshots": {
+      "assets": {
+        "file": "assets.json",
+        "version": "v11.4.39",
+        "updated_at": null,
+        "status": null,
+        "age_seconds": null,
+        "max_age_seconds": 64800,
+        "stale": true
+      },
+      "asset_audit": {
+        "file": "asset-audit.json",
+        "version": "v11.4.39",
+        "updated_at": "2026-08-05T11:23:01+08:00",
+        "status": null,
+        "age_seconds": 426645.1,
+        "max_age_seconds": 64800,
+        "stale": true
+      },
+      "tw_market": {
+        "file": "tw-market.json",
+        "version": "v11.4.39",
+        "updated_at": null,
+        "status": null,
+        "age_seconds": null,
+        "max_age_seconds": 5400,
+        "stale": true
+      },
+      "monthly_revenue": {
+        "file": "monthly-revenue.json",
+        "version": "v11.4.39",
+        "updated_at": null,
+        "status": "waiting",
+        "age_seconds": null,
+        "max_age_seconds": 28800,
+        "stale": true
+      },
+      "dividend_history": {
+        "file": "dividend-history.json",
+        "version": "v11.4.39",
+        "updated_at": null,
+        "status": "waiting",
+        "age_seconds": null,
+        "max_age_seconds": 28800,
+        "stale": true
+      },
+      "secondary_reference": {
+        "file": "secondary-reference.json",
+        "version": "v11.4.39",
+        "updated_at": null,
+        "status": "waiting",
+        "age_seconds": null,
+        "max_age_seconds": 43200,
+        "stale": true
+      },
+      "yahoo_details": {
+        "file": "yahoo-details.json",
+        "version": "v11.4.39",
+        "updated_at": null,
+        "status": "waiting",
+        "age_seconds": null,
+        "max_age_seconds": 10800,
+        "stale": true
+      },
+      "etf_details": {
+        "file": "etf-details.json",
+        "version": "v11.4.39",
+        "updated_at": null,
+        "status": "waiting",
+        "age_seconds": null,
+        "max_age_seconds": 21600,
+        "stale": true
+      }
+    },
+    "stale_sources": [
+      "assets",
+      "asset_audit",
+      "tw_market",
+      "monthly_revenue",
+      "dividend_history",
+      "secondary_reference",
+      "yahoo_details",
+      "etf_details"
+    ],
+    "version_mismatch_sources": [],
+    "verification_basis": "isolated stock/ETF adapters; per-symbol source timestamps when available; channel snapshots retained separately",
+    "note": "Official values are primary. Optional channels are fail-closed and never leak state across asset classes."
   },
   "items": {
     "00403A": {
       "symbol": "00403A",
-      "overall": "missing",
+      "overall": "official",
+      "trust_overall": "official",
+      "completeness_status": "partial",
+      "coverage_percent": 46.15,
+      "missing_fields": [
+        "基金經理人",
+        "保管銀行",
+        "成立日期",
+        "上市／上櫃日期",
+        "配息資訊",
+        "成分股揭露狀態",
+        "產業配置"
+      ],
       "fields": {
         "quote": {
           "status": "missing",
           "sources": [],
-          "values": []
+          "values": [],
+          "official_date": null,
+          "reference_date": null,
+          "reference_session_match": false
         },
         "monthly_revenue": {
-          "status": "missing",
+          "status": "not_applicable",
           "sources": [],
-          "period": null,
           "values": []
         },
         "dividends": {
@@ -38,16 +152,18 @@
           "values": []
         },
         "metrics": {
-          "status": "missing",
+          "status": "not_applicable",
           "fields": {},
           "available": []
         },
         "etf": {
-          "status": "missing",
+          "status": "official",
           "fields": {
             "issuer": {
-              "status": "missing",
-              "values": [],
+              "status": "official",
+              "values": [
+                "統一證券投資信託股份有限公司"
+              ],
               "source": null
             },
             "manager": {
@@ -56,8 +172,10 @@
               "source": null
             },
             "benchmark": {
-              "status": "missing",
-              "values": [],
+              "status": "official",
+              "values": [
+                "臺灣證券交易所發行量加權股價報酬指數"
+              ],
               "source": null
             },
             "aum": {
@@ -104,21 +222,55 @@
         "moneydj_etf": "https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=00403A.TW",
         "histock_etf": "https://histock.tw/stock/active-etf.aspx"
       },
-      "updated_at": "2026-08-07T08:52:37+08:00"
+      "verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "snapshot_verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "updated_at": "2026-08-10T09:53:46+08:00"
     },
     "0050": {
       "symbol": "0050",
-      "overall": "missing",
+      "overall": "official",
+      "trust_overall": "official",
+      "completeness_status": "partial",
+      "coverage_percent": 46.15,
+      "missing_fields": [
+        "基金經理人",
+        "保管銀行",
+        "成立日期",
+        "上市／上櫃日期",
+        "配息資訊",
+        "成分股揭露狀態",
+        "產業配置"
+      ],
       "fields": {
         "quote": {
           "status": "missing",
           "sources": [],
-          "values": []
+          "values": [],
+          "official_date": null,
+          "reference_date": null,
+          "reference_session_match": false
         },
         "monthly_revenue": {
-          "status": "missing",
+          "status": "not_applicable",
           "sources": [],
-          "period": null,
           "values": []
         },
         "dividends": {
@@ -128,16 +280,18 @@
           "values": []
         },
         "metrics": {
-          "status": "missing",
+          "status": "not_applicable",
           "fields": {},
           "available": []
         },
         "etf": {
-          "status": "missing",
+          "status": "official",
           "fields": {
             "issuer": {
-              "status": "missing",
-              "values": [],
+              "status": "official",
+              "values": [
+                "元大證券投資信託股份有限公司"
+              ],
               "source": null
             },
             "manager": {
@@ -146,8 +300,10 @@
               "source": null
             },
             "benchmark": {
-              "status": "missing",
-              "values": [],
+              "status": "official",
+              "values": [
+                "臺灣50指數"
+              ],
               "source": null
             },
             "aum": {
@@ -194,21 +350,55 @@
         "moneydj_etf": "https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=0050.TW",
         "histock_etf": "https://histock.tw/stock/active-etf.aspx"
       },
-      "updated_at": "2026-08-07T08:52:37+08:00"
+      "verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "snapshot_verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "updated_at": "2026-08-10T09:53:46+08:00"
     },
     "006208": {
       "symbol": "006208",
-      "overall": "missing",
+      "overall": "official",
+      "trust_overall": "official",
+      "completeness_status": "partial",
+      "coverage_percent": 46.15,
+      "missing_fields": [
+        "基金經理人",
+        "保管銀行",
+        "成立日期",
+        "上市／上櫃日期",
+        "配息資訊",
+        "成分股揭露狀態",
+        "產業配置"
+      ],
       "fields": {
         "quote": {
           "status": "missing",
           "sources": [],
-          "values": []
+          "values": [],
+          "official_date": null,
+          "reference_date": null,
+          "reference_session_match": false
         },
         "monthly_revenue": {
-          "status": "missing",
+          "status": "not_applicable",
           "sources": [],
-          "period": null,
           "values": []
         },
         "dividends": {
@@ -218,16 +408,18 @@
           "values": []
         },
         "metrics": {
-          "status": "missing",
+          "status": "not_applicable",
           "fields": {},
           "available": []
         },
         "etf": {
-          "status": "missing",
+          "status": "official",
           "fields": {
             "issuer": {
-              "status": "missing",
-              "values": [],
+              "status": "official",
+              "values": [
+                "富邦證券投資信託股份有限公司"
+              ],
               "source": null
             },
             "manager": {
@@ -236,8 +428,10 @@
               "source": null
             },
             "benchmark": {
-              "status": "missing",
-              "values": [],
+              "status": "official",
+              "values": [
+                "臺灣50指數"
+              ],
               "source": null
             },
             "aum": {
@@ -284,21 +478,55 @@
         "moneydj_etf": "https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=006208.TW",
         "histock_etf": "https://histock.tw/stock/active-etf.aspx"
       },
-      "updated_at": "2026-08-07T08:52:37+08:00"
+      "verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "snapshot_verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "updated_at": "2026-08-10T09:53:46+08:00"
     },
     "00631L": {
       "symbol": "00631L",
-      "overall": "missing",
+      "overall": "official",
+      "trust_overall": "official",
+      "completeness_status": "partial",
+      "coverage_percent": 46.15,
+      "missing_fields": [
+        "基金經理人",
+        "保管銀行",
+        "成立日期",
+        "上市／上櫃日期",
+        "配息資訊",
+        "成分股揭露狀態",
+        "產業配置"
+      ],
       "fields": {
         "quote": {
           "status": "missing",
           "sources": [],
-          "values": []
+          "values": [],
+          "official_date": null,
+          "reference_date": null,
+          "reference_session_match": false
         },
         "monthly_revenue": {
-          "status": "missing",
+          "status": "not_applicable",
           "sources": [],
-          "period": null,
           "values": []
         },
         "dividends": {
@@ -308,16 +536,18 @@
           "values": []
         },
         "metrics": {
-          "status": "missing",
+          "status": "not_applicable",
           "fields": {},
           "available": []
         },
         "etf": {
-          "status": "missing",
+          "status": "official",
           "fields": {
             "issuer": {
-              "status": "missing",
-              "values": [],
+              "status": "official",
+              "values": [
+                "元大證券投資信託股份有限公司"
+              ],
               "source": null
             },
             "manager": {
@@ -326,8 +556,10 @@
               "source": null
             },
             "benchmark": {
-              "status": "missing",
-              "values": [],
+              "status": "official",
+              "values": [
+                "臺灣50指數"
+              ],
               "source": null
             },
             "aum": {
@@ -374,21 +606,56 @@
         "moneydj_etf": "https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=00631L.TW",
         "histock_etf": "https://histock.tw/stock/active-etf.aspx"
       },
-      "updated_at": "2026-08-07T08:52:37+08:00"
+      "verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "snapshot_verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "updated_at": "2026-08-10T09:53:46+08:00"
     },
     "00663L": {
       "symbol": "00663L",
-      "overall": "missing",
+      "overall": "official",
+      "trust_overall": "official",
+      "completeness_status": "partial",
+      "coverage_percent": 38.46,
+      "missing_fields": [
+        "基金經理人",
+        "保管銀行",
+        "成立日期",
+        "上市／上櫃日期",
+        "追蹤指數／主動式",
+        "配息資訊",
+        "成分股揭露狀態",
+        "產業配置"
+      ],
       "fields": {
         "quote": {
           "status": "missing",
           "sources": [],
-          "values": []
+          "values": [],
+          "official_date": null,
+          "reference_date": null,
+          "reference_session_match": false
         },
         "monthly_revenue": {
-          "status": "missing",
+          "status": "not_applicable",
           "sources": [],
-          "period": null,
           "values": []
         },
         "dividends": {
@@ -398,16 +665,18 @@
           "values": []
         },
         "metrics": {
-          "status": "missing",
+          "status": "not_applicable",
           "fields": {},
           "available": []
         },
         "etf": {
-          "status": "missing",
+          "status": "official",
           "fields": {
             "issuer": {
-              "status": "missing",
-              "values": [],
+              "status": "official",
+              "values": [
+                "國泰證券投資信託股份有限公司"
+              ],
               "source": null
             },
             "manager": {
@@ -464,21 +733,55 @@
         "moneydj_etf": "https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=00663L.TW",
         "histock_etf": "https://histock.tw/stock/active-etf.aspx"
       },
-      "updated_at": "2026-08-07T08:52:37+08:00"
+      "verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "snapshot_verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "updated_at": "2026-08-10T09:53:46+08:00"
     },
     "00981A": {
       "symbol": "00981A",
-      "overall": "missing",
+      "overall": "official",
+      "trust_overall": "official",
+      "completeness_status": "partial",
+      "coverage_percent": 46.15,
+      "missing_fields": [
+        "基金經理人",
+        "保管銀行",
+        "成立日期",
+        "上市／上櫃日期",
+        "配息資訊",
+        "成分股揭露狀態",
+        "產業配置"
+      ],
       "fields": {
         "quote": {
           "status": "missing",
           "sources": [],
-          "values": []
+          "values": [],
+          "official_date": null,
+          "reference_date": null,
+          "reference_session_match": false
         },
         "monthly_revenue": {
-          "status": "missing",
+          "status": "not_applicable",
           "sources": [],
-          "period": null,
           "values": []
         },
         "dividends": {
@@ -488,16 +791,18 @@
           "values": []
         },
         "metrics": {
-          "status": "missing",
+          "status": "not_applicable",
           "fields": {},
           "available": []
         },
         "etf": {
-          "status": "missing",
+          "status": "official",
           "fields": {
             "issuer": {
-              "status": "missing",
-              "values": [],
+              "status": "official",
+              "values": [
+                "統一證券投資信託股份有限公司"
+              ],
               "source": null
             },
             "manager": {
@@ -554,21 +859,56 @@
         "moneydj_etf": "https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=00981A.TW",
         "histock_etf": "https://histock.tw/stock/active-etf.aspx"
       },
-      "updated_at": "2026-08-07T08:52:37+08:00"
+      "verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "snapshot_verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "updated_at": "2026-08-10T09:53:46+08:00"
     },
     "009816": {
       "symbol": "009816",
-      "overall": "missing",
+      "overall": "official",
+      "trust_overall": "official",
+      "completeness_status": "partial",
+      "coverage_percent": 38.46,
+      "missing_fields": [
+        "基金經理人",
+        "保管銀行",
+        "成立日期",
+        "上市／上櫃日期",
+        "追蹤指數／主動式",
+        "配息資訊",
+        "成分股揭露狀態",
+        "產業配置"
+      ],
       "fields": {
         "quote": {
           "status": "missing",
           "sources": [],
-          "values": []
+          "values": [],
+          "official_date": null,
+          "reference_date": null,
+          "reference_session_match": false
         },
         "monthly_revenue": {
-          "status": "missing",
+          "status": "not_applicable",
           "sources": [],
-          "period": null,
           "values": []
         },
         "dividends": {
@@ -578,16 +918,18 @@
           "values": []
         },
         "metrics": {
-          "status": "missing",
+          "status": "not_applicable",
           "fields": {},
           "available": []
         },
         "etf": {
-          "status": "missing",
+          "status": "official",
           "fields": {
             "issuer": {
-              "status": "missing",
-              "values": [],
+              "status": "official",
+              "values": [
+                "凱基證券投資信託股份有限公司"
+              ],
               "source": null
             },
             "manager": {
@@ -644,16 +986,55 @@
         "moneydj_etf": "https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=009816.TW",
         "histock_etf": "https://histock.tw/stock/active-etf.aspx"
       },
-      "updated_at": "2026-08-07T08:52:37+08:00"
+      "verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "snapshot_verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "updated_at": "2026-08-10T09:53:46+08:00"
     },
     "2317": {
       "symbol": "2317",
       "overall": "missing",
+      "trust_overall": "missing",
+      "completeness_status": "partial",
+      "coverage_percent": 21.43,
+      "missing_fields": [
+        "上市／上櫃日期",
+        "發行股數",
+        "本益比狀態",
+        "股價淨值比狀態",
+        "殖利率狀態",
+        "EPS",
+        "ROE",
+        "負債比",
+        "淨利率",
+        "最近季度財報",
+        "歷季財報"
+      ],
       "fields": {
         "quote": {
           "status": "missing",
           "sources": [],
-          "values": []
+          "values": [],
+          "official_date": null,
+          "reference_date": null,
+          "reference_session_match": false
         },
         "monthly_revenue": {
           "status": "missing",
@@ -679,16 +1060,55 @@
         "moneydj_etf": null,
         "histock_etf": null
       },
-      "updated_at": "2026-08-07T08:52:37+08:00"
+      "verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "snapshot_verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "updated_at": "2026-08-10T09:53:46+08:00"
     },
     "2330": {
       "symbol": "2330",
       "overall": "missing",
+      "trust_overall": "missing",
+      "completeness_status": "partial",
+      "coverage_percent": 21.43,
+      "missing_fields": [
+        "上市／上櫃日期",
+        "發行股數",
+        "本益比狀態",
+        "股價淨值比狀態",
+        "殖利率狀態",
+        "EPS",
+        "ROE",
+        "負債比",
+        "淨利率",
+        "最近季度財報",
+        "歷季財報"
+      ],
       "fields": {
         "quote": {
           "status": "missing",
           "sources": [],
-          "values": []
+          "values": [],
+          "official_date": null,
+          "reference_date": null,
+          "reference_session_match": false
         },
         "monthly_revenue": {
           "status": "missing",
@@ -714,16 +1134,55 @@
         "moneydj_etf": null,
         "histock_etf": null
       },
-      "updated_at": "2026-08-07T08:52:37+08:00"
+      "verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "snapshot_verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "updated_at": "2026-08-10T09:53:46+08:00"
     },
     "2382": {
       "symbol": "2382",
       "overall": "missing",
+      "trust_overall": "missing",
+      "completeness_status": "partial",
+      "coverage_percent": 21.43,
+      "missing_fields": [
+        "上市／上櫃日期",
+        "發行股數",
+        "本益比狀態",
+        "股價淨值比狀態",
+        "殖利率狀態",
+        "EPS",
+        "ROE",
+        "負債比",
+        "淨利率",
+        "最近季度財報",
+        "歷季財報"
+      ],
       "fields": {
         "quote": {
           "status": "missing",
           "sources": [],
-          "values": []
+          "values": [],
+          "official_date": null,
+          "reference_date": null,
+          "reference_session_match": false
         },
         "monthly_revenue": {
           "status": "missing",
@@ -749,16 +1208,55 @@
         "moneydj_etf": null,
         "histock_etf": null
       },
-      "updated_at": "2026-08-07T08:52:37+08:00"
+      "verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "snapshot_verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "updated_at": "2026-08-10T09:53:46+08:00"
     },
     "2454": {
       "symbol": "2454",
       "overall": "missing",
+      "trust_overall": "missing",
+      "completeness_status": "partial",
+      "coverage_percent": 21.43,
+      "missing_fields": [
+        "上市／上櫃日期",
+        "發行股數",
+        "本益比狀態",
+        "股價淨值比狀態",
+        "殖利率狀態",
+        "EPS",
+        "ROE",
+        "負債比",
+        "淨利率",
+        "最近季度財報",
+        "歷季財報"
+      ],
       "fields": {
         "quote": {
           "status": "missing",
           "sources": [],
-          "values": []
+          "values": [],
+          "official_date": null,
+          "reference_date": null,
+          "reference_session_match": false
         },
         "monthly_revenue": {
           "status": "missing",
@@ -784,16 +1282,55 @@
         "moneydj_etf": null,
         "histock_etf": null
       },
-      "updated_at": "2026-08-07T08:52:37+08:00"
+      "verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "snapshot_verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "updated_at": "2026-08-10T09:53:46+08:00"
     },
     "2603": {
       "symbol": "2603",
       "overall": "missing",
+      "trust_overall": "missing",
+      "completeness_status": "partial",
+      "coverage_percent": 21.43,
+      "missing_fields": [
+        "上市／上櫃日期",
+        "發行股數",
+        "本益比狀態",
+        "股價淨值比狀態",
+        "殖利率狀態",
+        "EPS",
+        "ROE",
+        "負債比",
+        "淨利率",
+        "最近季度財報",
+        "歷季財報"
+      ],
       "fields": {
         "quote": {
           "status": "missing",
           "sources": [],
-          "values": []
+          "values": [],
+          "official_date": null,
+          "reference_date": null,
+          "reference_session_match": false
         },
         "monthly_revenue": {
           "status": "missing",
@@ -819,16 +1356,55 @@
         "moneydj_etf": null,
         "histock_etf": null
       },
-      "updated_at": "2026-08-07T08:52:37+08:00"
+      "verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "snapshot_verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "updated_at": "2026-08-10T09:53:46+08:00"
     },
     "2881": {
       "symbol": "2881",
       "overall": "missing",
+      "trust_overall": "missing",
+      "completeness_status": "partial",
+      "coverage_percent": 21.43,
+      "missing_fields": [
+        "上市／上櫃日期",
+        "發行股數",
+        "本益比狀態",
+        "股價淨值比狀態",
+        "殖利率狀態",
+        "EPS",
+        "ROE",
+        "負債比",
+        "淨利率",
+        "最近季度財報",
+        "歷季財報"
+      ],
       "fields": {
         "quote": {
           "status": "missing",
           "sources": [],
-          "values": []
+          "values": [],
+          "official_date": null,
+          "reference_date": null,
+          "reference_session_match": false
         },
         "monthly_revenue": {
           "status": "missing",
@@ -854,16 +1430,55 @@
         "moneydj_etf": null,
         "histock_etf": null
       },
-      "updated_at": "2026-08-07T08:52:37+08:00"
+      "verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "snapshot_verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "updated_at": "2026-08-10T09:53:46+08:00"
     },
     "2882": {
       "symbol": "2882",
       "overall": "missing",
+      "trust_overall": "missing",
+      "completeness_status": "partial",
+      "coverage_percent": 21.43,
+      "missing_fields": [
+        "上市／上櫃日期",
+        "發行股數",
+        "本益比狀態",
+        "股價淨值比狀態",
+        "殖利率狀態",
+        "EPS",
+        "ROE",
+        "負債比",
+        "淨利率",
+        "最近季度財報",
+        "歷季財報"
+      ],
       "fields": {
         "quote": {
           "status": "missing",
           "sources": [],
-          "values": []
+          "values": [],
+          "official_date": null,
+          "reference_date": null,
+          "reference_session_match": false
         },
         "monthly_revenue": {
           "status": "missing",
@@ -889,16 +1504,55 @@
         "moneydj_etf": null,
         "histock_etf": null
       },
-      "updated_at": "2026-08-07T08:52:37+08:00"
+      "verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "snapshot_verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "updated_at": "2026-08-10T09:53:46+08:00"
     },
     "2891": {
       "symbol": "2891",
       "overall": "missing",
+      "trust_overall": "missing",
+      "completeness_status": "partial",
+      "coverage_percent": 21.43,
+      "missing_fields": [
+        "上市／上櫃日期",
+        "發行股數",
+        "本益比狀態",
+        "股價淨值比狀態",
+        "殖利率狀態",
+        "EPS",
+        "ROE",
+        "負債比",
+        "淨利率",
+        "最近季度財報",
+        "歷季財報"
+      ],
       "fields": {
         "quote": {
           "status": "missing",
           "sources": [],
-          "values": []
+          "values": [],
+          "official_date": null,
+          "reference_date": null,
+          "reference_session_match": false
         },
         "monthly_revenue": {
           "status": "missing",
@@ -924,16 +1578,55 @@
         "moneydj_etf": null,
         "histock_etf": null
       },
-      "updated_at": "2026-08-07T08:52:37+08:00"
+      "verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "snapshot_verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "updated_at": "2026-08-10T09:53:46+08:00"
     },
     "3231": {
       "symbol": "3231",
       "overall": "missing",
+      "trust_overall": "missing",
+      "completeness_status": "partial",
+      "coverage_percent": 21.43,
+      "missing_fields": [
+        "上市／上櫃日期",
+        "發行股數",
+        "本益比狀態",
+        "股價淨值比狀態",
+        "殖利率狀態",
+        "EPS",
+        "ROE",
+        "負債比",
+        "淨利率",
+        "最近季度財報",
+        "歷季財報"
+      ],
       "fields": {
         "quote": {
           "status": "missing",
           "sources": [],
-          "values": []
+          "values": [],
+          "official_date": null,
+          "reference_date": null,
+          "reference_session_match": false
         },
         "monthly_revenue": {
           "status": "missing",
@@ -959,16 +1652,55 @@
         "moneydj_etf": null,
         "histock_etf": null
       },
-      "updated_at": "2026-08-07T08:52:37+08:00"
+      "verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "snapshot_verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "updated_at": "2026-08-10T09:53:46+08:00"
     },
     "6669": {
       "symbol": "6669",
       "overall": "missing",
+      "trust_overall": "missing",
+      "completeness_status": "partial",
+      "coverage_percent": 21.43,
+      "missing_fields": [
+        "上市／上櫃日期",
+        "發行股數",
+        "本益比狀態",
+        "股價淨值比狀態",
+        "殖利率狀態",
+        "EPS",
+        "ROE",
+        "負債比",
+        "淨利率",
+        "最近季度財報",
+        "歷季財報"
+      ],
       "fields": {
         "quote": {
           "status": "missing",
           "sources": [],
-          "values": []
+          "values": [],
+          "official_date": null,
+          "reference_date": null,
+          "reference_session_match": false
         },
         "monthly_revenue": {
           "status": "missing",
@@ -994,7 +1726,27 @@
         "moneydj_etf": null,
         "histock_etf": null
       },
-      "updated_at": "2026-08-07T08:52:37+08:00"
+      "verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "snapshot_verified_against": {
+        "assets": null,
+        "asset_audit": "2026-08-05T11:23:01+08:00",
+        "tw_market": null,
+        "monthly_revenue": null,
+        "dividend_history": null,
+        "secondary_reference": null,
+        "yahoo_details": null,
+        "etf_details": null
+      },
+      "updated_at": "2026-08-10T09:53:46+08:00"
     }
   }
 }

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build Market Event Radar v11.4.38 event data from official schedules.
+"""Build Market Event Radar v11.4.39 event data from official schedules.
 
 The updater keeps the last verified archive, refreshes selected official sources,
 and records when an exact date first appears or changes. It never invents dates.
@@ -34,7 +34,7 @@ NOW = datetime.now(ZoneInfo("Asia/Taipei"))
 TAIPEI = NOW.tzinfo
 NEW_YORK = ZoneInfo("America/New_York")
 OFFLINE = os.getenv("EVENT_OFFLINE", "").strip() == "1"
-VERSION = "v11.4.38"
+VERSION = "v11.4.39"
 TRACKING_KEY_VERSION = 2
 ARCHIVE_START = date(2026, 1, 1)
 ARCHIVE_START_DT = datetime.combine(ARCHIVE_START, time.min, tzinfo=TAIPEI)
@@ -977,6 +977,46 @@ def dividend_company_identity(row: dict[str, Any]) -> tuple[str, str]:
     return clean(match.group(1)), clean(name or match.group(2))
 
 
+def dividend_plan_candidate_dates(row: dict[str, Any]) -> tuple[date | None, date | None]:
+    """Return (board decision date, shareholder-meeting date) for a dividend row.
+
+    TPEx currently exposes a misleading field named
+    ``股東會日期配盈餘/待彌補虧損(元)``.  It is a monetary field, not a meeting
+    date, so semantic matching explicitly excludes profit/loss and currency
+    labels.  Keeping this logic in one helper ensures the parser, fetcher and
+    release gate agree on what an eligible row means.
+    """
+    shareholder_raw = first_value(row, ["股東會日期", "ShareholdersMeetingDate"]) or semantic_field(
+        row,
+        all_terms=("股東會",),
+        any_terms=("日期", "date"),
+        exclude_terms=("配盈餘", "待彌補", "金額", "元"),
+    )
+    decision_raw = first_value(row, [
+        "董事會決議通過股利分派日", "董事會通過股利分派日",
+        "董事會（擬議）股利分派日", "董事會(擬議)股利分派日",
+        "董事會股利分派日", "董事會擬議日期", "董事會決議日期",
+        "董事會決議日", "董事會日期", "董事會決議通過股利分派日期",
+        "現金股利經董事會決議、增資配股經董事會擬議日期",
+        "現金股利經董事會決議增資配股經董事會擬議日期",
+        "BoardMeetingDate", "BoardDecisionDate",
+    ])
+    if not decision_raw:
+        decision_raw = semantic_field(row, all_terms=("董事會",), any_terms=("決議", "擬議", "通過", "股利", "board"))
+    return first_market_date(decision_raw), first_market_date(shareholder_raw)
+
+
+def dividend_plan_eligible_count(rows: Any) -> int:
+    """Count rows with at least one monitor-window board/shareholder date."""
+    horizon = NOW.date() + timedelta(days=370)
+    count = 0
+    for row in payload_dict_rows(rows):
+        decision_day, shareholder_day = dividend_plan_candidate_dates(row)
+        if any(day and ARCHIVE_START <= day <= horizon for day in (decision_day, shareholder_day)):
+            count += 1
+    return count
+
+
 def parse_dividend_plans(rows: Any, market: str, source_url: str, origin: str) -> list[dict[str, Any]]:
     events = []
     normalized_rows = payload_dict_rows(rows)
@@ -999,20 +1039,7 @@ def parse_dividend_plans(rows: Any, market: str, source_url: str, origin: str) -
         term = first_value(row, ["期別", "股利期別", "DividendPeriod"]) or semantic_field(row, any_terms=("期別", "dividendperiod"))
         if term and term not in period:
             period = clean(f"{period} {term}")
-        shareholder_raw = first_value(row, ["股東會日期", "ShareholdersMeetingDate"]) or semantic_field(row, all_terms=("股東會",), any_terms=("日期", "date"), exclude_terms=("配盈餘", "待彌補", "金額", "元"))
-        shareholder_day = first_market_date(shareholder_raw)
-        decision_raw = first_value(row, [
-            "董事會決議通過股利分派日", "董事會通過股利分派日",
-            "董事會（擬議）股利分派日", "董事會(擬議)股利分派日",
-            "董事會股利分派日", "董事會擬議日期", "董事會決議日期",
-            "董事會決議日", "董事會日期", "董事會決議通過股利分派日期",
-            "現金股利經董事會決議、增資配股經董事會擬議日期",
-            "現金股利經董事會決議增資配股經董事會擬議日期",
-            "BoardMeetingDate", "BoardDecisionDate",
-        ])
-        if not decision_raw:
-            decision_raw = semantic_field(row, all_terms=("董事會",), any_terms=("決議", "擬議", "通過", "股利", "board"))
-        decision_day = first_market_date(decision_raw)
+        decision_day, shareholder_day = dividend_plan_candidate_dates(row)
         cash, stock = dividend_total(row, "現金"), dividend_total(row, "配股")
         if shareholder_day and ARCHIVE_START <= shareholder_day <= NOW.date() + timedelta(days=370):
             tracking = f"{origin}|{symbol}|shareholder-meeting|{period}"
@@ -1090,26 +1117,44 @@ def fetch_twse_dividend_plans(session: requests.Session) -> SourceResult:
 def fetch_tpex_dividend_plans(session: requests.Session) -> SourceResult:
     rows = http_json(session, TPEX_DIVIDEND_PLAN_URL)
     normalized_rows = payload_dict_rows(rows)
+    eligible = dividend_plan_eligible_count(rows)
     events = parse_dividend_plans(rows, "TPEX", TPEX_DIVIDEND_PLAN_URL, "tpex-dividend-plan")
-    message = f"{len(events)} verified board/shareholder dividend events from TPEx dividend table"
-    if normalized_rows and not events:
-        # TPEx has changed this legacy MOPS export several times.  If the table
-        # still cannot yield current-window dates, fall back to the separate
-        # official daily material feed rather than publishing zero coverage.
+
+    if normalized_rows and eligible == 0:
+        # A reachable historical table with no dates in our monitored window is
+        # healthy zero coverage, not a parser failure.  Do not manufacture an
+        # event and do not downgrade the entire event pipeline to warning.
+        message = f"{len(normalized_rows)} rows available; 0 rows in monitored board/shareholder window"
+        return SourceResult(
+            "tpex-dividend-plan", "TPEx/MOPS OTC dividend plans", TPEX_DIVIDEND_PLAN_URL,
+            ("tpex-dividend-plan",), [], message,
+        )
+
+    if normalized_rows and eligible and not events:
+        # Only invoke the official material fallback when a row really should be
+        # parseable in the current archive/future window.
         material_rows = http_json(session, TPEX_MATERIAL_URL)
         events = parse_material_dividend_decisions(
             material_rows, "TPEX", TPEX_MATERIAL_URL, "tpex-dividend-plan"
         )
         if events:
-            message = f"dividend table returned {len(normalized_rows)} rows outside/unrecognized current schema; official material fallback produced {len(events)} verified decisions"
+            message = (
+                f"dividend table had {eligible}/{len(normalized_rows)} eligible rows but no parsed events; "
+                f"official material fallback produced {len(events)} verified decisions"
+            )
         else:
             sample_keys = sorted({clean(key) for row in normalized_rows[:3] for key in row.keys()})[:24]
             raise RuntimeError(
-                f"TPEx dividend source returned {len(normalized_rows)} rows but parser recognized 0 events; "
-                f"material fallback also empty; keys={sample_keys}"
+                f"TPEx dividend source returned {len(normalized_rows)} rows with {eligible} eligible rows "
+                f"but parser recognized 0 events; material fallback also empty; keys={sample_keys}"
             )
-    return SourceResult("tpex-dividend-plan", "TPEx/MOPS OTC dividend plans", TPEX_DIVIDEND_PLAN_URL, ("tpex-dividend-plan",), events, message)
+    else:
+        message = f"{len(events)} verified board/shareholder dividend events from TPEx dividend table"
 
+    return SourceResult(
+        "tpex-dividend-plan", "TPEx/MOPS OTC dividend plans", TPEX_DIVIDEND_PLAN_URL,
+        ("tpex-dividend-plan",), events, message,
+    )
 
 def extract_candidate_dates(text: str) -> list[date]:
     tokens = re.findall(r"(?<!\d)(?:\d{3}|\d{4})[年/.-]\d{1,2}[月/.-]\d{1,2}日?(?!\d)", text)
@@ -1598,7 +1643,7 @@ def main() -> None:
             "announced_today_count": announced_today,
             "announced_recent_count": announced_recent,
             "state_initialized": True,
-            "announcement_integrity": "strict-v11.4.38-series-safe",
+            "announcement_integrity": "strict-v11.4.39-series-safe",
             "announcement_suppressed_origins": sorted(suppressed_origins),
             "source_ok_count": sum(1 for source in sources if source.get("status") == "ok"),
             "source_warning_count": sum(1 for source in sources if source.get("status") != "ok"),
