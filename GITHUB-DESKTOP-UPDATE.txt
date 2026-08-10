@@ -1,29 +1,32 @@
-市場事件雷達 v11.4.39 — 穩定資料核心重做版
-
-這版不是小修補；把「TPEx 當沖 / 股利判定 / Data Verification / Release gate」這段重新整理成 fail-closed、可診斷、外部故障隔離的架構。
+市場事件雷達 v11.4.40 — 資料正確性 / 法人金額 / 同步整合版
 
 覆蓋方式
 1. 解壓縮 ZIP。
 2. 把 ZIP 內「所有根目錄內容」直接覆蓋本機 market-event-radar repository；不要再多包一層資料夾。
-3. 雙擊根目錄 CLEAN-REPO.cmd。它會刪除舊版 v11.4.36～v11.4.38 的 verifier/test helper 與意外巢狀 repository，不會刪正常 production scripts。
-4. GitHub Desktop 確認變更後 Commit to main，再 Push origin。
-5. 建議 commit：market-event-radar-v11.4.39-stable-core
+3. 雙擊根目錄 CLEAN-REPO.cmd。它會清除 v11.4.36～v11.4.39 舊 verifier/test helper、舊 deletion manifest 與意外巢狀 repository。
+4. GitHub Desktop 檢查變更後 Commit to main，再 Push origin。
+5. 建議 commit：market-event-radar-v11.4.40-data-integrity
 
-v11.4.39 核心重做
-- Data Verification：stock / ETF 改成完全隔離 adapter。ETF 不會再碰到未初始化的 channel_revenue；股票也不會再誤用 reference_etf。非適用來源 timestamp 明確為 null。
-- Data Verification：額外記錄 version_mismatch_sources。上游 channel 尚未全部升版時只標 partial，不冒充全部資料都已同步。
-- TPEx 當沖：直接支援目前官方 OpenAPI 真實欄位 DayTradingVolume / DayTradingValueOfBuys / DayTradingValueOfSells，以及三個市場比重欄位；仍保留舊欄位 fallback。
-- TPEx 當沖：volume/buy/sell 三個核心欄位必須同時存在才發布，避免半套 schema 被當成有效數據。
-- TPEx 股利：統一用同一套 eligible-date 判定。`股東會日期配盈餘/待彌補虧損(元)` 明確認定為金額欄，不再誤當股東會日期。
-- TPEx 股利：官方歷史表可正常回傳但本監控期間 eligible=0 時，視為健康零資料，不再把整個 event pipeline 標 warning。
-- Release Verification：syntax / strict validation / pytest / HTTP smoke / Chromium 全部先跑，TPEx live contract 最後才跑。TPEx 暫時 5xx 不會再把前面 deterministic 檢查全部 skip。
-- TPEx live gate：區分「外部來源暫時 unavailable」與「HTTP 200 且 schema 可用、但 production parser 解析失敗」。只有後者才是 blocking contract failure。
-- 保留 Diagnose TPEx live schemas 作為觀測工具，不靠猜測欄位維護 production parser。
+這版主要完成
+- 新聞兩字公司簡稱防誤判，並讓 retained archive 在更新時套用新分類規則。
+- 毛利率／營益率／淨利率不再誤判成央行利率新聞。
+- Data Verification push 版會等全部核心獨立資料 branch 升到 v11.4.40 再發布；最長等待約 37 分鐘，workflow timeout 42 分鐘。
+- TWSE 籌碼加入日期指定報表、verified-session fallback、JSON/BOM 容錯與 retry。
+- 法人市場卡改為「上市＋上櫃」並同時顯示張數與官方買賣超金額；不同資料日不混用，缺金額顯示 —。
+- TPEx 股票若官方主檔可由實收資本額／普通股面額安全換算，補上發行股數並保留計算來源。
+- 股利歷史加入 Yahoo reference backfill；官方來源優先，並以除息日避免同年多次配息互相覆蓋。
+- ETF verification 減少臺/台、HTML entity、法律名稱與主動 ETF 基準造成的假 conflict。
+- PWA 靜態檔 cache-first；live data / navigation network-first。
+- GitHub Actions checkout/setup-python 升級到 Node 24 相容 major。
+- Cloudflare secrets 未設定：workflow 會 warning + skip，不再紅燈；這不代表 Worker 已部署。
 
-預期 GitHub Actions
-- Verify v11.4.39 stable app release：若程式與 bundled data 正常，deterministic checks 會完整跑完；TPEx 暫時 5xx 只留下 warning，真 schema mismatch 才紅燈。
-- Update v11.4.39 data verification：不應再出現 UnboundLocalError。
-- Update v11.4.39 Taiwan chips：TPEx endpoint 可達且回傳目前 schema 時，markets.tpex.day_trading 應有 volume / buy_amount / sell_amount。
-- Update v11.4.39 event calendar：TPEx dividend table 若 0 eligible rows，來源應維持 healthy zero，而不是假 warning。
+Push 後重點看
+- Verify v11.4.40 stable app release
+- Update v11.4.40 Taiwan chips
+- Update v11.4.40 data verification（會等 release barrier）
+- Update v11.4.40 asset database / dividend history
 
-Cloudflare edge-worker 若缺 CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID / CLOUDFLARE_KV_NAMESPACE_ID 仍會依原設計明確失敗；它與 GitHub Pages 本體分開，本版不改這個政策。
+Cloudflare Worker 要真正部署仍需：
+- CLOUDFLARE_API_TOKEN
+- CLOUDFLARE_ACCOUNT_ID
+- CLOUDFLARE_KV_NAMESPACE_ID

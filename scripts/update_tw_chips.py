@@ -18,7 +18,7 @@ from bs4 import BeautifulSoup
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.39"
+VERSION = "v11.4.40"
 TIMEOUT = 24
 YAHOO_BATCH = 24
 PRIORITY_SYMBOLS = [
@@ -37,6 +37,7 @@ NUMBER_RE = re.compile(r"^[+\-−]?[\d,.]+(?:\.\d+)?%?$")
 TPEX_INSTITUTIONAL = "https://www.tpex.org.tw/openapi/v1/tpex_3insti_daily_trading"
 TPEX_MARGIN = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_margin_balance"
 TPEX_DAY_TRADE = "https://www.tpex.org.tw/openapi/v1/tpex_intraday_trading_statistics"
+TPEX_INSTITUTIONAL_AMOUNTS = "https://www.tpex.org.tw/openapi/v1/tpex_3insti_summary"
 
 
 def number(value: Any) -> float | None:
@@ -158,7 +159,16 @@ def as_lots(value: Any, key: str | None = None) -> int | float | None:
 def get_rows(url: str) -> list[dict[str, Any]]:
     response = SESSION.get(url, timeout=TIMEOUT)
     response.raise_for_status()
-    payload = response.json()
+    # Some TWSE edge responses carry JSON with a misleading content-type or a
+    # UTF-8 BOM.  Parse the body defensively before declaring the source bad.
+    try:
+        payload = response.json()
+    except Exception:
+        import json as _json
+        text=(response.content or b"").decode("utf-8-sig","replace").strip()
+        if not text or text[:1] not in "[{":
+            raise ValueError(f"non-JSON response content-type={response.headers.get('content-type')} prefix={text[:80]!r}")
+        payload=_json.loads(text)
     if isinstance(payload, list):
         return [row for row in payload if isinstance(row, dict)]
     if not isinstance(payload, dict):
@@ -177,14 +187,18 @@ def get_rows(url: str) -> list[dict[str, Any]]:
     return []
 
 
-def try_rows(urls: Iterable[str], errors: list[dict[str, str]], label: str) -> tuple[list[dict[str, Any]], str | None]:
+def try_rows(urls: Iterable[str], errors: list[dict[str, str]], label: str, attempts: int = 2) -> tuple[list[dict[str, Any]], str | None]:
     for url in urls:
-        try:
-            rows = get_rows(url)
-            if rows:
-                return rows, url
-        except Exception as exc:
-            errors.append({"source": label, "url": url, "error": str(exc)[:220]})
+        for attempt in range(1, attempts + 1):
+            try:
+                rows = get_rows(url)
+                if rows:
+                    return rows, url
+                errors.append({"source": label, "url": url, "error": f"empty rows (attempt {attempt})"})
+            except Exception as exc:
+                errors.append({"source": label, "url": url, "error": f"attempt {attempt}: {str(exc)[:190]}"})
+            if attempt < attempts:
+                time.sleep(.8 * attempt)
     return [], None
 
 
@@ -302,7 +316,7 @@ def parse_tpex_margin(rows: list[dict[str, Any]], assets: dict[str, dict[str, An
 def parse_tpex_day_trade_market(rows: list[dict[str, Any]], fallback_date: str | None) -> tuple[dict[str, Any], str | None]:
     """Parse TPEx market-wide intraday/day-trading statistics.
 
-    v11.4.39 is schema-first: it recognises the current official OpenAPI fields
+    v11.4.40 is schema-first: it recognises the current official OpenAPI fields
     observed from ``tpex_intraday_trading_statistics`` and only then falls back
     to legacy aliases.  A row is published only when all three core measures
     (volume, buy value and sell value) are present, preventing a partial schema
@@ -410,7 +424,53 @@ def parse_tpex_day_trade_market(rows: list[dict[str, Any]], fallback_date: str |
     traded, values = max(candidates, key=lambda item: item[0])
     return values, traded
 
-def parse_institutional(rows: list[dict[str, Any]], assets: dict[str, dict[str, Any]], source_url: str | None) -> tuple[dict[str, dict[str, Any]], dict[str, Any], str | None]:
+def _amount_triplet(row: dict[str, Any]) -> dict[str, int | float] | None:
+    buy=number(field(row,"買進金額","BuyAmount","PurchaseAmount","TotalBuy"))
+    sell=number(field(row,"賣出金額","SellAmount","SaleAmount","TotalSell"))
+    net=number(field(row,"買賣差額","買賣超金額","買賣超","Difference","NetAmount","DifferenceAmount"))
+    if net is None and buy is not None and sell is not None:net=buy-sell
+    values={k:integer_or_float(v) for k,v in {"buy":buy,"sell":sell,"net":net}.items() if v is not None}
+    return values or None
+
+def _institution_label(row: dict[str, Any]) -> str:
+    return clean(field(row,"單位名稱","單位","InstitutionalInvestors","InstitutionalInvestor","Category","Name","投資人類別"))
+
+def parse_twse_institutional_amounts(rows: list[dict[str, Any]], fallback_date: str | None) -> tuple[dict[str, Any], str | None]:
+    result:dict[str,Any]={}; traded=None; dealer_parts=[]
+    for row in rows:
+        day=valid_chip_date(row_date(row)) or valid_chip_date(fallback_date)
+        if day:traded=max(traded or day,day)
+        label=_institution_label(row); values=_amount_triplet(row)
+        if not label or not values:continue
+        compact=normalized_key(label)
+        if "外資及陸資" in label and "不含外資自營商" in label:result["foreign"]=values
+        elif compact in {"投信","securitiesinvestmenttrust"} or label.strip()=="投信":result["trust"]=values
+        elif "自營商" in label and ("自行買賣" in label or "避險" in label):dealer_parts.append(values)
+        elif label.strip()=="合計" or "三大法人合計" in label:result["total"]=values
+    if dealer_parts:
+        result["dealer"]={key:integer_or_float(sum(float(part.get(key) or 0) for part in dealer_parts)) for key in ("buy","sell","net") if any(part.get(key) is not None for part in dealer_parts)}
+    return result,traded
+
+def parse_tpex_institutional_amounts(rows: list[dict[str, Any]], fallback_date: str | None) -> tuple[dict[str, Any], str | None]:
+    result:dict[str,Any]={}; traded=None; dealer_parts=[]
+    for row in rows:
+        day=valid_chip_date(row_date(row)) or valid_chip_date(fallback_date)
+        if day:traded=max(traded or day,day)
+        label=_institution_label(row); values=_amount_triplet(row)
+        if not label or not values:continue
+        norm=normalized_key(label)
+        if ("外資及陸資" in label and ("不含" in label or "自營商" not in label)) or ("foreign" in norm and ("notdealer" in norm or "dealer" not in norm)):result["foreign"]=values
+        elif "投信" in label or "investmenttrust" in norm:result["trust"]=values
+        elif "自營商" in label or "dealer" in norm:
+            if "外資" not in label and "foreign" not in norm:
+                if "合計" in label or "total" in norm:result["dealer"]=values
+                else:dealer_parts.append(values)
+        elif "三大法人" in label and ("合計" in label or "total" in norm):result["total"]=values
+    if "dealer" not in result and dealer_parts:
+        result["dealer"]={key:integer_or_float(sum(float(part.get(key) or 0) for part in dealer_parts)) for key in ("buy","sell","net") if any(part.get(key) is not None for part in dealer_parts)}
+    return result,traded
+
+def parse_institutional(rows: list[dict[str, Any]], assets: dict[str, dict[str, Any]], source_url: str | None, fallback_date: str | None = None) -> tuple[dict[str, dict[str, Any]], dict[str, Any], str | None]:
     output: dict[str, dict[str, Any]] = {}
     latest_date = None
     totals = {"foreign_net": 0.0, "trust_net": 0.0, "dealer_net": 0.0, "total_net": 0.0}
@@ -437,7 +497,7 @@ def parse_institutional(rows: list[dict[str, Any]], assets: dict[str, dict[str, 
         if total is None:
             values = [value for value in (foreign, trust, dealer) if value is not None]
             total = integer_or_float(sum(values)) if values else None
-        traded = valid_chip_date(row_date(row))
+        traded = valid_chip_date(row_date(row)) or valid_chip_date(fallback_date)
         if not traded:
             continue
         latest_date = max(latest_date or traded, traded)
@@ -463,7 +523,7 @@ def parse_institutional(rows: list[dict[str, Any]], assets: dict[str, dict[str, 
     return output, market, latest_date
 
 
-def parse_margin(rows: list[dict[str, Any]], assets: dict[str, dict[str, Any]], source_url: str | None) -> tuple[dict[str, dict[str, Any]], str | None]:
+def parse_margin(rows: list[dict[str, Any]], assets: dict[str, dict[str, Any]], source_url: str | None, fallback_date: str | None = None) -> tuple[dict[str, dict[str, Any]], str | None]:
     output: dict[str, dict[str, Any]] = {}
     latest_date = None
     for row in rows:
@@ -488,7 +548,7 @@ def parse_margin(rows: list[dict[str, Any]], assets: dict[str, dict[str, Any]], 
             short_change = integer_or_float(float(short_balance) - float(previous_short))
         if all(value is None for value in (margin_balance, margin_change, short_balance, short_change)):
             continue
-        traded = valid_chip_date(row_date(row))
+        traded = valid_chip_date(row_date(row)) or valid_chip_date(fallback_date)
         if not traded:
             continue
         latest_date = max(latest_date or traded, traded)
@@ -510,7 +570,7 @@ def parse_margin(rows: list[dict[str, Any]], assets: dict[str, dict[str, Any]], 
     return output, latest_date
 
 
-def parse_day_trade(rows: list[dict[str, Any]], assets: dict[str, dict[str, Any]], source_url: str | None) -> tuple[dict[str, dict[str, Any]], str | None]:
+def parse_day_trade(rows: list[dict[str, Any]], assets: dict[str, dict[str, Any]], source_url: str | None, fallback_date: str | None = None) -> tuple[dict[str, dict[str, Any]], str | None]:
     output: dict[str, dict[str, Any]] = {}
     latest_date = None
     for row in rows:
@@ -523,7 +583,7 @@ def parse_day_trade(rows: list[dict[str, Any]], assets: dict[str, dict[str, Any]
         ratio_value = number(ratio_raw)
         if volume is None and ratio_value is None:
             continue
-        traded = valid_chip_date(row_date(row))
+        traded = valid_chip_date(row_date(row)) or valid_chip_date(fallback_date)
         if not traded:
             continue
         latest_date = max(latest_date or traded, traded)
@@ -891,28 +951,39 @@ def main() -> None:
     errors: list[dict[str, str]] = []
     verified_market_date = valid_chip_date((read_json(DATA / "tw-market.json", {"metadata": {}}).get("metadata") or {}).get("trading_date"))
 
+    ymd = verified_market_date.replace("-", "") if verified_market_date else ""
     institutional_rows, institutional_url = try_rows([
+        f"https://www.twse.com.tw/rwd/zh/fund/T86?response=json&selectType=ALLBUT0999&date={ymd}" if ymd else "https://www.twse.com.tw/rwd/zh/fund/T86?response=json&selectType=ALLBUT0999",
         "https://openapi.twse.com.tw/v1/fund/T86",
         "https://www.twse.com.tw/rwd/zh/fund/T86?response=json&selectType=ALLBUT0999",
     ], errors, "TWSE 三大法人")
     margin_rows, margin_url = try_rows([
+        f"https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN?response=json&selectType=ALL&date={ymd}" if ymd else "https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN?response=json&selectType=ALL",
         "https://openapi.twse.com.tw/v1/exchangeReport/MI_MARGN",
         "https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN?response=json&selectType=ALL",
     ], errors, "TWSE 融資融券")
     day_rows, day_url = try_rows([
+        f"https://www.twse.com.tw/rwd/zh/afterTrading/TWTB4U?response=json&selectType=All&date={ymd}" if ymd else "https://www.twse.com.tw/rwd/zh/afterTrading/TWTB4U?response=json&selectType=All",
         "https://openapi.twse.com.tw/v1/exchangeReport/TWTB4U",
         "https://www.twse.com.tw/rwd/zh/afterTrading/TWTB4U?response=json&selectType=All",
     ], errors, "TWSE 當沖")
+    twse_amount_rows, twse_amount_url = try_rows([
+        f"https://www.twse.com.tw/rwd/zh/fund/BFI82U?response=json&date={ymd}" if ymd else "https://www.twse.com.tw/rwd/zh/fund/BFI82U?response=json",
+        "https://www.twse.com.tw/rwd/zh/fund/BFI82U?response=json",
+    ], errors, "TWSE 法人金額")
     tpex_inst_rows, tpex_inst_url = try_rows([TPEX_INSTITUTIONAL], errors, "TPEx 三大法人")
     tpex_margin_rows, tpex_margin_url = try_rows([TPEX_MARGIN], errors, "TPEx 融資融券")
     tpex_day_rows, tpex_day_url = try_rows([TPEX_DAY_TRADE], errors, "TPEx 當沖")
+    tpex_amount_rows, tpex_amount_url = try_rows([TPEX_INSTITUTIONAL_AMOUNTS], errors, "TPEx 法人金額")
 
-    official_inst, market_inst, institutional_date = parse_institutional(institutional_rows, asset_map, institutional_url)
-    official_margin, margin_date = parse_margin(margin_rows, asset_map, margin_url)
-    official_day, day_date = parse_day_trade(day_rows, asset_map, day_url)
+    official_inst, market_inst, institutional_date = parse_institutional(institutional_rows, asset_map, institutional_url, verified_market_date)
+    official_margin, margin_date = parse_margin(margin_rows, asset_map, margin_url, verified_market_date)
+    official_day, day_date = parse_day_trade(day_rows, asset_map, day_url, verified_market_date)
+    twse_amounts, twse_amount_date = parse_twse_institutional_amounts(twse_amount_rows, verified_market_date)
     tpex_inst, tpex_market_inst, tpex_inst_date = parse_tpex_institutional(tpex_inst_rows, asset_map, tpex_inst_url, verified_market_date)
     tpex_margin, tpex_margin_date = parse_tpex_margin(tpex_margin_rows, asset_map, tpex_margin_url, verified_market_date)
     tpex_day_market, tpex_day_market_date = parse_tpex_day_trade_market(tpex_day_rows, verified_market_date)
+    tpex_amounts, tpex_amount_date = parse_tpex_institutional_amounts(tpex_amount_rows, verified_market_date)
     # TPEx OpenAPI documents this endpoint as a market aggregate; do not invent
     # per-security day-trading rows from it.
     tpex_day: dict[str, dict[str, Any]] = {}
@@ -943,7 +1014,7 @@ def main() -> None:
     raw_available_dates = old.get("available_dates") or []
     dates = {day for value in raw_available_dates if (day := valid_chip_date(value))}
     removed_invalid_dates = len(raw_available_dates) - len(dates)
-    for value in (institutional_date, margin_date, day_date, tpex_inst_date, tpex_margin_date, tpex_day_market_date, tpex_day_date):
+    for value in (institutional_date, margin_date, day_date, twse_amount_date, tpex_inst_date, tpex_margin_date, tpex_day_market_date, tpex_day_date, tpex_amount_date):
         if value:
             dates.add(value)
     for row in items.values():
@@ -959,11 +1030,19 @@ def main() -> None:
     if market_inst:
         twse_market["institutional"] = market_inst
         twse_market["institutional_date"] = institutional_date
+    if twse_amounts:
+        twse_market["institutional_amounts"] = twse_amounts
+        twse_market["institutional_amount_date"] = twse_amount_date
+        twse_market["institutional_amount_source"] = twse_amount_url
     twse_market["stock_count"] = sum(1 for row in items.values() if str(row.get("exchange") or "").upper() == "TWSE")
     tpex_market = dict(old_markets.get("tpex") or {})
     if tpex_market_inst:
         tpex_market["institutional"] = tpex_market_inst
         tpex_market["institutional_date"] = tpex_inst_date
+    if tpex_amounts:
+        tpex_market["institutional_amounts"] = tpex_amounts
+        tpex_market["institutional_amount_date"] = tpex_amount_date
+        tpex_market["institutional_amount_source"] = tpex_amount_url
     if tpex_day_market:
         tpex_market["day_trading"] = tpex_day_market
         tpex_market["day_trading_date"] = tpex_day_market_date
@@ -978,7 +1057,7 @@ def main() -> None:
             "updated_at": NOW.isoformat(timespec="seconds"),
             "trading_date": trading_date,
             "status": "ok" if official_symbols and yahoo_success == len(batch) else "partial" if items else "warning",
-            "source": "TWSE/TPEx official structured data; Yahoo Taiwan reference fallback",
+            "source": "TWSE/TPEx official structured data including institutional share/amount summaries; Yahoo Taiwan reference fallback",
             "item_count": len(items),
             "official_item_count": len(official_symbols),
             "yahoo_batch_size": len(batch),
@@ -987,7 +1066,7 @@ def main() -> None:
             "invalid_legacy_dates_removed": removed_invalid_dates + removed_market_dates + removed_nested_dates,
             "invalid_nested_dates_removed": removed_nested_dates,
             "schema": "symbol-keyed-v2",
-            "note": "官方資料優先；第三方只補缺漏。v11.4.39 強化 ROC/Gregorian 日期、TPEx 市場彙總當沖欄位與線上 schema gate，不偽造個股當沖資料。",
+            "note": "官方資料優先；第三方只補缺漏。v11.4.40 強化 ROC/Gregorian 日期、TPEx 市場彙總當沖欄位與線上 schema gate，不偽造個股當沖資料。",
         },
         "markets": markets,
         "items": items,

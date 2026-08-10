@@ -1,4 +1,4 @@
-name: Verify v11.4.39 stable app release
+name: Verify v11.4.40 stable app release
 on:
   push:
     branches: [main]
@@ -6,15 +6,15 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: verify-v11-4-39-main
+  group: verify-v11-4-40-main
   cancel-in-progress: true
 jobs:
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
           cache: pip
@@ -77,5 +77,5 @@ jobs:
           for attempt in {1..20}; do curl -fsS http://127.0.0.1:8765/index.html >/dev/null && break; sleep 0.25; done
           python scripts/browser_smoke.py http://127.0.0.1:8765
 
-      - name: TPEx v11.4.39 reachability-aware live contract gate
-        run: python scripts/verify_v11_4_39_live_sources.py
+      - name: TPEx v11.4.40 reachability-aware live contract gate
+        run: python scripts/verify_v11_4_40_live_sources.py

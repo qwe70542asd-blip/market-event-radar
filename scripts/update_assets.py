@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Update the v11.4.39 Taiwan stock and ETF master with detailed official data.
+"""Update the v11.4.40 Taiwan stock and ETF master with detailed official data.
 
 The updater is intentionally defensive:
 - official TWSE/TPEx endpoints are parsed with bilingual/format-tolerant keys;
@@ -22,8 +22,8 @@ from bs4 import BeautifulSoup
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.39"
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.39)"}
+VERSION = "v11.4.40"
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.40)"}
 SESSION = requests.Session()
 
 MASTER_SOURCES = [
@@ -110,6 +110,20 @@ def number(value: Any) -> float | None:
     except (TypeError, ValueError):
         return None
     return value_float if value_float == value_float else None
+
+
+def official_issued_share_values(row: dict[str, Any], source_name: str) -> dict[str, Any]:
+    explicit = number(row_value(row, ("已發行普通股數或TDR原發行股數", "已發行普通股數或TDR原股發行股數", "已發行普通股數", "發行股數", "IssuedShares", "SharesOutstanding")))
+    paid = number(row_value(row, ("實收資本額", "PaidInCapital", "Capital")))
+    par_raw = row_value(row, ("普通股每股面額", "每股面額", "ParValue")); par = number(par_raw)
+    pref_raw = row_value(row, ("特別股發行股數", "特別股", "PreferredShares")); pref = number(pref_raw)
+    value=explicit; status="official" if explicit is not None else None; source=source_name if explicit is not None else None
+    if value is None and paid is not None and par is not None and par > 0:
+        derived=paid/par
+        if pref_raw is not None and pref is not None and pref >= 0:derived-=pref
+        if derived >= 0 and abs(derived-round(derived)) < 1e-6:
+            value=int(round(derived));status="calculated_official_fields";source=f"{source_name}: paid-in capital / par value"+(" - preferred shares" if pref_raw is not None else "")
+    return {"issued_shares":value,"issued_shares_status":status,"issued_shares_source":source,"paid_in_capital":paid,"par_value":par,"preferred_shares":pref}
 
 
 def status_for_raw(value: Any) -> str:
@@ -723,8 +737,9 @@ def main() -> None:
             company_name = row_value(row, ("公司名稱", "CompanyName", "CompanyFullName"))
             short_name = row_value(row, ("公司簡稱", "CompanyAbbreviation", "證券名稱", "Name"))
             listed_date = format_date(row_value(row, ("上市日期", "上櫃日期", "ListingDate", "DateOfListing")))
-            issued_shares = number(row_value(row, ("已發行普通股數或TDR原發行股數", "已發行普通股數或TDR原股發行股數", "已發行普通股數", "發行股數", "IssuedShares", "SharesOutstanding")))
-            paid_in_capital = number(row_value(row, ("實收資本額", "PaidInCapital", "Capital")))
+            share_values = official_issued_share_values(row, name)
+            issued_shares=share_values["issued_shares"];issued_shares_status=share_values["issued_shares_status"];issued_shares_source=share_values["issued_shares_source"]
+            paid_in_capital=share_values["paid_in_capital"];par_value=share_values["par_value"];preferred_shares=share_values["preferred_shares"]
             industry = industry_name(row_value(row, ("產業別", "產業類別", "Industry", "IndustryName")))
             assets[key] = {
                 **previous,
@@ -749,6 +764,10 @@ def main() -> None:
                 "accounting_firm": text_value(row, "簽證會計師事務所名稱", "會計師事務所", "AccountingFirm") or previous.get("accounting_firm"),
                 "employee_count": number(row_value(row, ("員工人數", "EmployeeCount"))) if number(row_value(row, ("員工人數", "EmployeeCount"))) is not None else previous.get("employee_count"),
                 "issued_shares": issued_shares if issued_shares is not None else previous.get("issued_shares"),
+                "issued_shares_status": issued_shares_status or previous.get("issued_shares_status"),
+                "issued_shares_source": issued_shares_source or previous.get("issued_shares_source"),
+                "par_value": par_value if par_value is not None else previous.get("par_value"),
+                "preferred_shares": preferred_shares if preferred_shares is not None else previous.get("preferred_shares"),
                 "paid_in_capital": paid_in_capital if paid_in_capital is not None else previous.get("paid_in_capital"),
                 "currency": "TWD",
                 "master_updated_at": NOW.isoformat(timespec="seconds"),

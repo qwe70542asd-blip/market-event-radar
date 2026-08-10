@@ -1,0 +1,29 @@
+v11.4.40 release cleanup
+
+Run CLEAN-REPO.cmd after overlaying this ZIP.
+
+Obsolete release helpers removed from an existing overlaid repository:
+- scripts/verify_v11_4_36_live_sources.py
+- scripts/verify_v11_4_37_live_sources.py
+- scripts/verify_v11_4_38_live_sources.py
+- scripts/verify_v11_4_39_live_sources.py
+- tests/test_v11_4_36_contracts.py
+- tests/test_v11_4_37_contracts.py
+- tests/test_v11_4_37_core.py
+- tests/test_v11_4_38_contracts.py
+- tests/test_v11_4_38_core.py
+- tests/test_v11_4_39_contracts.py
+- tests/test_v11_4_39_core.py
+- DELETION-MANIFEST-v11.4.36.txt
+- DELETION-MANIFEST-v11.4.37.txt
+- DELETION-MANIFEST-v11.4.38.txt
+- DELETION-MANIFEST-v11.4.39.txt
+
+Current release helpers:
+- scripts/verify_v11_4_40_live_sources.py
+- scripts/diagnose_tpex_live.py
+- scripts/wait_for_data_channels.py
+- tests/test_v11_4_40_contracts.py
+- tests/test_v11_4_40_core.py
+- docs/V11.4.40.md
+- docs/V11.4.40-release-audit.md

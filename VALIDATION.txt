@@ -1,19 +1,26 @@
-Market Event Radar v11.4.39 validation
-Validated: 2026-08-10T09:56:32+08:00
+Market Event Radar v11.4.40 validation
+Validated: 2026-08-10T12:08:00+08:00
 
-PASS: pytest 218 passed
-PASS: strict public-data validation
-PASS: Python syntax / compile checks
-PASS: JavaScript syntax (17 files)
-PASS: shell syntax (2 files)
+PASS: pytest 232 passed
+PASS: strict public-data validation (`validation ok all`)
+PASS: Python syntax / compileall
+PASS: JavaScript syntax (16 app/edge JS files + service-worker.js)
+PASS: shell syntax (2 scripts)
 PASS: GitHub Actions YAML (31 workflows)
 PASS: workflow run-block shell syntax (183 blocks)
 PASS: cleanup_repo --check
 PASS: HTTP smoke (7 pages, 43 referenced assets)
-PASS: Data Verification rebuilt runtime; no UnboundLocalError
-PASS: TPEx current day-trading schema regression tests; partial core rows fail closed
-PASS: release hygiene (audio=0, temp/editor-backup=0, nested=0, cache=0)
+PASS: news two-character alias / rate-category regressions
+PASS: retained media archive reclassification regression
+PASS: TWSE verified-session fallback and official institutional-amount parser fixtures
+PASS: TPEx institutional amount / current day-trading contract fixtures
+PASS: TPEx issued-shares official-field derivation fail-closed fixtures
+PASS: ETF verification normalization / active-ETF no-tracking-index fixtures
+PASS: dividend official-priority, ex-date identity and multiple-distribution fixtures
+PASS: release barrier / PWA cache / Node-24-compatible Action static checks
 
-TPEx LIVE LOCAL: sandbox DNS could not resolve www.tpex.org.tw. The new reachability-aware gate treated all 3 endpoints as external warnings and exited 0 as designed; this is not a parser pass/fail claim.
-LOCAL BROWSER SMOKE: not executed in this sandbox; GitHub release-verification remains the authoritative Chromium runtime gate.
+TPEx LIVE LOCAL: sandbox DNS could not resolve www.tpex.org.tw. The reachability-aware v11.4.40 gate reported 3 external warnings and exited 0; this is an external reachability observation, not a live parser pass claim.
+LOCAL BROWSER SMOKE: Playwright launched system Chromium, but this sandbox blocks Chromium access to http://127.0.0.1 with ERR_BLOCKED_BY_ADMINISTRATOR. The v11.4.40 GitHub release workflow still contains the full Chromium runtime gate and will be authoritative after push.
+HTTP LOCAL: Python HTTP smoke passed independently.
+CLOUDFLARE: missing secrets are an explicit warning/skip. Worker deployment is not claimed until all required secrets exist.
 RELEASE ORDER: deterministic syntax/data/tests/HTTP/Chromium checks run before the external TPEx contract gate.

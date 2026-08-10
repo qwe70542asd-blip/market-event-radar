@@ -12,11 +12,11 @@ from dateutil import parser as date_parser
 
 from common import DATA, NOW, read_json
 
-VERSION="v11.4.39"
+VERSION="v11.4.40"
 ARCHIVE_START=datetime(2026,1,1,tzinfo=NOW.tzinfo)
 RECENT_FULL_DAYS=30
 MID_ARCHIVE_DAYS=90
-HEADERS={"User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.4.39; +https://github.com/qwe70542asd-blip/market-event-radar)"}
+HEADERS={"User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.4.40; +https://github.com/qwe70542asd-blip/market-event-radar)"}
 COMPANY_EVENT_RE=re.compile(r"增資|減資|除權|除息|股利|法說|財報|財務報告|股東會|停牌|復牌|公開收購|併購|合併|處分資產|取得資產|重大合約|融資融券|注意股票|處置股票|庫藏股|董事會|重大訊息",re.I)
 MARKET_HIGH_RE=re.compile(r"FOMC|聯準會|Fed\b|央行|CPI|PCE|GDP|非農|JOLTS|PMI|利率決策|升息|降息|關稅|制裁|戰爭|金融危機|熔斷|重大法規|匯率干預|資本管制|銀行危機|債務危機|財政危機|信用危機",re.I)
 ASIA_RISK_RE=re.compile(r"日本銀行|日銀|BOJ|日圓|日債|日本國債|日本政府債務|日本企業倒閉|日本企業破產|匯市干預|韓國央行|韓元|KOSPI|KOSDAQ|中國房地產|中國房企|地方債|人民幣|亞洲貨幣|亞洲資金外流|貨幣競貶",re.I)
@@ -40,7 +40,24 @@ TRACKING_QUERY_KEYS={
  "utm_source","utm_medium","utm_campaign","utm_term","utm_content","utm_id","gclid","fbclid","yclid","mc_cid","mc_eid","ref","ref_src"
 }
 AMBIGUOUS_ALIAS_NAMES={"時報","及成"}
-SHORT_ALIAS_CONTEXT_RE=re.compile(r"公司|股票|股價|漲停|跌停|營收|獲利|財報|財測|法說|EPS|每股盈餘|毛利率|營益率|訂單|資本支出|配息|股利|除權|除息|董事會|董事長|總經理|公告|增資|減資|併購|處分|買超|賣超|目標價",re.I)
+SHORT_ALIAS_CONTEXT_RE=re.compile(r"公司|股票|個股|股價|盤價|漲停|跌停|成交量|成交額|營收|獲利|財報|財測|法說|EPS|每股盈餘|毛利率|營益率|訂單|資本支出|配息|股利|除權|除息|董事會|董事長|總經理|公告|增資|減資|併購|處分|買超|賣超|目標價|投資|持股",re.I)
+SHORT_ALIAS_SIGNAL_RE=re.compile(r"開盤|收盤|盤中|盤後|飆高|大漲|上漲|走高|走強|漲停|下跌|大跌|重挫|跌停|反彈|拉回|營收|獲利|財報|財測|法說|EPS|股價|盤價|成交|訂單|擴產|減產|漲價|降價|配息|股利|除權|除息|買超|賣超|目標價|董事會|公告|公司|股票|個股",re.I)
+
+def short_alias_supported(text:str,span:tuple[int,int],name:str)->bool:
+ # Two-CJK-character company aliases collide frequently with ordinary prose
+ # (e.g. 至上 inside 截至上午).  Require a nearby market/business signal or
+ # an explicit ticker/name bracket instead of accepting a raw substring.
+ if len(name)!=2 or len(CJK_RE.findall(name))!=2:return True
+ start,end=span
+ before=text[max(0,start-6):start];after=text[end:min(len(text),end+6)];near=f"{before} {after}"
+ context=text[max(0,start-12):min(len(text),end+14)]
+ left_signal=bool(re.search(rf"(?:{SHORT_ALIAS_CONTEXT_RE.pattern}|{SHORT_ALIAS_SIGNAL_RE.pattern})$",before,re.I))
+ right_signal=bool(re.match(rf"(?:{SHORT_ALIAS_CONTEXT_RE.pattern}|{SHORT_ALIAS_SIGNAL_RE.pattern})",after,re.I))
+ if name in AMBIGUOUS_ALIAS_NAMES and not (left_signal or right_signal):return False
+ if left_signal or right_signal:return True
+ if re.search(rf"{re.escape(name)}\s*[（(\[]\s*\d{{4,6}}[A-Z]?\s*[）)\]]",context,re.I):return True
+ if re.search(rf"[（(\[]\s*\d{{4,6}}[A-Z]?\s*[）)\]]\s*{re.escape(name)}",context,re.I):return True
+ return False
 
 def canonical_news_url(value:Any)->str|None:
  url=direct_url(value) if value else None
@@ -63,9 +80,11 @@ def normalized_text_identity(value:Any)->str:
 
 CATEGORY_RULES=[
  ("日本與亞洲風險","asia-risk",ASIA_RISK_RE),
- ("央行與利率","macro",re.compile(r"聯準會|Fed\b|FOMC|央行|升息|降息|利率|殖利率",re.I)),
+ # Explicit central-bank/rate language wins, but generic「利率」is deliberately
+ # absent so 毛利率/淨利率/營益率 cannot trigger the macro category.
+ ("央行與利率","macro",re.compile(r"聯準會|Fed\b|FOMC|央行|升息|降息|政策利率|基準利率|利率決策|存款利率|貸款利率|美債殖利率|公債殖利率|債券殖利率|\d+年期殖利率",re.I)),
+ ("企業財報","earnings",re.compile(r"財報|營收|獲利|EPS|法說|財測|季報|年報|每股盈餘|毛利率|營益率|淨利率",re.I)),
  ("總體經濟","macro",re.compile(r"CPI|PCE|GDP|非農|JOLTS|就業|失業|通膨|景氣|PMI|出口|進口",re.I)),
- ("企業財報","earnings",re.compile(r"財報|營收|獲利|EPS|法說|財測|季報|年報|每股盈餘|毛利率|營益率",re.I)),
  ("半導體與 AI","technology",re.compile(r"AI|人工智慧|半導體|晶片|晶圓|GPU|伺服器|台積電|NVIDIA|輝達|記憶體",re.I)),
  ("政策與法規","policy",re.compile(r"政策|法規|關稅|制裁|補貼|金管會|行政院|立法院|交易制度",re.I)),
  ("地緣政治","geopolitics",re.compile(r"戰爭|衝突|軍事|地緣|停火|攻擊|選舉",re.I)),
@@ -228,13 +247,10 @@ def infer_symbols(text:str,aliases:dict[str,str])->list[str]:
   for match in re.finditer(re.escape(name),low):
    span=match.span()
    if any(not (span[1]<=old[0] or span[0]>=old[1]) for old in occupied):continue
-   # Two-character aliases are inherently ambiguous in Chinese prose.  Require
-   # nearby company/market context, and suppress a small set of known collision
-   # words that repeatedly matched publishers or ordinary phrases.  Longer
-   # aliases continue to match normally.
-   if name in AMBIGUOUS_ALIAS_NAMES:
-    context=low[max(0,span[0]-10):min(len(low),span[1]+12)]
-    if not SHORT_ALIAS_CONTEXT_RE.search(context):continue
+   # All two-CJK-character aliases are ambiguity-prone.  Raw substring
+   # matches are accepted only when nearby market/business context supports
+   # the entity reading; this blocks collisions such as 至上 in 截至上午.
+   if not short_alias_supported(low,span,name):continue
    found.append(symbol);occupied.append(span);break
  return list(dict.fromkeys(found))[:10]
 
@@ -368,15 +384,27 @@ def legacy_now_fallback(item:dict[str,Any],old_metadata:dict[str,Any])->bool:
  published=_news_datetime(item)
  return bool(updated and published and abs((published-updated).total_seconds())<=5)
 
+def refresh_retained_media_item(row:dict[str,Any],aliases:dict[str,str],profiles:dict[str,dict[str,Any]])->dict[str,Any]:
+ # Retained archive rows must receive the current entity/category rules too.
+ # Otherwise a fixed parser leaves old false symbols/categories in the live
+ # archive until those exact articles happen to be fetched again.
+ title=clean_title(row.get("title"));summary=clean_text(row.get("ai_summary") or row.get("summary"))
+ analysis=classify(title,summary,aliases,"media")
+ symbols=[str(symbol).upper() for symbol in analysis.get("symbols") or []]
+ return {**row,"title":title,"summary":summary or title,"ai_summary":summary or title,"companies":[profiles[symbol] for symbol in symbols if symbol in profiles],**analysis}
+
 def save_channel(filename:str,varname:str,source_id:str,source_name:str,items:list[dict[str,Any]],health:dict[str,Any],retention_days:int=14,min_records:int=1)->dict[str,Any]:
  path=DATA/filename;old=read_json(path,{"items":[]});old_metadata=old.get("metadata") or {}
  fetched=dedupe(items,retention_days)
  old_raw=[];legacy_removed=0
+ media_archive=source_id not in {"official-notices","company-disclosures"}
+ aliases=asset_aliases() if media_archive else {}
+ profiles=asset_profiles() if media_archive else {}
  for row in old.get("items",[]):
   suspicious_official=source_id=="official-notices" and bool(re.search(r"/(?:np|lp)-\d",str(row.get("url") or ""),re.I))
   if legacy_now_fallback(row,old_metadata) or suspicious_official:
    legacy_removed+=1;continue
-  old_raw.append(row)
+  old_raw.append(refresh_retained_media_item(row,aliases,profiles) if media_archive else row)
  old_items=dedupe(old_raw,retention_days)
  combined=dedupe(fetched+old_items,retention_days)
  used=bool(old_items and (not fetched or len(combined)>len(fetched)))

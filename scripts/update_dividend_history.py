@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Update the isolated dividend-history channel for v11.4.39.
+"""Update the isolated dividend-history channel for v11.4.40.
 
 Current official dividend rows are merged with a bounded MOPS company batch.
 The main cursor advances even when individual companies fail; failures enter a
@@ -25,7 +25,7 @@ from update_assets import (
     text_value,
 )
 
-VERSION = "v11.4.39"
+VERSION = "v11.4.40"
 NEW_BATCH = 15
 RETRY_BATCH = 5
 MAX_RECORDS = 40
@@ -73,6 +73,64 @@ def current_row(row: dict, source_name: str) -> tuple[str, dict] | None:
     }
 
 
+def dividend_source_priority(row: dict) -> int:
+    source=str(row.get("source") or "").lower()
+    if source.startswith("twse") or source.startswith("tpex") or source.startswith("mops"): return 3
+    if row.get("source_level") == "reference" or "yahoo" in source: return 1
+    return 2
+
+def dividend_record_key(row: dict) -> str:
+    ex_date=str(row.get("ex_date") or row.get("ex_dividend_date") or row.get("date") or "").strip()
+    if ex_date:return f"ex:{ex_date}"
+    period=str(row.get("period") or row.get("year") or "").strip()
+    term=str(row.get("term") or "").strip()
+    return f"period:{period}|term:{term}" if period else ""
+
+def _same_period_candidates(records: list[dict], row: dict) -> list[int]:
+    period=str(row.get("period") or row.get("year") or "").strip()
+    term=str(row.get("term") or "").strip()
+    if not period:return []
+    out=[]
+    for index,current in enumerate(records):
+        if str(current.get("period") or current.get("year") or "").strip()!=period:continue
+        current_term=str(current.get("term") or "").strip()
+        if term and current_term and term!=current_term:continue
+        out.append(index)
+    return out
+
+def merge_dividend_records(existing_rows: list[dict], update_rows: list[dict], limit: int = MAX_RECORDS) -> list[dict]:
+    # Merge exact ex-dates first because Yahoo uses ex-date year as its period while
+    # official sources may use a fiscal/dividend period.  When one side lacks an
+    # ex-date, a period fallback is allowed only if that period identifies exactly
+    # one record; this preserves semiannual/multiple distributions in the same year.
+    records: list[dict] = []
+    for row in sorted((r for r in [*(existing_rows or []),*(update_rows or [])] if isinstance(r,dict)), key=dividend_source_priority):
+        if not dividend_record_key(row):continue
+        ex_date=str(row.get("ex_date") or row.get("ex_dividend_date") or row.get("date") or "").strip()
+        exact=[i for i,current in enumerate(records) if ex_date and str(current.get("ex_date") or current.get("ex_dividend_date") or current.get("date") or "").strip()==ex_date]
+        if exact:
+            matches=exact
+        elif ex_date:
+            # Different known ex-dates are distinct distributions.  Period
+            # fallback is only safe against a candidate whose ex-date is absent.
+            matches=[i for i in _same_period_candidates(records,row) if not str(records[i].get("ex_date") or records[i].get("ex_dividend_date") or records[i].get("date") or "").strip()]
+        else:
+            matches=_same_period_candidates(records,row)
+        target=matches[0] if len(matches)==1 else None
+        if target is None:
+            records.append(dict(row));continue
+        current=records[target]
+        if dividend_source_priority(row) < dividend_source_priority(current):continue
+        upgraded=dividend_source_priority(row) > dividend_source_priority(current)
+        merged={**current,**{k:v for k,v in row.items() if v is not None}}
+        if upgraded and row.get("source_level") is None:
+            merged.pop("source_level",None);merged.pop("period_basis",None)
+        records[target]=merged
+    def sort_key(row:dict)->tuple[str,str]:
+        return (str(row.get("ex_date") or row.get("ex_dividend_date") or row.get("date") or ""),str(row.get("period") or row.get("year") or ""))
+    return sorted(records,key=sort_key,reverse=True)[:limit]
+
+
 def main() -> None:
     old = read_json(DATA / "dividend-history.json", {"items": {}})
     state_path = DATA / "dividend-history-state.json"
@@ -92,6 +150,32 @@ def main() -> None:
             if parsed:
                 symbol, values = parsed
                 updates[symbol].append(values)
+
+    # Yahoo dividend events are reference-only historical backfill.  They never
+    # overwrite a current official TWSE/TPEx row for the same period.
+    yahoo_payload = read_json(DATA / "yahoo-details.json", {"items": {}})
+    yahoo_items = yahoo_payload.get("items") if isinstance(yahoo_payload.get("items"), dict) else {}
+    yahoo_reference_symbols: set[str] = set()
+    yahoo_reference_records = 0
+    for symbol, item in yahoo_items.items():
+        if not isinstance(item, dict):
+            continue
+        for row in item.get("dividends") or []:
+            if not isinstance(row, dict):
+                continue
+            period = str(row.get("period") or row.get("year") or "").strip()
+            cash = row.get("cash_dividend") if row.get("cash_dividend") is not None else row.get("cash")
+            if not period or cash is None:
+                continue
+            updates[str(symbol).upper()].append({
+                "period": period, "period_basis": "ex_date_year", "cash": cash, "stock": row.get("stock_dividend") or row.get("stock"),
+                "ex_date": row.get("ex_date") or row.get("date"), "payment_date": row.get("payment_date"),
+                "source": "Yahoo Finance dividend event", "source_level": "reference",
+                "url": row.get("url"), "source_updated_at": row.get("source_updated_at") or item.get("updated_at") or (yahoo_payload.get("metadata") or {}).get("updated_at"),
+            })
+            yahoo_reference_symbols.add(str(symbol).upper()); yahoo_reference_records += 1
+    if yahoo_reference_records:
+        health.append({"name":"Yahoo dividend history reference","status":"ok","symbols":len(yahoo_reference_symbols),"records":yahoo_reference_records})
 
     assets = read_json(DATA / "assets.json", {"assets": []})
     symbols = sorted({str(row.get("symbol") or "") for row in assets.get("assets", []) if row.get("market") == "TW" and row.get("asset_class") == "stock" and row.get("symbol")})
@@ -131,10 +215,9 @@ def main() -> None:
 
     merged: dict[str, list[dict]] = {}
     for symbol in set(existing) | set(updates):
-        rows = merge_period_rows(existing.get(symbol, []), updates.get(symbol, []), "period", MAX_RECORDS)
+        rows=merge_dividend_records(existing.get(symbol, []), updates.get(symbol, []), MAX_RECORDS)
         rows = [row for row in rows if row.get("period") and (row.get("cash") is not None or row.get("stock") is not None)]
-        if rows:
-            merged[symbol] = rows
+        if rows: merged[symbol] = rows
 
     fresh_records = sum(len(rows) for rows in updates.values())
     total_records = sum(len(rows) for rows in merged.values())
@@ -160,7 +243,9 @@ def main() -> None:
             "batch_failures": len(failed),
             "next_cursor": meta.get("cursor", 0),
             "retry_queue_size": len(meta.get("retry_symbols", [])),
-            "note": "Dividend history is an isolated channel. The main cursor always advances while failed companies enter a separate retry queue.",
+            "reference_symbol_count": len(yahoo_reference_symbols),
+            "reference_record_count": yahoo_reference_records,
+            "note": "Official TWSE/TPEx rows stay primary; Yahoo dividend events backfill history as reference-only data while MOPS remains best-effort.",
         },
         "sources": health,
         "items": merged,

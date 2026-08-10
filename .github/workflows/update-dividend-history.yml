@@ -1,4 +1,4 @@
-name: Update v11.4.39 dividend history
+name: Update v11.4.40 dividend history
 on:
   push:
     branches: [main]
@@ -19,10 +19,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 18
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
           cache: pip
@@ -35,6 +35,8 @@ jobs:
             "dividend-history-state.json:data/dividend-history-state.json"
           bash scripts/restore_data_branch.sh live-assets \
             "assets.json:data/assets.json"
+          bash scripts/restore_data_branch.sh live-yahoo-details \
+            "yahoo-details.json:data/yahoo-details.json"
       - run: python scripts/update_dividend_history.py
       - name: Validate isolated dividend channel
         run: |

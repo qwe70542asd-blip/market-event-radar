@@ -1,63 +1,21 @@
 {
-  "version": "v11.4.39",
-  "validated_at": "2026-08-10T09:56:32+08:00",
-  "pytest": {
-    "status": "pass",
-    "passed": 218
-  },
-  "strict_public_data": {
-    "status": "pass",
-    "detail": "validation ok all"
-  },
-  "python_syntax": {
-    "status": "pass",
-    "detail": "AST parse for scripts/tests; compileall also passed earlier in this build"
-  },
-  "javascript_syntax": {
-    "status": "pass",
-    "files": 17
-  },
-  "shell_syntax": {
-    "status": "pass",
-    "files": 2
-  },
-  "workflow_yaml": {
-    "status": "pass",
-    "files": 31
-  },
-  "workflow_run_block_shell_syntax": {
-    "status": "pass",
-    "run_blocks": 183
-  },
-  "cleanup_repo": {
-    "status": "pass",
-    "detail": "repository layout clean"
-  },
-  "http_smoke": {
-    "status": "pass",
-    "detail": "HTTP smoke passed: 7 pages, 43 referenced assets"
-  },
-  "data_verification_runtime": {
-    "status": "pass",
-    "detail": "rebuilt verifier executed locally without UnboundLocalError; stock/ETF isolation covered by regression tests"
-  },
-  "tpex_contract_unit": {
-    "status": "pass",
-    "detail": "observed DayTradingVolume/DayTradingValueOfBuys/DayTradingValueOfSells schema covered; partial core rows fail closed"
-  },
-  "tpex_live_local": {
-    "status": "external-unavailable-nonblocking",
-    "detail": "sandbox DNS could not resolve www.tpex.org.tw; reachability-aware gate exited 0 with 3 external warnings as designed"
-  },
-  "browser_smoke_local": {
-    "status": "not-run",
-    "detail": "GitHub release-verification remains authoritative for Chromium runtime"
-  },
-  "release_hygiene": {
-    "audio_files": 0,
-    "temporary_or_editor_backup_files": 0,
-    "nested_repo_dirs": 0,
-    "cache_artifacts": 0
-  },
+  "version": "v11.4.40",
+  "validated_at": "2026-08-10T12:08:00+08:00",
+  "pytest": {"status": "pass", "passed": 232},
+  "strict_public_data": {"status": "pass", "detail": "validation ok all"},
+  "python_syntax": {"status": "pass", "detail": "compileall scripts/tests"},
+  "javascript_syntax": {"status": "pass", "app_edge_files": 16, "service_worker": 1},
+  "shell_syntax": {"status": "pass", "files": 2},
+  "workflow_yaml": {"status": "pass", "files": 31},
+  "workflow_run_block_shell_syntax": {"status": "pass", "run_blocks": 183},
+  "cleanup_repo": {"status": "pass", "detail": "repository layout clean"},
+  "http_smoke": {"status": "pass", "detail": "HTTP smoke passed: 7 pages, 43 referenced assets"},
+  "browser_smoke_local": {"status": "environment-blocked", "detail": "system Chromium was available but sandbox policy returned ERR_BLOCKED_BY_ADMINISTRATOR for local HTTP; GitHub release workflow retains the Chromium gate"},
+  "tpex_live_local": {"status": "external-unavailable-nonblocking", "detail": "sandbox DNS could not resolve www.tpex.org.tw; reachability-aware gate exited 0 with 3 external warnings"},
+  "institutional_amounts": {"status": "pass-fixtures", "detail": "TWSE/TPEx official amount semantics and session guards covered by tests; live values are never estimated from lots x price"},
+  "dividend_history": {"status": "pass-fixtures", "detail": "official priority, ex-date cross-source identity, reference period-basis labeling and multiple same-year distributions covered"},
+  "data_release_barrier": {"status": "pass-static", "detail": "push verification waits for 8 files across 7 isolated branches; 222 x 10-second poll budget under 42-minute workflow timeout"},
+  "cloudflare_deploy": {"status": "configured-skip", "detail": "missing secrets warn and skip without claiming deployment"},
+  "release_hygiene": {"audio_files": 0, "temporary_or_editor_backup_files": 0, "nested_repo_dirs": 0, "cache_artifacts": 0},
   "release_policy": "deterministic checks first; external TPEx contract check last; reachable parser mismatch blocks, transient upstream outage warns"
 }

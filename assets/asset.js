@@ -286,7 +286,7 @@
       const range=text.match(/^(\d{3})(\d{2})(\d{2})[~至-](\d{3})(\d{2})(\d{2})$/);
       if(range)return `${Number(range[1])+1911}/${range[2]}/${range[3]}－${Number(range[4])+1911}/${range[5]}/${range[6]}`;
       text=text.replace(/(\d{2,3})年/g,(_,year)=>`${Number(year)+1911}年`).replace(/^(\d{2,3})(?=\s|$)/,(_,year)=>String(Number(year)+1911));
-      return text;
+      return row.period_basis==="ex_date_year"?`${text}（除息年）`:text;
     };
     const renderDistributions=(years=5)=>{
       const cutoff=years?new Date().getFullYear()-years+1:null;

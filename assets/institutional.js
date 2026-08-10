@@ -8,7 +8,8 @@
   ]);
   $("#chipsDate").textContent=payload.metadata?.updated_at?formatTime(payload.metadata.updated_at):"等待盤後資料";
   const display=(value,digits=0)=>finite(value)==null?"—":fmt(value,digits);
-  const displayLots=value=>{const n=finite(value);return n==null?"—":`${n>0?"+":""}${fmt(n,0)} 張`};
+  const displayLots=value=>{const n=finite(value);if(n==null)return "—";const digits=Math.abs(n-Math.round(n))<1e-9?0:Math.min(3,Math.max(1,String(n).split(".")[1]?.length||1));return `${n>0?"+":""}${fmt(n,digits)} 張`};
+  const displayAmount=value=>{const n=finite(value);return n==null?"—":`${n>0?"+":""}${fmt(n/1e8,2)} 億元`};
   const flowLabel=value=>{const n=finite(value);return n==null?"資料待補":n>0?"買超":n<0?"賣超":"持平"};
   const nonempty=value=>value!==null&&value!==undefined&&value!==""&&(!(Array.isArray(value))||value.length);
   const mergeObject=(primary={},fallback={})=>{
@@ -46,12 +47,17 @@
   }
   function marketCard(key,label){
     const marketData=payload.markets?.[key]||{},institutional=marketData.institutional||{};
+    const lotsDate=String(marketData.institutional_date||marketData.trading_date||"");
+    const amountDate=String(marketData.institutional_amount_date||"");
+    const amountSessionMatches=!lotsDate||!amountDate||lotsDate===amountDate;
+    const amounts=amountSessionMatches?(marketData.institutional_amounts||{}):{};
     const values=[institutional.foreign_net,institutional.trust_net,institutional.dealer_net,institutional.total_net];
-    if(!values.some(value=>finite(value)!=null))return "";
-    const card=(name,value)=>`<article class="stat market-flow-stat"><small>${label} ${name}</small><strong class="${cls(value)}">${displayLots(value)}</strong><span class="stat-detail">${flowLabel(value)} · 單位：張</span></article>`;
-    return card("外資",institutional.foreign_net)+card("投信",institutional.trust_net)+card("自營商",institutional.dealer_net)+card("合計",institutional.total_net);
+    const amountValues=[amounts.foreign?.net,amounts.trust?.net,amounts.dealer?.net,amounts.total?.net];
+    if(![...values,...amountValues].some(value=>finite(value)!=null))return "";
+    const card=(name,value,amount)=>`<article class="stat market-flow-stat"><small>${label} ${name}</small><strong class="${cls(value)}">${displayLots(value)}</strong><b class="market-flow-amount ${cls(amount)}">${displayAmount(amount)}</b><span class="stat-detail">${flowLabel(finite(value)!=null?value:amount)} · 張數 / 金額</span></article>`;
+    return card("外資",institutional.foreign_net,amounts.foreign?.net)+card("投信",institutional.trust_net,amounts.trust?.net)+card("自營商",institutional.dealer_net,amounts.dealer?.net)+card("合計",institutional.total_net,amounts.total?.net);
   }
-  const marketCards=marketCard("twse","上市");
+  const marketCards=marketCard("twse","上市")+marketCard("tpex","上櫃");
   $("#marketFlowCards").innerHTML=marketCards||'<div class="empty compact-empty">市場法人彙總等待盤後資料；單一標的仍可使用下方搜尋。</div>';
 
   const hasAny=(object,keys)=>keys.some(key=>finite(object?.[key])!=null);

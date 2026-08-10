@@ -7,7 +7,7 @@ on:
     paths:
       - scripts/diagnose_tpex_live.py
       - .github/workflows/diagnose-tpex-live.yml
-      - docs/V11.4.39-tpex-live-diagnostic.md
+      - docs/V11.4.40-tpex-live-diagnostic.md
 
 permissions:
   contents: read
@@ -22,10 +22,10 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: '3.12'
           cache: pip

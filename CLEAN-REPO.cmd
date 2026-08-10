@@ -15,7 +15,7 @@ for %%F in (.gitignore .nojekyll 404.html asset.html data-status.html event.html
     del /f /q "scripts\%%F"
   )
 )
-for %%F in (DELETION-MANIFEST-v11.4.36.txt DELETION-MANIFEST-v11.4.37.txt DELETION-MANIFEST-v11.4.38.txt scripts\verify_v11_4_36_live_sources.py scripts\verify_v11_4_37_live_sources.py scripts\verify_v11_4_38_live_sources.py tests\test_v11_4_36_contracts.py tests\test_v11_4_37_contracts.py tests\test_v11_4_37_core.py tests\test_v11_4_38_contracts.py tests\test_v11_4_38_core.py docs\V11.4.36-tpex-live-diagnostic.md docs\V11.4.37-tpex-live-diagnostic.md) do (
+for %%F in (DELETION-MANIFEST-v11.4.36.txt DELETION-MANIFEST-v11.4.37.txt DELETION-MANIFEST-v11.4.38.txt DELETION-MANIFEST-v11.4.39.txt scripts\verify_v11_4_36_live_sources.py scripts\verify_v11_4_37_live_sources.py scripts\verify_v11_4_38_live_sources.py scripts\verify_v11_4_39_live_sources.py tests\test_v11_4_36_contracts.py tests\test_v11_4_37_contracts.py tests\test_v11_4_37_core.py tests\test_v11_4_38_contracts.py tests\test_v11_4_38_core.py tests\test_v11_4_39_contracts.py tests\test_v11_4_39_core.py docs\V11.4.36-tpex-live-diagnostic.md docs\V11.4.37-tpex-live-diagnostic.md) do (
   if exist "%%F" del /f /q "%%F"
 )
 echo Repository nested-copy and obsolete-release cleanup complete.

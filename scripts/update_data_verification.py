@@ -1,20 +1,22 @@
 #!/usr/bin/env python3
 """Cross-source trust + completeness verification for Market Event Radar.
 
-v11.4.39 rebuilds this verifier around isolated stock / ETF adapters.  Every
+v11.4.40 rebuilds this verifier around isolated stock / ETF adapters.  Every
 asset is evaluated with local immutable source rows, so an optional channel can
 never leak an uninitialised variable into another asset class.  The output
-schema remains backwards-compatible with v11.4.39.
+schema remains backwards-compatible with v11.4.40.
 """
 from __future__ import annotations
 
 from datetime import datetime
+import html
 import re
+import unicodedata
 from typing import Any
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.39"
+VERSION = "v11.4.40"
 
 SOURCE_FILES = {
     "assets": "assets.json",
@@ -98,8 +100,27 @@ def clean_text_value(value: Any) -> str | None:
 
 
 def normalized_text_value(value: Any) -> str:
-    text = clean_text_value(value) or ""
+    text = html.unescape(clean_text_value(value) or "")
+    text = unicodedata.normalize("NFKC", text).replace("臺", "台")
+    text = re.sub(r"[®™©]", "", text)
+    text = re.sub(r"(?i)MSCI\s*R(?=[台A-Za-z])", "MSCI", text)
+    text = re.sub(r"證券投資信託股份有限公司|證券投資信託有限公司|證券投資信託", "投信", text)
+    text = re.sub(r"股份有限公司|有限公司", "", text)
     return re.sub(r"[^0-9A-Za-z\u3400-\u9fff]+", "", text).lower()
+
+def normalized_benchmark_identity(value: Any) -> str:
+    text=normalized_text_value(normalize_benchmark_value(value))
+    text=text.replace("台灣證券交易所", "").replace("發行量", "").replace("台灣", "")
+    return text
+
+def benchmark_status_for(official: Any, reference: Any, reference_status: str = "reference") -> tuple[str, list[Any]]:
+    left,right=normalize_benchmark_value(official),normalize_benchmark_value(reference)
+    if left:
+        if right and normalized_benchmark_identity(left)==normalized_benchmark_identity(right):return "multi_source",[left,right]
+        if right and reference_status=="official":return "conflict",[left,right]
+        return "official",[left]
+    if right:return reference_status,[right]
+    return "missing",[]
 
 
 def normalize_benchmark_value(value: Any) -> str | None:
@@ -247,9 +268,13 @@ def build_etf_field(asset: dict[str, Any], symbol: str, etf_details: dict[str, A
     text_fields = {"issuer", "manager", "benchmark"}
     for key in ("issuer", "manager", "benchmark", "aum", "beneficiary_count", "nav", "premium_discount", "holdings", "allocations", "distributions"):
         official_value, reference_value = official_etf.get(key), reference_etf.get(key)
+        reference_status = str(mapping(verification.get(key)).get("status") or "reference")
+        active_etf = "主動" in str(official_etf.get("management_style") or official_etf.get("category") or asset.get("name") or "")
         if key == "benchmark":
             official_value, reference_value = normalize_benchmark_value(official_value), normalize_benchmark_value(reference_value)
-        reference_status = str(mapping(verification.get(key)).get("status") or "reference")
+            if active_etf and official_value == "不適用":
+                checks[key] = {"status":"official","values":[official_value],"source":field_sources.get(key),"comparison_skipped":"active_etf_no_tracking_index"}
+                continue
         if isinstance(official_value, (list, dict)) or isinstance(reference_value, (list, dict)):
             if official_value:
                 status = "official"
@@ -258,6 +283,8 @@ def build_etf_field(asset: dict[str, Any], symbol: str, etf_details: dict[str, A
             else:
                 status = "missing"
             values = [len(value) if isinstance(value, list) else bool(value) for value in (official_value, reference_value) if value]
+        elif key == "benchmark":
+            status, values = benchmark_status_for(official_value, reference_value, reference_status)
         elif key in text_fields:
             status, values = text_status_for(official_value, reference_value, reference_status)
         else:

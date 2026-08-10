@@ -1,4 +1,4 @@
-name: Update v11.4.39 assets and audit
+name: Update v11.4.40 assets and audit
 on:
   push:
     branches: [main]
@@ -21,10 +21,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 28
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
           cache: pip
