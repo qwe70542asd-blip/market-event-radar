@@ -7,7 +7,7 @@ on:
     paths:
       - scripts/diagnose_tpex_live.py
       - .github/workflows/diagnose-tpex-live.yml
-      - docs/V11.4.40-tpex-live-diagnostic.md
+      - docs/V11.4.41-tpex-live-diagnostic.md
 
 permissions:
   contents: read
@@ -40,7 +40,7 @@ jobs:
 
       - name: Upload diagnostic artifact
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: tpex-live-diagnostic-${{ github.run_id }}
           path: |

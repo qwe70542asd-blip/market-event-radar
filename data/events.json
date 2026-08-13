@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "version": "v11.4.40",
+    "version": "v11.4.41",
     "updated_at": null,
     "timezone": "Asia/Taipei",
     "state_initialized": false,
@@ -9,7 +9,7 @@
     "archive_start": "2026-01-01",
     "archive_policy": "retain verified events from 2026-01-01 through the official future horizon",
     "event_count": 0,
-    "announcement_integrity": "strict-v11.4.40-series-safe",
+    "announcement_integrity": "strict-v11.4.41-series-safe",
     "announcement_suppressed_origins": []
   },
   "sources": [],

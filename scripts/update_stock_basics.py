@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import re
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import date
 from typing import Any
 
 import requests
@@ -26,7 +27,7 @@ from bs4 import BeautifulSoup
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.40"
+VERSION = "v11.4.41"
 TIMEOUT = 25
 YAHOO_BATCH = 48
 HEADERS = {
@@ -98,16 +99,67 @@ def number(value: Any) -> float | None:
 
 
 def normalize_date(value: Any) -> str | None:
+    """Normalize Gregorian/ROC company dates without guessing arbitrary numbers."""
     text = clean(value)
     if not text:
         return None
-    match = re.search(r"(20\d{2})[/-]?(\d{2})[/-]?(\d{2})", text)
+    token = re.sub(r"[年.]", "/", text).replace("月", "/").replace("日", "")
+    match = re.search(r"(?<!\d)(20\d{2})[/-](\d{1,2})[/-](\d{1,2})(?!\d)", token)
     if match:
-        return f"{match.group(1)}-{match.group(2)}-{match.group(3)}"
-    match = re.search(r"(\d{2,3})[/-](\d{1,2})[/-](\d{1,2})", text)
-    if match:
-        return f"{int(match.group(1)) + 1911:04d}-{int(match.group(2)):02d}-{int(match.group(3)):02d}"
-    return None
+        year, month, day = map(int, match.groups())
+    else:
+        match = re.search(r"(?<!\d)(\d{2,3})[/-](\d{1,2})[/-](\d{1,2})(?!\d)", token)
+        if match:
+            roc, month, day = map(int, match.groups())
+            year = roc + 1911
+        else:
+            compact = re.search(r"(?<!\d)(20\d{6}|\d{6,7})(?!\d)", text)
+            if not compact:
+                return None
+            raw = compact.group(1)
+            if len(raw) == 8 and raw.startswith("20"):
+                year, month, day = int(raw[:4]), int(raw[4:6]), int(raw[6:8])
+            else:
+                # ROC compact dates may be 6 digits (YYMMDD) or 7 (YYYMMDD).
+                roc_digits = len(raw) - 4
+                roc, month, day = int(raw[:roc_digits]), int(raw[roc_digits:roc_digits+2]), int(raw[-2:])
+                year = roc + 1911
+    try:
+        return date(year, month, day).isoformat()
+    except ValueError:
+        return None
+
+
+def sane_company_date(value: Any, *, listed_date: Any = None, field: str = "established_date") -> str | None:
+    day = normalize_date(value)
+    if not day:
+        return None
+    parsed = date.fromisoformat(day)
+    # Company master data must never move into the future.  Establishment also
+    # cannot happen after the security is listed.  This catches schema drift
+    # such as TPEx rows where a report date was previously mistaken for setup date.
+    if parsed > NOW.date():
+        return None
+    if field == "established_date":
+        listed = normalize_date(listed_date)
+        if listed and parsed > date.fromisoformat(listed):
+            return None
+    return day
+
+
+def sanitize_company_dates(record: dict[str, Any]) -> dict[str, Any]:
+    row = dict(record or {})
+    listed = sane_company_date(row.get("listed_date"), field="listed_date")
+    established = sane_company_date(row.get("established_date"), listed_date=listed, field="established_date")
+    if listed:
+        row["listed_date"] = listed
+    else:
+        row.pop("listed_date", None)
+    if established:
+        row["established_date"] = established
+    else:
+        row.pop("established_date", None)
+    return row
 
 
 def value_from(row: dict[str, Any], *labels: str) -> Any:
@@ -195,7 +247,7 @@ def fetch_official() -> tuple[dict[str, dict[str, Any]], list[dict[str, Any]], d
                 record = official_record(row, source_name, url, exchange)
                 if not record:
                     continue
-                output[record["symbol"]] = record
+                output[record["symbol"]] = sanitize_company_dates(record)
                 counts[exchange] += 1
         except Exception as exc:
             errors.append({"source": source_name, "error": str(exc)[:500]})
@@ -314,7 +366,7 @@ def existing_asset_records() -> dict[str, dict[str, Any]]:
         if asset.get("market") != "TW" or asset.get("asset_class") != "stock" or not asset.get("symbol"):
             continue
         symbol = str(asset["symbol"]).upper()
-        output[symbol] = {
+        output[symbol] = sanitize_company_dates({
             "symbol": symbol,
             "company_name": asset.get("company_name") or asset.get("name"),
             "short_name": asset.get("name"),
@@ -338,7 +390,7 @@ def existing_asset_records() -> dict[str, dict[str, Any]]:
             "accounting_firm": asset.get("accounting_firm"),
             "metrics": asset.get("metrics"),
             "financials": asset.get("financials"),
-        }
+        })
     return output
 
 
@@ -382,11 +434,12 @@ def main() -> None:
         # Official record has highest priority, followed by existing official fields,
         # then the preserved archive and the new Yahoo reference-only enhancement.
         merged = merge_nonempty(
-            official.get(symbol) or {},
-            asset_records.get(symbol) or {},
-            old_items.get(symbol) or {},
-            yahoo_results.get(symbol) or {},
+            sanitize_company_dates(official.get(symbol) or {}),
+            sanitize_company_dates(asset_records.get(symbol) or {}),
+            sanitize_company_dates(old_items.get(symbol) or {}),
+            sanitize_company_dates(yahoo_results.get(symbol) or {}),
         )
+        merged = sanitize_company_dates(merged)
         if not merged:
             continue
         exchange = str(merged.get("exchange") or "TWSE")

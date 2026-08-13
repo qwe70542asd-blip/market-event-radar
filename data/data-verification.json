@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "version": "v11.4.40",
+    "version": "v11.4.41",
     "updated_at": "2026-08-10T09:53:46+08:00",
     "status": "partial",
     "counts": {
@@ -30,7 +30,7 @@
     "source_snapshots": {
       "assets": {
         "file": "assets.json",
-        "version": "v11.4.40",
+        "version": "v11.4.41",
         "updated_at": null,
         "status": null,
         "age_seconds": null,
@@ -39,7 +39,7 @@
       },
       "asset_audit": {
         "file": "asset-audit.json",
-        "version": "v11.4.40",
+        "version": "v11.4.41",
         "updated_at": "2026-08-05T11:23:01+08:00",
         "status": null,
         "age_seconds": 426645.1,
@@ -48,7 +48,7 @@
       },
       "tw_market": {
         "file": "tw-market.json",
-        "version": "v11.4.40",
+        "version": "v11.4.41",
         "updated_at": null,
         "status": null,
         "age_seconds": null,
@@ -57,7 +57,7 @@
       },
       "monthly_revenue": {
         "file": "monthly-revenue.json",
-        "version": "v11.4.40",
+        "version": "v11.4.41",
         "updated_at": null,
         "status": "waiting",
         "age_seconds": null,
@@ -66,7 +66,7 @@
       },
       "dividend_history": {
         "file": "dividend-history.json",
-        "version": "v11.4.40",
+        "version": "v11.4.41",
         "updated_at": null,
         "status": "waiting",
         "age_seconds": null,
@@ -75,7 +75,7 @@
       },
       "secondary_reference": {
         "file": "secondary-reference.json",
-        "version": "v11.4.40",
+        "version": "v11.4.41",
         "updated_at": null,
         "status": "waiting",
         "age_seconds": null,
@@ -84,7 +84,7 @@
       },
       "yahoo_details": {
         "file": "yahoo-details.json",
-        "version": "v11.4.40",
+        "version": "v11.4.41",
         "updated_at": null,
         "status": "waiting",
         "age_seconds": null,
@@ -93,7 +93,7 @@
       },
       "etf_details": {
         "file": "etf-details.json",
-        "version": "v11.4.40",
+        "version": "v11.4.41",
         "updated_at": null,
         "status": "waiting",
         "age_seconds": null,

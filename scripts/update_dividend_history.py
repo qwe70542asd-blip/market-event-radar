@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Update the isolated dividend-history channel for v11.4.40.
+"""Update the isolated dividend-history channel for v11.4.41.
 
 Current official dividend rows are merged with a bounded MOPS company batch.
 The main cursor advances even when individual companies fail; failures enter a
@@ -25,7 +25,7 @@ from update_assets import (
     text_value,
 )
 
-VERSION = "v11.4.40"
+VERSION = "v11.4.41"
 NEW_BATCH = 15
 RETRY_BATCH = 5
 MAX_RECORDS = 40
@@ -62,8 +62,8 @@ def current_row(row: dict, source_name: str) -> tuple[str, dict] | None:
         "term": str(exact_row_value(row, ("期別",)) or "").strip() or None,
         "cash": cash,
         "stock": stock,
-        "board_date": format_date(exact_row_value(row, ("董事會（擬議）股利分派日", "董事會決議日", "董事會日期"))),
-        "shareholder_meeting_date": format_date(exact_row_value(row, ("股東會日期",))),
+        "board_date": format_date(exact_row_value(row, ("董事會（擬議）股利分派日", "董事會決議通過股利分派日", "董事會決議日", "董事會日期"))),
+        "shareholder_meeting_date": format_date(exact_row_value(row, ("股東會日期", "股東會日期配盈餘/待彌補虧損(元)"))),
         "ex_date": format_date(exact_row_value(row, ("除權息交易日", "除息日", "除權日", "ExDate"))),
         "payment_date": format_date(exact_row_value(row, ("現金股利發放日", "發放日", "PaymentDate"))),
         "record_date": format_date(exact_row_value(row, ("除權息基準日", "基準日", "RecordDate"))),
@@ -183,27 +183,49 @@ def main() -> None:
     if symbols:
         cursor %= len(symbols)
     retry = [str(value) for value in meta.get("retry_symbols", []) if str(value) in symbols]
-    retry_targets = retry[:RETRY_BATCH]
-    new_targets = [symbols[(cursor + offset) % len(symbols)] for offset in range(min(NEW_BATCH, len(symbols)))] if symbols else []
+    circuit_remaining = max(0, int(meta.get("mops_circuit_remaining") or 0))
+    retry_targets = retry[:RETRY_BATCH] if circuit_remaining == 0 else []
+    new_targets = [symbols[(cursor + offset) % len(symbols)] for offset in range(min(NEW_BATCH, len(symbols)))] if symbols and circuit_remaining == 0 else []
     targets = list(dict.fromkeys(retry_targets + new_targets))
 
     successful: set[str] = set()
     failed: list[str] = []
-    with ThreadPoolExecutor(max_workers=2) as pool:
-        futures = {pool.submit(fetch_mops_dividend_history, symbol): symbol for symbol in targets}
-        for future in as_completed(futures):
-            symbol, rows, error = future.result()
-            if rows:
-                updates[symbol].extend(rows)
-                successful.add(symbol)
-                health.append({"name": "MOPS dividend history", "status": "ok", "symbol": symbol, "records": len(rows)})
+    mops_errors: list[dict[str, str]] = []
+    if circuit_remaining:
+        meta["mops_circuit_remaining"] = circuit_remaining - 1
+        health.append({
+            "name": "MOPS dividend history", "status": "degraded", "mode": "circuit-open",
+            "message": "Previous batch was broadly unavailable; this run skips MOPS to avoid repeated requests.",
+            "remaining_runs": circuit_remaining - 1,
+        })
+    else:
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            futures = {pool.submit(fetch_mops_dividend_history, symbol): symbol for symbol in targets}
+            for future in as_completed(futures):
+                symbol, rows, error = future.result()
+                if rows:
+                    updates[symbol].extend(rows)
+                    successful.add(symbol)
+                else:
+                    failed.append(symbol)
+                    mops_errors.append({"symbol": symbol, "error": error or "no rows parsed"})
+        if targets:
+            failure_ratio = len(failed) / len(targets)
+            if failure_ratio >= .9 and len(targets) >= 5:
+                meta["mops_circuit_remaining"] = 2
             else:
-                failed.append(symbol)
-                health.append({"name": "MOPS dividend history", "status": "warning", "symbol": symbol, "error": error or "no rows parsed"})
+                meta["mops_circuit_remaining"] = 0
+            health.append({
+                "name": "MOPS dividend history",
+                "status": "ok" if not failed else "degraded" if successful else "warning",
+                "attempted": len(targets), "success": len(successful), "failures": len(failed),
+                "failure_ratio": round(failure_ratio, 4),
+                "sample_errors": mops_errors[:5],
+            })
 
     # Advance through new symbols regardless of individual failures. Failed
     # symbols remain in a separate bounded retry queue.
-    if symbols:
+    if symbols and new_targets:
         meta["cursor"] = (cursor + len(new_targets)) % len(symbols)
     remaining_retry = [symbol for symbol in retry if symbol not in successful and symbol not in retry_targets]
     meta["retry_symbols"] = list(dict.fromkeys(remaining_retry + failed))[:300]
@@ -243,9 +265,11 @@ def main() -> None:
             "batch_failures": len(failed),
             "next_cursor": meta.get("cursor", 0),
             "retry_queue_size": len(meta.get("retry_symbols", [])),
+            "mops_circuit_remaining": int(meta.get("mops_circuit_remaining") or 0),
+            "mops_status": "circuit-open" if circuit_remaining else ("ok" if targets and not failed else "degraded" if successful else "unavailable" if targets else "idle"),
             "reference_symbol_count": len(yahoo_reference_symbols),
             "reference_record_count": yahoo_reference_records,
-            "note": "Official TWSE/TPEx rows stay primary; Yahoo dividend events backfill history as reference-only data while MOPS remains best-effort.",
+            "note": "Official TWSE/TPEx rows stay primary; Yahoo dividend events backfill history as reference-only data. MOPS is best-effort with a circuit breaker when broad failures occur.",
         },
         "sources": health,
         "items": merged,

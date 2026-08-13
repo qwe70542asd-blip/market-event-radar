@@ -1,4 +1,4 @@
-name: Update v11.4.40 科技新報／財經新報 news
+name: Update v11.4.41 科技新報／財經新報 news
 on:
   workflow_dispatch:
 permissions:

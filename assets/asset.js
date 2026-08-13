@@ -41,7 +41,7 @@
   const has=value=>value!==null&&value!==undefined&&String(value).trim()!=="";
   const prefer=(official,reference)=>has(official)?official:reference;
   const metricSource=(key,fallback)=>asset.metric_sources?.[key]||(yahooMetricMeta[key]?.source)||(has(yahooMetrics[key])?"Yahoo 參考資料":fallback);
-  const metricTrust=key=>asset.metric_sources?.[key]?verification.fields?.metrics?.status:(yahooMetricMeta[key]?.status|| (has(yahooMetrics[key])?"reference":verification.fields?.metrics?.status));
+  const metricTrust=key=>verification.fields?.metrics?.fields?.[key]?.status||(asset.metric_sources?.[key]?"official":(yahooMetricMeta[key]?.status||(has(yahooMetrics[key])?"reference":verification.fields?.metrics?.status)));
   const nonEmpty=value=>Array.isArray(value)?value.length>0:has(value);
   const safeUrl=value=>/^https?:\/\//i.test(String(value||""))?String(value):"";
   const formatDate=value=>{

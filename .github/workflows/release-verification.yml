@@ -1,4 +1,4 @@
-name: Verify v11.4.40 stable app release
+name: Verify v11.4.41 stable app release
 on:
   push:
     branches: [main]
@@ -6,7 +6,7 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: verify-v11-4-40-main
+  group: verify-v11-4-41-main
   cancel-in-progress: true
 jobs:
   verify:
@@ -77,5 +77,5 @@ jobs:
           for attempt in {1..20}; do curl -fsS http://127.0.0.1:8765/index.html >/dev/null && break; sleep 0.25; done
           python scripts/browser_smoke.py http://127.0.0.1:8765
 
-      - name: TPEx v11.4.40 reachability-aware live contract gate
-        run: python scripts/verify_v11_4_40_live_sources.py
+      - name: TPEx v11.4.41 reachability-aware live contract gate
+        run: python scripts/verify_v11_4_41_live_sources.py

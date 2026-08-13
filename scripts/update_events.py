@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build Market Event Radar v11.4.40 event data from official schedules.
+"""Build Market Event Radar v11.4.41 event data from official schedules.
 
 The updater keeps the last verified archive, refreshes selected official sources,
 and records when an exact date first appears or changes. It never invents dates.
@@ -34,7 +34,7 @@ NOW = datetime.now(ZoneInfo("Asia/Taipei"))
 TAIPEI = NOW.tzinfo
 NEW_YORK = ZoneInfo("America/New_York")
 OFFLINE = os.getenv("EVENT_OFFLINE", "").strip() == "1"
-VERSION = "v11.4.40"
+VERSION = "v11.4.41"
 TRACKING_KEY_VERSION = 2
 ARCHIVE_START = date(2026, 1, 1)
 ARCHIVE_START_DT = datetime.combine(ARCHIVE_START, time.min, tzinfo=TAIPEI)
@@ -980,18 +980,24 @@ def dividend_company_identity(row: dict[str, Any]) -> tuple[str, str]:
 def dividend_plan_candidate_dates(row: dict[str, Any]) -> tuple[date | None, date | None]:
     """Return (board decision date, shareholder-meeting date) for a dividend row.
 
-    TPEx currently exposes a misleading field named
-    ``股東會日期配盈餘/待彌補虧損(元)``.  It is a monetary field, not a meeting
-    date, so semantic matching explicitly excludes profit/loss and currency
-    labels.  Keeping this logic in one helper ensures the parser, fetcher and
-    release gate agree on what an eligible row means.
+    TPEx currently exposes the shareholder-meeting date under the misleading
+    legacy header ``股東會日期配盈餘/待彌補虧損(元)``.  Live diagnostics confirm
+    that the value is a ROC compact date (for example ``1080617``), so that
+    *exact* official header is accepted before the generic monetary-field
+    exclusions are applied.  Other fields containing profit/loss/amount/unit
+    words remain excluded to avoid interpreting monetary values as dates.
     """
-    shareholder_raw = first_value(row, ["股東會日期", "ShareholdersMeetingDate"]) or semantic_field(
-        row,
-        all_terms=("股東會",),
-        any_terms=("日期", "date"),
-        exclude_terms=("配盈餘", "待彌補", "金額", "元"),
-    )
+    shareholder_raw = first_value(row, [
+        "股東會日期", "ShareholdersMeetingDate",
+        "股東會日期配盈餘/待彌補虧損(元)",
+    ])
+    if not shareholder_raw:
+        shareholder_raw = semantic_field(
+            row,
+            all_terms=("股東會",),
+            any_terms=("日期", "date"),
+            exclude_terms=("配盈餘", "待彌補", "金額", "總額", "元", "股利", "配股", "配現金"),
+        )
     decision_raw = first_value(row, [
         "董事會決議通過股利分派日", "董事會通過股利分派日",
         "董事會（擬議）股利分派日", "董事會(擬議)股利分派日",
@@ -1643,7 +1649,7 @@ def main() -> None:
             "announced_today_count": announced_today,
             "announced_recent_count": announced_recent,
             "state_initialized": True,
-            "announcement_integrity": "strict-v11.4.40-series-safe",
+            "announcement_integrity": "strict-v11.4.41-series-safe",
             "announcement_suppressed_origins": sorted(suppressed_origins),
             "source_ok_count": sum(1 for source in sources if source.get("status") == "ok"),
             "source_warning_count": sum(1 for source in sources if source.get("status") != "ok"),

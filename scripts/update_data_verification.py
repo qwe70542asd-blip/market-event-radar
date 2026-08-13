@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Cross-source trust + completeness verification for Market Event Radar.
 
-v11.4.40 rebuilds this verifier around isolated stock / ETF adapters.  Every
+v11.4.41 rebuilds this verifier around isolated stock / ETF adapters.  Every
 asset is evaluated with local immutable source rows, so an optional channel can
 never leak an uninitialised variable into another asset class.  The output
-schema remains backwards-compatible with v11.4.40.
+schema remains backwards-compatible with v11.4.41.
 """
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ from typing import Any
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.40"
+VERSION = "v11.4.41"
 
 SOURCE_FILES = {
     "assets": "assets.json",
@@ -242,17 +242,31 @@ def build_metrics_field(asset: dict[str, Any], yahoo_row: dict[str, Any]) -> dic
     reference_metrics = mapping(yahoo_row.get("metrics"))
     metric_meta = mapping(yahoo_row.get("metrics_meta"))
     metric_fields: dict[str, Any] = {}
+    # Valuation fields are point-in-time market ratios and may be compared with
+    # a loose tolerance.  Financial-statement ratios/EPS often use different
+    # quarter vs TTM bases across TWSE/MOPS and Yahoo; without an explicit
+    # matching period, disagreement is not evidence of a data conflict.
+    point_in_time = {"pe", "pb", "dividend_yield"}
     for key in sorted(set(official_metrics) | set(reference_metrics)):
+        official_value, reference_value = official_metrics.get(key), reference_metrics.get(key)
         meta = mapping(metric_meta.get(key))
-        status, values = status_for(official_metrics.get(key), reference_metrics.get(key), .01, str(meta.get("status") or "reference"))
+        reference_status = str(meta.get("status") or "reference")
+        comparison_skipped = None
+        if key not in point_in_time and num(official_value) is not None and num(reference_value) is not None:
+            status, values = "official", [num(official_value)]
+            comparison_skipped = "period_basis_not_proven_equal"
+        else:
+            status, values = status_for(official_value, reference_value, .01, reference_status)
         metric_fields[key] = {
             "status": status,
             "values": values,
             "sources": [source for source, value in [
-                (mapping(asset.get("metric_sources")).get(key) or "official financial data", official_metrics.get(key)),
-                (meta.get("source") or "Yahoo Finance", reference_metrics.get(key)),
+                (mapping(asset.get("metric_sources")).get(key) or "official financial data", official_value),
+                (meta.get("source") or "Yahoo Finance", reference_value),
             ] if num(value) is not None],
             "formula": meta.get("formula"),
+            **({"reference_period": meta.get("period")} if meta.get("period") else {}),
+            **({"comparison_skipped": comparison_skipped} if comparison_skipped else {}),
         }
     return {"status": overall_status(metric_fields), "fields": metric_fields, "available": list(metric_fields)}
 
@@ -401,6 +415,9 @@ def main() -> None:
         trust_counts[trust] = trust_counts.get(trust, 0) + 1
         completeness_counts[completeness] = completeness_counts.get(completeness, 0) + 1
 
+    true_conflicts = trust_counts.get("conflict", 0)
+    conflict_ratio = round(true_conflicts / max(1, len(output)) * 100, 2)
+    partial_ratio = round(completeness_counts.get("partial", 0) / max(1, len(output)) * 100, 2)
     payload = {
         "metadata": {
             "version": VERSION,
@@ -409,12 +426,14 @@ def main() -> None:
             "counts": trust_counts,
             "trust_counts": trust_counts,
             "completeness_counts": completeness_counts,
+            "conflict_ratio_percent": conflict_ratio,
+            "partial_ratio_percent": partial_ratio,
             "average_field_coverage_percent": audit_summary.get("average_field_coverage_percent"),
             "source_snapshots": source_snapshots,
             "stale_sources": stale_sources,
             "version_mismatch_sources": version_mismatch_sources,
-            "verification_basis": "isolated stock/ETF adapters; per-symbol source timestamps when available; channel snapshots retained separately",
-            "note": "Official values are primary. Optional channels are fail-closed and never leak state across asset classes.",
+            "verification_basis": "isolated stock/ETF adapters; per-symbol source timestamps when available; financial conflicts require comparable period basis",
+            "note": "Official values are primary. Financial-statement ratios from different or unknown periods are not mislabeled as conflicts; optional channels remain fail-closed.",
         },
         "items": output,
     }

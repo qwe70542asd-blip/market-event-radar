@@ -1,4 +1,4 @@
-name: Update v11.4.40 亞洲總體風險 news
+name: Update v11.4.41 亞洲總體風險 news
 on:
   workflow_dispatch:
 permissions:

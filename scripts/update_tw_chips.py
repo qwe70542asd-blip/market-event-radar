@@ -18,7 +18,7 @@ from bs4 import BeautifulSoup
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.40"
+VERSION = "v11.4.41"
 TIMEOUT = 24
 YAHOO_BATCH = 24
 PRIORITY_SYMBOLS = [
@@ -316,7 +316,7 @@ def parse_tpex_margin(rows: list[dict[str, Any]], assets: dict[str, dict[str, An
 def parse_tpex_day_trade_market(rows: list[dict[str, Any]], fallback_date: str | None) -> tuple[dict[str, Any], str | None]:
     """Parse TPEx market-wide intraday/day-trading statistics.
 
-    v11.4.40 is schema-first: it recognises the current official OpenAPI fields
+    v11.4.41 is schema-first: it recognises the current official OpenAPI fields
     observed from ``tpex_intraday_trading_statistics`` and only then falls back
     to legacy aliases.  A row is published only when all three core measures
     (volume, buy value and sell value) are present, preventing a partial schema
@@ -424,16 +424,100 @@ def parse_tpex_day_trade_market(rows: list[dict[str, Any]], fallback_date: str |
     traded, values = max(candidates, key=lambda item: item[0])
     return values, traded
 
+
+def parse_twse_day_trade_market(rows: list[dict[str, Any]], fallback_date: str | None) -> tuple[dict[str, Any], str | None]:
+    """Aggregate official TWTB4U per-security rows into a TWSE market summary.
+
+    TWTB4U publishes official day-trading share volume and buy/sell values per
+    security.  Summing those columns is exact; percentage ratios are left
+    absent unless the upstream row explicitly supplies an official market ratio.
+    """
+    ceiling = valid_chip_date(fallback_date)
+    sessions: dict[str, dict[str, float]] = {}
+    for row in rows:
+        traded = valid_chip_date(row_date(row)) or ceiling
+        if not traded or (ceiling and traded > ceiling):
+            continue
+        volume_key, volume_raw = field_pair(row, "當日沖銷交易成交股數", "當日沖銷成交股數", "DayTradingVolume")
+        _, buy_raw = field_pair(row, "當日沖銷交易買進成交金額", "當日沖銷買進成交金額", "DayTradingBuyAmount", "DayTradingValueOfBuys")
+        _, sell_raw = field_pair(row, "當日沖銷交易賣出成交金額", "當日沖銷賣出成交金額", "DayTradingSellAmount", "DayTradingValueOfSells")
+        # Ignore non-security summary rows here; if a dedicated official total
+        # row is ever added it can still be parsed by the aliases above only
+        # when it also carries a normal market date.
+        if not symbol_from_row(row):
+            continue
+        volume = as_lots(volume_raw, volume_key)
+        buy, sell = number(buy_raw), number(sell_raw)
+        if volume is None and buy is None and sell is None:
+            continue
+        bucket = sessions.setdefault(traded, {"volume": 0.0, "buy_amount": 0.0, "sell_amount": 0.0, "stock_count": 0.0})
+        if volume is not None:
+            bucket["volume"] += float(volume)
+        if buy is not None:
+            bucket["buy_amount"] += float(buy)
+        if sell is not None:
+            bucket["sell_amount"] += float(sell)
+        bucket["stock_count"] += 1
+    if not sessions:
+        return {}, None
+    traded = max(sessions)
+    bucket = sessions[traded]
+    result = {
+        "volume": integer_or_float(bucket["volume"]),
+        "buy_amount": integer_or_float(bucket["buy_amount"]),
+        "sell_amount": integer_or_float(bucket["sell_amount"]),
+        "stock_count": int(bucket["stock_count"]),
+    }
+    return {key: value for key, value in result.items() if value is not None}, traded
+
+def _amount_value(row: dict[str, Any], kind: str) -> float | None:
+    aliases = {
+        "buy": ("買進金額", "買入金額", "BuyAmount", "PurchaseAmount", "TotalBuy", "TotalBuyAmount", "BuyingAmount"),
+        "sell": ("賣出金額", "SellAmount", "SaleAmount", "TotalSell", "TotalSellAmount", "SellingAmount"),
+        "net": ("買賣差額", "買賣超金額", "買賣超", "Difference", "NetAmount", "DifferenceAmount", "NetBuySellAmount"),
+    }
+    value = number(field(row, *aliases[kind]))
+    if value is not None:
+        return value
+    any_terms = {
+        "buy": ("買進", "買入", "buy", "purchase"),
+        "sell": ("賣出", "sell", "sale"),
+        "net": ("買賣超", "差額", "difference", "net"),
+    }[kind]
+    excludes = ("股數", "張數", "volume", "shares", "ratio", "比重", "比例")
+    _, raw = semantic_pair(row, any_terms=any_terms, exclude_terms=excludes)
+    return number(raw)
+
+
 def _amount_triplet(row: dict[str, Any]) -> dict[str, int | float] | None:
-    buy=number(field(row,"買進金額","BuyAmount","PurchaseAmount","TotalBuy"))
-    sell=number(field(row,"賣出金額","SellAmount","SaleAmount","TotalSell"))
-    net=number(field(row,"買賣差額","買賣超金額","買賣超","Difference","NetAmount","DifferenceAmount"))
-    if net is None and buy is not None and sell is not None:net=buy-sell
-    values={k:integer_or_float(v) for k,v in {"buy":buy,"sell":sell,"net":net}.items() if v is not None}
+    buy = _amount_value(row, "buy")
+    sell = _amount_value(row, "sell")
+    net = _amount_value(row, "net")
+    if net is None and buy is not None and sell is not None:
+        net = buy - sell
+    values = {key: integer_or_float(value) for key, value in {"buy": buy, "sell": sell, "net": net}.items() if value is not None}
     return values or None
 
+
 def _institution_label(row: dict[str, Any]) -> str:
-    return clean(field(row,"單位名稱","單位","InstitutionalInvestors","InstitutionalInvestor","Category","Name","投資人類別"))
+    direct = clean(field(
+        row, "單位名稱", "單位", "投資人類別", "投資人", "投資人名稱", "投資人類型",
+        "InstitutionalInvestors", "InstitutionalInvestor", "InvestorType", "InstitutionalType", "Category", "Name", "Item",
+    ))
+    if direct:
+        return direct
+    # Schema drift protection: the label column is the short non-numeric text
+    # field in official summary rows.  Never select dates or numeric amounts.
+    for key, value in row.items():
+        if str(key).startswith("_"):
+            continue
+        text = clean(value)
+        if not text or number(text) is not None or date_value(text):
+            continue
+        norm = normalized_key(text)
+        if any(token in norm for token in ("外資", "陸資", "投信", "自營商", "三大法人", "foreign", "dealer", "trust", "institution")):
+            return text
+    return ""
 
 def parse_twse_institutional_amounts(rows: list[dict[str, Any]], fallback_date: str | None) -> tuple[dict[str, Any], str | None]:
     result:dict[str,Any]={}; traded=None; dealer_parts=[]
@@ -979,6 +1063,7 @@ def main() -> None:
     official_inst, market_inst, institutional_date = parse_institutional(institutional_rows, asset_map, institutional_url, verified_market_date)
     official_margin, margin_date = parse_margin(margin_rows, asset_map, margin_url, verified_market_date)
     official_day, day_date = parse_day_trade(day_rows, asset_map, day_url, verified_market_date)
+    twse_day_market, twse_day_market_date = parse_twse_day_trade_market(day_rows, verified_market_date)
     twse_amounts, twse_amount_date = parse_twse_institutional_amounts(twse_amount_rows, verified_market_date)
     tpex_inst, tpex_market_inst, tpex_inst_date = parse_tpex_institutional(tpex_inst_rows, asset_map, tpex_inst_url, verified_market_date)
     tpex_margin, tpex_margin_date = parse_tpex_margin(tpex_margin_rows, asset_map, tpex_margin_url, verified_market_date)
@@ -1014,7 +1099,7 @@ def main() -> None:
     raw_available_dates = old.get("available_dates") or []
     dates = {day for value in raw_available_dates if (day := valid_chip_date(value))}
     removed_invalid_dates = len(raw_available_dates) - len(dates)
-    for value in (institutional_date, margin_date, day_date, twse_amount_date, tpex_inst_date, tpex_margin_date, tpex_day_market_date, tpex_day_date, tpex_amount_date):
+    for value in (institutional_date, margin_date, day_date, twse_day_market_date, twse_amount_date, tpex_inst_date, tpex_margin_date, tpex_day_market_date, tpex_day_date, tpex_amount_date):
         if value:
             dates.add(value)
     for row in items.values():
@@ -1034,6 +1119,11 @@ def main() -> None:
         twse_market["institutional_amounts"] = twse_amounts
         twse_market["institutional_amount_date"] = twse_amount_date
         twse_market["institutional_amount_source"] = twse_amount_url
+    if twse_day_market:
+        twse_market["day_trading"] = twse_day_market
+        twse_market["day_trading_date"] = twse_day_market_date
+        twse_market["day_trading_scope"] = "market-aggregate"
+        twse_market["day_trading_source"] = day_url
     twse_market["stock_count"] = sum(1 for row in items.values() if str(row.get("exchange") or "").upper() == "TWSE")
     tpex_market = dict(old_markets.get("tpex") or {})
     if tpex_market_inst:
@@ -1066,7 +1156,7 @@ def main() -> None:
             "invalid_legacy_dates_removed": removed_invalid_dates + removed_market_dates + removed_nested_dates,
             "invalid_nested_dates_removed": removed_nested_dates,
             "schema": "symbol-keyed-v2",
-            "note": "官方資料優先；第三方只補缺漏。v11.4.40 強化 ROC/Gregorian 日期、TPEx 市場彙總當沖欄位與線上 schema gate，不偽造個股當沖資料。",
+            "note": "官方資料優先；第三方只補缺漏。v11.4.41 強化 ROC/Gregorian 日期、TPEx 市場彙總當沖欄位與線上 schema gate，不偽造個股當沖資料。",
         },
         "markets": markets,
         "items": items,

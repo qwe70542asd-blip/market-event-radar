@@ -81,12 +81,20 @@ def news(name):
 
 def basics():
  p=load("stock-basics.json")
+ today=date.today()
  for s,row in (p.get("items") or {}).items():
   if "financial_coverage_percent" not in row:fail(f"missing financial coverage {s}")
   for field in ("industry","industry_name"):
    if str(row.get(field) or "").isdigit():fail(f"industry code exposed {s} {field}={row.get(field)}")
   code=str(row.get("industry_code") or "")
   if code and (not code.isdigit() or len(code)>2):fail(f"invalid industry_code {s}: {code}")
+  listed=iso_day(row.get("listed_date")) if row.get("listed_date") else None
+  established=iso_day(row.get("established_date")) if row.get("established_date") else None
+  if row.get("listed_date") and not listed:fail(f"invalid listed date {s}: {row.get('listed_date')}")
+  if row.get("established_date") and not established:fail(f"invalid established date {s}: {row.get('established_date')}")
+  if listed and listed>today:fail(f"future listed date {s}: {listed}")
+  if established and established>today:fail(f"future established date {s}: {established}")
+  if listed and established and established>listed:fail(f"established date after listing {s}: {established}>{listed}")
 
 if __name__=="__main__":
  scope=sys.argv[1] if len(sys.argv)>1 else "all"

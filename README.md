@@ -1,21 +1,20 @@
-# 市場事件雷達 v11.4.40
+# 市場事件雷達 v11.4.41
 
 以事件月曆為核心，整合台股行情、全球市場、財經新聞、法人籌碼、股票／ETF 資料與個人投資組合的靜態 PWA。
 
-## v11.4.40：資料正確性、法人金額與同步整合
+## v11.4.41：正確性強化與來源健康
 
-這版承接 v11.4.39 stable core，集中處理自我檢查發現的資料誤判、來源同步與完整性問題，不移除既有功能。
+這版針對 v11.4.40 上線後的 live audit，優先修「錯資料被當成正常」與「來源降級卻看起來健康」兩類問題。
 
-- **新聞實體辨識**：所有兩字中文公司簡稱都視為高碰撞名稱，必須有鄰近市場／企業語境；修正「至上」誤中「截至上午」等問題，保留舊新聞 archive 的重新分類機制。
-- **新聞分類**：毛利率、營益率、淨利率不再因包含「利率」而誤判成央行新聞；Fed、央行、升降息與政策利率仍正常歸類。
-- **Data Verification release barrier**：push 後等待 assets、tw-market、monthly-revenue、dividend-history、secondary-reference、Yahoo details、ETF details 全部升到 v11.4.40 才發布驗證快照。
-- **法人籌碼**：TWSE／TPEx 同時顯示買賣超張數與官方買賣超金額；金額缺值不以股價×張數估算，張數與金額日期不同時也不混用。
-- **TWSE 籌碼韌性**：日期指定報表優先、verified-session fallback、JSON/BOM 容錯與 retry；上游失敗時保留 last-known-good。
-- **TPEx 發行股數**：若主檔沒有直接發行股數，只有在官方實收資本額與普通股面額足以安全計算時才補值，並標記 `calculated_official_fields` 與來源。
-- **股利歷史**：Yahoo dividend event 只作 reference backfill；官方 TWSE／TPEx／MOPS 優先。跨來源優先以除息日辨識同一筆，避免把同年多次配息錯合併。
-- **ETF 驗證**：正規化臺/台、HTML entity、法律全名與 MSCI 標記差異；主動 ETF 官方「不適用」追蹤指數不再和績效比較基準形成假 conflict。
-- **PWA**：同源靜態 JS/CSS/SVG/圖片/JSON 可由 precache cache-first；頁面 navigation 與 live data 維持 network-first。
-- **GitHub Actions**：checkout/setup-python 使用 Node 24 相容 major；Cloudflare secrets 未設定時明確 warning + skip，不再製造永久紅燈，也不會假稱 worker 已部署。
+- **TPEx 公司日期**：Gregorian／ROC 日期正規化；成立日晚於掛牌日或未來日期會被拒絕，且 stock-basics 發布前有 fail-closed 驗證。
+- **TPEx 股利計畫**：依 live diagnostic 實際欄位，支援歷史 header `股東會日期配盈餘/待彌補虧損(元)` 中的 ROC 日期，不再把整欄直接當成金額排除。
+- **當沖／法人市場摘要**：TWSE 由官方 TWTB4U 精確加總當沖股數與買賣金額；TPEx 法人金額 parser 擴充中英文 schema。缺資料仍保持 `—`，不做張數×股價推估。
+- **Data Verification**：不同或未知財報期間的 ROE／EPS／財務比率不再誤標 conflict；PE／PB／殖利率等 point-in-time 指標仍做跨來源比對。
+- **個股頁可信度**：每個指標改讀自己的 verification status，不再受整組 metrics 的 conflict 污染。
+- **歷史股利韌性**：MOPS 大規模失敗時短暫開 circuit breaker；錯誤只保留摘要樣本，官方當期資料與 Yahoo reference history 繼續可用。
+- **新聞來源健康**：direct source 403 + history fallback 會標記 degraded/partial，不再顯示 health=ok。
+- **PWA**：network-first 遇 HTTP 4xx/5xx 也會使用已存在的 cache fallback。
+- **GitHub Actions**：diagnostic artifact 改用 Node-24-compatible `actions/upload-artifact@v7`。
 
 ## 覆蓋舊 repository
 
@@ -25,10 +24,10 @@
 CLEAN-REPO.cmd
 ```
 
-它會移除 v11.4.36～v11.4.39 已淘汰的 verifier/test helper、舊 deletion manifest 與意外巢狀 repository，不會刪除 production scripts。之後使用 GitHub Desktop Commit / Push。
+它會移除 v11.4.36～v11.4.40 已淘汰的 verifier/test helper、舊 deletion manifest、舊 apply helper 與意外巢狀 repository，不會刪除 production scripts。之後使用 GitHub Desktop Commit / Push。
 
-建議 commit：`market-event-radar-v11.4.40-data-integrity`
+建議 commit：`market-event-radar-v11.4.41-correctness-hardening`
 
-完整修正與驗收條件見 `docs/V11.4.40.md`、`docs/V11.4.40-release-audit.md`、`VALIDATION.txt`。
+完整修正與驗收條件見 `docs/V11.4.41.md`、`docs/V11.4.41-release-audit.md`、`VALIDATION.txt`。
 
 資料僅供市場觀察，不構成投資建議。無法驗證的值維持缺值／warning，不得偽造成正式或即時資料。

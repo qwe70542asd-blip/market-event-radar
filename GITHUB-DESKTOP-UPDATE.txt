@@ -1,32 +1,33 @@
-市場事件雷達 v11.4.40 — 資料正確性 / 法人金額 / 同步整合版
+市場事件雷達 v11.4.41 — 正確性強化 / 來源健康修正版
 
 覆蓋方式
 1. 解壓縮 ZIP。
-2. 把 ZIP 內「所有根目錄內容」直接覆蓋本機 market-event-radar repository；不要再多包一層資料夾。
-3. 雙擊根目錄 CLEAN-REPO.cmd。它會清除 v11.4.36～v11.4.39 舊 verifier/test helper、舊 deletion manifest 與意外巢狀 repository。
+2. 把 ZIP 內「所有根目錄內容」直接覆蓋本機 market-event-radar repository；不要多包一層資料夾。
+3. 雙擊根目錄 CLEAN-REPO.cmd。因為單純覆蓋不會刪除舊檔，這一步會清掉 v11.4.40 舊 verifier/tests、舊 deletion manifest、apply_v11_4_36.py 與意外巢狀 repository。
 4. GitHub Desktop 檢查變更後 Commit to main，再 Push origin。
-5. 建議 commit：market-event-radar-v11.4.40-data-integrity
+5. 建議 commit：market-event-radar-v11.4.41-correctness-hardening
 
-這版主要完成
-- 新聞兩字公司簡稱防誤判，並讓 retained archive 在更新時套用新分類規則。
-- 毛利率／營益率／淨利率不再誤判成央行利率新聞。
-- Data Verification push 版會等全部核心獨立資料 branch 升到 v11.4.40 再發布；最長等待約 37 分鐘，workflow timeout 42 分鐘。
-- TWSE 籌碼加入日期指定報表、verified-session fallback、JSON/BOM 容錯與 retry。
-- 法人市場卡改為「上市＋上櫃」並同時顯示張數與官方買賣超金額；不同資料日不混用，缺金額顯示 —。
-- TPEx 股票若官方主檔可由實收資本額／普通股面額安全換算，補上發行股數並保留計算來源。
-- 股利歷史加入 Yahoo reference backfill；官方來源優先，並以除息日避免同年多次配息互相覆蓋。
-- ETF verification 減少臺/台、HTML entity、法律名稱與主動 ETF 基準造成的假 conflict。
-- PWA 靜態檔 cache-first；live data / navigation network-first。
-- GitHub Actions checkout/setup-python 升級到 Node 24 相容 major。
-- Cloudflare secrets 未設定：workflow 會 warning + skip，不再紅燈；這不代表 Worker 已部署。
+這版主要修正
+- TPEx 公司成立日期：支援 ROC compact date，並拒絕未來日期與「成立日晚於掛牌日」的 schema 誤配；stock-basics 發布前會 fail-closed 驗證。
+- TPEx 股利計畫：依 live diagnostic 實際 schema，正確接受「股東會日期配盈餘/待彌補虧損(元)」這個歷史欄名中的 ROC 日期。
+- TWSE 當沖市場彙總：從官方 TWTB4U 個股列精確加總成交股數、買進金額、賣出金額；不自行估算百分比。
+- TPEx 法人金額：擴充中英文欄位與 label schema 容錯；官方來源取不到時維持 —，不以張數×股價推估。
+- Data Verification：PE/PB/殖利率維持可比對；ROE/EPS/財務比率若跨來源報表期間未證明相同，不再誤標 conflict。
+- 個股頁指標可信度：改用該指標自己的 verification status，不再被整組 metrics 狀態污染。
+- MOPS 歷史股利：大量來源失敗時開啟短暫 circuit breaker，避免每輪重複打 20 檔；錯誤改為摘要＋樣本。
+- 新聞來源健康：直接來源 403、但歷史 fallback 成功時標示 degraded，不再顯示 health=ok。
+- PWA：network-first 遇 HTTP 4xx/5xx 也會先找 cache fallback，不只處理斷線 exception。
+- Diagnose artifact：actions/upload-artifact 升到 Node 24 相容 major。
 
 Push 後重點看
-- Verify v11.4.40 stable app release
-- Update v11.4.40 Taiwan chips
-- Update v11.4.40 data verification（會等 release barrier）
-- Update v11.4.40 asset database / dividend history
+- Verify v11.4.41 stable app release
+- Update v11.4.41 stock basics
+- Update v11.4.41 Taiwan chips
+- Update v11.4.41 events
+- Update v11.4.41 dividend history
+- Update v11.4.41 data verification
 
-Cloudflare Worker 要真正部署仍需：
-- CLOUDFLARE_API_TOKEN
-- CLOUDFLARE_ACCOUNT_ID
-- CLOUDFLARE_KV_NAMESPACE_ID
+外部來源說明
+- CTEE 直接來源若仍回 403，會以 degraded + history fallback 運作，不假裝 live feed 正常。
+- MOPS 歷史股利若仍拒絕/空回應，會降級並節流；TWSE/TPEx 當期官方股利仍為 primary，Yahoo 歷史僅 reference。
+- Cloudflare Worker 仍需 CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID / CLOUDFLARE_KV_NAMESPACE_ID 才會真正部署。

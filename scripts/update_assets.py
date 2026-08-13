@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Update the v11.4.40 Taiwan stock and ETF master with detailed official data.
+"""Update the v11.4.41 Taiwan stock and ETF master with detailed official data.
 
 The updater is intentionally defensive:
 - official TWSE/TPEx endpoints are parsed with bilingual/format-tolerant keys;
@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import json
 import re
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any, Iterable
@@ -22,8 +22,8 @@ from bs4 import BeautifulSoup
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.40"
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.40)"}
+VERSION = "v11.4.41"
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.41)"}
 SESSION = requests.Session()
 
 MASTER_SOURCES = [
@@ -315,6 +315,26 @@ def format_date(value: Any) -> str | None:
             year += 1911
         return f"{year:04d}/{month:02d}/{day:02d}"
     return text
+
+
+def sane_company_date(value: Any, *, listed_date: Any = None, establishment: bool = False) -> str | None:
+    formatted = format_date(value)
+    if not formatted:
+        return None
+    try:
+        parsed = date.fromisoformat(str(formatted).replace("/", "-"))
+    except ValueError:
+        return None
+    if parsed > NOW.date():
+        return None
+    if establishment and listed_date:
+        try:
+            listed = date.fromisoformat(str(format_date(listed_date)).replace("/", "-"))
+        except (TypeError, ValueError):
+            listed = None
+        if listed and parsed > listed:
+            return None
+    return formatted
 
 
 def industry_name(value: Any) -> str | None:
@@ -736,7 +756,8 @@ def main() -> None:
             previous = assets.get(key, {})
             company_name = row_value(row, ("公司名稱", "CompanyName", "CompanyFullName"))
             short_name = row_value(row, ("公司簡稱", "CompanyAbbreviation", "證券名稱", "Name"))
-            listed_date = format_date(row_value(row, ("上市日期", "上櫃日期", "ListingDate", "DateOfListing")))
+            listed_date = sane_company_date(row_value(row, ("上市日期", "上櫃日期", "ListingDate", "DateOfListing"))) or sane_company_date(previous.get("listed_date"))
+            established_date = sane_company_date(row_value(row, ("公司成立日期", "成立日期", "EstablishedDate")), listed_date=listed_date, establishment=True) or sane_company_date(previous.get("established_date"), listed_date=listed_date, establishment=True)
             share_values = official_issued_share_values(row, name)
             issued_shares=share_values["issued_shares"];issued_shares_status=share_values["issued_shares_status"];issued_shares_source=share_values["issued_shares_source"]
             paid_in_capital=share_values["paid_in_capital"];par_value=share_values["par_value"];preferred_shares=share_values["preferred_shares"]
@@ -751,8 +772,8 @@ def main() -> None:
                 "name": str(short_name or previous.get("name") or company_name or symbol).strip(),
                 "company_name": str(company_name or previous.get("company_name") or short_name or "").strip(),
                 "official_industry": industry or previous.get("official_industry"),
-                "listed_date": listed_date or previous.get("listed_date"),
-                "established_date": format_date(row_value(row, ("公司成立日期", "成立日期", "EstablishedDate"))) or previous.get("established_date"),
+                "listed_date": listed_date,
+                "established_date": established_date,
                 "tax_id": text_value(row, "營利事業統一編號", "統一編號", "TaxID") or previous.get("tax_id"),
                 "chairperson": text_value(row, "董事長", "Chairperson", "Chairman") or previous.get("chairperson"),
                 "general_manager": text_value(row, "總經理", "GeneralManager", "President") or previous.get("general_manager"),

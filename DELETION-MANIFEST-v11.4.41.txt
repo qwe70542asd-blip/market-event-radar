@@ -1,0 +1,28 @@
+Market Event Radar v11.4.41 deletion manifest
+
+When this full package is copied over an older repository, files that are no longer
+part of the release may remain on disk. Run CLEAN-REPO.cmd before committing.
+
+Delete if present:
+- apply_v11_4_36.py
+- DELETION-MANIFEST-v11.4.36.txt
+- DELETION-MANIFEST-v11.4.37.txt
+- DELETION-MANIFEST-v11.4.38.txt
+- DELETION-MANIFEST-v11.4.39.txt
+- DELETION-MANIFEST-v11.4.40.txt
+- scripts/verify_v11_4_36_live_sources.py
+- scripts/verify_v11_4_37_live_sources.py
+- scripts/verify_v11_4_38_live_sources.py
+- scripts/verify_v11_4_39_live_sources.py
+- scripts/verify_v11_4_40_live_sources.py
+- tests/test_v11_4_36_contracts.py
+- tests/test_v11_4_37_contracts.py
+- tests/test_v11_4_37_core.py
+- tests/test_v11_4_38_contracts.py
+- tests/test_v11_4_38_core.py
+- tests/test_v11_4_39_contracts.py
+- tests/test_v11_4_39_core.py
+- tests/test_v11_4_40_contracts.py
+- tests/test_v11_4_40_core.py
+
+Keep historical docs unless explicitly listed above.

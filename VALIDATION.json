@@ -1,21 +1,80 @@
 {
-  "version": "v11.4.40",
-  "validated_at": "2026-08-10T12:08:00+08:00",
-  "pytest": {"status": "pass", "passed": 232},
-  "strict_public_data": {"status": "pass", "detail": "validation ok all"},
-  "python_syntax": {"status": "pass", "detail": "compileall scripts/tests"},
-  "javascript_syntax": {"status": "pass", "app_edge_files": 16, "service_worker": 1},
-  "shell_syntax": {"status": "pass", "files": 2},
-  "workflow_yaml": {"status": "pass", "files": 31},
-  "workflow_run_block_shell_syntax": {"status": "pass", "run_blocks": 183},
-  "cleanup_repo": {"status": "pass", "detail": "repository layout clean"},
-  "http_smoke": {"status": "pass", "detail": "HTTP smoke passed: 7 pages, 43 referenced assets"},
-  "browser_smoke_local": {"status": "environment-blocked", "detail": "system Chromium was available but sandbox policy returned ERR_BLOCKED_BY_ADMINISTRATOR for local HTTP; GitHub release workflow retains the Chromium gate"},
-  "tpex_live_local": {"status": "external-unavailable-nonblocking", "detail": "sandbox DNS could not resolve www.tpex.org.tw; reachability-aware gate exited 0 with 3 external warnings"},
-  "institutional_amounts": {"status": "pass-fixtures", "detail": "TWSE/TPEx official amount semantics and session guards covered by tests; live values are never estimated from lots x price"},
-  "dividend_history": {"status": "pass-fixtures", "detail": "official priority, ex-date cross-source identity, reference period-basis labeling and multiple same-year distributions covered"},
-  "data_release_barrier": {"status": "pass-static", "detail": "push verification waits for 8 files across 7 isolated branches; 222 x 10-second poll budget under 42-minute workflow timeout"},
-  "cloudflare_deploy": {"status": "configured-skip", "detail": "missing secrets warn and skip without claiming deployment"},
-  "release_hygiene": {"audio_files": 0, "temporary_or_editor_backup_files": 0, "nested_repo_dirs": 0, "cache_artifacts": 0},
-  "release_policy": "deterministic checks first; external TPEx contract check last; reachable parser mismatch blocks, transient upstream outage warns"
+  "version": "v11.4.41",
+  "validated_at": "2026-08-10T17:23:41+08:00",
+  "pytest": {
+    "status": "pass",
+    "passed": 242
+  },
+  "strict_public_data": {
+    "status": "pass",
+    "detail": "validation ok all"
+  },
+  "python_syntax": {
+    "status": "pass",
+    "detail": "compileall scripts/tests"
+  },
+  "javascript_syntax": {
+    "status": "pass",
+    "app_edge_files": 16,
+    "service_worker": 1
+  },
+  "shell_syntax": {
+    "status": "pass",
+    "files": 2
+  },
+  "workflow_yaml": {
+    "status": "pass",
+    "files": 31
+  },
+  "workflow_run_block_shell_syntax": {
+    "status": "pass",
+    "run_blocks": 183
+  },
+  "cleanup_repo": {
+    "status": "pass",
+    "detail": "repository layout clean"
+  },
+  "http_smoke": {
+    "status": "pass",
+    "detail": "HTTP smoke passed: 7 pages, 43 referenced assets"
+  },
+  "browser_smoke_local": {
+    "status": "environment-unavailable",
+    "detail": "local Playwright browser binary is not installed in this sandbox; GitHub release workflow installs Chromium and keeps the authoritative runtime gate"
+  },
+  "live_contract_local": {
+    "status": "external-unavailable-nonblocking",
+    "detail": "sandbox DNS could not resolve TPEx/TWSE official hosts; reachability-aware gate exited 0 with 5 external warnings"
+  },
+  "tpex_diagnostic_schema": {
+    "status": "pass",
+    "detail": "captured v11.4.40 TPEx dividend-plan samples now parse the exact legacy shareholder-meeting date field; sample rows are historical and therefore correctly outside the 2026 event window"
+  },
+  "company_date_sanity": {
+    "status": "pass",
+    "detail": "future dates and establishment-after-listing are rejected; 1580-like 2026/08/09 > 2007-12-10 is dropped; ROC compact dates are normalized"
+  },
+  "institutional_and_daytrade": {
+    "status": "pass-fixtures",
+    "detail": "TWSE market day-trade aggregation and TPEx institutional-amount schema variants covered; live gates fail only on reachable parser mismatches"
+  },
+  "dividend_history": {
+    "status": "pass-fixtures",
+    "detail": "TPEx legacy meeting/board dates covered; MOPS broad-failure circuit breaker prevents repeated 20/20 retry storms while official current rows remain primary"
+  },
+  "verification_semantics": {
+    "status": "pass-fixtures",
+    "detail": "financial ratios with unproven period equivalence are no longer labeled conflicts; point-in-time valuation metrics remain cross-compared"
+  },
+  "pwa_cache": {
+    "status": "pass-fixtures",
+    "detail": "network-first now uses cached fallback for non-OK HTTP responses as well as thrown network errors"
+  },
+  "release_hygiene": {
+    "audio_files": 0,
+    "temporary_or_editor_backup_files": 0,
+    "nested_repo_dirs": 0,
+    "cache_artifacts": 0
+  },
+  "release_policy": "deterministic checks first; external live contracts last; reachable schema/parser mismatch blocks, transient upstream outage warns"
 }

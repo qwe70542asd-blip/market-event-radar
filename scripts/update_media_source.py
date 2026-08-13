@@ -277,11 +277,15 @@ def main():
  history_items=[];history_health={"enabled":False,"queries":0,"items":0}
  try:history_items,history_health=parse_history_google_news(cfg,aliases,profiles)
  except Exception as exc:history_health={"enabled":True,"queries":0,"items":0,"error":str(exc)}
+ direct_count=len(items)
  items.extend(history_items)
  try:items=enrich_merged_article_images(cfg,items)
  except Exception as exc:
   history_health={**history_health,"image_enrichment_error":str(exc)}
- health={"status":"ok" if items else "warning","error":error,"requested_urls":cfg.get("urls",[]),"parsed_items":len(items),"history_backfill":history_health,"image_policy":"current-and-history-merged; high-impact and recent missing images first; generic placeholders rejected"}
+ fallback_ok=bool(history_items)
+ live_source_ok=bool(direct_count and not error)
+ health_status="ok" if live_source_ok else "degraded" if fallback_ok else "warning"
+ health={"status":health_status,"error":error,"live_source_ok":live_source_ok,"fallback_ok":fallback_ok,"direct_parsed_items":direct_count,"requested_urls":cfg.get("urls",[]),"parsed_items":len(items),"history_backfill":history_health,"image_policy":"current-and-history-merged; high-impact and recent missing images first; generic placeholders rejected"}
  payload=save_channel(cfg["file"],cfg["var"],cfg["id"],cfg["name"],items,health,cfg.get("retention_days",7),cfg.get("minimum_records",1))
  print(cfg["id"],payload["metadata"]["status"],payload["metadata"]["item_count"])
 if __name__=="__main__":main()
