@@ -1,13 +1,7 @@
 (async()=>{"use strict";
 const {$,escapeHtml,fmt,cls,finite,loadData,loadPortfolio,savePortfolio}=MR;
-const [assets,tw,global]=await Promise.all([
-  loadData("assets.json",window.__ASSET_SEED__||{assets:[]}),
-  loadData("tw-market.json",window.__TW_MARKET_SEED__||{items:[]}),
-  loadData("market-snapshot.json",window.__MARKET_SNAPSHOT_SEED__||{items:[]})
-]);
-const quotes=new Map([...(tw.items||[]),...(global.items||[])].map(x=>[String(x.symbol||"").toUpperCase(),x]));
-let rows=loadPortfolio();
-const candidateMap=new Map();
+let assets=window.__ASSET_SEED__||{assets:[]},tw=window.__TW_MARKET_SEED__||{items:[]},global=window.__MARKET_SNAPSHOT_SEED__||{items:[]};
+let quotes=new Map(),rows=loadPortfolio(),candidateMap=new Map(),candidates=[];
 const addCandidate=(row,priority=0)=>{
   const symbol=String(row?.symbol||"").toUpperCase().trim();if(!symbol)return;
   const old=candidateMap.get(symbol)||{};
@@ -17,10 +11,8 @@ const addCandidate=(row,priority=0)=>{
   merged.exchange=merged.exchange||merged.market_label||old.exchange||"";
   candidateMap.set(symbol,merged);
 };
-for(const row of assets.assets||[])addCandidate(row,3);
-for(const row of tw.items||[])if(["stock","etf"].includes(row.asset_class))addCandidate(row,4);
-for(const row of global.items||[])if(row.asset_class||!/^[\^A-Z].*/.test(String(row.symbol||"")))addCandidate(row,1);
-const candidates=[...candidateMap.values()];
+function rebuildMarketData(){quotes=new Map([...(tw.items||[]),...(global.items||[])].map(x=>[String(x.symbol||"").toUpperCase(),x]));candidateMap=new Map();for(const row of assets.assets||[])addCandidate(row,3);for(const row of tw.items||[])if(["stock","etf"].includes(row.asset_class))addCandidate(row,4);for(const row of global.items||[])if(row.asset_class||!/^[\^A-Z].*/.test(String(row.symbol||"")))addCandidate(row,1);candidates=[...candidateMap.values()]}
+rebuildMarketData();
 let matches=[],activeIndex=-1,selectedSymbol="";
 const suggestions=$("#holdingSuggestions"),symbolInput=$("#holdingSymbol"),nameInput=$("#holdingName");
 const marketLabel=row=>row.exchange||row.market_label||row.market||"";
@@ -77,4 +69,8 @@ function render(){
 $("#addHolding").onclick=()=>{const symbol=symbolInput.value.trim().toUpperCase(),quantity=Number($("#holdingQty").value),cost=Number($("#holdingCost").value),candidate=candidateMap.get(symbol);if(!candidate){alert("找不到正式標的，請從搜尋選單選取股票或 ETF");symbolInput.focus();renderSuggestions();return}if(!Number.isFinite(quantity)||quantity<=0||!Number.isFinite(cost)){alert("請填入正確數量與平均成本");return}const existing=rows.find(row=>String(row.symbol).toUpperCase()===symbol);if(existing){const oldQty=Number(existing.quantity||0),newQty=oldQty+quantity;existing.cost=newQty?((oldQty*Number(existing.cost||0))+(quantity*cost))/newQty:cost;existing.quantity=newQty;existing.name=candidate.name||existing.name||symbol;existing.currency=existing.currency||candidate.currency||quotes.get(symbol)?.currency||"TWD"}else rows.push({symbol,name:candidate.name||symbol,quantity,cost,currency:candidate.currency||quotes.get(symbol)?.currency||"TWD"});savePortfolio(rows);render();selectedSymbol="";["holdingSymbol","holdingName","holdingQty","holdingCost"].forEach(id=>$("#"+id).value="");closeSuggestions()};
 $("#exportPortfolio").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify({version:2,items:rows},null,2)],{type:"application/json"}));a.download="market-radar-portfolio.json";a.click()};
 $("#importPortfolio").onchange=async e=>{try{const js=JSON.parse(await e.target.files[0].text());rows=Array.isArray(js)?js:js.items;if(!Array.isArray(rows))throw Error("items");savePortfolio(rows);render()}catch(err){alert("匯入檔格式錯誤")}};
-render();})();
+render();
+loadData("assets.json",assets).then(fresh=>{if(Array.isArray(fresh?.assets)&&fresh.assets.length){assets=fresh;rebuildMarketData();render()}}).catch(()=>{});
+loadData("tw-market.json",tw).then(fresh=>{if(Array.isArray(fresh?.items)&&fresh.items.length){tw=fresh;rebuildMarketData();render()}}).catch(()=>{});
+loadData("market-snapshot.json",global).then(fresh=>{if(Array.isArray(fresh?.items)&&fresh.items.length){global=fresh;rebuildMarketData();render()}}).catch(()=>{});
+})();

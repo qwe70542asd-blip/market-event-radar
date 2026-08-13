@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Refresh global-market quotes and continuous daily candlesticks.
 
-v11.4.41 data-quality policy
+v11.4.43 data-quality policy
 - A card may only combine price, change and OHLC from the same exchange session.
 - When Yahoo's live quote is newer than the last completed daily candle, the
   live-session OHLC comes from Yahoo meta fields; yesterday's daily candle is
@@ -23,9 +23,9 @@ import requests
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.41"
+VERSION = "v11.4.43"
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.41)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.43)",
     "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.6",
 }
 YAHOO_CHART = "https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"
@@ -154,7 +154,7 @@ def parse_yahoo_candles(chart: dict[str, Any], market: str, quote_kind: str | No
 def daily_reference(candles: list[dict[str, Any]], live_price: float | None, market_date: str | None = None) -> dict[str, Any]:
     """Compatibility helper for tests and downstream tools.
 
-    The v11.4.41 publisher uses same-session-price-vs-adjacent-close. This
+    The v11.4.43 publisher uses same-session-price-vs-adjacent-close. This
     helper preserves the old adjacent-daily-candles API without ever using
     Yahoo chartPreviousClose, which can refer to the beginning of a range.
     """
@@ -295,6 +295,21 @@ def validate_market_row(row: dict[str, Any]) -> None:
     session_dates = {str(row.get(key) or "") for key in ("session_date", "price_date", "ohlc_date")}
     if len(session_dates) != 1 or "" in session_dates:
         raise ValueError(f"{row.get('symbol')} mixed-session price/OHLC")
+    session_date = next(iter(session_dates))
+    market_at_local = str(row.get("market_at_local") or "").strip()
+    if market_at_local:
+        try:
+            quote_local_date = datetime.fromisoformat(market_at_local.replace("Z", "+00:00")).date().isoformat()
+        except ValueError as exc:
+            raise ValueError(f"{row.get('symbol')} invalid market_at_local") from exc
+        if quote_local_date != session_date:
+            # Reject before serialization.  The caller will retain the last good
+            # cached row rather than publishing a timestamp from a newer session
+            # alongside an older OHLC candle and then failing the whole workflow.
+            raise ValueError(
+                f"{row.get('symbol')} market local timestamp/session mismatch "
+                f"{quote_local_date} != {session_date}"
+            )
     change, percent = number(row.get("change")), number(row.get("change_percent"))
     if previous is not None:
         expected = price - previous

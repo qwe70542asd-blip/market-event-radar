@@ -1,12 +1,7 @@
 (async()=>{
   "use strict";
   const {$,escapeHtml,fmt,pct,cls,formatTime,loadData,finite}=MR;
-  const [payload,market,yahooPayload]=await Promise.all([
-    loadData("tw-chips.json",window.__TW_CHIPS_SEED__||{markets:{},items:{}}),
-    loadData("tw-market.json",window.__TW_MARKET_SEED__||{items:[]}),
-    loadData("yahoo-details.json",window.__YAHOO_DETAILS_SEED__||{items:{}})
-  ]);
-  $("#chipsDate").textContent=payload.metadata?.updated_at?formatTime(payload.metadata.updated_at):"等待盤後資料";
+  let payload=window.__TW_CHIPS_SEED__||{markets:{},items:{}},market=window.__TW_MARKET_SEED__||{items:[]},yahooPayload=window.__YAHOO_DETAILS_SEED__||{items:{}};
   const display=(value,digits=0)=>finite(value)==null?"—":fmt(value,digits);
   const displayLots=value=>{const n=finite(value);if(n==null)return "—";const digits=Math.abs(n-Math.round(n))<1e-9?0:Math.min(3,Math.max(1,String(n).split(".")[1]?.length||1));return `${n>0?"+":""}${fmt(n,digits)} 張`};
   const displayAmount=value=>{const n=finite(value);return n==null?"—":`${n>0?"+":""}${fmt(n/1e8,2)} 億元`};
@@ -29,14 +24,9 @@
     }
     return [...map.values()].sort((a,b)=>String(b.date).localeCompare(String(a.date))).slice(0,40);
   };
-  const chipItems=payload.items||{};
-  const yahooItems=yahooPayload.items||{};
-  const marketItems=market.items||[];
-  const marketMap=new Map(marketItems.map(item=>[String(item.symbol),item]));
-  const allSymbols=new Map();
-  for(const item of marketItems)if(["stock","etf"].includes(item.asset_class))allSymbols.set(String(item.symbol),item);
-  for(const item of Object.values(chipItems))allSymbols.set(String(item.symbol),{...allSymbols.get(String(item.symbol)),...item});
-  const searchable=[...allSymbols.values()].sort((a,b)=>String(a.symbol).localeCompare(String(b.symbol),"zh-Hant"));
+  let chipItems={},yahooItems={},marketItems=[],marketMap=new Map(),searchable=[];
+  function rebuildDerived(){chipItems=payload.items||{};yahooItems=yahooPayload.items||{};marketItems=market.items||[];marketMap=new Map(marketItems.map(item=>[String(item.symbol),item]));const allSymbols=new Map();for(const item of marketItems)if(["stock","etf"].includes(item.asset_class))allSymbols.set(String(item.symbol),item);for(const item of Object.values(chipItems))allSymbols.set(String(item.symbol),{...allSymbols.get(String(item.symbol)),...item});searchable=[...allSymbols.values()].sort((a,b)=>String(a.symbol).localeCompare(String(b.symbol),"zh-Hant"));}
+  rebuildDerived();
 
   function chipFor(symbol){
     const official=chipItems[symbol]||{};
@@ -57,8 +47,7 @@
     const card=(name,value,amount)=>`<article class="stat market-flow-stat"><small>${label} ${name}</small><strong class="${cls(value)}">${displayLots(value)}</strong><b class="market-flow-amount ${cls(amount)}">${displayAmount(amount)}</b><span class="stat-detail">${flowLabel(finite(value)!=null?value:amount)} · 張數 / 金額</span></article>`;
     return card("外資",institutional.foreign_net,amounts.foreign?.net)+card("投信",institutional.trust_net,amounts.trust?.net)+card("自營商",institutional.dealer_net,amounts.dealer?.net)+card("合計",institutional.total_net,amounts.total?.net);
   }
-  const marketCards=marketCard("twse","上市")+marketCard("tpex","上櫃");
-  $("#marketFlowCards").innerHTML=marketCards||'<div class="empty compact-empty">市場法人彙總等待盤後資料；單一標的仍可使用下方搜尋。</div>';
+  function renderMarketCards(){const marketCards=marketCard("twse","上市")+marketCard("tpex","上櫃");$("#chipsDate").textContent=payload.metadata?.updated_at?formatTime(payload.metadata.updated_at):"盤後資料同步中";$("#marketFlowCards").innerHTML=marketCards||'<div class="empty compact-empty">市場法人彙總同步中；單一標的仍可使用下方搜尋。</div>'}
 
   const hasAny=(object,keys)=>keys.some(key=>finite(object?.[key])!=null);
   const trendRows=item=>{
@@ -130,6 +119,10 @@
     });
   };
   const hotHtml=rows=>rows.map((item,index)=>`<tr><td>${index+1}</td><td><a href="asset.html?symbol=${encodeURIComponent(item.symbol)}"><b>${escapeHtml(item.symbol)}</b><br><small>${escapeHtml(item.name||"")}</small></a></td><td><span class="hot-score">${item.score}</span></td><td class="${cls(item.change_percent)}">${pct(item.change_percent)}</td><td>${display(item.trade_value)}</td><td class="${cls(item.chip.institutional?.foreign_net)}">${displayLots(item.chip.institutional?.foreign_net)}</td><td>${finite(item.chip.day_trade?.ratio)==null?"—":pct(item.chip.day_trade.ratio)}</td></tr>`).join("")||'<tr><td colspan="7" class="empty">等待市場資料</td></tr>';
-  $("#hotStocks").innerHTML=hotHtml(hot(false));
-  $("#hotEtfs").innerHTML=hotHtml(hot(true));
+  function renderHot(){$("#hotStocks").innerHTML=hotHtml(hot(false));$("#hotEtfs").innerHTML=hotHtml(hot(true));}
+  function refreshMounted(){rebuildDerived();renderMarketCards();renderHot();if(selectedSymbol&&searchable.some(item=>String(item.symbol)===selectedSymbol))renderItem(selectedSymbol);else if($("#chipSymbol").value.trim())search()}
+  refreshMounted();
+  loadData("tw-chips.json",payload).then(fresh=>{if(fresh?.markets){payload=fresh;refreshMounted()}}).catch(()=>{});
+  loadData("tw-market.json",market).then(fresh=>{if(Array.isArray(fresh?.items)&&fresh.items.length){market=fresh;refreshMounted()}}).catch(()=>{});
+  loadData("yahoo-details.json",yahooPayload).then(fresh=>{if(fresh?.items){yahooPayload=fresh;refreshMounted()}}).catch(()=>{});
 })();

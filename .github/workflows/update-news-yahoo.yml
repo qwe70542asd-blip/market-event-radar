@@ -1,4 +1,4 @@
-name: Update v11.4.41 Yahoo股市 news
+name: Update v11.4.43 Yahoo股市 news
 on:
   workflow_dispatch:
 permissions:

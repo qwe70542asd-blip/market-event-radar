@@ -1,33 +1,60 @@
-市場事件雷達 v11.4.41 — 正確性強化 / 來源健康修正版
+市場事件雷達 v11.4.43 — Progressive Live Resilience
+
+這是一個完整覆蓋版，不是 patch。
+目前正式 GitHub main 仍是 v11.4.40；v11.4.41 / v11.4.42 都不要推，直接用本版覆蓋。
 
 覆蓋方式
 1. 解壓縮 ZIP。
-2. 把 ZIP 內「所有根目錄內容」直接覆蓋本機 market-event-radar repository；不要多包一層資料夾。
-3. 雙擊根目錄 CLEAN-REPO.cmd。因為單純覆蓋不會刪除舊檔，這一步會清掉 v11.4.40 舊 verifier/tests、舊 deletion manifest、apply_v11_4_36.py 與意外巢狀 repository。
+2. 把 ZIP 內所有根目錄內容直接覆蓋本機 market-event-radar repository，不要多包一層資料夾。
+3. 雙擊根目錄 CLEAN-REPO.cmd。它會清理舊 verifier/tests/deletion manifest、v11.4.41/v11.4.42 未採用文件與 apply_v11_4_36.py。
 4. GitHub Desktop 檢查變更後 Commit to main，再 Push origin。
-5. 建議 commit：market-event-radar-v11.4.41-correctness-hardening
+5. 建議 commit：market-event-radar-v11.4.43-progressive-live-resilience
 
-這版主要修正
-- TPEx 公司成立日期：支援 ROC compact date，並拒絕未來日期與「成立日晚於掛牌日」的 schema 誤配；stock-basics 發布前會 fail-closed 驗證。
-- TPEx 股利計畫：依 live diagnostic 實際 schema，正確接受「股東會日期配盈餘/待彌補虧損(元)」這個歷史欄名中的 ROC 日期。
-- TWSE 當沖市場彙總：從官方 TWTB4U 個股列精確加總成交股數、買進金額、賣出金額；不自行估算百分比。
-- TPEx 法人金額：擴充中英文欄位與 label schema 容錯；官方來源取不到時維持 —，不以張數×股價推估。
-- Data Verification：PE/PB/殖利率維持可比對；ROE/EPS/財務比率若跨來源報表期間未證明相同，不再誤標 conflict。
-- 個股頁指標可信度：改用該指標自己的 verification status，不再被整組 metrics 狀態污染。
-- MOPS 歷史股利：大量來源失敗時開啟短暫 circuit breaker，避免每輪重複打 20 檔；錯誤改為摘要＋樣本。
-- 新聞來源健康：直接來源 403、但歷史 fallback 成功時標示 degraded，不再顯示 health=ok。
-- PWA：network-first 遇 HTTP 4xx/5xx 也會先找 cache fallback，不只處理斷線 exception。
-- Diagnose artifact：actions/upload-artifact 升到 Node 24 相容 major。
+本版核心修正
+- 移除首頁 4.5 秒先放棄、live data 晚到卻永遠停在空 fallback 的競速問題。
+- 台股行情、法人、全球行情、事件、新聞、資產、股利各自獨立載入；哪個先到就先更新自己的區塊。
+- 今日台股狀態新增獨立 renderTaiwanStatus()，行情與法人晚到都會重新 render；市場廣度、外資方向、成交動能不再卡在第一次 seed 狀態。
+- 台股 freshness 只看 tw-market 自己的 updated_at，不再混用全球市場時間。
+- 台股狀態 footer 改顯示「行情時間 · 籌碼時間」，不再錯接事件月曆 updated_at。
+- 新聞改為 12 個來源逐一完成就逐一顯示；單一新聞來源慢/壞不會讓整個精選區或新聞頁保持空白。
+- 事件與新聞解耦；事件頁先顯示事件，相關新聞晚到再補。
+- high-impact corporate 事件可以進首頁精選重大資訊，不再只接受 event_group=major。
+- 台股頁、法人頁、投資組合頁、資料狀態頁改成 progressive render，附加來源不再阻塞核心資料。
+- GitHub live loader 改成 hedged mirrors：Raw 先跑，真的慢才啟動 CDN/API 備援；成功後不再發出後續多餘 mirror 請求。
+- 所有可用 live channel 以 IndexedDB 保存 last-known-good；寫入改成背景動作，不阻塞畫面更新。
+- Service Worker 對 /data/*.json 正規化 cache key，移除 ?t= / ?_= cache-busting，HTTP 4xx/5xx 或斷線時能找到上一份快取。
+- Browser smoke 新增 delayed-live regression：故意讓 tw-market 晚 5.2 秒、chips/events/news 不同時間才回來，最後必須補回 1,244 漲/743 跌、外資買超、量能正常與重大資訊。
 
-Push 後重點看
-- Verify v11.4.41 stable app release
-- Update v11.4.41 stock basics
-- Update v11.4.41 Taiwan chips
-- Update v11.4.41 events
-- Update v11.4.41 dividend history
-- Update v11.4.41 data verification
+同時保留 v11.4.42 已審核的資料正確性修正
+- 公司成立/掛牌日期支援 pre-2000 Gregorian、compact Gregorian/ROC，拒絕未來日期與成立日晚於掛牌日。
+- ^TWII quote/session 日期不一致時在序列化前 fail-closed，保留上一筆 verified row。
+- 新聞 generic image 前後端規則一致，JSON-LD image object 不可繞過檢查。
+- MOPS dividend circuit breaker 以本輪執行後 state 回報。
+- TPEx day-trading / dividend-plan 維持 GitHub live diagnostic 真實 schema，不猜欄位。
+
+Push 後請看
+- Verify v11.4.43 stable app release（包含 delayed-live Chromium regression）
+- Update v11.4.43 market core
+- Update v11.4.43 Taiwan chips
+- Update v11.4.43 events
+- Update v11.4.43 data verification
+- Diagnose TPEx live schemas
 
 外部來源說明
-- CTEE 直接來源若仍回 403，會以 degraded + history fallback 運作，不假裝 live feed 正常。
-- MOPS 歷史股利若仍拒絕/空回應，會降級並節流；TWSE/TPEx 當期官方股利仍為 primary，Yahoo 歷史僅 reference。
-- Cloudflare Worker 仍需 CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID / CLOUDFLARE_KV_NAMESPACE_ID 才會真正部署。
+- CTEE 若仍 403，會 degraded + history fallback，不假裝 direct live 正常。
+- MOPS 歷史股利若拒絕/空回應，會 circuit-break + last-known-good；TWSE/TPEx 當期官方來源保持 primary。
+- Cloudflare Worker 需要對應 secrets 才會實際部署，與 GitHub Pages 本體分開。
+
+本機最終驗證（2026-08-13T15:48:15+08:00）
+- pytest：256 passed
+- strict public data：PASS
+- Python compileall：PASS
+- JavaScript syntax：16 app/edge + service worker PASS
+- shell syntax：2 files PASS
+- GitHub Actions YAML：31 workflows PASS
+- workflow run-block bash syntax：183 PASS
+- repository cleanup：PASS
+- HTTP smoke：7 pages / 43 referenced assets PASS
+- release hygiene：audio/cache/temp/nested repo = 0
+- Local Chromium：本 sandbox 對 localhost 回 ERR_BLOCKED_BY_ADMINISTRATOR；Push 後由 GitHub Chromium gate 執行 delayed-live regression。
+- Local live contract：本 sandbox DNS 無法解析 TPEx/TWSE，reachability-aware gate 以 5 個 external warnings 正常退出；Push 後重新以 GitHub-hosted runner 驗證。

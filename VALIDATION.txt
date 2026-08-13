@@ -1,28 +1,19 @@
-Market Event Radar v11.4.41 validation
-Validated: 2026-08-10T17:23:41+08:00
+Market Event Radar v11.4.43 validation
+Validated: 2026-08-13T15:48:15+08:00
 
-PASS: pytest 242 passed
-PASS: strict public-data validation (`validation ok all`)
-PASS: Python syntax / compileall
-PASS: JavaScript syntax (16 app/edge JS files + service-worker.js)
-PASS: shell syntax (2 scripts)
+PASS: pytest 256 passed
+PASS: strict public-data validation (validation ok all)
+PASS: Python compileall (scripts/tests)
+PASS: JavaScript syntax (16 app/edge files + service worker)
+PASS: shell syntax (2 files)
 PASS: GitHub Actions YAML (31 workflows)
 PASS: workflow run-block shell syntax (183 blocks)
-PASS: cleanup_repo --check
-PASS: HTTP smoke (7 pages, 43 referenced assets)
-PASS: company-date sanity guard (future / establishment-after-listing rejected; ROC compact dates normalized)
-PASS: TPEx captured dividend-plan legacy shareholder-meeting field regression
-PASS: TWSE market day-trading aggregate parser fixtures
-PASS: TPEx institutional-amount schema variants and live contract fixture coverage
-PASS: period-aware financial verification semantics
-PASS: per-metric trust badge regression
-PASS: MOPS dividend-history broad-failure circuit breaker
-PASS: direct-news degraded/fallback health semantics
-PASS: PWA non-OK HTTP cache fallback
-PASS: Node-24-compatible diagnostic artifact action static checks
+PASS: cleanup_repo --check (repository layout clean)
+PASS: HTTP smoke (7 pages / 43 referenced assets)
+PASS: release hygiene (audio=0, cache=0, temp/editor-backup=0, nested repo=0)
 
-LIVE CONTRACT LOCAL: sandbox DNS could not resolve TPEx/TWSE official hosts. The reachability-aware v11.4.41 gate reported 5 external warnings and exited 0; this is an external reachability observation, not a live parser pass claim.
-LOCAL BROWSER SMOKE: Playwright browser binary is not installed in this sandbox. The GitHub release workflow installs Chromium and retains the authoritative browser runtime gate after push.
-HTTP LOCAL: Python HTTP smoke passed independently.
-UPSTREAM DEGRADATION: CTEE/MOPS source availability cannot be repaired by client code; v11.4.41 reports degraded/fallback/circuit-open states instead of presenting them as fully healthy.
-RELEASE ORDER: deterministic syntax/data/tests/HTTP/Chromium checks run before external live contract checks.
+LOCAL BROWSER SMOKE: environment blocked. System Chromium is installed, but this sandbox returns ERR_BLOCKED_BY_ADMINISTRATOR for localhost. GitHub Release Verification is authoritative and now includes a delayed-live rerender regression where tw-market arrives 5.2 seconds late.
+
+LOCAL LIVE CONTRACT: reachability-aware gate exited successfully with 5 external warnings because this sandbox could not resolve TPEx/TWSE hosts. Parser/schema correctness remains gated again on GitHub-hosted Actions.
+
+PROGRESSIVE LIVE CHECKS: homepage boot timeout removed; Taiwan status/news/events rerender on late arrival; news sources publish partial success; IndexedDB last-known-good is background persisted; /data/ service-worker cache keys ignore t/_ cache-busters.

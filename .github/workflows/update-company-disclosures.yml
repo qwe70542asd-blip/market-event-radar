@@ -1,4 +1,4 @@
-name: Update v11.4.41 company disclosures
+name: Update v11.4.43 company disclosures
 on:
   workflow_dispatch:
 permissions:

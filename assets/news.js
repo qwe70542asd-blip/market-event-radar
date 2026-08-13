@@ -1,19 +1,14 @@
 (async()=>{
   "use strict";
   const {$,escapeHtml,formatTime,stripHtml,renderNewsThumb,newsHasImage}=MR;
-  const [payload,stockPayload]=await Promise.all([MR.loadNewsChannels(),MR.loadStockNews()]);
-  let topic="all";
+  let payload={metadata:{status:"seed"},channels:[],items:[]},stockPayload=window.__STOCK_NEWS_SEED__||{metadata:{status:"seed"},items:[]},topic="all";
+  let channels=[],officialRows=[],companyRows=[],stockRows=[],combined=[];
   const generic=/^(?:首頁|新聞|最新消息|公文公告|公告查詢|新聞中心|個股資訊|台股新聞|財經新聞|即時新聞)$/i;
   const invalidOfficial=/個人資料|隱私權|網站使用|資訊安全|常見問題|網站導覽|下載專區|系統維護|服務條款|按\s*Enter/i;
   const truncate=(value,max=150)=>{const text=stripHtml(value);return text.length>max?`${text.slice(0,max).trim()}…`:text};
   const validUrl=value=>{try{const u=new URL(value);return /^https?:$/.test(u.protocol)&&u.pathname!=="/"}catch{return false}};
   const normalize=value=>stripHtml(value).toLowerCase().normalize("NFKC").replace(/[^0-9a-z\u3400-\u9fff]+/g,"");
   const cleanRows=list=>(list||[]).map(item=>({...item,title:stripHtml(item.title),summary:stripHtml(item.ai_summary||item.summary),url:validUrl(item.url)?item.url:null})).filter(item=>item.title&&item.url&&!generic.test(item.title)&&!invalidOfficial.test(`${item.title} ${item.summary||""}`));
-  const channels=payload.channels||[];
-  const officialRows=cleanRows(payload.items).filter(item=>item.source_id==="official-notices"&&!/櫃買|TPEx/i.test(`${item.source||""} ${item.title||""}`));
-  const companyRows=cleanRows(payload.items).filter(item=>item.source_id==="company-disclosures");
-  const stockRows=cleanRows(stockPayload.items);
-  const mediaRaw=cleanRows(payload.items).filter(item=>!["official-notices","company-disclosures"].includes(item.source_id));
   const LEADER_RE=/台積電|鴻海|聯發科|廣達|緯創|國巨|川湖|日月光|台達電|中華電|長榮|陽明|NVIDIA|輝達|Microsoft|微軟|Apple|蘋果|Amazon|亞馬遜|Meta|Google|Alphabet|AMD|Intel|Tesla|三星|SK\s*海力士|海力士|Sony|Toyota/i;
   const LEADING_SECTOR_RE=/AI\s*伺服器|人工智慧|半導體|晶圓代工|記憶體|HBM|封裝測試|散熱|PCB|電源供應|雲端|資料中心|金融|航運|能源|原物料|機器人/i;
   const EXECUTIVE_RE=/執行長|董事長|財務長|總經理|基金經理人|分析師|首席經濟學家|央行總裁|官員|法說會|投資人會議|發表會|開發者大會|展覽|論壇|供應鏈會議/i;
@@ -31,16 +26,29 @@
   const heroLead=item=>{const image=renderNewsThumb(item,"hero",{alt:item.title});return `<a class="hero-lead${image?"":" no-image"}" href="${escapeHtml(item.url)}" target="_blank" rel="noreferrer noopener">${image}<div class="hero-copy"><div><span class="tag">${escapeHtml(item.ai_category||"重大資訊")}</span><span class="impact-badge ${escapeHtml(item.impact||"high")}">${impactLabel(item)}</span></div><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(truncate(item.summary,image?170:240)||"查看完整事件內容與市場影響。")}</p><time>${escapeHtml(formatTime(item.published_at||item.date))}</time></div></a>`};
   const heroSide=item=>{const image=renderNewsThumb(item,"small",{alt:item.title});return `<a class="hero-side-item${image?"":" no-image"}" href="${escapeHtml(item.url)}" target="_blank" rel="noreferrer noopener">${image}<div><span>${escapeHtml(item.ai_category||"重大資訊")}</span><h3>${escapeHtml(item.title)}</h3><time>${escapeHtml(formatTime(item.published_at||item.date))}</time></div></a>`};
   const noticeCard=item=>{const summary=truncate(item.short_summary||item.summary,115)||"來源未提供公告摘要。",full=stripHtml(item.full_text||item.original_text||"");return `<article class="company-notice-card"><div class="company-notice-head"><div><span class="tag">${escapeHtml(item.ai_category||"個股公告")}</span><span class="impact-badge ${escapeHtml(item.impact||"medium")}">${impactLabel(item)}</span></div><time>${escapeHtml(formatTime(item.published_at||item.date))}</time></div><h3>${escapeHtml(item.title)}</h3><p class="notice-summary">${escapeHtml(summary)}</p>${Array.isArray(item.key_facts)&&item.key_facts.length?`<dl class="notice-facts">${item.key_facts.slice(0,4).map(row=>`<div><dt>${escapeHtml(row.label||"重點")}</dt><dd>${escapeHtml(row.value||"—")}</dd></div>`).join("")}</dl>`:""}${full&&full.length>summary.length+20?`<details class="notice-details"><summary>查看公告內容</summary><p>${escapeHtml(full)}</p></details>`:""}<div class="company-notice-actions">${(item.symbols||[])[0]?`<a href="asset.html?symbol=${encodeURIComponent(item.symbols[0])}">查看個股 →</a>`:""}<a href="${escapeHtml(item.url)}" target="_blank" rel="noreferrer noopener">官方來源 →</a></div></article>`};
-  const stockByKey=new Map();for(const item of stockRows)stockByKey.set(normalize(item.title),item);
-  const combined=[],seen=new Set();for(const item of [...stockRows,...mediaRaw]){const enriched=stockByKey.get(normalize(item.title))||item,key=String(enriched.canonical_url||enriched.url||normalize(enriched.title)||"").toLowerCase();if(!key||seen.has(key))continue;seen.add(key);combined.push({...enriched,_majorScore:majorScore(enriched)})}
-  combined.sort((a,b)=>Date.parse(b.published_at||0)-Date.parse(a.published_at||0));
-  const majorNow=Date.now();
-  const majorCandidates=[...combined,...officialRows].map(item=>({...item,_majorScore:majorScore(item)})).filter(item=>{const published=Date.parse(item.published_at||item.date||0),age=majorNow-published;return item._majorScore>=45&&Number.isFinite(age)&&age>=0&&age<=86400000}).sort((a,b)=>b._majorScore-a._majorScore||Date.parse(b.published_at||0)-Date.parse(a.published_at||0)).slice(0,7);
-  if(majorCandidates.length){const lead=majorCandidates.find(newsHasImage)||majorCandidates[0],side=majorCandidates.filter(item=>item!==lead);$("#majorNews").innerHTML=heroLead(lead)+`<div class="hero-side-list">${side.slice(0,4).map(heroSide).join("")}</div>`+`${side.length>4?`<div class="hero-extra-grid count-${side.slice(4).length}">${side.slice(4).map(card).join("")}</div>`:""}`;}else $("#majorNews").innerHTML='<div class="empty">目前沒有達到精選門檻的重大資訊。</div>';
   const topicMatch=(item,value)=>{if(value==="all")return true;if(value==="major")return majorScore(item)>=45;const text=`${item.title||""} ${item.summary||""}`;if(value==="stock")return Boolean((item.symbols||[]).length||item.is_stock_news);if(value==="asia-risk")return item.topic==="asia-risk"||item.ai_topic==="asia-risk"||ASIA_RISK_RE.test(text);if(value==="global")return GLOBAL_RE.test(text);if(value==="industry")return INDUSTRY_RE.test(text)||LEADING_SECTOR_RE.test(text);return item.topic===value||item.ai_topic===value};
-  function renderLatest(){const query=$("#newsSearch").value.trim().toLowerCase();const result=combined.filter(item=>(!query||`${item.title} ${item.summary} ${item.ai_category} ${(item.symbols||[]).join(" ")}`.toLowerCase().includes(query))&&topicMatch(item,topic));$("#latestNewsRows").innerHTML=result.slice(0,120).map(card).join("")||'<div class="empty">沒有符合條件的繁體中文財經新聞</div>'}
+
+  function rebuild(){
+    channels=payload.channels||[];
+    officialRows=cleanRows(payload.items).filter(item=>item.source_id==="official-notices"&&!/櫃買|TPEx/i.test(`${item.source||""} ${item.title||""}`));
+    companyRows=cleanRows(payload.items).filter(item=>item.source_id==="company-disclosures");
+    stockRows=cleanRows(stockPayload.items);
+    const mediaRaw=cleanRows(payload.items).filter(item=>!["official-notices","company-disclosures"].includes(item.source_id)),stockByKey=new Map();for(const item of stockRows)stockByKey.set(normalize(item.title),item);
+    combined=[];const seen=new Set();for(const item of [...stockRows,...mediaRaw]){const enriched=stockByKey.get(normalize(item.title))||item,key=String(enriched.canonical_url||enriched.url||normalize(enriched.title)||"").toLowerCase();if(!key||seen.has(key))continue;seen.add(key);combined.push({...enriched,_majorScore:majorScore(enriched)})}
+    combined.sort((a,b)=>Date.parse(b.published_at||0)-Date.parse(a.published_at||0));
+  }
+  function renderLatest(){const query=$("#newsSearch").value.trim().toLowerCase(),result=combined.filter(item=>(!query||`${item.title} ${item.summary} ${item.ai_category} ${(item.symbols||[]).join(" ")}`.toLowerCase().includes(query))&&topicMatch(item,topic));$("#latestNewsRows").innerHTML=result.slice(0,120).map(card).join("")||'<div class="empty">資料同步中或沒有符合條件的繁體中文財經新聞</div>'}
+  function renderAll(){
+    rebuild();
+    const majorNow=Date.now(),majorCandidates=[...combined,...officialRows].map(item=>({...item,_majorScore:majorScore(item)})).filter(item=>{const published=Date.parse(item.published_at||item.date||0),age=majorNow-published;return item._majorScore>=45&&Number.isFinite(age)&&age>=0&&age<=86400000}).sort((a,b)=>b._majorScore-a._majorScore||Date.parse(b.published_at||0)-Date.parse(a.published_at||0)).slice(0,7);
+    if(majorCandidates.length){const lead=majorCandidates.find(newsHasImage)||majorCandidates[0],side=majorCandidates.filter(item=>item!==lead);$("#majorNews").innerHTML=heroLead(lead)+`<div class="hero-side-list">${side.slice(0,4).map(heroSide).join("")}</div>`+`${side.length>4?`<div class="hero-extra-grid count-${side.slice(4).length}">${side.slice(4).map(card).join("")}</div>`:""}`}
+    else $("#majorNews").innerHTML='<div class="empty">重大資訊同步中；已完成的新聞來源會先顯示。</div>';
+    $("#officialNotices").innerHTML=officialRows.length?officialRows.slice(0,9).map(card).join(""):'<div class="empty">官方市場公告同步中。</div>';
+    $("#companyNotices").innerHTML=companyRows.length?companyRows.slice(0,16).map(noticeCard).join(""):'<div class="empty">個股重大訊息同步中。</div>';
+    const badChannels=channels.filter(channel=>["warning","partial","fallback","degraded"].includes(channel.metadata?.status)),resolved=Number(payload.metadata?.resolved_channel_count||0);$("#newsHealthNote").textContent=badChannels.length?`· 部分來源暫時未完整更新（${badChannels.length}）`:resolved<MR.NEWS_FILES.length?`· 已載入 ${resolved}/${MR.NEWS_FILES.length} 個來源`:"";$("#newsCount").textContent=`${combined.length+officialRows.length+companyRows.length} 則`;$("#newsUpdated").textContent=payload.metadata?.updated_at?formatTime(payload.metadata.updated_at):"新聞來源同步中";renderLatest();
+  }
   $("#newsSearch").oninput=renderLatest;$("#categoryFilters").onclick=event=>{const button=event.target.closest("[data-topic]");if(!button)return;topic=button.dataset.topic;$("#categoryFilters").querySelectorAll("button").forEach(x=>x.classList.remove("active"));button.classList.add("active");renderLatest()};
-  $("#officialNotices").innerHTML=officialRows.length?officialRows.slice(0,9).map(card).join(""):'<div class="empty">目前沒有可驗證的官方市場公告。</div>';
-  $("#companyNotices").innerHTML=companyRows.length?companyRows.slice(0,16).map(noticeCard).join(""):'<div class="empty">個股重大訊息來源尚未產生資料。</div>';
-  const badChannels=channels.filter(channel=>["warning","partial","fallback"].includes(channel.metadata?.status));$("#newsHealthNote").textContent=badChannels.length?`· 部分來源暫時未完整更新（${badChannels.length}）`:"";$("#newsCount").textContent=`${combined.length+officialRows.length+companyRows.length} 則`;$("#newsUpdated").textContent=payload.metadata?.updated_at?formatTime(payload.metadata.updated_at):"等待各來源排程";renderLatest();
+  const stream=MR.startNewsChannels({onUpdate:fresh=>{payload=fresh;renderAll()}});payload=stream.initial;renderAll();
+  MR.loadStockNews().then(fresh=>{stockPayload=fresh;renderAll()}).catch(()=>{});
+  stream.done.then(fresh=>{payload=fresh;renderAll()}).catch(()=>{});
 })();

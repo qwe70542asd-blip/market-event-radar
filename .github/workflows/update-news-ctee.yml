@@ -1,4 +1,4 @@
-name: Update v11.4.41 工商時報 news
+name: Update v11.4.43 工商時報 news
 on:
   workflow_dispatch:
 permissions:

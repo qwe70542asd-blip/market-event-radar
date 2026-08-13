@@ -27,7 +27,7 @@ from bs4 import BeautifulSoup
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.41"
+VERSION = "v11.4.43"
 TIMEOUT = 25
 YAHOO_BATCH = 48
 HEADERS = {
@@ -99,12 +99,19 @@ def number(value: Any) -> float | None:
 
 
 def normalize_date(value: Any) -> str | None:
-    """Normalize Gregorian/ROC company dates without guessing arbitrary numbers."""
+    """Normalize Gregorian/ROC company dates with calendar validation.
+
+    Company masters contain both old Gregorian dates (for example 1950-12-29)
+    and ROC dates.  Four-digit years are always treated as Gregorian; two/three
+    digit years are ROC.  Compact YYYYMMDD and YY/YYYMMDD are both supported.
+    """
     text = clean(value)
     if not text:
         return None
     token = re.sub(r"[年.]", "/", text).replace("月", "/").replace("日", "")
-    match = re.search(r"(?<!\d)(20\d{2})[/-](\d{1,2})[/-](\d{1,2})(?!\d)", token)
+
+    year = month = day = None
+    match = re.search(r"(?<!\d)(\d{4})[/-](\d{1,2})[/-](\d{1,2})(?!\d)", token)
     if match:
         year, month, day = map(int, match.groups())
     else:
@@ -113,20 +120,24 @@ def normalize_date(value: Any) -> str | None:
             roc, month, day = map(int, match.groups())
             year = roc + 1911
         else:
-            compact = re.search(r"(?<!\d)(20\d{6}|\d{6,7})(?!\d)", text)
+            compact = re.search(r"(?<!\d)(\d{8}|\d{6,7})(?!\d)", re.sub(r"\s+", "", text))
             if not compact:
                 return None
             raw = compact.group(1)
-            if len(raw) == 8 and raw.startswith("20"):
+            if len(raw) == 8:
                 year, month, day = int(raw[:4]), int(raw[4:6]), int(raw[6:8])
             else:
-                # ROC compact dates may be 6 digits (YYMMDD) or 7 (YYYMMDD).
                 roc_digits = len(raw) - 4
-                roc, month, day = int(raw[:roc_digits]), int(raw[roc_digits:roc_digits+2]), int(raw[-2:])
+                roc, month, day = int(raw[:roc_digits]), int(raw[roc_digits:roc_digits + 2]), int(raw[-2:])
                 year = roc + 1911
+    # Reject implausible four-digit values instead of silently interpreting them
+    # as company dates.  Taiwan listed-company records legitimately reach back
+    # well before 2000, so the lower bound must not be 20xx-only.
+    if year is None or year < 1800 or year > NOW.year + 1:
+        return None
     try:
         return date(year, month, day).isoformat()
-    except ValueError:
+    except (TypeError, ValueError):
         return None
 
 

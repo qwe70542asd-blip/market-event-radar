@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Cross-source trust + completeness verification for Market Event Radar.
 
-v11.4.41 rebuilds this verifier around isolated stock / ETF adapters.  Every
+v11.4.43 rebuilds this verifier around isolated stock / ETF adapters.  Every
 asset is evaluated with local immutable source rows, so an optional channel can
 never leak an uninitialised variable into another asset class.  The output
-schema remains backwards-compatible with v11.4.41.
+schema remains backwards-compatible with v11.4.43.
 """
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ from typing import Any
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.41"
+VERSION = "v11.4.43"
 
 SOURCE_FILES = {
     "assets": "assets.json",

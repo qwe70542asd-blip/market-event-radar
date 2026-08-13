@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Update the isolated dividend-history channel for v11.4.41.
+"""Update the isolated dividend-history channel for v11.4.43.
 
 Current official dividend rows are merged with a bounded MOPS company batch.
 The main cursor advances even when individual companies fail; failures enter a
@@ -25,7 +25,7 @@ from update_assets import (
     text_value,
 )
 
-VERSION = "v11.4.41"
+VERSION = "v11.4.43"
 NEW_BATCH = 15
 RETRY_BATCH = 5
 MAX_RECORDS = 40
@@ -252,6 +252,20 @@ def main() -> None:
     else:
         status = "warning"
 
+    circuit_after = int(meta.get("mops_circuit_remaining") or 0)
+    if circuit_after > 0:
+        mops_status = "circuit-open"
+    elif circuit_remaining > 0 and not targets:
+        mops_status = "cooldown-complete"
+    elif targets and not failed:
+        mops_status = "ok"
+    elif successful:
+        mops_status = "degraded"
+    elif targets:
+        mops_status = "unavailable"
+    else:
+        mops_status = "idle"
+
     payload = {
         "metadata": {
             "version": VERSION,
@@ -265,8 +279,8 @@ def main() -> None:
             "batch_failures": len(failed),
             "next_cursor": meta.get("cursor", 0),
             "retry_queue_size": len(meta.get("retry_symbols", [])),
-            "mops_circuit_remaining": int(meta.get("mops_circuit_remaining") or 0),
-            "mops_status": "circuit-open" if circuit_remaining else ("ok" if targets and not failed else "degraded" if successful else "unavailable" if targets else "idle"),
+            "mops_circuit_remaining": circuit_after,
+            "mops_status": mops_status,
             "reference_symbol_count": len(yahoo_reference_symbols),
             "reference_record_count": yahoo_reference_records,
             "note": "Official TWSE/TPEx rows stay primary; Yahoo dividend events backfill history as reference-only data. MOPS is best-effort with a circuit breaker when broad failures occur.",

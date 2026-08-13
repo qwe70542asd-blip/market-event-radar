@@ -12,7 +12,7 @@ const cls=v=>finite(v)==null||Number(v)===0?"flat":Number(v)>0?"up":"down";
 const formatTime=(v,opts={})=>{if(!v)return"—";const d=new Date(v);if(Number.isNaN(+d))return String(v);return new Intl.DateTimeFormat("zh-TW",{timeZone:"Asia/Taipei",year:"numeric",month:"2-digit",day:"2-digit",hour:opts.dateOnly?undefined:"2-digit",minute:opts.dateOnly?undefined:"2-digit",hour12:false}).format(d)};
 const stripHtml=value=>String(value??"").replace(/<[^>]*>/g," ").replace(/&nbsp;/gi," ").replace(/\s+/g," ").trim();
 const normalizeText=value=>stripHtml(value).toLowerCase().normalize("NFKC").replace(/[^0-9a-z\u3400-\u9fff]+/g," ").trim();
-const GENERIC_NEWS_IMAGE_RE=/(?:og-image|default(?:_og)?|logo|placeholder|no[-_]?image|blank|icon|avatar|sprite|favicon)(?:[._/-]|$)/i;
+const GENERIC_NEWS_IMAGE_RE=/(?:og-image|default(?:_og)?|logo|placeholder|no[-_]?image|blank|icon|avatar|sprite|favicon|google-prefer(?:ed|red)-source-illustration|pic_fb|line-ad)(?:[._/-]|$)/i;
 const newsImageCandidates=item=>[item?.image_url,...(Array.isArray(item?.image_candidates)?item.image_candidates:[])].map(value=>String(value||"").trim()).filter((url,index,rows)=>/^https?:\/\//i.test(url)&&!GENERIC_NEWS_IMAGE_RE.test(url)&&rows.indexOf(url)===index);
 const newsHasImage=item=>newsImageCandidates(item).length>0;
 function advanceNewsImage(img){try{const candidates=JSON.parse(decodeURIComponent(img.dataset.candidates||"%5B%5D"));const next=Number(img.dataset.candidateIndex||0)+1;if(next<candidates.length){img.dataset.candidateIndex=String(next);img.src=candidates[next];return}img.style.display="none";img.parentElement?.classList.add("fallback","remote-image-failed")}catch(e){img.style.display="none";img.parentElement?.classList.add("fallback","remote-image-failed")}}
@@ -49,19 +49,31 @@ async function loadBranchApi(name,branch){
  if(meta?.download_url)return await getJson(`${meta.download_url}${meta.download_url.includes("?")?"&":"?"}sha=${encodeURIComponent(meta.sha||Date.now())}`,11000);
  throw Error("GitHub contents API returned no JSON content");
 }
-const snapshotCacheKeys=["mr-market-snapshot-last-good-v1","mr-market-snapshot-last-good-v11.4.41","mr-market-snapshot-last-good-v11.4.31","mr-market-snapshot-last-good-v11.4.28","mr-market-snapshot-last-good-v11.4.27"];
+const snapshotCacheKeys=["mr-market-snapshot-last-good-v1","mr-market-snapshot-last-good-v11.4.43","mr-market-snapshot-last-good-v11.4.43","mr-market-snapshot-last-good-v11.4.31","mr-market-snapshot-last-good-v11.4.28","mr-market-snapshot-last-good-v11.4.27"];
 const snapshotCacheKey=snapshotCacheKeys[0];
 const DATA_MEMORY=new Map();
-const WEB_STORAGE_CACHE_FILES=new Set(["market-snapshot.json"]);
+// Small hot-path session cache stays in Web Storage.  Durable last-known-good
+// snapshots for every live channel use IndexedDB so a multi-megabyte events or
+// news archive never competes with localStorage's small quota.
+const WEB_STORAGE_CACHE_FILES=new Set(["market-snapshot.json","tw-market.json"]);
 const dataCacheKey=name=>`mr-data-cache-v1:${name}`;
 const lastGoodKey=name=>`mr-data-last-good-v1:${name}`;
-const STORAGE_CLEANUP_KEY="mr-storage-cleanup-v11.4.41";
+const STORAGE_CLEANUP_KEY="mr-storage-cleanup-v11.4.43";
+const LAST_GOOD_DB="market-radar-last-good-v1",LAST_GOOD_STORE="payloads";
+let lastGoodDbPromise=null;
+function openLastGoodDb(){
+ if(!("indexedDB" in window))return Promise.resolve(null);
+ if(lastGoodDbPromise)return lastGoodDbPromise;
+ lastGoodDbPromise=new Promise(resolve=>{try{const request=indexedDB.open(LAST_GOOD_DB,1);request.onupgradeneeded=()=>{const db=request.result;if(!db.objectStoreNames.contains(LAST_GOOD_STORE))db.createObjectStore(LAST_GOOD_STORE)};request.onsuccess=()=>resolve(request.result);request.onerror=()=>resolve(null)}catch(e){resolve(null)}});
+ return lastGoodDbPromise;
+}
+async function idbGet(name){const db=await openLastGoodDb();if(!db)return null;return await new Promise(resolve=>{try{const tx=db.transaction(LAST_GOOD_STORE,"readonly"),req=tx.objectStore(LAST_GOOD_STORE).get(name);req.onsuccess=()=>resolve(req.result||null);req.onerror=()=>resolve(null)}catch(e){resolve(null)}})}
+async function idbPut(name,value){const db=await openLastGoodDb();if(!db)return;await new Promise(resolve=>{try{const tx=db.transaction(LAST_GOOD_STORE,"readwrite");tx.objectStore(LAST_GOOD_STORE).put(value,name);tx.oncomplete=()=>resolve();tx.onerror=()=>resolve();tx.onabort=()=>resolve()}catch(e){resolve()}})}
 try{
  if(localStorage.getItem(STORAGE_CLEANUP_KEY)!=="1"){
   for(const name of Object.keys(CHANNELS)){
-   if(WEB_STORAGE_CACHE_FILES.has(name))continue;
-   localStorage.removeItem(lastGoodKey(name));sessionStorage.removeItem(dataCacheKey(name));
-   for(const version of ["v11.4.31","v11.4.28","v11.4.27","v11.4.26"])sessionStorage.removeItem(`mr-data-cache-${version}:${name}`);
+   if(!WEB_STORAGE_CACHE_FILES.has(name)){localStorage.removeItem(lastGoodKey(name));sessionStorage.removeItem(dataCacheKey(name))}
+   for(const version of ["v11.4.43","v11.4.31","v11.4.28","v11.4.27","v11.4.26"])sessionStorage.removeItem(`mr-data-cache-${version}:${name}`);
   }
   localStorage.setItem(STORAGE_CLEANUP_KEY,"1");
  }
@@ -87,42 +99,47 @@ function mergeSnapshotCache(payload){
  const items=(payload?.items||[]).map(row=>{const old=oldMap.get(String(row.symbol||"").toUpperCase());if(snapshotCandleCount(row)>=10||!old)return row;return {...old,...row,candles:old.candles||[],candle_count:snapshotCandleCount(old),candle_source:`${row.candle_source||row.source||"線上行情"}／瀏覽器上次成功 K 線`,data_status:row.data_status==="live"?"cached-kline":row.data_status};});
  return {...payload,items};
 }
-function rememberLastGood(name,payload){
- if(!WEB_STORAGE_CACHE_FILES.has(name)||!isUsablePayload(name,payload))return;
- try{const serialized=JSON.stringify(payload);localStorage.setItem(lastGoodKey(name),serialized);if(name==="market-snapshot.json")localStorage.setItem(snapshotCacheKey,serialized)}catch(e){}
+async function rememberLastGood(name,payload){
+ if(!isUsablePayload(name,payload))return;
+ // Yield before cloning/writing multi-megabyte payloads so last-good persistence
+ // can never hold up the live-data promise that drives mounted UI rerenders.
+ await new Promise(resolve=>setTimeout(resolve,0));
+ const entry={at:Date.now(),payload:cloneValue(payload)};
+ // IndexedDB is the durable cache for all channels.  Keep the compact market
+ // snapshot in localStorage as a compatibility path for older installations.
+ await idbPut(name,entry);
+ if(WEB_STORAGE_CACHE_FILES.has(name)){try{const serialized=JSON.stringify(payload);localStorage.setItem(lastGoodKey(name),serialized);if(name==="market-snapshot.json")localStorage.setItem(snapshotCacheKey,serialized)}catch(e){}}
 }
-function readLastGood(name){
- if(!WEB_STORAGE_CACHE_FILES.has(name))return null;
- try{const value=JSON.parse(localStorage.getItem(lastGoodKey(name))||"null");if(isUsablePayload(name,value))return value}catch(e){}
- for(const legacy of [`mr-data-cache-v11.4.31:${name}`,`mr-data-cache-v11.4.28:${name}`,`mr-data-cache-v11.4.27:${name}`,`mr-data-cache-v11.4.26:${name}`]){try{const entry=JSON.parse(sessionStorage.getItem(legacy)||"null");if(isUsablePayload(name,entry?.payload)){rememberLastGood(name,entry.payload);return entry.payload}}catch(e){}}
+async function readLastGood(name){
+ const indexed=await idbGet(name);if(isUsablePayload(name,indexed?.payload))return indexed.payload;
+ if(WEB_STORAGE_CACHE_FILES.has(name)){try{const value=JSON.parse(localStorage.getItem(lastGoodKey(name))||"null");if(isUsablePayload(name,value))return value}catch(e){}}
+ for(const legacy of [`mr-data-cache-v11.4.43:${name}`,`mr-data-cache-v11.4.31:${name}`,`mr-data-cache-v11.4.28:${name}`,`mr-data-cache-v11.4.27:${name}`,`mr-data-cache-v11.4.26:${name}`]){try{const entry=JSON.parse(sessionStorage.getItem(legacy)||"null");if(isUsablePayload(name,entry?.payload)){await rememberLastGood(name,entry.payload);return entry.payload}}catch(e){}}
  if(name==="market-snapshot.json"){const value=loadStored(snapshotCacheKeys);if(isUsablePayload(name,value))return value}
  return null;
 }
-async function loadRawBranch(name,branch,timeout=5200){return await getJson(`https://raw.githubusercontent.com/${OWNER}/${REPO}/${branch}/${name}?t=${Date.now()}`,timeout)}
-async function loadJsDelivr(name,branch,timeout=5200){return await getJson(`https://cdn.jsdelivr.net/gh/${OWNER}/${REPO}@${branch}/${name}?t=${Date.now()}`,timeout)}
-async function loadStatically(name,branch,timeout=5200){return await getJson(`https://cdn.statically.io/gh/${OWNER}/${REPO}/${branch}/${name}?t=${Date.now()}`,timeout)}
+async function loadRawBranch(name,branch,timeout=6200){return await getJson(`https://raw.githubusercontent.com/${OWNER}/${REPO}/${branch}/${name}?t=${Date.now()}`,timeout)}
+async function loadJsDelivr(name,branch,timeout=6200){return await getJson(`https://cdn.jsdelivr.net/gh/${OWNER}/${REPO}@${branch}/${name}?t=${Date.now()}`,timeout)}
+async function loadStatically(name,branch,timeout=6200){return await getJson(`https://cdn.statically.io/gh/${OWNER}/${REPO}/${branch}/${name}?t=${Date.now()}`,timeout)}
 // GitHub Contents API is rate-limited for anonymous clients and is a poor
 // fallback for large generated JSON.  Large channels use three direct/CDN
 // mirrors instead; smaller payloads keep the API as a final metadata-aware
 // fallback.
 const LARGE_BRANCH_FILES=new Set(["events.json","market-kline.json","assets.json","asset-audit.json","stock-basics.json","yahoo-details.json","etf-details.json","data-verification.json","company-disclosures.json","stock-news.json"]);
 async function loadLiveBranchFast(name,branch){
- // Mirrors are intentionally tried one-by-one.  v11.4.30 started Raw,
- // jsDelivr and GitHub Contents API simultaneously for every channel, so a
- // news page could create 30+ duplicate downloads and decode multi-megabyte
- // JSON more than once.  Sequential failover keeps the same resilience while
- // making one verified payload the normal case.
- const loaders=[
+ // Hedged mirrors: Raw starts immediately, CDN mirrors are started only when
+ // the first path is slow.  This avoids the old 15-20 second sequential worst
+ // case without going back to firing every mirror at once on a healthy path.
+ const candidates=[
   ["raw-live-branch",()=>loadRawBranch(name,branch)],
   ["jsdelivr-live-branch",()=>loadJsDelivr(name,branch)],
   ["statically-live-branch",()=>loadStatically(name,branch)],
  ];
- if(!LARGE_BRANCH_FILES.has(name))loaders.push(["github-api-live-branch",()=>loadBranchApi(name,branch)]);
- let lastError=null;
- for(const [source,loader] of loaders){
-  try{const payload=await loader();if(isUsablePayload(name,payload))return{payload,source};lastError=Error(`${source} unusable`)}catch(error){lastError=error}
- }
- throw lastError||Error("live branch unavailable");
+ if(!LARGE_BRANCH_FILES.has(name))candidates.push(["github-api-live-branch",()=>loadBranchApi(name,branch)]);
+ return await new Promise((resolve,reject)=>{
+  let settled=false,finished=0,lastError=Error("live branch unavailable");
+  const launch=(entry,index)=>setTimeout(async()=>{if(settled)return;const [source,loader]=entry;try{const payload=await loader();if(settled)return;if(isUsablePayload(name,payload)){settled=true;resolve({payload,source});return}lastError=Error(`${source} unusable`)}catch(error){lastError=error}finally{finished++;if(!settled&&finished===candidates.length)reject(lastError)}},index*850);
+  candidates.forEach(launch);
+ });
 }
 const DATA_INFLIGHT=new Map();
 async function _loadData(name,fallback={},options={}){
@@ -134,12 +151,12 @@ async function _loadData(name,fallback={},options={}){
  const branch=CHANNELS[name];let payload=null,source="";
  if(name==="market-snapshot.json"&&LIVE_MARKET_ENDPOINT){try{const candidate=await getJson(`${LIVE_MARKET_ENDPOINT}/market-snapshot.json?_=${Date.now()}`,6000);if(isUsablePayload(name,candidate)){payload=candidate;source="worker"}}catch(e){}}
  if(branch&&!payload){try{const live=await loadLiveBranchFast(name,branch);payload=live.payload;source=live.source}catch(e){}}
- if(!payload){const cached=readLastGood(name);if(cached){payload=cached;source="browser-last-good"}}
+ if(!payload){const cached=await readLastGood(name);if(cached){payload=cached;source="browser-last-good"}}
  if(!payload){try{const candidate=await getJson(`data/${name}?t=${Date.now()}`,5000);if(isUsablePayload(name,candidate)){payload=candidate;source="same-origin-main"}}catch(e){}}
  if(!payload)payload=cloneValue(fallback);
  if(name==="market-snapshot.json")payload=mergeSnapshotCache(payload||cloneValue(fallback));
  if(payload?.metadata&&source)payload={...payload,metadata:{...payload.metadata,frontend_load_source:source}};
- if(isUsablePayload(name,payload))rememberLastGood(name,payload);
+ if(isUsablePayload(name,payload))void rememberLastGood(name,payload);
  const entry={at:Date.now(),payload};DATA_MEMORY.set(name,entry);if(WEB_STORAGE_CACHE_FILES.has(name)){try{sessionStorage.setItem(dataCacheKey(name),JSON.stringify(entry))}catch(e){}}
  return cloneValue(payload);
 }
@@ -155,42 +172,51 @@ const STOCK_BASIC_ENDPOINTS=[
  {url:"https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O",exchange:"TPEx",source:"TPEx 上櫃公司基本資料"}
 ];
 const basicField=(row,...labels)=>{for(const label of labels){if(row?.[label]!=null&&String(row[label]).trim())return row[label]}for(const [key,value] of Object.entries(row||{})){if(labels.some(label=>String(key).includes(label))&&value!=null&&String(value).trim())return value}return null};
-const basicDate=value=>{const text=String(value||"").trim();let m=text.match(/(20\d{2})[\/-]?(\d{2})[\/-]?(\d{2})/);if(m)return`${m[1]}-${m[2]}-${m[3]}`;m=text.match(/(\d{2,3})[\/-](\d{1,2})[\/-](\d{1,2})/);return m?`${Number(m[1])+1911}-${String(m[2]).padStart(2,"0")}-${String(m[3]).padStart(2,"0")}`:""};
+const basicDate=value=>{const text=String(value||"").trim();if(!text)return"";const token=text.replace(/[年.]/g,"/").replace(/月/g,"/").replace(/日/g,"");let y,m,d,hit=token.match(/(?:^|\D)(\d{4})[\/-](\d{1,2})[\/-](\d{1,2})(?!\d)/);if(hit){y=Number(hit[1]);m=Number(hit[2]);d=Number(hit[3])}else{hit=token.match(/(?:^|\D)(\d{2,3})[\/-](\d{1,2})[\/-](\d{1,2})(?!\d)/);if(hit){y=Number(hit[1])+1911;m=Number(hit[2]);d=Number(hit[3])}else{const compact=text.replace(/\s+/g,"").match(/(?:^|\D)(\d{8}|\d{6,7})(?!\d)/);if(!compact)return"";const raw=compact[1];if(raw.length===8){y=Number(raw.slice(0,4));m=Number(raw.slice(4,6));d=Number(raw.slice(6,8))}else{const n=raw.length-4;y=Number(raw.slice(0,n))+1911;m=Number(raw.slice(n,n+2));d=Number(raw.slice(-2))}}}if(!Number.isInteger(y)||y<1800||y>new Date().getFullYear()+1)return"";const probe=new Date(Date.UTC(y,m-1,d));if(probe.getUTCFullYear()!==y||probe.getUTCMonth()!==m-1||probe.getUTCDate()!==d)return"";return`${String(y).padStart(4,"0")}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`};
+const saneBasicDates=(established,listed)=>{const listedDate=basicDate(listed),establishedDate=basicDate(established),today=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Taipei",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date());return{listed_date:listedDate&&listedDate<=today?listedDate:"",established_date:establishedDate&&establishedDate<=today&&(!listedDate||establishedDate<=listedDate)?establishedDate:""}};
 const basicNumber=value=>{const m=String(value||"").replace(/,/g,"").match(/[-+]?\d+(?:\.\d+)?/);return m?Number(m[0]):null};
 function officialBasicRecord(row,endpoint){
  const symbol=String(basicField(row,"公司代號","公司代碼","SecuritiesCompanyCode")||"").trim().toUpperCase();
  if(!/^\d{4,6}[A-Z]?$/.test(symbol))return null;
  const yahooSymbol=endpoint.exchange==="TPEx"?`${symbol}.TWO`:symbol;
- const record={symbol,company_name:String(basicField(row,"公司名稱","CompanyName")||"").trim(),short_name:String(basicField(row,"公司簡稱","CompanyAbbreviation")||"").trim(),asset_class:"stock",market:"TW",exchange:endpoint.exchange,market_label:endpoint.exchange==="TWSE"?"上市":"上櫃",currency:"TWD",industry:String(basicField(row,"產業別","產業類別","Industry")||"").trim(),address:String(basicField(row,"住址","地址","Address")||"").trim(),tax_id:String(basicField(row,"營利事業統一編號","統一編號","UnifiedBusinessNo")||"").trim(),chairperson:String(basicField(row,"董事長","Chairman")||"").trim(),general_manager:String(basicField(row,"總經理","GeneralManager")||"").trim(),spokesperson:String(basicField(row,"發言人","Spokesman")||"").trim(),phone:String(basicField(row,"總機電話","Telephone")||"").trim(),established_date:basicDate(basicField(row,"成立日期","DateOfIncorporation")),listed_date:basicDate(basicField(row,"上市日期","上櫃日期","DateOfListing")),paid_in_capital:basicNumber(basicField(row,"實收資本額","PaidinCapital")),issued_shares:basicNumber(basicField(row,"已發行普通股數","已發行普通股數或TDR原股發行股數","IssuedShares")),website:String(basicField(row,"網址","URL","公司網站")||"").trim(),email:String(basicField(row,"電子郵件信箱","Email")||"").trim(),accounting_firm:String(basicField(row,"簽證會計師事務所")||"").trim(),source:endpoint.source,source_level:"official",source_url:endpoint.url,official_url:`https://mops.twse.com.tw/mops/web/t05st03?step=1&off=1&firstin=1&co_id=${symbol}`,profile_url:`https://tw.stock.yahoo.com/quote/${yahooSymbol}/profile`,quote_url:`https://tw.stock.yahoo.com/quote/${yahooSymbol}`,financial_url:`https://tw.stock.yahoo.com/quote/${yahooSymbol}/income-statement`};
+ const dates=saneBasicDates(basicField(row,"成立日期","DateOfIncorporation"),basicField(row,"上市日期","上櫃日期","DateOfListing"));
+ const record={symbol,company_name:String(basicField(row,"公司名稱","CompanyName")||"").trim(),short_name:String(basicField(row,"公司簡稱","CompanyAbbreviation")||"").trim(),asset_class:"stock",market:"TW",exchange:endpoint.exchange,market_label:endpoint.exchange==="TWSE"?"上市":"上櫃",currency:"TWD",industry:String(basicField(row,"產業別","產業類別","Industry")||"").trim(),address:String(basicField(row,"住址","地址","Address")||"").trim(),tax_id:String(basicField(row,"營利事業統一編號","統一編號","UnifiedBusinessNo")||"").trim(),chairperson:String(basicField(row,"董事長","Chairman")||"").trim(),general_manager:String(basicField(row,"總經理","GeneralManager")||"").trim(),spokesperson:String(basicField(row,"發言人","Spokesman")||"").trim(),phone:String(basicField(row,"總機電話","Telephone")||"").trim(),established_date:dates.established_date,listed_date:dates.listed_date,paid_in_capital:basicNumber(basicField(row,"實收資本額","PaidinCapital")),issued_shares:basicNumber(basicField(row,"已發行普通股數","已發行普通股數或TDR原股發行股數","IssuedShares")),website:String(basicField(row,"網址","URL","公司網站")||"").trim(),email:String(basicField(row,"電子郵件信箱","Email")||"").trim(),accounting_firm:String(basicField(row,"簽證會計師事務所")||"").trim(),source:endpoint.source,source_level:"official",source_url:endpoint.url,official_url:`https://mops.twse.com.tw/mops/web/t05st03?step=1&off=1&firstin=1&co_id=${symbol}`,profile_url:`https://tw.stock.yahoo.com/quote/${yahooSymbol}/profile`,quote_url:`https://tw.stock.yahoo.com/quote/${yahooSymbol}`,financial_url:`https://tw.stock.yahoo.com/quote/${yahooSymbol}/income-statement`};
  const fields=[record.symbol,record.company_name||record.short_name,record.asset_class,record.market,record.exchange,record.industry,record.currency,record.listed_date,record.paid_in_capital,record.issued_shares,record.official_url,record.profile_url];
  record.basic_coverage_percent=Math.round(fields.filter(value=>value!==null&&value!==undefined&&String(value).trim()!=="").length/fields.length*1000)/10;const metrics=record.metrics||{};const mf=["pe","pb","dividend_yield","eps","roe","debt_ratio","net_margin","current_ratio"].filter(key=>finite(metrics[key])!=null).length;record.financial_coverage_percent=Math.round((mf/8*.6+Math.min((record.financials||[]).length,12)/12*.4)*1000)/10;
  record.updated_at=new Date().toISOString();return record;
 }
 async function loadStockBasics(){
- const fallback=window.__STOCK_BASICS_SEED__||{metadata:{version:"v11.4.41",status:"waiting",item_count:0},items:{}};
+ const fallback=window.__STOCK_BASICS_SEED__||{metadata:{version:"v11.4.43",status:"waiting",item_count:0},items:{}};
  const payload=await loadData("stock-basics.json",fallback),items={...(payload.items||{})};
  if(Object.keys(items).length>=500)return payload;
  const settled=await Promise.allSettled(STOCK_BASIC_ENDPOINTS.map(async endpoint=>({endpoint,rows:await getJson(endpoint.url,15000)})));
  let added=0;
  for(const result of settled){if(result.status!=="fulfilled"||!Array.isArray(result.value.rows))continue;for(const row of result.value.rows){const record=officialBasicRecord(row,result.value.endpoint);if(!record)continue;items[record.symbol]={...(items[record.symbol]||{}),...record};added++}}
  const values=Object.values(items),average=values.length?values.reduce((sum,row)=>sum+Number(row.basic_coverage_percent||0),0)/values.length:0;
- return {...payload,metadata:{...(payload.metadata||{}),version:"v11.4.41",item_count:values.length,average_basic_coverage_percent:Math.round(average*10)/10,scope:"all-currently-listed-twse-and-tpex-stocks",browser_official_fallback_added:added},items};
+ return {...payload,metadata:{...(payload.metadata||{}),version:"v11.4.43",item_count:values.length,average_basic_coverage_percent:Math.round(average*10)/10,scope:"all-currently-listed-twse-and-tpex-stocks",browser_official_fallback_added:added},items};
 }
-async function loadNewsChannels(){
- const channels=await Promise.all(NEWS_FILES.map(async cfg=>{
-  const fallback=window[cfg.seed]||{metadata:{source_id:cfg.id,source_name:cfg.label,status:"waiting",item_count:0},items:[]};
-  const payload=await loadData(cfg.file,fallback);
-  const archiveStart=Date.parse("2026-01-01T00:00:00+08:00"),tomorrow=Date.now()+86400000;
-  return {...payload,channel:cfg,items:(payload.items||[]).filter(item=>{const at=Date.parse(item.published_at||item.date||0);return Number.isFinite(at)&&at>=archiveStart&&at<=tomorrow}).map(item=>({...item,source_id:item.source_id||cfg.id,source:item.source||cfg.label,channel_kind:cfg.kind}))};
- }));
+function normalizeNewsChannel(cfg,payload){
+ const archiveStart=Date.parse("2026-01-01T00:00:00+08:00"),tomorrow=Date.now()+86400000;
+ return {...payload,channel:cfg,items:(payload?.items||[]).filter(item=>{const at=Date.parse(item.published_at||item.date||0);return Number.isFinite(at)&&at>=archiveStart&&at<=tomorrow}).map(item=>({...item,source_id:item.source_id||cfg.id,source:item.source||cfg.label,channel_kind:cfg.kind}))};
+}
+function mergeNewsChannels(channels){
  const seen=new Set(),items=[];
- for(const channel of channels){for(const item of channel.items||[]){const key=String(item.canonical_url||item.url||item.id||item.title||"").toLowerCase();if(!key||seen.has(key))continue;seen.add(key);items.push(item)}}
+ for(const channel of channels||[]){for(const item of channel?.items||[]){const key=String(item.canonical_url||item.url||item.id||item.title||"").toLowerCase();if(!key||seen.has(key))continue;seen.add(key);items.push(item)}}
  items.sort((a,b)=>Date.parse(b.published_at||b.date||0)-Date.parse(a.published_at||a.date||0));
- const updated=channels.map(c=>c.metadata?.updated_at).filter(Boolean).sort().pop()||null;
- return {metadata:{version:"v11.4.41",updated_at:updated,item_count:items.length,channel_count:channels.length},channels,items};
+ const updated=(channels||[]).map(c=>c?.metadata?.updated_at).filter(Boolean).sort().pop()||null;
+ const resolved=(channels||[]).filter(c=>c?.metadata?.updated_at||Number(c?.items?.length||0)>0).length;
+ return {metadata:{version:"v11.4.43",updated_at:updated,item_count:items.length,channel_count:(channels||[]).length,resolved_channel_count:resolved},channels,items};
 }
+function startNewsChannels(options={}){
+ const channels=NEWS_FILES.map(cfg=>normalizeNewsChannel(cfg,window[cfg.seed]||{metadata:{source_id:cfg.id,source_name:cfg.label,status:"waiting",item_count:0},items:[]}));
+ const emit=()=>{const merged=mergeNewsChannels(channels);try{options.onUpdate?.(cloneValue(merged))}catch(e){console.warn("news progressive callback failed",e)}return merged};
+ const promises=NEWS_FILES.map((cfg,index)=>loadData(cfg.file,window[cfg.seed]||{metadata:{source_id:cfg.id,source_name:cfg.label,status:"waiting",item_count:0},items:[]},options.force?{force:true}:{}).then(payload=>{channels[index]=normalizeNewsChannel(cfg,payload);emit();return channels[index]}).catch(()=>channels[index]));
+ const initial=mergeNewsChannels(channels),done=Promise.allSettled(promises).then(()=>emit());
+ return {initial,done};
+}
+async function loadNewsChannels(){return await startNewsChannels().done}
 async function loadStockNews(){
- const fallback=window.__STOCK_NEWS_SEED__||{metadata:{version:"v11.4.41",status:"waiting",item_count:0},items:[]};
+ const fallback=window.__STOCK_NEWS_SEED__||{metadata:{version:"v11.4.43",status:"waiting",item_count:0},items:[]};
  return await loadData("stock-news.json",fallback);
 }
 
@@ -288,5 +314,5 @@ function scheduleAssetPrefetch(){
  document.addEventListener("pointerover",warm,{passive:true});document.addEventListener("touchstart",warm,{passive:true});
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",scheduleAssetPrefetch,{once:true});else scheduleAssetPrefetch();
-window.MR={$,$$,escapeHtml,finite,fmt,pct,cls,formatTime,stripHtml,normalizeText,newsImageCandidates,newsHasImage,advanceNewsImage,pickNewsFallbackSlug,renderNewsThumb,relatedNews,loadData,loadMarketKline,loadStockBasics,loadNewsChannels,loadStockNews,getJson,loadPortfolio,savePortfolio,mergeAssets,NEWS_FILES,OWNER,REPO,LIVE_MARKET_ENDPOINT,KLINE_INTERVALS};
+window.MR={$,$$,escapeHtml,finite,fmt,pct,cls,formatTime,stripHtml,normalizeText,newsImageCandidates,newsHasImage,advanceNewsImage,pickNewsFallbackSlug,renderNewsThumb,relatedNews,loadData,loadMarketKline,loadStockBasics,loadNewsChannels,startNewsChannels,mergeNewsChannels,loadStockNews,getJson,loadPortfolio,savePortfolio,mergeAssets,NEWS_FILES,OWNER,REPO,LIVE_MARKET_ENDPOINT,KLINE_INTERVALS};
 })();

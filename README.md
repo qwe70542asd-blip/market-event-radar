@@ -1,8 +1,8 @@
-# 市場事件雷達 v11.4.41
+# 市場事件雷達 v11.4.43
 
 以事件月曆為核心，整合台股行情、全球市場、財經新聞、法人籌碼、股票／ETF 資料與個人投資組合的靜態 PWA。
 
-## v11.4.41：正確性強化與來源健康
+## v11.4.43：正確性強化與來源健康
 
 這版針對 v11.4.40 上線後的 live audit，優先修「錯資料被當成正常」與「來源降級卻看起來健康」兩類問題。
 
@@ -26,8 +26,8 @@ CLEAN-REPO.cmd
 
 它會移除 v11.4.36～v11.4.40 已淘汰的 verifier/test helper、舊 deletion manifest、舊 apply helper 與意外巢狀 repository，不會刪除 production scripts。之後使用 GitHub Desktop Commit / Push。
 
-建議 commit：`market-event-radar-v11.4.41-correctness-hardening`
+建議 commit：`market-event-radar-v11.4.43-correctness-hardening`
 
-完整修正與驗收條件見 `docs/V11.4.41.md`、`docs/V11.4.41-release-audit.md`、`VALIDATION.txt`。
+完整修正與驗收條件見 `docs/V11.4.43.md`、`docs/V11.4.43-release-audit.md`、`VALIDATION.txt`。
 
 資料僅供市場觀察，不構成投資建議。無法驗證的值維持缺值／warning，不得偽造成正式或即時資料。

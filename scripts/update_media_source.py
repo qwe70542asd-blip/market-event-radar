@@ -74,7 +74,7 @@ def image_value(value:Any)->str|None:
   for row in value:
    found=image_value(row)
    if found:return found
- if isinstance(value,dict):return value.get("url") or value.get("@id") or value.get("contentUrl")
+ if isinstance(value,dict):return image_value(value.get("url") or value.get("@id") or value.get("contentUrl"))
  return None
 
 def json_candidates(value:Any):

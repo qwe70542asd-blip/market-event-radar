@@ -1,0 +1,16 @@
+Market Event Radar v11.4.43 deletion manifest
+
+This is a full overwrite release. Copy the ZIP contents into the repository root,
+then run CLEAN-REPO.cmd so GitHub Desktop can record files removed by earlier releases.
+
+Delete if present:
+- apply_v11_4_36.py
+- DELETION-MANIFEST-v11.4.33.txt through DELETION-MANIFEST-v11.4.42.txt
+- scripts/verify_v11_4_36_live_sources.py through scripts/verify_v11_4_42_live_sources.py
+- tests/test_v11_4_36_contracts.py through tests/test_v11_4_42_contracts.py
+- tests/test_v11_4_37_core.py through tests/test_v11_4_42_core.py when present
+- docs/V11.4.41.md, docs/V11.4.41-release-audit.md, docs/V11.4.41-tpex-live-diagnostic.md
+- docs/V11.4.42.md, docs/V11.4.42-release-audit.md, docs/V11.4.42-tpex-live-diagnostic.md
+- accidental nested repository/application copies under scripts/
+
+Keep the v11.4.43 verifier, tests, docs and deletion manifest.
