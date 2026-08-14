@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build Market Event Radar v11.4.45 event data from official schedules.
+"""Build Market Event Radar v11.4.46 event data from official schedules.
 
 The updater keeps the last verified archive, refreshes selected official sources,
 and records when an exact date first appears or changes. It never invents dates.
@@ -34,7 +34,7 @@ NOW = datetime.now(ZoneInfo("Asia/Taipei"))
 TAIPEI = NOW.tzinfo
 NEW_YORK = ZoneInfo("America/New_York")
 OFFLINE = os.getenv("EVENT_OFFLINE", "").strip() == "1"
-VERSION = "v11.4.45"
+VERSION = "v11.4.46"
 TRACKING_KEY_VERSION = 2
 ARCHIVE_START = date(2026, 1, 1)
 ARCHIVE_START_DT = datetime.combine(ARCHIVE_START, time.min, tzinfo=TAIPEI)
@@ -1649,7 +1649,7 @@ def main() -> None:
             "announced_today_count": announced_today,
             "announced_recent_count": announced_recent,
             "state_initialized": True,
-            "announcement_integrity": "strict-v11.4.45-series-safe",
+            "announcement_integrity": "strict-v11.4.46-series-safe",
             "announcement_suppressed_origins": sorted(suppressed_origins),
             "source_ok_count": sum(1 for source in sources if source.get("status") == "ok"),
             "source_warning_count": sum(1 for source in sources if source.get("status") != "ok"),

@@ -1,4 +1,4 @@
-name: Update v11.4.45 data verification
+name: Update v11.4.46 data verification
 on:
   push:
     branches: [main]
@@ -28,9 +28,9 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
-      - name: Wait for v11.4.45 isolated-data release barrier
+      - name: Wait for v11.4.46 isolated-data release barrier
         if: github.event_name == 'push'
-        run: python scripts/wait_for_data_channels.py v11.4.45 --attempts 222 --sleep 10
+        run: python scripts/wait_for_data_channels.py v11.4.46 --attempts 222 --sleep 10
       - name: Restore source channels
         run: |
           bash scripts/restore_data_branch.sh live-assets "assets.json:data/assets.json" "asset-audit.json:data/asset-audit.json"

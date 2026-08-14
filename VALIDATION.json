@@ -1,60 +1,104 @@
 {
-  "version": "v11.4.45",
-  "validated_at": "2026-08-14T13:42:27+08:00",
-  "release_scope": "anti-regression / security authorization / production readiness / live-market truthfulness",
-  "cleanup_repo": {"status": "pass", "detail": "repository layout clean for v11.4.45"},
-  "workflow_publishers": {"status": "pass", "live_branches": 25, "detail": "one publishing workflow per live branch"},
-  "security_authorization_audit": {"status": "pass"},
-  "production_readiness_static": {"status": "pass"},
-  "pytest": {"status": "pass", "passed": 259},
-  "public_data_validation": {"status": "pass", "all": "validation ok all", "strict": "validation ok --strict"},
-  "python_syntax": {"status": "pass", "detail": "compileall scripts/tests"},
-  "javascript_syntax": {"status": "pass", "files": 16},
-  "shell_syntax": {"status": "pass", "files": 2},
-  "workflow_yaml": {"status": "pass", "files": 16, "run_blocks_shell_checked": 101},
-  "dependabot": {"status": "pass", "ecosystems": ["pip", "github-actions"], "cadence": "weekly"},
-  "http_smoke": {"status": "pass", "pages": 7, "referenced_assets": 42},
-  "static_integrity": {
+  "version": "v11.4.46",
+  "validated_at": "2026-08-14T16:53:39+08:00",
+  "release_scope": "post-deploy propagation reliability / CSP-safe browser gate / endpoint identity pinning / Cloudflare rate limiting / security regression hardening",
+  "cleanup_repo": {
     "status": "pass",
-    "html_pages": 9,
-    "local_references": 236,
-    "duplicate_html_ids": 0,
-    "missing_local_references": 0,
-    "inline_scripts": 0,
-    "inline_event_handlers": 0,
-    "json_parse_errors": 0
+    "detail": "repository layout clean for v11.4.46"
+  },
+  "workflow_publishers": {
+    "status": "pass",
+    "live_branches": 25,
+    "detail": "one publishing workflow per live branch"
+  },
+  "security_authorization_audit": {
+    "status": "pass",
+    "detail": "endpoint identity/retry/rate-limit/secret-prefix guards included"
+  },
+  "production_readiness_static": {
+    "status": "pass"
+  },
+  "pytest": {
+    "status": "pass",
+    "passed": 264
+  },
+  "public_data_validation": {
+    "status": "pass",
+    "all": "validation ok all"
+  },
+  "python_syntax": {
+    "status": "pass",
+    "detail": "compileall scripts/tests"
+  },
+  "javascript_syntax": {
+    "status": "pass",
+    "files": 16
+  },
+  "shell_syntax": {
+    "status": "pass",
+    "files": 2
+  },
+  "workflow_yaml": {
+    "status": "pass",
+    "files": 16
+  },
+  "http_smoke": {
+    "status": "pass",
+    "pages": 7,
+    "referenced_assets": 42
   },
   "browser_smoke_local": {
     "status": "environment-blocked",
-    "detail": "system Chromium launches, but sandbox blocks localhost navigation with net::ERR_BLOCKED_BY_ADMINISTRATOR; GitHub hosted Release Verification is authoritative"
+    "detail": "system Chromium launches, but this sandbox blocks localhost navigation with net::ERR_BLOCKED_BY_ADMINISTRATOR; GitHub hosted Release Verification remains authoritative. Static regression verifies no CSP-incompatible wait_for_function string eval remains."
   },
   "live_contract_local": {
     "status": "pass-with-external-warnings",
     "external_warnings": 5,
-    "detail": "sandbox DNS cannot resolve TPEx/TWSE hosts; semantic contract failures remain blocking when an official endpoint is reachable"
+    "detail": "sandbox DNS cannot resolve TPEx/TWSE hosts; reachable semantic contract failures remain blocking"
   },
-  "action_pins": {
-    "actions/checkout@v7.0.1": "3d3c42e5aac5ba805825da76410c181273ba90b1",
-    "actions/setup-python@v7.0.0": "5fda3b95a4ea91299a34e894583c3862153e4b97",
-    "actions/upload-artifact@v7.0.1": "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
-    "cloudflare/wrangler-action@v4.0.0": "ebbaa1584979971c8614a24965b4405ff95890e0"
+  "cloudflare_pre_release_evidence": {
+    "status": "v11.4.45 worker verified healthy after propagation",
+    "endpoint": "https://market-event-radar-live.qwe70542asd.workers.dev",
+    "observed_health": {
+      "service": "Market Event Radar live market",
+      "version": "v11.4.45",
+      "status": "ok",
+      "cache_binding": true
+    },
+    "root_cause_fixed_in_11446": "v11.4.45 readiness probed /health immediately after deploy and received transient 404; v11.4.46 adds bounded propagation retries"
   },
-  "wrangler": "4.123.0",
-  "github_current_main": {
-    "status": "v11.4.44",
-    "commit": "6e6d110ae3b3d597d932bf658ba53fce33c6bddc",
-    "branch_protected": false,
-    "admin_actions_settings_verified": false,
-    "admin_actions_settings_reason": "connected GitHub integration returned 403 for repository Actions permission settings"
+  "v11446_production_activation": {
+    "status": "pending push/deploy",
+    "required_existing_config": [
+      "CLOUDFLARE_API_TOKEN secret",
+      "CLOUDFLARE_ACCOUNT_ID secret",
+      "CLOUDFLARE_KV_NAMESPACE_ID variable"
+    ],
+    "extra_cloudflare_secret_required": false,
+    "expected_endpoint": "https://market-event-radar-live.qwe70542asd.workers.dev",
+    "acceptance": [
+      "Verify v11.4.46 stable app release green",
+      "Deploy v11.4.46 live market worker green",
+      "publish-runtime completes"
+    ]
   },
-  "cloudflare_production_activation": {
-    "status": "not-verifiable-without-user-secrets",
-    "required": ["CLOUDFLARE_API_TOKEN secret", "CLOUDFLARE_ACCOUNT_ID secret", "CLOUDFLARE_KV_NAMESPACE_ID variable"],
-    "endpoint_source": "wrangler-action deployment-url output; no manual LIVE_MARKET_ENDPOINT variable"
-  },
+  "security_controls_added": [
+    "exact workers.dev hostname allowlist in deploy/readiness/browser runtime",
+    "browser /health identity verification before trusting live-runtime endpoint",
+    "Cloudflare native Rate Limiting binding for market snapshot and K-line routes",
+    "fail-closed degraded health when rate limiter binding is absent",
+    "Cloudflare cfut_/cfat_/cfk_ credential prefix scanning",
+    "preview URLs disabled; workers.dev canonical route explicitly enabled",
+    "CSP-safe Playwright Locator/Expect browser smoke",
+    "bounded post-deploy readiness retries 0/3/5/10/15/30 seconds"
+  ],
+  "repository_admin_followups": [
+    "protect main and require verification check",
+    "enable Dependabot alerts/security updates",
+    "keep default GITHUB_TOKEN read-only"
+  ],
   "remaining_nonblocking_limitations": [
     "15-minute K-line remains upstream/source-dependent and must show unavailable/stale rather than fabricated bars",
-    "fundamental/financial coverage remains source-dependent where verified fields are unavailable",
-    "full Taiwan stock/ETF rankings are scheduled snapshots, not the six-index minute-refresh Worker channel"
+    "full Taiwan stock/ETF rankings remain scheduled snapshots rather than the six-index minute-refresh Worker channel"
   ]
 }

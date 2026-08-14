@@ -1,4 +1,4 @@
-name: Update v11.4.45 stock basics
+name: Update v11.4.46 stock basics
 on:
   push:
     branches: [main]

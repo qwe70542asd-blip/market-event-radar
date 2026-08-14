@@ -1,15 +1,30 @@
-/* v11.4.45 runtime endpoint bootstrap.
+/* v11.4.46 runtime endpoint bootstrap.
  * The public Worker URL is published only after a successful production
- * deployment to the history-free live-runtime branch.  Deployment credentials
- * are never exposed to the browser.
+ * deployment to the history-free live-runtime branch. Deployment credentials
+ * are never exposed to the browser. The endpoint is accepted only when both
+ * its exact workers.dev hostname and its /health identity contract match.
  */
 (()=>{
   "use strict";
-  const OWNER="qwe70542asd-blip",REPO="market-event-radar",VERSION="v11.4.45";
+  const OWNER="qwe70542asd-blip",REPO="market-event-radar",VERSION="v11.4.46";
+  const EXPECTED_HOST="market-event-radar-live.qwe70542asd.workers.dev";
   const safeEndpoint=value=>{
     const text=String(value||"").trim().replace(/\/$/,"");
     if(!/^https:\/\//i.test(text))return "";
-    try{const url=new URL(text);if(url.username||url.password)return "";return url.origin+url.pathname.replace(/\/$/,"")}catch(e){return ""}
+    try{
+      const url=new URL(text);
+      if(url.username||url.password||url.hostname!==EXPECTED_HOST||!['','/'].includes(url.pathname)||url.search||url.hash)return "";
+      return url.origin;
+    }catch(e){return ""}
+  };
+  const verifyHealth=async endpoint=>{
+    const ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),6500);
+    try{
+      const response=await fetch(`${endpoint}/health`,{cache:"no-store",headers:{Accept:"application/json"},signal:ctl.signal});
+      if(!response.ok)return false;
+      const body=await response.json();
+      return body?.service==="Market Event Radar live market"&&body?.version===VERSION&&body?.status==="ok"&&body?.cache_binding===true&&body?.rate_limit_binding===true;
+    }catch(e){return false}finally{clearTimeout(timer)}
   };
   window.MR_RUNTIME={version:VERSION,liveMarketEndpoint:"",source:"unconfigured"};
   window.MR_RUNTIME_READY=(async()=>{
@@ -20,7 +35,8 @@
       const payload=await response.json();
       const endpoint=safeEndpoint(payload?.liveMarketEndpoint);
       if(payload?.version!==VERSION||!endpoint)throw Error("runtime config rejected");
-      window.MR_RUNTIME={version:VERSION,liveMarketEndpoint:endpoint,source:"live-runtime"};
+      if(!await verifyHealth(endpoint))throw Error("runtime health identity rejected");
+      window.MR_RUNTIME={version:VERSION,liveMarketEndpoint:endpoint,source:"live-runtime-verified"};
     }catch(error){
       window.MR_RUNTIME={version:VERSION,liveMarketEndpoint:"",source:"github-fallback-only"};
     }

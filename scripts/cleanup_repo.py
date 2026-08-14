@@ -31,7 +31,7 @@ MIRRORED_FILES = [
     "requirements.txt", "requirements-dev.txt", "CLEAN-REPO.cmd",
 ]
 
-# v11.4.45 has one authoritative writer for every live branch.  These former
+# v11.4.46 has one authoritative writer for every live branch.  These former
 # standalone publishers duplicated aggregate workflows and could force-push the
 # same branch under a different concurrency group.
 REDUNDANT_WORKFLOWS = [
@@ -55,7 +55,7 @@ REDUNDANT_WORKFLOWS = [
 
 def version_obsolete_paths() -> list[Path]:
     found: list[Path] = []
-    # Regression tests and the live verifier are versionless from v11.4.45 onward.
+    # Regression tests and the live verifier are versionless from v11.4.46 onward.
     # Any versioned copy is necessarily stale and must be removed so an overlay
     # release cannot resurrect old assertions/parsers.
     found.extend((ROOT / "tests").glob("test_v*_*.py"))

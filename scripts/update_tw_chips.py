@@ -18,7 +18,7 @@ from bs4 import BeautifulSoup
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.45"
+VERSION = "v11.4.46"
 TIMEOUT = 24
 YAHOO_BATCH = 24
 PRIORITY_SYMBOLS = [
@@ -316,7 +316,7 @@ def parse_tpex_margin(rows: list[dict[str, Any]], assets: dict[str, dict[str, An
 def parse_tpex_day_trade_market(rows: list[dict[str, Any]], fallback_date: str | None) -> tuple[dict[str, Any], str | None]:
     """Parse TPEx market-wide intraday/day-trading statistics.
 
-    v11.4.45 is schema-first: it recognises the current official OpenAPI fields
+    v11.4.46 is schema-first: it recognises the current official OpenAPI fields
     observed from ``tpex_intraday_trading_statistics`` and only then falls back
     to legacy aliases.  A row is published only when all three core measures
     (volume, buy value and sell value) are present, preventing a partial schema
@@ -1185,7 +1185,7 @@ def main() -> None:
             "invalid_legacy_dates_removed": removed_invalid_dates + removed_market_dates + removed_nested_dates,
             "invalid_nested_dates_removed": removed_nested_dates,
             "schema": "symbol-keyed-v2",
-            "note": "官方資料優先；第三方只補缺漏。v11.4.45 強化 ROC/Gregorian 日期、TPEx 市場彙總當沖欄位與線上 schema gate，不偽造個股當沖資料。",
+            "note": "官方資料優先；第三方只補缺漏。v11.4.46 強化 ROC/Gregorian 日期、TPEx 市場彙總當沖欄位與線上 schema gate，不偽造個股當沖資料。",
         },
         "markets": markets,
         "items": items,

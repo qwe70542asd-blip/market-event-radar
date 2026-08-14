@@ -1,15 +1,15 @@
-Market Event Radar v11.4.45 — full overwrite / security deployment procedure
+Market Event Radar v11.4.46 — full overwrite / security deployment procedure
 
 DO NOT overlay this on top of old source without cleanup.
 
 1. GitHub Desktop: Fetch/Pull current main.
 2. In the local market-event-radar repository, keep the hidden `.git` directory.
-3. Remove the old project files/directories and place the v11.4.45 ZIP contents directly in the repository root (no extra nested folder).
+3. Remove the old project files/directories and place the v11.4.46 ZIP contents directly in the repository root (no extra nested folder).
 4. Run `CLEAN-REPO.cmd` once.
 5. In GitHub Desktop confirm Added / Modified / Deleted files are all present.
-6. Commit: `market-event-radar-v11.4.45`
+6. Commit: `market-event-radar-v11.4.46`
 7. Push origin.
-8. Do not accept the release as complete until `Verify v11.4.45 stable app release` is green.
+8. Do not accept the release as complete until `Verify v11.4.46 stable app release` is green.
 
 SECURITY SETTINGS TO CHECK IN GITHUB
 - Settings → Actions → General: default GITHUB_TOKEN permissions = read-only.
@@ -25,7 +25,7 @@ Environment/repository secrets:
 Environment/repository variable:
 - CLOUDFLARE_KV_NAMESPACE_ID
 
-DO NOT create LIVE_MARKET_ENDPOINT manually. v11.4.45 obtains the real endpoint from the pinned Wrangler deployment output, validates it, checks /health + snapshot + 5-minute K-line + arbitrary-symbol rejection, then and only then publishes the public endpoint to live-runtime.
+DO NOT create LIVE_MARKET_ENDPOINT manually. v11.4.46 obtains the real endpoint from the pinned Wrangler deployment output, validates it, checks /health + snapshot + 5-minute K-line + arbitrary-symbol rejection, then and only then publishes the public endpoint to live-runtime.
 
 WHY THIS PREVENTS THE OLD “FIXED, THEN BROKEN AGAIN” PATTERN
 - old version-specific tests/verifiers are automatically rejected;

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail-closed security regression audit for v11.4.45."""
+"""Fail-closed security regression audit for v11.4.46."""
 from __future__ import annotations
 import re,sys
 from pathlib import Path
@@ -90,7 +90,7 @@ if 'safeExternalHref' not in shared or 'url.username||url.password' not in share
 if 'https?:\\/\\/' in re.search(r'const newsImageCandidates=.*?;',shared,re.S).group(0): bad('news images still permit HTTP')
 
 # Runtime configuration may contain a public endpoint only after a successful deployment.
-runtime=text('assets/runtime-config.js'); sw=text('service-worker.js'); deploy=text('.github/workflows/deploy-live-market-worker.yml'); worker=text('edge/market-live-worker.js')
+runtime=text('assets/runtime-config.js'); sw=text('service-worker.js'); deploy=text('.github/workflows/deploy-live-market-worker.yml'); worker=text('edge/market-live-worker.js'); wrangler=text('edge/wrangler.jsonc.example'); readiness=text('scripts/production_readiness.py'); smoke=text('scripts/browser_smoke.py')
 if 'live-runtime/runtime-config.json' not in runtime: bad('runtime config is not deployment-published')
 static_match=re.search(r'const STATIC=(\[.*?\]);',sw,re.S)
 if static_match and 'runtime-config.js' in static_match.group(1): bad('runtime config is service-worker precached')
@@ -104,8 +104,21 @@ for token in ('id: deploy-worker','steps.deploy-worker.outputs.deployment-url','
     if token not in deploy: bad(f'Verified deployment endpoint handoff missing: {token}')
 if re.search(r'vars\.LIVE_MARKET_ENDPOINT|secrets\.LIVE_MARKET_ENDPOINT',deploy): bad('live endpoint must not be manually configured in repository secrets/variables')
 if 'data/runtime-config.json' not in deploy or 'deployment credentials never published' not in deploy: bad('public runtime publication contract missing')
-for token in ('ALLOWED_SYMBOLS','/health','MARKET_CACHE binding unavailable','unsupported symbol or interval'):
+for token in ('ALLOWED_SYMBOLS','/health','MARKET_CACHE binding unavailable','unsupported symbol or interval','API_RATE_LIMITER','rate_limit_binding','rate limit exceeded'):
     if token not in worker: bad(f'Worker hardening missing: {token}')
+expected_host='market-event-radar-live.qwe70542asd.workers.dev'
+if expected_host not in runtime or expected_host not in deploy or expected_host not in readiness:
+    bad('exact workers.dev hostname allowlist missing from runtime/deploy/readiness')
+if '/health' not in runtime or 'live-runtime-verified' not in runtime:
+    bad('browser runtime does not verify Worker identity before trust')
+if 'RETRY_DELAYS=(0,3,5,10,15,30)' not in readiness or 'get_json_retry' not in readiness:
+    bad('post-deploy propagation retry guard missing')
+if 'wait_for_function(' in smoke:
+    bad('browser smoke still uses CSP-incompatible string eval wait_for_function')
+if '"ratelimits"' not in wrangler or '"name": "API_RATE_LIMITER"' not in wrangler:
+    bad('Cloudflare Rate Limiting binding missing')
+if '"preview_urls": false' not in wrangler or '"workers_dev": true' not in wrangler:
+    bad('Worker public route/preview URL policy missing')
 
 # Portfolio import must be bounded/validated.
 portfolio=text('assets/portfolio.js')
@@ -118,6 +131,7 @@ secret_patterns=[
     re.compile(r'\bgh[pousr]_[A-Za-z0-9]{30,}\b'),
     re.compile(r'\bgithub_pat_[A-Za-z0-9_]{40,}\b'),
     re.compile(r'\bAKIA[0-9A-Z]{16}\b'),
+    re.compile(r'\bcf(?:ut|at|k)_[A-Za-z0-9_-]{40,100}\b'),
 ]
 for path in ROOT.rglob('*'):
     if not path.is_file() or '.git' in path.parts or path.suffix.lower() in {'.png','.jpg','.jpeg','.webp','.zip'}: continue
@@ -130,4 +144,4 @@ if FAIL:
     print('SECURITY AUDIT FAILED',file=sys.stderr)
     for item in FAIL: print(' - '+item,file=sys.stderr)
     raise SystemExit(1)
-print('security audit ok: immutable Actions, fail-closed deployment auth, CSP, URL gates, bounded imports, no obvious secrets')
+print('security audit ok: immutable Actions, fail-closed deployment auth, CSP, endpoint identity/retry/rate-limit guards, bounded imports, no obvious secrets')

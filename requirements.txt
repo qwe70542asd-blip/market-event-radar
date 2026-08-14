@@ -1,4 +1,4 @@
-# v11.4.45 production dependency lock. Update intentionally, never by floating CI ranges.
+# v11.4.46 production dependency lock. Update intentionally, never by floating CI ranges.
 requests==2.34.2
 beautifulsoup4==4.15.0
 python-dateutil==2.9.0.post0

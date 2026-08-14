@@ -1,4 +1,4 @@
-name: Update v11.4.45 media news batch
+name: Update v11.4.46 media news batch
 on:
   push:
     branches: [main]
@@ -67,7 +67,7 @@ jobs:
           file=os.environ["NEWS_FILE"]
           p=json.loads(Path(file).read_text(encoding="utf-8"))
           assert isinstance(p.get("items"),list)
-          assert p.get("metadata",{}).get("version")=="v11.4.45"
+          assert p.get("metadata",{}).get("version")=="v11.4.46"
           print(file,len(p.get("items",[])),p.get("metadata",{}).get("status"))
           PY
         env:

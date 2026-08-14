@@ -27,7 +27,7 @@ from bs4 import BeautifulSoup
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.45"
+VERSION = "v11.4.46"
 TIMEOUT = 25
 YAHOO_BATCH = 48
 HEADERS = {
