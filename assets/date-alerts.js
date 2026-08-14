@@ -1,6 +1,6 @@
 (()=>{
   "use strict";
-  const {escapeHtml,loadData,formatTime}=MR;
+  const {escapeHtml,loadData,formatTime,safeExternalHref}=MR;
   const list=document.querySelector("#dateAlertList"),count=document.querySelector("#dateAlertCount"),updated=document.querySelector("#dateAlertUpdated");
   if(!list||!count||!updated)return;
   const fallback=window.__EVENT_SEED__||{metadata:{status:"seed"},events:[]};
@@ -40,7 +40,7 @@
     const visible=rows.slice(0,limit);
     list.innerHTML=visible.map(event=>{
       const changed=event.announcement_kind==="date-changed",date=eventDate(event),mode=calendarMode(event);
-      return `<article class="date-alert-item ${changed?"changed":"new"}"><div class="date-alert-label">${changed?"日期異動":"今日新確認"}</div><a class="date-alert-main" href="event.html?id=${encodeURIComponent(event.id)}"><strong>${escapeHtml(event.title||"未命名事件")}</strong><span>新日期：${escapeHtml(date||formatTime(event.start))}</span>${changed&&event.previous_start?`<small>原日期：${escapeHtml(dayKey(event.previous_start)||formatTime(event.previous_start))}</small>`:""}</a><div class="date-alert-meta"><span>確認 ${escapeHtml(formatTime(event.announced_at))}</span><span class="date-alert-actions"><button type="button" data-calendar-jump data-calendar-mode="${mode}" data-calendar-date="${escapeHtml(date)}">在月曆查看</button>${event.source_url?`<a href="${escapeHtml(event.source_url)}" target="_blank" rel="noreferrer noopener">官方來源 ↗</a>`:""}</span></div></article>`;
+      return `<article class="date-alert-item ${changed?"changed":"new"}"><div class="date-alert-label">${changed?"日期異動":"今日新確認"}</div><a class="date-alert-main" href="event.html?id=${encodeURIComponent(event.id)}"><strong>${escapeHtml(event.title||"未命名事件")}</strong><span>新日期：${escapeHtml(date||formatTime(event.start))}</span>${changed&&event.previous_start?`<small>原日期：${escapeHtml(dayKey(event.previous_start)||formatTime(event.previous_start))}</small>`:""}</a><div class="date-alert-meta"><span>確認 ${escapeHtml(formatTime(event.announced_at))}</span><span class="date-alert-actions"><button type="button" data-calendar-jump data-calendar-mode="${mode}" data-calendar-date="${escapeHtml(date)}">在月曆查看</button>${event.source_url?`<a href="${escapeHtml(safeExternalHref(event.source_url)||"#")}" target="_blank" rel="noreferrer noopener">官方來源 ↗</a>`:""}</span></div></article>`;
     }).join("")+(rows.length>visible.length?`<div class="date-alert-more">另有 ${rows.length-visible.length} 件今日新公布日期，請使用月曆搜尋查看。</div>`:"");
   };
   list.addEventListener("click",event=>{

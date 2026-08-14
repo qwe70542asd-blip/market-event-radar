@@ -20,7 +20,10 @@ for src in "$@"; do
   test -f "$repo_root/$src" || { echo "missing publish source: $src" >&2; exit 2; }
   cp "$repo_root/$src" "$(basename "$src")"
 done
-printf '{"version":"v11.4.44","channel":"%s","label":"%s","snapshot_history":"orphan"}\n' "$branch" "$label" > channel.json
+printf '{"version":"v11.4.45","channel":"%s","label":"%s","snapshot_history":"orphan"}\n' "$branch" "$label" > channel.json
 git add .
 git -c user.name='market-radar-bot' -c user.email='actions@users.noreply.github.com' commit -m "chore: publish $label snapshot" >/dev/null
-git push origin "HEAD:refs/heads/$branch" --force
+test -n "${GH_TOKEN:-}" || { echo "GH_TOKEN is required for publication" >&2; exit 2; }
+auth="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 | tr -d '\n')"
+git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $auth" push origin "HEAD:refs/heads/$branch" --force
+unset auth

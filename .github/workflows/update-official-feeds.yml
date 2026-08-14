@@ -1,4 +1,4 @@
-name: Update v11.4.44 official feeds
+name: Update v11.4.45 official feeds
 on:
   push:
     branches: [main]
@@ -23,10 +23,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 16
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
           fetch-depth: 0
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
           cache: pip
@@ -46,7 +47,7 @@ jobs:
           from pathlib import Path
           for file in ("company-disclosures.json","official-market-notices.json"):
               p=json.loads((Path("data")/file).read_text(encoding="utf-8"))
-              assert p.get("metadata",{}).get("version")=="v11.4.44"
+              assert p.get("metadata",{}).get("version")=="v11.4.45"
               rows=p.get("items",[])
               assert all(row.get("published_at") for row in rows)
               print(file,len(rows),p.get("metadata",{}).get("recent_24h_count"))

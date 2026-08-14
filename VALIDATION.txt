@@ -1,34 +1,64 @@
-Market Event Radar v11.4.44 validation
-Validated: 2026-08-14T11:34:08+08:00
+Market Event Radar v11.4.45 — final validation
+Validated: 2026-08-14T13:42:27+08:00
 
-PASS: pytest 259 passed
+PACKAGE STATUS
+PASS: repository layout / version-aware stale-file cleanup
+PASS: single-writer audit (25 live branches; exactly one publisher each)
+PASS: security + authorization regression audit
+PASS: static production-readiness audit
+PASS: pytest (259 passed)
 PASS: public-data validation (all + --strict)
 PASS: Python compileall (scripts/tests)
-PASS: JavaScript syntax (17 files)
-PASS: shell syntax (2 files)
+PASS: JavaScript syntax (16 files: assets + edge + service-worker)
+PASS: shell syntax (2 scripts)
 PASS: GitHub Actions YAML (16 workflows)
-PASS: workflow run-block shell syntax (96 blocks)
-PASS: workflow publisher audit (24 live branches; one writer each)
-PASS: cleanup_repo --check (repository layout clean for v11.4.44)
-PASS: HTTP smoke (7 pages / 43 referenced assets)
-PASS: static HTML/JSON audit (duplicate IDs=0, missing local refs=0, JSON parse errors=0)
-PASS WITH EXTERNAL WARNINGS: reachability-aware live contract gate completed; sandbox DNS could not resolve 4 TPEx + 1 TWSE endpoint.
+PASS: Dependabot YAML (pip + github-actions weekly review PRs)
+PASS: workflow run-block shell syntax (101 run blocks)
+PASS: HTTP smoke (7 pages / 42 referenced assets)
+PASS: static HTML/JSON audit (9 HTML pages; 236 local references; duplicate IDs=0; missing local refs=0; inline scripts=0; inline event handlers=0; JSON parse errors=0)
+PASS WITH EXTERNAL WARNINGS: reachability-aware official-source contract gate completed; this sandbox cannot resolve TPEx/TWSE hosts, so 5 external reachability warnings were recorded rather than fabricating a pass.
 
-LOCAL BROWSER SMOKE: environment blocked. System Chromium launches, but this execution sandbox rejects localhost navigation with ERR_BLOCKED_BY_ADMINISTRATOR. GitHub Release Verification installs Chromium and remains the authoritative runtime gate.
+LOCAL BROWSER SMOKE
+ENVIRONMENT-BLOCKED: system Chromium launches, but this execution sandbox blocks navigation to localhost with net::ERR_BLOCKED_BY_ADMINISTRATOR. GitHub Release Verification installs Chromium on the hosted runner and is the authoritative browser runtime gate after push.
 
-GITHUB CURRENT MAIN: v11.4.43 at 5444d00fe17bfa8e0c37f4d46a76b89770e34154. The online tree still contains stale older tests/workflows; v11.4.43 Release Verification failed on an obsolete v11.4.41 service-worker assertion, and Taiwan market-core showed intermittent trading-date validation failures. v11.4.44 is the corrective full-overwrite release and has not yet been pushed during this audit.
+SECURITY / AUTHORIZATION BASELINE
+- External Actions are full 40-character SHA pins.
+- Current audited pins: checkout v7.0.1, setup-python v7.0.0, upload-artifact v7.0.1, wrangler-action v4.0.0.
+- actions/checkout uses persist-credentials:false everywhere.
+- GITHUB_TOKEN is exposed as GH_TOKEN only to explicit live-branch publication steps.
+- Workflow permission keys are allowlisted to repository contents read/write only; release verification is read-only.
+- Cloudflare deployment is fail-closed and runs in the production Environment.
+- Cloudflare API token / account ID are secrets; KV namespace ID has one variable source.
+- The Worker endpoint is NOT manually configured: it is derived from the pinned Wrangler Action deployment-url output, validated, live-probed, then published to live-runtime by a separate repository-write job that does not receive Cloudflare credentials.
+- Runtime config is not Service Worker precached.
+- CSP + no-referrer are present on all top-level pages; no third-party runtime script or inline event handler remains.
+- Dynamic external links/news images are HTTPS-gated; embedded URL credentials are rejected.
+- Public Worker is read-only, has a six-index symbol allowlist, interval allowlist, /health, KV cache and explicit 400/503 failure modes.
+- Portfolio JSON import is bounded (1 MiB, 500 rows) and validates known symbols and numeric ranges.
+- Dependabot covers pip + GitHub Actions; Release Verification also runs on pull requests.
 
-CORE v11.4.44 FIXES:
-- version-aware stale-file cleanup for overlay updates
-- one authoritative workflow publisher per live branch
-- quote session date separated from turnover-history end date
-- per-exchange TWSE/TPEx completeness and cross-session conflict rejection
-- last-known-good retention on partial/regressed quote refreshes
-- market-core scheduled runs no longer cancel a healthy in-flight refresh
+CURRENT GITHUB STATE AT AUDIT TIME
+main = v11.4.44 commit 6e6d110ae3b3d597d932bf658ba53fce33c6bddc.
+main branch protection is currently disabled in GitHub. Repository-level Actions policy/default GITHUB_TOKEN settings could not be read through the connected GitHub integration (403), so those admin settings still require a manual check after upload.
+v11.4.44 Release Verification is red on the old TWSE day-trading contract gate, and the current Cloudflare deployment workflow previously completed with deploy steps skipped because production Cloudflare values were not configured.
 
-RELEASE HYGIENE AFTER FINAL CLEAN: audio=0, cache artifacts=0, temp/editor backup=0, nested repository=0.
+WHAT v11.4.45 CHANGES PERMANENTLY
+- Regression tests/verifier are versionless so old version-specific assertions cannot silently return during ZIP overlays.
+- Source presence is no longer treated as production activation: Worker live claims require a deployed endpoint and freshness checks.
+- Missing Cloudflare authorization fails the deployment instead of returning a misleading green skipped run.
+- Endpoint handoff is automatic from the actual deploy output; no stale LIVE_MARKET_ENDPOINT variable.
+- Official TWSE verifier and production updater share the same semantic selector/parser.
+- Runtime config and executable assets cannot be trapped indefinitely by the old Service Worker cache.
+- Action/dependency updates are pinned/reviewed rather than silently floating.
 
-NON-BLOCKING LIMITATIONS:
-- Asset detail supplementary data can still complete later than the core quote.
-- 15 分鐘 K 線 is deployment-post, non-blocking and source-dependent; missing data must stay unavailable/stale and must not be fabricated.
+PRODUCTION ACTIVATION STILL REQUIRED
+The ZIP can be statically validated without your Cloudflare credentials, but a true production-live pass cannot be claimed until GitHub Environment `production` has:
+1. secret CLOUDFLARE_API_TOKEN
+2. secret CLOUDFLARE_ACCOUNT_ID
+3. variable CLOUDFLARE_KV_NAMESPACE_ID
+and `Deploy v11.4.45 live market worker` passes its live Production Readiness gate.
+
+NON-BLOCKING LIMITATIONS
+- 15-minute K-line remains upstream/source-dependent; unavailable/stale is allowed, fabricated data is not.
 - Fundamental/financial coverage remains explicitly incomplete when verified source fields are unavailable.
+- Full Taiwan stock/ETF ranking remains an official scheduled snapshot; only the six-index Worker channel may be labeled minute-refresh live when freshness is proven.

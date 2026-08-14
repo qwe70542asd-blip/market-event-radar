@@ -18,7 +18,7 @@ from bs4 import BeautifulSoup
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.44"
+VERSION = "v11.4.45"
 TIMEOUT = 24
 YAHOO_BATCH = 24
 PRIORITY_SYMBOLS = [
@@ -316,7 +316,7 @@ def parse_tpex_margin(rows: list[dict[str, Any]], assets: dict[str, dict[str, An
 def parse_tpex_day_trade_market(rows: list[dict[str, Any]], fallback_date: str | None) -> tuple[dict[str, Any], str | None]:
     """Parse TPEx market-wide intraday/day-trading statistics.
 
-    v11.4.44 is schema-first: it recognises the current official OpenAPI fields
+    v11.4.45 is schema-first: it recognises the current official OpenAPI fields
     observed from ``tpex_intraday_trading_statistics`` and only then falls back
     to legacy aliases.  A row is published only when all three core measures
     (volume, buy value and sell value) are present, preventing a partial schema
@@ -469,6 +469,39 @@ def parse_twse_day_trade_market(rows: list[dict[str, Any]], fallback_date: str |
         "stock_count": int(bucket["stock_count"]),
     }
     return {key: value for key, value in result.items() if value is not None}, traded
+
+def twse_day_trade_urls(fallback_date: str | None) -> list[str]:
+    ymd = valid_chip_date(fallback_date)
+    compact = ymd.replace("-", "") if ymd else ""
+    return [
+        f"https://www.twse.com.tw/rwd/zh/afterTrading/TWTB4U?response=json&selectType=All&date={compact}" if compact else "https://www.twse.com.tw/rwd/zh/afterTrading/TWTB4U?response=json&selectType=All",
+        "https://openapi.twse.com.tw/v1/exchangeReport/TWTB4U",
+        "https://www.twse.com.tw/rwd/zh/afterTrading/TWTB4U?response=json&selectType=All",
+    ]
+
+
+def try_twse_day_trade_rows(fallback_date: str | None, errors: list[dict[str, str]], attempts: int = 2) -> tuple[list[dict[str, Any]], str | None]:
+    """Select a TWSE TWTB4U endpoint by parsed semantics, not merely non-empty JSON.
+
+    TWSE has reused/moved endpoint shapes before. A non-empty response with a
+    different schema must not be accepted as day-trading data.
+    """
+    required = {"volume", "buy_amount", "sell_amount"}
+    for url in twse_day_trade_urls(fallback_date):
+        for attempt in range(1, attempts + 1):
+            try:
+                rows = get_rows(url)
+                market, traded = parse_twse_day_trade_market(rows, fallback_date)
+                if rows and required.issubset(market):
+                    return rows, url
+                keys = sorted({str(key) for row in rows[:3] for key in row}) if rows else []
+                errors.append({"source": "TWSE 當沖", "url": url, "error": f"semantic mismatch rows={len(rows)} date={traded} fields={sorted(market)} keys={keys[:20]}"})
+            except Exception as exc:
+                errors.append({"source": "TWSE 當沖", "url": url, "error": f"attempt {attempt}: {str(exc)[:190]}"})
+            if attempt < attempts:
+                time.sleep(.8 * attempt)
+    return [], None
+
 
 def _amount_value(row: dict[str, Any], kind: str) -> float | None:
     aliases = {
@@ -1046,11 +1079,7 @@ def main() -> None:
         "https://openapi.twse.com.tw/v1/exchangeReport/MI_MARGN",
         "https://www.twse.com.tw/rwd/zh/marginTrading/MI_MARGN?response=json&selectType=ALL",
     ], errors, "TWSE 融資融券")
-    day_rows, day_url = try_rows([
-        f"https://www.twse.com.tw/rwd/zh/afterTrading/TWTB4U?response=json&selectType=All&date={ymd}" if ymd else "https://www.twse.com.tw/rwd/zh/afterTrading/TWTB4U?response=json&selectType=All",
-        "https://openapi.twse.com.tw/v1/exchangeReport/TWTB4U",
-        "https://www.twse.com.tw/rwd/zh/afterTrading/TWTB4U?response=json&selectType=All",
-    ], errors, "TWSE 當沖")
+    day_rows, day_url = try_twse_day_trade_rows(verified_market_date, errors)
     twse_amount_rows, twse_amount_url = try_rows([
         f"https://www.twse.com.tw/rwd/zh/fund/BFI82U?response=json&date={ymd}" if ymd else "https://www.twse.com.tw/rwd/zh/fund/BFI82U?response=json",
         "https://www.twse.com.tw/rwd/zh/fund/BFI82U?response=json",
@@ -1156,7 +1185,7 @@ def main() -> None:
             "invalid_legacy_dates_removed": removed_invalid_dates + removed_market_dates + removed_nested_dates,
             "invalid_nested_dates_removed": removed_nested_dates,
             "schema": "symbol-keyed-v2",
-            "note": "官方資料優先；第三方只補缺漏。v11.4.44 強化 ROC/Gregorian 日期、TPEx 市場彙總當沖欄位與線上 schema gate，不偽造個股當沖資料。",
+            "note": "官方資料優先；第三方只補缺漏。v11.4.45 強化 ROC/Gregorian 日期、TPEx 市場彙總當沖欄位與線上 schema gate，不偽造個股當沖資料。",
         },
         "markets": markets,
         "items": items,

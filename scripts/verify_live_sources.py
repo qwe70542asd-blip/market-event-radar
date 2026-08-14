@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reachability-aware TPEx live contract verification for v11.4.44.
+"""Reachability-aware TPEx live contract verification for v11.4.45.
 
 Deterministic application tests must not fail because an external official host
 returns a transient 5xx.  This gate therefore distinguishes:
@@ -25,7 +25,7 @@ import requests
 import update_events as ev
 import update_tw_chips as chips
 
-VERSION = "v11.4.44"
+VERSION = "v11.4.45"
 
 
 @dataclass
@@ -145,17 +145,25 @@ def check_tpex_institutional_amounts(session: requests.Session) -> tuple[str, st
 
 
 def check_twse_day_trade(session: requests.Session) -> tuple[str, str]:
-    url = "https://openapi.twse.com.tw/v1/exchangeReport/TWTB4U"
-    fetched = fetch_json(session, url)
-    if not fetched.ok:
-        return "unavailable", f"TWSE day-trading unavailable: {fetched.error}"
-    rows = chip_rows(fetched.payload)
-    market, traded = chips.parse_twse_day_trade_market(rows, chips.valid_chip_date(chips.NOW.date().isoformat()))
+    # Intentionally reuse the production source selector and parser so verifier
+    # and updater cannot silently drift to different TWSE endpoint contracts.
+    errors: list[dict[str, str]] = []
+    fallback = chips.valid_chip_date(chips.NOW.date().isoformat())
+    rows, url = chips.try_twse_day_trade_rows(fallback, errors, attempts=1)
+    if not rows:
+        detail = "; ".join(item.get("error", "") for item in errors[-3:])
+        # A reachable JSON response with the wrong semantic schema is a real
+        # contract regression. Pure DNS/timeout/HTTP failures remain warnings.
+        semantic = [item for item in errors if "semantic mismatch" in str(item.get("error", "")).lower() and "rows=0" not in str(item.get("error", "")).lower()]
+        if semantic:
+            contract_fail(f"TWSE day-trading production candidates reachable but semantically invalid: {detail}")
+        return "unavailable", f"TWSE day-trading unavailable across production candidates: {detail}"
+    market, traded = chips.parse_twse_day_trade_market(rows, fallback)
     required = {"volume", "buy_amount", "sell_amount"}
-    if rows and (not market or not required.issubset(market)):
-        keys = sorted({str(key) for row in rows[:3] for key in row})
-        contract_fail(f"TWSE day-trading rows={len(rows)} parsed_fields={sorted(market)} keys={keys}")
-    return "ok", f"TWSE day-trading: rows={len(rows)} date={traded} fields={sorted(market)}"
+    if not required.issubset(market):
+        contract_fail(f"TWSE day-trading production parser fields={sorted(market)} url={url}")
+    return "ok", f"TWSE day-trading: rows={len(rows)} date={traded} fields={sorted(market)} source={url}"
+
 
 def main() -> None:
     session = requests.Session()

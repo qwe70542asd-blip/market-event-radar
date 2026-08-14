@@ -1,24 +1,28 @@
-name: Verify v11.4.44 stable app release
+name: Verify v11.4.45 stable app release
 on:
   push:
+    branches: [main]
+  pull_request:
     branches: [main]
   workflow_dispatch:
 permissions:
   contents: read
 concurrency:
-  group: verify-v11-4-44-main
+  group: verify-v11-4-45-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-python@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
           cache: pip
-      - run: pip install -r requirements.txt pytest pyyaml playwright
+      - run: pip install -r requirements-dev.txt
 
       - name: Reject stale, conflicting or nested repository files
         run: |
@@ -53,6 +57,12 @@ jobs:
           print('workflow yaml',len(files))
           PY
 
+      - name: Security and authorization regression gate
+        run: python scripts/security_audit.py
+
+      - name: Static production readiness gate
+        run: python scripts/production_readiness.py --version v11.4.45
+
       # Deterministic product checks always run before any external live-source
       # contract check.  A transient TPEx outage can no longer hide app/test
       # regressions by causing all later steps to be skipped.
@@ -79,5 +89,5 @@ jobs:
           for attempt in {1..20}; do curl -fsS http://127.0.0.1:8765/index.html >/dev/null && break; sleep 0.25; done
           python scripts/browser_smoke.py http://127.0.0.1:8765
 
-      - name: TPEx v11.4.44 reachability-aware live contract gate
-        run: python scripts/verify_v11_4_44_live_sources.py
+      - name: Official v11.4.45 reachability-aware live contract gate
+        run: python scripts/verify_live_sources.py

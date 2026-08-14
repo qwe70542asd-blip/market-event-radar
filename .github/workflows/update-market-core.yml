@@ -1,4 +1,4 @@
-name: Update v11.4.44 market core
+name: Update v11.4.45 market core
 on:
   push:
     branches: [main]
@@ -24,10 +24,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 14
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
           fetch-depth: 0
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
           cache: pip
@@ -65,10 +66,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 14
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
           fetch-depth: 0
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
           cache: pip
@@ -91,7 +93,7 @@ jobs:
           market=json.loads(Path("data/tw-market.json").read_text(encoding="utf-8"))
           history=json.loads(Path("data/market-volume-history.json").read_text(encoding="utf-8"))
           meta=market.get("metadata",{})
-          assert meta.get("version")=="v11.4.44", meta.get("version")
+          assert meta.get("version")=="v11.4.45", meta.get("version")
           trading_date=meta.get("trading_date")
           assert trading_date, "verified trading date missing"
           assert date.fromisoformat(trading_date).weekday() < 5, trading_date

@@ -1,22 +1,37 @@
-Market Event Radar v11.4.44 — GitHub Desktop update procedure
+Market Event Radar v11.4.45 — full overwrite / security deployment procedure
 
-This release fixes a repository-overlay problem that allowed old tests/workflows to remain on GitHub even after a newer ZIP was copied over them.
+DO NOT overlay this on top of old source without cleanup.
 
-Use this exact order:
-
-1. In GitHub Desktop, fetch/pull the current `main` first.
-2. Extract the v11.4.44 full ZIP directly into the repository root. Do not create an extra nested folder.
-3. Double-click `CLEAN-REPO.cmd` in the repository root.
-4. Wait for: `Repository cleanup complete.`
-5. Return to GitHub Desktop and confirm you see deletions as well as modified/new files.
-6. Commit with a message such as `market-event-radar-v11.4.44`.
+1. GitHub Desktop: Fetch/Pull current main.
+2. In the local market-event-radar repository, keep the hidden `.git` directory.
+3. Remove the old project files/directories and place the v11.4.45 ZIP contents directly in the repository root (no extra nested folder).
+4. Run `CLEAN-REPO.cmd` once.
+5. In GitHub Desktop confirm Added / Modified / Deleted files are all present.
+6. Commit: `market-event-radar-v11.4.45`
 7. Push origin.
-8. In GitHub Actions, the first release verification should run the same cleanup check plus the single-writer workflow audit. Do not ignore a red verification run.
+8. Do not accept the release as complete until `Verify v11.4.45 stable app release` is green.
 
-Why step 3 is mandatory:
-GitHub Desktop copying/overwriting a ZIP does not automatically remove old files that are absent from the new ZIP. v11.4.43 therefore still had older regression tests and duplicate workflow files online. v11.4.44 makes cleanup version-aware so this does not require another hand-maintained deletion list next release.
+SECURITY SETTINGS TO CHECK IN GITHUB
+- Settings → Actions → General: default GITHUB_TOKEN permissions = read-only.
+- Enable “Require actions to be pinned to a full-length commit SHA” if available.
+- Restrict allowed Actions to GitHub-owned Actions plus cloudflare/wrangler-action where practical.
+- Protect main against force-push and branch deletion. At audit time main is currently unprotected.
+- Create Environment `production`, restrict it to main, and if supported require your own reviewer approval before production secrets are released.
 
-Expected v11.4.44 workflow topology:
-- 16 workflow YAML files total in the release.
-- Every live-* data branch has exactly one publishing workflow.
-- The old standalone global/Taiwan/news/official/stock-news publishers are deleted.
+CLOUDFLARE VALUES — ONLY THREE
+Environment/repository secrets:
+- CLOUDFLARE_API_TOKEN
+- CLOUDFLARE_ACCOUNT_ID
+Environment/repository variable:
+- CLOUDFLARE_KV_NAMESPACE_ID
+
+DO NOT create LIVE_MARKET_ENDPOINT manually. v11.4.45 obtains the real endpoint from the pinned Wrangler deployment output, validates it, checks /health + snapshot + 5-minute K-line + arbitrary-symbol rejection, then and only then publishes the public endpoint to live-runtime.
+
+WHY THIS PREVENTS THE OLD “FIXED, THEN BROKEN AGAIN” PATTERN
+- old version-specific tests/verifiers are automatically rejected;
+- one live branch = one writer is CI-enforced;
+- release verification runs on main and pull requests;
+- dependency/action updates arrive as Dependabot PRs, not floating runtime changes;
+- missing Cloudflare authorization is a hard failure, never “skipped but green”;
+- runtime config is not Service Worker precached;
+- UI may claim Worker minute-refresh only when the payload actually comes from a verified live Worker; otherwise it says GitHub fallback / non-real-time.

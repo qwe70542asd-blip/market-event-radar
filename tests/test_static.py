@@ -7,7 +7,7 @@ class StaticTests(unittest.TestCase):
  def test_required_tree(self):
   for path in [".github/workflows","assets","data","docs","scripts","tests","index.html","news.html","asset.html","service-worker.js"]:self.assertTrue((ROOT/path).exists(),path)
  def test_version(self):
-  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.44")
+  self.assertEqual(json.loads(self.read("VERSION.json"))["baseline_version"],"11.4.45")
  def test_ascii_filenames(self):
   for path in ROOT.rglob("*"):self.assertTrue(all(ord(c)<128 for c in path.name),path)
  def test_no_audio(self):
@@ -84,7 +84,7 @@ class StaticTests(unittest.TestCase):
   texts="\n".join(self.read(p.relative_to(ROOT)) for p in (ROOT/".github/workflows").glob("update-news-*.yml"))
   for branch in ("live-news-cna","live-news-moneydj","live-news-cnyes","live-news-udn","live-news-ltn","live-news-wealth","live-news-yahoo","live-news-technews","live-news-ctee","live-news-asia-risk"):self.assertIn(branch,texts)
  def test_service_worker_cache(self):
-  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-44",sw)
+  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-45",sw)
   for seed in ("news-cna-seed.js","news-moneydj-seed.js","news-wealth-seed.js","news-yahoo-seed.js","news-technews-seed.js","news-ctee-seed.js","news-asia-risk-seed.js","stock-news-seed.js","company-disclosures-seed.js","monthly-revenue-seed.js","dividend-history-seed.js","secondary-reference-seed.js","data-verification-seed.js","yahoo-details-seed.js","etf-details-seed.js","stock-basics-seed.js","market-volume-history-seed.js","market-kline-seed.js"):self.assertIn(seed,sw)
  def test_cross_market_validator_uses_exchange_local_timestamp(self):
   validator=self.read("scripts/validate_public_data.py")
@@ -98,14 +98,14 @@ class StaticTests(unittest.TestCase):
 
  def test_market_snapshot_seed_schema(self):
   payload=json.loads(self.read("data/market-snapshot.json"))
-  self.assertEqual(payload.get("metadata",{}).get("version"),"v11.4.44")
+  self.assertEqual(payload.get("metadata",{}).get("version"),"v11.4.45")
   self.assertEqual(set(payload.get("metadata",{}).get("kline_symbols",[])),{"^TWII","^DJI","^IXIC","^SOX","^GSPC","^N225"})
   self.assertNotIn("^TWOII",{row.get("symbol") for row in payload.get("items",[])})
 
  def test_all_pages_current_version(self):
   for p in ROOT.glob("*.html"):
    body=p.read_text(encoding="utf-8")
-   self.assertIn("v11.4.44",body,p.name)
+   self.assertIn("v11.4.45",body,p.name)
    self.assertNotIn("v11.4.15",body,p.name)
 
 
@@ -168,7 +168,7 @@ class StaticTests(unittest.TestCase):
 
  def test_balanced_portfolio_summary_layout(self):
   css=self.read("assets/styles.css")
-  for token in ("v11.4.44 portfolio summary balance","grid-template-columns:repeat(3,minmax(0,1fr))","grid-template-rows:repeat(2,minmax(78px,1fr))","justify-content:center"):
+  for token in ("v11.4.45 portfolio summary balance","grid-template-columns:repeat(3,minmax(0,1fr))","grid-template-rows:repeat(2,minmax(78px,1fr))","justify-content:center"):
    self.assertIn(token,css)
 
  def test_home_summary_and_volume_momentum(self):
@@ -376,7 +376,7 @@ class StaticTests(unittest.TestCase):
   home=self.read("assets/home.js");shared=self.read("assets/shared.js");worker=self.read("edge/market-live-worker.js")
   for token in ("60000","anyTrackedMarketOpen","visibilitychange","freshness_status","session_date"):self.assertIn(token,home)
   for token in ("loadMarketKline","5m","15m","30m","60m","4h","1wk","1mo","LIVE_MARKET_ENDPOINT"):self.assertIn(token,shared)
-  for token in ("scheduled(event,env,ctx)","* * * * *","same-session","marketOpen"):self.assertIn(token,worker+self.read("edge/wrangler.toml.example"))
+  for token in ("scheduled(event,env,ctx)","* * * * *","same-session","marketOpen"):self.assertIn(token,worker+self.read("edge/wrangler.jsonc.example"))
 
  def test_v11421_historical_exdiv_backfill(self):
   events=self.read("scripts/update_events.py")
@@ -440,7 +440,7 @@ class StaticTests(unittest.TestCase):
 
  def test_v11424_version_bump_prevents_same_version_asset_cache(self):
   for path in ("index.html","assets/shared.js","assets/home.js","assets/sw-register.js","service-worker.js","VERSION.json"):
-   content=self.read(path);self.assertIn("11.4.44",content);self.assertNotIn("11.4.23",content);self.assertNotIn("11.4.22",content)
+   content=self.read(path);self.assertIn("11.4.45",content);self.assertNotIn("11.4.23",content);self.assertNotIn("11.4.22",content)
 
  def test_v11428_compact_market_state_replaces_sector_heat(self):
   html=self.read("index.html");home=self.read("assets/home.js");snapshot=self.read("scripts/update_market_snapshot.py")
@@ -491,13 +491,13 @@ class StaticTests(unittest.TestCase):
    self.assertIn(token,market)
 
  def test_v11426_15m_is_documented_as_post_deploy_nonblocking(self):
-  audit=self.read("docs/V11.4.44-release-audit.md")
+  audit=self.read("docs/V11.4.45-release-audit.md")
   for token in ("15 分鐘 K","非阻擋","部署後","不得偽造"):
    self.assertIn(token,audit)
 
  def test_v11428_mobile_calendar_has_no_forced_horizontal_scroll(self):
   css=self.read("assets/styles.css");html=self.read("index.html");manifest=json.loads(self.read("manifest.webmanifest"))
-  for token in (".calendar-weekdays,.calendar-grid{width:100%;min-width:0!important","overflow:visible!important","grid-template-columns:repeat(7,minmax(0,1fr))",".mobile-install-trigger","assets/pwa-install.js?v=11.4.44"):
+  for token in (".calendar-weekdays,.calendar-grid{width:100%;min-width:0!important","overflow:visible!important","grid-template-columns:repeat(7,minmax(0,1fr))",".mobile-install-trigger","assets/pwa-install.js?v=11.4.45"):
    self.assertIn(token,css+html)
   self.assertEqual(manifest.get("display"),"standalone")
   self.assertTrue(any(icon.get("sizes")=="192x192" for icon in manifest.get("icons",[])))
@@ -513,9 +513,9 @@ class StaticTests(unittest.TestCase):
   frontend=self.read("assets/date-alerts.js");backend=self.read("scripts/update_events.py");workflow=self.read(".github/workflows/update-events.yml")
   for token in ("trustedAnnouncement","next<today","previous>=today","dayDistance(previous,next)<=183"):
    self.assertIn(token,frontend)
-  for token in ("announcement_candidate","announcement_semantically_valid","suppressed_origins","strict-v11.4.44"):
+  for token in ("announcement_candidate","announcement_semantically_valid","suppressed_origins","strict-v11.4.45"):
    self.assertIn(token,backend)
-  self.assertIn("v11.4.44",workflow)
+  self.assertIn("v11.4.45",workflow)
 
 
  def test_v11431_repo_layout_guard(self):
@@ -532,7 +532,7 @@ class StaticTests(unittest.TestCase):
   snapshot=self.read("scripts/update_market_snapshot.py")
   self.assertIn("session_confirmed",snapshot);self.assertIn("unconfirmed_reason",snapshot)
   self.assertIn('cron: "*/5 * * * *"',core)
-  self.assertIn('meta.get("version")=="v11.4.44"',core)
+  self.assertIn('meta.get("version")=="v11.4.45"',core)
 
  def test_v11431_scheduler_is_consolidated(self):
   batch=self.read(".github/workflows/update-news-batch.yml");official=self.read(".github/workflows/update-official-feeds.yml");core=self.read(".github/workflows/update-market-core.yml")
@@ -597,7 +597,7 @@ class StaticTests(unittest.TestCase):
 
  def test_v11431_edge_worker_is_current_and_uses_verified_time(self):
   worker=self.read("edge/market-live-worker.js")
-  self.assertIn('v11.4.44',worker);self.assertNotIn('v11.4.27',worker)
+  self.assertIn('v11.4.45',worker);self.assertNotIn('v11.4.27',worker)
   self.assertIn('missing verified quote time',worker)
   self.assertIn('marketDate(new Date(x.time*1000),market)',worker)
   self.assertIn('latestSession===session?previous?.close:latest?.close',worker)
@@ -634,18 +634,17 @@ class StaticTests(unittest.TestCase):
   self.assertIn("mopsfin_t187ap39_O",events)
   self.assertNotIn("mopsfin_t187ap45_O",events)
 
- def test_v11432_chart_library_is_not_boot_blocking(self):
-  html=self.read("index.html"); loader=self.read("assets/chart-loader.js"); home=self.read("assets/home.js"); sw=self.read("service-worker.js")
-  self.assertNotIn('<script src="https://unpkg.com/lightweight-charts',html)
-  self.assertIn('assets/chart-loader.js?v=11.4.44',html)
-  self.assertLess(html.index('assets/chart-loader.js?v=11.4.44'),html.index('assets/shared.js?v=11.4.44'))
-  self.assertIn('market-radar:chart-lib-ready',loader);self.assertIn('market-radar:chart-lib-ready',home)
-  self.assertIn('assets/chart-loader.js?v=11.4.44',sw)
+ def test_v11445_chart_runtime_has_no_remote_executable_dependency(self):
+  html=self.read("index.html"); home=self.read("assets/home.js"); sw=self.read("service-worker.js")
+  self.assertFalse((ROOT/"assets/chart-loader.js").exists())
+  self.assertNotIn('unpkg.com',html+home+sw)
+  self.assertNotIn('chart-loader.js',html+sw)
+  self.assertIn('buildCandlestickSvg',home)
 
  def test_v11432_large_payloads_do_not_use_web_storage(self):
   shared=self.read("assets/shared.js")
   self.assertIn('WEB_STORAGE_CACHE_FILES=new Set(["market-snapshot.json","tw-market.json"])',shared)
-  self.assertIn('STORAGE_CLEANUP_KEY="mr-storage-cleanup-v11.4.44"',shared)
+  self.assertIn('STORAGE_CLEANUP_KEY="mr-storage-cleanup-v11.4.45"',shared)
   self.assertIn('indexedDB.open(LAST_GOOD_DB,1)',shared)
   self.assertIn('await idbPut(name,entry)',shared)
   self.assertNotIn('WEB_STORAGE_CACHE_FILES=new Set(["market-snapshot.json","events.json"',shared)
@@ -655,7 +654,7 @@ class StaticTests(unittest.TestCase):
   for token in ('TRACKING_KEY_VERSION = 2','bea_series_key','bls_series_key','assign_bea_tracking','canonical_event_key','tracking_migration_origins'):
    self.assertIn(token,events)
   self.assertGreaterEqual(workflow.count("inputs.clean_rebuild"),2)
-  self.assertIn('strict-v11.4.44-series-safe',workflow)
+  self.assertIn('strict-v11.4.45-series-safe',workflow)
   self.assertIn('reject legacy recurring-series keys',alerts)
 
  def test_v11432_market_and_chip_state_migrations(self):
@@ -678,7 +677,7 @@ class StaticTests(unittest.TestCase):
    self.assertIn(token,ignore)
   for token in ('NESTED_DIRS','REDUNDANT_WORKFLOWS','version_obsolete_paths','--check'):
    self.assertIn(token,cleanup)
-  self.assertIn('python scripts/cleanup_repo.py --check',verify);self.assertIn('verify-v11-4-44-main',verify)
+  self.assertIn('python scripts/cleanup_repo.py --check',verify);self.assertIn('verify-v11-4-45-${{ github.ref }}',verify)
 
  def test_v11438_home_portfolio_totals_fail_closed(self):
   home=self.read("assets/home.js")
@@ -687,11 +686,12 @@ class StaticTests(unittest.TestCase):
   self.assertIn('$("#portfolioTotalCost").textContent=totalsComplete?',home)
   self.assertIn('totalsComplete&&totalAllocated?',home)
 
- def test_v11433_cloudflare_deploy_uses_step_level_secret_gate(self):
+ def test_v11445_cloudflare_deploy_is_fail_closed_and_authorization_isolated(self):
   deploy=self.read(".github/workflows/deploy-live-market-worker.yml")
   self.assertNotIn("if: ${{ secrets.",deploy)
-  self.assertIn("CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}",deploy)
-  self.assertIn("Check Cloudflare deployment configuration",deploy); self.assertIn("Cloudflare deployment skipped",deploy); self.assertNotIn("exit 2",deploy)
+  for token in ("CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}","Fail closed when production authorization is incomplete","exit 2","environment: production","persist-credentials: false","wranglerVersion: 4.123.0","needs: deploy","live-runtime"):
+   self.assertIn(token,deploy)
+  self.assertNotIn("Cloudflare deployment skipped",deploy)
 
  def test_v11433_release_has_real_browser_runtime_gate(self):
   verify=self.read(".github/workflows/release-verification.yml"); smoke=self.read("scripts/browser_smoke.py")
@@ -709,8 +709,8 @@ class StaticTests(unittest.TestCase):
   self.assertIn("BLS_SNAPSHOT_PATH",events); self.assertEqual(len(snapshot.get("events") or []),63)
   self.assertIn('day_trading_scope',chips)
   self.assertNotIn("def parse_tpex_day_trade(rows:",chips)
-  self.assertIn("Wait for v11.4.44 isolated-data release barrier",verify)
-  self.assertIn("wait_for_data_channels.py v11.4.44",verify)
+  self.assertIn("Wait for v11.4.45 isolated-data release barrier",verify)
+  self.assertIn("wait_for_data_channels.py v11.4.45",verify)
 
 
  def test_v11440_institutional_amounts_release_barrier_and_pwa_cache(self):
@@ -721,10 +721,12 @@ class StaticTests(unittest.TestCase):
   self.assertIn("cacheFirst",sw);self.assertIn("networkFirst",sw)
   self.assertIn("--attempts 222 --sleep 10",verify);self.assertIn("timeout-minutes: 42",verify)
 
- def test_v11440_actions_are_node24_compatible_majors(self):
+ def test_v11445_actions_are_node24_compatible_and_immutable(self):
   workflows="\n".join(path.read_text(encoding="utf-8") for path in (ROOT/".github/workflows").glob("*.yml"))
   self.assertNotIn("actions/checkout@v4",workflows);self.assertNotIn("actions/setup-python@v5",workflows)
-  self.assertIn("actions/checkout@v6",workflows);self.assertIn("actions/setup-python@v6",workflows)
+  self.assertIn("actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",workflows)
+  self.assertIn("actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97",workflows)
+  self.assertNotIn("actions/checkout@v7",workflows);self.assertNotIn("actions/setup-python@v7",workflows)
 
 
 if __name__=="__main__":unittest.main()

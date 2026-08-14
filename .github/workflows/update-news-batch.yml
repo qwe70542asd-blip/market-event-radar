@@ -1,4 +1,4 @@
-name: Update v11.4.44 media news batch
+name: Update v11.4.45 media news batch
 on:
   push:
     branches: [main]
@@ -39,10 +39,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 14
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
           fetch-depth: 0
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
           cache: pip
@@ -66,7 +67,7 @@ jobs:
           file=os.environ["NEWS_FILE"]
           p=json.loads(Path(file).read_text(encoding="utf-8"))
           assert isinstance(p.get("items"),list)
-          assert p.get("metadata",{}).get("version")=="v11.4.44"
+          assert p.get("metadata",{}).get("version")=="v11.4.45"
           print(file,len(p.get("items",[])),p.get("metadata",{}).get("status"))
           PY
         env:
@@ -82,10 +83,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
           fetch-depth: 0
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
           cache: pip

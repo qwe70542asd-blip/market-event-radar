@@ -1,15 +1,60 @@
-# v11.4.17 部署
+# v11.4.45 production deployment and authorization
 
-將完整 `market-event-radar` 資料夾覆蓋到 GitHub 專案並推送 `main`。
+## A. Replace the repository cleanly
 
-推送後會依檔案變更與排程分別執行：
+1. Pull the latest `main` in GitHub Desktop.
+2. Keep the local `.git` directory; replace the project files with the v11.4.45 full ZIP.
+3. Run `CLEAN-REPO.cmd`.
+4. Confirm GitHub Desktop shows both changed files and intended deletions.
+5. Commit and push.
+6. Do not accept the release as healthy until `Verify v11.4.45 stable app release` is green.
 
-- 五家媒體新聞工作
-- 官方市場公告
-- 個股重大訊息
-- 月營收歷史
-- 股利歷史
+## B. GitHub Actions security settings
 
-各工作流程獨立成功或失敗。某一家顯示紅色，不會影響其他來源與網站其他資料。
+In repository **Settings → Actions → General**:
 
-第一次部署後到 `data-status.html` 查看每條通道的筆數與狀態。月營收與股利歷史採小批次累積，不需重複手動執行同一工作。
+- set default `GITHUB_TOKEN` workflow permissions to **Read repository contents**;
+- enable **Require actions to be pinned to a full-length commit SHA** if the option is available;
+- preferably restrict allowed Actions to GitHub-owned Actions plus `cloudflare/wrangler-action`;
+- protect `main` against force-push and deletion;
+- review Dependabot pull requests and require the `Verify v11.4.45 stable app release` check before accepting dependency updates.
+
+The workflows themselves already use full-SHA pins and explicitly request write permission only for data-publisher workflows.
+
+## C. Cloudflare production authorization
+
+Create a GitHub Environment named `production`. Restrict it to the `main` branch; if your plan supports Environment reviewers, require your own approval before the Cloudflare secrets are released.
+
+Configure these values (repository or Environment scope):
+
+- Secret `CLOUDFLARE_API_TOKEN`
+- Secret `CLOUDFLARE_ACCOUNT_ID`
+- Variable `CLOUDFLARE_KV_NAMESPACE_ID`
+
+For `CLOUDFLARE_API_TOKEN`, create a Cloudflare custom token based on **Edit Cloudflare Workers** and scope it only to the account used by this project. Do not use the Global API Key and do not commit the token.
+
+The deploy workflow intentionally fails when any required authorization/configuration is missing. “Skipped but green” is not accepted anymore.
+
+## D. Live Worker activation flow
+
+After the three Cloudflare production values exist, run `Deploy v11.4.45 live market worker` (or push a relevant Worker file). The public Worker endpoint is taken automatically from the pinned Wrangler Action `deployment-url` output; do not create or maintain a separate `LIVE_MARKET_ENDPOINT` secret/variable.
+
+The workflow must complete this sequence:
+
+1. fail-closed authorization validation;
+2. immutable source checkout with no persisted Git credential;
+3. render the KV binding into `wrangler.jsonc`;
+4. deploy with pinned Wrangler 4.123.0;
+5. derive the public HTTPS endpoint directly from the deploy Action output and validate it;
+6. verify `/health`, `/market-snapshot.json`, 5-minute K-line and arbitrary-symbol rejection;
+7. only then publish the verified public endpoint to `live-runtime`.
+
+The browser subsequently retrieves the endpoint from `live-runtime`. Cloudflare API credentials are never sent to the browser.
+
+## E. Expected UI state
+
+When Worker production readiness passes, the six-index section can display `Worker 即時通道・盤中每分鐘刷新` when the actual payload source is Worker and the row is fresh.
+
+If Worker configuration/deployment is missing or unavailable, the page must say `GitHub 備援・非即時` rather than presenting a GitHub snapshot as live data.
+
+The full Taiwan stock/ETF ranking channel is still an official scheduled snapshot and must not be labeled real-time.

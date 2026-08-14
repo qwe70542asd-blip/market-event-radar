@@ -1,1 +1,1 @@
-window.__MONTHLY_REVENUE_SEED__={"metadata":{"version":"v11.4.44","updated_at":null,"status":"waiting","symbol_count":0,"record_count":0,"note":"Waiting for the isolated monthly-revenue workflow."},"sources":[],"items":{}};
+window.__MONTHLY_REVENUE_SEED__={"metadata":{"version":"v11.4.45","updated_at":null,"status":"waiting","symbol_count":0,"record_count":0,"note":"Waiting for the isolated monthly-revenue workflow."},"sources":[],"items":{}};

@@ -28,10 +28,10 @@ MIRRORED_FILES = [
     "event.html", "index.html", "institutional.html", "news.html", "portfolio.html",
     "tw-market.html", "README.md", "GITHUB-DESKTOP-UPDATE.txt", "VALIDATION.json",
     "VALIDATION.txt", "VERSION.json", "manifest.webmanifest", "service-worker.js",
-    "requirements.txt", "CLEAN-REPO.cmd",
+    "requirements.txt", "requirements-dev.txt", "CLEAN-REPO.cmd",
 ]
 
-# v11.4.44 has one authoritative writer for every live branch.  These former
+# v11.4.45 has one authoritative writer for every live branch.  These former
 # standalone publishers duplicated aggregate workflows and could force-push the
 # same branch under a different concurrency group.
 REDUNDANT_WORKFLOWS = [
@@ -55,14 +55,11 @@ REDUNDANT_WORKFLOWS = [
 
 def version_obsolete_paths() -> list[Path]:
     found: list[Path] = []
-    current_test_prefix = f"test_v{VERSION_UNDERSCORE}_"
-    for path in (ROOT / "tests").glob("test_v*_*.py"):
-        if not path.name.startswith(current_test_prefix):
-            found.append(path)
-    current_verifier = f"verify_v{VERSION_UNDERSCORE}_live_sources.py"
-    for path in SCRIPTS.glob("verify_v*_live_sources.py"):
-        if path.name != current_verifier:
-            found.append(path)
+    # Regression tests and the live verifier are versionless from v11.4.45 onward.
+    # Any versioned copy is necessarily stale and must be removed so an overlay
+    # release cannot resurrect old assertions/parsers.
+    found.extend((ROOT / "tests").glob("test_v*_*.py"))
+    found.extend(SCRIPTS.glob("verify_v*_live_sources.py"))
     current_manifest = f"DELETION-MANIFEST-{VERSION}.txt"
     for path in ROOT.glob("DELETION-MANIFEST-v*.txt"):
         if path.name != current_manifest:

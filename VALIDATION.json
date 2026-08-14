@@ -1,77 +1,60 @@
 {
-  "version": "v11.4.44",
-  "validated_at": "2026-08-14T11:34:08+08:00",
-  "release_scope": "consolidated reliability / stale-overlay cleanup / single-writer publishing / Taiwan session integrity",
-  "pytest": {
-    "status": "pass",
-    "passed": 259
-  },
-  "public_data_validation": {
-    "status": "pass",
-    "all": "validation ok all",
-    "strict": "validation ok --strict"
-  },
-  "python_syntax": {
-    "status": "pass",
-    "detail": "compileall scripts/tests"
-  },
-  "javascript_syntax": {
-    "status": "pass",
-    "files": 17,
-    "detail": "assets/*.js + edge/*.js + service-worker.js"
-  },
-  "shell_syntax": {
-    "status": "pass",
-    "files": 2
-  },
-  "workflow_yaml": {
-    "status": "pass",
-    "files": 16,
-    "run_blocks_shell_checked": 96
-  },
-  "workflow_publishers": {
-    "status": "pass",
-    "live_branches": 24,
-    "detail": "one publishing workflow per live branch"
-  },
-  "cleanup_repo": {
-    "status": "pass",
-    "detail": "repository layout clean for v11.4.44"
-  },
-  "http_smoke": {
-    "status": "pass",
-    "pages": 7,
-    "referenced_assets": 43
-  },
+  "version": "v11.4.45",
+  "validated_at": "2026-08-14T13:42:27+08:00",
+  "release_scope": "anti-regression / security authorization / production readiness / live-market truthfulness",
+  "cleanup_repo": {"status": "pass", "detail": "repository layout clean for v11.4.45"},
+  "workflow_publishers": {"status": "pass", "live_branches": 25, "detail": "one publishing workflow per live branch"},
+  "security_authorization_audit": {"status": "pass"},
+  "production_readiness_static": {"status": "pass"},
+  "pytest": {"status": "pass", "passed": 259},
+  "public_data_validation": {"status": "pass", "all": "validation ok all", "strict": "validation ok --strict"},
+  "python_syntax": {"status": "pass", "detail": "compileall scripts/tests"},
+  "javascript_syntax": {"status": "pass", "files": 16},
+  "shell_syntax": {"status": "pass", "files": 2},
+  "workflow_yaml": {"status": "pass", "files": 16, "run_blocks_shell_checked": 101},
+  "dependabot": {"status": "pass", "ecosystems": ["pip", "github-actions"], "cadence": "weekly"},
+  "http_smoke": {"status": "pass", "pages": 7, "referenced_assets": 42},
   "static_integrity": {
     "status": "pass",
+    "html_pages": 9,
+    "local_references": 236,
     "duplicate_html_ids": 0,
     "missing_local_references": 0,
+    "inline_scripts": 0,
+    "inline_event_handlers": 0,
     "json_parse_errors": 0
   },
   "browser_smoke_local": {
     "status": "environment-blocked",
-    "detail": "system Chromium launches, but the execution sandbox blocks navigation to http://127.0.0.1 with ERR_BLOCKED_BY_ADMINISTRATOR; GitHub Release Verification installs Chromium and remains the authoritative runtime gate"
+    "detail": "system Chromium launches, but sandbox blocks localhost navigation with net::ERR_BLOCKED_BY_ADMINISTRATOR; GitHub hosted Release Verification is authoritative"
   },
   "live_contract_local": {
     "status": "pass-with-external-warnings",
     "external_warnings": 5,
-    "detail": "reachability-aware gate completed successfully; sandbox DNS could not resolve four TPEx endpoints and one TWSE endpoint"
+    "detail": "sandbox DNS cannot resolve TPEx/TWSE hosts; semantic contract failures remain blocking when an official endpoint is reachable"
   },
+  "action_pins": {
+    "actions/checkout@v7.0.1": "3d3c42e5aac5ba805825da76410c181273ba90b1",
+    "actions/setup-python@v7.0.0": "5fda3b95a4ea91299a34e894583c3862153e4b97",
+    "actions/upload-artifact@v7.0.1": "043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+    "cloudflare/wrangler-action@v4.0.0": "ebbaa1584979971c8614a24965b4405ff95890e0"
+  },
+  "wrangler": "4.123.0",
   "github_current_main": {
-    "status": "known-v11.4.43",
-    "commit": "5444d00fe17bfa8e0c37f4d46a76b89770e34154",
-    "detail": "v11.4.43 online still contains stale older version tests/workflows. Its release verification failed on an obsolete v11.4.41 service-worker assertion; Taiwan market-core also showed intermittent trading-date validation failures. v11.4.44 is the corrective full-overwrite release and has not yet been pushed in this audit."
+    "status": "v11.4.44",
+    "commit": "6e6d110ae3b3d597d932bf658ba53fce33c6bddc",
+    "branch_protected": false,
+    "admin_actions_settings_verified": false,
+    "admin_actions_settings_reason": "connected GitHub integration returned 403 for repository Actions permission settings"
   },
-  "release_hygiene": {
-    "audio_files": 0,
-    "cache_artifacts": 0,
-    "temporary_or_editor_backup_files": 0,
-    "nested_repo_dirs": 0
+  "cloudflare_production_activation": {
+    "status": "not-verifiable-without-user-secrets",
+    "required": ["CLOUDFLARE_API_TOKEN secret", "CLOUDFLARE_ACCOUNT_ID secret", "CLOUDFLARE_KV_NAMESPACE_ID variable"],
+    "endpoint_source": "wrangler-action deployment-url output; no manual LIVE_MARKET_ENDPOINT variable"
   },
   "remaining_nonblocking_limitations": [
-    "asset detail still waits on multiple supplementary datasets before every section is complete",
-    "15-minute K-line coverage remains source-dependent and must show unavailable/stale rather than fabricated bars",
-    "fundamental/financial coverage remains source-dependent where verified fields are unavailable"
+    "15-minute K-line remains upstream/source-dependent and must show unavailable/stale rather than fabricated bars",
+    "fundamental/financial coverage remains source-dependent where verified fields are unavailable",
+    "full Taiwan stock/ETF rankings are scheduled snapshots, not the six-index minute-refresh Worker channel"
   ]
 }

@@ -14,8 +14,8 @@ from typing import Any
 import requests
 from common import DATA, NOW, read_json
 
-VERSION="v11.4.44"
-HEADERS={"User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.4.44)"}
+VERSION="v11.4.45"
+HEADERS={"User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.4.45)"}
 BATCH=120
 TAIPEI=ZoneInfo("Asia/Taipei")
 

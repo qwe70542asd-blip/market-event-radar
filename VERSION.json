@@ -1,5 +1,5 @@
 {
-  "version": "v11.4.44",
-  "baseline_version": "11.4.44",
-  "name": "single-writer-market-session-integrity"
+  "version": "v11.4.45",
+  "baseline_version": "11.4.45",
+  "name": "anti-regression-security-production-readiness"
 }

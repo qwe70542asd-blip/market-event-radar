@@ -1,0 +1,23 @@
+Market Event Radar v11.4.45 deletion/synchronization manifest
+
+This is a full overwrite anti-regression/security release, not a patch.
+
+Run CLEAN-REPO.cmd before commit. The cleanup engine removes:
+- every legacy versioned tests/test_v*_*.py regression file (regression suites are versionless from v11.4.45 onward)
+- every legacy scripts/verify_v*_live_sources.py verifier (the current verifier is scripts/verify_live_sources.py)
+- older DELETION-MANIFEST-v*.txt files
+- apply_v*.py patch leftovers
+- accidental nested repository copies under scripts/
+- the 15 redundant standalone publisher workflows replaced by aggregate single-writer workflows
+
+Files intentionally removed in v11.4.45:
+- assets/chart-loader.js (remote runtime JavaScript dependency removed)
+- edge/wrangler.toml.example (replaced by edge/wrangler.jsonc.example)
+
+Authoritative live writers:
+- update-market-core.yml -> live-global-market + live-tw-market
+- update-news-batch.yml -> live-news-* + live-stock-news
+- update-official-feeds.yml -> live-company-disclosures + live-official-notices
+- deploy-live-market-worker.yml publish-runtime job -> live-runtime (only after Worker readiness passes)
+
+Do not preserve older standalone writers or old versioned test/verifier files when copying a release over an existing repository.

@@ -1,5 +1,14 @@
-requests>=2.32,<3
-beautifulsoup4>=4.12,<5
-python-dateutil>=2.9,<3
-feedparser>=6.0,<7
-lxml>=5,<7
+# v11.4.45 production dependency lock. Update intentionally, never by floating CI ranges.
+requests==2.34.2
+beautifulsoup4==4.15.0
+python-dateutil==2.9.0.post0
+feedparser==6.0.14
+lxml==6.1.1
+certifi==2026.7.22
+charset-normalizer==3.5.0
+idna==3.18
+urllib3==2.7.0
+soupsieve==2.9.2
+typing-extensions==4.16.0
+six==1.17.0
+feedparser-sgmllib==2.1.0

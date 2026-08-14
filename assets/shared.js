@@ -1,6 +1,20 @@
 (()=>{"use strict";
 const OWNER="qwe70542asd-blip",REPO="market-event-radar";
-const LIVE_MARKET_ENDPOINT=String(window.MR_RUNTIME?.liveMarketEndpoint||"").replace(/\/$/,"");
+let LIVE_MARKET_ENDPOINT=String(window.MR_RUNTIME?.liveMarketEndpoint||"").replace(/\/$/,"");
+let runtimeReadyPromise=null;
+async function ensureRuntimeEndpoint(){
+ if(runtimeReadyPromise)return await runtimeReadyPromise;
+ runtimeReadyPromise=(async()=>{
+  try{if(window.MR_RUNTIME_READY)await window.MR_RUNTIME_READY}catch(e){}
+  const value=String(window.MR_RUNTIME?.liveMarketEndpoint||"").trim().replace(/\/$/,"");
+  if(/^https:\/\//i.test(value)){
+   try{const url=new URL(value);LIVE_MARKET_ENDPOINT=(!url.username&&!url.password)?url.origin+url.pathname.replace(/\/$/,""):""}catch(e){LIVE_MARKET_ENDPOINT=""}
+  }else LIVE_MARKET_ENDPOINT="";
+  return LIVE_MARKET_ENDPOINT;
+ })();
+ return await runtimeReadyPromise;
+}
+const getLiveMarketEndpoint=()=>LIVE_MARKET_ENDPOINT;
 const CHANNELS={"assets.json":"live-assets","asset-audit.json":"live-assets","asset-coverage.json":"live-assets","events.json":"live-events","event-source-state.json":"live-events","tw-market.json":"live-tw-market","tw-chips.json":"live-tw-chips","market-snapshot.json":"live-global-market","market-kline.json":"live-global-market","news-cna.json":"live-news-cna","news-moneydj.json":"live-news-moneydj","news-cnyes.json":"live-news-cnyes","news-udn.json":"live-news-udn","news-ltn.json":"live-news-ltn","news-wealth.json":"live-news-wealth","news-yahoo.json":"live-news-yahoo","news-technews.json":"live-news-technews","news-ctee.json":"live-news-ctee","news-asia-risk.json":"live-news-asia-risk","stock-news.json":"live-stock-news","official-market-notices.json":"live-official-notices","company-disclosures.json":"live-company-disclosures","monthly-revenue.json":"live-monthly-revenue","dividend-history.json":"live-dividend-history","market-volume-history.json":"live-tw-market","secondary-reference.json":"live-secondary-reference","data-verification.json":"live-data-verification","yahoo-details.json":"live-yahoo-details","etf-details.json":"live-etf-details","stock-basics.json":"live-stock-basics"};
 const NEWS_FILES=[{"file":"news-cna.json","id":"cna","label":"中央社","seed":"__NEWS_CNA_SEED__","kind":"media"},{"file":"news-moneydj.json","id":"moneydj","label":"MoneyDJ","seed":"__NEWS_MONEYDJ_SEED__","kind":"media"},{"file":"news-cnyes.json","id":"cnyes","label":"鉅亨網","seed":"__NEWS_CNYES_SEED__","kind":"media"},{"file":"news-udn.json","id":"udn","label":"經濟日報","seed":"__NEWS_UDN_SEED__","kind":"media"},{"file":"news-ltn.json","id":"ltn","label":"自由財經","seed":"__NEWS_LTN_SEED__","kind":"media"},{"file":"news-wealth.json","id":"wealth","label":"財富自由","seed":"__NEWS_WEALTH_SEED__","kind":"media"},{"file":"news-yahoo.json","id":"yahoo","label":"Yahoo股市","seed":"__NEWS_YAHOO_SEED__","kind":"media"},{"file":"news-technews.json","id":"technews","label":"科技新報／財經新報","seed":"__NEWS_TECHNEWS_SEED__","kind":"media"},{"file":"news-ctee.json","id":"ctee","label":"工商時報","seed":"__NEWS_CTEE_SEED__","kind":"media"},{"file":"news-asia-risk.json","id":"asia-risk","label":"亞洲總體風險","seed":"__NEWS_ASIA_RISK_SEED__","kind":"media"},{"file":"official-market-notices.json","id":"official-notices","label":"官方市場公告","seed":"__OFFICIAL_NOTICE_SEED__","kind":"official"},{"file":"company-disclosures.json","id":"company-disclosures","label":"個股重大訊息","seed":"__COMPANY_DISCLOSURE_SEED__","kind":"company"}];
 const $=(q,r=document)=>r.querySelector(q),$$=(q,r=document)=>[...r.querySelectorAll(q)];
@@ -12,8 +26,14 @@ const cls=v=>finite(v)==null||Number(v)===0?"flat":Number(v)>0?"up":"down";
 const formatTime=(v,opts={})=>{if(!v)return"—";const d=new Date(v);if(Number.isNaN(+d))return String(v);return new Intl.DateTimeFormat("zh-TW",{timeZone:"Asia/Taipei",year:"numeric",month:"2-digit",day:"2-digit",hour:opts.dateOnly?undefined:"2-digit",minute:opts.dateOnly?undefined:"2-digit",hour12:false}).format(d)};
 const stripHtml=value=>String(value??"").replace(/<[^>]*>/g," ").replace(/&nbsp;/gi," ").replace(/\s+/g," ").trim();
 const normalizeText=value=>stripHtml(value).toLowerCase().normalize("NFKC").replace(/[^0-9a-z\u3400-\u9fff]+/g," ").trim();
+const safeHttpUrl=(value,{allowHttp=false}={})=>{
+ const text=String(value||"").trim();if(!text)return "";
+ try{const url=new URL(text,location.href);if(url.username||url.password)return "";if(url.protocol==="https:"||(allowHttp&&url.protocol==="http:"))return url.href}catch(e){}
+ return "";
+};
+const safeExternalHref=value=>safeHttpUrl(value);
 const GENERIC_NEWS_IMAGE_RE=/(?:og-image|default(?:_og)?|logo|placeholder|no[-_]?image|blank|icon|avatar|sprite|favicon|google-prefer(?:ed|red)-source-illustration|pic_fb|line-ad)(?:[._/-]|$)/i;
-const newsImageCandidates=item=>[item?.image_url,...(Array.isArray(item?.image_candidates)?item.image_candidates:[])].map(value=>String(value||"").trim()).filter((url,index,rows)=>/^https?:\/\//i.test(url)&&!GENERIC_NEWS_IMAGE_RE.test(url)&&rows.indexOf(url)===index);
+const newsImageCandidates=item=>[item?.image_url,...(Array.isArray(item?.image_candidates)?item.image_candidates:[])].map(value=>String(value||"").trim()).filter((url,index,rows)=>/^https:\/\//i.test(url)&&!GENERIC_NEWS_IMAGE_RE.test(url)&&rows.indexOf(url)===index);
 const newsHasImage=item=>newsImageCandidates(item).length>0;
 function advanceNewsImage(img){try{const candidates=JSON.parse(decodeURIComponent(img.dataset.candidates||"%5B%5D"));const next=Number(img.dataset.candidateIndex||0)+1;if(next<candidates.length){img.dataset.candidateIndex=String(next);img.src=candidates[next];return}img.style.display="none";img.parentElement?.classList.add("fallback","remote-image-failed")}catch(e){img.style.display="none";img.parentElement?.classList.add("fallback","remote-image-failed")}}
 function pickNewsFallbackSlug(item={}){
@@ -35,9 +55,11 @@ function renderNewsThumb(item,kind="tile",options={}){
  const label=escapeHtml(item?.ai_category||item?.topic||"市場資訊");
  const fallback=`assets/news-fallback/${slug}.svg`,loading=options.eager?"eager":"lazy",priority=options.eager?' fetchpriority="high"':'';
  const candidates=newsImageCandidates(item);
- if(candidates.length){const encoded=escapeHtml(encodeURIComponent(JSON.stringify(candidates)));return `<div class="news-thumb ${kind}" data-fallback="${slug}" style="background-image:url('${fallback}')"><img src="${escapeHtml(candidates[0])}" data-candidates="${encoded}" data-candidate-index="0" data-fallback-src="${fallback}" alt="${alt}" loading="${loading}"${priority} decoding="async" referrerpolicy="no-referrer" onload="this.dataset.loaded='true';this.parentElement?.classList.add('remote-image-loaded')" onerror="MR.advanceNewsImage(this)"><span class="fallback-label">${label}</span></div>`;}
+ if(candidates.length){const encoded=escapeHtml(encodeURIComponent(JSON.stringify(candidates)));return `<div class="news-thumb ${kind}" data-fallback="${slug}" style="background-image:url('${fallback}')"><img src="${escapeHtml(candidates[0])}" data-news-remote="1" data-candidates="${encoded}" data-candidate-index="0" data-fallback-src="${fallback}" alt="${alt}" loading="${loading}"${priority} decoding="async" referrerpolicy="no-referrer"><span class="fallback-label">${label}</span></div>`;}
  return `<div class="news-thumb ${kind} fallback" data-fallback="${slug}" style="background-image:url('${fallback}')"><img src="${fallback}" alt="${alt}" loading="${loading}"${priority} decoding="async"><span class="fallback-label">${label}</span></div>`;
 }
+document.addEventListener("load",event=>{const img=event.target;if(img instanceof HTMLImageElement&&img.dataset.newsRemote==="1"){img.dataset.loaded="true";img.parentElement?.classList.add("remote-image-loaded")}},true);
+document.addEventListener("error",event=>{const img=event.target;if(img instanceof HTMLImageElement&&img.dataset.newsRemote==="1")advanceNewsImage(img)},true);
 async function getJson(url,timeout=9000){const ctl=new AbortController(),id=setTimeout(()=>ctl.abort(),timeout);try{const r=await fetch(url,{cache:"no-store",headers:{Accept:"application/json"},signal:ctl.signal});if(!r.ok)throw Error(r.status);return await r.json()}finally{clearTimeout(id)}}
 const FRESH_BRANCH_FILES=new Set(["market-snapshot.json","market-kline.json","tw-market.json","market-volume-history.json","events.json"]);
 const cloneValue=value=>typeof structuredClone==="function"?structuredClone(value):JSON.parse(JSON.stringify(value));
@@ -49,7 +71,7 @@ async function loadBranchApi(name,branch){
  if(meta?.download_url)return await getJson(`${meta.download_url}${meta.download_url.includes("?")?"&":"?"}sha=${encodeURIComponent(meta.sha||Date.now())}`,11000);
  throw Error("GitHub contents API returned no JSON content");
 }
-const snapshotCacheKeys=["mr-market-snapshot-last-good-v1","mr-market-snapshot-last-good-v11.4.44","mr-market-snapshot-last-good-v11.4.44","mr-market-snapshot-last-good-v11.4.31","mr-market-snapshot-last-good-v11.4.28","mr-market-snapshot-last-good-v11.4.27"];
+const snapshotCacheKeys=["mr-market-snapshot-last-good-v1","mr-market-snapshot-last-good-v11.4.45","mr-market-snapshot-last-good-v11.4.31","mr-market-snapshot-last-good-v11.4.28","mr-market-snapshot-last-good-v11.4.27"];
 const snapshotCacheKey=snapshotCacheKeys[0];
 const DATA_MEMORY=new Map();
 // Small hot-path session cache stays in Web Storage.  Durable last-known-good
@@ -58,7 +80,7 @@ const DATA_MEMORY=new Map();
 const WEB_STORAGE_CACHE_FILES=new Set(["market-snapshot.json","tw-market.json"]);
 const dataCacheKey=name=>`mr-data-cache-v1:${name}`;
 const lastGoodKey=name=>`mr-data-last-good-v1:${name}`;
-const STORAGE_CLEANUP_KEY="mr-storage-cleanup-v11.4.44";
+const STORAGE_CLEANUP_KEY="mr-storage-cleanup-v11.4.45";
 const LAST_GOOD_DB="market-radar-last-good-v1",LAST_GOOD_STORE="payloads";
 let lastGoodDbPromise=null;
 function openLastGoodDb(){
@@ -73,7 +95,7 @@ try{
  if(localStorage.getItem(STORAGE_CLEANUP_KEY)!=="1"){
   for(const name of Object.keys(CHANNELS)){
    if(!WEB_STORAGE_CACHE_FILES.has(name)){localStorage.removeItem(lastGoodKey(name));sessionStorage.removeItem(dataCacheKey(name))}
-   for(const version of ["v11.4.44","v11.4.31","v11.4.28","v11.4.27","v11.4.26"])sessionStorage.removeItem(`mr-data-cache-${version}:${name}`);
+   for(const version of ["v11.4.45","v11.4.31","v11.4.28","v11.4.27","v11.4.26"])sessionStorage.removeItem(`mr-data-cache-${version}:${name}`);
   }
   localStorage.setItem(STORAGE_CLEANUP_KEY,"1");
  }
@@ -113,7 +135,7 @@ async function rememberLastGood(name,payload){
 async function readLastGood(name){
  const indexed=await idbGet(name);if(isUsablePayload(name,indexed?.payload))return indexed.payload;
  if(WEB_STORAGE_CACHE_FILES.has(name)){try{const value=JSON.parse(localStorage.getItem(lastGoodKey(name))||"null");if(isUsablePayload(name,value))return value}catch(e){}}
- for(const legacy of [`mr-data-cache-v11.4.44:${name}`,`mr-data-cache-v11.4.31:${name}`,`mr-data-cache-v11.4.28:${name}`,`mr-data-cache-v11.4.27:${name}`,`mr-data-cache-v11.4.26:${name}`]){try{const entry=JSON.parse(sessionStorage.getItem(legacy)||"null");if(isUsablePayload(name,entry?.payload)){await rememberLastGood(name,entry.payload);return entry.payload}}catch(e){}}
+ for(const legacy of [`mr-data-cache-v11.4.45:${name}`,`mr-data-cache-v11.4.31:${name}`,`mr-data-cache-v11.4.28:${name}`,`mr-data-cache-v11.4.27:${name}`,`mr-data-cache-v11.4.26:${name}`]){try{const entry=JSON.parse(sessionStorage.getItem(legacy)||"null");if(isUsablePayload(name,entry?.payload)){await rememberLastGood(name,entry.payload);return entry.payload}}catch(e){}}
  if(name==="market-snapshot.json"){const value=loadStored(snapshotCacheKeys);if(isUsablePayload(name,value))return value}
  return null;
 }
@@ -149,7 +171,8 @@ async function _loadData(name,fallback={},options={}){
   if(WEB_STORAGE_CACHE_FILES.has(name)){try{const cached=JSON.parse(sessionStorage.getItem(dataCacheKey(name))||"null");if(cached&&now-cached.at<ttl&&isUsablePayload(name,cached.payload)){DATA_MEMORY.set(name,cached);return cloneValue(cached.payload)}}catch(e){}}
  }
  const branch=CHANNELS[name];let payload=null,source="";
- if(name==="market-snapshot.json"&&LIVE_MARKET_ENDPOINT){try{const candidate=await getJson(`${LIVE_MARKET_ENDPOINT}/market-snapshot.json?_=${Date.now()}`,6000);if(isUsablePayload(name,candidate)){payload=candidate;source="worker"}}catch(e){}}
+ const endpoint=name==="market-snapshot.json"?await ensureRuntimeEndpoint():"";
+ if(name==="market-snapshot.json"&&endpoint){try{const candidate=await getJson(`${endpoint}/market-snapshot.json?_=${Date.now()}`,6000);if(isUsablePayload(name,candidate)){payload=candidate;source="worker"}}catch(e){}}
  if(branch&&!payload){try{const live=await loadLiveBranchFast(name,branch);payload=live.payload;source=live.source}catch(e){}}
  if(!payload){const cached=await readLastGood(name);if(cached){payload=cached;source="browser-last-good"}}
  if(!payload){try{const candidate=await getJson(`data/${name}?t=${Date.now()}`,5000);if(isUsablePayload(name,candidate)){payload=candidate;source="same-origin-main"}}catch(e){}}
@@ -186,14 +209,14 @@ function officialBasicRecord(row,endpoint){
  record.updated_at=new Date().toISOString();return record;
 }
 async function loadStockBasics(){
- const fallback=window.__STOCK_BASICS_SEED__||{metadata:{version:"v11.4.44",status:"waiting",item_count:0},items:{}};
+ const fallback=window.__STOCK_BASICS_SEED__||{metadata:{version:"v11.4.45",status:"waiting",item_count:0},items:{}};
  const payload=await loadData("stock-basics.json",fallback),items={...(payload.items||{})};
  if(Object.keys(items).length>=500)return payload;
  const settled=await Promise.allSettled(STOCK_BASIC_ENDPOINTS.map(async endpoint=>({endpoint,rows:await getJson(endpoint.url,15000)})));
  let added=0;
  for(const result of settled){if(result.status!=="fulfilled"||!Array.isArray(result.value.rows))continue;for(const row of result.value.rows){const record=officialBasicRecord(row,result.value.endpoint);if(!record)continue;items[record.symbol]={...(items[record.symbol]||{}),...record};added++}}
  const values=Object.values(items),average=values.length?values.reduce((sum,row)=>sum+Number(row.basic_coverage_percent||0),0)/values.length:0;
- return {...payload,metadata:{...(payload.metadata||{}),version:"v11.4.44",item_count:values.length,average_basic_coverage_percent:Math.round(average*10)/10,scope:"all-currently-listed-twse-and-tpex-stocks",browser_official_fallback_added:added},items};
+ return {...payload,metadata:{...(payload.metadata||{}),version:"v11.4.45",item_count:values.length,average_basic_coverage_percent:Math.round(average*10)/10,scope:"all-currently-listed-twse-and-tpex-stocks",browser_official_fallback_added:added},items};
 }
 function normalizeNewsChannel(cfg,payload){
  const archiveStart=Date.parse("2026-01-01T00:00:00+08:00"),tomorrow=Date.now()+86400000;
@@ -205,7 +228,7 @@ function mergeNewsChannels(channels){
  items.sort((a,b)=>Date.parse(b.published_at||b.date||0)-Date.parse(a.published_at||a.date||0));
  const updated=(channels||[]).map(c=>c?.metadata?.updated_at).filter(Boolean).sort().pop()||null;
  const resolved=(channels||[]).filter(c=>c?.metadata?.updated_at||Number(c?.items?.length||0)>0).length;
- return {metadata:{version:"v11.4.44",updated_at:updated,item_count:items.length,channel_count:(channels||[]).length,resolved_channel_count:resolved},channels,items};
+ return {metadata:{version:"v11.4.45",updated_at:updated,item_count:items.length,channel_count:(channels||[]).length,resolved_channel_count:resolved},channels,items};
 }
 function startNewsChannels(options={}){
  const channels=NEWS_FILES.map(cfg=>normalizeNewsChannel(cfg,window[cfg.seed]||{metadata:{source_id:cfg.id,source_name:cfg.label,status:"waiting",item_count:0},items:[]}));
@@ -216,7 +239,7 @@ function startNewsChannels(options={}){
 }
 async function loadNewsChannels(){return await startNewsChannels().done}
 async function loadStockNews(){
- const fallback=window.__STOCK_NEWS_SEED__||{metadata:{version:"v11.4.44",status:"waiting",item_count:0},items:[]};
+ const fallback=window.__STOCK_NEWS_SEED__||{metadata:{version:"v11.4.45",status:"waiting",item_count:0},items:[]};
  return await loadData("stock-news.json",fallback);
 }
 
@@ -249,7 +272,8 @@ async function staticMarketKline(symbol,interval){
 }
 async function loadMarketKline(symbol,interval="1d"){
  const spec=KLINE_INTERVALS[interval]||KLINE_INTERVALS["1d"],encoded=encodeURIComponent(symbol);let payload=null;
- if(LIVE_MARKET_ENDPOINT){try{payload=await getJson(`${LIVE_MARKET_ENDPOINT}/kline?symbol=${encoded}&interval=${encodeURIComponent(interval)}&_=${Date.now()}`,9000)}catch(e){}}
+ const endpoint=await ensureRuntimeEndpoint();
+ if(endpoint){try{payload=await getJson(`${endpoint}/kline?symbol=${encoded}&interval=${encodeURIComponent(interval)}&_=${Date.now()}`,9000)}catch(e){}}
  if(!payload){const staticPayload=await staticMarketKline(symbol,interval);if(staticPayload)payload=staticPayload}
  // Do not fall back to browser-to-Yahoo requests.  Besides being CORS-unstable,
  // client-side 4h aggregation can cross exchange sessions.  Verified edge or
@@ -259,7 +283,7 @@ async function loadMarketKline(symbol,interval="1d"){
  rows=rows.map(row=>{const raw=row.time??row.timestamp??row.date;const time=typeof raw==="string"&&!/^\d+$/.test(raw)?raw:Number(raw);return {time,open:finite(row.open),high:finite(row.high),low:finite(row.low),close:finite(row.close),volume:finite(row.volume)}}).filter(row=>row.time&&[row.open,row.high,row.low,row.close].every(value=>value!=null));
  if(spec.aggregate&&!payload.candles)rows=aggregateCandles(rows,spec.aggregate);
  if(rows.length<2)throw Error("此週期資料不足");
- return {symbol,interval,candles:rows,source:payload.source||payload.metadata?.source||(LIVE_MARKET_ENDPOINT?"edge live market":"Yahoo chart"),updated_at:payload.updated_at||payload.metadata?.updated_at,status:payload.status||"ok"};
+ return {symbol,interval,candles:rows,source:payload.source||payload.metadata?.source||(endpoint?"edge live market":"published K-line"),updated_at:payload.updated_at||payload.metadata?.updated_at,status:payload.status||"ok"};
 }
 
 const portfolioKeys=["marketRadarPortfolioV2","marketRadarPortfolio","market-radar-portfolio","portfolio"];
@@ -314,5 +338,5 @@ function scheduleAssetPrefetch(){
  document.addEventListener("pointerover",warm,{passive:true});document.addEventListener("touchstart",warm,{passive:true});
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",scheduleAssetPrefetch,{once:true});else scheduleAssetPrefetch();
-window.MR={$,$$,escapeHtml,finite,fmt,pct,cls,formatTime,stripHtml,normalizeText,newsImageCandidates,newsHasImage,advanceNewsImage,pickNewsFallbackSlug,renderNewsThumb,relatedNews,loadData,loadMarketKline,loadStockBasics,loadNewsChannels,startNewsChannels,mergeNewsChannels,loadStockNews,getJson,loadPortfolio,savePortfolio,mergeAssets,NEWS_FILES,OWNER,REPO,LIVE_MARKET_ENDPOINT,KLINE_INTERVALS};
+window.MR={$,$$,escapeHtml,finite,fmt,pct,cls,formatTime,stripHtml,normalizeText,safeHttpUrl,safeExternalHref,newsImageCandidates,newsHasImage,advanceNewsImage,pickNewsFallbackSlug,renderNewsThumb,relatedNews,loadData,loadMarketKline,loadStockBasics,loadNewsChannels,startNewsChannels,mergeNewsChannels,loadStockNews,getJson,loadPortfolio,savePortfolio,mergeAssets,NEWS_FILES,OWNER,REPO,getLiveMarketEndpoint,ensureRuntimeEndpoint,KLINE_INTERVALS};
 })();

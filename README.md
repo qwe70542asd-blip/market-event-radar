@@ -1,35 +1,38 @@
-# 市場事件雷達 v11.4.44
+# 市場事件雷達 v11.4.45
 
 以事件月曆為核心，整合台股行情、全球市場、財經新聞、法人籌碼、股票／ETF 資料與個人投資組合的靜態 PWA。
 
-## v11.4.44：單一發布者與台股交易日完整性
+## v11.4.45：防回歸、安全授權與 Production Readiness
 
-這版不是再疊一層小修，而是針對 v11.4.43 線上失敗紀錄與 repository 結構做整體清查，把會互相覆蓋、會留下舊檔、會把不同交易日資料混在一起的路徑一次收斂。
+這版把「程式碼存在」與「正式環境真的啟用」分開驗收，避免即時行情、Cloudflare 部署或外部 API parser 再次出現修過後復發。
 
-- **Repository 覆蓋殘留**：`CLEAN-REPO.cmd` 改由 `scripts/cleanup_repo.py` 讀取 `VERSION.json`，自動清除舊版 regression tests、verifier、deletion manifest、`apply_v*.py`、巢狀 repository 與已淘汰的重複 workflow。
-- **單一 live branch 發布者**：移除 15 個與 aggregate scheduler 重複的 workflow。`scripts/audit_workflow_publishers.py` 會在 Release Verification 阻擋任何 `live-*` branch 多重 writer。
-- **台股交易日分離**：quote snapshot 的 `trading_date` 與成交金額歷史的 `history_end` 分開管理，不再因其中一個來源較慢就把另一份已驗證資料回退或刪掉。
-- **TWSE／TPEx 完整性**：新 snapshot 必須兩個市場各自都有足夠有效列、交易日一致且不得倒退，否則保留 last-known-good，避免 TWSE-only 或混合交易日資料被當成完整台股。
-- **排程穩定性**：5 分鐘一次的 `update-market-core.yml` 不再取消仍在正常執行的上一輪更新。
-- **Release Verification**：先檢查 stale/conflicting files 與 workflow writer 衝突，再跑 syntax、資料驗證、259 個 regression tests、HTTP app-shell、Chromium runtime 與 reachability-aware live contract。
+- **即時行情不再假裝成功**：Worker 未實際部署時 UI 明確顯示 `GitHub 備援・非即時`；只有真正從 Worker 取得資料才可顯示盤中每分鐘刷新。
+- **Cloudflare 授權 fail-closed**：Token／Account／KV 少任何一項就讓部署紅燈；Endpoint 直接取自 Wrangler 成功部署輸出並經 live gate 驗證，不再靠人工維護，也不再允許 `skipped` 卻顯示 success。
+- **權限分離**：Cloudflare deploy job 只有 repository read；發布 `live-runtime` 的 write job 不持有 Cloudflare Token。
+- **Actions 供應鏈鎖定**：所有外部 Action 使用完整 commit SHA；checkout 一律 `persist-credentials:false`；目前鎖定 checkout v7.0.1、setup-python v7.0.0、upload-artifact v7.0.1、wrangler-action v4.0.0；Wrangler 固定 4.123.0；Python 依賴固定版本。
+- **永久 Security Gate**：CSP、外部 URL scheme、remote runtime JS、憑證檔、Actions SHA、部署授權、Portfolio 匯入限制都進 CI 自動阻擋。
+- **Dependabot + PR Gate**：每週檢查 pip / GitHub Actions 更新，PR 也必須跑完整 Release Verification，避免「更新套件＝直接進正式環境」。
+- **TWSE parser 防漂移**：正式 updater 與 live verifier 共用同一個語意 selector/parser，不再各自硬寫不同 endpoint。
+- **Service Worker 防舊版卡住**：runtime config 不預快取；JS/CSS/data 改 network-first。
+- **單一 live branch writer**：持續保留 v11.4.44 建立的單一發布者規則，新增 `live-runtime` 後共 25 個 live branches 全部一個 writer。
 
 ## 覆蓋既有 repository
 
 這是 **full overwrite release**，不是 patch。請依照以下順序：
 
 1. 先在 GitHub Desktop Fetch/Pull 最新 `main`。
-2. 把 v11.4.44 ZIP 內容直接解壓到 repository root，不要多包一層資料夾。
+2. 把 v11.4.45 ZIP 內容直接解壓到 repository root，不要多包一層資料夾。
 3. 執行 `CLEAN-REPO.cmd`。
 4. 回 GitHub Desktop 確認除了修改／新增檔案，也有顯示舊檔刪除。
 5. Commit / Push。
-6. GitHub Actions 的 `Verify v11.4.44 stable app release` 必須通過；紅燈不要忽略。
+6. GitHub Actions 的 `Verify v11.4.45 stable app release` 必須通過；紅燈不要忽略。
 
-建議 commit：`market-event-radar-v11.4.44`
+建議 commit：`market-event-radar-v11.4.45`
 
 完整根因、刪除清單與驗收結果見：
 
-- `docs/V11.4.44-release-audit.md`
-- `DELETION-MANIFEST-v11.4.44.txt`
+- `docs/V11.4.45-release-audit.md`
+- `DELETION-MANIFEST-v11.4.45.txt`
 - `VALIDATION.txt`
 - `GITHUB-DESKTOP-UPDATE.txt`
 

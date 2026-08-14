@@ -1,38 +1,131 @@
-name: Deploy v11.4.44 live market worker
+name: Deploy v11.4.45 live market worker
 on:
   workflow_dispatch:
   push:
     branches: [main]
     paths:
       - "edge/**"
+      - "assets/runtime-config.js"
+      - "scripts/production_readiness.py"
+      - "scripts/publish_data_branch.sh"
       - ".github/workflows/deploy-live-market-worker.yml"
 permissions:
   contents: read
+concurrency:
+  group: production-live-market-worker
+  cancel-in-progress: false
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    environment: production
+    outputs:
+      live_market_endpoint: ${{ steps.endpoint.outputs.url }}
     env:
       CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      CF_KV_ID: ${{ secrets.CLOUDFLARE_KV_NAMESPACE_ID }}
+      CF_KV_ID: ${{ vars.CLOUDFLARE_KV_NAMESPACE_ID }}
     steps:
-      - name: Check Cloudflare deployment configuration
-        if: env.CF_API_TOKEN == '' || env.CF_ACCOUNT_ID == '' || env.CF_KV_ID == ''
+      - name: Fail closed when production authorization is incomplete
+        shell: bash
         run: |
-          echo "::warning::Cloudflare deployment skipped: CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID / CLOUDFLARE_KV_NAMESPACE_ID is not fully configured."
-          echo "No worker was deployed; configure all three repository secrets to enable deployment."
-      - uses: actions/checkout@v6
-        if: env.CF_API_TOKEN != '' && env.CF_ACCOUNT_ID != '' && env.CF_KV_ID != ''
-      - name: Build Wrangler configuration
-        if: env.CF_API_TOKEN != '' && env.CF_ACCOUNT_ID != '' && env.CF_KV_ID != ''
+          set -euo pipefail
+          missing=0
+          for key in CF_API_TOKEN CF_ACCOUNT_ID CF_KV_ID; do
+            if [ -z "${!key:-}" ]; then
+              echo "::error::$key is required for a production live-market deployment"
+              missing=1
+            fi
+          done
+          [ "$missing" -eq 0 ] || exit 2
+          [[ "$CF_ACCOUNT_ID" =~ ^[A-Fa-f0-9]{32}$ ]] || { echo "::error::CF_ACCOUNT_ID format is invalid"; exit 2; }
+          [[ "$CF_KV_ID" =~ ^[A-Fa-f0-9]{32}$ ]] || { echo "::error::CF_KV_ID format is invalid"; exit 2; }
+
+      - name: Checkout immutable release source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Build Wrangler configuration without exposing credentials
         working-directory: edge
         env:
           KV_ID: ${{ env.CF_KV_ID }}
-        run: sed "s/REPLACE_WITH_KV_NAMESPACE_ID/$KV_ID/" wrangler.toml.example > wrangler.toml
-      - uses: cloudflare/wrangler-action@v3
-        if: env.CF_API_TOKEN != '' && env.CF_ACCOUNT_ID != '' && env.CF_KV_ID != ''
+        run: |
+          python - <<'PY'
+          import os,re
+          from pathlib import Path
+          value=os.environ["KV_ID"]
+          if not re.fullmatch(r"[A-Fa-f0-9]{32}",value):
+              raise SystemExit("invalid KV namespace id")
+          src=Path("wrangler.jsonc.example").read_text(encoding="utf-8")
+          Path("wrangler.jsonc").write_text(src.replace("REPLACE_WITH_KV_NAMESPACE_ID",value),encoding="utf-8")
+          PY
+
+      - name: Deploy Worker with least-privilege Cloudflare token
+        id: deploy-worker
+        uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: edge
-          command: deploy
+          wranglerVersion: 4.123.0
+          command: deploy --config wrangler.jsonc
+
+      - name: Resolve deployment endpoint from Wrangler output
+        id: endpoint
+        env:
+          DEPLOYMENT_URL: ${{ steps.deploy-worker.outputs.deployment-url }}
+        run: |
+          python - <<'PY'
+          import os,re
+          from urllib.parse import urlparse
+          endpoint=os.environ.get("DEPLOYMENT_URL","").strip().rstrip("/")
+          parsed=urlparse(endpoint)
+          if parsed.scheme!="https" or not parsed.netloc or parsed.username or parsed.password or parsed.query or parsed.fragment:
+              raise SystemExit(f"Wrangler did not return a safe HTTPS deployment URL: {endpoint!r}")
+          with open(os.environ["GITHUB_OUTPUT"],"a",encoding="utf-8") as fh:
+              fh.write(f"url={endpoint}\n")
+          with open(os.environ["GITHUB_ENV"],"a",encoding="utf-8") as fh:
+              fh.write(f"LIVE_MARKET_ENDPOINT={endpoint}\n")
+          PY
+
+      - name: Production readiness and endpoint contract
+        run: python scripts/production_readiness.py --endpoint "$LIVE_MARKET_ENDPOINT" --require-live --version v11.4.45
+
+  publish-runtime:
+    needs: deploy
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    env:
+      LIVE_MARKET_ENDPOINT: ${{ needs.deploy.outputs.live_market_endpoint }}
+    steps:
+      - name: Checkout for isolated runtime publication
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Publish only the verified public endpoint
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python - <<'PY'
+          import json,os
+          from datetime import datetime,timezone
+          from pathlib import Path
+          from urllib.parse import urlparse
+          endpoint=os.environ["LIVE_MARKET_ENDPOINT"].strip().rstrip("/")
+          parsed=urlparse(endpoint)
+          if parsed.scheme!="https" or not parsed.netloc or parsed.username or parsed.password or parsed.query or parsed.fragment:
+              raise SystemExit("invalid verified deployment endpoint")
+          payload={
+              "version":"v11.4.45",
+              "liveMarketEndpoint":endpoint,
+              "published_at":datetime.now(timezone.utc).isoformat().replace("+00:00","Z"),
+              "auth":"public-read-endpoint; deployment credentials never published",
+          }
+          Path("data/runtime-config.json").write_text(json.dumps(payload,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+          PY
+          bash scripts/publish_data_branch.sh live-runtime live-runtime data/runtime-config.json
