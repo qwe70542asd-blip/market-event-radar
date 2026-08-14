@@ -1,60 +1,22 @@
-市場事件雷達 v11.4.43 — Progressive Live Resilience
+Market Event Radar v11.4.44 — GitHub Desktop update procedure
 
-這是一個完整覆蓋版，不是 patch。
-目前正式 GitHub main 仍是 v11.4.40；v11.4.41 / v11.4.42 都不要推，直接用本版覆蓋。
+This release fixes a repository-overlay problem that allowed old tests/workflows to remain on GitHub even after a newer ZIP was copied over them.
 
-覆蓋方式
-1. 解壓縮 ZIP。
-2. 把 ZIP 內所有根目錄內容直接覆蓋本機 market-event-radar repository，不要多包一層資料夾。
-3. 雙擊根目錄 CLEAN-REPO.cmd。它會清理舊 verifier/tests/deletion manifest、v11.4.41/v11.4.42 未採用文件與 apply_v11_4_36.py。
-4. GitHub Desktop 檢查變更後 Commit to main，再 Push origin。
-5. 建議 commit：market-event-radar-v11.4.43-progressive-live-resilience
+Use this exact order:
 
-本版核心修正
-- 移除首頁 4.5 秒先放棄、live data 晚到卻永遠停在空 fallback 的競速問題。
-- 台股行情、法人、全球行情、事件、新聞、資產、股利各自獨立載入；哪個先到就先更新自己的區塊。
-- 今日台股狀態新增獨立 renderTaiwanStatus()，行情與法人晚到都會重新 render；市場廣度、外資方向、成交動能不再卡在第一次 seed 狀態。
-- 台股 freshness 只看 tw-market 自己的 updated_at，不再混用全球市場時間。
-- 台股狀態 footer 改顯示「行情時間 · 籌碼時間」，不再錯接事件月曆 updated_at。
-- 新聞改為 12 個來源逐一完成就逐一顯示；單一新聞來源慢/壞不會讓整個精選區或新聞頁保持空白。
-- 事件與新聞解耦；事件頁先顯示事件，相關新聞晚到再補。
-- high-impact corporate 事件可以進首頁精選重大資訊，不再只接受 event_group=major。
-- 台股頁、法人頁、投資組合頁、資料狀態頁改成 progressive render，附加來源不再阻塞核心資料。
-- GitHub live loader 改成 hedged mirrors：Raw 先跑，真的慢才啟動 CDN/API 備援；成功後不再發出後續多餘 mirror 請求。
-- 所有可用 live channel 以 IndexedDB 保存 last-known-good；寫入改成背景動作，不阻塞畫面更新。
-- Service Worker 對 /data/*.json 正規化 cache key，移除 ?t= / ?_= cache-busting，HTTP 4xx/5xx 或斷線時能找到上一份快取。
-- Browser smoke 新增 delayed-live regression：故意讓 tw-market 晚 5.2 秒、chips/events/news 不同時間才回來，最後必須補回 1,244 漲/743 跌、外資買超、量能正常與重大資訊。
+1. In GitHub Desktop, fetch/pull the current `main` first.
+2. Extract the v11.4.44 full ZIP directly into the repository root. Do not create an extra nested folder.
+3. Double-click `CLEAN-REPO.cmd` in the repository root.
+4. Wait for: `Repository cleanup complete.`
+5. Return to GitHub Desktop and confirm you see deletions as well as modified/new files.
+6. Commit with a message such as `market-event-radar-v11.4.44`.
+7. Push origin.
+8. In GitHub Actions, the first release verification should run the same cleanup check plus the single-writer workflow audit. Do not ignore a red verification run.
 
-同時保留 v11.4.42 已審核的資料正確性修正
-- 公司成立/掛牌日期支援 pre-2000 Gregorian、compact Gregorian/ROC，拒絕未來日期與成立日晚於掛牌日。
-- ^TWII quote/session 日期不一致時在序列化前 fail-closed，保留上一筆 verified row。
-- 新聞 generic image 前後端規則一致，JSON-LD image object 不可繞過檢查。
-- MOPS dividend circuit breaker 以本輪執行後 state 回報。
-- TPEx day-trading / dividend-plan 維持 GitHub live diagnostic 真實 schema，不猜欄位。
+Why step 3 is mandatory:
+GitHub Desktop copying/overwriting a ZIP does not automatically remove old files that are absent from the new ZIP. v11.4.43 therefore still had older regression tests and duplicate workflow files online. v11.4.44 makes cleanup version-aware so this does not require another hand-maintained deletion list next release.
 
-Push 後請看
-- Verify v11.4.43 stable app release（包含 delayed-live Chromium regression）
-- Update v11.4.43 market core
-- Update v11.4.43 Taiwan chips
-- Update v11.4.43 events
-- Update v11.4.43 data verification
-- Diagnose TPEx live schemas
-
-外部來源說明
-- CTEE 若仍 403，會 degraded + history fallback，不假裝 direct live 正常。
-- MOPS 歷史股利若拒絕/空回應，會 circuit-break + last-known-good；TWSE/TPEx 當期官方來源保持 primary。
-- Cloudflare Worker 需要對應 secrets 才會實際部署，與 GitHub Pages 本體分開。
-
-本機最終驗證（2026-08-13T15:48:15+08:00）
-- pytest：256 passed
-- strict public data：PASS
-- Python compileall：PASS
-- JavaScript syntax：16 app/edge + service worker PASS
-- shell syntax：2 files PASS
-- GitHub Actions YAML：31 workflows PASS
-- workflow run-block bash syntax：183 PASS
-- repository cleanup：PASS
-- HTTP smoke：7 pages / 43 referenced assets PASS
-- release hygiene：audio/cache/temp/nested repo = 0
-- Local Chromium：本 sandbox 對 localhost 回 ERR_BLOCKED_BY_ADMINISTRATOR；Push 後由 GitHub Chromium gate 執行 delayed-live regression。
-- Local live contract：本 sandbox DNS 無法解析 TPEx/TWSE，reachability-aware gate 以 5 個 external warnings 正常退出；Push 後重新以 GitHub-hosted runner 驗證。
+Expected v11.4.44 workflow topology:
+- 16 workflow YAML files total in the release.
+- Every live-* data branch has exactly one publishing workflow.
+- The old standalone global/Taiwan/news/official/stock-news publishers are deleted.

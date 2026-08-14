@@ -1,4 +1,4 @@
-name: Update v11.4.43 market core
+name: Update v11.4.44 market core
 on:
   push:
     branches: [main]
@@ -18,7 +18,7 @@ permissions:
   contents: write
 concurrency:
   group: live-market-core
-  cancel-in-progress: true
+  cancel-in-progress: false
 jobs:
   global-market:
     runs-on: ubuntu-latest
@@ -91,14 +91,19 @@ jobs:
           market=json.loads(Path("data/tw-market.json").read_text(encoding="utf-8"))
           history=json.loads(Path("data/market-volume-history.json").read_text(encoding="utf-8"))
           meta=market.get("metadata",{})
-          assert meta.get("version")=="v11.4.43", meta.get("version")
+          assert meta.get("version")=="v11.4.44", meta.get("version")
           trading_date=meta.get("trading_date")
           assert trading_date, "verified trading date missing"
           assert date.fromisoformat(trading_date).weekday() < 5, trading_date
-          assert all(str(row.get("quote_date") or trading_date) <= trading_date for row in market.get("items",[]))
-          assert all(str(row.get("date", "")) <= trading_date for row in history.get("items",[]))
-          assert all(date.fromisoformat(str(row.get("date"))).weekday() < 5 for row in history.get("items",[]) if row.get("date"))
-          print("trading_date",trading_date,"turnover sessions",len(history.get("items",[])))
+          assert meta.get("quote_snapshot_complete") is True, meta.get("quote_exchange_counts")
+          quote_dates={str(row.get("quote_date") or "") for row in market.get("items",[]) if row.get("quote_date")}
+          assert not quote_dates or quote_dates == {trading_date}, quote_dates
+          history_dates=[str(row.get("date")) for row in history.get("items",[]) if row.get("date")]
+          assert all(date.fromisoformat(day).weekday() < 5 for day in history_dates)
+          assert all(date.fromisoformat(day) <= date.today() for day in history_dates)
+          history_end=(history.get("metadata") or {}).get("history_end")
+          assert history_end == max(history_dates, default=None), (history_end, max(history_dates, default=None))
+          print("trading_date",trading_date,"history_end",history_end,"turnover sessions",len(history_dates))
           PY
       - name: Validate Taiwan turnover integrity
         run: python scripts/validate_public_data.py market

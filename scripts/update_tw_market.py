@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Refresh Taiwan closing quotes and online historical market turnover.
 
-v11.4.43 validates the restored archive before reuse and backfills every calendar month from the official TWSE/TPEx network sources.
+v11.4.44 validates the restored archive before reuse and backfills every calendar month from the official TWSE/TPEx network sources.
 Local JSON is only a last-known-good cache. Turnover averages are published only from complete market totals, so a missing TPEx component can no longer silently bias volume momentum.
 """
 from __future__ import annotations
@@ -15,8 +15,8 @@ import requests
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.43"
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.43)"}
+VERSION = "v11.4.44"
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.44)"}
 TWSE_QUOTES = "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL"
 TPEX_QUOTES = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes"
 TWSE_FUNDS = "https://openapi.twse.com.tw/v1/opendata/t187ap47_L"
@@ -322,7 +322,7 @@ def merge_history(old_rows: list[dict], online_rows: list[dict], current_total: 
             value = number(raw.get(key))
             if value is not None and value > 0:
                 row[key] = value
-        # Older files may only have a total. Preserve an explicit v11.4.43
+        # Older files may only have a total. Preserve an explicit v11.4.44
         # completeness flag, but never infer completeness from a source label:
         # v11.4.32 could say "TWSE/TPEx quote sum" while its stored total had
         # already been overwritten by the lone TWSE component.
@@ -414,20 +414,84 @@ def recent_history_complete(rows: list[dict], trading_date: str | None, sessions
     return (date.fromisoformat(end) - dates[sessions - 1]).days <= max_calendar_days
 
 
+def exchange_row_counts(rows: list[dict]) -> dict[str, int]:
+    counts = {"TWSE": 0, "TPEx": 0}
+    for row in rows:
+        exchange = str(row.get("exchange") or "")
+        if exchange in counts and row.get("asset_class") in {"stock", "etf"}:
+            counts[exchange] += 1
+    return counts
+
+
+def coherent_quote_date(rows: list[dict], old_trading_date: str | None) -> tuple[str | None, str, list[str]]:
+    """Return a session date only when exchange dates do not contradict each other.
+
+    Some official latest-close feeds omit a date.  A single observed exchange date
+    may still anchor the snapshot, but a cross-exchange mismatch or regression
+    must never relabel mixed/stale prices as a newer session.
+    """
+    notes: list[str] = []
+    by_exchange: dict[str, set[str]] = {"TWSE": set(), "TPEx": set()}
+    for row in rows:
+        exchange = str(row.get("exchange") or "")
+        day = valid_session_date(row.get("source_date"))
+        if exchange in by_exchange and day:
+            by_exchange[exchange].add(day)
+    latest = {exchange: max(days) for exchange, days in by_exchange.items() if days}
+    if len(latest) == 2 and len(set(latest.values())) != 1:
+        notes.append(f"Quote session mismatch: TWSE={latest.get('TWSE')} TPEx={latest.get('TPEx')}")
+        return None, "conflict", notes
+    observed = max(latest.values(), default=None)
+    if observed and old_trading_date and observed < old_trading_date:
+        notes.append(f"Quote session regressed from {old_trading_date} to {observed}")
+        return None, "regressed", notes
+    if observed:
+        return observed, "official-quote-date", notes
+    return None, "undated", notes
+
+
 def main() -> None:
     old = read_json(DATA / "tw-market.json", {"items": []})
     old_rows = old.get("items") or []
+    old_trading_date = valid_session_date((old.get("metadata") or {}).get("trading_date"))
     session = requests.Session()
     etf_codes, warnings = official_etf_codes(session, old_rows)
-    rows: list[dict] = []
+
+    fetched_by_exchange: dict[str, list[dict]] = {}
     for url, exchange in ((TWSE_QUOTES, "TWSE"), (TPEX_QUOTES, "TPEx")):
         try:
-            rows.extend(fetch_quotes(session, url, exchange, etf_codes))
+            fetched_by_exchange[exchange] = fetch_quotes(session, url, exchange, etf_codes)
         except Exception as exc:  # noqa: BLE001
+            fetched_by_exchange[exchange] = []
             warnings.append(f"{exchange} quotes: {exc}")
 
-    if len(rows) < 100:
+    # A single exchange can easily exceed the old global 100-row threshold.
+    # Replacing the market with that partial snapshot silently deleted the other
+    # exchange.  v11.4.44 requires both exchanges before replacing last-known-good.
+    fresh_rows = [row for exchange in ("TWSE", "TPEx") for row in fetched_by_exchange.get(exchange, [])]
+    fresh_counts = exchange_row_counts(fresh_rows)
+    min_exchange_rows = 100
+    fresh_complete = all(fresh_counts.get(exchange, 0) >= min_exchange_rows for exchange in ("TWSE", "TPEx"))
+    fresh_quote_date, quote_date_basis, quote_notes = coherent_quote_date(fresh_rows, old_trading_date)
+    warnings.extend(quote_notes)
+
+    use_last_known_good = (not fresh_complete or quote_date_basis in {"conflict", "regressed"}) and bool(old_rows)
+    if use_last_known_good:
         rows = [{**row, "asset_class": asset_class(str(row.get("symbol") or ""), etf_codes)} for row in old_rows]
+        quote_snapshot_status = "last-known-good"
+        quote_date_basis = "last-known-good"
+        if not fresh_complete:
+            warnings.append(
+                "Incomplete cross-exchange quote refresh; retained the complete last-known-good snapshot "
+                f"(fresh TWSE={fresh_counts.get('TWSE', 0)}, TPEx={fresh_counts.get('TPEx', 0)})"
+            )
+        quote_trading_date = old_trading_date
+    else:
+        rows = fresh_rows
+        quote_snapshot_status = "fresh-complete" if fresh_complete else "fresh-incomplete-no-fallback"
+        quote_trading_date = fresh_quote_date
+        if not fresh_complete:
+            warnings.append("No complete last-known-good quote snapshot was available; current output is explicitly marked incomplete")
 
     ranked_rows = [row for row in rows if row.get("asset_class") in {"stock", "etf"}]
     up = sum((number(row.get("change_percent")) or 0) > 0 for row in ranked_rows)
@@ -436,13 +500,9 @@ def main() -> None:
 
     history_path = DATA / "market-volume-history.json"
     history = read_json(history_path, {"metadata": {}, "items": []})
-    # Full online backfill is needed only when the archive is incomplete or has
-    # not been refreshed today.  This removes dozens of redundant historical
-    # HTTP requests from every five-minute market refresh.
     raw_old_history_rows = history.get("items") or []
     old_history_rows = [row for row in raw_old_history_rows if valid_session_date(row.get("date"))]
     legacy_history_polluted = len(old_history_rows) != len(raw_old_history_rows)
-    old_trading_date = valid_session_date((old.get("metadata") or {}).get("trading_date"))
     history_meta = history.get("metadata") or {}
     history_checked_today = str(history_meta.get("last_full_backfill_date") or "") == NOW.date().isoformat()
     history_current_version = str(history_meta.get("version") or "") == VERSION
@@ -450,39 +510,52 @@ def main() -> None:
     if history_checked_today and history_current_version and enough_history and not legacy_history_polluted and old_trading_date:
         fetched_history, history_warnings = [], []
     else:
-        # A version upgrade always forces one fresh archive pass even if the
-        # previous version already stamped today's backfill date.
         fetched_history, history_warnings = online_history(session)
     if legacy_history_polluted:
         history_warnings.insert(0, "Removed legacy weekend/future turnover rows before selecting the trading session")
     warnings.extend(history_warnings)
-    source_dates = [day for row in ranked_rows if (day := valid_session_date(row.get("source_date")))]
+
     fetched_dates = [day for row in fetched_history if (day := valid_session_date(row.get("date")))]
     retained_dates = [day for row in old_history_rows if (day := valid_session_date(row.get("date")))]
-    verified_dates = source_dates or fetched_dates or retained_dates or ([old_trading_date] if old_trading_date else [])
-    trading_date = max(verified_dates, default=None)
+    history_end = max([*fetched_dates, *retained_dates], default=None)
+
+    # If both quote feeds are complete but neither exposes a date, official
+    # turnover history is allowed to identify the latest close.  Crucially this
+    # is separate from history retention; a partial/stale quote refresh never
+    # drags trading_date backwards or causes newer history rows to be deleted.
+    if not quote_trading_date and quote_snapshot_status.startswith("fresh"):
+        quote_trading_date = max([day for day in (history_end, old_trading_date) if day], default=None)
+        if quote_trading_date:
+            quote_date_basis = "official-history-inference"
+    trading_date = quote_trading_date or old_trading_date
     if not trading_date:
-        warnings.append("Unable to verify latest Taiwan trading date; retained quote rows without a fabricated date")
-    elif old_history_rows:
-        trimmed_history = trim_history_to_trading_date(old_history_rows, trading_date)
-        if len(trimmed_history) != len(old_history_rows):
-            warnings.append("Removed retained turnover rows newer than the latest verified trading session")
-        old_history_rows = trimmed_history
+        warnings.append("Unable to verify latest Taiwan quote session; retained rows without a fabricated date")
+
+    # Never relabel a last-known-good snapshot as a newer turnover-history date.
     for row in rows:
         row.pop("source_date", None)
         row["quote_date"] = trading_date
         row["quote_time"] = ""
-        row["status"] = "latest-close"
+        row["status"] = "latest-close" if quote_snapshot_status == "fresh-complete" else quote_snapshot_status
+
+    # Turnover history has its own verified end date.  It may legitimately be
+    # newer than a retained quote snapshot while one exchange endpoint is stale.
     history_rows = merge_history(old_history_rows, fetched_history, current_quote_total, trading_date)
+    history_end = max(
+        [day for item in history_rows if (day := valid_session_date(item.get("date")))],
+        default=history_end,
+    )
     previous_values = [
         number(item.get("trade_value"))
         for item in history_rows
-        if item.get("date") != trading_date and item.get("complete_total") is True
+        if item.get("date") != trading_date
+        and (not trading_date or str(item.get("date")) < trading_date)
+        and item.get("complete_total") is True
     ]
     previous_values = [value for value in previous_values if value is not None and value > 0]
     latest_row = next((item for item in history_rows if item.get("date") == trading_date), None)
     total_trade_value = number(latest_row.get("trade_value")) if latest_row and latest_row.get("complete_total") is True else current_quote_total
-    history_complete_5d = recent_history_complete(history_rows, trading_date, 6, 20)  # current + five prior sessions
+    history_complete_5d = recent_history_complete(history_rows, trading_date, 6, 20)
     history_complete_20d = recent_history_complete(history_rows, trading_date, 21, 45)
     history_complete_60d = recent_history_complete(history_rows, trading_date, 61, 110)
     average_5d = average(previous_values, 5) if history_complete_5d else None
@@ -495,10 +568,11 @@ def main() -> None:
             "version": VERSION,
             "updated_at": NOW.isoformat(timespec="seconds"),
             "history_start": HISTORY_START.isoformat(),
-            "history_end": trading_date,
-            "retention_policy": "2026-01-01 through latest verified trading date",
+            "history_end": history_end,
+            "quote_trading_date": trading_date,
+            "retention_policy": "2026-01-01 through latest verified turnover-history session",
             "source_policy": "direct-online-official backfill at most once per day; restored rows are session-validated before reuse",
-            "migration": "v11.4.43 backfills every month, rejects partial-market averages, and removes legacy weekend/future turnover rows",
+            "migration": "v11.4.44 separates quote-session freshness from turnover-history freshness and rejects partial cross-exchange snapshots",
             "last_full_backfill_date": NOW.date().isoformat() if fetched_history else history_meta.get("last_full_backfill_date"),
             "session_count": len(history_rows),
             "warnings": history_warnings,
@@ -511,12 +585,18 @@ def main() -> None:
         encoding="utf-8",
     )
 
+    final_counts = exchange_row_counts(rows)
     payload = {
         "metadata": {
             "version": VERSION,
             "updated_at": NOW.isoformat(timespec="seconds"),
             "trading_date": trading_date,
-            "market_status": "latest-close",
+            "market_status": quote_snapshot_status,
+            "quote_snapshot_status": quote_snapshot_status,
+            "quote_date_basis": quote_date_basis,
+            "quote_snapshot_complete": all(final_counts.get(exchange, 0) >= min_exchange_rows for exchange in ("TWSE", "TPEx")),
+            "quote_exchange_counts": final_counts,
+            "history_end": history_end,
             "source": "TWSE/TPEx official online open data",
             "warnings": warnings,
             "etf_count": sum(row.get("asset_class") == "etf" for row in rows),

@@ -134,5 +134,35 @@ class MarketIntegrityTests(unittest.TestCase):
         self.assertFalse(row["complete_total"])
         self.assertEqual(row["total_coverage"], "legacy-total-unverified")
 
+    def test_v11444_quote_session_requires_cross_exchange_coherence(self):
+        rows=[
+            {"exchange":"TWSE","asset_class":"stock","source_date":"2026-08-13"},
+            {"exchange":"TPEx","asset_class":"stock","source_date":"2026-08-13"},
+        ]
+        day,basis,notes=update_tw_market.coherent_quote_date(rows,"2026-08-12")
+        self.assertEqual(day,"2026-08-13")
+        self.assertEqual(basis,"official-quote-date")
+        self.assertEqual(notes,[])
+        rows[1]["source_date"]="2026-08-12"
+        day,basis,notes=update_tw_market.coherent_quote_date(rows,"2026-08-12")
+        self.assertIsNone(day)
+        self.assertEqual(basis,"conflict")
+        self.assertTrue(notes)
+
+    def test_v11444_quote_session_cannot_regress_last_known_good(self):
+        rows=[
+            {"exchange":"TWSE","asset_class":"stock","source_date":"2026-08-12"},
+            {"exchange":"TPEx","asset_class":"stock","source_date":"2026-08-12"},
+        ]
+        day,basis,notes=update_tw_market.coherent_quote_date(rows,"2026-08-13")
+        self.assertIsNone(day)
+        self.assertEqual(basis,"regressed")
+        self.assertTrue(notes)
+
+    def test_v11444_exchange_completeness_is_measured_per_market(self):
+        rows=[{"exchange":"TWSE","asset_class":"stock"} for _ in range(150)]
+        rows += [{"exchange":"TPEx","asset_class":"stock"} for _ in range(80)]
+        self.assertEqual(update_tw_market.exchange_row_counts(rows),{"TWSE":150,"TPEx":80})
+
 
 if __name__=='__main__': unittest.main()

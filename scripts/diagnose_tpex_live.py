@@ -232,12 +232,12 @@ def main() -> int:
 
     session = requests.Session()
     headers = dict(getattr(ev, "HEADERS", {}) or {})
-    headers.setdefault("User-Agent", "Mozilla/5.0 (compatible; market-event-radar-diagnostic/11.4.43)")
+    headers.setdefault("User-Agent", "Mozilla/5.0 (compatible; market-event-radar-diagnostic/11.4.44)")
     headers.setdefault("Accept", "application/json,text/plain,*/*")
     session.headers.update(headers)
 
     report: dict[str, Any] = {
-        "diagnostic_version": "v11.4.43-tpex-stable-schema-1",
+        "diagnostic_version": "v11.4.44-tpex-stable-schema-1",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "purpose": "Read-only TPEx live source diagnosis. No parser or site behavior is modified.",
         "endpoints": {},

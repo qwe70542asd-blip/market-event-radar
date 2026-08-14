@@ -1,4 +1,4 @@
-name: Verify v11.4.43 stable app release
+name: Verify v11.4.44 stable app release
 on:
   push:
     branches: [main]
@@ -6,7 +6,7 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: verify-v11-4-43-main
+  group: verify-v11-4-44-main
   cancel-in-progress: true
 jobs:
   verify:
@@ -20,8 +20,10 @@ jobs:
           cache: pip
       - run: pip install -r requirements.txt pytest pyyaml playwright
 
-      - name: Reject nested repository copies
-        run: python scripts/cleanup_repo.py --check
+      - name: Reject stale, conflicting or nested repository files
+        run: |
+          python scripts/cleanup_repo.py --check
+          python scripts/audit_workflow_publishers.py
 
       - name: Python, JavaScript and shell syntax
         run: |
@@ -77,5 +79,5 @@ jobs:
           for attempt in {1..20}; do curl -fsS http://127.0.0.1:8765/index.html >/dev/null && break; sleep 0.25; done
           python scripts/browser_smoke.py http://127.0.0.1:8765
 
-      - name: TPEx v11.4.43 reachability-aware live contract gate
-        run: python scripts/verify_v11_4_43_live_sources.py
+      - name: TPEx v11.4.44 reachability-aware live contract gate
+        run: python scripts/verify_v11_4_44_live_sources.py

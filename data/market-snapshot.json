@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "version": "v11.4.43",
+    "version": "v11.4.44",
     "updated_at": null,
     "source": "TWSE official TAIEX history + Yahoo same-session quote/OHLC; Taiwan leader ticker is selected dynamically from full TW market data",
     "note": "Six verified indices plus ten Taiwan-listed industry leaders. Cryptocurrency and Korean index cards are excluded.",

@@ -1,19 +1,34 @@
-Market Event Radar v11.4.43 validation
-Validated: 2026-08-13T15:48:15+08:00
+Market Event Radar v11.4.44 validation
+Validated: 2026-08-14T11:34:08+08:00
 
-PASS: pytest 256 passed
-PASS: strict public-data validation (validation ok all)
+PASS: pytest 259 passed
+PASS: public-data validation (all + --strict)
 PASS: Python compileall (scripts/tests)
-PASS: JavaScript syntax (16 app/edge files + service worker)
+PASS: JavaScript syntax (17 files)
 PASS: shell syntax (2 files)
-PASS: GitHub Actions YAML (31 workflows)
-PASS: workflow run-block shell syntax (183 blocks)
-PASS: cleanup_repo --check (repository layout clean)
+PASS: GitHub Actions YAML (16 workflows)
+PASS: workflow run-block shell syntax (96 blocks)
+PASS: workflow publisher audit (24 live branches; one writer each)
+PASS: cleanup_repo --check (repository layout clean for v11.4.44)
 PASS: HTTP smoke (7 pages / 43 referenced assets)
-PASS: release hygiene (audio=0, cache=0, temp/editor-backup=0, nested repo=0)
+PASS: static HTML/JSON audit (duplicate IDs=0, missing local refs=0, JSON parse errors=0)
+PASS WITH EXTERNAL WARNINGS: reachability-aware live contract gate completed; sandbox DNS could not resolve 4 TPEx + 1 TWSE endpoint.
 
-LOCAL BROWSER SMOKE: environment blocked. System Chromium is installed, but this sandbox returns ERR_BLOCKED_BY_ADMINISTRATOR for localhost. GitHub Release Verification is authoritative and now includes a delayed-live rerender regression where tw-market arrives 5.2 seconds late.
+LOCAL BROWSER SMOKE: environment blocked. System Chromium launches, but this execution sandbox rejects localhost navigation with ERR_BLOCKED_BY_ADMINISTRATOR. GitHub Release Verification installs Chromium and remains the authoritative runtime gate.
 
-LOCAL LIVE CONTRACT: reachability-aware gate exited successfully with 5 external warnings because this sandbox could not resolve TPEx/TWSE hosts. Parser/schema correctness remains gated again on GitHub-hosted Actions.
+GITHUB CURRENT MAIN: v11.4.43 at 5444d00fe17bfa8e0c37f4d46a76b89770e34154. The online tree still contains stale older tests/workflows; v11.4.43 Release Verification failed on an obsolete v11.4.41 service-worker assertion, and Taiwan market-core showed intermittent trading-date validation failures. v11.4.44 is the corrective full-overwrite release and has not yet been pushed during this audit.
 
-PROGRESSIVE LIVE CHECKS: homepage boot timeout removed; Taiwan status/news/events rerender on late arrival; news sources publish partial success; IndexedDB last-known-good is background persisted; /data/ service-worker cache keys ignore t/_ cache-busters.
+CORE v11.4.44 FIXES:
+- version-aware stale-file cleanup for overlay updates
+- one authoritative workflow publisher per live branch
+- quote session date separated from turnover-history end date
+- per-exchange TWSE/TPEx completeness and cross-session conflict rejection
+- last-known-good retention on partial/regressed quote refreshes
+- market-core scheduled runs no longer cancel a healthy in-flight refresh
+
+RELEASE HYGIENE AFTER FINAL CLEAN: audio=0, cache artifacts=0, temp/editor backup=0, nested repository=0.
+
+NON-BLOCKING LIMITATIONS:
+- Asset detail supplementary data can still complete later than the core quote.
+- 15 分鐘 K 線 is deployment-post, non-blocking and source-dependent; missing data must stay unavailable/stale and must not be fabricated.
+- Fundamental/financial coverage remains explicitly incomplete when verified source fields are unavailable.

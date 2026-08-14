@@ -49,7 +49,7 @@ async function loadBranchApi(name,branch){
  if(meta?.download_url)return await getJson(`${meta.download_url}${meta.download_url.includes("?")?"&":"?"}sha=${encodeURIComponent(meta.sha||Date.now())}`,11000);
  throw Error("GitHub contents API returned no JSON content");
 }
-const snapshotCacheKeys=["mr-market-snapshot-last-good-v1","mr-market-snapshot-last-good-v11.4.43","mr-market-snapshot-last-good-v11.4.43","mr-market-snapshot-last-good-v11.4.31","mr-market-snapshot-last-good-v11.4.28","mr-market-snapshot-last-good-v11.4.27"];
+const snapshotCacheKeys=["mr-market-snapshot-last-good-v1","mr-market-snapshot-last-good-v11.4.44","mr-market-snapshot-last-good-v11.4.44","mr-market-snapshot-last-good-v11.4.31","mr-market-snapshot-last-good-v11.4.28","mr-market-snapshot-last-good-v11.4.27"];
 const snapshotCacheKey=snapshotCacheKeys[0];
 const DATA_MEMORY=new Map();
 // Small hot-path session cache stays in Web Storage.  Durable last-known-good
@@ -58,7 +58,7 @@ const DATA_MEMORY=new Map();
 const WEB_STORAGE_CACHE_FILES=new Set(["market-snapshot.json","tw-market.json"]);
 const dataCacheKey=name=>`mr-data-cache-v1:${name}`;
 const lastGoodKey=name=>`mr-data-last-good-v1:${name}`;
-const STORAGE_CLEANUP_KEY="mr-storage-cleanup-v11.4.43";
+const STORAGE_CLEANUP_KEY="mr-storage-cleanup-v11.4.44";
 const LAST_GOOD_DB="market-radar-last-good-v1",LAST_GOOD_STORE="payloads";
 let lastGoodDbPromise=null;
 function openLastGoodDb(){
@@ -73,7 +73,7 @@ try{
  if(localStorage.getItem(STORAGE_CLEANUP_KEY)!=="1"){
   for(const name of Object.keys(CHANNELS)){
    if(!WEB_STORAGE_CACHE_FILES.has(name)){localStorage.removeItem(lastGoodKey(name));sessionStorage.removeItem(dataCacheKey(name))}
-   for(const version of ["v11.4.43","v11.4.31","v11.4.28","v11.4.27","v11.4.26"])sessionStorage.removeItem(`mr-data-cache-${version}:${name}`);
+   for(const version of ["v11.4.44","v11.4.31","v11.4.28","v11.4.27","v11.4.26"])sessionStorage.removeItem(`mr-data-cache-${version}:${name}`);
   }
   localStorage.setItem(STORAGE_CLEANUP_KEY,"1");
  }
@@ -113,7 +113,7 @@ async function rememberLastGood(name,payload){
 async function readLastGood(name){
  const indexed=await idbGet(name);if(isUsablePayload(name,indexed?.payload))return indexed.payload;
  if(WEB_STORAGE_CACHE_FILES.has(name)){try{const value=JSON.parse(localStorage.getItem(lastGoodKey(name))||"null");if(isUsablePayload(name,value))return value}catch(e){}}
- for(const legacy of [`mr-data-cache-v11.4.43:${name}`,`mr-data-cache-v11.4.31:${name}`,`mr-data-cache-v11.4.28:${name}`,`mr-data-cache-v11.4.27:${name}`,`mr-data-cache-v11.4.26:${name}`]){try{const entry=JSON.parse(sessionStorage.getItem(legacy)||"null");if(isUsablePayload(name,entry?.payload)){await rememberLastGood(name,entry.payload);return entry.payload}}catch(e){}}
+ for(const legacy of [`mr-data-cache-v11.4.44:${name}`,`mr-data-cache-v11.4.31:${name}`,`mr-data-cache-v11.4.28:${name}`,`mr-data-cache-v11.4.27:${name}`,`mr-data-cache-v11.4.26:${name}`]){try{const entry=JSON.parse(sessionStorage.getItem(legacy)||"null");if(isUsablePayload(name,entry?.payload)){await rememberLastGood(name,entry.payload);return entry.payload}}catch(e){}}
  if(name==="market-snapshot.json"){const value=loadStored(snapshotCacheKeys);if(isUsablePayload(name,value))return value}
  return null;
 }
@@ -186,14 +186,14 @@ function officialBasicRecord(row,endpoint){
  record.updated_at=new Date().toISOString();return record;
 }
 async function loadStockBasics(){
- const fallback=window.__STOCK_BASICS_SEED__||{metadata:{version:"v11.4.43",status:"waiting",item_count:0},items:{}};
+ const fallback=window.__STOCK_BASICS_SEED__||{metadata:{version:"v11.4.44",status:"waiting",item_count:0},items:{}};
  const payload=await loadData("stock-basics.json",fallback),items={...(payload.items||{})};
  if(Object.keys(items).length>=500)return payload;
  const settled=await Promise.allSettled(STOCK_BASIC_ENDPOINTS.map(async endpoint=>({endpoint,rows:await getJson(endpoint.url,15000)})));
  let added=0;
  for(const result of settled){if(result.status!=="fulfilled"||!Array.isArray(result.value.rows))continue;for(const row of result.value.rows){const record=officialBasicRecord(row,result.value.endpoint);if(!record)continue;items[record.symbol]={...(items[record.symbol]||{}),...record};added++}}
  const values=Object.values(items),average=values.length?values.reduce((sum,row)=>sum+Number(row.basic_coverage_percent||0),0)/values.length:0;
- return {...payload,metadata:{...(payload.metadata||{}),version:"v11.4.43",item_count:values.length,average_basic_coverage_percent:Math.round(average*10)/10,scope:"all-currently-listed-twse-and-tpex-stocks",browser_official_fallback_added:added},items};
+ return {...payload,metadata:{...(payload.metadata||{}),version:"v11.4.44",item_count:values.length,average_basic_coverage_percent:Math.round(average*10)/10,scope:"all-currently-listed-twse-and-tpex-stocks",browser_official_fallback_added:added},items};
 }
 function normalizeNewsChannel(cfg,payload){
  const archiveStart=Date.parse("2026-01-01T00:00:00+08:00"),tomorrow=Date.now()+86400000;
@@ -205,7 +205,7 @@ function mergeNewsChannels(channels){
  items.sort((a,b)=>Date.parse(b.published_at||b.date||0)-Date.parse(a.published_at||a.date||0));
  const updated=(channels||[]).map(c=>c?.metadata?.updated_at).filter(Boolean).sort().pop()||null;
  const resolved=(channels||[]).filter(c=>c?.metadata?.updated_at||Number(c?.items?.length||0)>0).length;
- return {metadata:{version:"v11.4.43",updated_at:updated,item_count:items.length,channel_count:(channels||[]).length,resolved_channel_count:resolved},channels,items};
+ return {metadata:{version:"v11.4.44",updated_at:updated,item_count:items.length,channel_count:(channels||[]).length,resolved_channel_count:resolved},channels,items};
 }
 function startNewsChannels(options={}){
  const channels=NEWS_FILES.map(cfg=>normalizeNewsChannel(cfg,window[cfg.seed]||{metadata:{source_id:cfg.id,source_name:cfg.label,status:"waiting",item_count:0},items:[]}));
@@ -216,7 +216,7 @@ function startNewsChannels(options={}){
 }
 async function loadNewsChannels(){return await startNewsChannels().done}
 async function loadStockNews(){
- const fallback=window.__STOCK_NEWS_SEED__||{metadata:{version:"v11.4.43",status:"waiting",item_count:0},items:[]};
+ const fallback=window.__STOCK_NEWS_SEED__||{metadata:{version:"v11.4.44",status:"waiting",item_count:0},items:[]};
  return await loadData("stock-news.json",fallback);
 }
 

@@ -1,4 +1,4 @@
-# v11.4.17 Limitations and responses
+# v11.4.44 Limitations and responses
 
 | Limitation | Reason | Response |
 |---|---|---|
@@ -10,3 +10,5 @@
 | Article image availability | Publishers may omit images or block hotlinking | Use verified original images only; switch to compact text cards when unavailable |
 | Guaranteed parser completeness | Official and media pages can change | Reject empty refreshes, expose source health and retain last-good data |
 | Predicting market direction with certainty | News impact depends on expectations and valuation | Show impact/direction labels rather than certainty |
+
+| 15 分鐘 K 線完整覆蓋 | 免費／官方來源的盤中粒度與可用性不一致 | 視為部署後非阻擋能力；缺資料時標示不可用或過期，不得偽造 K 棒 |

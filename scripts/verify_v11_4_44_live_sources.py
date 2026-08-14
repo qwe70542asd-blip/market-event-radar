@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reachability-aware TPEx live contract verification for v11.4.41.
+"""Reachability-aware TPEx live contract verification for v11.4.44.
 
 Deterministic application tests must not fail because an external official host
 returns a transient 5xx.  This gate therefore distinguishes:
@@ -25,7 +25,7 @@ import requests
 import update_events as ev
 import update_tw_chips as chips
 
-VERSION = "v11.4.41"
+VERSION = "v11.4.44"
 
 
 @dataclass

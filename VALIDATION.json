@@ -1,13 +1,15 @@
 {
-  "version": "v11.4.43",
-  "validated_at": "2026-08-13T15:48:15+08:00",
+  "version": "v11.4.44",
+  "validated_at": "2026-08-14T11:34:08+08:00",
+  "release_scope": "consolidated reliability / stale-overlay cleanup / single-writer publishing / Taiwan session integrity",
   "pytest": {
     "status": "pass",
-    "passed": 256
+    "passed": 259
   },
-  "strict_public_data": {
+  "public_data_validation": {
     "status": "pass",
-    "detail": "validation ok all"
+    "all": "validation ok all",
+    "strict": "validation ok --strict"
   },
   "python_syntax": {
     "status": "pass",
@@ -15,8 +17,8 @@
   },
   "javascript_syntax": {
     "status": "pass",
-    "app_edge_files": 16,
-    "service_worker": 1
+    "files": 17,
+    "detail": "assets/*.js + edge/*.js + service-worker.js"
   },
   "shell_syntax": {
     "status": "pass",
@@ -24,44 +26,52 @@
   },
   "workflow_yaml": {
     "status": "pass",
-    "files": 31
+    "files": 16,
+    "run_blocks_shell_checked": 96
   },
-  "workflow_run_block_shell_syntax": {
+  "workflow_publishers": {
     "status": "pass",
-    "run_blocks": 183
+    "live_branches": 24,
+    "detail": "one publishing workflow per live branch"
   },
   "cleanup_repo": {
     "status": "pass",
-    "detail": "repository layout clean"
+    "detail": "repository layout clean for v11.4.44"
   },
   "http_smoke": {
     "status": "pass",
-    "detail": "HTTP smoke passed: 7 pages, 43 referenced assets"
+    "pages": 7,
+    "referenced_assets": 43
+  },
+  "static_integrity": {
+    "status": "pass",
+    "duplicate_html_ids": 0,
+    "missing_local_references": 0,
+    "json_parse_errors": 0
   },
   "browser_smoke_local": {
     "status": "environment-blocked",
-    "detail": "system Chromium is present, but this sandbox blocks localhost navigation with ERR_BLOCKED_BY_ADMINISTRATOR; GitHub Release Verification is authoritative and includes the delayed-live rerender regression"
-  },
-  "delayed_live_browser_regression": {
-    "status": "defined-for-github-gate",
-    "detail": "tw-market is delayed 5200ms while chips/events/news resolve independently; mounted UI must later show breadth 1244/743, foreign buy, bullish tone, normal volume and featured information"
+    "detail": "system Chromium launches, but the execution sandbox blocks navigation to http://127.0.0.1 with ERR_BLOCKED_BY_ADMINISTRATOR; GitHub Release Verification installs Chromium and remains the authoritative runtime gate"
   },
   "live_contract_local": {
-    "status": "external-unavailable-nonblocking",
-    "detail": "local sandbox DNS could not resolve TPEx/TWSE official hosts; reachability-aware live gate exited successfully with 5 external warnings"
+    "status": "pass-with-external-warnings",
+    "external_warnings": 5,
+    "detail": "reachability-aware gate completed successfully; sandbox DNS could not resolve four TPEx endpoints and one TWSE endpoint"
   },
-  "progressive_loader": {
-    "status": "pass-static-and-unit",
-    "detail": "no homepage boot timeout; independent late-arrival rerenders; hedged mirrors; IndexedDB last-known-good; service-worker cache-buster normalization"
-  },
-  "github_live_evidence": {
-    "status": "reviewed",
-    "detail": "current production main remains v11.4.40; 2026-08-13 live tw-market contained 2026-08-12 breadth/volume data while the user-visible v11.4.40 homepage could remain on seed placeholders, confirming a frontend boot/rerender race"
+  "github_current_main": {
+    "status": "known-v11.4.43",
+    "commit": "5444d00fe17bfa8e0c37f4d46a76b89770e34154",
+    "detail": "v11.4.43 online still contains stale older version tests/workflows. Its release verification failed on an obsolete v11.4.41 service-worker assertion; Taiwan market-core also showed intermittent trading-date validation failures. v11.4.44 is the corrective full-overwrite release and has not yet been pushed in this audit."
   },
   "release_hygiene": {
     "audio_files": 0,
     "cache_artifacts": 0,
     "temporary_or_editor_backup_files": 0,
     "nested_repo_dirs": 0
-  }
+  },
+  "remaining_nonblocking_limitations": [
+    "asset detail still waits on multiple supplementary datasets before every section is complete",
+    "15-minute K-line coverage remains source-dependent and must show unavailable/stale rather than fabricated bars",
+    "fundamental/financial coverage remains source-dependent where verified fields are unavailable"
+  ]
 }

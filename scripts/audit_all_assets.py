@@ -7,7 +7,7 @@ from typing import Any
 
 from common import DATA, NOW, read_json, write_payload
 
-VERSION = "v11.4.43"
+VERSION = "v11.4.44"
 
 
 def present(value: Any) -> bool:
