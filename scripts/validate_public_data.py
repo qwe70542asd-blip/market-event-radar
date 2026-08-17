@@ -46,20 +46,32 @@ def market():
    q=str(row.get("quote_date") or "")
    if q and q!=trading:fail(f"Taiwan quote date mismatch {row.get('symbol')}: {q} != {trading}")
 
+ # Turnover history is an independent verified channel. It may legitimately be
+ # newer than a retained quote snapshot when TWSE/TPEx quote endpoints disagree.
+ # v11.4.46's validator incorrectly forced history <= quote trading_date and
+ # therefore blocked publication of otherwise valid turnover data.
  hist=load("market-volume-history.json")
  rows=hist.get("items") or []
+ hist_meta=hist.get("metadata") or {}
  if rows:
-  seen=set(); complete=[]
+  seen=set(); complete=[]; history_days=[]
   for row in rows:
    raw=str(row.get("date") or ""); day=iso_day(raw)
    if not day or day.weekday()>=5:fail(f"invalid turnover session {raw}")
+   if day>date.today():fail(f"future turnover session {raw}")
    if raw in seen:fail(f"duplicate turnover session {raw}")
-   seen.add(raw)
-   if trading and raw>trading:fail(f"turnover newer than trading date {raw}>{trading}")
+   seen.add(raw);history_days.append(raw)
    if row.get("complete_total") is True:
     complete.append(day)
    if row.get("total_coverage")=="partial-single-market" and row.get("complete_total") is True:
     fail(f"partial turnover marked complete {raw}")
+  actual_end=max(history_days,default=None)
+  declared_end=str(hist_meta.get("history_end") or meta.get("history_end") or "") or None
+  if declared_end and actual_end and declared_end!=actual_end:
+   fail(f"turnover history_end mismatch {declared_end}!={actual_end}")
+  quote_basis=str(hist_meta.get("quote_trading_date") or "")
+  if quote_basis and trading and quote_basis!=trading:
+   fail(f"turnover quote_trading_date mismatch {quote_basis}!={trading}")
   if meta.get("volume_history_complete") is True:
    complete=sorted(set(complete),reverse=True)
    if len(complete)<21 or (complete[0]-complete[20]).days>45:

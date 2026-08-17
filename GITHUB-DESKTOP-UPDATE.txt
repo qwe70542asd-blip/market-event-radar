@@ -1,37 +1,29 @@
-Market Event Radar v11.4.46 — full overwrite / security deployment procedure
+Market Event Radar v11.4.47 update steps
 
-DO NOT overlay this on top of old source without cleanup.
+1. Close the website tab if it is open.
+2. Extract this ZIP directly over the root of your existing market-event-radar repository.
+3. Double-click CLEAN-REPO.cmd once.
+4. Open GitHub Desktop and verify the changed files include:
+   - index.html
+   - assets/runtime-config.js
+   - assets/v11.4.47-overrides.css
+   - edge/market-live-worker.js
+   - edge/wrangler.jsonc.example
+   - scripts/production_readiness.py
+   - scripts/validate_public_data.py
+   - .github/workflows/deploy-live-market-worker.yml
+   - .github/workflows/release-verification.yml
+   - service-worker.js
+   - VERSION.json
+   - deletion of old DELETION-MANIFEST-v*.txt files
+5. Commit and Push.
+6. In GitHub Actions, wait for Verify v11.4.47 stable app release and Deploy v11.4.47 live market worker.
+7. The Worker deployment no longer needs or publishes a live-runtime branch. The browser validates the fixed allowlisted workers.dev endpoint directly through /health.
 
-1. GitHub Desktop: Fetch/Pull current main.
-2. In the local market-event-radar repository, keep the hidden `.git` directory.
-3. Remove the old project files/directories and place the v11.4.46 ZIP contents directly in the repository root (no extra nested folder).
-4. Run `CLEAN-REPO.cmd` once.
-5. In GitHub Desktop confirm Added / Modified / Deleted files are all present.
-6. Commit: `market-event-radar-v11.4.46`
-7. Push origin.
-8. Do not accept the release as complete until `Verify v11.4.46 stable app release` is green.
-
-SECURITY SETTINGS TO CHECK IN GITHUB
-- Settings → Actions → General: default GITHUB_TOKEN permissions = read-only.
-- Enable “Require actions to be pinned to a full-length commit SHA” if available.
-- Restrict allowed Actions to GitHub-owned Actions plus cloudflare/wrangler-action where practical.
-- Protect main against force-push and branch deletion. At audit time main is currently unprotected.
-- Create Environment `production`, restrict it to main, and if supported require your own reviewer approval before production secrets are released.
-
-CLOUDFLARE VALUES — ONLY THREE
-Environment/repository secrets:
-- CLOUDFLARE_API_TOKEN
-- CLOUDFLARE_ACCOUNT_ID
-Environment/repository variable:
-- CLOUDFLARE_KV_NAMESPACE_ID
-
-DO NOT create LIVE_MARKET_ENDPOINT manually. v11.4.46 obtains the real endpoint from the pinned Wrangler deployment output, validates it, checks /health + snapshot + 5-minute K-line + arbitrary-symbol rejection, then and only then publishes the public endpoint to live-runtime.
-
-WHY THIS PREVENTS THE OLD “FIXED, THEN BROKEN AGAIN” PATTERN
-- old version-specific tests/verifiers are automatically rejected;
-- one live branch = one writer is CI-enforced;
-- release verification runs on main and pull requests;
-- dependency/action updates arrive as Dependabot PRs, not floating runtime changes;
-- missing Cloudflare authorization is a hard failure, never “skipped but green”;
-- runtime config is not Service Worker precached;
-- UI may claim Worker minute-refresh only when the payload actually comes from a verified live Worker; otherwise it says GitHub fallback / non-real-time.
+Expected behavioral changes:
+- Calendar appears above the six-index K-line panel.
+- Four square quick-navigation buttons float on the left on desktop.
+- The selected major-information block is shorter.
+- Worker KV cache uses schema-versioned keys, so old v11.4.45/v11.4.46 snapshots cannot poison the deployment.
+- Rate limiting is per requester + route rather than one global route bucket.
+- Taiwan turnover history may be newer than retained quote data without failing the whole Taiwan-market publish.

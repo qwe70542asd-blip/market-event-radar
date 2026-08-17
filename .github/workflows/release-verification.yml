@@ -1,4 +1,4 @@
-name: Verify v11.4.46 stable app release
+name: Verify v11.4.47 stable app release
 on:
   push:
     branches: [main]
@@ -8,7 +8,7 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: verify-v11-4-46-${{ github.ref }}
+  group: verify-v11-4-47-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   verify:
@@ -61,11 +61,8 @@ jobs:
         run: python scripts/security_audit.py
 
       - name: Static production readiness gate
-        run: python scripts/production_readiness.py --version v11.4.46
+        run: python scripts/production_readiness.py --version v11.4.47
 
-      # Deterministic product checks always run before any external live-source
-      # contract check.  A transient TPEx outage can no longer hide app/test
-      # regressions by causing all later steps to be skipped.
       - name: Strict data validation
         run: python scripts/validate_public_data.py all
 
@@ -89,5 +86,5 @@ jobs:
           for attempt in {1..20}; do curl -fsS http://127.0.0.1:8765/index.html >/dev/null && break; sleep 0.25; done
           python scripts/browser_smoke.py http://127.0.0.1:8765
 
-      - name: Official v11.4.46 reachability-aware live contract gate
+      - name: Official live-source contract gate
         run: python scripts/verify_live_sources.py

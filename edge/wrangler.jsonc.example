@@ -1,7 +1,7 @@
 {
   "name": "market-event-radar-live",
   "main": "market-live-worker.js",
-  "compatibility_date": "2026-08-14",
+  "compatibility_date": "2026-08-17",
   "workers_dev": true,
   "preview_urls": false,
   "triggers": {
@@ -16,7 +16,7 @@
   "ratelimits": [
     {
       "name": "API_RATE_LIMITER",
-      "namespace_id": "1144601",
+      "namespace_id": "1144701",
       "simple": {
         "limit": 600,
         "period": 60

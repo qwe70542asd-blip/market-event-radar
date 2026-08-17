@@ -1,4 +1,5 @@
-name: Deploy v11.4.46 live market worker
+# v11.4.46 compatibility note only: legacy needs: deploy -> live-runtime publication was removed in v11.4.47.
+name: Deploy v11.4.47 live market worker
 on:
   workflow_dispatch:
   push:
@@ -7,7 +8,6 @@ on:
       - "edge/**"
       - "assets/runtime-config.js"
       - "scripts/production_readiness.py"
-      - "scripts/publish_data_branch.sh"
       - ".github/workflows/deploy-live-market-worker.yml"
 permissions:
   contents: read
@@ -19,8 +19,6 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     environment: production
-    outputs:
-      live_market_endpoint: ${{ steps.endpoint.outputs.url }}
     env:
       CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -73,63 +71,20 @@ jobs:
           command: deploy --config wrangler.jsonc
 
       - name: Resolve deployment endpoint from Wrangler output
-        id: endpoint
         env:
           DEPLOYMENT_URL: ${{ steps.deploy-worker.outputs.deployment-url }}
         run: |
           python - <<'PY'
-          import os,re
+          import os
           from urllib.parse import urlparse
           endpoint=os.environ.get("DEPLOYMENT_URL","").strip().rstrip("/")
           parsed=urlparse(endpoint)
           expected=os.environ["EXPECTED_WORKER_HOST"]
           if parsed.scheme!="https" or not parsed.netloc or parsed.username or parsed.password or parsed.query or parsed.fragment or parsed.hostname!=expected or parsed.path not in ("","/"):
               raise SystemExit(f"Wrangler did not return the allowlisted HTTPS Worker endpoint: {endpoint!r}")
-          with open(os.environ["GITHUB_OUTPUT"],"a",encoding="utf-8") as fh:
-              fh.write(f"url={endpoint}\n")
           with open(os.environ["GITHUB_ENV"],"a",encoding="utf-8") as fh:
               fh.write(f"LIVE_MARKET_ENDPOINT={endpoint}\n")
           PY
 
       - name: Production readiness and endpoint contract
-        run: python scripts/production_readiness.py --endpoint "$LIVE_MARKET_ENDPOINT" --require-live --version v11.4.46
-
-  publish-runtime:
-    needs: deploy
-    runs-on: ubuntu-24.04
-    timeout-minutes: 5
-    permissions:
-      contents: write
-    env:
-      LIVE_MARKET_ENDPOINT: ${{ needs.deploy.outputs.live_market_endpoint }}
-      EXPECTED_WORKER_HOST: market-event-radar-live.qwe70542asd.workers.dev
-    steps:
-      - name: Checkout for isolated runtime publication
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-          fetch-depth: 0
-
-      - name: Publish only the verified public endpoint
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          python - <<'PY'
-          import json,os
-          from datetime import datetime,timezone
-          from pathlib import Path
-          from urllib.parse import urlparse
-          endpoint=os.environ["LIVE_MARKET_ENDPOINT"].strip().rstrip("/")
-          parsed=urlparse(endpoint)
-          expected=os.environ["EXPECTED_WORKER_HOST"]
-          if parsed.scheme!="https" or not parsed.netloc or parsed.username or parsed.password or parsed.query or parsed.fragment or parsed.hostname!=expected or parsed.path not in ("","/"):
-              raise SystemExit("invalid or non-allowlisted verified deployment endpoint")
-          payload={
-              "version":"v11.4.46",
-              "liveMarketEndpoint":endpoint,
-              "published_at":datetime.now(timezone.utc).isoformat().replace("+00:00","Z"),
-              "auth":"public-read-endpoint; deployment credentials never published",
-          }
-          Path("data/runtime-config.json").write_text(json.dumps(payload,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-          PY
-          bash scripts/publish_data_branch.sh live-runtime live-runtime data/runtime-config.json
+        run: python scripts/production_readiness.py --endpoint "$LIVE_MARKET_ENDPOINT" --require-live --version v11.4.47

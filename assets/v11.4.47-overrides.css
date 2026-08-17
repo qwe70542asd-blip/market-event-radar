@@ -1,0 +1,95 @@
+/* Market Event Radar v11.4.47 homepage layout patch.
+ * Calendar first, compact headline block, and four-square floating navigation.
+ */
+.home-shell{position:relative}
+.breaking{padding-top:6px;padding-bottom:6px;font-size:12px;min-height:32px}
+.breaking b{white-space:nowrap}
+
+.floating-quick-nav{
+  position:fixed;
+  z-index:19;
+  left:14px;
+  top:96px;
+  display:grid;
+  grid-template-columns:repeat(2,64px);
+  grid-auto-rows:64px;
+  gap:8px;
+  padding:8px;
+  border:1px solid rgba(72,112,143,.45);
+  border-radius:16px;
+  background:rgba(6,17,29,.84);
+  box-shadow:0 16px 38px rgba(0,0,0,.28);
+  backdrop-filter:blur(14px);
+}
+.floating-quick-nav .quick-tile{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  width:64px;
+  height:64px;
+  padding:6px;
+  border:1px solid #29465e;
+  border-radius:12px;
+  background:#0b1b2a;
+  color:#dbe8f1;
+  text-align:center;
+  transition:transform .16s,border-color .16s,background .16s;
+}
+.floating-quick-nav .quick-tile:hover{transform:translateY(-2px);border-color:#5c8bae;background:#122b40}
+.floating-quick-nav .quick-tile b{font-size:10px;line-height:1.2}
+.floating-quick-nav .quick-tile span{font:700 15px Georgia;color:#6eb7ff;line-height:1}
+.floating-quick-nav .quick-tile.current span{color:#20d69b}
+
+/* The selected-major-information area no longer dominates the homepage. */
+.compact-home-news{padding:13px}
+.compact-home-news .section-head{margin-bottom:0}
+.compact-home-news .home-news-feature-layout{grid-template-columns:minmax(0,1.35fr) minmax(280px,.9fr);gap:9px;margin-top:9px}
+.compact-home-news .home-feature-lead{grid-template-rows:minmax(190px,220px) auto}
+.compact-home-news .home-feature-lead .home-news-thumb{min-height:190px;height:100%}
+.compact-home-news .home-feature-lead h3{font-size:20px;line-height:1.35;margin:6px 0}
+.compact-home-news .home-feature-lead p{font-size:11px;-webkit-line-clamp:2}
+.compact-home-news .home-feature-copy{padding:10px}
+.compact-home-news .home-feature-side-list{gap:6px}
+.compact-home-news .home-feature-side{grid-template-columns:92px minmax(0,1fr);min-height:74px}
+.compact-home-news .home-feature-side .home-news-thumb{width:92px;min-height:74px}
+.compact-home-news .home-feature-side .home-feature-copy{padding:7px 8px}
+.compact-home-news .home-feature-side h3{font-size:12px;line-height:1.35;margin:3px 0}
+
+/* Calendar is the first large decision surface. */
+#calendarPanel{scroll-margin-top:82px}
+#marketKlinePanel{scroll-margin-top:82px}
+
+@media(min-width:1101px) and (max-width:1740px){
+  .home-shell{padding-left:158px}
+}
+@media(min-width:1741px){
+  .floating-quick-nav{left:max(14px,calc((100vw - 1720px)/2))}
+}
+@media(max-width:1100px){
+  .floating-quick-nav{
+    position:sticky;
+    top:70px;
+    left:auto;
+    z-index:18;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    grid-auto-rows:52px;
+    width:100%;
+    margin:0 0 10px;
+    padding:6px;
+  }
+  .floating-quick-nav .quick-tile{width:100%;height:52px;flex-direction:row;gap:6px}
+  .floating-quick-nav .quick-tile b{font-size:11px}
+  .home-shell{padding-left:18px}
+}
+@media(max-width:720px){
+  .floating-quick-nav{top:58px;grid-template-columns:repeat(4,1fr);gap:4px;padding:5px;border-radius:12px}
+  .floating-quick-nav .quick-tile{height:44px;padding:4px;flex-direction:column;gap:1px;border-radius:8px}
+  .floating-quick-nav .quick-tile span{font-size:12px}
+  .floating-quick-nav .quick-tile b{font-size:9px}
+  .home-shell{padding-left:8px}
+  .compact-home-news .home-news-feature-layout{grid-template-columns:1fr}
+  .compact-home-news .home-feature-lead{grid-template-rows:auto auto}
+  .compact-home-news .home-feature-lead .home-news-thumb{height:175px;min-height:175px}
+}
