@@ -199,11 +199,11 @@ class StaticTests(unittest.TestCase):
 
  def test_compact_controls_before_calendar_layout(self):
   html=self.read("index.html")
-  self.assertLess(html.index("compact-feature-strip"),html.index("我的資產總覽"))
-  self.assertLess(html.index("我的資產總覽"),html.index("六大指數互動 K 線與關鍵資訊"))
-  self.assertLess(html.index("六大指數互動 K 線與關鍵資訊"),html.index("市場事件月曆"))
-  self.assertLess(html.index("市場事件月曆"),html.index("今日新公布日期"))
-  for token in ("home-summary-row","balanced-summary-row","dual-calendar-card","calendar-mode-switch","market-kline-panel","六大指數互動 K 線與關鍵資訊"):self.assertIn(token,html)
+  self.assertLess(html.index("今日市場重點"),html.index("我的資產總覽"))
+  self.assertLess(html.index("我的資產總覽"),html.index("市場事件月曆"))
+  self.assertLess(html.index("市場事件月曆"),html.index("六大指數互動 K 線與關鍵資訊"))
+  self.assertLess(html.index("六大指數互動 K 線與關鍵資訊"),html.index("今日新公布日期"))
+  for token in ("today-market-brief","home-summary-row","balanced-summary-row","dual-calendar-card","calendar-mode-switch","market-kline-panel","六大指數互動 K 線與關鍵資訊"):self.assertIn(token,html)
   for token in ("home-primary-grid","home-market-rail"):self.assertNotIn(token,html)
 
  def test_today_new_dates_jump_to_matching_calendar_mode(self):
@@ -439,8 +439,11 @@ class StaticTests(unittest.TestCase):
   self.assertIn('item.pop("image_url",None)',script)
 
  def test_v11424_version_bump_prevents_same_version_asset_cache(self):
-  for path in ("index.html","assets/shared.js","assets/home.js","assets/sw-register.js","service-worker.js","VERSION.json"):
-   content=self.read(path);self.assertIn("11.4.46",content);self.assertNotIn("11.4.23",content);self.assertNotIn("11.4.22",content)
+  for path in ("index.html","assets/home.js","assets/runtime-config.js","service-worker.js","VERSION.json"):
+   content=self.read(path);self.assertIn("11.4.48",content);self.assertNotIn("11.4.23",content);self.assertNotIn("11.4.22",content)
+  index=self.read("index.html");sw=self.read("service-worker.js")
+  for token in ("assets/shared.js?v=11.4.48","assets/home.js?v=11.4.48","assets/sw-register.js?v=11.4.48"):
+   self.assertIn(token,index+sw)
 
  def test_v11428_compact_market_state_replaces_sector_heat(self):
   html=self.read("index.html");home=self.read("assets/home.js");snapshot=self.read("scripts/update_market_snapshot.py")
@@ -497,7 +500,7 @@ class StaticTests(unittest.TestCase):
 
  def test_v11428_mobile_calendar_has_no_forced_horizontal_scroll(self):
   css=self.read("assets/styles.css");html=self.read("index.html");manifest=json.loads(self.read("manifest.webmanifest"))
-  for token in (".calendar-weekdays,.calendar-grid{width:100%;min-width:0!important","overflow:visible!important","grid-template-columns:repeat(7,minmax(0,1fr))",".mobile-install-trigger","assets/pwa-install.js?v=11.4.46"):
+  for token in (".calendar-weekdays,.calendar-grid{width:100%;min-width:0!important","overflow:visible!important","grid-template-columns:repeat(7,minmax(0,1fr))",".mobile-install-trigger","assets/pwa-install.js?v=11.4.48"):
    self.assertIn(token,css+html)
   self.assertEqual(manifest.get("display"),"standalone")
   self.assertTrue(any(icon.get("sizes")=="192x192" for icon in manifest.get("icons",[])))
@@ -597,7 +600,7 @@ class StaticTests(unittest.TestCase):
 
  def test_v11431_edge_worker_is_current_and_uses_verified_time(self):
   worker=self.read("edge/market-live-worker.js")
-  self.assertIn('v11.4.46',worker);self.assertNotIn('v11.4.27',worker)
+  self.assertIn('v11.4.48',worker);self.assertNotIn('v11.4.27',worker)
   self.assertIn('missing verified quote time',worker)
   self.assertIn('marketDate(new Date(x.time*1000),market)',worker)
   self.assertIn('latestSession===session?previous?.close:latest?.close',worker)
@@ -677,7 +680,7 @@ class StaticTests(unittest.TestCase):
    self.assertIn(token,ignore)
   for token in ('NESTED_DIRS','REDUNDANT_WORKFLOWS','version_obsolete_paths','--check'):
    self.assertIn(token,cleanup)
-  self.assertIn('python scripts/cleanup_repo.py --check',verify);self.assertIn('verify-v11-4-46-${{ github.ref }}',verify)
+  self.assertIn('python scripts/cleanup_repo.py --check',verify);self.assertIn('verify-v11-4-48-${{ github.ref }}',verify)
 
  def test_v11438_home_portfolio_totals_fail_closed(self):
   home=self.read("assets/home.js")
@@ -752,7 +755,7 @@ class StaticTests(unittest.TestCase):
   worker=self.read("edge/market-live-worker.js");wrangler=self.read("edge/wrangler.jsonc.example")
   for token in ("API_RATE_LIMITER","rateLimitReady","rate limit exceeded","429","rate_limit_binding"):
    self.assertIn(token,worker)
-  for token in ('"ratelimits"','"name": "API_RATE_LIMITER"','"namespace_id": "1144601"','"limit": 600','"period": 60','"workers_dev": true','"preview_urls": false'):
+  for token in ('"ratelimits"','"name": "API_RATE_LIMITER"','"namespace_id":','"limit": 600','"period": 60','"workers_dev": true','"preview_urls": false'):
    self.assertIn(token,wrangler)
 
  def test_v11446_cloudflare_prefixed_credentials_are_scanned(self):

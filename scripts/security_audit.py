@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail-closed security regression audit for v11.4.47."""
+"""Fail-closed security regression audit for v11.4.48."""
 from __future__ import annotations
 import re,sys
 from pathlib import Path

@@ -1,29 +1,21 @@
-Market Event Radar v11.4.47 update steps
+Market Event Radar v11.4.48 overlay update
 
-1. Close the website tab if it is open.
-2. Extract this ZIP directly over the root of your existing market-event-radar repository.
-3. Double-click CLEAN-REPO.cmd once.
-4. Open GitHub Desktop and verify the changed files include:
-   - index.html
-   - assets/runtime-config.js
-   - assets/v11.4.47-overrides.css
-   - edge/market-live-worker.js
-   - edge/wrangler.jsonc.example
-   - scripts/production_readiness.py
-   - scripts/validate_public_data.py
-   - .github/workflows/deploy-live-market-worker.yml
-   - .github/workflows/release-verification.yml
-   - service-worker.js
-   - VERSION.json
-   - deletion of old DELETION-MANIFEST-v*.txt files
-5. Commit and Push.
-6. In GitHub Actions, wait for Verify v11.4.47 stable app release and Deploy v11.4.47 live market worker.
-7. The Worker deployment no longer needs or publishes a live-runtime branch. The browser validates the fixed allowlisted workers.dev endpoint directly through /health.
+1. Keep the repository .git folder.
+2. Copy the contents of this overlay into the repository root and allow overwrite.
+3. Run CLEAN-REPO.cmd once.
+   - It removes the old v11.4.47 homepage override and old deletion manifests.
+4. In GitHub Desktop, confirm both modified files and deletions are visible.
+5. Commit suggestion: market-event-radar-v11.4.48
+6. Push.
+7. Check these Actions first:
+   - Verify v11.4.48 stable app release
+   - Deploy v11.4.48 live market worker
 
-Expected behavioral changes:
-- Calendar appears above the six-index K-line panel.
-- Four square quick-navigation buttons float on the left on desktop.
-- The selected major-information block is shorter.
-- Worker KV cache uses schema-versioned keys, so old v11.4.45/v11.4.46 snapshots cannot poison the deployment.
-- Rate limiting is per requester + route rather than one global route bucket.
-- Taiwan turnover history may be newer than retained quote data without failing the whole Taiwan-market publish.
+No Cloudflare Secret / Account ID / KV Namespace ID needs to be recreated for this UI/information-priority update.
+
+Important v11.4.48 behavior:
+- Desktop quick navigation is 1 x 4 vertical.
+- Major-information lead card has fixed desktop height and a larger image area.
+- Day-event dialog keeps the close control visible while its body scrolls.
+- Major-information ranking covers market-structure changes and all major industries; AI/semiconductors receive a priority boost but do not monopolize the panel.
+- A future date found in a single news story is NOT promoted to the calendar. News-derived calendar dates require corroboration or a trusted primary/major source and are explicitly labeled as reported, not official-final.

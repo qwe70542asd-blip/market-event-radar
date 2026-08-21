@@ -1,0 +1,15 @@
+Market Event Radar v11.4.48 cleanup manifest
+
+After overlaying this package onto an existing repository, run CLEAN-REPO.cmd once before Commit/Push.
+The version-aware cleanup script removes older release-only files and conflicting homepage overrides.
+
+Expected removals include:
+- DELETION-MANIFEST-v11.4.45.txt / v11.4.46 / v11.4.47 and any other old release manifest
+- assets/v11.4.47-overrides.css and any older v*-overrides.css
+- versioned legacy regression tests (tests/test_v*_*.py)
+- versioned legacy live verifiers (scripts/verify_v*_live_sources.py)
+- stale apply_v*.py files
+- redundant live-branch publisher workflows already covered by aggregate workflows
+- accidental mirrored/nested repository copies under scripts/
+
+Do not delete live data branches or Cloudflare configuration values.

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Production-readiness gate for the live market channel.
 
-v11.4.47 verifies a fixed allowlisted Worker origin. Cache compatibility is
+v11.4.48 verifies a fixed allowlisted Worker origin. Cache compatibility is
 based on schema_version rather than the app release number so an old KV object
 cannot poison a new deployment and harmless release bumps do not invalidate a
 compatible payload.
@@ -80,7 +80,7 @@ def valid_https_endpoint(endpoint:str)->str:
 
 
 def get_json(url:str,timeout:int=12):
-    r=requests.get(url,headers={'accept':'application/json','user-agent':'MarketEventRadar-readiness/11.4.47'},timeout=timeout)
+    r=requests.get(url,headers={'accept':'application/json','user-agent':'MarketEventRadar-readiness/11.4.48'},timeout=timeout)
     r.raise_for_status()
     return r.json()
 
@@ -150,7 +150,7 @@ def main()->None:
     ap=argparse.ArgumentParser()
     ap.add_argument('--endpoint',default='')
     ap.add_argument('--require-live',action='store_true')
-    ap.add_argument('--version',default='v11.4.47')
+    ap.add_argument('--version',default='v11.4.48')
     args=ap.parse_args()
     static_checks(args.version)
     if args.require_live:

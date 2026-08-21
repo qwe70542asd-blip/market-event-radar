@@ -30,6 +30,9 @@ def version_obsolete_paths()->list[Path]:
     current_manifest=f"DELETION-MANIFEST-{VERSION}.txt"
     for path in ROOT.glob("DELETION-MANIFEST-v*.txt"):
         if path.name!=current_manifest: found.append(path)
+    current_override=f"{VERSION}-overrides.css"
+    for path in (ROOT/"assets").glob("v*-overrides.css"):
+        if path.name!=current_override: found.append(path)
     found.extend(ROOT.glob("apply_v*.py"))
     found.extend((ROOT/".github"/"workflows"/name) for name in REDUNDANT_WORKFLOWS)
     return found
