@@ -1,0 +1,299 @@
+{
+  "metadata": {
+    "version": "v11.4.46",
+    "updated_at": "2026-08-21T11:35:14+08:00",
+    "status": "ok",
+    "successful_sources": 47,
+    "warning_sources": 0,
+    "stock_count": 1985,
+    "etf_count": 268,
+    "stock_with_metrics": 1973,
+    "stock_with_financials": 1852,
+    "stock_with_monthly_revenue": 1977,
+    "message": "Official stock and ETF detail refresh completed; warning sources retained their last successful values."
+  },
+  "sources": [
+    {
+      "name": "TWSE fund master",
+      "status": "ok",
+      "rows": 268,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap47_L"
+    },
+    {
+      "name": "TWSE company master",
+      "status": "ok",
+      "rows": 1095,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap03_L"
+    },
+    {
+      "name": "TPEx company master",
+      "status": "ok",
+      "rows": 890,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O"
+    },
+    {
+      "name": "TWSE valuation",
+      "status": "ok",
+      "rows": 1081,
+      "url": "https://openapi.twse.com.tw/v1/exchangeReport/BWIBBU_ALL"
+    },
+    {
+      "name": "TPEx valuation",
+      "status": "ok",
+      "rows": 887,
+      "url": "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_peratio_analysis"
+    },
+    {
+      "name": "TWSE EPS",
+      "status": "ok",
+      "rows": 987,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap14_L"
+    },
+    {
+      "name": "TPEx EPS",
+      "status": "ok",
+      "rows": 861,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap14_O"
+    },
+    {
+      "name": "TWSE monthly revenue",
+      "status": "ok",
+      "rows": 1085,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap05_L"
+    },
+    {
+      "name": "TPEx monthly revenue",
+      "status": "ok",
+      "rows": 890,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap05_O"
+    },
+    {
+      "name": "TWSE dividend",
+      "status": "ok",
+      "rows": 1222,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap45_L"
+    },
+    {
+      "name": "TPEx dividend",
+      "status": "ok",
+      "rows": 2483,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap39_O"
+    },
+    {
+      "name": "TWSE public income basi",
+      "status": "ok",
+      "rows": 4,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_X_basi"
+    },
+    {
+      "name": "TWSE income ins",
+      "status": "ok",
+      "rows": 2,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_L_ins"
+    },
+    {
+      "name": "TWSE public income fh",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_X_fh"
+    },
+    {
+      "name": "TWSE public income ins",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_X_ins"
+    },
+    {
+      "name": "TWSE income bd",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_L_bd"
+    },
+    {
+      "name": "TWSE public income mim",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_X_mim"
+    },
+    {
+      "name": "TWSE income fh",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_L_fh"
+    },
+    {
+      "name": "TWSE income basi",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_L_basi"
+    },
+    {
+      "name": "TWSE public income bd",
+      "status": "ok",
+      "rows": 9,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_X_bd"
+    },
+    {
+      "name": "TWSE balance fh",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_L_fh"
+    },
+    {
+      "name": "TWSE income mim",
+      "status": "ok",
+      "rows": 4,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_L_mim"
+    },
+    {
+      "name": "TWSE public balance fh",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_X_fh"
+    },
+    {
+      "name": "TWSE balance basi",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_L_basi"
+    },
+    {
+      "name": "TWSE balance bd",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_L_bd"
+    },
+    {
+      "name": "TWSE balance ins",
+      "status": "ok",
+      "rows": 2,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_L_ins"
+    },
+    {
+      "name": "TWSE public balance ins",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_X_ins"
+    },
+    {
+      "name": "TWSE public balance basi",
+      "status": "ok",
+      "rows": 4,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_X_basi"
+    },
+    {
+      "name": "TWSE balance mim",
+      "status": "ok",
+      "rows": 4,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_L_mim"
+    },
+    {
+      "name": "TWSE public balance mim",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_X_mim"
+    },
+    {
+      "name": "TWSE public balance ci",
+      "status": "ok",
+      "rows": 212,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_X_ci"
+    },
+    {
+      "name": "TWSE public income ci",
+      "status": "ok",
+      "rows": 212,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_X_ci"
+    },
+    {
+      "name": "TPEx income basi",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap06_O_basi"
+    },
+    {
+      "name": "TPEx income fh",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap06_O_fh"
+    },
+    {
+      "name": "TWSE public balance bd",
+      "status": "ok",
+      "rows": 9,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_X_bd"
+    },
+    {
+      "name": "TPEx income mim",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap06_O_mim"
+    },
+    {
+      "name": "TPEx income ci",
+      "status": "ok",
+      "rows": 858,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap06_O_ci"
+    },
+    {
+      "name": "TPEx income ins",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap06_O_ins"
+    },
+    {
+      "name": "TPEx balance fh",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap07_O_fh"
+    },
+    {
+      "name": "TPEx income bd",
+      "status": "ok",
+      "rows": 3,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap06_O_bd"
+    },
+    {
+      "name": "TPEx balance basi",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap07_O_basi"
+    },
+    {
+      "name": "TPEx balance bd",
+      "status": "ok",
+      "rows": 3,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap07_O_bd"
+    },
+    {
+      "name": "TPEx balance mim",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap07_O_mim"
+    },
+    {
+      "name": "TPEx balance ins",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap07_O_ins"
+    },
+    {
+      "name": "TWSE income ci",
+      "status": "ok",
+      "rows": 980,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_L_ci"
+    },
+    {
+      "name": "TWSE balance ci",
+      "status": "ok",
+      "rows": 980,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_L_ci"
+    },
+    {
+      "name": "TPEx balance ci",
+      "status": "ok",
+      "rows": 858,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap07_O_ci"
+    }
+  ]
+}
