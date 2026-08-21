@@ -9,6 +9,7 @@ returns a transient 5xx.  This gate therefore distinguishes:
 * contract failure: reachable JSON rows that should parse but do not -> fail.
 """
 from __future__ import annotations
+from common import VERSION
 
 from dataclasses import dataclass
 from datetime import timedelta
@@ -24,9 +25,6 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import requests
 import update_events as ev
 import update_tw_chips as chips
-
-VERSION = "v11.4.46"
-
 
 @dataclass
 class FetchResult:

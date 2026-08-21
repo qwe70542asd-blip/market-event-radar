@@ -1,8 +1,9 @@
-name: Update v11.4.46 media news batch
+name: Update media news batch
 on:
   push:
     branches: [main]
     paths:
+      - "VERSION.json"
       - ".github/workflows/update-news-batch.yml"
       - "scripts/update_media_source.py"
       - "scripts/update_stock_news.py"
@@ -67,7 +68,7 @@ jobs:
           file=os.environ["NEWS_FILE"]
           p=json.loads(Path(file).read_text(encoding="utf-8"))
           assert isinstance(p.get("items"),list)
-          assert p.get("metadata",{}).get("version")=="v11.4.46"
+          assert p.get("metadata",{}).get("version")=="v11.4.50"
           print(file,len(p.get("items",[])),p.get("metadata",{}).get("status"))
           PY
         env:

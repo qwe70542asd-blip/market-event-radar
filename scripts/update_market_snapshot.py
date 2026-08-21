@@ -21,11 +21,10 @@ from zoneinfo import ZoneInfo
 import csv
 import requests
 
-from common import DATA, NOW, read_json, write_payload
+from common import DATA, NOW, read_json, write_payload, VERSION
 
-VERSION = "v11.4.46"
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.46)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.50)",
     "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.6",
 }
 YAHOO_CHART = "https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"

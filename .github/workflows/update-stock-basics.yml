@@ -1,8 +1,9 @@
-name: Update v11.4.46 stock basics
+name: Update stock basics
 on:
   push:
     branches: [main]
     paths:
+      - "VERSION.json"
       - ".github/workflows/update-stock-basics.yml"
       - "scripts/update_stock_basics.py"
       - "scripts/common.py"

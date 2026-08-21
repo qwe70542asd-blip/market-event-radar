@@ -1,8 +1,9 @@
-name: Update v11.4.46 Yahoo detail references
+name: Update Yahoo detail references
 on:
   push:
     branches: [main]
     paths:
+      - "VERSION.json"
       - ".github/workflows/update-yahoo-details.yml"
       - "scripts/update_yahoo_details.py"
       - "scripts/common.py"

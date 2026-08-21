@@ -1,8 +1,9 @@
-name: Update v11.4.46 monthly revenue history
+name: Update monthly revenue history
 on:
   push:
     branches: [main]
     paths:
+      - "VERSION.json"
       - ".github/workflows/update-monthly-revenue.yml"
       - "scripts/update_monthly_revenue.py"
       - "scripts/update_assets.py"

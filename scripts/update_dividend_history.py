@@ -11,7 +11,7 @@ import json
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from common import DATA, NOW, read_json, write_payload
+from common import DATA, NOW, read_json, write_payload, VERSION
 from update_assets import (
     DIVIDEND_SOURCES,
     dividend_year_label,
@@ -25,7 +25,6 @@ from update_assets import (
     text_value,
 )
 
-VERSION = "v11.4.46"
 NEW_BATCH = 15
 RETRY_BATCH = 5
 MAX_RECORDS = 40

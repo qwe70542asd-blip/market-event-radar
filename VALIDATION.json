@@ -1,56 +1,45 @@
 {
-  "version": "v11.4.49",
-  "validated_at": "2026-08-21T13:08:00+08:00",
-  "release_scope": "full replacement; global central-bank official schedule; major-information recency/classification hardening",
-  "cleanup_repo": {
-    "status": "pass"
-  },
-  "workflow_publishers": {
-    "status": "pass",
-    "live_branches": 24
-  },
-  "security_authorization_audit": {
-    "status": "pass"
-  },
-  "production_readiness_static": {
-    "status": "pass"
-  },
-  "pytest": {
-    "status": "pass",
-    "passed": 274
-  },
-  "public_data_validation": {
-    "status": "pass",
-    "all": "validation ok all"
-  },
-  "workflow_yaml": {
-    "status": "pass",
-    "files": 16
-  },
-  "http_smoke": {
-    "status": "pass",
-    "pages": 7,
-    "referenced_assets": 65
-  },
-  "event_offline_rebuild": {
-    "status": "pass",
-    "events": 99,
-    "global_central_bank_events": 36,
-    "regions": [
-      "JP",
-      "EU",
-      "UK",
-      "TW",
-      "KR"
-    ]
-  },
-  "browser_smoke_local": {
-    "status": "environment-blocked",
-    "detail": "system Chromium starts but container policy blocks localhost with ERR_BLOCKED_BY_ADMINISTRATOR; GitHub hosted runner is authoritative"
-  },
-  "production_acceptance": [
-    "Verify v11.4.49 stable app release",
-    "Update v11.4.49 event calendar and announced dates",
-    "Deploy v11.4.49 live market worker"
+  "version": "v11.4.50",
+  "package": "full-replace",
+  "checks": [
+    {
+      "name": "repository cleanup",
+      "status": "pass"
+    },
+    {
+      "name": "python compileall",
+      "status": "pass"
+    },
+    {
+      "name": "public data validation",
+      "status": "pass"
+    },
+    {
+      "name": "security audit",
+      "status": "pass"
+    },
+    {
+      "name": "production static readiness",
+      "status": "pass"
+    },
+    {
+      "name": "pytest",
+      "status": "pass",
+      "detail": "273 passed"
+    },
+    {
+      "name": "javascript syntax",
+      "status": "pass"
+    },
+    {
+      "name": "http smoke",
+      "status": "pass",
+      "detail": "7 pages / 44 referenced assets"
+    },
+    {
+      "name": "chromium browser smoke",
+      "status": "skip",
+      "detail": "Playwright Chromium binary not installed in this environment; GitHub Actions is final browser gate"
+    }
   ]
 }

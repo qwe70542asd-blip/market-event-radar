@@ -1,8 +1,9 @@
-name: Update v11.4.46 secondary quote references
+name: Update secondary quote references
 on:
   push:
     branches: [main]
     paths:
+      - "VERSION.json"
       - ".github/workflows/update-secondary-reference.yml"
       - "scripts/update_secondary_reference.py"
       - "scripts/common.py"

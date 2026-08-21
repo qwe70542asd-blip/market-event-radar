@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Refresh Taiwan closing quotes and online historical market turnover.
 
-v11.4.46 validates the restored archive before reuse and backfills every calendar month from the official TWSE/TPEx network sources.
+The updater validates the restored archive before reuse and backfills every calendar month from the official TWSE/TPEx network sources.
 Local JSON is only a last-known-good cache. Turnover averages are published only from complete market totals, so a missing TPEx component can no longer silently bias volume momentum.
 """
 from __future__ import annotations
@@ -13,10 +13,9 @@ from typing import Any
 
 import requests
 
-from common import DATA, NOW, read_json, write_payload
+from common import DATA, NOW, read_json, write_payload, VERSION
 
-VERSION = "v11.4.46"
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.46)"}
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.50)"}
 TWSE_QUOTES = "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL"
 TPEX_QUOTES = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes"
 TWSE_FUNDS = "https://openapi.twse.com.tw/v1/opendata/t187ap47_L"

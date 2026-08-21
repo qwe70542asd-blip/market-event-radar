@@ -12,10 +12,9 @@ from zoneinfo import ZoneInfo
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any
 import requests
-from common import DATA, NOW, read_json
+from common import DATA, NOW, read_json, VERSION
 
-VERSION="v11.4.46"
-HEADERS={"User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.4.46)"}
+HEADERS={"User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.4.50)"}
 BATCH=120
 TAIPEI=ZoneInfo("Asia/Taipei")
 

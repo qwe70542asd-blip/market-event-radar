@@ -1,4 +1,4 @@
-Market Event Radar v11.4.49 FULL REPLACEMENT
+Market Event Radar v11.4.50 FULL REPLACEMENT
 
 1. In GitHub Desktop, fetch/pull the current main first.
 2. Close the website tab if it is open.
@@ -6,12 +6,12 @@ Market Event Radar v11.4.49 FULL REPLACEMENT
 4. Delete the old project files/folders, then copy ALL contents of this ZIP into the repository root.
 5. Do not copy an extra outer folder; index.html must sit directly in the repository root.
 6. Open GitHub Desktop. You should see a large clean replacement diff, including deletion of old v11.4.48 release-only files.
-7. Commit suggestion: market-event-radar-v11.4.49-full-replace
+7. Commit suggestion: market-event-radar-v11.4.50-full-replace
 8. Push.
 9. Check GitHub Actions:
-   - Verify v11.4.49 stable app release
-   - Update v11.4.49 event calendar and announced dates
-   - Deploy v11.4.49 live market worker
+   - Verify v11.4.50 stable app release
+   - Update v11.4.50 event calendar and announced dates
+   - Deploy v11.4.50 live market worker
 
 Existing Cloudflare configuration remains the same:
 - Secret CLOUDFLARE_API_TOKEN

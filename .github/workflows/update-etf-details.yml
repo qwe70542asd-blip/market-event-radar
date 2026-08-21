@@ -1,8 +1,9 @@
-name: Update v11.4.46 ETF detail references
+name: Update ETF detail references
 on:
   push:
     branches: [main]
     paths:
+      - "VERSION.json"
       - ".github/workflows/update-etf-details.yml"
       - "scripts/update_etf_details.py"
       - "scripts/common.py"

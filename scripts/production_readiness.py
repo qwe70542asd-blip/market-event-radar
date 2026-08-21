@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """Production-readiness gate for the live market channel.
 
-v11.4.49 verifies a fixed allowlisted Worker origin. Cache compatibility is
+This gate verifies a fixed allowlisted Worker origin. Cache compatibility is
 based on schema_version rather than the app release number so an old KV object
 cannot poison a new deployment and harmless release bumps do not invalidate a
 compatible payload.
 """
 from __future__ import annotations
+from common import VERSION
 import argparse,re,time
 from datetime import datetime,timezone
 from pathlib import Path
@@ -59,8 +60,10 @@ def static_checks(version:str)->None:
         fail('Worker Rate Limiting binding missing')
     if '"preview_urls": false' not in wrangler or '"workers_dev": true' not in wrangler:
         fail('workers.dev/preview URL policy missing')
-    if version not in worker or version not in runtime:
-        fail('runtime/worker version mismatch')
+    if version not in worker:
+        fail('Worker version mismatch')
+    if 'body?.version===VERSION' in runtime:
+        fail('frontend runtime must use schema compatibility instead of exact patch-version coupling')
     static_match=re.search(r'const STATIC=(\[.*?\]);',sw,re.S)
     if static_match and 'runtime-config.js' in static_match.group(1):
         fail('runtime-config.js must not be precached')
@@ -80,7 +83,7 @@ def valid_https_endpoint(endpoint:str)->str:
 
 
 def get_json(url:str,timeout:int=12):
-    r=requests.get(url,headers={'accept':'application/json','user-agent':'MarketEventRadar-readiness/11.4.49'},timeout=timeout)
+    r=requests.get(url,headers={'accept':'application/json','user-agent':f'MarketEventRadar-readiness/{VERSION.removeprefix("v")}'},timeout=timeout)
     r.raise_for_status()
     return r.json()
 
@@ -150,7 +153,7 @@ def main()->None:
     ap=argparse.ArgumentParser()
     ap.add_argument('--endpoint',default='')
     ap.add_argument('--require-live',action='store_true')
-    ap.add_argument('--version',default='v11.4.49')
+    ap.add_argument('--version',default=VERSION)
     args=ap.parse_args()
     static_checks(args.version)
     if args.require_live:

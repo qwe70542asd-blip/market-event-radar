@@ -1,74 +1,70 @@
 from pathlib import Path
+import re
 
 ROOT=Path(__file__).resolve().parents[1]
+def read(path): return (ROOT/path).read_text(encoding="utf-8")
 
-def read(path): return (ROOT/path).read_text(encoding='utf-8')
+def test_v11450_major_information_is_one_plus_three_equal_height():
+    css=read("assets/v11.4.50-overrides.css");home=read("assets/home.js")
+    assert "height:360px" in css
+    assert "grid-template-rows:238px 122px" in css
+    assert "grid-template-rows:repeat(3,minmax(0,1fr))" in css
+    assert "slice(0,4)" in home
+    assert "featured.slice(1,4)" in home
 
-def test_v11449_one_by_four_quick_navigation_and_priority_strip():
-    html=read('index.html');css=read('assets/v11.4.49-overrides.css')
-    assert 'today-market-brief' in html
-    assert 'grid-template-columns:96px' in css
-    assert 'grid-auto-rows:58px' in css
-    assert html.count('class="quick-tile') == 4
+def test_v11450_breaking_requires_breaking_signal_and_ranks_first():
+    home=read("assets/home.js")
+    assert 'BREAKING_RE.test(storyText)&&item._majorScore>=70?"突發／關鍵"' in home
+    assert 'const featureRank={"突發／關鍵":0' in home
+    assert "item._majorScore>=35" in home
 
-def test_v11449_major_information_has_fixed_desktop_geometry():
-    css=read('assets/v11.4.49-overrides.css')
-    for token in ('height:510px','grid-template-rows:345px 165px','height:345px','max-height:510px'):
-        assert token in css
+def test_v11450_date_only_events_never_claim_invented_time():
+    shared=read("assets/shared.js");home=read("assets/home.js");events=read("scripts/update_events.py")
+    assert "formatEventTime" in shared
+    assert "時間未公告" in home
+    assert 'start:`${day}T00:00:00+08:00`' in home
+    assert "start=at_taipei(day, 0, 0)" in events or "start = at_taipei(day, 0, 0)" in events
 
-def test_v11449_day_dialog_keeps_close_control_visible_and_has_escape_backdrop_close():
-    css=read('assets/v11.4.49-overrides.css');home=read('assets/home.js')
-    for token in ('height:min(88dvh,900px)','grid-template-rows:auto minmax(0,1fr)','overflow:auto','scrollbar-gutter:stable'):
-        assert token in css
-    for token in ('event.target===dialog','event.key==="Escape"','event.preventDefault();closeDayDialog()'):
-        assert token in home
+def test_v11450_homepage_uses_compact_event_index_and_lazy_full_archive():
+    home=read("assets/home.js");index=read("index.html");workflow=read(".github/workflows/update-events.yml")
+    assert 'loadData("events-index.json"' in home
+    assert "ensureFullEventArchive" in home
+    assert "events-index-seed.js" in index
+    assert "python scripts/build_event_index.py" in workflow
+    assert "data/events-index.json" in workflow
 
-def test_v11449_major_news_covers_market_structure_and_multiple_industries():
-    home=read('assets/home.js')
-    for token in ('MARKET_STRUCTURE_RE','零股','撮合','交易制度','AI_SECTOR_RE','FINANCE_RE','SHIPPING_RE','ENERGY_RE','BIOTECH_RE','REAL_ESTATE_RE','DEFENSE_RE','ROBOTICS_RE'):
-        assert token in home
-    assert 'selectDiverseNews' in home
-    assert 'used>=2&&item._majorScore<88' in home
+def test_v11450_service_worker_upgrade_is_resilient():
+    sw=read("service-worker.js");register=read("assets/sw-register.js")
+    assert "CORE_STATIC" in sw and "OPTIONAL_STATIC" in sw
+    assert "Promise.allSettled" in sw
+    core=sw.split("const CORE_STATIC=",1)[1].split(";",1)[0]
+    assert "events-seed.js" not in core
+    assert 'register("service-worker.js",{updateViaCache:"none"})' in register
+    assert 'const VERSION="11.4.46"' not in register
 
-def test_v11449_corroborated_explicit_news_dates_can_join_calendar_without_single_source_guessing():
-    home=read('assets/home.js')
-    for token in ('explicitNewsDate','NEWS_EVENT_ACTION_RE','derivedNewsEvents','reported-corroborated','single-media dates remain news, not confirmed calendar facts'):
-        assert token in home
-    assert 'reports>0||["cna","official-notices"].includes(sourceId)' in home
+def test_v11450_runtime_worker_is_schema_gated_not_patch_gated():
+    runtime=read("assets/runtime-config.js");readiness=read("scripts/production_readiness.py")
+    assert 'body?.schema_version===SCHEMA_VERSION' in runtime
+    assert "body?.version===VERSION" not in runtime
+    assert "workerVersion" in runtime
+    assert "frontend runtime must use schema compatibility" in readiness
 
-def test_v11449_large_company_day_is_progressively_disclosed():
-    home=read('assets/home.js')
-    assert 'groups.company.slice(0,36)' in home
-    assert 'show-all-company-events' in home
-    assert '顯示全部 ${groups.company.length} 筆公司資訊' in home
+def test_v11450_calendar_has_eu_uk_and_rollover():
+    index=read("index.html");home=read("assets/home.js")
+    assert '<option value="EU">歐洲</option>' in index
+    assert '<option value="UK">英國</option>' in index
+    assert "refreshDayKeys" in home and "checkDayBoundary" in home
+    assert "mr-calendar-mode-v1" in home
 
+def test_v11450_foreign_direction_uses_both_markets_and_stale_date_guard():
+    home=read("assets/home.js")
+    assert "markets.tpex?.institutional?.foreign_net" in home
+    assert "chipsCurrent" in home
+    assert "法人 ${chipDate" in home
 
-def test_v11449_market_structure_requires_real_change_signal_for_bare_institution():
-    home=read('assets/home.js')
-    assert 'MARKET_STRUCTURE_INSTITUTION_RE' in home
-    assert 'MARKET_STRUCTURE_CHANGE_RE' in home
-    assert 'isMarketStructure' in home
-    assert 'if(isMarketStructure(text))score+=52' in home
-
-def test_v11449_major_information_retention_and_today_focus_are_bounded():
-    home=read('assets/home.js')
-    assert 'majorRetentionMs' in home
-    assert 'return 72*3600000' in home
-    assert 'return 48*3600000' in home
-    assert 'focus24.length?focus24:focusCandidates' in home
-    assert '暫無明確焦點' in home
-
-def test_v11449_global_central_bank_official_snapshot_is_integrated():
-    updater=read('scripts/update_events.py')
-    workflow=read('.github/workflows/update-events.yml')
-    schedule=read('data/official-central-bank-schedule-2026.json')
-    for token in ('fetch_bundled_central_banks','global-central-banks','BOJ/ECB/BOE/CBC/BOK'):
-        assert token in updater
-    for token in ('boj.or.jp','ecb.europa.eu','bankofengland.co.uk','cbc.gov.tw','bok.or.kr'):
-        assert token in schedule
-    assert 'global central-bank schedule incomplete' in workflow
-
-def test_v11449_live_branch_channel_version_is_not_hardcoded_to_v11446():
-    publisher=read('scripts/publish_data_branch.sh')
-    assert 'VERSION.json' in publisher
-    assert '"version":"v11.4.46"' not in publisher
+def test_v11450_producers_use_version_source_of_truth():
+    common=read("scripts/common.py")
+    assert 'VERSION_INFO=read_json(ROOT/"VERSION.json"' in common
+    for file in (ROOT/"scripts").glob("update_*.py"):
+        text=file.read_text(encoding="utf-8")
+        assert not re.search(r'^VERSION\s*=\s*"v\d+\.\d+\.\d+"',text,re.M), file

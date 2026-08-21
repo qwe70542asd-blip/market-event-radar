@@ -14,9 +14,7 @@ import re
 import unicodedata
 from typing import Any
 
-from common import DATA, NOW, read_json, write_payload
-
-VERSION = "v11.4.46"
+from common import DATA, NOW, read_json, write_payload, VERSION
 
 SOURCE_FILES = {
     "assets": "assets.json",

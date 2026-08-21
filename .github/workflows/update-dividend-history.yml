@@ -1,8 +1,9 @@
-name: Update v11.4.46 dividend history
+name: Update dividend history
 on:
   push:
     branches: [main]
     paths:
+      - "VERSION.json"
       - ".github/workflows/update-dividend-history.yml"
       - "scripts/update_dividend_history.py"
       - "scripts/update_assets.py"

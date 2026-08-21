@@ -1,8 +1,9 @@
-name: Update v11.4.46 Taiwan chips
+name: Update Taiwan chips
 on:
   push:
     branches: [main]
     paths:
+      - "VERSION.json"
       - ".github/workflows/update-tw-chips.yml"
       - "scripts/update_tw_chips.py"
       - "scripts/common.py"
@@ -45,7 +46,7 @@ jobs:
           payload = json.loads(path.read_text(encoding="utf-8"))
           assert isinstance(payload, dict) and isinstance(payload.get("items"), dict)
           meta=payload.get("metadata",{})
-          assert meta.get("version")=="v11.4.46", meta
+          assert meta.get("version")=="v11.4.50", meta
           assert meta.get("schema")=="symbol-keyed-v2", meta
           for key,row in payload.get("items",{}).items():
               assert ":" not in key and key == str(row.get("symbol") or "").upper(), (key,row.get("symbol"))

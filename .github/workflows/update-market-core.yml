@@ -1,8 +1,9 @@
-name: Update v11.4.46 market core
+name: Update market core
 on:
   push:
     branches: [main]
     paths:
+      - "VERSION.json"
       - ".github/workflows/update-market-core.yml"
       - "scripts/update_market_snapshot.py"
       - "scripts/update_market_klines.py"
@@ -93,7 +94,8 @@ jobs:
           market=json.loads(Path("data/tw-market.json").read_text(encoding="utf-8"))
           history=json.loads(Path("data/market-volume-history.json").read_text(encoding="utf-8"))
           meta=market.get("metadata",{})
-          assert meta.get("version")=="v11.4.46", meta.get("version")
+          expected=json.loads(Path("VERSION.json").read_text(encoding="utf-8"))["version"]
+          assert meta.get("version")==expected, meta.get("version")
           trading_date=meta.get("trading_date")
           assert trading_date, "verified trading date missing"
           assert date.fromisoformat(trading_date).weekday() < 5, trading_date

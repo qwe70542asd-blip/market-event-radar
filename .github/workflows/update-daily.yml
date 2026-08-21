@@ -1,8 +1,9 @@
-name: Update v11.4.46 assets and audit
+name: Update assets and audit
 on:
   push:
     branches: [main]
     paths:
+      - "VERSION.json"
       - ".github/workflows/update-daily.yml"
       - "scripts/update_assets.py"
       - "scripts/audit_all_assets.py"

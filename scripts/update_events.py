@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build Market Event Radar v11.4.49 event data from official schedules.
+"""Build Market Event Radar event data from official schedules.
 
 The updater keeps the last verified archive, refreshes selected official sources,
 and records when an exact date first appears or changes. It never invents dates.
@@ -24,6 +24,7 @@ from bs4 import BeautifulSoup
 from dateutil import parser as date_parser
 
 ROOT = Path(__file__).resolve().parents[1]
+VERSION = json.loads((ROOT / "VERSION.json").read_text(encoding="utf-8")).get("version", "v0.0.0")
 DATA = ROOT / "data"
 EVENTS_PATH = DATA / "events.json"
 SEED_PATH = DATA / "events-seed.js"
@@ -35,7 +36,6 @@ NOW = datetime.now(ZoneInfo("Asia/Taipei"))
 TAIPEI = NOW.tzinfo
 NEW_YORK = ZoneInfo("America/New_York")
 OFFLINE = os.getenv("EVENT_OFFLINE", "").strip() == "1"
-VERSION = "v11.4.49"
 TRACKING_KEY_VERSION = 2
 ARCHIVE_START = date(2026, 1, 1)
 ARCHIVE_START_DT = datetime.combine(ARCHIVE_START, time.min, tzinfo=TAIPEI)
@@ -702,7 +702,7 @@ def fetch_bundled_central_banks(session: requests.Session) -> SourceResult:
         tracking = f"global-central-bank|{source_key}|{day.isoformat()}"
         event = make_event(
             event_id=stable_id("central-bank", tracking), tracking_key=tracking,
-            title=clean(row.get("title")), start=at_taipei(day), category="macro",
+            title=clean(row.get("title")), start=at_taipei(day, 0, 0), category="macro",
             event_type="central-bank-decision", event_group="macro", region=clean(row.get("region")) or "GLOBAL", impact="high",
             description=f"{source_name} 官方 2026 行程所列的貨幣政策會議／決策日期。",
             market_effect="利率路徑與政策措辭可能影響匯率、債券殖利率、股票估值及跨市場資金流向。",
@@ -738,7 +738,7 @@ def make_exdiv_event(market: str, symbol: str, name: str, day: date, kind: str, 
     if stock_ratio not in (None, 0): details.append(f"股票股利率 {fmt_number(stock_ratio)}")
     return make_event(
         event_id=stable_id("tw-exdiv", tracking, day), tracking_key=tracking,
-        title=f"{symbol} {name} {label}{amount}", start=at_taipei(day), category=category,
+        title=f"{symbol} {name} {label}{amount}", start=at_taipei(day, 0, 0), category=category,
         event_type=category, event_group="dividend", region="TW", impact="medium" if asset_class == "etf" else "low",
         description=f"{market} {type_label}的{label}日。{'、'.join(details) if details else '實際金額以交易所公告為準。'}",
         market_effect="除權息會調整參考價；ETF 配息也會使淨值與市價反映分配金額。",
@@ -1697,7 +1697,7 @@ def main() -> None:
             "announced_today_count": announced_today,
             "announced_recent_count": announced_recent,
             "state_initialized": True,
-            "announcement_integrity": "strict-v11.4.49-series-safe",
+            "announcement_integrity": f"strict-{VERSION}-series-safe",
             "announcement_suppressed_origins": sorted(suppressed_origins),
             "source_ok_count": sum(1 for source in sources if source.get("status") == "ok"),
             "source_warning_count": sum(1 for source in sources if source.get("status") != "ok"),

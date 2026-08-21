@@ -1,4 +1,4 @@
-/* Market Event Radar v11.4.49 homepage layout patch.
+/* Market Event Radar v11.4.50 homepage layout patch.
  * Calendar first, compact headline block, and one-by-four floating navigation.
  */
 .home-shell{position:relative}
@@ -45,13 +45,13 @@
 /* The selected-major-information area no longer dominates the homepage. */
 .compact-home-news{padding:13px}
 .compact-home-news .section-head{margin-bottom:0}
-.compact-home-news .home-news-feature-layout{grid-template-columns:minmax(0,1.55fr) minmax(300px,.85fr);gap:10px;margin-top:9px;height:510px;min-height:510px;max-height:510px}
-.compact-home-news .home-feature-lead{grid-template-rows:345px 165px;height:510px;min-height:510px;max-height:510px}
-.compact-home-news .home-feature-lead .home-news-thumb{min-height:345px;height:345px;max-height:345px}
+.compact-home-news .home-news-feature-layout{grid-template-columns:minmax(0,1.55fr) minmax(300px,.85fr);gap:10px;margin-top:9px;height:360px;min-height:360px;max-height:360px}
+.compact-home-news .home-feature-lead{grid-template-rows:238px 122px;height:360px;min-height:360px;max-height:360px}
+.compact-home-news .home-feature-lead .home-news-thumb{min-height:238px;height:238px;max-height:238px}
 .compact-home-news .home-feature-lead h3{font-size:20px;line-height:1.35;margin:6px 0}
 .compact-home-news .home-feature-lead p{font-size:11px;-webkit-line-clamp:2}
 .compact-home-news .home-feature-copy{padding:10px 12px;overflow:hidden}
-.compact-home-news .home-feature-side-list{height:510px;min-height:510px;max-height:510px;grid-template-rows:repeat(5,minmax(0,1fr));gap:7px;overflow:hidden}
+.compact-home-news .home-feature-side-list{height:360px;min-height:360px;max-height:360px;grid-template-rows:repeat(3,minmax(0,1fr));gap:7px;overflow:hidden}
 .compact-home-news .home-feature-side{grid-template-columns:108px minmax(0,1fr);min-height:0;height:100%;overflow:hidden}
 .compact-home-news .home-feature-side .home-news-thumb{width:108px;min-height:0;height:100%;max-height:100%}
 .compact-home-news .home-feature-side .home-feature-copy{padding:7px 8px}
@@ -95,7 +95,7 @@
 }
 
 
-/* v11.4.49 usability hardening: emphasis, fixed cards, persistent dialog controls. */
+/* v11.4.50 usability hardening: emphasis, fixed cards, persistent dialog controls. */
 .section-subtitle{margin:4px 0 0;color:#7898ae;font-size:11px;line-height:1.45;font-weight:500;letter-spacing:0}
 .today-market-brief{display:grid;grid-template-columns:auto minmax(260px,1fr) auto;align-items:center;gap:16px;margin:0 0 12px;padding:12px 14px;border:1px solid #2b4b63;border-radius:14px;background:linear-gradient(135deg,rgba(14,39,57,.96),rgba(7,23,36,.96));box-shadow:0 10px 24px rgba(0,0,0,.12)}
 .today-brief-title h2{margin:0;font-size:17px;white-space:nowrap}.today-brief-sentence{margin:0;color:#d7e5ee;font-size:13px;line-height:1.55;font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.today-brief-facts{display:grid;grid-template-columns:repeat(4,minmax(76px,auto));gap:7px}.today-brief-facts span{padding:7px 9px;border:1px solid #29465d;border-radius:9px;background:#0a1c2b}.today-brief-facts small,.today-brief-facts b{display:block}.today-brief-facts small{color:#7895aa;font-size:9px}.today-brief-facts b{margin-top:2px;color:#e4eef4;font-size:11px;white-space:nowrap}

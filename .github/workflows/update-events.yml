@@ -1,9 +1,10 @@
-name: Update v11.4.49 event calendar and announced dates
+name: Update event calendar and announced dates
 
 on:
   push:
     branches: [main]
     paths:
+      - "VERSION.json"
       - ".github/workflows/update-events.yml"
       - "scripts/update_events.py"
       - "scripts/publish_data_branch.sh"
@@ -80,6 +81,9 @@ jobs:
       - name: Scan official calendars and compare exact dates
         run: python scripts/update_events.py
 
+      - name: Build compact homepage event index
+        run: python scripts/build_event_index.py
+
       - name: Validate event archive and date-monitor metadata
         run: |
           python - <<'PY'
@@ -90,14 +94,15 @@ jobs:
           events=payload.get("events") or []
           metadata=payload.get("metadata") or {}
           assert events, "empty event calendar after official-source refresh"
-          assert metadata.get("version")=="v11.4.49", metadata
+          expected=json.loads(Path("VERSION.json").read_text(encoding="utf-8"))["version"]
+          assert metadata.get("version")==expected, metadata
           assert metadata.get("state_initialized") is True, metadata
           assert metadata.get("archive_start")=="2026-01-01", metadata
           assert isinstance(metadata.get("announced_today_count"), int), metadata
           assert all(str(row.get("local_date") or row.get("start") or "")[:10] >= "2026-01-01" for row in events)
           assert state.get("initialized") is True, state
           assert int(state.get("tracking_key_version") or 0) >= 2, state
-          assert metadata.get("announcement_integrity") == "strict-v11.4.49-series-safe", metadata
+          assert metadata.get("announcement_integrity") == f"strict-{expected}-series-safe", metadata
           assert all(row.get("id") and row.get("title") and row.get("start") for row in events)
           global_cb=[row for row in events if row.get("origin")=="global-central-banks"]
           assert len(global_cb) >= 30, f"global central-bank schedule incomplete: {len(global_cb)}"
@@ -109,6 +114,14 @@ jobs:
                       assert re.match(r"^bea\|[^|]+\|20\d{2}\|[^|]+$", key), row
                   else:
                       assert re.match(r"^bls\|[^|]+\|[^|]+$", key), row
+          index=json.loads(Path("data/events-index.json").read_text(encoding="utf-8"))
+          index_events=index.get("events") or []
+          index_meta=index.get("metadata") or {}
+          assert index_meta.get("version")==expected, index_meta
+          assert index_meta.get("is_index") is True, index_meta
+          assert index_events, "empty homepage event index"
+          assert len(index_events) <= len(events), (len(index_events),len(events))
+          print("event index",len(index_events),"of",len(events))
           print("events",len(events))
           print("today newly announced",metadata.get("announced_today_count"))
           print("sources ok",metadata.get("source_ok_count"))
@@ -120,7 +133,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          bash scripts/publish_data_branch.sh "$DATA_BRANCH" "event-calendar-v11.4.49" \
+          APP_VERSION="$(python -c 'import json;print(json.load(open("VERSION.json",encoding="utf-8"))["version"])')"
+          bash scripts/publish_data_branch.sh "$DATA_BRANCH" "event-calendar-$APP_VERSION" \
             data/events.json \
             data/events-seed.js \
+            data/events-index.json \
+            data/events-index-seed.js \
             data/event-source-state.json

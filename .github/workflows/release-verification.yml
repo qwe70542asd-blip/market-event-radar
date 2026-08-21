@@ -1,4 +1,4 @@
-name: Verify v11.4.49 stable app release
+name: Verify stable app release
 on:
   push:
     branches: [main]
@@ -61,7 +61,7 @@ jobs:
         run: python scripts/security_audit.py
 
       - name: Static production readiness gate
-        run: python scripts/production_readiness.py --version v11.4.49
+        run: python scripts/production_readiness.py --version v11.4.50
 
       - name: Strict data validation
         run: python scripts/validate_public_data.py all

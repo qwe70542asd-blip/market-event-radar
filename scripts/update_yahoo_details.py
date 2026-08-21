@@ -15,9 +15,8 @@ from typing import Any
 
 import requests
 
-from common import DATA, NOW, read_json, write_payload
+from common import DATA, NOW, read_json, write_payload, VERSION
 
-VERSION = "v11.4.46"
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/150 Safari/537.36",
     "Accept": "application/json,text/plain,*/*",

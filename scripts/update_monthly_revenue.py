@@ -10,7 +10,7 @@ import json
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from common import DATA, NOW, read_json, write_payload
+from common import DATA, NOW, read_json, write_payload, VERSION
 from update_assets import (
     MONTHLY_REVENUE_SOURCES,
     MOPS_REVENUE_ARCHIVES,
@@ -22,7 +22,6 @@ from update_assets import (
     year_month_of,
 )
 
-VERSION = "v11.4.46"
 HISTORY_MONTHS = 60
 BATCH_MONTHS = 12
 RETRY_JOBS = 4
