@@ -440,9 +440,9 @@ class StaticTests(unittest.TestCase):
 
  def test_v11424_version_bump_prevents_same_version_asset_cache(self):
   for path in ("index.html","assets/home.js","assets/runtime-config.js","service-worker.js","VERSION.json"):
-   content=self.read(path);self.assertIn("11.4.48",content);self.assertNotIn("11.4.23",content);self.assertNotIn("11.4.22",content)
+   content=self.read(path);self.assertIn("11.4.49",content);self.assertNotIn("11.4.23",content);self.assertNotIn("11.4.22",content)
   index=self.read("index.html");sw=self.read("service-worker.js")
-  for token in ("assets/shared.js?v=11.4.48","assets/home.js?v=11.4.48","assets/sw-register.js?v=11.4.48"):
+  for token in ("assets/shared.js?v=11.4.49","assets/home.js?v=11.4.49","assets/sw-register.js?v=11.4.49"):
    self.assertIn(token,index+sw)
 
  def test_v11428_compact_market_state_replaces_sector_heat(self):
@@ -500,7 +500,7 @@ class StaticTests(unittest.TestCase):
 
  def test_v11428_mobile_calendar_has_no_forced_horizontal_scroll(self):
   css=self.read("assets/styles.css");html=self.read("index.html");manifest=json.loads(self.read("manifest.webmanifest"))
-  for token in (".calendar-weekdays,.calendar-grid{width:100%;min-width:0!important","overflow:visible!important","grid-template-columns:repeat(7,minmax(0,1fr))",".mobile-install-trigger","assets/pwa-install.js?v=11.4.48"):
+  for token in (".calendar-weekdays,.calendar-grid{width:100%;min-width:0!important","overflow:visible!important","grid-template-columns:repeat(7,minmax(0,1fr))",".mobile-install-trigger","assets/pwa-install.js?v=11.4.49"):
    self.assertIn(token,css+html)
   self.assertEqual(manifest.get("display"),"standalone")
   self.assertTrue(any(icon.get("sizes")=="192x192" for icon in manifest.get("icons",[])))
@@ -516,9 +516,9 @@ class StaticTests(unittest.TestCase):
   frontend=self.read("assets/date-alerts.js");backend=self.read("scripts/update_events.py");workflow=self.read(".github/workflows/update-events.yml")
   for token in ("trustedAnnouncement","next<today","previous>=today","dayDistance(previous,next)<=183"):
    self.assertIn(token,frontend)
-  for token in ("announcement_candidate","announcement_semantically_valid","suppressed_origins","strict-v11.4.46"):
+  for token in ("announcement_candidate","announcement_semantically_valid","suppressed_origins","strict-v11.4.49"):
    self.assertIn(token,backend)
-  self.assertIn("v11.4.46",workflow)
+  self.assertIn("v11.4.49",workflow)
 
 
  def test_v11431_repo_layout_guard(self):
@@ -600,7 +600,7 @@ class StaticTests(unittest.TestCase):
 
  def test_v11431_edge_worker_is_current_and_uses_verified_time(self):
   worker=self.read("edge/market-live-worker.js")
-  self.assertIn('v11.4.48',worker);self.assertNotIn('v11.4.27',worker)
+  self.assertIn('v11.4.49',worker);self.assertNotIn('v11.4.27',worker)
   self.assertIn('missing verified quote time',worker)
   self.assertIn('marketDate(new Date(x.time*1000),market)',worker)
   self.assertIn('latestSession===session?previous?.close:latest?.close',worker)
@@ -657,7 +657,7 @@ class StaticTests(unittest.TestCase):
   for token in ('TRACKING_KEY_VERSION = 2','bea_series_key','bls_series_key','assign_bea_tracking','canonical_event_key','tracking_migration_origins'):
    self.assertIn(token,events)
   self.assertGreaterEqual(workflow.count("inputs.clean_rebuild"),2)
-  self.assertIn('strict-v11.4.46-series-safe',workflow)
+  self.assertIn('strict-v11.4.49-series-safe',workflow)
   self.assertIn('reject legacy recurring-series keys',alerts)
 
  def test_v11432_market_and_chip_state_migrations(self):
@@ -680,7 +680,7 @@ class StaticTests(unittest.TestCase):
    self.assertIn(token,ignore)
   for token in ('NESTED_DIRS','REDUNDANT_WORKFLOWS','version_obsolete_paths','--check'):
    self.assertIn(token,cleanup)
-  self.assertIn('python scripts/cleanup_repo.py --check',verify);self.assertIn('verify-v11-4-48-${{ github.ref }}',verify)
+  self.assertIn('python scripts/cleanup_repo.py --check',verify);self.assertIn('verify-v11-4-49-${{ github.ref }}',verify)
 
  def test_v11438_home_portfolio_totals_fail_closed(self):
   home=self.read("assets/home.js")

@@ -1,8 +1,606 @@
 {
-  "version": "v11.4.46",
-  "initialized": false,
-  "updated_at": null,
-  "sources": {},
+  "version": "v11.4.49",
+  "initialized": true,
   "tracking_key_version": 2,
-  "events": {}
+  "initialized_origins": [
+    "bls",
+    "global-central-banks"
+  ],
+  "updated_at": "2026-08-21T13:18:57+08:00",
+  "events": {
+    "bls|employment-situation|2025-dec": {
+      "start": "2026-01-09T21:30:00+08:00",
+      "title": "美國非農就業報告",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|employment-situation|2026-jan": {
+      "start": "2026-02-11T21:30:00+08:00",
+      "title": "美國非農就業報告",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|employment-situation|2026-feb": {
+      "start": "2026-03-06T21:30:00+08:00",
+      "title": "美國非農就業報告",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|employment-situation|2026-mar": {
+      "start": "2026-04-03T20:30:00+08:00",
+      "title": "美國非農就業報告",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|employment-situation|2026-apr": {
+      "start": "2026-05-08T20:30:00+08:00",
+      "title": "美國非農就業報告",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|employment-situation|2026-may": {
+      "start": "2026-06-05T20:30:00+08:00",
+      "title": "美國非農就業報告",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|employment-situation|2026-jun": {
+      "start": "2026-07-02T20:30:00+08:00",
+      "title": "美國非農就業報告",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|employment-situation|2026-jul": {
+      "start": "2026-08-07T20:30:00+08:00",
+      "title": "美國非農就業報告",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|employment-situation|2026-aug": {
+      "start": "2026-09-04T20:30:00+08:00",
+      "title": "美國非農就業報告",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|employment-situation|2026-sep": {
+      "start": "2026-10-02T20:30:00+08:00",
+      "title": "美國非農就業報告",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|employment-situation|2026-oct": {
+      "start": "2026-11-06T21:30:00+08:00",
+      "title": "美國非農就業報告",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|employment-situation|2026-nov": {
+      "start": "2026-12-04T21:30:00+08:00",
+      "title": "美國非農就業報告",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|cpi|2025-dec": {
+      "start": "2026-01-13T21:30:00+08:00",
+      "title": "美國 CPI 通膨",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|cpi|2026-jan": {
+      "start": "2026-02-13T21:30:00+08:00",
+      "title": "美國 CPI 通膨",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|cpi|2026-feb": {
+      "start": "2026-03-11T20:30:00+08:00",
+      "title": "美國 CPI 通膨",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|cpi|2026-mar": {
+      "start": "2026-04-10T20:30:00+08:00",
+      "title": "美國 CPI 通膨",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|cpi|2026-apr": {
+      "start": "2026-05-12T20:30:00+08:00",
+      "title": "美國 CPI 通膨",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|cpi|2026-may": {
+      "start": "2026-06-10T20:30:00+08:00",
+      "title": "美國 CPI 通膨",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|cpi|2026-jun": {
+      "start": "2026-07-14T20:30:00+08:00",
+      "title": "美國 CPI 通膨",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|cpi|2026-jul": {
+      "start": "2026-08-12T20:30:00+08:00",
+      "title": "美國 CPI 通膨",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|cpi|2026-aug": {
+      "start": "2026-09-11T20:30:00+08:00",
+      "title": "美國 CPI 通膨",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|cpi|2026-sep": {
+      "start": "2026-10-14T20:30:00+08:00",
+      "title": "美國 CPI 通膨",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|cpi|2026-oct": {
+      "start": "2026-11-10T21:30:00+08:00",
+      "title": "美國 CPI 通膨",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|cpi|2026-nov": {
+      "start": "2026-12-10T21:30:00+08:00",
+      "title": "美國 CPI 通膨",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|ppi|2025-nov": {
+      "start": "2026-01-14T21:30:00+08:00",
+      "title": "美國 PPI 生產者物價",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|ppi|2025-dec": {
+      "start": "2026-01-30T21:30:00+08:00",
+      "title": "美國 PPI 生產者物價",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|ppi|2026-jan": {
+      "start": "2026-02-27T21:30:00+08:00",
+      "title": "美國 PPI 生產者物價",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|ppi|2026-feb": {
+      "start": "2026-03-18T20:30:00+08:00",
+      "title": "美國 PPI 生產者物價",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|ppi|2026-mar": {
+      "start": "2026-04-14T20:30:00+08:00",
+      "title": "美國 PPI 生產者物價",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|ppi|2026-apr": {
+      "start": "2026-05-13T20:30:00+08:00",
+      "title": "美國 PPI 生產者物價",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|ppi|2026-may": {
+      "start": "2026-06-11T20:30:00+08:00",
+      "title": "美國 PPI 生產者物價",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|ppi|2026-jun": {
+      "start": "2026-07-15T20:30:00+08:00",
+      "title": "美國 PPI 生產者物價",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|ppi|2026-jul": {
+      "start": "2026-08-13T20:30:00+08:00",
+      "title": "美國 PPI 生產者物價",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|ppi|2026-aug": {
+      "start": "2026-09-10T20:30:00+08:00",
+      "title": "美國 PPI 生產者物價",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|ppi|2026-sep": {
+      "start": "2026-10-15T20:30:00+08:00",
+      "title": "美國 PPI 生產者物價",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|ppi|2026-oct": {
+      "start": "2026-11-13T21:30:00+08:00",
+      "title": "美國 PPI 生產者物價",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|ppi|2026-nov": {
+      "start": "2026-12-15T21:30:00+08:00",
+      "title": "美國 PPI 生產者物價",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|jolts|2025-nov": {
+      "start": "2026-01-07T23:00:00+08:00",
+      "title": "美國 JOLTS 職缺數",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|jolts|2025-dec": {
+      "start": "2026-02-05T23:00:00+08:00",
+      "title": "美國 JOLTS 職缺數",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|jolts|2026-jan": {
+      "start": "2026-03-13T22:00:00+08:00",
+      "title": "美國 JOLTS 職缺數",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|jolts|2026-feb": {
+      "start": "2026-03-31T22:00:00+08:00",
+      "title": "美國 JOLTS 職缺數",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|jolts|2026-mar": {
+      "start": "2026-05-05T22:00:00+08:00",
+      "title": "美國 JOLTS 職缺數",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|jolts|2026-apr": {
+      "start": "2026-06-02T22:00:00+08:00",
+      "title": "美國 JOLTS 職缺數",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|jolts|2026-may": {
+      "start": "2026-06-30T22:00:00+08:00",
+      "title": "美國 JOLTS 職缺數",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|jolts|2026-jun": {
+      "start": "2026-08-04T22:00:00+08:00",
+      "title": "美國 JOLTS 職缺數",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|jolts|2026-jul": {
+      "start": "2026-09-01T22:00:00+08:00",
+      "title": "美國 JOLTS 職缺數",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|jolts|2026-aug": {
+      "start": "2026-09-29T22:00:00+08:00",
+      "title": "美國 JOLTS 職缺數",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|jolts|2026-sep": {
+      "start": "2026-11-03T23:00:00+08:00",
+      "title": "美國 JOLTS 職缺數",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|jolts|2026-oct": {
+      "start": "2026-12-01T23:00:00+08:00",
+      "title": "美國 JOLTS 職缺數",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|eci|2025-q4": {
+      "start": "2026-02-10T21:30:00+08:00",
+      "title": "美國就業成本指數",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|eci|2026-q1": {
+      "start": "2026-04-30T20:30:00+08:00",
+      "title": "美國就業成本指數",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|eci|2026-q2": {
+      "start": "2026-07-31T20:30:00+08:00",
+      "title": "美國就業成本指數",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|eci|2026-q3": {
+      "start": "2026-10-30T20:30:00+08:00",
+      "title": "美國就業成本指數",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|productivity-preliminary|2025-q3": {
+      "start": "2026-01-08T21:30:00+08:00",
+      "title": "美國生產力與單位勞動成本",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|productivity-revised|2025-q3": {
+      "start": "2026-01-29T21:30:00+08:00",
+      "title": "美國生產力與單位勞動成本",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|productivity-preliminary|2025-q4": {
+      "start": "2026-03-05T21:30:00+08:00",
+      "title": "美國生產力與單位勞動成本",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|productivity-revised|2025-q4": {
+      "start": "2026-03-24T20:30:00+08:00",
+      "title": "美國生產力與單位勞動成本",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|productivity-preliminary|2026-q1": {
+      "start": "2026-05-07T20:30:00+08:00",
+      "title": "美國生產力與單位勞動成本",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|productivity-revised|2026-q1": {
+      "start": "2026-06-04T20:30:00+08:00",
+      "title": "美國生產力與單位勞動成本",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|productivity-preliminary|2026-q2": {
+      "start": "2026-08-06T20:30:00+08:00",
+      "title": "美國生產力與單位勞動成本",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|productivity-revised|2026-q2": {
+      "start": "2026-09-03T20:30:00+08:00",
+      "title": "美國生產力與單位勞動成本",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|productivity-preliminary|2026-q3": {
+      "start": "2026-11-05T21:30:00+08:00",
+      "title": "美國生產力與單位勞動成本",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "bls|productivity-revised|2026-q3": {
+      "start": "2026-12-08T21:30:00+08:00",
+      "title": "美國生產力與單位勞動成本",
+      "origin": "bls",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|boj|2026-01-23": {
+      "start": "2026-01-23T09:00:00+08:00",
+      "title": "日本銀行（BOJ）貨幣政策決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|boj|2026-03-19": {
+      "start": "2026-03-19T09:00:00+08:00",
+      "title": "日本銀行（BOJ）貨幣政策決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|boj|2026-04-28": {
+      "start": "2026-04-28T09:00:00+08:00",
+      "title": "日本銀行（BOJ）貨幣政策決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|boj|2026-06-16": {
+      "start": "2026-06-16T09:00:00+08:00",
+      "title": "日本銀行（BOJ）貨幣政策決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|boj|2026-07-31": {
+      "start": "2026-07-31T09:00:00+08:00",
+      "title": "日本銀行（BOJ）貨幣政策決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|boj|2026-09-18": {
+      "start": "2026-09-18T09:00:00+08:00",
+      "title": "日本銀行（BOJ）貨幣政策決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|boj|2026-10-30": {
+      "start": "2026-10-30T09:00:00+08:00",
+      "title": "日本銀行（BOJ）貨幣政策決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|boj|2026-12-18": {
+      "start": "2026-12-18T09:00:00+08:00",
+      "title": "日本銀行（BOJ）貨幣政策決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|ecb|2026-02-05": {
+      "start": "2026-02-05T09:00:00+08:00",
+      "title": "歐洲央行（ECB）貨幣政策決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|ecb|2026-03-19": {
+      "start": "2026-03-19T09:00:00+08:00",
+      "title": "歐洲央行（ECB）貨幣政策決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|ecb|2026-04-30": {
+      "start": "2026-04-30T09:00:00+08:00",
+      "title": "歐洲央行（ECB）貨幣政策決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|ecb|2026-06-11": {
+      "start": "2026-06-11T09:00:00+08:00",
+      "title": "歐洲央行（ECB）貨幣政策決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|ecb|2026-07-23": {
+      "start": "2026-07-23T09:00:00+08:00",
+      "title": "歐洲央行（ECB）貨幣政策決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|ecb|2026-09-10": {
+      "start": "2026-09-10T09:00:00+08:00",
+      "title": "歐洲央行（ECB）貨幣政策決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|ecb|2026-10-29": {
+      "start": "2026-10-29T09:00:00+08:00",
+      "title": "歐洲央行（ECB）貨幣政策決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|ecb|2026-12-17": {
+      "start": "2026-12-17T09:00:00+08:00",
+      "title": "歐洲央行（ECB）貨幣政策決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|boe|2026-02-05": {
+      "start": "2026-02-05T09:00:00+08:00",
+      "title": "英國央行（BOE）MPC 利率決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|boe|2026-03-19": {
+      "start": "2026-03-19T09:00:00+08:00",
+      "title": "英國央行（BOE）MPC 利率決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|boe|2026-04-30": {
+      "start": "2026-04-30T09:00:00+08:00",
+      "title": "英國央行（BOE）MPC 利率決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|boe|2026-06-18": {
+      "start": "2026-06-18T09:00:00+08:00",
+      "title": "英國央行（BOE）MPC 利率決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|boe|2026-07-30": {
+      "start": "2026-07-30T09:00:00+08:00",
+      "title": "英國央行（BOE）MPC 利率決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|boe|2026-09-17": {
+      "start": "2026-09-17T09:00:00+08:00",
+      "title": "英國央行（BOE）MPC 利率決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|boe|2026-11-05": {
+      "start": "2026-11-05T09:00:00+08:00",
+      "title": "英國央行（BOE）MPC 利率決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|boe|2026-12-17": {
+      "start": "2026-12-17T09:00:00+08:00",
+      "title": "英國央行（BOE）MPC 利率決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|cbc-tw|2026-03-19": {
+      "start": "2026-03-19T09:00:00+08:00",
+      "title": "台灣央行理監事聯席會議貨幣政策決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|cbc-tw|2026-06-18": {
+      "start": "2026-06-18T09:00:00+08:00",
+      "title": "台灣央行理監事聯席會議貨幣政策決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|cbc-tw|2026-09-17": {
+      "start": "2026-09-17T09:00:00+08:00",
+      "title": "台灣央行理監事聯席會議貨幣政策決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|cbc-tw|2026-12-17": {
+      "start": "2026-12-17T09:00:00+08:00",
+      "title": "台灣央行理監事聯席會議貨幣政策決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|bok|2026-01-15": {
+      "start": "2026-01-15T09:00:00+08:00",
+      "title": "韓國央行（BOK）貨幣政策決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|bok|2026-02-26": {
+      "start": "2026-02-26T09:00:00+08:00",
+      "title": "韓國央行（BOK）貨幣政策決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|bok|2026-04-10": {
+      "start": "2026-04-10T09:00:00+08:00",
+      "title": "韓國央行（BOK）貨幣政策決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|bok|2026-05-28": {
+      "start": "2026-05-28T09:00:00+08:00",
+      "title": "韓國央行（BOK）貨幣政策決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|bok|2026-07-16": {
+      "start": "2026-07-16T09:00:00+08:00",
+      "title": "韓國央行（BOK）貨幣政策決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|bok|2026-08-27": {
+      "start": "2026-08-27T09:00:00+08:00",
+      "title": "韓國央行（BOK）貨幣政策決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|bok|2026-10-22": {
+      "start": "2026-10-22T09:00:00+08:00",
+      "title": "韓國央行（BOK）貨幣政策決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    },
+    "global-central-bank|bok|2026-11-26": {
+      "start": "2026-11-26T09:00:00+08:00",
+      "title": "韓國央行（BOK）貨幣政策決策",
+      "origin": "global-central-banks",
+      "last_seen_at": "2026-08-21T13:18:57+08:00"
+    }
+  }
 }

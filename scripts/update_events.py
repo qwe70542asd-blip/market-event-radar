@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build Market Event Radar v11.4.46 event data from official schedules.
+"""Build Market Event Radar v11.4.49 event data from official schedules.
 
 The updater keeps the last verified archive, refreshes selected official sources,
 and records when an exact date first appears or changes. It never invents dates.
@@ -30,11 +30,12 @@ SEED_PATH = DATA / "events-seed.js"
 MANUAL_PATH = DATA / "manual-events.json"
 STATE_PATH = DATA / "event-source-state.json"
 BLS_SNAPSHOT_PATH = DATA / "bls-official-schedule-2026.json"
+CENTRAL_BANK_SNAPSHOT_PATH = DATA / "official-central-bank-schedule-2026.json"
 NOW = datetime.now(ZoneInfo("Asia/Taipei"))
 TAIPEI = NOW.tzinfo
 NEW_YORK = ZoneInfo("America/New_York")
 OFFLINE = os.getenv("EVENT_OFFLINE", "").strip() == "1"
-VERSION = "v11.4.46"
+VERSION = "v11.4.49"
 TRACKING_KEY_VERSION = 2
 ARCHIVE_START = date(2026, 1, 1)
 ARCHIVE_START_DT = datetime.combine(ARCHIVE_START, time.min, tzinfo=TAIPEI)
@@ -673,6 +674,53 @@ def fetch_fomc(session: requests.Session) -> SourceResult:
     if not events: raise RuntimeError("FOMC calendar returned no 2026 meetings")
     return SourceResult("fomc", "Federal Reserve FOMC calendar", FOMC_URL, ("fomc",), events)
 
+
+def fetch_bundled_central_banks(session: requests.Session) -> SourceResult:
+    """Load exact 2026 policy-decision dates transcribed from official central-bank schedules.
+
+    These are date-only official schedule facts.  The updater deliberately does
+    not invent a release clock time; normal source-state tracking still detects
+    later date changes when the verified snapshot is updated.
+    """
+    payload = load_json(CENTRAL_BANK_SNAPSHOT_PATH, {})
+    source_rows = payload.get("sources") if isinstance(payload, dict) else []
+    event_rows = payload.get("events") if isinstance(payload, dict) else []
+    sources = {clean(row.get("key")): row for row in source_rows if isinstance(row, dict)}
+    events: list[dict[str, Any]] = []
+    for row in event_rows if isinstance(event_rows, list) else []:
+        if not isinstance(row, dict):
+            continue
+        source_key = clean(row.get("source_key"))
+        source = sources.get(source_key) or {}
+        day = parse_market_date(row.get("date"))
+        if not source_key or not day or not ARCHIVE_START <= day <= NOW.date() + timedelta(days=370):
+            continue
+        source_url = clean(source.get("url"))
+        source_name = clean(source.get("name"))
+        if not source_url.startswith("https://") or not source_name:
+            continue
+        tracking = f"global-central-bank|{source_key}|{day.isoformat()}"
+        event = make_event(
+            event_id=stable_id("central-bank", tracking), tracking_key=tracking,
+            title=clean(row.get("title")), start=at_taipei(day), category="macro",
+            event_type="central-bank-decision", event_group="macro", region=clean(row.get("region")) or "GLOBAL", impact="high",
+            description=f"{source_name} 官方 2026 行程所列的貨幣政策會議／決策日期。",
+            market_effect="利率路徑與政策措辭可能影響匯率、債券殖利率、股票估值及跨市場資金流向。",
+            source_name=source_name, source_url=source_url, origin="global-central-banks",
+            all_day=True, assets=list(row.get("assets") or []), tags=["央行", "利率決策", source_key.upper()],
+            date_basis="official 2026 central-bank schedule bundled snapshot",
+            schedule_snapshot_verified_at=clean((payload.get("metadata") or {}).get("verified_at")),
+            time_status="date-only", verification_status="confirmed",
+        )
+        events.append(event)
+    if len(events) < 30:
+        raise RuntimeError(f"verified central-bank schedule unexpectedly small: {len(events)}")
+    return SourceResult(
+        "global-central-banks", "Official 2026 central-bank policy schedules",
+        "https://www.boj.or.jp/en/mopo/mpmsche_minu/index.htm", ("global-central-banks",), events,
+        f"{len(events)} exact date-only policy meetings from BOJ/ECB/BOE/CBC/BOK official schedules",
+    )
+
 def tw_asset_type(symbol: str, name: str) -> tuple[str, str]:
     is_etf = symbol.startswith("00") or "ETF" in name.upper() or "基金" in name
     return ("etf", "ETF") if is_etf else ("stock", "股票")
@@ -1295,7 +1343,7 @@ def fallback_tracking_key(row: dict[str, Any]) -> str:
     return f"legacy|{clean(row.get('origin'))}|{symbol}|{base[:160]}"
 
 
-DATE_ALERT_SCHEDULE_ORIGINS = {"bls", "bea", "fomc", "twse-exdiv", "tpex-exdiv"}
+DATE_ALERT_SCHEDULE_ORIGINS = {"bls", "bea", "fomc", "global-central-banks", "twse-exdiv", "tpex-exdiv"}
 DATE_ALERT_TYPES = {"economic-release", "central-bank-decision", "ex-dividend", "ex-right", "investor-conference", "shareholder-meeting", "dividend-payment"}
 
 
@@ -1456,7 +1504,7 @@ def main() -> None:
     previous_by_tracking = {fallback_tracking_key(row): row for row in previous_events}
 
     fetchers: list[Callable[[requests.Session], SourceResult]] = [
-        fetch_bls, fetch_bea, fetch_fomc, fetch_twse_exdiv, fetch_tpex_exdiv,
+        fetch_bls, fetch_bea, fetch_fomc, fetch_bundled_central_banks, fetch_twse_exdiv, fetch_tpex_exdiv,
         fetch_twse_exdiv_history, fetch_tpex_exdiv_history,
         fetch_twse_dividend_plans, fetch_tpex_dividend_plans,
         fetch_twse_material, fetch_tpex_material,
@@ -1649,7 +1697,7 @@ def main() -> None:
             "announced_today_count": announced_today,
             "announced_recent_count": announced_recent,
             "state_initialized": True,
-            "announcement_integrity": "strict-v11.4.46-series-safe",
+            "announcement_integrity": "strict-v11.4.49-series-safe",
             "announcement_suppressed_origins": sorted(suppressed_origins),
             "source_ok_count": sum(1 for source in sources if source.get("status") == "ok"),
             "source_warning_count": sum(1 for source in sources if source.get("status") != "ok"),

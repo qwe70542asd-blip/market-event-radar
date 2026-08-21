@@ -1,5 +1,5 @@
 /* v11.4.46 test compatibility text only: runtime health identity rejected; live-runtime-verified. */
-/* v11.4.48 direct Worker bootstrap.
+/* v11.4.49 direct Worker bootstrap.
  * The public Worker origin is fixed and allowlisted in source. Deployment
  * credentials never enter runtime. Browser traffic is enabled only after the
  * /health identity + schema contract succeeds; otherwise the app falls back
@@ -7,7 +7,7 @@
  */
 (()=>{
   "use strict";
-  const VERSION="v11.4.48";
+  const VERSION="v11.4.49";
   const SCHEMA_VERSION="market-snapshot-v2";
   const EXPECTED_HOST="market-event-radar-live.qwe70542asd.workers.dev";
   const ENDPOINT=`https://${EXPECTED_HOST}`;

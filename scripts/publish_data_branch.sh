@@ -20,7 +20,8 @@ for src in "$@"; do
   test -f "$repo_root/$src" || { echo "missing publish source: $src" >&2; exit 2; }
   cp "$repo_root/$src" "$(basename "$src")"
 done
-printf '{"version":"v11.4.46","channel":"%s","label":"%s","snapshot_history":"orphan"}\n' "$branch" "$label" > channel.json
+version="$(python -c 'import json; print(json.load(open(\"'$repo_root'/VERSION.json\", encoding=\"utf-8\"))[\"version\"])')"
+printf '{"version":"%s","channel":"%s","label":"%s","snapshot_history":"orphan"}\n' "$version" "$branch" "$label" > channel.json
 git add .
 git -c user.name='market-radar-bot' -c user.email='actions@users.noreply.github.com' commit -m "chore: publish $label snapshot" >/dev/null
 test -n "${GH_TOKEN:-}" || { echo "GH_TOKEN is required for publication" >&2; exit 2; }

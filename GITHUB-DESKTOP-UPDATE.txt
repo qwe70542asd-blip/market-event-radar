@@ -1,21 +1,20 @@
-Market Event Radar v11.4.48 overlay update
+Market Event Radar v11.4.49 FULL REPLACEMENT
 
-1. Keep the repository .git folder.
-2. Copy the contents of this overlay into the repository root and allow overwrite.
-3. Run CLEAN-REPO.cmd once.
-   - It removes the old v11.4.47 homepage override and old deletion manifests.
-4. In GitHub Desktop, confirm both modified files and deletions are visible.
-5. Commit suggestion: market-event-radar-v11.4.48
-6. Push.
-7. Check these Actions first:
-   - Verify v11.4.48 stable app release
-   - Deploy v11.4.48 live market worker
+1. In GitHub Desktop, fetch/pull the current main first.
+2. Close the website tab if it is open.
+3. In your local repository folder, KEEP the hidden .git folder only.
+4. Delete the old project files/folders, then copy ALL contents of this ZIP into the repository root.
+5. Do not copy an extra outer folder; index.html must sit directly in the repository root.
+6. Open GitHub Desktop. You should see a large clean replacement diff, including deletion of old v11.4.48 release-only files.
+7. Commit suggestion: market-event-radar-v11.4.49-full-replace
+8. Push.
+9. Check GitHub Actions:
+   - Verify v11.4.49 stable app release
+   - Update v11.4.49 event calendar and announced dates
+   - Deploy v11.4.49 live market worker
 
-No Cloudflare Secret / Account ID / KV Namespace ID needs to be recreated for this UI/information-priority update.
-
-Important v11.4.48 behavior:
-- Desktop quick navigation is 1 x 4 vertical.
-- Major-information lead card has fixed desktop height and a larger image area.
-- Day-event dialog keeps the close control visible while its body scrolls.
-- Major-information ranking covers market-structure changes and all major industries; AI/semiconductors receive a priority boost but do not monopolize the panel.
-- A future date found in a single news story is NOT promoted to the calendar. News-derived calendar dates require corroboration or a trusted primary/major source and are explicitly labeled as reported, not official-final.
+Existing Cloudflare configuration remains the same:
+- Secret CLOUDFLARE_API_TOKEN
+- Secret CLOUDFLARE_ACCOUNT_ID
+- Variable CLOUDFLARE_KV_NAMESPACE_ID
+Do not create LIVE_MARKET_ENDPOINT manually.

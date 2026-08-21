@@ -1,44 +1,41 @@
-# 市場事件雷達 v11.4.46
+# 市場事件雷達 v11.4.49
 
-以事件月曆為核心，整合台股行情、全球市場、財經新聞、法人籌碼、股票／ETF 資料與個人投資組合的靜態 PWA。
+以事件月曆為核心，整合台股行情、六大指數、重大財經資訊、法人籌碼、股票／ETF 資料與個人投資組合的靜態 PWA。
 
-## v11.4.46：防回歸、安全授權與 Production Readiness
+## v11.4.49：完整替換／事件來源與重大資訊修正
 
-這版把「程式碼存在」與「正式環境真的啟用」分開驗收，避免即時行情、Cloudflare 部署或外部 API parser 再次出現修過後復發。
+這版是 **full replacement**，不是 overlay。目標是把先前覆蓋更新留下的舊檔問題一次清掉，並保留 v11.4.48 已完成的首頁 UX。
 
-- **即時行情不再假裝成功**：Worker 未實際部署時 UI 明確顯示 `GitHub 備援・非即時`；只有真正從 Worker 取得資料才可顯示盤中每分鐘刷新。
-- **部署後 404 假失敗已修正**：Production Readiness 對新部署 Worker 採 0/3/5/10/15/30 秒重試，不再於 Wrangler 成功後不到 1 秒就因 workers.dev 路由尚未傳播而誤判失敗。
-- **CSP 測試不再自撞安全政策**：Chromium smoke 改用 Playwright Locator/Expect，不再使用字串版 `wait_for_function` 觸發 `unsafe-eval`。正式頁面仍保持 `script-src 'self'`。
-- **Worker 身分鎖定**：只接受 `market-event-radar-live.qwe70542asd.workers.dev`，且瀏覽器在信任 endpoint 前必須驗證 `/health` 的 service/version/KV/rate-limit contract。
-- **Cloudflare 原生 Rate Limiting**：對 snapshot/K-line 加入 Workers Rate Limiting binding，超量回 429；無 binding 時 Worker 健康狀態直接 degraded。
-- **Cloudflare Token 洩漏掃描**：CI 額外攔截 2026 新格式 `cfut_`、`cfat_`、`cfk_`。
-- **Cloudflare 授權 fail-closed**：Token／Account／KV 少任何一項就讓部署紅燈；Endpoint 直接取自 Wrangler 成功部署輸出並經 live gate 驗證，不再靠人工維護，也不再允許 `skipped` 卻顯示 success。
-- **權限分離**：Cloudflare deploy job 只有 repository read；發布 `live-runtime` 的 write job 不持有 Cloudflare Token。
-- **Actions 供應鏈鎖定**：所有外部 Action 使用完整 commit SHA；checkout 一律 `persist-credentials:false`；目前鎖定 checkout v7.0.1、setup-python v7.0.0、upload-artifact v7.0.1、wrangler-action v4.0.0；Wrangler 固定 4.123.0；Python 依賴固定版本。
-- **永久 Security Gate**：CSP、外部 URL scheme、remote runtime JS、憑證檔、Actions SHA、部署授權、Portfolio 匯入限制都進 CI 自動阻擋。
-- **Dependabot + PR Gate**：每週檢查 pip / GitHub Actions 更新，PR 也必須跑完整 Release Verification，避免「更新套件＝直接進正式環境」。
-- **TWSE parser 防漂移**：正式 updater 與 live verifier 共用同一個語意 selector/parser，不再各自硬寫不同 endpoint。
-- **Service Worker 防舊版卡住**：runtime config 不預快取；JS/CSS/data 改 network-first。
-- **單一 live branch writer**：持續保留 v11.4.44 建立的單一發布者規則，新增 `live-runtime` 後共 25 個 live branches 全部一個 writer。
+- 首頁左側 1×4 浮動導覽、日曆優先、固定高度重大資訊卡、浮動事件視窗關閉鍵全部保留。
+- 新增 BOJ、ECB、BOE、台灣央行（CBC）與韓國央行（BOK）2026 官方貨幣政策日期，合計 36 筆；官方只給日期時保持「日期限定」，不猜測時刻。
+- 首頁「焦點產業」先看最近 24 小時；沒有明確焦點才放寬至 72 小時，不再讓舊新聞長期霸榜。
+- 普通重大新聞保留 24 小時、真正突發事件最高 48 小時、制度／央行／系統性／地緣政治重大資訊最高 72 小時。
+- 「市場制度」判斷收緊：單純出現證交所／櫃買中心／金管會名稱不再自動升級，必須同時出現新制、修正、上路、規則調整等制度變更訊號；零股、撮合、交易時間等明確制度詞仍可直接判定。
+- `publish_data_branch.sh` 改從 `VERSION.json` 讀取版本，不再把 live branch 的 channel marker 寫死成 v11.4.46。
+- 舊 `DELETION-MANIFEST-v*.txt` 與舊 `assets/v*-overrides.css` 不包含在本套件；`cleanup_repo.py --check` 會阻止它們再次混入。
 
-## 覆蓋既有 repository
+## 乾淨替換既有 repository
 
-這是 **full overwrite release**，不是 patch。請依照以下順序：
+1. GitHub Desktop 先 **Fetch/Pull** 最新 `main`。
+2. 打開本機 `market-event-radar` repository 資料夾。
+3. **保留隱藏的 `.git` 資料夾**；刪除其餘舊專案檔案與資料夾。
+4. 解壓 `market-event-radar-v11.4.49-full-replace.zip`，把 ZIP **裡面的所有內容**直接放到 repository root。不要多包一層資料夾。
+5. 確認 `index.html`、`.github`、`assets`、`data`、`scripts` 都直接位於 repository root。
+6. 執行一次 `CLEAN-REPO.cmd`。正常應顯示 `repository layout clean for v11.4.49` 或完成清理。
+7. GitHub Desktop Commit：`market-event-radar-v11.4.49-full-replace`，再 Push。
+8. GitHub Actions 至少確認：
+   - `Verify v11.4.49 stable app release` 綠燈
+   - `Update v11.4.49 event calendar and announced dates` 綠燈
+   - `Deploy v11.4.49 live market worker` 綠燈
 
-1. 先在 GitHub Desktop Fetch/Pull 最新 `main`。
-2. 把 v11.4.46 ZIP 內容直接解壓到 repository root，不要多包一層資料夾。
-3. 執行 `CLEAN-REPO.cmd`。
-4. 回 GitHub Desktop 確認除了修改／新增檔案，也有顯示舊檔刪除。
-5. Commit / Push。
-6. GitHub Actions 的 `Verify v11.4.46 stable app release` 必須通過；紅燈不要忽略。
+## Cloudflare
 
-建議 commit：`market-event-radar-v11.4.46`
+不需要重建既有設定。仍使用：
 
-完整根因、刪除清單與驗收結果見：
+- Secret `CLOUDFLARE_API_TOKEN`
+- Secret `CLOUDFLARE_ACCOUNT_ID`
+- Variable `CLOUDFLARE_KV_NAMESPACE_ID`
 
-- `docs/V11.4.46-release-audit.md`
-- `DELETION-MANIFEST-v11.4.46.txt`
-- `VALIDATION.txt`
-- `GITHUB-DESKTOP-UPDATE.txt`
+不要建立 `LIVE_MARKET_ENDPOINT`。瀏覽器只接受固定 allowlist 的 `market-event-radar-live.qwe70542asd.workers.dev`，並在使用前驗證 `/health` 的 service、release version、schema、KV 與 rate-limit binding。
 
-資料僅供市場觀察，不構成投資建議。無法驗證的值維持缺值／warning，不得偽造成正式或即時資料。
+資料僅供市場觀察，不構成投資建議。無法驗證的值維持缺值／warning，不偽造成正式或即時資料。

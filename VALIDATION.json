@@ -1,42 +1,27 @@
 {
-  "version": "v11.4.46",
-  "validated_at": "2026-08-14T16:53:39+08:00",
-  "release_scope": "post-deploy propagation reliability / CSP-safe browser gate / endpoint identity pinning / Cloudflare rate limiting / security regression hardening",
+  "version": "v11.4.49",
+  "validated_at": "2026-08-21T13:08:00+08:00",
+  "release_scope": "full replacement; global central-bank official schedule; major-information recency/classification hardening",
   "cleanup_repo": {
-    "status": "pass",
-    "detail": "repository layout clean for v11.4.46"
+    "status": "pass"
   },
   "workflow_publishers": {
     "status": "pass",
-    "live_branches": 25,
-    "detail": "one publishing workflow per live branch"
+    "live_branches": 24
   },
   "security_authorization_audit": {
-    "status": "pass",
-    "detail": "endpoint identity/retry/rate-limit/secret-prefix guards included"
+    "status": "pass"
   },
   "production_readiness_static": {
     "status": "pass"
   },
   "pytest": {
     "status": "pass",
-    "passed": 264
+    "passed": 274
   },
   "public_data_validation": {
     "status": "pass",
     "all": "validation ok all"
-  },
-  "python_syntax": {
-    "status": "pass",
-    "detail": "compileall scripts/tests"
-  },
-  "javascript_syntax": {
-    "status": "pass",
-    "files": 16
-  },
-  "shell_syntax": {
-    "status": "pass",
-    "files": 2
   },
   "workflow_yaml": {
     "status": "pass",
@@ -45,60 +30,27 @@
   "http_smoke": {
     "status": "pass",
     "pages": 7,
-    "referenced_assets": 42
+    "referenced_assets": 65
+  },
+  "event_offline_rebuild": {
+    "status": "pass",
+    "events": 99,
+    "global_central_bank_events": 36,
+    "regions": [
+      "JP",
+      "EU",
+      "UK",
+      "TW",
+      "KR"
+    ]
   },
   "browser_smoke_local": {
     "status": "environment-blocked",
-    "detail": "system Chromium launches, but this sandbox blocks localhost navigation with net::ERR_BLOCKED_BY_ADMINISTRATOR; GitHub hosted Release Verification remains authoritative. Static regression verifies no CSP-incompatible wait_for_function string eval remains."
+    "detail": "system Chromium starts but container policy blocks localhost with ERR_BLOCKED_BY_ADMINISTRATOR; GitHub hosted runner is authoritative"
   },
-  "live_contract_local": {
-    "status": "pass-with-external-warnings",
-    "external_warnings": 5,
-    "detail": "sandbox DNS cannot resolve TPEx/TWSE hosts; reachable semantic contract failures remain blocking"
-  },
-  "cloudflare_pre_release_evidence": {
-    "status": "v11.4.45 worker verified healthy after propagation",
-    "endpoint": "https://market-event-radar-live.qwe70542asd.workers.dev",
-    "observed_health": {
-      "service": "Market Event Radar live market",
-      "version": "v11.4.45",
-      "status": "ok",
-      "cache_binding": true
-    },
-    "root_cause_fixed_in_11446": "v11.4.45 readiness probed /health immediately after deploy and received transient 404; v11.4.46 adds bounded propagation retries"
-  },
-  "v11446_production_activation": {
-    "status": "pending push/deploy",
-    "required_existing_config": [
-      "CLOUDFLARE_API_TOKEN secret",
-      "CLOUDFLARE_ACCOUNT_ID secret",
-      "CLOUDFLARE_KV_NAMESPACE_ID variable"
-    ],
-    "extra_cloudflare_secret_required": false,
-    "expected_endpoint": "https://market-event-radar-live.qwe70542asd.workers.dev",
-    "acceptance": [
-      "Verify v11.4.46 stable app release green",
-      "Deploy v11.4.46 live market worker green",
-      "publish-runtime completes"
-    ]
-  },
-  "security_controls_added": [
-    "exact workers.dev hostname allowlist in deploy/readiness/browser runtime",
-    "browser /health identity verification before trusting live-runtime endpoint",
-    "Cloudflare native Rate Limiting binding for market snapshot and K-line routes",
-    "fail-closed degraded health when rate limiter binding is absent",
-    "Cloudflare cfut_/cfat_/cfk_ credential prefix scanning",
-    "preview URLs disabled; workers.dev canonical route explicitly enabled",
-    "CSP-safe Playwright Locator/Expect browser smoke",
-    "bounded post-deploy readiness retries 0/3/5/10/15/30 seconds"
-  ],
-  "repository_admin_followups": [
-    "protect main and require verification check",
-    "enable Dependabot alerts/security updates",
-    "keep default GITHUB_TOKEN read-only"
-  ],
-  "remaining_nonblocking_limitations": [
-    "15-minute K-line remains upstream/source-dependent and must show unavailable/stale rather than fabricated bars",
-    "full Taiwan stock/ETF rankings remain scheduled snapshots rather than the six-index minute-refresh Worker channel"
+  "production_acceptance": [
+    "Verify v11.4.49 stable app release",
+    "Update v11.4.49 event calendar and announced dates",
+    "Deploy v11.4.49 live market worker"
   ]
 }

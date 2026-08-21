@@ -1,0 +1,11 @@
+Market Event Radar v11.4.49 full-replacement manifest
+
+This package is intended for a clean replacement.
+Keep only the repository .git directory, remove the old working-tree contents, then copy this package into the repository root.
+
+The package intentionally contains only the current release manifest and current homepage override:
+- DELETION-MANIFEST-v11.4.49.txt
+- assets/v11.4.49-overrides.css
+
+Do not delete GitHub Secrets / Environment values or Cloudflare account resources. They are not files in this package.
+Do not delete live-* Git branches; the scheduled workflows will continue to publish them.
