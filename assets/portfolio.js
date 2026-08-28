@@ -1,5 +1,5 @@
 (async()=>{"use strict";
-const {$,escapeHtml,fmt,cls,finite,loadData,loadPortfolio,savePortfolio}=MR;
+const {$,escapeHtml,fmt,pct,cls,finite,loadData,loadPortfolio,savePortfolio,loadWatchlist,saveWatchlist}=MR;
 let assets=window.__ASSET_SEED__||{assets:[]},tw=window.__TW_MARKET_SEED__||{items:[]},global=window.__MARKET_SNAPSHOT_SEED__||{items:[]};
 let quotes=new Map(),rows=loadPortfolio(),candidateMap=new Map(),candidates=[];
 const addCandidate=(row,priority=0)=>{
@@ -49,22 +49,44 @@ symbolInput.addEventListener("keydown",event=>{
 });
 suggestions.addEventListener("pointerdown",event=>{const button=event.target.closest("[data-index]");if(!button)return;event.preventDefault();applyCandidate(matches[Number(button.dataset.index)])});
 document.addEventListener("pointerdown",event=>{if(!event.target.closest(".portfolio-symbol-search"))closeSuggestions()});
+const standardBrokerFeeRate=.001425;
+function renderRetailCalculator(){
+  const price=finite($("#retailToolPrice")?.value),qty=Math.floor(finite($("#retailToolQty")?.value)||0),budget=finite($("#retailToolBudget")?.value),type=$("#retailToolType")?.value||"stock",taxRate=type==="etf"?.001:.003;
+  const gross=price!=null&&qty>0?price*qty:null,buy=gross==null?null:gross*(1+standardBrokerFeeRate),sell=gross==null?null:gross*(1-standardBrokerFeeRate-taxRate),breakEven=((1+standardBrokerFeeRate)/(1-standardBrokerFeeRate-taxRate)-1)*100,maxQty=price!=null&&price>0&&budget!=null&&budget>0?Math.floor(budget/(price*(1+standardBrokerFeeRate))):null;
+  if($("#retailBuyAmount"))$("#retailBuyAmount").textContent=buy==null?"—":`NT$ ${fmt(buy,0)}`;
+  if($("#retailSellNet"))$("#retailSellNet").textContent=sell==null?"—":`NT$ ${fmt(sell,0)}`;
+  if($("#retailBreakEven"))$("#retailBreakEven").textContent=`${fmt(breakEven,2)}%`;
+  if($("#retailMaxQty"))$("#retailMaxQty").textContent=maxQty==null?"—":`${fmt(maxQty,0)} 股`;
+}
+function renderWatchlist(){
+  const root=$("#watchlistRows");if(!root)return;
+  const list=loadWatchlist();
+  root.innerHTML=list.map(item=>{const symbol=String(item.symbol).toUpperCase(),q=quotes.get(symbol),candidate=candidateMap.get(symbol)||{},price=finite(q?.price),change=finite(q?.change_percent),assetClass=item.asset_class||candidate.asset_class||q?.asset_class||"stock",lot=price==null?null:price*1000*(1+standardBrokerFeeRate);return `<article class="watchlist-card"><a href="asset.html?symbol=${encodeURIComponent(symbol)}"><small>${escapeHtml(assetClass==="etf"?"ETF":"股票")}</small><strong>${escapeHtml(symbol)} ${escapeHtml(item.name||candidate.name||q?.name||"")}</strong><span>${price==null?"等待行情":`NT$ ${fmt(price,2)}`} <em class="${cls(change)}">${change==null?"":pct(change)}</em></span><b>${lot==null?"1 張金額待行情":`1 張約 NT$ ${fmt(lot,0)}`}</b></a><div><button class="btn" type="button" data-watch-calc="${escapeHtml(symbol)}">試算</button><button class="btn" type="button" data-watch-del="${escapeHtml(symbol)}">移除</button></div></article>`}).join("")||'<div class="empty">尚未加入自選標的；到個股／ETF 詳情頁按「加入自選」。</div>';
+  root.querySelectorAll("[data-watch-del]").forEach(button=>button.addEventListener("click",()=>{const symbol=button.dataset.watchDel;saveWatchlist(loadWatchlist().filter(item=>String(item.symbol).toUpperCase()!==symbol));renderWatchlist()}));
+  root.querySelectorAll("[data-watch-calc]").forEach(button=>button.addEventListener("click",()=>{const symbol=button.dataset.watchCalc,q=quotes.get(symbol),candidate=candidateMap.get(symbol)||{},price=finite(q?.price);if(price!=null)$("#retailToolPrice").value=String(price);$("#retailToolType").value=(candidate.asset_class||q?.asset_class)==="etf"?"etf":"stock";renderRetailCalculator();$("#retailTools")?.scrollIntoView({behavior:"smooth",block:"start"})}));
+}
+for(const id of ["retailToolPrice","retailToolQty","retailToolType","retailToolBudget"]){$("#"+id)?.addEventListener("input",renderRetailCalculator);$("#"+id)?.addEventListener("change",renderRetailCalculator)}
+window.addEventListener("watchlistchange",renderWatchlist);
+
 function render(){
   const usdTwd=finite(quotes.get("TWD=X")?.price);
   const fxToTwd=currency=>{const code=String(currency||"TWD").toUpperCase();if(code==="TWD")return 1;if(code==="USD")return usdTwd&&usdTwd>0?usdTwd:null;const usdCross=finite(quotes.get(`${code}=X`)?.price);return usdTwd&&usdCross&&usdTwd>0&&usdCross>0?usdTwd/usdCross:null};
   let totalCost=0,totalValue=0,valuedRows=0,unconverted=0;
   $("#portfolioRows").innerHTML=rows.map((h,i)=>{
-    const q=quotes.get(String(h.symbol).toUpperCase()),candidate=candidateMap.get(String(h.symbol).toUpperCase())||{},price=finite(q?.price),qty=Number(h.quantity||0),cost=Number(h.cost||0),currency=String(h.currency||q?.currency||candidate.currency||"TWD").toUpperCase(),fx=fxToTwd(currency),value=price==null?null:price*qty,pl=value==null?null:value-cost*qty;
+    const q=quotes.get(String(h.symbol).toUpperCase()),candidate=candidateMap.get(String(h.symbol).toUpperCase())||{},price=finite(q?.price),qty=Number(h.quantity||0),cost=Number(h.cost||0),currency=String(h.currency||q?.currency||candidate.currency||"TWD").toUpperCase(),fx=fxToTwd(currency),value=price==null?null:price*qty,pl=value==null?null:value-cost*qty,plPct=price==null||cost<=0?null:(price-cost)/cost*100;
     if(fx==null)unconverted++;else{totalCost+=cost*qty*fx;if(value!=null){totalValue+=value*fx;valuedRows++}}
     const money=value=>value==null?"—":`${currency==="TWD"?"":`${escapeHtml(currency)} `}${fmt(value,0)}`;
-    return`<tr><td><a href="asset.html?symbol=${encodeURIComponent(h.symbol)}"><b>${escapeHtml(h.symbol)}</b><br><small>${escapeHtml(h.name||"")}${currency?` · ${escapeHtml(currency)}`:""}</small></a></td><td>${fmt(qty,4)}</td><td>${money(cost)}</td><td>${money(price)}</td><td>${money(value)}</td><td class="${cls(pl)}">${money(pl)}</td><td><button class="btn" data-del="${i}">刪除</button></td></tr>`
-  }).join("")||'<tr><td colspan="7" class="empty">尚未加入標的</td></tr>';
+    return`<tr><td><a href="asset.html?symbol=${encodeURIComponent(h.symbol)}"><b>${escapeHtml(h.symbol)}</b><br><small>${escapeHtml(h.name||"")}${currency?` · ${escapeHtml(currency)}`:""}</small></a></td><td>${fmt(qty,4)}</td><td>${money(cost)}</td><td>${money(price)}</td><td>${money(value)}</td><td class="${cls(pl)}">${money(pl)}</td><td class="${cls(plPct)}">${plPct==null?"—":pct(plPct)}</td><td><button class="btn" data-del="${i}">刪除</button></td></tr>`
+  }).join("")||'<tr><td colspan="8" class="empty">尚未加入標的</td></tr>';
   const complete=rows.length>0&&valuedRows===rows.length&&unconverted===0;
   $("#totalCost").textContent=complete?`NT$ ${fmt(totalCost,0)}`:"—";
   $("#totalValue").textContent=complete?`NT$ ${fmt(totalValue,0)}`:"—";
   $("#totalPL").textContent=complete?`${totalValue-totalCost>=0?"+":"-"}NT$ ${fmt(Math.abs(totalValue-totalCost),0)}`:"—";
   $("#totalPL").className=complete?cls(totalValue-totalCost):"flat";
-  document.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{rows.splice(Number(b.dataset.del),1);savePortfolio(rows);render()})
+  const totalReturn=complete&&totalCost>0?(totalValue-totalCost)/totalCost*100:null;
+  $("#totalReturn").textContent=totalReturn==null?"—":pct(totalReturn);$("#totalReturn").className=totalReturn==null?"flat":cls(totalReturn);
+  document.querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{rows.splice(Number(b.dataset.del),1);savePortfolio(rows);render()});
+  renderWatchlist();renderRetailCalculator();
 }
 $("#addHolding").onclick=()=>{const symbol=symbolInput.value.trim().toUpperCase(),quantity=Number($("#holdingQty").value),cost=Number($("#holdingCost").value),candidate=candidateMap.get(symbol);if(!candidate){alert("找不到正式標的，請從搜尋選單選取股票或 ETF");symbolInput.focus();renderSuggestions();return}if(!Number.isFinite(quantity)||quantity<=0||!Number.isFinite(cost)){alert("請填入正確數量與平均成本");return}const existing=rows.find(row=>String(row.symbol).toUpperCase()===symbol);if(existing){const oldQty=Number(existing.quantity||0),newQty=oldQty+quantity;existing.cost=newQty?((oldQty*Number(existing.cost||0))+(quantity*cost))/newQty:cost;existing.quantity=newQty;existing.name=candidate.name||existing.name||symbol;existing.currency=existing.currency||candidate.currency||quotes.get(symbol)?.currency||"TWD"}else rows.push({symbol,name:candidate.name||symbol,quantity,cost,currency:candidate.currency||quotes.get(symbol)?.currency||"TWD"});savePortfolio(rows);render();selectedSymbol="";["holdingSymbol","holdingName","holdingQty","holdingCost"].forEach(id=>$("#"+id).value="");closeSuggestions()};
 $("#exportPortfolio").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify({version:2,items:rows},null,2)],{type:"application/json"}));a.download="market-radar-portfolio.json";a.click()};

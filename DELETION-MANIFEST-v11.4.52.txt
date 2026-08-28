@@ -1,9 +1,0 @@
-Market Event Radar v11.4.52 deletion manifest
-
-Removed regression artifacts:
-- data/events-index.json
-- data/events-index-seed.js
-- scripts/build_event_index.py
-- v11.4.50 deletion manifest and override CSS
-
-Reason: events-index was built from the small bundled fallback while the authoritative live-events/events.json archive remained complete. The index optimization therefore hid real events from the homepage calendar. v11.4.52 restores events.json as the single authoritative event source.

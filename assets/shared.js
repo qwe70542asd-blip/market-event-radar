@@ -1,5 +1,5 @@
 (()=>{"use strict";
-const OWNER="qwe70542asd-blip",REPO="market-event-radar",APP_VERSION="v11.4.52";
+const OWNER="qwe70542asd-blip",REPO="market-event-radar",APP_VERSION="v11.4.53";
 let LIVE_MARKET_ENDPOINT=String(window.MR_RUNTIME?.liveMarketEndpoint||"").replace(/\/$/,"");
 let runtimeReadyPromise=null;
 async function ensureRuntimeEndpoint(){
@@ -367,6 +367,21 @@ function relatedNews(event,items,options={}){
   }).filter(Boolean).sort((a,b)=>b._relatedScore-a._relatedScore||Date.parse(b.published_at||0)-Date.parse(a.published_at||0)).slice(0,limit);
 }
 
+const WATCHLIST_KEY="marketRadarWatchlistV1";
+function loadWatchlist(){try{const value=JSON.parse(localStorage.getItem(WATCHLIST_KEY)||"[]");return Array.isArray(value)?value.filter(row=>row&&row.symbol).slice(0,100):[]}catch(e){return[]}}
+function saveWatchlist(rows){const clean=[],seen=new Set();for(const raw of rows||[]){const symbol=String(raw?.symbol||"").trim().toUpperCase();if(!symbol||seen.has(symbol))continue;seen.add(symbol);clean.push({symbol,name:String(raw?.name||symbol).trim(),asset_class:String(raw?.asset_class||"").trim(),exchange:String(raw?.exchange||"").trim(),added_at:raw?.added_at||new Date().toISOString()})}localStorage.setItem(WATCHLIST_KEY,JSON.stringify(clean.slice(0,100)));window.dispatchEvent(new CustomEvent("watchlistchange"));return clean}
+function toggleWatchlist(item={}){const symbol=String(item.symbol||"").trim().toUpperCase();if(!symbol)return{added:false,items:loadWatchlist()};const rows=loadWatchlist(),index=rows.findIndex(row=>String(row.symbol).toUpperCase()===symbol);let added=false;if(index>=0)rows.splice(index,1);else{rows.unshift({symbol,name:String(item.name||symbol).trim(),asset_class:String(item.asset_class||"").trim(),exchange:String(item.exchange||"").trim(),added_at:new Date().toISOString()});added=true}return{added,items:saveWatchlist(rows)}}
+function installGlobalMobileQuickNav(){
+ if(document.querySelector(".floating-quick-nav"))return;
+ const shell=document.querySelector("main.shell");if(!shell)return;
+ const nav=document.createElement("nav");nav.className="floating-quick-nav mobile-global-quick-nav";nav.setAttribute("aria-label","手機快速導覽");
+ nav.innerHTML='<a class="quick-tile" href="index.html#calendarPanel"><span>01</span><b>事件日曆</b></a><a class="quick-tile" href="tw-market.html"><span>02</span><b>台股排行</b></a><a class="quick-tile" href="institutional.html"><span>03</span><b>法人籌碼</b></a><a class="quick-tile" href="index.html#latestNews"><span>04</span><b>重大資訊</b></a>';
+ shell.appendChild(nav);
+}
+function syncMobileNavCurrent(){const page=(location.pathname.split("/").pop()||"index.html").toLowerCase();document.querySelectorAll(".mobile-nav a").forEach(link=>{const href=(link.getAttribute("href")||"").split("#")[0].split("?")[0].toLowerCase();link.classList.toggle("active",href===page||(page===""&&href==="index.html"))})}
+function initSharedMobileUi(){installGlobalMobileQuickNav();syncMobileNavCurrent()}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",initSharedMobileUi,{once:true});else initSharedMobileUi();
+
 function scheduleAssetPrefetch(){
  // Do not preload seven data channels on every page.  The old idle prefetch
  // could download several megabytes even when the user never opened a stock.
@@ -375,5 +390,5 @@ function scheduleAssetPrefetch(){
  document.addEventListener("pointerover",warm,{passive:true});document.addEventListener("touchstart",warm,{passive:true});
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",scheduleAssetPrefetch,{once:true});else scheduleAssetPrefetch();
-window.MR={$,$$,escapeHtml,finite,fmt,pct,cls,formatTime,formatEventTime,stripHtml,normalizeText,safeHttpUrl,safeExternalHref,newsImageCandidates,newsHasImage,advanceNewsImage,pickNewsFallbackSlug,renderNewsThumb,relatedNews,loadData,loadMarketKline,loadStockBasics,loadNewsChannels,startNewsChannels,mergeNewsChannels,loadStockNews,getJson,loadPortfolio,savePortfolio,mergeAssets,NEWS_FILES,OWNER,REPO,getLiveMarketEndpoint,ensureRuntimeEndpoint,KLINE_INTERVALS};
+window.MR={$,$$,escapeHtml,finite,fmt,pct,cls,formatTime,formatEventTime,stripHtml,normalizeText,safeHttpUrl,safeExternalHref,newsImageCandidates,newsHasImage,advanceNewsImage,pickNewsFallbackSlug,renderNewsThumb,relatedNews,loadData,loadMarketKline,loadStockBasics,loadNewsChannels,startNewsChannels,mergeNewsChannels,loadStockNews,getJson,loadPortfolio,savePortfolio,loadWatchlist,saveWatchlist,toggleWatchlist,mergeAssets,NEWS_FILES,OWNER,REPO,getLiveMarketEndpoint,ensureRuntimeEndpoint,KLINE_INTERVALS};
 })();

@@ -1,4 +1,4 @@
-Market Event Radar v11.4.52 FULL REPLACEMENT validation
+Market Event Radar v11.4.53 FULL REPLACEMENT validation
 
 PASS  Repository cleanup --check
 PASS  Python compileall
@@ -18,7 +18,7 @@ Critical integrity fixes:
 - Protected master/history writers refuse catastrophic replacement below 45% of the previous dataset when the previous set has >=100 records.
 - data-verification restores its previous live archive before rebuilding so the regression guard has a valid comparison baseline.
 - secondary-reference and market-volume-history now use the protected shared writer.
-- Service Worker cache namespace is release-specific (v11.4.52) so v11.4.50 cache residue cannot survive as the active namespace.
+- Service Worker cache namespace is release-specific (v11.4.53) so v11.4.50 cache residue cannot survive as the active namespace.
 
 Preserved improvements:
 - major information: 1 lead + 3 side cards, equal total height

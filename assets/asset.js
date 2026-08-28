@@ -1,6 +1,6 @@
 (async()=>{
   "use strict";
-  const {$,$$,escapeHtml,fmt,pct,cls,formatTime,loadData,loadStockBasics,loadStockNews,finite,stripHtml,normalizeText,renderNewsThumb,safeExternalHref}=MR;
+  const {$,$$,escapeHtml,fmt,pct,cls,formatTime,loadData,loadStockBasics,loadStockNews,finite,stripHtml,normalizeText,renderNewsThumb,safeExternalHref,loadWatchlist,toggleWatchlist}=MR;
   const symbol=(new URLSearchParams(location.search).get("symbol")||"2330").toUpperCase();
   // Core asset information loads first.  Large event/news archives are started
   // only after the primary profile/quote channels resolve and are awaited near
@@ -92,6 +92,46 @@
   const completeness=verification.completeness_status||"",coverage=finite(verification.coverage_percent);
   const completenessText=coverage!=null?`欄位完整度 ${fmt(coverage,1)}%${completeness==="complete"?" · 完整":completeness==="partial"?" · 部分完整":""}`:"";
   $("#assetTrust").innerHTML=`<span class="verification-badge ${trustClass(overallTrust)}">${escapeHtml(trustText)}</span>${completenessText?`<span class="verification-badge ${completeness==="complete"?"confirmed":"reference"}">${escapeHtml(completenessText)}</span>`:""}<span>可信度與欄位完整度分開計算；官方資料優先，Yahoo、MoneyDJ、HiStock 僅補空白欄位，計算值會標示公式。</span>${stockBasic.basic_coverage_percent?`<span class="verification-badge official">公司主檔 ${escapeHtml(stockBasic.basic_coverage_percent)}%</span>`:""}${stockBasic.financial_coverage_percent!=null?`<span class="verification-badge reference">財務資料 ${escapeHtml(stockBasic.financial_coverage_percent)}%</span>`:""}${yahoo.updated_at?`<span class="verification-badge reference">Yahoo 已補充</span>`:""}${etfReference.updated_at?`<span class="verification-badge reference">ETF 多來源已補充</span>`:""}${(verification.reference_links?.yahoo||yahoo.source_url)?`<a href="${escapeHtml(safeExternalHref(verification.reference_links?.yahoo||yahoo.source_url)||"#")}" target="_blank" rel="noreferrer noopener">Yahoo 查閱 ↗</a>`:""}${verification.reference_links?.goodinfo?`<a href="${escapeHtml(safeExternalHref(verification.reference_links.goodinfo)||"#")}" target="_blank" rel="noreferrer noopener">Goodinfo 查閱 ↗</a>`:""}`;
+
+  const retailState={yearHigh:null,yearLow:null,yearPosition:null,nextEvent:null};
+  const standardBrokerFeeRate=.001425;
+  const retailEtfText=`${etf.category||""} ${etf.formal_name||""} ${displayName||""}`;
+  const isBondEtf=isEtf&&/(?:債券|公債|公司債|bond)/i.test(retailEtfText);
+  const sellTaxRate=isEtf?(isBondEtf?null:.001):.003;
+  const retailRevenueRows=!isEtf?(revenuePayload.items?.[symbol]||asset.monthly_revenue||yahoo.monthly_revenue||[]).filter(row=>finite(row.revenue)!=null).sort((a,b)=>String(b.period||"").localeCompare(String(a.period||""))):[];
+  const retailCard=(label,value,note="",tone="")=>`<article class="retail-basic-card ${tone}"><small>${escapeHtml(label)}</small><strong>${escapeHtml(value||"—")}</strong>${note?`<span>${escapeHtml(note)}</span>`:""}</article>`;
+  const estimatedBuy=qty=>{const price=finite(quote.price);if(price==null)return null;const gross=price*qty;return gross*(1+standardBrokerFeeRate)};
+  const renderRetailBasics=()=>{
+    const cards=[];
+    for(const [label,qty] of [["1 股約需",1],["10 股約需",10],["100 股約需",100],["1 張約需",1000]]){
+      const value=estimatedBuy(qty);cards.push(retailCard(label,value==null?"等待現價":`NT$ ${fmt(value,0)}`,`${qty.toLocaleString("zh-TW")} 股＋0.1425%標準手續費估算`));
+    }
+    const breakEven=sellTaxRate==null?null:((1+standardBrokerFeeRate)/(1-standardBrokerFeeRate-sellTaxRate)-1)*100;
+    cards.push(retailCard("來回約需上漲",breakEven==null?"依商品稅率":`${fmt(breakEven,2)}%`,sellTaxRate==null?"債券 ETF 等商品稅率可能不同":"以買賣各 0.1425% 手續費＋賣出證交稅估算"));
+    cards.push(retailCard("賣出證交稅",sellTaxRate==null?"依商品":`${fmt(sellTaxRate*100,2)}%`,isEtf?(isBondEtf?"債券 ETF 等依當期規定":"一般 ETF 參考稅率"):`股票參考稅率`));
+    if(retailState.yearHigh!=null&&retailState.yearLow!=null){const pos=retailState.yearPosition;cards.push(retailCard("近一年價格位置",pos==null?"—":`${fmt(pos,0)}%`,`低 ${fmt(retailState.yearLow,2)}／高 ${fmt(retailState.yearHigh,2)}`,pos!=null&&pos>=80?"warn":pos!=null&&pos<=20?"cool":""));}
+    else cards.push(retailCard("近一年價格位置","等待歷史行情","同步後顯示目前位於一年高低區間的位置"));
+    if(isEtf){
+      if(finite(etf.premium_discount)!=null)cards.push(retailCard("ETF 折溢價",pct(etf.premium_discount),"正值為溢價、負值為折價",cls(etf.premium_discount)));
+      if(finite(etf.nav)!=null)cards.push(retailCard("最新淨值",`${fmt(etf.nav,2)} 元`,etf.nav_source||"基金揭露"));
+      if(finite(etf.beneficiary_count)!=null)cards.push(retailCard("受益人數",`${fmt(etf.beneficiary_count,0)} 人`,"觀察規模與市場參與度"));
+    }else{
+      if(finite(metrics.pe)!=null)cards.push(retailCard("本益比",fmt(metrics.pe,2),"估值參考，不等於便宜或昂貴"));
+      if(finite(metrics.eps)!=null)cards.push(retailCard("EPS",`${fmt(metrics.eps,2)} 元`,"最新已同步財報／參考資料"));
+      const latestRevenue=retailRevenueRows[0];if(latestRevenue&&finite(latestRevenue.yoy)!=null)cards.push(retailCard("最新月營收 YoY",pct(latestRevenue.yoy),latestRevenue.period||"",cls(latestRevenue.yoy)));
+      if(finite(metrics.dividend_yield)!=null)cards.push(retailCard("殖利率",`${fmt(metrics.dividend_yield,2)}%`,"歷史／市場估值欄位，非保證配息"));
+    }
+    const foreign=finite(chip.foreign?.net??chip.institutional?.foreign_net);if(foreign!=null)cards.push(retailCard("外資今日",`${foreign>0?"買超 ":foreign<0?"賣超 ":"持平 "}${fmt(Math.abs(foreign),0)}`,"官方法人資料",cls(foreign)));
+    const dayTrade=finite(chip.day_trade?.ratio);if(dayTrade!=null)cards.push(retailCard("當沖比例",`${fmt(dayTrade,2)}%`,"短線交易熱度參考"));
+    if(retailState.nextEvent)cards.push(retailCard("下一個公司事件",retailState.nextEvent.title||"公司事件",formatTime(retailState.nextEvent.start)));
+    $("#retailBasics").innerHTML=cards.join("");
+    $("#retailCostNote").innerHTML='<strong>成本估算說明</strong><span>券商手續費可自行訂定並可能有折扣或最低費用；此處以 0.1425% 標準費率估算。股票賣出證交稅以 0.3% 參考，一般 ETF 以 0.1% 參考；特殊商品請以券商與主管機關最新規定為準。</span>';
+    $("#retailBasicsUpdated").textContent=finite(quote.price)!=null?`現價 ${fmt(quote.price,2)} 元 · 估算不含券商個別折扣／最低手續費`:"等待行情後補齊交易成本";
+  };
+  const watchButton=$("#toggleWatchlist");
+  const syncWatchButton=()=>{if(!watchButton)return;const active=loadWatchlist().some(row=>String(row.symbol).toUpperCase()===symbol);watchButton.classList.toggle("active",active);watchButton.textContent=active?"✓ 已加入自選":"＋ 加入自選"};
+  if(watchButton){syncWatchButton();watchButton.addEventListener("click",()=>{toggleWatchlist({symbol,name:displayName,asset_class:asset.asset_class,exchange:asset.exchange});syncWatchButton()})}
+  renderRetailBasics();showSection("#retailBasicsSection","小資速讀");
 
   const overview=[];
   const pushCard=(label,value,source,options={})=>{const html=metricCard(label,value,source,options);if(html)overview.push(html)};
@@ -332,6 +372,7 @@
   try{history=(asset.exchange||quote.exchange)==="TPEx"?await fetchTpexHistory():await fetchTwseHistory()}catch(e){}
   if(history.length<15){try{history=await fetchYahooHistory()}catch(e){}}
   history=[...new Map(history.filter(row=>row.date&&finite(row.close)!=null).map(row=>[row.date,row])).values()].sort((a,b)=>a.date.localeCompare(b.date));
+  if(history.length){const yearRows=history.slice(-252),highs=yearRows.map(row=>finite(row.high)??finite(row.close)).filter(value=>value!=null),lows=yearRows.map(row=>finite(row.low)??finite(row.close)).filter(value=>value!=null);if(highs.length&&lows.length){retailState.yearHigh=Math.max(...highs);retailState.yearLow=Math.min(...lows);const price=finite(quote.price)??finite(yearRows.at(-1)?.close);retailState.yearPosition=price!=null&&retailState.yearHigh>retailState.yearLow?Math.max(0,Math.min(100,(price-retailState.yearLow)/(retailState.yearHigh-retailState.yearLow)*100)):null;renderRetailBasics();}}
   const sma=(rows,index,days)=>{if(index+1<days)return null;const values=rows.slice(index-days+1,index+1).map(row=>finite(row.close)).filter(value=>value!=null);return values.length===days?values.reduce((a,b)=>a+b,0)/days:null};
   const drawChart=(days=30)=>{
     const rows=history.slice(-days);if(!rows.length){$("#assetChart").innerHTML='<div class="empty">目前無法取得歷史行情。最新成交資料仍會保留在頁面上方。</div>';return}
@@ -360,11 +401,14 @@
   // chart is prepared; they cannot delay the primary quote or chart anymore.
   const assetNames=[symbol,displayName,asset.company_name,etf.formal_name].filter(Boolean).map(normalizeText);
   const [eventPayload,stockNewsPayload]=await Promise.all([eventPromise,stockNewsPromise]);
-  const relatedEvents=(eventPayload.events||[]).filter(event=>{
+  const allRelatedEvents=(eventPayload.events||[]).filter(event=>{
     const symbols=[event.symbol,...(event.symbols||[]),...(event.assets||[])].filter(Boolean).map(value=>String(value).toUpperCase());
     const text=normalizeText(`${event.title||""} ${event.description||event.summary||""}`);
     return symbols.includes(symbol)||assetNames.some(name=>name&&text.includes(name));
-  }).sort((a,b)=>Date.parse(b.start||0)-Date.parse(a.start||0)).slice(0,20);
+  });
+  const upcomingRelated=allRelatedEvents.filter(event=>{const at=Date.parse(event.start||event.local_date||0);return Number.isFinite(at)&&at>=Date.now()-12*3600000}).sort((a,b)=>Date.parse(a.start||a.local_date||0)-Date.parse(b.start||b.local_date||0));
+  retailState.nextEvent=upcomingRelated[0]||null;renderRetailBasics();
+  const relatedEvents=allRelatedEvents.sort((a,b)=>Date.parse(b.start||0)-Date.parse(a.start||0)).slice(0,20);
   if(relatedEvents.length){
     $("#assetEvents").innerHTML=relatedEvents.map(event=>`<article class="asset-event-card"><div><span class="tag">${escapeHtml(event.category||event.kind||"公司資訊")}</span><time>${escapeHtml(formatTime(event.start))}</time></div><h3>${escapeHtml(event.title||"公司事件")}</h3>${event.summary||event.description?`<p>${escapeHtml(stripHtml(event.summary||event.description).slice(0,220))}</p>`:""}${event.source_url?`<a href="${escapeHtml(safeExternalHref(event.source_url)||"#")}" target="_blank" rel="noreferrer noopener">查看官方來源 ↗</a>`:""}</article>`).join("");
     showSection("#eventsSection","事件公告");
