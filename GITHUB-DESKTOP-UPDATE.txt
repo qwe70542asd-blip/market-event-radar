@@ -1,20 +1,12 @@
-Market Event Radar v11.4.53 FULL REPLACEMENT
+Market Event Radar v11.4.54 FULL REPLACEMENT
 
-1. In GitHub Desktop, fetch/pull the current main first.
-2. Close the website tab if it is open.
-3. In your local repository folder, KEEP the hidden .git folder only.
-4. Delete the old project files/folders, then copy ALL contents of this ZIP into the repository root.
-5. Do not copy an extra outer folder; index.html must sit directly in the repository root.
-6. Open GitHub Desktop. You should see a large clean replacement diff, including deletion of old v11.4.48 release-only files.
-7. Commit suggestion: market-event-radar-v11.4.53-full-replace
-8. Push.
-9. Check GitHub Actions:
-   - Verify v11.4.53 stable app release
-   - Update v11.4.53 event calendar and announced dates
-   - Deploy v11.4.53 live market worker
+1. GitHub Desktop 先 Fetch/Pull main。
+2. 在本機 repository 保留隱藏的 .git 資料夾。
+3. 刪除其餘舊專案檔案／資料夾。
+4. 把本 ZIP 內所有內容直接複製到 repository root；不要多包一層資料夾。
+5. 確認 index.html、.github、assets、data、docs、edge、scripts、tests 都在 root。
+6. 執行 CLEAN-REPO.cmd。
+7. Commit 建議：market-event-radar-v11.4.54-full-replace
+8. Push 後確認 Verify stable app release 與 Deploy live market worker 綠燈。
 
-Existing Cloudflare configuration remains the same:
-- Secret CLOUDFLARE_API_TOKEN
-- Secret CLOUDFLARE_ACCOUNT_ID
-- Variable CLOUDFLARE_KV_NAMESPACE_ID
-Do not create LIVE_MARKET_ENDPOINT manually.
+Cloudflare Secrets / Variables 不需要因本版重新建立。

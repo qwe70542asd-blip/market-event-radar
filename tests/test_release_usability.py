@@ -4,7 +4,7 @@ ROOT=Path(__file__).resolve().parents[1]
 def read(path): return (ROOT/path).read_text(encoding="utf-8")
 
 def test_v11451_major_information_stays_one_plus_three_equal_height():
-    css=read("assets/v11.4.53-overrides.css");home=read("assets/home.js")
+    css=read("assets/v11.4.54-overrides.css");home=read("assets/home.js")
     assert "height:360px" in css
     assert "grid-template-rows:238px 122px" in css
     assert "grid-template-rows:repeat(3,minmax(0,1fr))" in css
@@ -74,7 +74,7 @@ def test_v11452_live_payloads_cannot_silently_replace_complete_archives():
 
 def test_v11452_service_worker_uses_new_atomic_cache_namespace():
     sw=read("service-worker.js")
-    assert 'market-event-radar-v11-4-53' in sw
+    assert 'market-event-radar-v11-4-54' in sw
     assert 'market-event-radar-v11-4-50' not in sw
 
 

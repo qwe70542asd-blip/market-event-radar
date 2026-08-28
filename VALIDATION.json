@@ -1,47 +1,65 @@
 {
-  "version": "v11.4.53",
+  "version": "v11.4.54",
   "package": "full-replace",
+  "status": "local-validation-passed-with-environment-limits",
   "checks": [
     {
-      "name": "Repository cleanup --check",
-      "status": "PASS"
+      "name": "repository_cleanup",
+      "status": "pass"
     },
     {
-      "name": "Python compileall",
-      "status": "PASS"
+      "name": "workflow_publisher_audit",
+      "status": "pass",
+      "detail": "24 live branches, one writer each"
     },
     {
-      "name": "JavaScript syntax",
-      "status": "PASS"
+      "name": "python_compileall",
+      "status": "pass"
     },
     {
-      "name": "Public data validation",
-      "status": "PASS"
+      "name": "javascript_syntax",
+      "status": "pass"
     },
     {
-      "name": "Workflow publisher audit (24 branches)",
-      "status": "PASS"
+      "name": "shell_syntax",
+      "status": "pass"
     },
     {
-      "name": "Security audit",
-      "status": "PASS"
+      "name": "workflow_yaml",
+      "status": "pass",
+      "detail": "16 workflows"
     },
     {
-      "name": "Production static readiness",
-      "status": "PASS"
+      "name": "security_audit",
+      "status": "pass"
     },
     {
-      "name": "Pytest regression suite (278 passed)",
-      "status": "PASS"
+      "name": "production_readiness",
+      "status": "pass"
     },
     {
-      "name": "HTTP smoke (7 pages / 43 assets)",
-      "status": "PASS"
+      "name": "public_data_validation",
+      "status": "pass"
     },
     {
-      "name": "Chromium browser smoke",
-      "status": "SKIP"
+      "name": "pytest",
+      "status": "pass",
+      "detail": "289 passed"
+    },
+    {
+      "name": "http_smoke",
+      "status": "pass",
+      "detail": "7 pages / 44 referenced assets"
+    },
+    {
+      "name": "official_live_source_contract",
+      "status": "pass_with_warnings",
+      "detail": "5 external DNS warnings in sandbox"
+    },
+    {
+      "name": "chromium_browser_smoke",
+      "status": "environment_blocked",
+      "detail": "sandbox blocks localhost navigation; GitHub Hosted Runner is authoritative browser gate"
     }
-  ],
-  "critical_fix": "cross-channel anti-shrink barriers; full events authority; empty timestamp-only payload rejection; release-specific PWA cache"
+  ]
 }

@@ -1,31 +1,5 @@
-Market Event Radar v11.4.53 FULL REPLACEMENT validation
-
-PASS  Repository cleanup --check
-PASS  Python compileall
-PASS  JavaScript syntax: all assets / edge worker / service worker
-PASS  Public data validation: all
-PASS  Workflow publisher audit: 24 live branches / one writer each
-PASS  Security audit
-PASS  Production static readiness
-PASS  Pytest regression suite: 278 passed
-PASS  HTTP smoke: 7 pages / 43 referenced assets
-SKIP  Chromium browser smoke: Playwright is installed but Chromium binary is not installed in this build environment; GitHub Hosted Runner remains the final browser gate.
-
-Critical integrity fixes:
-- Full live-events/events.json remains the sole authoritative event archive; events-index artifacts stay removed.
-- Frontend rejects empty timestamp-only collections and catastrophic live-payload shrink versus browser last-known-good.
-- Event publisher refuses a non-empty archive that unexpectedly falls below 70% of the previous verified archive.
-- Protected master/history writers refuse catastrophic replacement below 45% of the previous dataset when the previous set has >=100 records.
-- data-verification restores its previous live archive before rebuilding so the regression guard has a valid comparison baseline.
-- secondary-reference and market-volume-history now use the protected shared writer.
-- Service Worker cache namespace is release-specific (v11.4.53) so v11.4.50 cache residue cannot survive as the active namespace.
-
-Preserved improvements:
-- major information: 1 lead + 3 side cards, equal total height
-- date-only events do not claim a fake time
-- stricter breaking-news label
-- EU/UK calendar filters
-- TWSE+TPEx foreign-flow and stale-date guard
-- resilient Service Worker install/update
-- schema-gated Cloudflare Worker compatibility
-- automatic midnight day rollover
+Market Event Radar v11.4.54 FULL REPLACEMENT
+Local validation: PASS with environment limits.
+Full details: VALIDATION-v11.4.54.txt
+Pytest: 289 passed. HTTP smoke: 7 pages / 44 assets.
+Hosted Chromium and deployed Worker are re-verified by GitHub Actions after push.

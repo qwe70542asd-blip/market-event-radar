@@ -22,7 +22,7 @@ from bs4 import BeautifulSoup
 
 from common import DATA, NOW, read_json, write_payload, VERSION
 
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.53)"}
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.54)"}
 SESSION = requests.Session()
 
 MASTER_SOURCES = [

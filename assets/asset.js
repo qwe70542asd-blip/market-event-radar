@@ -103,34 +103,19 @@
   const estimatedBuy=qty=>{const price=finite(quote.price);if(price==null)return null;const gross=price*qty;return gross*(1+standardBrokerFeeRate)};
   const renderRetailBasics=()=>{
     const cards=[];
-    for(const [label,qty] of [["1 股約需",1],["10 股約需",10],["100 股約需",100],["1 張約需",1000]]){
-      const value=estimatedBuy(qty);cards.push(retailCard(label,value==null?"等待現價":`NT$ ${fmt(value,0)}`,`${qty.toLocaleString("zh-TW")} 股＋0.1425%標準手續費估算`));
-    }
+    for(const [label,qty] of [["1 股約需",1],["10 股約需",10],["100 股約需",100],["1 張約需",1000]]){const value=estimatedBuy(qty);cards.push(retailCard(label,value==null?"等待現價":`NT$ ${fmt(value,0)}`,`${qty.toLocaleString("zh-TW")} 股＋0.1425%標準手續費估算`))}
     const breakEven=sellTaxRate==null?null:((1+standardBrokerFeeRate)/(1-standardBrokerFeeRate-sellTaxRate)-1)*100;
     cards.push(retailCard("來回約需上漲",breakEven==null?"依商品稅率":`${fmt(breakEven,2)}%`,sellTaxRate==null?"債券 ETF 等商品稅率可能不同":"以買賣各 0.1425% 手續費＋賣出證交稅估算"));
-    cards.push(retailCard("賣出證交稅",sellTaxRate==null?"依商品":`${fmt(sellTaxRate*100,2)}%`,isEtf?(isBondEtf?"債券 ETF 等依當期規定":"一般 ETF 參考稅率"):`股票參考稅率`));
-    if(retailState.yearHigh!=null&&retailState.yearLow!=null){const pos=retailState.yearPosition;cards.push(retailCard("近一年價格位置",pos==null?"—":`${fmt(pos,0)}%`,`低 ${fmt(retailState.yearLow,2)}／高 ${fmt(retailState.yearHigh,2)}`,pos!=null&&pos>=80?"warn":pos!=null&&pos<=20?"cool":""));}
-    else cards.push(retailCard("近一年價格位置","等待歷史行情","同步後顯示目前位於一年高低區間的位置"));
-    if(isEtf){
-      if(finite(etf.premium_discount)!=null)cards.push(retailCard("ETF 折溢價",pct(etf.premium_discount),"正值為溢價、負值為折價",cls(etf.premium_discount)));
-      if(finite(etf.nav)!=null)cards.push(retailCard("最新淨值",`${fmt(etf.nav,2)} 元`,etf.nav_source||"基金揭露"));
-      if(finite(etf.beneficiary_count)!=null)cards.push(retailCard("受益人數",`${fmt(etf.beneficiary_count,0)} 人`,"觀察規模與市場參與度"));
-    }else{
-      if(finite(metrics.pe)!=null)cards.push(retailCard("本益比",fmt(metrics.pe,2),"估值參考，不等於便宜或昂貴"));
-      if(finite(metrics.eps)!=null)cards.push(retailCard("EPS",`${fmt(metrics.eps,2)} 元`,"最新已同步財報／參考資料"));
-      const latestRevenue=retailRevenueRows[0];if(latestRevenue&&finite(latestRevenue.yoy)!=null)cards.push(retailCard("最新月營收 YoY",pct(latestRevenue.yoy),latestRevenue.period||"",cls(latestRevenue.yoy)));
-      if(finite(metrics.dividend_yield)!=null)cards.push(retailCard("殖利率",`${fmt(metrics.dividend_yield,2)}%`,"歷史／市場估值欄位，非保證配息"));
-    }
+    cards.push(retailCard("賣出證交稅",sellTaxRate==null?"依商品":`${fmt(sellTaxRate*100,2)}%`,isEtf?(isBondEtf?"債券 ETF 等依當期規定":"一般 ETF 參考稅率"):"股票參考稅率"));
+    if(retailState.yearHigh!=null&&retailState.yearLow!=null){const pos=retailState.yearPosition;cards.push(retailCard("近一年價格位置",pos==null?"—":`${fmt(pos,0)}%`,`低 ${fmt(retailState.yearLow,2)}／高 ${fmt(retailState.yearHigh,2)}`,pos!=null&&pos>=80?"warn":pos!=null&&pos<=20?"cool":""))}else cards.push(retailCard("近一年價格位置","等待歷史行情","同步後顯示目前位於一年高低區間的位置"));
+    if(isEtf){if(finite(etf.premium_discount)!=null)cards.push(retailCard("ETF 折溢價",pct(etf.premium_discount),"正值為溢價、負值為折價",cls(etf.premium_discount)));if(finite(etf.nav)!=null)cards.push(retailCard("最新淨值",`${fmt(etf.nav,2)} 元`,etf.nav_source||"基金揭露"));if(finite(etf.beneficiary_count)!=null)cards.push(retailCard("受益人數",`${fmt(etf.beneficiary_count,0)} 人`,"觀察規模與市場參與度"))}
+    else{if(finite(metrics.pe)!=null)cards.push(retailCard("本益比",fmt(metrics.pe,2),"估值參考，不等於便宜或昂貴"));if(finite(metrics.eps)!=null)cards.push(retailCard("EPS",`${fmt(metrics.eps,2)} 元`,"最新已同步財報／參考資料"));const latestRevenue=retailRevenueRows[0];if(latestRevenue&&finite(latestRevenue.yoy)!=null)cards.push(retailCard("最新月營收 YoY",pct(latestRevenue.yoy),latestRevenue.period||"",cls(latestRevenue.yoy)));if(finite(metrics.dividend_yield)!=null)cards.push(retailCard("殖利率",`${fmt(metrics.dividend_yield,2)}%`,"歷史／市場估值欄位，非保證配息"))}
     const foreign=finite(chip.foreign?.net??chip.institutional?.foreign_net);if(foreign!=null)cards.push(retailCard("外資今日",`${foreign>0?"買超 ":foreign<0?"賣超 ":"持平 "}${fmt(Math.abs(foreign),0)}`,"官方法人資料",cls(foreign)));
     const dayTrade=finite(chip.day_trade?.ratio);if(dayTrade!=null)cards.push(retailCard("當沖比例",`${fmt(dayTrade,2)}%`,"短線交易熱度參考"));
     if(retailState.nextEvent)cards.push(retailCard("下一個公司事件",retailState.nextEvent.title||"公司事件",formatTime(retailState.nextEvent.start)));
-    $("#retailBasics").innerHTML=cards.join("");
-    $("#retailCostNote").innerHTML='<strong>成本估算說明</strong><span>券商手續費可自行訂定並可能有折扣或最低費用；此處以 0.1425% 標準費率估算。股票賣出證交稅以 0.3% 參考，一般 ETF 以 0.1% 參考；特殊商品請以券商與主管機關最新規定為準。</span>';
-    $("#retailBasicsUpdated").textContent=finite(quote.price)!=null?`現價 ${fmt(quote.price,2)} 元 · 估算不含券商個別折扣／最低手續費`:"等待行情後補齊交易成本";
+    $("#retailBasics").innerHTML=cards.join("");$("#retailCostNote").innerHTML='<strong>成本估算說明</strong><span>券商手續費可自行訂定並可能有折扣或最低費用；此處以 0.1425% 標準費率估算。股票賣出證交稅以 0.3% 參考，一般 ETF 以 0.1% 參考；特殊商品請以券商與主管機關最新規定為準。</span>';$("#retailBasicsUpdated").textContent=finite(quote.price)!=null?`現價 ${fmt(quote.price,2)} 元 · 估算不含券商個別折扣／最低手續費`:"等待行情後補齊交易成本";
   };
-  const watchButton=$("#toggleWatchlist");
-  const syncWatchButton=()=>{if(!watchButton)return;const active=loadWatchlist().some(row=>String(row.symbol).toUpperCase()===symbol);watchButton.classList.toggle("active",active);watchButton.textContent=active?"✓ 已加入自選":"＋ 加入自選"};
-  if(watchButton){syncWatchButton();watchButton.addEventListener("click",()=>{toggleWatchlist({symbol,name:displayName,asset_class:asset.asset_class,exchange:asset.exchange});syncWatchButton()})}
+  const watchButton=$("#toggleWatchlist");const syncWatchButton=()=>{if(!watchButton)return;const active=loadWatchlist().some(row=>String(row.symbol).toUpperCase()===symbol);watchButton.classList.toggle("active",active);watchButton.textContent=active?"✓ 已加入自選":"＋ 加入自選"};if(watchButton){syncWatchButton();watchButton.addEventListener("click",()=>{toggleWatchlist({symbol,name:displayName,asset_class:asset.asset_class,exchange:asset.exchange});syncWatchButton()})}
   renderRetailBasics();showSection("#retailBasicsSection","小資速讀");
 
   const overview=[];

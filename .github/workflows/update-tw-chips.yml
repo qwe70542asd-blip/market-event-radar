@@ -46,7 +46,7 @@ jobs:
           payload = json.loads(path.read_text(encoding="utf-8"))
           assert isinstance(payload, dict) and isinstance(payload.get("items"), dict)
           meta=payload.get("metadata",{})
-          assert meta.get("version")=="v11.4.53", meta
+          assert meta.get("version")=="v11.4.54", meta
           assert meta.get("schema")=="symbol-keyed-v2", meta
           for key,row in payload.get("items",{}).items():
               assert ":" not in key and key == str(row.get("symbol") or "").upper(), (key,row.get("symbol"))

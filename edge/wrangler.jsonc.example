@@ -16,7 +16,7 @@
   "ratelimits": [
     {
       "name": "API_RATE_LIMITER",
-      "namespace_id": "1145301",
+      "namespace_id": "1144701",
       "simple": {
         "limit": 600,
         "period": 60

@@ -91,7 +91,7 @@ if 'CLOUDFLARE_API_TOKEN' not in deploy or 'CLOUDFLARE_ACCOUNT_ID' not in deploy
 if 'vars.CLOUDFLARE_KV_NAMESPACE_ID' not in deploy or 'secrets.CLOUDFLARE_KV_NAMESPACE_ID' in deploy: bad('KV namespace must have one non-secret configuration source')
 if re.search(r'(?m)^\s*contents:\s*write\s*$',deploy): bad('Worker deployment workflow must not have repository write permission')
 if re.search(r'vars\.LIVE_MARKET_ENDPOINT|secrets\.LIVE_MARKET_ENDPOINT',deploy): bad('live endpoint must not be manually configured in repository secrets/variables')
-for token in ('ALLOWED_SYMBOLS','/health','MARKET_CACHE binding unavailable','unsupported symbol or interval','API_RATE_LIMITER','rate_limit_binding','rate limit exceeded','requesterKey','SCHEMA_VERSION','SNAPSHOT_KEY'):
+for token in ('ALLOWED_SYMBOLS','/health','HOT_SNAPSHOT_URL','caches.default','kv_write_policy','unsupported symbol or interval','API_RATE_LIMITER','rate_limit_binding','rate limit exceeded','requesterKey','SCHEMA_VERSION','SNAPSHOT_KEY'):
     if token not in worker: bad(f'Worker hardening missing: {token}')
 expected_host='market-event-radar-live.qwe70542asd.workers.dev'
 if expected_host not in runtime or expected_host not in deploy or expected_host not in readiness:

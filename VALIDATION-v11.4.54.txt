@@ -1,0 +1,38 @@
+Market Event Radar v11.4.54 — FULL REPLACEMENT VALIDATION
+Generated: 2026-08-28 (Asia/Taipei)
+Baseline package: user-provided v11.4.52 full-replace + latest v11.4.53 main changes + v11.4.54 audit fixes
+
+RESULTS
+[PASS] Repository cleanup: repository layout clean for v11.4.54
+[PASS] Workflow publisher audit: 24 live branches, one writer each
+[PASS] Python compileall: scripts + tests
+[PASS] JavaScript syntax: assets/*.js + edge/*.js + service-worker.js
+[PASS] Shell syntax: scripts/*.sh
+[PASS] Workflow YAML syntax: 16 workflows
+[PASS] Security audit: immutable Actions, fail-closed deployment auth, CSP, Worker identity/schema/rate-limit guards, bounded imports, no obvious secrets
+[PASS] Static production readiness: --version v11.4.54
+[PASS] Strict public-data validation: all
+[PASS] Full pytest regression suite: 289 passed
+[PASS] HTTP application-shell smoke: 7 pages / 44 referenced assets
+[PASS with environment warnings] Official live-source contract: contract gate OK; 5 external-source warnings because this build sandbox cannot resolve TWSE/TPEx DNS. The script correctly treats these as external availability warnings rather than fabricated data.
+[ENVIRONMENT BLOCKED] Chromium browser smoke: local Chromium exists, but this execution environment blocks http://127.0.0.1 navigation (ERR_BLOCKED_BY_ADMINISTRATOR). GitHub Hosted Runner remains the release browser gate and installs Playwright Chromium before running the same browser_smoke.py.
+
+v11.4.54 FIXES VERIFIED
+- Taiwan market date and institutional/chip date are gated independently.
+- If the market session is current but institutional data is one session behind, foreign-flow fields show 待更新 while valid price/breadth/volume conclusions stay available.
+- A verified ^TWII reference session equal to the market session is not rejected solely because a long holiday exceeds five calendar days.
+- If ^TWII proves a newer session than tw-market, the market summary fails closed.
+- Local watchlist, small-account transaction-cost tools, total-return percentage and mobile global quick navigation are included.
+- Mobile quick navigation is fixed above the bottom navigation on phones; page padding prevents overlap.
+- Cloudflare Worker hot snapshot/kline data uses Cache API; KV is reserved for snapshot last-known-good checkpoints; kline performs no KV writes.
+- Worker cron is every five minutes; LKG persistence is capped to 15-minute checkpoints.
+- Data publisher parses VERSION.json via Python argv and publishes history-free orphan snapshots.
+- Service Worker uses the v11.4.54 cache namespace and includes stale-market-guard.js.
+- Old version-specific validation/manifest/override files are removed by cleanup rules.
+
+POST-PUSH REQUIRED
+- GitHub Actions: Verify stable app release must finish green.
+- Cloudflare deploy: /health must report version v11.4.54 and schema market-snapshot-v2.
+- Hosted Chromium smoke and live-source checks run again after push/deploy.
+
+Note: no software release can guarantee that external exchanges, news sites or APIs will never change. This package fails closed or falls back to last-known-good data instead of inventing missing values.
