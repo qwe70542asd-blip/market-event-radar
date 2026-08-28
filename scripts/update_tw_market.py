@@ -15,7 +15,7 @@ import requests
 
 from common import DATA, NOW, read_json, write_payload, VERSION
 
-HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.50)"}
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.4.52)"}
 TWSE_QUOTES = "https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL"
 TPEX_QUOTES = "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_daily_close_quotes"
 TWSE_FUNDS = "https://openapi.twse.com.tw/v1/opendata/t187ap47_L"
@@ -578,11 +578,7 @@ def main() -> None:
         },
         "items": history_rows,
     }
-    history_path.write_text(json.dumps(volume_payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    (DATA / "market-volume-history-seed.js").write_text(
-        "window.__MARKET_VOLUME_HISTORY_SEED__=" + json.dumps(volume_payload, ensure_ascii=False, separators=(",", ":")) + ";\n",
-        encoding="utf-8",
-    )
+    write_payload("market-volume-history.json", "__MARKET_VOLUME_HISTORY_SEED__", volume_payload)
 
     final_counts = exchange_row_counts(rows)
     payload = {

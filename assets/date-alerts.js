@@ -3,7 +3,7 @@
   const {escapeHtml,loadData,formatTime,safeExternalHref}=MR;
   const list=document.querySelector("#dateAlertList"),count=document.querySelector("#dateAlertCount"),updated=document.querySelector("#dateAlertUpdated");
   if(!list||!count||!updated)return;
-  const fallback=window.__EVENT_INDEX_SEED__||window.__EVENT_SEED__||{metadata:{status:"seed"},events:[]};
+  const fallback=window.__EVENT_SEED__||{metadata:{status:"seed"},events:[]};
   const dayKey=value=>{
     const date=new Date(value);
     if(Number.isNaN(+date))return"";
@@ -52,6 +52,6 @@
   // Never leave this panel on a permanent loading placeholder.  Seed data is
   // rendered immediately; verified live data replaces it when available.
   render(fallback);
-  const livePromise=window.__MR_EVENT_LIVE_PROMISE__||loadData("events-index.json",fallback);
+  const livePromise=window.__MR_EVENT_LIVE_PROMISE__||loadData("events.json",fallback);
   livePromise.then(render).catch(()=>render(fallback));
 })();

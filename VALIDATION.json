@@ -1,45 +1,47 @@
 {
-  "version": "v11.4.50",
+  "version": "v11.4.52",
   "package": "full-replace",
   "checks": [
     {
-      "name": "repository cleanup",
-      "status": "pass"
+      "name": "Repository cleanup --check",
+      "status": "PASS"
     },
     {
-      "name": "python compileall",
-      "status": "pass"
+      "name": "Python compileall",
+      "status": "PASS"
     },
     {
-      "name": "public data validation",
-      "status": "pass"
+      "name": "JavaScript syntax",
+      "status": "PASS"
     },
     {
-      "name": "security audit",
-      "status": "pass"
+      "name": "Public data validation",
+      "status": "PASS"
     },
     {
-      "name": "production static readiness",
-      "status": "pass"
+      "name": "Workflow publisher audit (24 branches)",
+      "status": "PASS"
     },
     {
-      "name": "pytest",
-      "status": "pass",
-      "detail": "273 passed"
+      "name": "Security audit",
+      "status": "PASS"
     },
     {
-      "name": "javascript syntax",
-      "status": "pass"
+      "name": "Production static readiness",
+      "status": "PASS"
     },
     {
-      "name": "http smoke",
-      "status": "pass",
-      "detail": "7 pages / 44 referenced assets"
+      "name": "Pytest regression suite (278 passed)",
+      "status": "PASS"
     },
     {
-      "name": "chromium browser smoke",
-      "status": "skip",
-      "detail": "Playwright Chromium binary not installed in this environment; GitHub Actions is final browser gate"
+      "name": "HTTP smoke (7 pages / 43 assets)",
+      "status": "PASS"
+    },
+    {
+      "name": "Chromium browser smoke",
+      "status": "SKIP"
     }
-  ]
+  ],
+  "critical_fix": "cross-channel anti-shrink barriers; full events authority; empty timestamp-only payload rejection; release-specific PWA cache"
 }

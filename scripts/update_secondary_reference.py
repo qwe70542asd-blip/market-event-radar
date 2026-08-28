@@ -12,9 +12,9 @@ from zoneinfo import ZoneInfo
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any
 import requests
-from common import DATA, NOW, read_json, VERSION
+from common import DATA, NOW, read_json, write_payload, VERSION
 
-HEADERS={"User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.4.50)"}
+HEADERS={"User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.4.52)"}
 BATCH=120
 TAIPEI=ZoneInfo("Asia/Taipei")
 
@@ -88,7 +88,6 @@ def main()->None:
   "state":{"cursor":next_cursor,"last_batch_at":NOW.isoformat(timespec="seconds")},
   "errors":errors[:50],"items":items
  }
- (DATA/"secondary-reference.json").write_text(json.dumps(payload,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
- (DATA/"secondary-reference-seed.js").write_text("window.__SECONDARY_REFERENCE_SEED__="+json.dumps(payload,ensure_ascii=False,separators=(",",":"))+";\n",encoding="utf-8")
+ write_payload("secondary-reference.json","__SECONDARY_REFERENCE_SEED__",payload)
  print(payload["metadata"])
 if __name__=="__main__":main()

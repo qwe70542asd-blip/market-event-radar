@@ -81,8 +81,6 @@ jobs:
       - name: Scan official calendars and compare exact dates
         run: python scripts/update_events.py
 
-      - name: Build compact homepage event index
-        run: python scripts/build_event_index.py
 
       - name: Validate event archive and date-monitor metadata
         run: |
@@ -114,14 +112,6 @@ jobs:
                       assert re.match(r"^bea\|[^|]+\|20\d{2}\|[^|]+$", key), row
                   else:
                       assert re.match(r"^bls\|[^|]+\|[^|]+$", key), row
-          index=json.loads(Path("data/events-index.json").read_text(encoding="utf-8"))
-          index_events=index.get("events") or []
-          index_meta=index.get("metadata") or {}
-          assert index_meta.get("version")==expected, index_meta
-          assert index_meta.get("is_index") is True, index_meta
-          assert index_events, "empty homepage event index"
-          assert len(index_events) <= len(events), (len(index_events),len(events))
-          print("event index",len(index_events),"of",len(events))
           print("events",len(events))
           print("today newly announced",metadata.get("announced_today_count"))
           print("sources ok",metadata.get("source_ok_count"))
@@ -137,6 +127,4 @@ jobs:
           bash scripts/publish_data_branch.sh "$DATA_BRANCH" "event-calendar-$APP_VERSION" \
             data/events.json \
             data/events-seed.js \
-            data/events-index.json \
-            data/events-index-seed.js \
             data/event-source-state.json

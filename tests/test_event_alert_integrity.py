@@ -269,3 +269,15 @@ class EventAlertIntegrityTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+class EventArchiveRegressionBarrierTests(unittest.TestCase):
+    def test_catastrophic_nonempty_archive_shrink_is_blocked(self):
+        previous=[{"id":str(i)} for i in range(100)]
+        current=[{"id":str(i)} for i in range(60)]
+        with self.assertRaises(SystemExit):
+            update_events.assert_event_archive_not_catastrophically_shrunk(previous,current)
+
+    def test_normal_archive_dedup_churn_is_allowed(self):
+        previous=[{"id":str(i)} for i in range(100)]
+        current=[{"id":str(i)} for i in range(90)]
+        update_events.assert_event_archive_not_catastrophically_shrunk(previous,current)

@@ -29,11 +29,12 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
-      - name: Wait for v11.4.50 isolated-data release barrier
+      - name: Wait for v11.4.52 isolated-data release barrier
         if: github.event_name == 'push'
-        run: python scripts/wait_for_data_channels.py v11.4.50 --attempts 222 --sleep 10
-      - name: Restore source channels
+        run: python scripts/wait_for_data_channels.py v11.4.52 --attempts 222 --sleep 10
+      - name: Restore source channels and previous verification archive
         run: |
+          bash scripts/restore_data_branch.sh live-data-verification "data-verification.json:data/data-verification.json"
           bash scripts/restore_data_branch.sh live-assets "assets.json:data/assets.json" "asset-audit.json:data/asset-audit.json"
           bash scripts/restore_data_branch.sh live-tw-market "tw-market.json:data/tw-market.json"
           bash scripts/restore_data_branch.sh live-monthly-revenue "monthly-revenue.json:data/monthly-revenue.json"

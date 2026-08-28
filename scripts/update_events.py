@@ -1474,6 +1474,26 @@ def canonical_event_key(row: dict[str, Any]) -> str:
     return f"{day}|{group}|{symbol}|{normalized}"
 
 
+def assert_event_archive_not_catastrophically_shrunk(previous_events: list[dict[str, Any]], current_events: list[dict[str, Any]]) -> None:
+    """Refuse to publish a syntactically valid but catastrophically incomplete archive.
+
+    The verified event dataset is retain/append by policy from ARCHIVE_START. A
+    successful parser returning a small non-empty subset is therefore not enough
+    to justify replacing the last-known-good archive. Intentional rebuilds start
+    from the packaged baseline instead of silently weakening this barrier.
+    """
+    previous_count = len(previous_events or [])
+    current_count = len(current_events or [])
+    if previous_count < 50:
+        return
+    minimum = max(50, int(previous_count * 0.70))
+    if current_count < minimum:
+        raise SystemExit(
+            f"Event archive catastrophic shrink blocked: {previous_count} -> {current_count}; "
+            f"minimum allowed without an explicit rebuild is {minimum}."
+        )
+
+
 def source_snapshot(result: SourceResult, previous_source: dict[str, Any] | None, status: str, message: str) -> dict[str, Any]:
     previous_source = previous_source or {}
     return {
@@ -1676,6 +1696,7 @@ def main() -> None:
     events = sorted(canonical.values(), key=lambda row: (str(row.get("start")), str(row.get("title"))))
     if not events and previous_events:
         raise SystemExit("No events after refresh; previous verified archive was not replaced.")
+    assert_event_archive_not_catastrophically_shrunk(previous_events, events)
 
     recent_cutoff = NOW - timedelta(hours=24)
     announced_today = sum(

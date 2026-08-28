@@ -61,7 +61,7 @@ jobs:
         run: python scripts/security_audit.py
 
       - name: Static production readiness gate
-        run: python scripts/production_readiness.py --version v11.4.50
+        run: python scripts/production_readiness.py --version v11.4.52
 
       - name: Strict data validation
         run: python scripts/validate_public_data.py all

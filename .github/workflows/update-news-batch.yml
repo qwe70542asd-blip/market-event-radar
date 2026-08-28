@@ -68,7 +68,7 @@ jobs:
           file=os.environ["NEWS_FILE"]
           p=json.loads(Path(file).read_text(encoding="utf-8"))
           assert isinstance(p.get("items"),list)
-          assert p.get("metadata",{}).get("version")=="v11.4.50"
+          assert p.get("metadata",{}).get("version")=="v11.4.52"
           print(file,len(p.get("items",[])),p.get("metadata",{}).get("status"))
           PY
         env:

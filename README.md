@@ -1,8 +1,8 @@
-# 市場事件雷達 v11.4.50
+# 市場事件雷達 v11.4.52
 
 以事件月曆為核心，整合台股行情、六大指數、重大財經資訊、法人籌碼、股票／ETF 資料與個人投資組合的靜態 PWA。
 
-## v11.4.50：完整替換／事件來源與重大資訊修正
+## v11.4.52：完整替換／資料完整性防回歸
 
 這版是 **full replacement**，不是 overlay。目標是把先前覆蓋更新留下的舊檔問題一次清掉，並保留 v11.4.48 已完成的首頁 UX。
 
@@ -19,14 +19,14 @@
 1. GitHub Desktop 先 **Fetch/Pull** 最新 `main`。
 2. 打開本機 `market-event-radar` repository 資料夾。
 3. **保留隱藏的 `.git` 資料夾**；刪除其餘舊專案檔案與資料夾。
-4. 解壓 `market-event-radar-v11.4.50-full-replace.zip`，把 ZIP **裡面的所有內容**直接放到 repository root。不要多包一層資料夾。
+4. 解壓 `market-event-radar-v11.4.52-full-replace.zip`，把 ZIP **裡面的所有內容**直接放到 repository root。不要多包一層資料夾。
 5. 確認 `index.html`、`.github`、`assets`、`data`、`scripts` 都直接位於 repository root。
-6. 執行一次 `CLEAN-REPO.cmd`。正常應顯示 `repository layout clean for v11.4.50` 或完成清理。
-7. GitHub Desktop Commit：`market-event-radar-v11.4.50-full-replace`，再 Push。
+6. 執行一次 `CLEAN-REPO.cmd`。正常應顯示 `repository layout clean for v11.4.52` 或完成清理。
+7. GitHub Desktop Commit：`market-event-radar-v11.4.52-full-replace`，再 Push。
 8. GitHub Actions 至少確認：
-   - `Verify v11.4.50 stable app release` 綠燈
-   - `Update v11.4.50 event calendar and announced dates` 綠燈
-   - `Deploy v11.4.50 live market worker` 綠燈
+   - `Verify v11.4.52 stable app release` 綠燈
+   - `Update v11.4.52 event calendar and announced dates` 綠燈
+   - `Deploy v11.4.52 live market worker` 綠燈
 
 ## Cloudflare
 

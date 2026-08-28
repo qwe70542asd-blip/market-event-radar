@@ -1,5 +1,5 @@
 (()=>{"use strict";
-const OWNER="qwe70542asd-blip",REPO="market-event-radar",APP_VERSION="v11.4.50";
+const OWNER="qwe70542asd-blip",REPO="market-event-radar",APP_VERSION="v11.4.52";
 let LIVE_MARKET_ENDPOINT=String(window.MR_RUNTIME?.liveMarketEndpoint||"").replace(/\/$/,"");
 let runtimeReadyPromise=null;
 async function ensureRuntimeEndpoint(){
@@ -15,7 +15,7 @@ async function ensureRuntimeEndpoint(){
  return await runtimeReadyPromise;
 }
 const getLiveMarketEndpoint=()=>LIVE_MARKET_ENDPOINT;
-const CHANNELS={"assets.json":"live-assets","asset-audit.json":"live-assets","asset-coverage.json":"live-assets","events.json":"live-events","events-index.json":"live-events","event-source-state.json":"live-events","tw-market.json":"live-tw-market","tw-chips.json":"live-tw-chips","market-snapshot.json":"live-global-market","market-kline.json":"live-global-market","news-cna.json":"live-news-cna","news-moneydj.json":"live-news-moneydj","news-cnyes.json":"live-news-cnyes","news-udn.json":"live-news-udn","news-ltn.json":"live-news-ltn","news-wealth.json":"live-news-wealth","news-yahoo.json":"live-news-yahoo","news-technews.json":"live-news-technews","news-ctee.json":"live-news-ctee","news-asia-risk.json":"live-news-asia-risk","stock-news.json":"live-stock-news","official-market-notices.json":"live-official-notices","company-disclosures.json":"live-company-disclosures","monthly-revenue.json":"live-monthly-revenue","dividend-history.json":"live-dividend-history","market-volume-history.json":"live-tw-market","secondary-reference.json":"live-secondary-reference","data-verification.json":"live-data-verification","yahoo-details.json":"live-yahoo-details","etf-details.json":"live-etf-details","stock-basics.json":"live-stock-basics"};
+const CHANNELS={"assets.json":"live-assets","asset-audit.json":"live-assets","asset-coverage.json":"live-assets","events.json":"live-events","event-source-state.json":"live-events","tw-market.json":"live-tw-market","tw-chips.json":"live-tw-chips","market-snapshot.json":"live-global-market","market-kline.json":"live-global-market","news-cna.json":"live-news-cna","news-moneydj.json":"live-news-moneydj","news-cnyes.json":"live-news-cnyes","news-udn.json":"live-news-udn","news-ltn.json":"live-news-ltn","news-wealth.json":"live-news-wealth","news-yahoo.json":"live-news-yahoo","news-technews.json":"live-news-technews","news-ctee.json":"live-news-ctee","news-asia-risk.json":"live-news-asia-risk","stock-news.json":"live-stock-news","official-market-notices.json":"live-official-notices","company-disclosures.json":"live-company-disclosures","monthly-revenue.json":"live-monthly-revenue","dividend-history.json":"live-dividend-history","market-volume-history.json":"live-tw-market","secondary-reference.json":"live-secondary-reference","data-verification.json":"live-data-verification","yahoo-details.json":"live-yahoo-details","etf-details.json":"live-etf-details","stock-basics.json":"live-stock-basics"};
 const NEWS_FILES=[{"file":"news-cna.json","id":"cna","label":"中央社","seed":"__NEWS_CNA_SEED__","kind":"media"},{"file":"news-moneydj.json","id":"moneydj","label":"MoneyDJ","seed":"__NEWS_MONEYDJ_SEED__","kind":"media"},{"file":"news-cnyes.json","id":"cnyes","label":"鉅亨網","seed":"__NEWS_CNYES_SEED__","kind":"media"},{"file":"news-udn.json","id":"udn","label":"經濟日報","seed":"__NEWS_UDN_SEED__","kind":"media"},{"file":"news-ltn.json","id":"ltn","label":"自由財經","seed":"__NEWS_LTN_SEED__","kind":"media"},{"file":"news-wealth.json","id":"wealth","label":"財富自由","seed":"__NEWS_WEALTH_SEED__","kind":"media"},{"file":"news-yahoo.json","id":"yahoo","label":"Yahoo股市","seed":"__NEWS_YAHOO_SEED__","kind":"media"},{"file":"news-technews.json","id":"technews","label":"科技新報／財經新報","seed":"__NEWS_TECHNEWS_SEED__","kind":"media"},{"file":"news-ctee.json","id":"ctee","label":"工商時報","seed":"__NEWS_CTEE_SEED__","kind":"media"},{"file":"news-asia-risk.json","id":"asia-risk","label":"亞洲總體風險","seed":"__NEWS_ASIA_RISK_SEED__","kind":"media"},{"file":"official-market-notices.json","id":"official-notices","label":"官方市場公告","seed":"__OFFICIAL_NOTICE_SEED__","kind":"official"},{"file":"company-disclosures.json","id":"company-disclosures","label":"個股重大訊息","seed":"__COMPANY_DISCLOSURE_SEED__","kind":"company"}];
 const $=(q,r=document)=>r.querySelector(q),$$=(q,r=document)=>[...r.querySelectorAll(q)];
 const escapeHtml=v=>String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
@@ -67,7 +67,7 @@ function renderNewsThumb(item,kind="tile",options={}){
 document.addEventListener("load",event=>{const img=event.target;if(img instanceof HTMLImageElement&&img.dataset.newsRemote==="1"){img.dataset.loaded="true";img.parentElement?.classList.add("remote-image-loaded")}},true);
 document.addEventListener("error",event=>{const img=event.target;if(img instanceof HTMLImageElement&&img.dataset.newsRemote==="1")advanceNewsImage(img)},true);
 async function getJson(url,timeout=9000){const ctl=new AbortController(),id=setTimeout(()=>ctl.abort(),timeout);try{const r=await fetch(url,{cache:"no-store",headers:{Accept:"application/json"},signal:ctl.signal});if(!r.ok)throw Error(r.status);return await r.json()}finally{clearTimeout(id)}}
-const FRESH_BRANCH_FILES=new Set(["market-snapshot.json","market-kline.json","tw-market.json","market-volume-history.json","events.json","events-index.json"]);
+const FRESH_BRANCH_FILES=new Set(["market-snapshot.json","market-kline.json","tw-market.json","market-volume-history.json","events.json"]);
 const cloneValue=value=>typeof structuredClone==="function"?structuredClone(value):JSON.parse(JSON.stringify(value));
 function decodeGitHubContent(value){const binary=atob(String(value||"").replace(/\s+/g,"")),bytes=Uint8Array.from(binary,char=>char.charCodeAt(0));return JSON.parse(new TextDecoder("utf-8").decode(bytes))}
 async function loadBranchApi(name,branch){
@@ -106,7 +106,7 @@ try{
   localStorage.setItem(STORAGE_CLEANUP_KEY,"1");
  }
 }catch(e){}
-const dataCacheTtl=name=>["market-snapshot.json","market-kline.json","tw-market.json","events.json","events-index.json"].includes(name)?30000:300000;
+const dataCacheTtl=name=>["market-snapshot.json","market-kline.json","tw-market.json","events.json"].includes(name)?30000:300000;
 const snapshotCandleCount=row=>(Array.isArray(row?.candles)?row.candles:[]).filter(candle=>candle?.date&&[candle.open,candle.high,candle.low,candle.close].every(value=>finite(value)!=null)).length;
 const loadStored=(keys=[])=>{for(const key of keys){try{const value=JSON.parse(localStorage.getItem(key)||"null");if(value)return value}catch(e){}}return null};
 const isUsablePayload=(name,payload)=>{
@@ -114,12 +114,33 @@ const isUsablePayload=(name,payload)=>{
  if(name==="market-snapshot.json")return (payload.items||[]).filter(row=>finite(row?.price)!=null&&snapshotCandleCount(row)>=10).length>=4;
  if(name==="tw-market.json")return (payload.items||[]).filter(row=>finite(row?.price)!=null).length>=10;
  if(name==="market-kline.json"){const items=payload.items||{};return !!payload.metadata?.updated_at&&typeof items==="object"&&Object.keys(items).length>0;}
- if(name==="events.json"||name==="events-index.json")return Array.isArray(payload.events)&&payload.events.length>0;
- if(Array.isArray(payload.items))return payload.items.length>0||!!payload.metadata?.updated_at;
- if(payload.items&&typeof payload.items==="object")return Object.keys(payload.items).length>0||!!payload.metadata?.updated_at;
+ if(name==="events.json")return Array.isArray(payload.events)&&payload.events.length>0;
+ // An updated_at timestamp is not evidence that a collection is complete.
+ // Empty/accidentally truncated live files must fall through to last-known-good.
+ if(Array.isArray(payload.items))return payload.items.length>0;
+ if(payload.items&&typeof payload.items==="object")return Object.keys(payload.items).length>0;
  if(Array.isArray(payload.assets))return payload.assets.length>0;
  return !!payload.metadata?.updated_at||Object.keys(payload).length>1;
 };
+const payloadCardinality=(name,payload)=>{
+ if(!payload||typeof payload!=="object")return 0;
+ if(name==="events.json")return Array.isArray(payload.events)?payload.events.length:0;
+ if(Array.isArray(payload.items))return payload.items.length;
+ if(payload.items&&typeof payload.items==="object")return Object.keys(payload.items).length;
+ if(Array.isArray(payload.assets))return payload.assets.length;
+ return 0;
+};
+const ARCHIVE_REGRESSION_FILES=new Set(["events.json","assets.json","stock-basics.json","yahoo-details.json","etf-details.json","monthly-revenue.json","dividend-history.json","data-verification.json","market-kline.json","market-volume-history.json","tw-chips.json","secondary-reference.json"]);
+function isCatastrophicPayloadRegression(name,candidate,lastGood){
+ if(!ARCHIVE_REGRESSION_FILES.has(name)||!lastGood)return false;
+ const before=payloadCardinality(name,lastGood),after=payloadCardinality(name,candidate);
+ if(before<25)return false;
+ // Event history is an append/retain archive, so even a 30% collapse is invalid.
+ // Other master/history channels use a wider 55% loss threshold to avoid blocking
+ // ordinary membership churn while still catching a broken one-page/partial scrape.
+ const floor=name==="events.json"?Math.max(25,Math.floor(before*0.70)):before>=100?Math.max(25,Math.floor(before*0.45)):0;
+ return floor>0&&after<floor;
+}
 function mergeSnapshotCache(payload){
  const cached=loadStored(snapshotCacheKeys);
  if(!cached?.items?.length)return payload;
@@ -177,10 +198,20 @@ async function _loadData(name,fallback={},options={}){
   if(WEB_STORAGE_CACHE_FILES.has(name)){try{const cached=JSON.parse(sessionStorage.getItem(dataCacheKey(name))||"null");if(cached&&now-cached.at<ttl&&isUsablePayload(name,cached.payload)){DATA_MEMORY.set(name,cached);return cloneValue(cached.payload)}}catch(e){}}
  }
  const branch=CHANNELS[name];let payload=null,source="";
+ // Read the durable snapshot before accepting a remote replacement.  A payload
+ // can be syntactically valid yet catastrophically incomplete (the class of
+ // regression that previously hid most calendar events).
+ const lastGoodForGuard=(branch||name==="market-snapshot.json")?await readLastGood(name):null;
+ const acceptRemote=(candidate,candidateSource)=>{
+  if(!isUsablePayload(name,candidate))return false;
+  if(isCatastrophicPayloadRegression(name,candidate,lastGoodForGuard)){console.warn(`Rejected catastrophic ${name} shrink from ${payloadCardinality(name,lastGoodForGuard)} to ${payloadCardinality(name,candidate)} (${candidateSource})`);return false}
+  payload=candidate;source=candidateSource;return true;
+ };
  const endpoint=name==="market-snapshot.json"?await ensureRuntimeEndpoint():"";
- if(name==="market-snapshot.json"&&endpoint){try{const candidate=await getJson(`${endpoint}/market-snapshot.json?_=${Date.now()}`,6000);if(isUsablePayload(name,candidate)){payload=candidate;source="worker"}}catch(e){}}
- if(branch&&!payload){try{const live=await loadLiveBranchFast(name,branch);payload=live.payload;source=live.source}catch(e){}}
- if(!payload){const cached=await readLastGood(name);if(cached){payload=cached;source="browser-last-good"}}
+ if(name==="market-snapshot.json"&&endpoint){try{acceptRemote(await getJson(`${endpoint}/market-snapshot.json?_=${Date.now()}`,6000),"worker")}catch(e){}}
+ if(branch&&!payload){try{const live=await loadLiveBranchFast(name,branch);acceptRemote(live.payload,live.source)}catch(e){}}
+ if(!payload&&lastGoodForGuard){payload=lastGoodForGuard;source="browser-last-good"}
+ if(!payload&&!lastGoodForGuard){const cached=await readLastGood(name);if(cached){payload=cached;source="browser-last-good"}}
  if(!payload){try{const candidate=await getJson(`data/${name}?t=${Date.now()}`,5000);if(isUsablePayload(name,candidate)){payload=candidate;source="same-origin-main"}}catch(e){}}
  if(!payload)payload=cloneValue(fallback);
  if(name==="market-snapshot.json")payload=mergeSnapshotCache(payload||cloneValue(fallback));

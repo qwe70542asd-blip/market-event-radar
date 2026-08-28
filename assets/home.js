@@ -1,9 +1,9 @@
-// v11.4.50 usability + all-industry major-information layer
+// v11.4.52 usability + all-industry major-information layer
 (async()=>{
   "use strict";
   const {$,escapeHtml,fmt,pct,cls,formatTime,formatEventTime,loadData,loadMarketKline,startNewsChannels,loadStockNews,loadPortfolio,finite,renderNewsThumb,newsHasImage,safeExternalHref,getLiveMarketEndpoint}=MR;
   const assetFallback=window.__ASSET_SEED__||{assets:[]};
-  const eventFallback=window.__EVENT_INDEX_SEED__||window.__EVENT_SEED__||{metadata:{status:"seed"},events:[]};
+  const eventFallback=window.__EVENT_SEED__||{metadata:{status:"seed"},events:[]};
   const twFallback=window.__TW_MARKET_SEED__||{items:[]};
   const chipsFallback=window.__TW_CHIPS_SEED__||{markets:{},items:{}};
   const snapshotFallback=window.__MARKET_SNAPSHOT_SEED__||{items:[]};
@@ -21,16 +21,7 @@
   const rebuildQuotes=()=>{quotes=new Map([...(tw.items||[]),...(snapshot.items||[])].map(row=>[String(row.symbol||"").toUpperCase(),row]));};
   rebuildAssets();rebuildQuotes();
 
-  const eventLivePromise=window.__MR_EVENT_LIVE_PROMISE__||(window.__MR_EVENT_LIVE_PROMISE__=loadData("events-index.json",eventFallback).catch(()=>eventFallback));
-  let fullEventArchivePromise=null;
-  const ensureFullEventArchive=async()=>{
-    if(fullEventArchivePromise)return await fullEventArchivePromise;
-    fullEventArchivePromise=loadData("events.json",window.__EVENT_SEED__||events||{events:[]},{force:true}).then(full=>{
-      if(Array.isArray(full?.events)&&full.events.length){events=full;return full}
-      return events;
-    }).catch(()=>events);
-    return await fullEventArchivePromise;
-  };
+  const eventLivePromise=window.__MR_EVENT_LIVE_PROMISE__||(window.__MR_EVENT_LIVE_PROMISE__=loadData("events.json",eventFallback).catch(()=>eventFallback));
   const assetLivePromise=loadData("assets.json",assetFallback).catch(()=>assetFallback);
   const twLivePromise=loadData("tw-market.json",twFallback).catch(()=>twFallback);
   const chipsLivePromise=loadData("tw-chips.json",chipsFallback).catch(()=>chipsFallback);
@@ -81,7 +72,7 @@
   const impactLabel=impact=>impact==="high"?"高影響":impact==="low"?"低影響":"中影響";
 
   const LEADER_RE=/台積電|鴻海|聯發科|廣達|緯創|國巨|川湖|日月光|台達電|中華電|長榮|陽明|NVIDIA|輝達|Microsoft|微軟|Apple|蘋果|Amazon|亞馬遜|Meta|Google|Alphabet|AMD|Intel|Tesla|三星|SK\s*海力士|海力士|Sony|Toyota/i;
-  // v11.4.50: a bare regulator/exchange mention is not a market-structure event.
+  // v11.4.52: a bare regulator/exchange mention is not a market-structure event.
   // Direct trading-rule terms qualify on their own; institution names qualify only
   // when paired with an actual rule/change signal.
   const MARKET_STRUCTURE_RE=/零股|整股|盤中零股|盤後零股|撮合|集合競價|逐筆交易|交易時間|開盤時間|收盤時間|漲跌幅|升降單位|當沖|融資融券|融券|融資|交割|T\+?1|T\+?2|交易制度|市場制度/i;
@@ -471,16 +462,10 @@
   }
   renderFeaturedInfo();renderTodayFocus();renderTaiwanStatus();renderTodayBrief();
 
-  const storedCalendarMode=localStorage.getItem("mr-calendar-mode-v1")||localStorage.getItem("mr-calendar-mode-v11.4.49")||localStorage.getItem("mr-calendar-mode-v11.4.50")||"market";
+  const storedCalendarMode=localStorage.getItem("mr-calendar-mode-v1")||localStorage.getItem("mr-calendar-mode-v11.4.49")||localStorage.getItem("mr-calendar-mode-v11.4.52")||"market";
   if(!localStorage.getItem("mr-calendar-mode-v1"))localStorage.setItem("mr-calendar-mode-v1",storedCalendarMode);
   let current=new Date(),calendarMode=storedCalendarMode==="dividend"?"dividend":"market",pendingJumpDate="";
   const calendar=$("#calendarGrid"),dialog=$("#dayDialog");
-  const calendarIndexCovers=(year,month)=>{
-    const start=`${year}-${String(month+1).padStart(2,"0")}-01`,end=localKey(new Date(year,month+1,0));
-    const min=String(events?.metadata?.calendar_window_start||""),max=String(events?.metadata?.calendar_window_end||"");
-    return !min||!max||(start>=min&&end<=max);
-  };
-  const ensureCalendarMonth=async(year,month)=>{if(calendarIndexCovers(year,month))return;await ensureFullEventArchive()};
   const marketFilters=()=>({q:$("#eventSearch").value.trim().toLowerCase(),region:$("#eventRegion").value,type:$("#eventType").value,impact:$("#eventImpact").value});
   const dividendFilters=()=>({q:$("#eventSearch").value.trim().toLowerCase(),kind:$("#dividendKind").value,asset:$("#dividendAsset").value,amount:$("#dividendAmount").value});
   const searchableText=event=>`${event.title||""} ${event.description||event.summary||""} ${event.symbol||event.asset_id||""} ${event.asset_name||event.name||""} ${Array.isArray(event.assets)?event.assets.join(" "):event.assets||""} ${Array.isArray(event.symbols)?event.symbols.join(" "):event.symbols||""}`.toLowerCase();
@@ -633,8 +618,8 @@
   $("#eventSearch").addEventListener("input",renderCalendar);
   ["eventRegion","eventType","eventImpact","dividendKind","dividendAsset","dividendAmount"].forEach(id=>$("#"+id).addEventListener("change",renderCalendar));
   document.querySelectorAll("[data-calendar-mode]").forEach(button=>button.onclick=()=>setCalendarMode(button.dataset.calendarMode));
-  $("#prevMonth").onclick=async()=>{current.setMonth(current.getMonth()-1);pendingJumpDate="";await ensureCalendarMonth(current.getFullYear(),current.getMonth());renderCalendar()};
-  $("#nextMonth").onclick=async()=>{current.setMonth(current.getMonth()+1);pendingJumpDate="";await ensureCalendarMonth(current.getFullYear(),current.getMonth());renderCalendar()};
+  $("#prevMonth").onclick=()=>{current.setMonth(current.getMonth()-1);pendingJumpDate="";renderCalendar()};
+  $("#nextMonth").onclick=()=>{current.setMonth(current.getMonth()+1);pendingJumpDate="";renderCalendar()};
   $("#todayMonth").onclick=()=>{current=new Date();pendingJumpDate="";renderCalendar()};
   const closeDayDialog=()=>{if(dialog?.open)dialog.close()};
   $("#closeDayDialog").onclick=closeDayDialog;
@@ -647,9 +632,9 @@
     const observer=new IntersectionObserver(entries=>{const visible=entries.filter(entry=>entry.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];if(!visible)return;quickLinks.forEach(link=>link.classList.toggle("current",link.getAttribute("href")==="#"+visible.target.id))},{rootMargin:"-20% 0px -55%",threshold:[.05,.2,.5]});
     targets.forEach(target=>observer.observe(target));
   }
-  window.addEventListener("market-radar:calendar-jump",async event=>{
+  window.addEventListener("market-radar:calendar-jump",event=>{
     const detail=event.detail||{},target=String(detail.date||"").match(/^\d{4}-\d{2}-\d{2}/)?.[0]||"";
-    if(target){const [year,month,day]=target.split("-").map(Number);current=new Date(year,month-1,day);pendingJumpDate=target;await ensureCalendarMonth(year,month-1)}
+    if(target){const [year,month,day]=target.split("-").map(Number);current=new Date(year,month-1,day);pendingJumpDate=target;}
     setCalendarMode(detail.mode==="dividend"?"dividend":"market");
     $("#calendarPanel").scrollIntoView({behavior:"smooth",block:"start"});
   });

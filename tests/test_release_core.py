@@ -349,3 +349,17 @@ def test_frontend_generic_news_filter_is_in_parity_with_backend_denylist():
     shared = (ROOT / "assets/shared.js").read_text(encoding="utf-8")
     for token in ("google-prefer", "pic_fb", "line-ad"):
         assert token in shared
+
+
+def test_common_catastrophic_collection_shrink_guard():
+    import common
+    previous={"items":{str(i):{} for i in range(1000)}}
+    current={"items":{str(i):{} for i in range(100)}}
+    try:
+        common.guard_against_catastrophic_shrink("stock-basics.json",previous,current)
+    except RuntimeError as exc:
+        assert "Catastrophic dataset shrink blocked" in str(exc)
+    else:
+        raise AssertionError("catastrophic shrink must be blocked")
+    # Ordinary churn remains allowed.
+    common.guard_against_catastrophic_shrink("stock-basics.json",previous,{"items":{str(i):{} for i in range(800)}})
