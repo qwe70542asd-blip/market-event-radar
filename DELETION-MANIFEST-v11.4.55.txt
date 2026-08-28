@@ -1,0 +1,11 @@
+Market Event Radar v11.4.55 deletion/synchronization manifest
+
+Removed/replaced release artifacts:
+- previous DELETION-MANIFEST-v*.txt / VALIDATION-v*.txt
+- previous assets/v*-overrides.css
+- obsolete events-index artifacts
+- legacy apply_v*.py patch helpers
+- dynamically injected mobile-global 01–04 quick navigation (duplicate/overlapping navigation)
+
+Current release keeps only v11.4.55 release-specific manifest, validation and override CSS.
+cleanup_repo.py --check must pass before commit.

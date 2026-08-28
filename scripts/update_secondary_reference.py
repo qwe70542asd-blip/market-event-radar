@@ -14,7 +14,7 @@ from typing import Any
 import requests
 from common import DATA, NOW, read_json, write_payload, VERSION
 
-HEADERS={"User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.4.54)"}
+HEADERS={"User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.4.55)"}
 BATCH=120
 TAIPEI=ZoneInfo("Asia/Taipei")
 

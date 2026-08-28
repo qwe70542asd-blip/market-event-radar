@@ -48,7 +48,7 @@ jobs:
           from pathlib import Path
           for file in ("company-disclosures.json","official-market-notices.json"):
               p=json.loads((Path("data")/file).read_text(encoding="utf-8"))
-              assert p.get("metadata",{}).get("version")=="v11.4.54"
+              assert p.get("metadata",{}).get("version")=="v11.4.55"
               rows=p.get("items",[])
               assert all(row.get("published_at") for row in rows)
               print(file,len(rows),p.get("metadata",{}).get("recent_24h_count"))

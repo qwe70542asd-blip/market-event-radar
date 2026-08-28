@@ -1,4 +1,4 @@
-// v11.4.54 usability + all-industry major-information layer
+// v11.4.55 usability + all-industry major-information layer
 (async()=>{
   "use strict";
   const {$,escapeHtml,fmt,pct,cls,formatTime,formatEventTime,loadData,loadMarketKline,startNewsChannels,loadStockNews,loadPortfolio,finite,renderNewsThumb,newsHasImage,safeExternalHref,getLiveMarketEndpoint}=MR;
@@ -72,7 +72,7 @@
   const impactLabel=impact=>impact==="high"?"高影響":impact==="low"?"低影響":"中影響";
 
   const LEADER_RE=/台積電|鴻海|聯發科|廣達|緯創|國巨|川湖|日月光|台達電|中華電|長榮|陽明|NVIDIA|輝達|Microsoft|微軟|Apple|蘋果|Amazon|亞馬遜|Meta|Google|Alphabet|AMD|Intel|Tesla|三星|SK\s*海力士|海力士|Sony|Toyota/i;
-  // v11.4.54: a bare regulator/exchange mention is not a market-structure event.
+  // v11.4.55: a bare regulator/exchange mention is not a market-structure event.
   // Direct trading-rule terms qualify on their own; institution names qualify only
   // when paired with an actual rule/change signal.
   const MARKET_STRUCTURE_RE=/零股|整股|盤中零股|盤後零股|撮合|集合競價|逐筆交易|交易時間|開盤時間|收盤時間|漲跌幅|升降單位|當沖|融資融券|融券|融資|交割|T\+?1|T\+?2|交易制度|市場制度/i;
@@ -426,6 +426,47 @@
     const majorToday=todayEvents.filter(featuredEvent).sort((a,b)=>Number(b.impact==="high")-Number(a.impact==="high"));
     const node=$("#todayFocusList");if(node)node.innerHTML=majorToday.length?majorToday.slice(0,6).map(event=>`<a class="today-focus-item" href="event.html?id=${encodeURIComponent(event.id)}"><span class="impact-dot ${escapeHtml(event.impact||"medium")}"></span><span><strong>${escapeHtml(strip(event.title))}</strong><small>${escapeHtml(eventWhenLabel(event))}</small></span></a>`).join(""):(eventFeedReady()?'<div class="empty">今天沒有已確認的高影響事件</div>':'<div class="empty">線上事件資料同步中</div>');
   }
+  const isMacroCalendarEvent=event=>{
+    const text=`${event?.title||""} ${event?.description||event?.summary||""} ${event?.category||""} ${event?.event_type||""}`;
+    return CENTRAL_BANK_RE.test(text)||MACRO_RE.test(text);
+  };
+  const median=values=>{
+    const rows=(values||[]).filter(Number.isFinite).sort((a,b)=>a-b);if(!rows.length)return null;
+    const mid=Math.floor(rows.length/2);return rows.length%2?rows[mid]:(rows[mid-1]+rows[mid])/2;
+  };
+  function renderMarketInsights(){
+    const breadth=tw.breadth||{},up=Math.max(0,finite(breadth.up)||0),down=Math.max(0,finite(breadth.down)||0),flat=Math.max(0,finite(breadth.flat)||0),total=up+down+flat;
+    const heat=total?Math.round(up/total*100):null,heatLabel=heat==null?"等待資料":heat>=75?"全面偏強":heat>=60?"偏強":heat>=45?"均衡":heat>=30?"偏弱":"低迷";
+    const heatScore=$("#marketHeatScore"),heatText=$("#marketHeatLabel"),heatFill=$("#marketHeatFill");
+    if(heatScore)heatScore.textContent=heat==null?"—":String(heat);if(heatText)heatText.textContent=heatLabel;if(heatFill)heatFill.style.width=`${heat==null?0:Math.max(0,Math.min(100,heat))}%`;
+    const heatValues={marketHeatUp:total?up:"—",marketHeatDown:total?down:"—",marketHeatFlat:total?flat:"—"};for(const [id,value] of Object.entries(heatValues)){const node=$("#"+id);if(node)node.textContent=value}
+    const marketDate=String(tw.metadata?.trading_date||"");const heatDate=$("#marketHeatDate");if(heatDate)heatDate.textContent=marketDate?`交易日 ${marketDate}`:"等待官方交易日";
+
+    const chipDate=String(chips.metadata?.trading_date||""),chipsCurrent=!marketDate||!chipDate||marketDate===chipDate,foreignParts=[finite(chips.markets?.twse?.institutional?.foreign_net),finite(chips.markets?.tpex?.institutional?.foreign_net)].filter(value=>value!=null),foreignNet=chipsCurrent&&foreignParts.length?foreignParts.reduce((sum,value)=>sum+value,0):null;
+    const directional=up+down?up/(up+down):null,eventReady=eventFeedReady(),highEvents=eventReady?calendarEvents().filter(event=>eventDateKey(event)===todayKey&&event.impact==="high"&&eventGroup(event)!=="dividend").length:0,volumeRatio=finite(tw.metadata?.volume_ratio_20d);
+    let riskPoints=0;const reasons=[];
+    if(directional!=null&&(directional<=.30||directional>=.75)){riskPoints+=2;reasons.push(directional>=.75?"盤面過熱":"盤面偏弱")}
+    if(highEvents>=2){riskPoints+=2;reasons.push(`${highEvents} 件高影響事件`)}else if(highEvents===1){riskPoints+=1;reasons.push("1 件高影響事件")}
+    if(foreignNet!=null&&foreignNet<0&&directional!=null&&directional<.5){riskPoints+=1;reasons.push("外資偏賣")}
+    if(volumeRatio!=null&&volumeRatio>=1.35){riskPoints+=1;reasons.push("成交明顯放大")}
+    const riskWaiting=directional==null||!eventReady,riskLabel=riskWaiting?"資料同步中":riskPoints>=4?"高":riskPoints>=2?"中":"低",riskPct=riskWaiting?0:Math.min(100,Math.round(riskPoints/6*100));
+    const riskPanel=$("#todayRiskPanel"),riskNode=$("#todayRiskLabel"),riskFill=$("#todayRiskFill"),riskDetail=$("#todayRiskDetail");
+    if(riskPanel)riskPanel.dataset.risk=riskWaiting?"waiting":riskLabel==="高"?"high":riskLabel==="中"?"medium":"low";if(riskNode)riskNode.textContent=riskLabel;if(riskFill)riskFill.style.width=`${riskPct}%`;if(riskDetail)riskDetail.textContent=riskWaiting?(directional==null?"等待最新市場廣度後再判定。":"市場行情已到，但完整事件資料仍在同步。"):(reasons.length?reasons.join(" · "):"市場廣度、法人與事件暫無明顯風險訊號。");
+
+    const groups=new Map();
+    for(const row of tw.items||[]){
+      if(String(row.asset_class||"").toLowerCase()!=="stock")continue;const change=finite(row.change_percent);if(change==null)continue;
+      const asset=assetMap.get(String(row.symbol||"").toUpperCase())||{},industry=String(asset.official_industry||row.official_industry||asset.sub_industry||"").trim();if(!industry||/ETF|基金/.test(industry))continue;
+      if(!groups.has(industry))groups.set(industry,[]);groups.get(industry).push(change);
+    }
+    let sectors=[...groups].map(([name,values])=>({name,count:values.length,move:median(values)})).filter(row=>row.move!=null&&row.count>=3);
+    if(sectors.length<4)sectors=[...groups].map(([name,values])=>({name,count:values.length,move:median(values)})).filter(row=>row.move!=null&&row.count>=2);
+    sectors.sort((a,b)=>b.move-a.move||b.count-a.count);const top=sectors.slice(0,3),topNames=new Set(top.map(row=>row.name)),bottom=[...sectors].reverse().filter(row=>!topNames.has(row.name)).slice(0,3);
+    const sectorNode=$("#sectorMomentum"),sectorUpdated=$("#sectorMomentumUpdated");
+    const sectorRows=rows=>rows.length?rows.map((row,index)=>`<div class="sector-momentum-row"><span><b>${index+1}</b><strong>${escapeHtml(row.name)}</strong><small>${row.count} 檔</small></span><em class="${cls(row.move)}">${pct(row.move)}</em></div>`).join(""):'<div class="empty">資料不足</div>';
+    if(sectorNode)sectorNode.innerHTML=sectors.length?`<div class="sector-momentum-group"><h3>強勢 TOP 3</h3>${sectorRows(top)}</div><div class="sector-momentum-group"><h3>弱勢 TOP 3</h3>${sectorRows(bottom)}</div>`:'<div class="empty">等待完整台股行情與產業分類資料</div>';
+    if(sectorUpdated)sectorUpdated.textContent=marketDate&&sectors.length?`交易日 ${marketDate} · ${sectors.length} 個產業`:marketDate?`交易日 ${marketDate} · 產業資料同步中`:"等待完整台股行情";
+  }
   function renderTodayBrief(){
     const node=$("#todayBriefSentence");if(!node)return;
     const breadth=tw.breadth||{},up=finite(breadth.up)||0,down=finite(breadth.down)||0,ratio=up+down?up/(up+down):null;
@@ -444,6 +485,7 @@
     node.textContent=`台股${tone} · 今日重大事件 ${eventCountText} · ${foreign} · 焦點 ${industry} · ${next}`;
     const values={briefMarketTone:tone,briefEventCount:eventCountText,briefForeign:foreign,briefIndustry:industry};
     for(const [id,value] of Object.entries(values)){const target=$("#"+id);if(target)target.textContent=value}
+    renderMarketInsights();
   }
   function renderTaiwanStatus(){
     const breadth=tw.breadth||{},up=finite(breadth.up)||0,down=finite(breadth.down)||0;
@@ -462,7 +504,7 @@
   }
   renderFeaturedInfo();renderTodayFocus();renderTaiwanStatus();renderTodayBrief();
 
-  const storedCalendarMode=localStorage.getItem("mr-calendar-mode-v1")||localStorage.getItem("mr-calendar-mode-v11.4.49")||localStorage.getItem("mr-calendar-mode-v11.4.54")||"market";
+  const storedCalendarMode=localStorage.getItem("mr-calendar-mode-v1")||localStorage.getItem("mr-calendar-mode-v11.4.49")||localStorage.getItem("mr-calendar-mode-v11.4.55")||"market";
   if(!localStorage.getItem("mr-calendar-mode-v1"))localStorage.setItem("mr-calendar-mode-v1",storedCalendarMode);
   let current=new Date(),calendarMode=storedCalendarMode==="dividend"?"dividend":"market",pendingJumpDate="";
   const calendar=$("#calendarGrid"),dialog=$("#dayDialog");
@@ -525,7 +567,7 @@
   const eventCard=event=>{
     const group=eventGroup(event),description=strip(event.description||event.summary||""),facts=factRows(event);
     const source=event.source_url?`<a href="${escapeHtml(safeExternalHref(event.source_url)||"#")}" target="_blank" rel="noreferrer noopener">官方來源 ↗</a>`:`<span>${escapeHtml(event.source_name||"官方來源")}</span>`;
-    return `<article class="event-detail ${group}"><div class="event-detail-top"><div><span class="tag">${escapeHtml(event.region||"GLOBAL")}</span><span class="event-kind">${group==="company"?"公司資訊":"重大事件"}</span></div><span class="impact-badge ${escapeHtml(event.impact||"medium")}">${impactLabel(event.impact)}</span></div><h3><a href="event.html?id=${encodeURIComponent(event.id)}">${escapeHtml(strip(event.title))}</a></h3>${description?`<p>${escapeHtml(truncate(description,220))}</p>`:""}${facts.length?`<dl class="event-fact-grid">${facts.map(row=>`<div><dt>${escapeHtml(row.label)}</dt><dd>${escapeHtml(row.value)}</dd></div>`).join("")}</dl>`:""}<div class="event-detail-foot"><time>${escapeHtml(eventWhenLabel(event))}</time>${source}</div>${relatedNewsHtml(event)}${description.length>220?`<details class="event-full"><summary>查看完整說明</summary><p>${escapeHtml(description)}</p></details>`:""}</article>`;
+    return `<article class="event-detail ${group}"><div class="event-detail-top"><div><span class="tag">${escapeHtml(event.region||"GLOBAL")}</span><span class="event-kind">${group==="company"?"公司資訊":isMacroCalendarEvent(event)?"經濟／央行":"重大事件"}</span></div><span class="impact-badge ${escapeHtml(event.impact||"medium")}">${impactLabel(event.impact)}</span></div><h3><a href="event.html?id=${encodeURIComponent(event.id)}">${escapeHtml(strip(event.title))}</a></h3>${description?`<p>${escapeHtml(truncate(description,220))}</p>`:""}${facts.length?`<dl class="event-fact-grid">${facts.map(row=>`<div><dt>${escapeHtml(row.label)}</dt><dd>${escapeHtml(row.value)}</dd></div>`).join("")}</dl>`:""}<div class="event-detail-foot"><time>${escapeHtml(eventWhenLabel(event))}</time>${source}</div>${relatedNewsHtml(event)}${description.length>220?`<details class="event-full"><summary>查看完整說明</summary><p>${escapeHtml(description)}</p></details>`:""}</article>`;
   };
   const dividendEventLabel=event=>({"ex-dividend":"除息","ex-right":"除權／除權息",decision:"股利方案",payment:"股利發放",other:"股利事件"})[dividendKind(event)]||"股利事件";
   const dividendRowsFor=event=>{const symbol=String(event.symbol||"").toUpperCase(),value=(dividendHistory.items||{})[symbol]||[];return Array.isArray(value)?value:(value.rows||[])};
@@ -553,8 +595,9 @@
     groups.major.sort((a,b)=>Number(b.impact==="high")-Number(a.impact==="high")||Date.parse(a.start)-Date.parse(b.start));
     groups.company.sort((a,b)=>Date.parse(a.start)-Date.parse(b.start));
     $("#dayDialogTitle").textContent=`${date.toLocaleDateString("zh-TW")} 市場事件`;
+    const macroCount=groups.major.filter(isMacroCalendarEvent).length,highCount=groups.major.filter(event=>event.impact==="high").length;
     const initialCompany=groups.company.slice(0,36);
-    $("#dayDialogBody").innerHTML=`<div class="day-summary market-day-summary"><div><strong>${groups.major.length}</strong><span>重大事件</span></div><div><strong>${groups.company.length}</strong><span>公司資訊</span></div></div><div class="dialog-tabs"><button class="chip active" data-day-tab="major">重大事件 <b>${groups.major.length}</b></button><button class="chip" data-day-tab="company">公司資訊 <b>${groups.company.length}</b></button></div><div class="day-tab-panel" data-day-panel="major">${groups.major.length?groups.major.map(eventCard).join(""):'<div class="empty">當日沒有重大事件</div>'}</div><div class="day-tab-panel" data-day-panel="company" hidden>${initialCompany.length?initialCompany.map(eventCard).join(""):'<div class="empty">當日沒有公司資訊</div>'}${groups.company.length>initialCompany.length?`<button class="btn show-all-company-events" type="button">顯示全部 ${groups.company.length} 筆公司資訊</button>`:""}</div>`;
+    $("#dayDialogBody").innerHTML=`<div class="day-summary market-day-summary"><div><strong>${highCount}</strong><span>高影響</span></div><div><strong>${macroCount}</strong><span>經濟／央行</span></div><div><strong>${groups.company.length}</strong><span>公司資訊</span></div></div><div class="dialog-tabs"><button class="chip active" data-day-tab="major">重大事件 <b>${groups.major.length}</b></button><button class="chip" data-day-tab="company">公司資訊 <b>${groups.company.length}</b></button></div><div class="day-tab-panel" data-day-panel="major">${groups.major.length?groups.major.map(eventCard).join(""):'<div class="empty">當日沒有重大事件</div>'}</div><div class="day-tab-panel" data-day-panel="company" hidden>${initialCompany.length?initialCompany.map(eventCard).join(""):'<div class="empty">當日沒有公司資訊</div>'}${groups.company.length>initialCompany.length?`<button class="btn show-all-company-events" type="button">顯示全部 ${groups.company.length} 筆公司資訊</button>`:""}</div>`;
     document.querySelectorAll("[data-day-tab]").forEach(button=>button.onclick=()=>{
       document.querySelectorAll("[data-day-tab]").forEach(item=>item.classList.toggle("active",item===button));
       document.querySelectorAll("[data-day-panel]").forEach(panel=>panel.hidden=panel.dataset.dayPanel!==button.dataset.dayTab);
@@ -562,21 +605,13 @@
     const showAll=$(".show-all-company-events");if(showAll)showAll.onclick=()=>{const panel=document.querySelector('[data-day-panel="company"]');if(panel)panel.innerHTML=groups.company.map(eventCard).join("")};
     dialog.showModal();
   }
+  const calendarMarker=(kind,count,label)=>count?`<span class="calendar-marker ${kind}" title="${escapeHtml(label)} ${count} 件" aria-label="${escapeHtml(label)} ${count} 件"><i></i><b>${count}</b></span>`:"";
   function renderMarketPills(rows){
-    const major=rows.filter(event=>eventGroup(event)==="major"),company=rows.filter(event=>eventGroup(event)==="company"),pills=[];
-    if(major.length){
-      pills.push(`<span class="event-pill ${escapeHtml(major[0].impact||"")}">${escapeHtml(truncate(major[0].title,38))}</span>`);
-      if(major.length>1)pills.push(`<span class="event-pill major-summary">另有重大事件 ${major.length-1} 件</span>`);
-    }
-    if(company.length)pills.push(`<span class="event-pill company-summary">公司資訊 ${company.length} 件</span>`);
-    return pills;
+    const company=rows.filter(event=>eventGroup(event)==="company"),majorRows=rows.filter(event=>eventGroup(event)==="major"),macro=majorRows.filter(isMacroCalendarEvent),major=majorRows.filter(event=>!isMacroCalendarEvent(event));
+    return [calendarMarker("major",major.length,"重大事件"),calendarMarker("macro",macro.length,"經濟或央行事件"),calendarMarker("company",company.length,"公司資訊")].filter(Boolean);
   }
   function renderDividendPills(rows){
-    const sorted=[...rows].sort((a,b)=>String(a.symbol||"").localeCompare(String(b.symbol||""),"zh-Hant"));
-    const companyCount=new Set(sorted.map(event=>event.symbol||event.asset_id||event.id)).size;
-    const pills=sorted.slice(0,2).map(event=>{const cash=dividendCash(event);return `<span class="event-pill dividend-symbol-pill"><b>${escapeHtml(event.symbol||"股利")}</b><span>${escapeHtml(dividendEventLabel(event))}${cash!=null?` · ${fmt(cash,4)} 元`:""}</span></span>`});
-    if(companyCount>2)pills.push(`<span class="event-pill dividend-summary">另有 ${companyCount-2} 家</span>`);
-    return pills;
+    return [calendarMarker("dividend",rows.length,"股利或除權息")].filter(Boolean);
   }
   function renderCalendar(){
     const year=current.getFullYear(),month=current.getMonth(),first=new Date(year,month,1),start=new Date(year,month,1-first.getDay()),all=monthEvents(year,month);
@@ -597,7 +632,7 @@
       cell.type="button";cell.dataset.date=key;
       cell.className=`calendar-day ${date.getMonth()!==month?"other":""} ${key===todayKey?"today":""} ${pendingJumpDate===key?"calendar-jump-highlight":""} ${calendarMode==="dividend"?"dividend-mode-day":""}`;
       cell.setAttribute("aria-label",`${date.toLocaleDateString("zh-TW")}，${rows.length} 件資訊`);
-      cell.innerHTML=`<span class="day-num">${date.getDate()}</span>${pills.join("")}${rows.length&&!pills.length?`<span class="event-pill">共 ${rows.length} 件資訊</span>`:""}`;
+      cell.innerHTML=`<span class="day-num">${date.getDate()}</span>${pills.length?`<span class="calendar-markers">${pills.join("")}</span>`:""}`;
       cell.onclick=()=>openDay(date,rows);
       calendar.appendChild(cell);
     }
@@ -643,9 +678,9 @@
   // Late-arriving channels independently upgrade the sections they own.
   // A slow optional source can no longer leave the whole homepage frozen on
   // the seed/fallback state after verified data has already arrived.
-  assetLivePromise.then(fresh=>{if(Array.isArray(fresh?.assets)&&fresh.assets.length){assets=fresh;rebuildAssets();renderPortfolioSummary()}}).catch(()=>{});
-  twLivePromise.then(fresh=>{if(Array.isArray(fresh?.items)&&fresh.items.length){tw=fresh;rebuildQuotes();renderMarketList();renderTaiwanStatus();renderPortfolioSummary()}}).catch(()=>{});
-  chipsLivePromise.then(fresh=>{if(fresh?.markets){chips=fresh;renderTaiwanStatus()}}).catch(()=>{});
+  assetLivePromise.then(fresh=>{if(Array.isArray(fresh?.assets)&&fresh.assets.length){assets=fresh;rebuildAssets();renderPortfolioSummary();renderMarketInsights()}}).catch(()=>{});
+  twLivePromise.then(fresh=>{if(Array.isArray(fresh?.items)&&fresh.items.length){tw=fresh;rebuildQuotes();renderMarketList();renderTaiwanStatus();renderPortfolioSummary();renderTodayBrief()}}).catch(()=>{});
+  chipsLivePromise.then(fresh=>{if(fresh?.markets){chips=fresh;renderTaiwanStatus();renderTodayBrief()}}).catch(()=>{});
   snapshotLivePromise.then(fresh=>{if(Array.isArray(fresh?.items)&&fresh.items.length){snapshot=fresh;rebuildQuotes();renderMarketKlines();renderPortfolioSummary()}}).catch(()=>{});
   dividendLivePromise.then(fresh=>{if(fresh?.items)dividendHistory=fresh}).catch(()=>{});
   stockNewsLivePromise.then(fresh=>{if(Array.isArray(fresh?.items)){stockNews=fresh;renderFeaturedInfo();renderCalendar();renderTodayFocus();renderTodayBrief()}}).catch(()=>{});

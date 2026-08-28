@@ -2,7 +2,7 @@
 setlocal
 cd /d "%~dp0"
 echo ============================================================
-echo Market Event Radar v11.4.54 - Full Replace Package
+echo Market Event Radar v11.4.55 - Full Replace Package
 echo 完整覆蓋後執行本檔，可清除舊版本殘留；不會刪除 .git
 echo ============================================================
 where py >nul 2>nul

@@ -1,4 +1,4 @@
-// v11.4.54: fail closed without turning a valid long-holiday session into a false stale alert.
+// v11.4.55: fail closed without turning a valid long-holiday session into a false stale alert.
 (()=>{
   "use strict";
   const fmtDay=value=>String(value||"").slice(0,10);

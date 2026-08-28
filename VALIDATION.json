@@ -1,5 +1,5 @@
 {
-  "version": "v11.4.54",
+  "version": "v11.4.55",
   "package": "full-replace",
   "status": "local-validation-passed-with-environment-limits",
   "checks": [
@@ -44,12 +44,24 @@
     {
       "name": "pytest",
       "status": "pass",
-      "detail": "289 passed"
+      "detail": "296 passed"
     },
     {
       "name": "http_smoke",
       "status": "pass",
       "detail": "7 pages / 44 referenced assets"
+    },
+    {
+      "name": "duplicate_html_and_asset_refs",
+      "status": "pass"
+    },
+    {
+      "name": "mobile_quick_nav_regression",
+      "status": "pass"
+    },
+    {
+      "name": "calendar_marker_regression",
+      "status": "pass"
     },
     {
       "name": "official_live_source_contract",
@@ -59,7 +71,7 @@
     {
       "name": "chromium_browser_smoke",
       "status": "environment_blocked",
-      "detail": "sandbox blocks localhost navigation; GitHub Hosted Runner is authoritative browser gate"
+      "detail": "sandbox blocks localhost/file navigation; GitHub Hosted Runner is authoritative browser gate"
     }
   ]
 }

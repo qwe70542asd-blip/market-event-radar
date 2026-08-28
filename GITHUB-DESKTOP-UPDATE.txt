@@ -1,4 +1,4 @@
-Market Event Radar v11.4.54 FULL REPLACEMENT
+Market Event Radar v11.4.55 FULL REPLACEMENT
 
 1. GitHub Desktop 先 Fetch/Pull main。
 2. 在本機 repository 保留隱藏的 .git 資料夾。
@@ -6,7 +6,13 @@ Market Event Radar v11.4.54 FULL REPLACEMENT
 4. 把本 ZIP 內所有內容直接複製到 repository root；不要多包一層資料夾。
 5. 確認 index.html、.github、assets、data、docs、edge、scripts、tests 都在 root。
 6. 執行 CLEAN-REPO.cmd。
-7. Commit 建議：market-event-radar-v11.4.54-full-replace
+7. Commit 建議：market-event-radar-v11.4.55-full-replace
 8. Push 後確認 Verify stable app release 與 Deploy live market worker 綠燈。
+
+v11.4.55 手機重點：
+- 不再出現第二組固定 01–04 導覽。
+- 月曆改用圓點＋件數，並有圖例與手機 bottom sheet 明細。
+- 新增市場上漲熱度、今日風險、產業動能。
+- 已加入防回歸測試，避免舊問題在後續版本重新出現。
 
 Cloudflare Secrets / Variables 不需要因本版重新建立。

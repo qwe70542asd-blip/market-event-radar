@@ -1,5 +1,6 @@
-Market Event Radar v11.4.54 FULL REPLACEMENT
+Market Event Radar v11.4.55 FULL REPLACEMENT
 Local validation: PASS with environment limits.
-Full details: VALIDATION-v11.4.54.txt
-Pytest: 289 passed. HTTP smoke: 7 pages / 44 assets.
+Full details: VALIDATION-v11.4.55.txt
+Pytest: 296 passed. HTTP smoke: 7 pages / 44 referenced assets.
+Duplicate audit: PASS. Mobile quick-nav duplication regression: PASS. Calendar dot/count regression: PASS.
 Hosted Chromium and deployed Worker are re-verified by GitHub Actions after push.
