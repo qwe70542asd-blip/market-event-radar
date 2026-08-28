@@ -1,0 +1,91 @@
+# v11.4.53: Cache API hot data + low-write KV LKG deployment.
+name: Deploy live market worker
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "VERSION.json"
+      - "edge/**"
+      - "assets/runtime-config.js"
+      - "scripts/production_readiness.py"
+      - ".github/workflows/deploy-live-market-worker.yml"
+permissions:
+  contents: read
+concurrency:
+  group: production-live-market-worker
+  cancel-in-progress: false
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    environment: production
+    env:
+      CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CF_KV_ID: ${{ vars.CLOUDFLARE_KV_NAMESPACE_ID }}
+      EXPECTED_WORKER_HOST: market-event-radar-live.qwe70542asd.workers.dev
+    steps:
+      - name: Fail closed when production authorization is incomplete
+        shell: bash
+        run: |
+          set -euo pipefail
+          missing=0
+          for key in CF_API_TOKEN CF_ACCOUNT_ID CF_KV_ID; do
+            if [ -z "${!key:-}" ]; then
+              echo "::error::$key is required for a production live-market deployment"
+              missing=1
+            fi
+          done
+          [ "$missing" -eq 0 ] || exit 2
+          [[ "$CF_ACCOUNT_ID" =~ ^[A-Fa-f0-9]{32}$ ]] || { echo "::error::CF_ACCOUNT_ID format is invalid"; exit 2; }
+          [[ "$CF_KV_ID" =~ ^[A-Fa-f0-9]{32}$ ]] || { echo "::error::CF_KV_ID format is invalid"; exit 2; }
+
+      - name: Checkout immutable release source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Build Wrangler configuration without exposing credentials
+        working-directory: edge
+        env:
+          KV_ID: ${{ env.CF_KV_ID }}
+        run: |
+          python - <<'PY'
+          import os,re
+          from pathlib import Path
+          value=os.environ["KV_ID"]
+          if not re.fullmatch(r"[A-Fa-f0-9]{32}",value):
+              raise SystemExit("invalid KV namespace id")
+          src=Path("wrangler.jsonc.example").read_text(encoding="utf-8")
+          Path("wrangler.jsonc").write_text(src.replace("REPLACE_WITH_KV_NAMESPACE_ID",value),encoding="utf-8")
+          PY
+
+      - name: Deploy Worker with least-privilege Cloudflare token
+        id: deploy-worker
+        uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: edge
+          wranglerVersion: 4.123.0
+          command: deploy --config wrangler.jsonc
+
+      - name: Resolve deployment endpoint from Wrangler output
+        env:
+          DEPLOYMENT_URL: ${{ steps.deploy-worker.outputs.deployment-url }}
+        run: |
+          python - <<'PY'
+          import os
+          from urllib.parse import urlparse
+          endpoint=os.environ.get("DEPLOYMENT_URL","").strip().rstrip("/")
+          parsed=urlparse(endpoint)
+          expected=os.environ["EXPECTED_WORKER_HOST"]
+          if parsed.scheme!="https" or not parsed.netloc or parsed.username or parsed.password or parsed.query or parsed.fragment or parsed.hostname!=expected or parsed.path not in ("","/"):
+              raise SystemExit(f"Wrangler did not return the allowlisted HTTPS Worker endpoint: {endpoint!r}")
+          with open(os.environ["GITHUB_ENV"],"a",encoding="utf-8") as fh:
+              fh.write(f"LIVE_MARKET_ENDPOINT={endpoint}\n")
+          PY
+
+      - name: Production readiness and endpoint contract
+        run: python scripts/production_readiness.py --endpoint "$LIVE_MARKET_ENDPOINT" --require-live --version v11.4.53
