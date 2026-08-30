@@ -57,7 +57,9 @@ def test_other_pages_no_longer_bind_optional_sources_at_boot():
     assert 'loadData("yahoo-details.json",yahooPayload).then' in inst
     assert '事件資料同步中' in event and 'startNewsChannels({onUpdate' in event
     assert 'loadData("assets.json",assets).then' in portfolio
-    assert 'Promise.allSettled(jobs)' in status
+    assert 'loadData("channel-health.json"' in status
+    assert 'Promise.allSettled(jobs)' not in status
+    assert '不再一次載入所有行情、新聞、財報與歷史資料' in status
 
 def test_browser_smoke_exercises_delayed_live_rerender():
     smoke=read('scripts/browser_smoke.py')

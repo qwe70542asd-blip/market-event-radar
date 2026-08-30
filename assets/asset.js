@@ -1,37 +1,34 @@
 (async()=>{
   "use strict";
-  const {$,$$,escapeHtml,fmt,pct,cls,formatTime,loadData,loadStockBasics,loadStockNews,finite,stripHtml,normalizeText,renderNewsThumb,safeExternalHref,loadWatchlist,toggleWatchlist}=MR;
+  const {$,$$,escapeHtml,fmt,pct,cls,formatTime,loadData,loadStockNews,finite,stripHtml,normalizeText,renderNewsThumb,safeExternalHref,loadWatchlist,toggleWatchlist}=MR;
   const symbol=(new URLSearchParams(location.search).get("symbol")||"2330").toUpperCase();
-  // Core asset information loads first.  Large event/news archives are started
-  // only after the primary profile/quote channels resolve and are awaited near
-  // their own sections, so a slow 3+ MB archive cannot block the whole page.
-  const [assetPayload,marketPayload,chipPayload,revenuePayload,dividendPayload,secondaryPayload,verificationPayload,yahooPayload,etfPayload,stockBasicsPayload]=await Promise.all([
-    loadData("assets.json",window.__ASSET_SEED__||{assets:[]}),
+  // v11.4.57 bounded asset bootstrap: one prefix shard replaces eight full
+  // symbol-keyed history/detail files.  Only the current symbol is retained in
+  // memory; the market quote stays on its independent official channel.
+  const shard=/^[0-9]/.test(symbol)?symbol[0]:"0";
+  const [marketPayload,detailPayload]=await Promise.all([
     loadData("tw-market.json",window.__TW_MARKET_SEED__||{items:[]}),
-    loadData("tw-chips.json",window.__TW_CHIPS_SEED__||{items:{},history:{}}),
-    loadData("monthly-revenue.json",window.__MONTHLY_REVENUE_SEED__||{metadata:{status:"waiting"},items:{}}),
-    loadData("dividend-history.json",window.__DIVIDEND_HISTORY_SEED__||{metadata:{status:"waiting"},items:{}}),
-    loadData("secondary-reference.json",window.__SECONDARY_REFERENCE_SEED__||{metadata:{status:"waiting"},items:{}}),
-    loadData("data-verification.json",window.__DATA_VERIFICATION_SEED__||{metadata:{status:"waiting"},items:{}}),
-    loadData("yahoo-details.json",window.__YAHOO_DETAILS_SEED__||{metadata:{status:"waiting"},items:{}}),
-    loadData("etf-details.json",window.__ETF_DETAILS_SEED__||{metadata:{status:"waiting"},items:{}}),
-    loadStockBasics()
+    loadData(`asset-detail-shard-${shard}.json`,{metadata:{status:"waiting",sources:{}},items:{}})
   ]);
+  const detail=detailPayload.items?.[symbol]||{},sourceMeta=detailPayload.metadata?.sources||{};
+  const one=(key,value)=>({metadata:sourceMeta[key]||{},items:{[symbol]:value}});
+  const assetPayload={metadata:sourceMeta.assets||{},assets:detail.asset?[detail.asset]:[]};
+  const chipPayload=one("tw_chips",detail.chip||{}),revenuePayload=one("monthly_revenue",detail.revenue||[]),dividendPayload=one("dividend_history",detail.dividends||[]),secondaryPayload=one("secondary_reference",detail.secondary||{}),yahooPayload=one("yahoo_details",detail.yahoo||{}),etfPayload=one("etf_details",detail.etf||{}),stockBasicsPayload=one("stock_basics",detail.stock_basic||{}),verificationPayload=one("data_verification",detail.verification||{});
   const eventPromise=loadData("events.json",window.__EVENT_SEED__||{events:[]});
   const stockNewsPromise=loadStockNews();
   const officialQuote=(marketPayload.items||[]).find(row=>String(row.symbol||"").toUpperCase()===symbol)||{};
-  const secondaryQuote=(secondaryPayload.items||{})[symbol]||{};
+  const secondaryQuote=detail.secondary||{};
   const secondaryTime=String(secondaryQuote.market_at||"").match(/T(\d{2}:\d{2})/)?.[1]||"";
   const quote=Object.keys(officialQuote).length?officialQuote:(secondaryQuote.price!=null?{symbol,name:symbol,price:secondaryQuote.price,previous_close:secondaryQuote.previous_close,status:"secondary-reference",quote_time:secondaryTime,quote_date:secondaryQuote.quote_date||""}:{});
-  const found=(assetPayload.assets||[]).find(row=>String(row.symbol||"").toUpperCase()===symbol);
-  const yahoo=(yahooPayload.items||{})[symbol]||{};
-  const etfReference=(etfPayload.items||{})[symbol]||{};
-  const stockBasic=(stockBasicsPayload.items||{})[symbol]||{};
-  const yahooProfile={...stockBasic,...(yahoo.profile||{})},yahooMetrics={...(stockBasic.metrics||{}),...(yahoo.metrics||{})},yahooEtf=yahoo.etf||{},yahooMetricMeta=yahoo.metrics_meta||{};
-  const asset={...(stockBasic||{}),...(found||{}),id:(found||{}).id||`TW:${symbol}`,symbol,name:(found||{}).name||stockBasic.short_name||stockBasic.company_name||yahooProfile.company_name||quote.name||symbol,exchange:(found||{}).exchange||stockBasic.exchange||yahooProfile.exchange||quote.exchange,asset_class:(found||{}).asset_class||stockBasic.asset_class||yahoo.asset_class||yahooProfile.asset_class||quote.asset_class||"stock",market:"TW"};
+  const found=detail.asset||null;
+  const yahoo=detail.yahoo||{};
+  const etfReference=detail.etf||{};
+  const stockBasic=detail.stock_basic||{};
+  const verification=detail.verification||{};
+  const chip=detail.chip||{};
+  const asset={...(stockBasic||{}),...(found||{}),id:(found||{}).id||`TW:${symbol}`,symbol,name:(found||{}).name||stockBasic.short_name||stockBasic.company_name||(yahoo.profile||{}).company_name||quote.name||symbol,exchange:(found||{}).exchange||stockBasic.exchange||(yahoo.profile||{}).exchange||quote.exchange,asset_class:(found||{}).asset_class||stockBasic.asset_class||yahoo.asset_class||(yahoo.profile||{}).asset_class||quote.asset_class||"stock",market:"TW"};
   const isEtf=asset.asset_class==="etf"||quote.asset_class==="etf";
-  const verification=(verificationPayload.items||{})[symbol]||{};
-  const chip=chipPayload.items?.[symbol]||{};
+  const yahooProfile={...stockBasic,...(yahoo.profile||{})},yahooMetrics={...(stockBasic.metrics||{}),...(yahoo.metrics||{})},yahooEtf=yahoo.etf||{},yahooMetricMeta=yahoo.metrics_meta||{};
   const officialEtf=asset.etf||{};
   const cleanObject=value=>Object.fromEntries(Object.entries(value||{}).filter(([,v])=>v!==null&&v!==undefined&&String(v).trim()!==""));
   const etf={...cleanObject(yahooEtf),...cleanObject(etfReference),...cleanObject(officialEtf)};

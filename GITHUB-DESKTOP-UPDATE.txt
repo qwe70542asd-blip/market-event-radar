@@ -1,18 +1,18 @@
-Market Event Radar v11.4.55 FULL REPLACEMENT
+Market Event Radar v11.4.57 FULL REPLACEMENT
 
-1. GitHub Desktop 先 Fetch/Pull main。
-2. 在本機 repository 保留隱藏的 .git 資料夾。
-3. 刪除其餘舊專案檔案／資料夾。
-4. 把本 ZIP 內所有內容直接複製到 repository root；不要多包一層資料夾。
-5. 確認 index.html、.github、assets、data、docs、edge、scripts、tests 都在 root。
-6. 執行 CLEAN-REPO.cmd。
-7. Commit 建議：market-event-radar-v11.4.55-full-replace
-8. Push 後確認 Verify stable app release 與 Deploy live market worker 綠燈。
+1. GitHub Desktop 選 market-event-radar。
+2. Show in Explorer。
+3. 解壓 market-event-radar-v11.4.57-full-replace.zip。
+4. ZIP 第一層全部內容直接覆蓋 repository root，不要多一層資料夾。
+5. 依 DELETION-MANIFEST-v11.4.57.txt 刪除舊版 release-only 檔案。
+6. GitHub Desktop 檢查 Changes。
+7. Commit 建議：market-event-radar-v11.4.57-full-replace
+8. Push origin。
+9. 等 Verify stable app release 與 Deploy live market worker 全綠。
 
-v11.4.55 手機重點：
-- 不再出現第二組固定 01–04 導覽。
-- 月曆改用圓點＋件數，並有圖例與手機 bottom sheet 明細。
-- 新增市場上漲熱度、今日風險、產業動能。
-- 已加入防回歸測試，避免舊問題在後續版本重新出現。
-
-Cloudflare Secrets / Variables 不需要因本版重新建立。
+v11.4.57 重點：
+- 資料狀態頁只讀輕量 channel-health，不載完整歷史巨檔。
+- 個股頁只載目前代碼的一個 detail shard，避免多個全市場檔同時占記憶體。
+- 新聞 20 天滾動保留並限制瀏覽器記憶體數量。
+- stale／fallback／partial／pending 不再被當成正常資料。
+- Worker 版本從 VERSION.json 驗證，避免部署後仍回舊版。

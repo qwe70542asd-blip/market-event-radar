@@ -6,10 +6,15 @@ on:
       - "VERSION.json"
       - ".github/workflows/update-data-verification.yml"
       - "scripts/update_data_verification.py"
+      - "scripts/update_channel_health.py"
+      - "scripts/update_asset_detail_shards.py"
       - "scripts/restore_data_branch.sh"
       - "scripts/wait_for_data_channels.py"
       - "scripts/publish_data_branch.sh"
   schedule:
+    - cron: "13 * * * *"
+    - cron: "28 * * * *"
+    - cron: "43 * * * *"
     - cron: "58 * * * *"
   workflow_dispatch:
 permissions:
@@ -29,21 +34,56 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
-      - name: Wait for v11.4.55 isolated-data release barrier
+      - name: Wait for v11.4.57 isolated-data release barrier
         if: github.event_name == 'push'
-        run: python scripts/wait_for_data_channels.py v11.4.55 --attempts 222 --sleep 10
+        run: |
+          VERSION=$(python -c 'import json; print(json.load(open("VERSION.json"))["version"])')
+          python scripts/wait_for_data_channels.py "$VERSION" --attempts 222 --sleep 10
       - name: Restore source channels and previous verification archive
         run: |
-          bash scripts/restore_data_branch.sh live-data-verification "data-verification.json:data/data-verification.json"
+          bash scripts/restore_data_branch.sh live-data-verification \
+            "data-verification.json:data/data-verification.json" \
+            "channel-health.json:data/channel-health.json" \
+            "asset-detail-shard-0.json:data/asset-detail-shard-0.json" \
+            "asset-detail-shard-1.json:data/asset-detail-shard-1.json" \
+            "asset-detail-shard-2.json:data/asset-detail-shard-2.json" \
+            "asset-detail-shard-3.json:data/asset-detail-shard-3.json" \
+            "asset-detail-shard-4.json:data/asset-detail-shard-4.json" \
+            "asset-detail-shard-5.json:data/asset-detail-shard-5.json" \
+            "asset-detail-shard-6.json:data/asset-detail-shard-6.json" \
+            "asset-detail-shard-7.json:data/asset-detail-shard-7.json" \
+            "asset-detail-shard-8.json:data/asset-detail-shard-8.json" \
+            "asset-detail-shard-9.json:data/asset-detail-shard-9.json"
           bash scripts/restore_data_branch.sh live-assets "assets.json:data/assets.json" "asset-audit.json:data/asset-audit.json"
-          bash scripts/restore_data_branch.sh live-tw-market "tw-market.json:data/tw-market.json"
+          bash scripts/restore_data_branch.sh live-tw-market "tw-market.json:data/tw-market.json" "market-volume-history.json:data/market-volume-history.json"
+          bash scripts/restore_data_branch.sh live-tw-chips "tw-chips.json:data/tw-chips.json"
+          bash scripts/restore_data_branch.sh live-global-market "market-snapshot.json:data/market-snapshot.json" "market-kline.json:data/market-kline.json"
+          bash scripts/restore_data_branch.sh live-events "events.json:data/events.json"
           bash scripts/restore_data_branch.sh live-monthly-revenue "monthly-revenue.json:data/monthly-revenue.json"
           bash scripts/restore_data_branch.sh live-dividend-history "dividend-history.json:data/dividend-history.json"
           bash scripts/restore_data_branch.sh live-secondary-reference "secondary-reference.json:data/secondary-reference.json"
           bash scripts/restore_data_branch.sh live-yahoo-details "yahoo-details.json:data/yahoo-details.json"
           bash scripts/restore_data_branch.sh live-etf-details "etf-details.json:data/etf-details.json"
-      - run: python scripts/update_data_verification.py
+          bash scripts/restore_data_branch.sh live-stock-basics "stock-basics.json:data/stock-basics.json"
+          bash scripts/restore_data_branch.sh live-stock-news "stock-news.json:data/stock-news.json"
+          bash scripts/restore_data_branch.sh live-news-cna "news-cna.json:data/news-cna.json"
+          bash scripts/restore_data_branch.sh live-news-moneydj "news-moneydj.json:data/news-moneydj.json"
+          bash scripts/restore_data_branch.sh live-news-cnyes "news-cnyes.json:data/news-cnyes.json"
+          bash scripts/restore_data_branch.sh live-news-udn "news-udn.json:data/news-udn.json"
+          bash scripts/restore_data_branch.sh live-news-ltn "news-ltn.json:data/news-ltn.json"
+          bash scripts/restore_data_branch.sh live-news-wealth "news-wealth.json:data/news-wealth.json"
+          bash scripts/restore_data_branch.sh live-news-yahoo "news-yahoo.json:data/news-yahoo.json"
+          bash scripts/restore_data_branch.sh live-news-technews "news-technews.json:data/news-technews.json"
+          bash scripts/restore_data_branch.sh live-news-ctee "news-ctee.json:data/news-ctee.json"
+          bash scripts/restore_data_branch.sh live-news-asia-risk "news-asia-risk.json:data/news-asia-risk.json"
+          bash scripts/restore_data_branch.sh live-official-notices "official-market-notices.json:data/official-market-notices.json"
+          bash scripts/restore_data_branch.sh live-company-disclosures "company-disclosures.json:data/company-disclosures.json"
+      - name: Refresh full cross-source verification
+        if: github.event_name != 'schedule' || github.event.schedule == '58 * * * *'
+        run: python scripts/update_data_verification.py
+      - run: python scripts/update_asset_detail_shards.py
+      - run: python scripts/update_channel_health.py
       - name: Publish verification channel
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: bash scripts/publish_data_branch.sh live-data-verification live-data-verification data/data-verification.json data/data-verification-seed.js
+        run: bash scripts/publish_data_branch.sh live-data-verification live-data-verification data/data-verification.json data/data-verification-seed.js data/channel-health.json data/channel-health-seed.js data/asset-detail-shard-0.json data/asset-detail-shard-1.json data/asset-detail-shard-2.json data/asset-detail-shard-3.json data/asset-detail-shard-4.json data/asset-detail-shard-5.json data/asset-detail-shard-6.json data/asset-detail-shard-7.json data/asset-detail-shard-8.json data/asset-detail-shard-9.json

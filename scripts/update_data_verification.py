@@ -20,23 +20,41 @@ SOURCE_FILES = {
     "assets": "assets.json",
     "asset_audit": "asset-audit.json",
     "tw_market": "tw-market.json",
+    "tw_chips": "tw-chips.json",
+    "market_snapshot": "market-snapshot.json",
+    "market_kline": "market-kline.json",
+    "events": "events.json",
     "monthly_revenue": "monthly-revenue.json",
     "dividend_history": "dividend-history.json",
     "secondary_reference": "secondary-reference.json",
     "yahoo_details": "yahoo-details.json",
     "etf_details": "etf-details.json",
+    "stock_basics": "stock-basics.json",
+    "stock_news": "stock-news.json",
+    "news_cna": "news-cna.json",
+    "news_moneydj": "news-moneydj.json",
+    "news_cnyes": "news-cnyes.json",
+    "news_udn": "news-udn.json",
+    "news_ltn": "news-ltn.json",
+    "news_wealth": "news-wealth.json",
+    "news_yahoo": "news-yahoo.json",
+    "news_technews": "news-technews.json",
+    "news_ctee": "news-ctee.json",
+    "news_asia_risk": "news-asia-risk.json",
+    "official_notices": "official-market-notices.json",
+    "company_disclosures": "company-disclosures.json",
 }
 SOURCE_MAX_AGE_SECONDS = {
-    "assets": 18 * 3600,
-    "asset_audit": 18 * 3600,
-    "tw_market": 90 * 60,
-    "monthly_revenue": 8 * 3600,
-    "dividend_history": 8 * 3600,
-    "secondary_reference": 12 * 3600,
-    "yahoo_details": 3 * 3600,
-    "etf_details": 6 * 3600,
+    "assets": 36 * 3600, "asset_audit": 36 * 3600, "tw_market": 3 * 3600, "tw_chips": 72 * 3600,
+    "market_snapshot": 20 * 60, "market_kline": 2 * 3600, "events": 12 * 3600,
+    "monthly_revenue": 18 * 3600, "dividend_history": 18 * 3600, "secondary_reference": 36 * 3600,
+    "yahoo_details": 96 * 3600, "etf_details": 72 * 3600, "stock_basics": 36 * 3600, "stock_news": 3 * 3600,
+    "news_cna": 3 * 3600, "news_moneydj": 3 * 3600, "news_cnyes": 3 * 3600, "news_udn": 3 * 3600,
+    "news_ltn": 3 * 3600, "news_wealth": 3 * 3600, "news_yahoo": 3 * 3600, "news_technews": 3 * 3600,
+    "news_ctee": 3 * 3600, "news_asia_risk": 3 * 3600, "official_notices": 12 * 3600, "company_disclosures": 12 * 3600,
 }
 TRUST_ORDER = ("conflict", "multi_source", "official", "calculated", "estimated", "reference", "missing")
+ITEM_SOURCE_KEYS = ("assets", "asset_audit", "tw_market", "monthly_revenue", "dividend_history", "secondary_reference", "yahoo_details", "etf_details")
 
 
 def mapping(value: Any) -> dict[str, Any]:
@@ -370,7 +388,7 @@ def build_asset_verification(
             "histock_etf": "https://histock.tw/stock/active-etf.aspx" if asset_class == "etf" else None,
         },
         "verified_against": verified_against,
-        "snapshot_verified_against": {key: snapshot.get("updated_at") for key, snapshot in source_snapshots.items()},
+        "snapshot_verified_against": {key: source_snapshots[key].get("updated_at") for key in ITEM_SOURCE_KEYS},
         "updated_at": NOW.isoformat(timespec="seconds"),
     }
     return row, trust_overall, completeness

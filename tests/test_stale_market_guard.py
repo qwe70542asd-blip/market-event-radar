@@ -7,7 +7,7 @@ def test_guard_has_independent_market_and_chip_states():
     assert 'const chipsStale=!marketStale&&(!chipDate||chipDate<marketDate)' in js
     assert 'applyChipStale' in js
     assert 'Keep valid price/breadth/volume conclusions' in js
-    assert 'if(state.marketStale)applyMarketStale();else if(state.chipsStale)applyChipStale()' in js
+    assert 'function applyState(){if(state?.partialLive)applyPartialMarket();else if(state?.marketStale)applyMarketStale();else if(state?.chipsStale)applyChipStale();else clearGuard()}' in js
 
 def test_long_holiday_uses_verified_reference_before_calendar_age():
     js=(ROOT/'assets/stale-market-guard.js').read_text(encoding='utf-8')

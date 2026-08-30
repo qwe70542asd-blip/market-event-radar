@@ -425,6 +425,23 @@ def derive_allocations_from_holdings(row: dict[str, Any], sector_by_symbol: dict
     row.setdefault("verification", {})["allocations"] = {"status": "calculated", "source": "持股×官方產業分類計算", "matches": 1}
 
 
+
+def stale_item_stats(items: dict[str, Any], max_age_hours: int = 72) -> tuple[int, list[str]]:
+    cutoff = NOW.timestamp() - max_age_hours * 3600
+    stale: list[str] = []
+    for symbol, row in items.items():
+        if not isinstance(row, dict) or not row.get("updated_at"):
+            continue
+        try:
+            stamp = datetime.fromisoformat(str(row["updated_at"]).replace("Z", "+00:00"))
+            if stamp.tzinfo is None:
+                stamp = stamp.replace(tzinfo=NOW.tzinfo)
+            if stamp.timestamp() < cutoff:
+                stale.append(symbol)
+        except Exception:
+            stale.append(symbol)
+    return len(stale), stale[:12]
+
 def main() -> None:
     assets = read_json(DATA / "assets.json", {"assets": []}).get("assets", [])
     sector_by_symbol = {str(asset.get("symbol") or "").upper(): clean(asset.get("official_industry") or asset.get("sub_industry") or asset.get("industry")) for asset in assets if asset.get("asset_class") == "stock"}
@@ -487,15 +504,22 @@ def main() -> None:
         if isinstance(row, dict):
             derive_allocations_from_holdings(row, sector_by_symbol)
     next_cursor = (cursor + len(batch)) % len(candidates) if candidates else 0
+    stale_count, stale_samples = stale_item_stats(items)
+    base_status = "ok" if success == len(batch) and success else "partial" if success or items else "warning"
+    if stale_count and base_status == "ok":
+        base_status = "partial"
     payload = {
         "metadata": {
             "version": VERSION,
             "updated_at": NOW.isoformat(timespec="seconds"),
-            "status": "ok" if success == len(batch) and success else "partial" if success or items else "warning",
+            "status": base_status,
             "item_count": len(items),
             "batch_size": len(batch),
             "batch_success": success,
-            "note": "Official ETF fields are primary. MoneyDJ、HiStock 與 Yahoo 交叉補齊基金主檔、配息、持股與產業配置；前端同時會整合 ETF 相關參考來源。",
+            "stale_item_count": stale_count,
+            "stale_item_samples": stale_samples,
+            "item_max_age_hours": 72,
+            "note": "Official ETF fields are primary. MoneyDJ、HiStock 與 Yahoo 交叉補齊基金主檔、配息、持股與產業配置；檔案更新時間不再掩蓋過期的個別 ETF 資料。",
         },
         "state": {"cursor": next_cursor, "last_batch_at": NOW.isoformat(timespec="seconds")},
         "errors": errors[:100],

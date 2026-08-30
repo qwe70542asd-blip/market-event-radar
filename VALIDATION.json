@@ -1,77 +1,26 @@
 {
-  "version": "v11.4.55",
-  "package": "full-replace",
-  "status": "local-validation-passed-with-environment-limits",
-  "checks": [
-    {
-      "name": "repository_cleanup",
-      "status": "pass"
-    },
-    {
-      "name": "workflow_publisher_audit",
-      "status": "pass",
-      "detail": "24 live branches, one writer each"
-    },
-    {
-      "name": "python_compileall",
-      "status": "pass"
-    },
-    {
-      "name": "javascript_syntax",
-      "status": "pass"
-    },
-    {
-      "name": "shell_syntax",
-      "status": "pass"
-    },
-    {
-      "name": "workflow_yaml",
-      "status": "pass",
-      "detail": "16 workflows"
-    },
-    {
-      "name": "security_audit",
-      "status": "pass"
-    },
-    {
-      "name": "production_readiness",
-      "status": "pass"
-    },
-    {
-      "name": "public_data_validation",
-      "status": "pass"
-    },
-    {
-      "name": "pytest",
-      "status": "pass",
-      "detail": "296 passed"
-    },
-    {
-      "name": "http_smoke",
-      "status": "pass",
-      "detail": "7 pages / 44 referenced assets"
-    },
-    {
-      "name": "duplicate_html_and_asset_refs",
-      "status": "pass"
-    },
-    {
-      "name": "mobile_quick_nav_regression",
-      "status": "pass"
-    },
-    {
-      "name": "calendar_marker_regression",
-      "status": "pass"
-    },
-    {
-      "name": "official_live_source_contract",
-      "status": "pass_with_warnings",
-      "detail": "5 external DNS warnings in sandbox"
-    },
-    {
-      "name": "chromium_browser_smoke",
-      "status": "environment_blocked",
-      "detail": "sandbox blocks localhost/file navigation; GitHub Hosted Runner is authoritative browser gate"
-    }
+  "version": "v11.4.57",
+  "release_type": "full-replacement",
+  "release_goal": "data-health correctness, bounded browser memory, deployment version synchronization",
+  "pytest": {"status": "pass", "passed": 307},
+  "workflow_yaml": {"status": "pass", "count": 16},
+  "http_smoke": {"status": "pass", "pages": 7, "referenced_assets": 38},
+  "security_audit": "pass",
+  "production_readiness": "pass",
+  "public_data_validation": "pass",
+  "repository_cleanup": "pass",
+  "workflow_publisher_audit": {"status": "pass", "live_branches": 24},
+  "bounded_memory": {
+    "data_status_compact_index": "pass",
+    "asset_prefix_shards": 10,
+    "news_retention_days": 20,
+    "news_per_channel_memory_limit": 180,
+    "news_merged_memory_limit": 800,
+    "large_archives_excluded_from_durable_last_good": "pass"
+  },
+  "post_push_required": [
+    "Hosted Chromium smoke",
+    "official live-source contract",
+    "Cloudflare /health version v11.4.57"
   ]
 }

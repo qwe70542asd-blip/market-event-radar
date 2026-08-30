@@ -426,6 +426,23 @@ def parse_one(asset: dict[str, Any]) -> tuple[str, dict[str, Any] | None, str | 
         return symbol, None, str(exc)
 
 
+
+def stale_item_stats(items: dict[str, Any], max_age_hours: int = 96) -> tuple[int, list[str]]:
+    cutoff = NOW.timestamp() - max_age_hours * 3600
+    stale: list[str] = []
+    for symbol, row in items.items():
+        if not isinstance(row, dict) or not row.get("updated_at"):
+            continue
+        try:
+            stamp = datetime.fromisoformat(str(row["updated_at"]).replace("Z", "+00:00"))
+            if stamp.tzinfo is None:
+                stamp = stamp.replace(tzinfo=NOW.tzinfo)
+            if stamp.timestamp() < cutoff:
+                stale.append(symbol)
+        except Exception:
+            stale.append(symbol)
+    return len(stale), stale[:12]
+
 def main() -> None:
     assets = read_json(DATA / "assets.json", {"assets": []}).get("assets", [])
     old = read_json(DATA / "yahoo-details.json", {"items": {}, "state": {}})
@@ -463,15 +480,22 @@ def main() -> None:
             elif error:
                 errors.append({"symbol": symbol, "error": error[:300]})
     next_cursor = (cursor + len(batch)) % len(candidates) if candidates else 0
+    stale_count, stale_samples = stale_item_stats(items)
+    base_status = "ok" if success == len(batch) and success else "partial" if success or items else "warning"
+    if stale_count and base_status == "ok":
+        base_status = "partial"
     payload = {
         "metadata": {
             "version": VERSION,
             "updated_at": NOW.isoformat(timespec="seconds"),
-            "status": "ok" if success == len(batch) and success else "partial" if success or items else "warning",
+            "status": base_status,
             "item_count": len(items),
             "batch_size": len(batch),
             "batch_success": success,
-            "note": "Official values remain primary. Yahoo data fills missing fields; calculated and estimated values retain formula labels.",
+            "stale_item_count": stale_count,
+            "stale_item_samples": stale_samples,
+            "item_max_age_hours": 96,
+            "note": "Official values remain primary. Yahoo data fills missing fields; stale per-symbol rows and source errors are exposed instead of being hidden by a fresh file timestamp.",
         },
         "state": {"cursor": next_cursor, "last_batch_at": NOW.isoformat(timespec="seconds")},
         "errors": errors[:100],

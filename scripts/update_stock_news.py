@@ -135,7 +135,7 @@ def main() -> None:
                 "url": item.get("url"),
                 "published_at": item.get("published_at"),
             }
-            for item in ranked[1:6]
+            for item in ranked[1:4]
         ]
         primary["report_count"] = len(ranked)
         primary["verification_status"] = "multi-source" if len(ranked) > 1 else "primary-media" if primary.get("source_id") == "cna" else "reference"
@@ -143,7 +143,7 @@ def main() -> None:
         output.append(primary)
 
     output.sort(key=lambda row: (str(row.get("published_at") or ""), archive_priority(row,parse_datetime(row.get("published_at")) or ARCHIVE_START)), reverse=True)
-    output = output[:600]
+    output = output[:400]
     old = read_json(DATA / "stock-news.json", {"items": []})
     fallback = False
     if not output and old.get("items"):
@@ -151,17 +151,27 @@ def main() -> None:
         output.sort(key=lambda row: str(row.get("published_at") or row.get("date") or ""), reverse=True)
         fallback = bool(output)
 
+    degraded_sources = [source for source in sources if str(source.get("status") or "").lower() not in {"ok", "fresh", "fresh-complete"}]
+    overall_status = (
+        "warning" if not output
+        else "fallback" if fallback
+        else "partial" if degraded_sources
+        else "ok"
+    )
     payload = {
         "metadata": {
             "version": VERSION,
             "updated_at": NOW.isoformat(timespec="seconds"),
-            "status": "ok" if output and not fallback else "fallback" if output else "warning",
+            "status": overall_status,
             "item_count": len(output),
             "source_count": len(sources),
+            "degraded_source_count": len(degraded_sources),
             "used_archive_fallback": fallback,
             "archive_start": ARCHIVE_START.date().isoformat(),
+            "retention_days": 20,
+            "archive_limit": 400,
             "sort_order": "published_at_desc",
-            "note": "繁體中文媒體個股新聞；近期完整保留，較舊資料只保留高重要度內容，2026-01-01 前自動刪除。",
+            "note": "繁體中文媒體個股新聞；只保留最近20天並限制總筆數，來源 fallback/partial 會同步降級總狀態，避免舊資料假裝正常。",
         },
         "sources": sources,
         "items": output,

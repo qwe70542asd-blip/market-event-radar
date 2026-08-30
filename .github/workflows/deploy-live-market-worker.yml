@@ -1,4 +1,4 @@
-# v11.4.55 compatibility note only: legacy needs: deploy -> live-runtime publication was removed in v11.4.55.
+# v11.4.57 compatibility note only: legacy needs: deploy -> live-runtime publication was removed in v11.4.57.
 name: Deploy live market worker
 on:
   workflow_dispatch:
@@ -46,6 +46,17 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Resolve release version from VERSION.json
+        run: |
+          python - <<'PY'
+          import json, os
+          version=str(json.load(open("VERSION.json",encoding="utf-8"))["version"])
+          if not version.startswith("v11.4."):
+              raise SystemExit(f"unexpected release version: {version}")
+          with open(os.environ["GITHUB_ENV"],"a",encoding="utf-8") as fh:
+              fh.write(f"EXPECTED_VERSION={version}\n")
+          PY
+
       - name: Build Wrangler configuration without exposing credentials
         working-directory: edge
         env:
@@ -88,4 +99,4 @@ jobs:
           PY
 
       - name: Production readiness and endpoint contract
-        run: python scripts/production_readiness.py --endpoint "$LIVE_MARKET_ENDPOINT" --require-live --version v11.4.55
+        run: python scripts/production_readiness.py --endpoint "$LIVE_MARKET_ENDPOINT" --require-live --version "$EXPECTED_VERSION"

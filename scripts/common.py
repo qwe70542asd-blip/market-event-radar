@@ -20,6 +20,7 @@ PROTECTED_COLLECTION_FILES={
     "assets.json","stock-basics.json","yahoo-details.json","etf-details.json",
     "monthly-revenue.json","dividend-history.json","data-verification.json",
     "market-kline.json","market-volume-history.json","tw-chips.json","tw-market.json","secondary-reference.json",
+    *(f"asset-detail-shard-{index}.json" for index in range(10)),
 }
 
 def payload_cardinality(payload):
