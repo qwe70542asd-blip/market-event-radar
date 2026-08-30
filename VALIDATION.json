@@ -1,15 +1,28 @@
 {
-  "version": "v11.4.57",
+  "version": "v11.4.58",
   "release_type": "full-replacement",
-  "release_goal": "data-health correctness, bounded browser memory, deployment version synchronization",
-  "pytest": {"status": "pass", "passed": 307},
-  "workflow_yaml": {"status": "pass", "count": 16},
-  "http_smoke": {"status": "pass", "pages": 7, "referenced_assets": 38},
+  "release_goal": "mobile density + calendar readability + data-health correctness + bounded browser memory + deployment version synchronization",
+  "pytest": {
+    "status": "pass",
+    "passed": 311
+  },
+  "workflow_yaml": {
+    "status": "pass",
+    "count": 16
+  },
+  "http_smoke": {
+    "status": "pass",
+    "pages": 7,
+    "referenced_assets": 38
+  },
   "security_audit": "pass",
   "production_readiness": "pass",
   "public_data_validation": "pass",
   "repository_cleanup": "pass",
-  "workflow_publisher_audit": {"status": "pass", "live_branches": 24},
+  "workflow_publisher_audit": {
+    "status": "pass",
+    "live_branches": 24
+  },
   "bounded_memory": {
     "data_status_compact_index": "pass",
     "asset_prefix_shards": 10,
@@ -21,6 +34,14 @@
   "post_push_required": [
     "Hosted Chromium smoke",
     "official live-source contract",
-    "Cloudflare /health version v11.4.57"
-  ]
+    "Cloudflare /health version v11.4.58"
+  ],
+  "mobile_ui": {
+    "empty_portfolio_collapses": "pass",
+    "single_filter_bottom_sheet": "pass",
+    "calendar_badges_enlarged": "pass",
+    "yellow_badge_contrast": "pass",
+    "phone_floating_rail_disabled": "pass",
+    "bottom_nav_retained": "pass"
+  }
 }

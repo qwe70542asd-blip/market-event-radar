@@ -1,15 +1,15 @@
 <!doctype html>
-<!-- baseline compatibility: v11.4.57; usability release v11.4.57 -->
+<!-- baseline compatibility: v11.4.58; usability release v11.4.58 -->
 <html lang="zh-Hant"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; connect-src 'self' https:; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'; upgrade-insecure-requests"><meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#061120"><meta name="description" content="以雙模式事件月曆為核心的市場雷達、即時大盤、多來源新聞與個人投資組合儀表板。">
-<title>市場事件雷達｜v11.4.57 重點資訊版</title>
+<title>市場事件雷達｜v11.4.58 重點資訊版</title>
 <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="assets/favicon.svg">
-<link rel="stylesheet" href="assets/styles.css?v=11.4.57"><link rel="stylesheet" href="assets/date-alerts.css?v=11.4.57"><link rel="stylesheet" href="assets/v11.4.57-overrides.css?v=11.4.57">
+<link rel="stylesheet" href="assets/styles.css?v=11.4.58"><link rel="stylesheet" href="assets/date-alerts.css?v=11.4.58"><link rel="stylesheet" href="assets/v11.4.58-overrides.css?v=11.4.58">
 </head><body>
 <div class="noise" aria-hidden="true"></div>
 <header class="topbar">
-  <a class="brand" href="index.html"><span class="brand-mark"><svg viewBox="0 0 48 48"><path d="M7 34 16 24l7 6 10-16 8 6"></path><path d="M7 40h34"></path></svg></span><span><strong>市場事件雷達 <em class="version">v11.4.57</em></strong><small>PERSONAL MARKET & EVENT RADAR</small></span></a>
+  <a class="brand" href="index.html"><span class="brand-mark"><svg viewBox="0 0 48 48"><path d="M7 34 16 24l7 6 10-16 8 6"></path><path d="M7 40h34"></path></svg></span><span><strong>市場事件雷達 <em class="version">v11.4.58</em></strong><small>PERSONAL MARKET & EVENT RADAR</small></span></a>
   <nav class="topnav"><span class="live-pill"><i></i> 重點優先・日曆・即時行情</span><a href="news.html">財經新聞</a><a href="tw-market.html">台股排行</a><a href="institutional.html">法人籌碼</a><a class="keep-mobile" href="portfolio.html">我的組合</a></nav>
 </header>
 <section class="breaking"><b>重大資訊</b><a id="breakingLink" href="news.html">正在同步市場重大資訊…</a></section>
@@ -27,7 +27,7 @@
     <div class="filter-dock dual-filter-dock compact-calendar-filter-dock">
       <div class="filter-row calendar-search-row"><input id="eventSearch" placeholder="搜尋：CPI、台積電、財報、法說會…"><span class="calendar-mode-summary" id="calendarModeSummary">準備月曆</span></div>
       <details class="calendar-filter-details" id="calendarFilterDetails">
-        <summary><span>進階篩選</span><b id="calendarActiveFilterText">全部</b></summary>
+        <summary><span>篩選</span><b id="calendarActiveFilterText">全部</b></summary>
         <div class="calendar-filter-details-body">
           <div class="calendar-filter-panel" id="marketCalendarFilters" data-calendar-filter="market">
             <div class="filter-row mode-filter-row"><select id="eventRegion"><option value="all">全部地區</option><option value="TW">台灣</option><option value="US">美國</option><option value="JP">日本</option><option value="KR">韓國</option><option value="EU">歐洲</option><option value="UK">英國</option><option value="GLOBAL">全球</option></select><select id="eventType"><option value="all">全部市場事件</option><option value="major">重大事件</option><option value="company">公司資訊</option></select><select id="eventImpact"><option value="all">全部影響</option><option value="high">高影響</option><option value="medium">中影響以上</option></select></div>
@@ -35,6 +35,7 @@
           <div class="calendar-filter-panel" id="dividendCalendarFilters" data-calendar-filter="dividend" hidden>
             <div class="filter-row mode-filter-row"><select id="dividendKind"><option value="all">全部股利事件</option><option value="ex-dividend">除息</option><option value="ex-right">除權／除權息</option><option value="decision">股利方案</option><option value="payment">股利發放</option></select><select id="dividendAsset"><option value="all">全部標的</option><option value="etf">ETF</option><option value="stock">個股</option></select><select id="dividendAmount"><option value="all">全部金額狀態</option><option value="cash">有現金股利</option><option value="stock">含股票股利</option></select></div>
           </div>
+          <div class="calendar-filter-sheet-actions" aria-label="篩選操作"><button class="btn" id="calendarClearFilters" type="button">清除</button><button class="btn primary" id="calendarApplyFilters" type="button">套用</button></div>
         </div>
       </details>
     </div>
@@ -94,9 +95,9 @@
 
   <section class="panel news-preview compact-home-news" id="latestNews"><div class="section-head"><div><p class="eyebrow">VERIFIED MARKET BRIEF</p><h2>精選重大資訊</h2><p class="section-subtitle">突發事件、交易制度、央行政策與各大產業關鍵資訊；AI／半導體優先但不獨占。</p></div><a class="btn" href="news.html">查看全部 →</a></div><div class="news-grid home-news-compact-grid" id="homeNews"></div></section>
 
-<footer><span>資料僅供市場觀察，不構成投資建議。盤中數值可能延遲。</span><span>Asia/Taipei · v11.4.57</span></footer><nav class="mobile-nav"><a href="index.html">首頁</a><a href="tw-market.html">台股</a><a href="news.html">新聞</a><a href="portfolio.html">組合</a><button class="mobile-install-trigger" id="installAppButton" type="button">安裝 App</button></nav>
+<footer><span>資料僅供市場觀察，不構成投資建議。盤中數值可能延遲。</span><span>Asia/Taipei · v11.4.58</span></footer><nav class="mobile-nav"><a href="index.html">首頁</a><a href="tw-market.html">台股</a><a href="news.html">新聞</a><a href="portfolio.html">組合</a><button class="mobile-install-trigger" id="installAppButton" type="button">安裝 App</button></nav>
 </main>
 <dialog class="dialog day-dialog" id="dayDialog"><div class="dialog-head"><h2 id="dayDialogTitle">當日事件</h2><button class="dialog-close" id="closeDayDialog" type="button" aria-label="關閉當日事件">×</button></div><div class="dialog-body" id="dayDialogBody"></div></dialog>
-<script src="data/assets-seed.js?v=11.4.57"></script><script src="data/events-seed.js?v=11.4.57"></script><script src="data/news-cna-seed.js?v=11.4.57"></script><script src="data/news-moneydj-seed.js?v=11.4.57"></script><script src="data/news-cnyes-seed.js?v=11.4.57"></script><script src="data/news-udn-seed.js?v=11.4.57"></script><script src="data/news-ltn-seed.js?v=11.4.57"></script><script src="data/news-wealth-seed.js?v=11.4.57"></script><script src="data/news-yahoo-seed.js?v=11.4.57"></script><script src="data/news-technews-seed.js?v=11.4.57"></script><script src="data/news-ctee-seed.js?v=11.4.57"></script><script src="data/news-asia-risk-seed.js?v=11.4.57"></script><script src="data/official-market-notices-seed.js?v=11.4.57"></script><script src="data/company-disclosures-seed.js?v=11.4.57"></script><script src="data/stock-news-seed.js?v=11.4.57"></script><script src="data/tw-market-seed.js?v=11.4.57"></script><script src="data/tw-chips-seed.js?v=11.4.57"></script><script src="data/market-snapshot-seed.js?v=11.4.57"></script><script src="data/market-kline-seed.js?v=11.4.57"></script>
-<script src="assets/runtime-config.js?v=11.4.57"></script><script src="assets/shared.js?v=11.4.57"></script><script src="assets/home.js?v=11.4.57"></script><script src="assets/stale-market-guard.js?v=11.4.57"></script><script src="assets/date-alerts.js?v=11.4.57"></script><script src="assets/pwa-install.js?v=11.4.57"></script><script src="assets/sw-register.js?v=11.4.57"></script>
+<script src="data/assets-seed.js?v=11.4.58"></script><script src="data/events-seed.js?v=11.4.58"></script><script src="data/news-cna-seed.js?v=11.4.58"></script><script src="data/news-moneydj-seed.js?v=11.4.58"></script><script src="data/news-cnyes-seed.js?v=11.4.58"></script><script src="data/news-udn-seed.js?v=11.4.58"></script><script src="data/news-ltn-seed.js?v=11.4.58"></script><script src="data/news-wealth-seed.js?v=11.4.58"></script><script src="data/news-yahoo-seed.js?v=11.4.58"></script><script src="data/news-technews-seed.js?v=11.4.58"></script><script src="data/news-ctee-seed.js?v=11.4.58"></script><script src="data/news-asia-risk-seed.js?v=11.4.58"></script><script src="data/official-market-notices-seed.js?v=11.4.58"></script><script src="data/company-disclosures-seed.js?v=11.4.58"></script><script src="data/stock-news-seed.js?v=11.4.58"></script><script src="data/tw-market-seed.js?v=11.4.58"></script><script src="data/tw-chips-seed.js?v=11.4.58"></script><script src="data/market-snapshot-seed.js?v=11.4.58"></script><script src="data/market-kline-seed.js?v=11.4.58"></script>
+<script src="assets/runtime-config.js?v=11.4.58"></script><script src="assets/shared.js?v=11.4.58"></script><script src="assets/home.js?v=11.4.58"></script><script src="assets/stale-market-guard.js?v=11.4.58"></script><script src="assets/date-alerts.js?v=11.4.58"></script><script src="assets/pwa-install.js?v=11.4.58"></script><script src="assets/sw-register.js?v=11.4.58"></script>
 </body></html>

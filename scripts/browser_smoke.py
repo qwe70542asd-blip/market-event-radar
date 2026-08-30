@@ -31,19 +31,19 @@ DELAYED_FETCH_SCRIPT = r"""
     if(url.includes('raw.githubusercontent.com/qwe70542asd-blip/market-event-radar/live-tw-market/tw-market.json')){
       await wait(5200);
       const items=Array.from({length:12},(_,i)=>({symbol:String(2300+i),name:`測試${i}`,exchange:'TWSE',asset_class:'stock',price:100+i,previous_close:99+i,change_percent:1,volume:1000,trade_value:1000000,quote_date:localDay(0),status:'latest-close'}));
-      return json({metadata:{version:'v11.4.57',updated_at:new Date().toISOString(),trading_date:localDay(0),market_status:'latest-close',volume_ratio_20d:.94,volume_history_sessions:145,total_trade_value:1000000000000},breadth:{up:1244,down:743,flat:207},items});
+      return json({metadata:{version:'v11.4.58',updated_at:new Date().toISOString(),trading_date:localDay(0),market_status:'latest-close',volume_ratio_20d:.94,volume_history_sessions:145,total_trade_value:1000000000000},breadth:{up:1244,down:743,flat:207},items});
     }
     if(url.includes('raw.githubusercontent.com/qwe70542asd-blip/market-event-radar/live-tw-chips/tw-chips.json')){
       await wait(2800);
-      return json({metadata:{version:'v11.4.57',updated_at:new Date().toISOString(),trading_date:localDay(0)},markets:{twse:{institutional:{foreign_net:560548.321,trust_net:1000,dealer_net:2000,total_net:563548.321},institutional_date:localDay(0)}},items:{}});
+      return json({metadata:{version:'v11.4.58',updated_at:new Date().toISOString(),trading_date:localDay(0)},markets:{twse:{institutional:{foreign_net:560548.321,trust_net:1000,dealer_net:2000,total_net:563548.321},institutional_date:localDay(0)}},items:{}});
     }
     if(url.includes('raw.githubusercontent.com/qwe70542asd-blip/market-event-radar/live-events/events.json')){
       await wait(3200);
-      return json({metadata:{version:'v11.4.57',updated_at:new Date().toISOString(),full_event_count:500},events:[{id:'delayed-high-company',title:'測試公司 Q2 財報申報截止',start:`${localDay(1)}T09:00:00+08:00`,local_date:localDay(1),category:'taiwan',event_type:'corporate',event_group:'corporate',region:'TW',impact:'high',description:'高影響公司事件應進入首頁重大資訊。'}]});
+      return json({metadata:{version:'v11.4.58',updated_at:new Date().toISOString(),full_event_count:500},events:[{id:'delayed-high-company',title:'測試公司 Q2 財報申報截止',start:`${localDay(1)}T09:00:00+08:00`,local_date:localDay(1),category:'taiwan',event_type:'corporate',event_group:'corporate',region:'TW',impact:'high',description:'高影響公司事件應進入首頁重大資訊。'}]});
     }
     if(url.includes('raw.githubusercontent.com/qwe70542asd-blip/market-event-radar/live-news-cna/news-cna.json')){
       await wait(1200);
-      return json({metadata:{version:'v11.4.57',source_id:'cna',source_name:'中央社',updated_at:new Date().toISOString(),status:'ok',item_count:1},items:[{id:'delayed-news',source_id:'cna',source:'中央社',title:'台積電 AI 伺服器財報重大進展',url:'https://example.com/delayed-news',canonical_url:'https://example.com/delayed-news',url_valid:true,published_at:new Date().toISOString(),summary:'台積電與 AI 伺服器供應鏈重大財報與資本支出進展。',ai_summary:'台積電與 AI 伺服器供應鏈重大財報與資本支出進展。',impact:'high',importance_score:80,ai_category:'企業財報',topic:'earnings'}]});
+      return json({metadata:{version:'v11.4.58',source_id:'cna',source_name:'中央社',updated_at:new Date().toISOString(),status:'ok',item_count:1},items:[{id:'delayed-news',source_id:'cna',source:'中央社',title:'台積電 AI 伺服器財報重大進展',url:'https://example.com/delayed-news',canonical_url:'https://example.com/delayed-news',url_valid:true,published_at:new Date().toISOString(),summary:'台積電與 AI 伺服器供應鏈重大財報與資本支出進展。',ai_summary:'台積電與 AI 伺服器供應鏈重大財報與資本支出進展。',impact:'high',importance_score:80,ai_category:'企業財報',topic:'earnings'}]});
     }
     if(/^https:\/\//i.test(url)) throw new TypeError('external blocked by delayed-live smoke');
     return nativeFetch(...args);
@@ -68,14 +68,14 @@ PARTIAL_LIVE_FETCH_SCRIPT = r"""
   ].map(([symbol,name,market,price,change_percent])=>({symbol,name,market,price,previous_close:price/(1+change_percent/100),change_percent,session_date:localDay(0),price_date:localDay(0),ohlc_date:localDay(0),market_at:new Date().toISOString(),candles:candles(price),data_status:'live'}));
   window.fetch = async (...args) => {
     const input=args[0], url=String(typeof input==='string'?input:input?.url||'');
-    if(url.includes('market-event-radar-live.qwe70542asd.workers.dev/health')) return json({service:'Market Event Radar live market',version:'v11.4.57',schema_version:'market-snapshot-v2',status:'ok',cache_binding:true,rate_limit_binding:true});
-    if(url.includes('market-event-radar-live.qwe70542asd.workers.dev/market-snapshot.json')) return json({metadata:{version:'v11.4.57',schema_version:'market-snapshot-v2',updated_at:new Date().toISOString()},items:snapshotRows});
+    if(url.includes('market-event-radar-live.qwe70542asd.workers.dev/health')) return json({service:'Market Event Radar live market',version:'v11.4.58',schema_version:'market-snapshot-v2',status:'ok',cache_binding:true,rate_limit_binding:true});
+    if(url.includes('market-event-radar-live.qwe70542asd.workers.dev/market-snapshot.json')) return json({metadata:{version:'v11.4.58',schema_version:'market-snapshot-v2',updated_at:new Date().toISOString()},items:snapshotRows});
     if(url.includes('raw.githubusercontent.com/qwe70542asd-blip/market-event-radar/live-tw-market/tw-market.json')){
       const items=Array.from({length:12},(_,i)=>({symbol:String(2300+i),name:`舊市場${i}`,exchange:'TWSE',asset_class:'stock',price:100+i,previous_close:99+i,change_percent:1,volume:1000,trade_value:1000000,quote_date:localDay(-1),status:'latest-close'}));
-      return json({metadata:{version:'v11.4.57',updated_at:new Date(Date.now()-86400000).toISOString(),trading_date:localDay(-1)},breadth:{up:1000,down:900,flat:100},items});
+      return json({metadata:{version:'v11.4.58',updated_at:new Date(Date.now()-86400000).toISOString(),trading_date:localDay(-1)},breadth:{up:1000,down:900,flat:100},items});
     }
-    if(url.includes('raw.githubusercontent.com/qwe70542asd-blip/market-event-radar/live-tw-chips/tw-chips.json')) return json({metadata:{version:'v11.4.57',updated_at:new Date(Date.now()-86400000).toISOString(),trading_date:localDay(-1)},markets:{},items:{}});
-    if(url.includes('raw.githubusercontent.com/qwe70542asd-blip/market-event-radar/live-events/events.json')) return json({metadata:{version:'v11.4.57',updated_at:new Date().toISOString(),full_event_count:501},events:[{id:'fallback-event',title:'明日央行重大利率決策',start:`${localDay(1)}T12:00:00+08:00`,local_date:localDay(1),category:'central-bank',event_type:'macro',event_group:'macro',region:'US',impact:'high',description:'已確認重大事件。'}]});
+    if(url.includes('raw.githubusercontent.com/qwe70542asd-blip/market-event-radar/live-tw-chips/tw-chips.json')) return json({metadata:{version:'v11.4.58',updated_at:new Date(Date.now()-86400000).toISOString(),trading_date:localDay(-1)},markets:{},items:{}});
+    if(url.includes('raw.githubusercontent.com/qwe70542asd-blip/market-event-radar/live-events/events.json')) return json({metadata:{version:'v11.4.58',updated_at:new Date().toISOString(),full_event_count:501},events:[{id:'fallback-event',title:'明日央行重大利率決策',start:`${localDay(1)}T12:00:00+08:00`,local_date:localDay(1),category:'central-bank',event_type:'macro',event_group:'macro',region:'US',impact:'high',description:'已確認重大事件。'}]});
     if(url.includes('/live-news-') || url.includes('/live-stock-news/') || url.includes('/live-official-notices/')) throw new TypeError('news intentionally unavailable');
     if(/^https:\/\//i.test(url)) throw new TypeError('other external blocked by partial-live smoke');
     return nativeFetch(...args);

@@ -1,4 +1,4 @@
-Market Event Radar v11.4.57 deletion manifest
+Market Event Radar v11.4.58 deletion manifest
 
 若 repository 內仍存在以下舊版 release-only 檔案，覆蓋後請刪除：
 - assets/v11.4.55-overrides.css
@@ -11,7 +11,7 @@ Market Event Radar v11.4.57 deletion manifest
 - VALIDATION-v11.4.56.txt
 
 保留：
-- assets/v11.4.57-overrides.css
-- ONE-CLICK-REPLACE-v11.4.57.cmd
-- DELETION-MANIFEST-v11.4.57.txt
-- VALIDATION-v11.4.57.txt
+- assets/v11.4.58-overrides.css
+- ONE-CLICK-REPLACE-v11.4.58.cmd
+- DELETION-MANIFEST-v11.4.58.txt
+- VALIDATION-v11.4.58.txt

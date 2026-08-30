@@ -6,7 +6,7 @@
   const css=status=>BAD.has(status)?"badge-warn":WARN.has(status)?"badge-warn":"badge-ok";
   const age=value=>{const n=Number(value);if(!Number.isFinite(n))return"—";if(n<60)return`${n} 秒`;if(n<3600)return`${Math.round(n/60)} 分`;if(n<86400)return`${(n/3600).toFixed(n<10800?1:0)} 小時`;return`${(n/86400).toFixed(1)} 天`};
   const reasons=row=>(row.reasons||[]).slice(0,2).join("；")||"—";
-  const empty={metadata:{version:"v11.4.57",status:"unavailable",counts:{}},channels:[]};
+  const empty={metadata:{version:"v11.4.58",status:"unavailable",counts:{}},channels:[]};
   let payload=empty;
   try{payload=await loadData("channel-health.json",empty,{force:true})}catch(error){payload={...empty,metadata:{...empty.metadata,error:String(error)}}}
   const meta=payload.metadata||{},counts=meta.counts||{},verification=meta.verification_summary||{},channels=Array.isArray(payload.channels)?payload.channels:[];

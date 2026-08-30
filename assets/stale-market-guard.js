@@ -1,4 +1,4 @@
-// v11.4.57: fail closed for stale breadth/chips, but keep a verified same-session TAIEX quote visible.
+// v11.4.58: fail closed for stale breadth/chips, but keep a verified same-session TAIEX quote visible.
 (()=>{
   "use strict";
   const fmtDay=value=>String(value||"").slice(0,10);

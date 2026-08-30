@@ -1,4 +1,4 @@
-// v11.4.57 calendar-first usability + resilient market/news layer
+// v11.4.58 calendar-first usability + resilient market/news layer
 (async()=>{
   "use strict";
   const {$,escapeHtml,fmt,pct,cls,formatTime,formatEventTime,loadData,loadMarketKline,startNewsChannels,loadStockNews,loadPortfolio,finite,renderNewsThumb,newsHasImage,safeExternalHref,getLiveMarketEndpoint}=MR;
@@ -72,7 +72,7 @@
   const impactLabel=impact=>impact==="high"?"高影響":impact==="low"?"低影響":"中影響";
 
   const LEADER_RE=/台積電|鴻海|聯發科|廣達|緯創|國巨|川湖|日月光|台達電|中華電|長榮|陽明|NVIDIA|輝達|Microsoft|微軟|Apple|蘋果|Amazon|亞馬遜|Meta|Google|Alphabet|AMD|Intel|Tesla|三星|SK\s*海力士|海力士|Sony|Toyota/i;
-  // v11.4.57: a bare regulator/exchange mention is not a market-structure event.
+  // v11.4.58: a bare regulator/exchange mention is not a market-structure event.
   // Direct trading-rule terms qualify on their own; institution names qualify only
   // when paired with an actual rule/change signal.
   const MARKET_STRUCTURE_RE=/零股|整股|盤中零股|盤後零股|撮合|集合競價|逐筆交易|交易時間|開盤時間|收盤時間|漲跌幅|升降單位|當沖|融資融券|融券|融資|交割|T\+?1|T\+?2|交易制度|市場制度/i;
@@ -166,6 +166,8 @@
 
   function renderPortfolioSummary(){
     const rows=loadPortfolio();
+    const summaryPanel=$("#portfolioSummary");
+    if(summaryPanel)summaryPanel.classList.toggle("portfolio-empty",rows.length===0);
     const usdTwd=finite(quotes.get("TWD=X")?.price);
     const fxToTwd=currency=>{
       const code=String(currency||"TWD").toUpperCase();
@@ -516,7 +518,7 @@
   }
   renderFeaturedInfo();renderTodayFocus();renderTaiwanStatus();renderTodayBrief();
 
-  const storedCalendarMode=localStorage.getItem("mr-calendar-mode-v1")||localStorage.getItem("mr-calendar-mode-v11.4.49")||localStorage.getItem("mr-calendar-mode-v11.4.57")||"market";
+  const storedCalendarMode=localStorage.getItem("mr-calendar-mode-v1")||localStorage.getItem("mr-calendar-mode-v11.4.49")||localStorage.getItem("mr-calendar-mode-v11.4.58")||"market";
   if(!localStorage.getItem("mr-calendar-mode-v1"))localStorage.setItem("mr-calendar-mode-v1",storedCalendarMode);
   let current=new Date(),calendarMode=storedCalendarMode==="dividend"?"dividend":"market",pendingJumpDate="";
   const calendar=$("#calendarGrid"),dialog=$("#dayDialog");
@@ -672,7 +674,16 @@
     if(render)renderCalendar();
   }
   $("#eventSearch").addEventListener("input",()=>{updateCalendarFilterLabel();renderCalendar()});
-  ["eventRegion","eventType","eventImpact","dividendKind","dividendAsset","dividendAmount"].forEach(id=>$("#"+id).addEventListener("change",()=>{updateCalendarFilterLabel();renderCalendar()}));
+  const calendarFilterIds=["eventRegion","eventType","eventImpact","dividendKind","dividendAsset","dividendAmount"];
+  calendarFilterIds.forEach(id=>$("#"+id).addEventListener("change",()=>{updateCalendarFilterLabel();renderCalendar()}));
+  const calendarFilterDetails=$("#calendarFilterDetails");
+  const resetCalendarFilters=()=>{
+    calendarFilterIds.forEach(id=>{const control=$("#"+id);if(control)control.value="all"});
+    const search=$("#eventSearch");if(search)search.value="";
+    updateCalendarFilterLabel();renderCalendar();
+  };
+  const clearFilters=$("#calendarClearFilters");if(clearFilters)clearFilters.onclick=resetCalendarFilters;
+  const applyFilters=$("#calendarApplyFilters");if(applyFilters)applyFilters.onclick=()=>{if(calendarFilterDetails)calendarFilterDetails.open=false};
   document.querySelectorAll("[data-calendar-mode]").forEach(button=>button.onclick=()=>setCalendarMode(button.dataset.calendarMode));
   $("#prevMonth").onclick=()=>{current.setMonth(current.getMonth()-1);pendingJumpDate="";renderCalendar()};
   $("#nextMonth").onclick=()=>{current.setMonth(current.getMonth()+1);pendingJumpDate="";renderCalendar()};

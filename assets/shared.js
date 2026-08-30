@@ -1,5 +1,5 @@
 (()=>{"use strict";
-const OWNER="qwe70542asd-blip",REPO="market-event-radar",APP_VERSION="v11.4.57";
+const OWNER="qwe70542asd-blip",REPO="market-event-radar",APP_VERSION="v11.4.58";
 let LIVE_MARKET_ENDPOINT=String(window.MR_RUNTIME?.liveMarketEndpoint||"").replace(/\/$/,"");
 let runtimeReadyPromise=null;
 async function ensureRuntimeEndpoint(){
@@ -392,7 +392,7 @@ function loadWatchlist(){try{const value=JSON.parse(localStorage.getItem(WATCHLI
 function saveWatchlist(rows){const clean=[],seen=new Set();for(const raw of rows||[]){const symbol=String(raw?.symbol||"").trim().toUpperCase();if(!symbol||seen.has(symbol))continue;seen.add(symbol);clean.push({symbol,name:String(raw?.name||symbol).trim(),asset_class:String(raw?.asset_class||"").trim(),exchange:String(raw?.exchange||"").trim(),added_at:raw?.added_at||new Date().toISOString()})}localStorage.setItem(WATCHLIST_KEY,JSON.stringify(clean.slice(0,100)));window.dispatchEvent(new CustomEvent("watchlistchange"));return clean}
 function toggleWatchlist(item={}){const symbol=String(item.symbol||"").trim().toUpperCase();if(!symbol)return{added:false,items:loadWatchlist()};const rows=loadWatchlist(),index=rows.findIndex(row=>String(row.symbol).toUpperCase()===symbol);let added=false;if(index>=0)rows.splice(index,1);else{rows.unshift({symbol,name:String(item.name||symbol).trim(),asset_class:String(item.asset_class||"").trim(),exchange:String(item.exchange||"").trim(),added_at:new Date().toISOString()});added=true}return{added,items:saveWatchlist(rows)}}
 function installGlobalMobileQuickNav(){
- // v11.4.57: never add a second persistent navigation row on phones.
+ // v11.4.58: never add a second persistent navigation row on phones.
  // The home page already owns its single left-side quick rail and every app page
  // already has the canonical bottom navigation. Keeping one navigation owner
  // prevents the old duplicated 01-04 bar from covering portfolio/calendar/K-line content.

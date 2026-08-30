@@ -1,4 +1,4 @@
-# v11.4.57 compatibility note only: legacy needs: deploy -> live-runtime publication was removed in v11.4.57.
+# v11.4.58 compatibility note only: legacy needs: deploy -> live-runtime publication was removed in v11.4.58.
 name: Deploy live market worker
 on:
   workflow_dispatch:

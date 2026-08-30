@@ -8,7 +8,7 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: verify-v11-4-57-${{ github.ref }}
+  group: verify-v11-4-58-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   verify:
@@ -64,7 +64,7 @@ jobs:
         run: python scripts/security_audit.py
 
       - name: Static production readiness gate
-        run: python scripts/production_readiness.py --version v11.4.57
+        run: python scripts/production_readiness.py --version v11.4.58
 
       - name: Strict data validation
         run: python scripts/validate_public_data.py all

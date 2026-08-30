@@ -2,7 +2,7 @@
   "use strict";
   const {$,$$,escapeHtml,fmt,pct,cls,formatTime,loadData,loadStockNews,finite,stripHtml,normalizeText,renderNewsThumb,safeExternalHref,loadWatchlist,toggleWatchlist}=MR;
   const symbol=(new URLSearchParams(location.search).get("symbol")||"2330").toUpperCase();
-  // v11.4.57 bounded asset bootstrap: one prefix shard replaces eight full
+  // v11.4.58 bounded asset bootstrap: one prefix shard replaces eight full
   // symbol-keyed history/detail files.  Only the current symbol is retained in
   // memory; the market quote stays on its independent official channel.
   const shard=/^[0-9]/.test(symbol)?symbol[0]:"0";
