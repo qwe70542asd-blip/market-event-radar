@@ -1,0 +1,29 @@
+Market Event Radar v11.5.1 — INTEGRATED PERFORMANCE UPDATE
+Generated: 2026-09-02 (Asia/Taipei)
+Baseline: v11.5.0 / main f5cf1448de5abbb41365672513aafcf6b260e098
+
+GOAL
+Fix extremely slow first load / apparent freeze without removing market-data integrity guards.
+
+INCLUDED FIXES
+[PASS] External startup scripts are converted to defer so downloads can proceed in parallel while execution order is preserved.
+[PASS] New v11.5.1 fast-boot layer deduplicates identical in-flight GETs for local/live-data routes.
+[PASS] During the first 15 seconds, slow GitHub/CDN live-data fetches fail fast (Raw 2.8s / CDN 2.2s) so the app can use its normal local/seed fallback instead of appearing frozen.
+[PASS] v11.4 and v11.5.0 generated data caches are not promoted into the clean v11.5.1 runtime; user portfolio/watchlist keys are preserved.
+[PASS] stale-market-guard no longer force-fetches the same compact market/chip/snapshot payload again at startup.
+[PASS] stale-market-guard first verification is idle-scheduled; the second verification is delayed to 15 seconds instead of 2 seconds.
+[PASS] Service Worker registration/update is delayed until load/idle.
+[PASS] Service Worker controller changes no longer force location.reload(), eliminating update/reload-loop behavior.
+[PASS] Service Worker install precache is reduced to the application shell; event/news/market seed storms are removed from install.
+[PASS] Cache namespace/version moved to v11.5.1.
+[PASS] Regression test test_v1151_performance_hotfix.py is included.
+
+IMPORTANT
+This package is an integrated update overlay for the existing v11.5.0 repository. It is not falsely labeled as a full-replace archive because the original v11.5.0 full-replace ZIP binary is not available in the current ChatGPT runtime.
+
+POST-APPLY REQUIRED
+- Extract this ZIP into the v11.5.0 repository root.
+- Run ONE-CLICK-APPLY-v11.5.1.cmd once.
+- Commit/push through GitHub Desktop.
+- GitHub Actions “Verify stable app release” must finish green.
+- Hard refresh once after deployment so the old v11.5.0 Service Worker/cache is replaced.

@@ -1,0 +1,18 @@
+v11.5.1 integrated update contents
+- ONE-CLICK-APPLY-v11.5.1.cmd
+- scripts/apply_v1151_patch.py
+- assets/v11.5.1-fast-boot.js
+- assets/sw-register.js
+- service-worker.js
+- tests/test_v1151_performance_hotfix.py
+- VALIDATION-v11.5.1.txt
+- PATCH-MANIFEST-v11.5.1.txt
+
+The apply script updates the existing v11.5.0 repository in place:
+- all root HTML: version/cache bust + defer + fast boot injection
+- assets/shared.js: APP_VERSION, shorter live-mirror timeout, remove v11.4 cache promotion
+- assets/stale-market-guard.js: no forced duplicate boot fetch + idle scheduling
+- assets/v11.5.0-overrides.css -> assets/v11.5.1-overrides.css
+- VERSION.json / manifest.webmanifest / runtime version markers
+- scripts/tests/workflows version-sensitive markers
+- validation files and performance regression test
