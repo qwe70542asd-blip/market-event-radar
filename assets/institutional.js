@@ -127,7 +127,6 @@
   function renderHot(){$("#hotStocks").innerHTML=hotHtml(hot(false));$("#hotEtfs").innerHTML=hotHtml(hot(true));}
   function refreshMounted(){rebuildDerived();renderMarketCards();renderHot();if(selectedSymbol&&searchable.some(item=>String(item.symbol)===selectedSymbol))renderItem(selectedSymbol);else if($("#chipSymbol").value.trim())search()}
   refreshMounted();
-  loadData("tw-chips.json",payload).then(fresh=>{if(fresh?.markets){payload=fresh;refreshMounted()}}).catch(()=>{});
-  loadData("tw-market.json",market).then(fresh=>{if(Array.isArray(fresh?.items)&&fresh.items.length){market=fresh;refreshMounted()}}).catch(()=>{});
-  loadData("yahoo-details.json",yahooPayload).then(fresh=>{if(fresh?.items){yahooPayload=fresh;refreshMounted()}}).catch(()=>{});
+  loadData("tw-chips-compact.json",payload).then(fresh=>{if(fresh?.markets){payload=fresh;refreshMounted()}}).catch(()=>{});
+  loadData("tw-market-compact.json",market).then(fresh=>{if(Array.isArray(fresh?.items)&&fresh.items.length){market=fresh;refreshMounted()}}).catch(()=>{});
 })();

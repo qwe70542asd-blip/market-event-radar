@@ -17,6 +17,6 @@
   }
   function search(){const input=$("#marketSearch");if(!input)return;const query=input.value.trim().toLowerCase(),wrap=$("#marketSearchWrap");if(!query){wrap.hidden=true;$("#marketSearchRows").innerHTML="";return}const data=searchable.filter(item=>`${item.symbol} ${item.name}`.toLowerCase().includes(query)).slice(0,80);wrap.hidden=false;$("#marketSearchRows").innerHTML=data.map(item=>`<tr><td><a href="asset.html?symbol=${encodeURIComponent(item.symbol)}"><b>${escapeHtml(item.symbol)}</b><br><small>${escapeHtml(item.name||"")}</small></a></td><td>${escapeHtml(item.exchange||"")}</td><td>${fmt(item.price)}</td><td class="${cls(item.change_percent)}">${pct(item.change_percent)}</td><td>${fmt(item.volume,0)}</td><td>${fmt(item.trade_value,0)}</td><td>${escapeHtml(item.quote_time||"")}</td></tr>`).join("")||'<tr><td colspan="7" class="empty">找不到符合的標的</td></tr>'}
   $("#marketSearch").oninput=search;renderMarket();
-  loadData("tw-market.json",payload).then(fresh=>{if(Array.isArray(fresh?.items)&&fresh.items.length){payload=fresh;renderMarket()}}).catch(()=>{});
+  loadData("tw-market-compact.json",payload).then(fresh=>{if(Array.isArray(fresh?.items)&&fresh.items.length){payload=fresh;renderMarket()}}).catch(()=>{});
   loadStockBasics().then(fresh=>{stockBasicsPayload=fresh;rebuild();search()}).catch(()=>{});
 })();

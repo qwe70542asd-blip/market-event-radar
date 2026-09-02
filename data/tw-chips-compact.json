@@ -1,0 +1,30 @@
+{
+  "metadata": {
+    "version": "v11.5.0",
+    "updated_at": "2026-09-02T12:32:48+08:00",
+    "trading_date": null,
+    "source": "TWSE official structured data; Yahoo Taiwan reference fallback",
+    "note": "Bundled fallback sanitized for v11.4.46; live updater refreshes TWSE/TPEx official channels and removes invalid nested dates.",
+    "invalid_nested_dates_removed": 0,
+    "invalid_legacy_dates_removed": 0,
+    "schema": "symbol-keyed-v2",
+    "status": "ok",
+    "item_count": 0,
+    "payload_mode": "current-plus-five-session-frontend"
+  },
+  "markets": {
+    "twse": {
+      "institutional": {},
+      "margin": {},
+      "short": {},
+      "stock_count": 0
+    },
+    "tpex": {
+      "institutional": {},
+      "margin": {},
+      "short": {},
+      "stock_count": 0
+    }
+  },
+  "items": {}
+}

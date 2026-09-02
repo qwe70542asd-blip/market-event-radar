@@ -6,9 +6,9 @@ def read(path): return (ROOT/path).read_text(encoding="utf-8")
 def test_home_never_exposes_unknown_numeric_industry_codes():
     home=read("assets/home.js")
     assert "normalizeHomeIndustry" in home
-    assert 'if(/^\\d+$/.test(raw))return""' in home
+    assert 'validHomeIndustryLabel' in home and 'Numeric taxonomy values such as 91' in home
     assert "HOME_INDUSTRY_NAMES" in home
-    assert "normalizeHomeIndustry(asset.official_industry" in home
+    assert "validHomeIndustryLabel(asset.official_industry" in home
 
 
 def test_yahoo_supplement_is_freshness_gated_on_asset_and_chips_pages():

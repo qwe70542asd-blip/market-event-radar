@@ -1,4 +1,4 @@
-// v11.4.61 calendar-first usability + resilient market/news layer
+// v11.5.0 sealed performance + strict industry normalization
 (async()=>{
   "use strict";
   const {$,escapeHtml,fmt,pct,cls,formatTime,formatEventTime,loadData,loadMarketKline,startNewsChannels,loadStockNews,loadPortfolio,finite,renderNewsThumb,newsHasImage,safeExternalHref,getLiveMarketEndpoint}=MR;
@@ -7,13 +7,12 @@
   const twFallback=window.__TW_MARKET_SEED__||{items:[]};
   const chipsFallback=window.__TW_CHIPS_SEED__||{markets:{},items:{}};
   const snapshotFallback=window.__MARKET_SNAPSHOT_SEED__||{items:[]};
-  const dividendFallback=window.__DIVIDEND_HISTORY_SEED__||{items:{}};
   const stockNewsFallback=window.__STOCK_NEWS_SEED__||{metadata:{status:"seed"},items:[]};
 
   // Homepage state mounts immediately from bundled/last-known-good data. Every
   // channel then upgrades the mounted section independently when verified live
   // data arrives; no 4.5 second boot race can permanently freeze an empty card.
-  let assets=assetFallback,events=eventFallback,stockNews=stockNewsFallback,tw=twFallback,chips=chipsFallback,snapshot=snapshotFallback,dividendHistory=dividendFallback;
+  let assets=assetFallback,events=eventFallback,stockNews=stockNewsFallback,tw=twFallback,chips=chipsFallback,snapshot=snapshotFallback;
   let news={metadata:{status:"seed"},channels:[],items:[]};
   let assetMap=new Map();
   let quotes=new Map();
@@ -21,14 +20,13 @@
   const rebuildQuotes=()=>{quotes=new Map([...(tw.items||[]),...(snapshot.items||[])].map(row=>[String(row.symbol||"").toUpperCase(),row]));};
   rebuildAssets();rebuildQuotes();
 
-  const eventLivePromise=window.__MR_EVENT_LIVE_PROMISE__||(window.__MR_EVENT_LIVE_PROMISE__=loadData("events.json",eventFallback).catch(()=>eventFallback));
-  const assetLivePromise=loadData("assets.json",assetFallback).catch(()=>assetFallback);
-  const twLivePromise=loadData("tw-market.json",twFallback).catch(()=>twFallback);
-  const chipsLivePromise=loadData("tw-chips.json",chipsFallback).catch(()=>chipsFallback);
+  const eventLivePromise=window.__MR_EVENT_LIVE_PROMISE__||(window.__MR_EVENT_LIVE_PROMISE__=loadData("home-events.json",eventFallback).catch(()=>eventFallback));
+  const assetLivePromise=loadData("home-assets.json",assetFallback).catch(()=>assetFallback);
+  const twLivePromise=loadData("tw-market-compact.json",twFallback).catch(()=>twFallback);
+  const chipsLivePromise=loadData("tw-chips-compact.json",chipsFallback).catch(()=>chipsFallback);
   const snapshotLivePromise=loadData("market-snapshot.json",snapshotFallback).catch(()=>snapshotFallback);
-  const dividendLivePromise=loadData("dividend-history.json",dividendFallback).catch(()=>dividendFallback);
   const stockNewsLivePromise=loadStockNews().catch(()=>stockNewsFallback);
-  const newsStream=startNewsChannels({onUpdate:payload=>{news=payload;queueMicrotask(()=>{renderFeaturedInfo?.();renderCalendar?.();renderTodayFocus?.();renderTodayBrief?.()})}});
+  const newsStream=startNewsChannels({concurrency:2,onUpdate:payload=>{news=payload;queueMicrotask(()=>{renderFeaturedInfo?.();renderCalendar?.();renderTodayFocus?.();renderTodayBrief?.()})}});
   news=newsStream.initial;
   const strip=value=>String(value||"").replace(/<[^>]*>/g," ").replace(/&nbsp;/gi," ").replace(/\s+/g," ").trim();
   const truncate=(value,max=180)=>{const text=strip(value);return text.length>max?`${text.slice(0,max).trim()}…`:text};
@@ -72,7 +70,7 @@
   const impactLabel=impact=>impact==="high"?"高影響":impact==="low"?"低影響":"中影響";
 
   const LEADER_RE=/台積電|鴻海|聯發科|廣達|緯創|國巨|川湖|日月光|台達電|中華電|長榮|陽明|NVIDIA|輝達|Microsoft|微軟|Apple|蘋果|Amazon|亞馬遜|Meta|Google|Alphabet|AMD|Intel|Tesla|三星|SK\s*海力士|海力士|Sony|Toyota/i;
-  // v11.4.61: a bare regulator/exchange mention is not a market-structure event.
+  // v11.5.0: a bare regulator/exchange mention is not a market-structure event.
   // Direct trading-rule terms qualify on their own; institution names qualify only
   // when paired with an actual rule/change signal.
   const MARKET_STRUCTURE_RE=/零股|整股|盤中零股|盤後零股|撮合|集合競價|逐筆交易|交易時間|開盤時間|收盤時間|漲跌幅|升降單位|當沖|融資融券|融券|融資|交割|T\+?1|T\+?2|交易制度|市場制度/i;
@@ -306,8 +304,8 @@
     try{
       const [freshSnapshot,freshTw,freshChips]=await Promise.all([
         loadData("market-snapshot.json",snapshot||window.__MARKET_SNAPSHOT_SEED__||{items:[]},{force:true}),
-        loadData("tw-market.json",tw||window.__TW_MARKET_SEED__||{items:[]},{force:true}),
-        loadData("tw-chips.json",chips||window.__TW_CHIPS_SEED__||{markets:{},items:{}},{force:true})
+        loadData("tw-market-compact.json",tw||window.__TW_MARKET_SEED__||{items:[]},{force:true}),
+        loadData("tw-chips-compact.json",chips||window.__TW_CHIPS_SEED__||{markets:{},items:{}},{force:true})
       ]);
       snapshot=freshSnapshot;tw=freshTw;chips=freshChips;
       rebuildQuotes();
@@ -449,11 +447,13 @@
   const HOME_INDUSTRY_NAMES={"01":"水泥工業","02":"食品工業","03":"塑膠工業","04":"紡織纖維","05":"電機機械","06":"電器電纜","07":"化學生技醫療","08":"玻璃陶瓷","09":"造紙工業","10":"鋼鐵工業","11":"橡膠工業","12":"汽車工業","13":"電子工業","14":"建材營造","15":"航運業","16":"觀光餐旅","17":"金融保險業","18":"貿易百貨","20":"其他業","21":"化學工業","22":"生技醫療業","23":"油電燃氣業","24":"半導體業","25":"電腦及週邊設備業","26":"光電業","27":"通信網路業","28":"電子零組件業","29":"電子通路業","30":"資訊服務業","31":"其他電子業","32":"文化創意業","33":"農業科技業","34":"電子商務","35":"綠能環保","36":"數位雲端","37":"運動休閒","38":"居家生活"};
   const normalizeHomeIndustry=value=>{
     const raw=String(value||"").trim();if(!raw)return"";
-    const numeric=raw.match(/^0?(\d{1,2})$/);
+    const numeric=raw.match(/^0?(\d{1,3})$/);
     if(numeric)return HOME_INDUSTRY_NAMES[String(numeric[1]).padStart(2,"0")]||"";
-    if(/^\d+$/.test(raw))return"";
+    // Numeric taxonomy values such as 91 are source codes, never user-facing labels.
+    if(/^\d+(?:[.\-]\d+)?$/.test(raw))return"";
     return raw;
   };
+  const validHomeIndustryLabel=value=>{const label=normalizeHomeIndustry(value);return label&&!/^\d/.test(label)&&!/ETF|基金/.test(label)?label:"";};
   function renderMarketInsights(){
     const breadth=tw.breadth||{},up=Math.max(0,finite(breadth.up)||0),down=Math.max(0,finite(breadth.down)||0),flat=Math.max(0,finite(breadth.flat)||0),total=up+down+flat;
     const heat=total?Math.round(up/total*100):null,heatLabel=heat==null?"等待資料":heat>=75?"全面偏強":heat>=60?"偏強":heat>=45?"均衡":heat>=30?"偏弱":"低迷";
@@ -476,7 +476,7 @@
     const groups=new Map();
     for(const row of tw.items||[]){
       if(String(row.asset_class||"").toLowerCase()!=="stock")continue;const change=finite(row.change_percent);if(change==null)continue;
-      const asset=assetMap.get(String(row.symbol||"").toUpperCase())||{},industry=normalizeHomeIndustry(asset.official_industry||row.official_industry||asset.sub_industry||row.sub_industry||"");if(!industry||/ETF|基金/.test(industry))continue;
+      const asset=assetMap.get(String(row.symbol||"").toUpperCase())||{},industry=validHomeIndustryLabel(asset.official_industry||row.official_industry||asset.sub_industry||row.sub_industry||"");if(!industry)continue;
       if(!groups.has(industry))groups.set(industry,[]);groups.get(industry).push(change);
     }
     let sectors=[...groups].map(([name,values])=>({name,count:values.length,move:median(values)})).filter(row=>row.move!=null&&row.count>=3);
@@ -524,7 +524,7 @@
   }
   renderFeaturedInfo();renderTodayFocus();renderTaiwanStatus();renderTodayBrief();
 
-  const storedCalendarMode=localStorage.getItem("mr-calendar-mode-v1")||localStorage.getItem("mr-calendar-mode-v11.4.49")||localStorage.getItem("mr-calendar-mode-v11.4.61")||"market";
+  const storedCalendarMode=localStorage.getItem("mr-calendar-mode-v1")||localStorage.getItem("mr-calendar-mode-v11.4.49")||localStorage.getItem("mr-calendar-mode-v11.5.0")||"market";
   if(!localStorage.getItem("mr-calendar-mode-v1"))localStorage.setItem("mr-calendar-mode-v1",storedCalendarMode);
   let current=new Date(),calendarMode=storedCalendarMode==="dividend"?"dividend":"market",pendingJumpDate="";
   const calendar=$("#calendarGrid"),dialog=$("#dayDialog");
@@ -597,10 +597,9 @@
     return `<article class="event-detail ${group}"><div class="event-detail-top"><div><span class="tag">${escapeHtml(event.region||"GLOBAL")}</span><span class="event-kind">${group==="company"?"公司資訊":isMacroCalendarEvent(event)?"經濟／央行":"重大事件"}</span></div><span class="impact-badge ${escapeHtml(event.impact||"medium")}">${impactLabel(event.impact)}</span></div><h3><a href="event.html?id=${encodeURIComponent(event.id)}">${escapeHtml(strip(event.title))}</a></h3>${description?`<p>${escapeHtml(truncate(description,220))}</p>`:""}${facts.length?`<dl class="event-fact-grid">${facts.map(row=>`<div><dt>${escapeHtml(row.label)}</dt><dd>${escapeHtml(row.value)}</dd></div>`).join("")}</dl>`:""}<div class="event-detail-foot"><time>${escapeHtml(eventWhenLabel(event))}</time>${source}</div>${relatedNewsHtml(event)}${description.length>220?`<details class="event-full"><summary>查看完整說明</summary><p>${escapeHtml(description)}</p></details>`:""}</article>`;
   };
   const dividendEventLabel=event=>({"ex-dividend":"除息","ex-right":"除權／除權息",decision:"股利方案",payment:"股利發放",other:"股利事件"})[dividendKind(event)]||"股利事件";
-  const dividendRowsFor=event=>{const symbol=String(event.symbol||"").toUpperCase(),value=(dividendHistory.items||{})[symbol]||[];return Array.isArray(value)?value:(value.rows||[])};
-  const matchingDividendRow=event=>{const day=eventDateKey(event);return dividendRowsFor(event).find(row=>[row.ex_date,row.payment_date,row.record_date,row.board_date].includes(day))||dividendRowsFor(event)[0]||{}};
-  const dividendCash=event=>finite(event.cash_dividend??event.amount??matchingDividendRow(event).cash??matchingDividendRow(event).amount);
-  const dividendStock=event=>finite(event.stock_dividend??event.stock_dividend_ratio??matchingDividendRow(event).stock);
+  const matchingDividendRow=event=>event||{};
+  const dividendCash=event=>finite(event.cash_dividend??event.amount);
+  const dividendStock=event=>finite(event.stock_dividend??event.stock_dividend_ratio);
   const dividendTable=rows=>{
     if(!rows.length)return '<div class="empty">當日沒有符合篩選的股利股息資訊</div>';
     return `<div class="table-wrap dividend-table-wrap"><table class="dividend-table"><thead><tr><th>標的</th><th>事件</th><th>現金股利</th><th>股票股利</th><th>發放日期</th><th>來源</th></tr></thead><tbody>${rows.map(event=>`<tr><td><a href="asset.html?symbol=${encodeURIComponent(event.symbol||"")}"><b>${escapeHtml(event.symbol||"—")}</b><br><small>${escapeHtml(event.asset_name||event.name||strip(event.title).replace(/^\S+\s*/,""))}</small></a></td><td>${escapeHtml(dividendEventLabel(event))}</td><td>${dividendCash(event)!=null?`${fmt(dividendCash(event),4)} 元`:'<span class="pending-value">金額待公告</span>'}</td><td>${dividendStock(event)!=null?fmt(dividendStock(event),4):"—"}</td><td>${escapeHtml(event.payment_date||event.pay_date||matchingDividendRow(event).payment_date||"—")}</td><td><a href="event.html?id=${encodeURIComponent(event.id)}">站內公告 →</a></td></tr>`).join("")}</tbody></table></div>`;
@@ -711,7 +710,6 @@
   twLivePromise.then(fresh=>{if(Array.isArray(fresh?.items)&&fresh.items.length){tw=fresh;rebuildQuotes();renderMarketList();renderTaiwanStatus();renderPortfolioSummary();renderTodayBrief()}}).catch(()=>{});
   chipsLivePromise.then(fresh=>{if(fresh?.markets){chips=fresh;renderTaiwanStatus();renderTodayBrief()}}).catch(()=>{});
   snapshotLivePromise.then(fresh=>{if(Array.isArray(fresh?.items)&&fresh.items.length){snapshot=fresh;rebuildQuotes();renderMarketKlines();renderPortfolioSummary()}}).catch(()=>{});
-  dividendLivePromise.then(fresh=>{if(fresh?.items)dividendHistory=fresh}).catch(()=>{});
   stockNewsLivePromise.then(fresh=>{if(Array.isArray(fresh?.items)){stockNews=fresh;renderFeaturedInfo();renderCalendar();renderTodayFocus();renderTodayBrief()}}).catch(()=>{});
   newsStream.done.then(fresh=>{news=fresh;renderFeaturedInfo();renderCalendar();renderTodayFocus();renderTodayBrief()}).catch(()=>{});
   let lastRenderedDay=todayKey;

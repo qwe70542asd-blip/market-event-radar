@@ -1,29 +1,37 @@
-# 市場事件雷達 v11.4.61
+# 市場事件雷達 v11.5.0
 
-## 版本重點：日曆主推／左側浮動導覽／台股部分即時／重大資訊保底
+## 大版本：Compact Live Data Architecture
 
-這是 **Full Replacement** 完整覆蓋版，以 v11.4.55 為母版。既有台股排行、法人籌碼、K 線、新聞、個股／ETF、投資組合、Cloudflare Worker、資料發布與 stale guard 均保留；本版只針對首頁手機體驗與資料顯示韌性做修正，並加入回歸測試避免舊問題復發。
+v11.5.0 是封版型架構更新，不新增花俏功能，優先處理「頁面打不開、舊資料來源互相覆蓋、舊系統殘留、同一頁下載完整巨型資料檔」等問題。
 
-### v11.4.61 修正
+### 主要改動
 
-- 市場事件月曆移到首頁最上方，成為主要入口。
-- 日曆搜尋保留；地區／事件類型／影響程度改成預設收合的「進階篩選」，避免手機占滿畫面。
-- 手機 01–04 快速導覽恢復為**單一左側固定浮動列**，不再變成內容中的第二排，也不再注入重複導覽。
-- 「今日台股狀態」在全市場資料落後一個交易日、但 ^TWII 已有同日可信行情時，改顯示「部分即時」與當日加權指數方向；市場廣度、成交動能與法人仍明確標示待更新，不拿舊資料冒充今日資料。
-- 「精選重大資訊」不再因新聞來源暫時空白而整塊無內容：優先顯示新鮮重大新聞，其次顯示近期已確認重大事件，再使用最近 7 天已驗證重大新聞，並以「近期事件／最近可用」標示來源時效。
-- 手機首頁順序調整為：事件月曆 → 今日市場重點 → 市場熱度／產業動能 → 今日台股狀態 → 我的資產 → 六大指數 → 今日新公布日期 → 精選重大資訊。
-- 保留日曆色點＋件數與日期 Bottom Sheet 明細，不恢復舊版長橫線。
+- 首頁不再直接下載 `assets.json`、`events.json`、`tw-chips.json`、`dividend-history.json` 等完整歷史資料。
+- 新增四個前端輕量資料契約：
+  - `home-assets.json`
+  - `home-events.json`
+  - `tw-market-compact.json`
+  - `tw-chips-compact.json`
+- 首頁、台股排行、法人籌碼、投資組合、stale guard、日期提醒、個股頁行情全部改用 compact 通道。
+- 完整 `events.json` 只在事件詳情找不到該事件時才按需下載，不再作為首頁開機依賴。
+- 個股 detail shard 從舊的一碼 0–9 分片改為二碼 00–99 分片；舊的一碼 shard 已從 release 移除，避免新舊格式同時存在。
+- 未知數字產業代碼（例如 `91`）不得直接成為首頁產業名稱；個股頁顯示「其他／未分類」。
+- 移除舊版 `mobile-global-quick-nav` 動態注入系統；首頁只保留一組左側固定 01–04 浮動導覽，其他頁只使用既有底部導覽。
+- Service Worker 保留 network-first 與一次性升版重載，但不再安裝時預抓大型 optional data。
+- 新增前端 payload budget gate；compact payload 超過限制時 CI 直接失敗。
+- `channel-health.json` 同時監控 compact 前端索引，前端資料缺失會被列為 critical health 問題。
 
-### 安裝／覆蓋
+### 發布規則
 
 1. GitHub Desktop 選擇 `market-event-radar`。
-2. 按 **Show in Explorer**。
-3. 解壓 `market-event-radar-v11.4.61-full-replace.zip`。
-4. 將 ZIP 第一層的所有檔案與資料夾直接覆蓋 repository root；不要多包一層資料夾。
-5. GitHub Desktop 應看到本版變更與刪除 `assets/v11.4.55-overrides.css`。
-6. Commit 建議：`market-event-radar-v11.4.61-full-replace`。
-7. Push 後等待 **Verify stable app release** 全部通過；Hosted Chromium 是正式瀏覽器 Gate。
+2. **Show in Explorer**。
+3. 保留 repository 內的 `.git`。
+4. 解壓 `market-event-radar-v11.5.0-full-replace.zip`。
+5. ZIP 第一層全部內容直接覆蓋 repository root，不要多包一層。
+6. 依 `DELETION-MANIFEST-v11.5.0.txt` 確認舊 release-only 檔案已移除。
+7. Commit 建議：`market-event-radar-v11.5.0-full-replace`。
+8. Push 後等待 `Verify stable app release` 與資料更新 workflows 完成。
 
 ### 驗證
 
-完整結果請看 `VALIDATION-v11.4.61.txt`。
+詳見 `VALIDATION-v11.5.0.txt` 與 `docs/V11.5.0-ARCHITECTURE.md`。

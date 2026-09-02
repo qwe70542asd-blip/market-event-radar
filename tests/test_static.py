@@ -63,7 +63,7 @@ class StaticTests(unittest.TestCase):
   for f in ("assets/home.js","assets/news.js","assets/event.js"):self.assertIn("startNewsChannels",self.read(f),f)
   self.assertIn("loadStockNews",self.read("assets/asset.js"))
   self.assertNotIn("startNewsChannels",self.read("assets/asset.js"))
-  self.assertIn('loadData("events.json"',self.read("assets/date-alerts.js"))
+  self.assertIn('loadData("home-events.json"',self.read("assets/date-alerts.js"))
  def test_news_page_blocks(self):
   html=self.read("news.html")
   for x in ("精選重大資訊","最新財經新聞","官方市場公告","個股重大訊息","latestNewsRows","news-hero-layout","portal-news-grid"):self.assertIn(x,html)
@@ -84,8 +84,11 @@ class StaticTests(unittest.TestCase):
   texts="\n".join(self.read(p.relative_to(ROOT)) for p in (ROOT/".github/workflows").glob("update-news-*.yml"))
   for branch in ("live-news-cna","live-news-moneydj","live-news-cnyes","live-news-udn","live-news-ltn","live-news-wealth","live-news-yahoo","live-news-technews","live-news-ctee","live-news-asia-risk"):self.assertIn(branch,texts)
  def test_service_worker_cache(self):
-  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-61",sw);self.assertIn("CORE_STATIC",sw);self.assertIn("OPTIONAL_STATIC",sw);self.assertIn("Promise.allSettled",sw)
-  for seed in ("news-cna-seed.js","news-moneydj-seed.js","news-wealth-seed.js","news-yahoo-seed.js","news-technews-seed.js","news-ctee-seed.js","news-asia-risk-seed.js","stock-news-seed.js","company-disclosures-seed.js","monthly-revenue-seed.js","dividend-history-seed.js","secondary-reference-seed.js","data-verification-seed.js","yahoo-details-seed.js","etf-details-seed.js","stock-basics-seed.js","market-volume-history-seed.js","market-kline-seed.js"):self.assertIn(seed,sw)
+  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-5-0",sw);self.assertIn("CORE_STATIC",sw);self.assertIn("OPTIONAL_STATIC",sw)
+  install=sw.split('self.addEventListener("install"',1)[1].split('self.addEventListener("activate"',1)[0]
+  self.assertNotIn("Promise.allSettled(OPTIONAL_STATIC",install)
+  optional=sw.split("const OPTIONAL_STATIC=",1)[1].split(";",1)[0]
+  for seed in ("news-cna-seed.js","stock-news-seed.js","yahoo-details-seed.js","data-verification-seed.js","market-kline-seed.js"):self.assertNotIn(seed,optional)
  def test_cross_market_validator_uses_exchange_local_timestamp(self):
   validator=self.read("scripts/validate_public_data.py")
   self.assertIn('row.get("market_at_local")',validator)
@@ -105,7 +108,7 @@ class StaticTests(unittest.TestCase):
  def test_all_pages_current_version(self):
   for p in ROOT.glob("*.html"):
    body=p.read_text(encoding="utf-8")
-   self.assertIn("v11.4.61",body,p.name)
+   self.assertIn("v11.5.0",body,p.name)
    self.assertNotIn("v11.4.15",body,p.name)
 
 
@@ -417,7 +420,8 @@ class StaticTests(unittest.TestCase):
  def test_v11422_event_dividend_and_news_ui_hardening(self):
   event=self.read("assets/event.js");home=self.read("assets/home.js");shared=self.read("assets/shared.js");asset=self.read("assets/asset.js")
   for token in ("event-facts-grid","事件說明","查看官方網頁","官方原始 API／文字檔已整理成本站內容"):self.assertIn(token,event+self.read("assets/styles.css"))
-  for token in ("金額待公告","event.html?id=", "dividend-history.json"):self.assertIn(token,home)
+  for token in ("金額待公告","event.html?id=", "home-events.json"):self.assertIn(token,home)
+  self.assertNotIn('loadData("dividend-history.json"',home)
   for token in ("fallback=","fetchpriority","remote-image-failed"):self.assertIn(token,shared+self.read("assets/styles.css"))
   for token in ("change_shares","待前一交易日","industry_name"):self.assertIn(token,asset+self.read("scripts/update_etf_details.py"))
 
@@ -443,9 +447,9 @@ class StaticTests(unittest.TestCase):
 
  def test_v11424_version_bump_prevents_same_version_asset_cache(self):
   for path in ("index.html","assets/home.js","assets/runtime-config.js","service-worker.js","VERSION.json"):
-   content=self.read(path);self.assertIn("11.4.61",content);self.assertNotIn("11.4.23",content);self.assertNotIn("11.4.22",content)
+   content=self.read(path);self.assertIn("11.5.0",content);self.assertNotIn("11.4.23",content);self.assertNotIn("11.4.22",content)
   index=self.read("index.html");sw=self.read("service-worker.js")
-  for token in ("assets/shared.js?v=11.4.61","assets/home.js?v=11.4.61","assets/sw-register.js?v=11.4.61"):
+  for token in ("assets/shared.js?v=11.5.0","assets/home.js?v=11.5.0","assets/sw-register.js?v=11.5.0"):
    self.assertIn(token,index+sw)
 
  def test_v11428_compact_market_state_replaces_sector_heat(self):
@@ -482,7 +486,7 @@ class StaticTests(unittest.TestCase):
    self.assertIn(token,shared)
 
  def test_v11428_featured_news_is_one_lead_plus_right_column(self):
-  home=self.read("assets/home.js");css=self.read("assets/styles.css")+self.read("assets/v11.4.61-overrides.css")
+  home=self.read("assets/home.js");css=self.read("assets/styles.css")+self.read("assets/v11.5.0-overrides.css")
   for token in ("home-news-feature-layout","home-feature-lead","home-feature-side-list","featured.slice(1,4)"):self.assertIn(token,home+css)
   self.assertIn("grid-template-rows:repeat(3,minmax(0,1fr))",css)
 
@@ -503,7 +507,7 @@ class StaticTests(unittest.TestCase):
 
  def test_v11428_mobile_calendar_has_no_forced_horizontal_scroll(self):
   css=self.read("assets/styles.css");html=self.read("index.html");manifest=json.loads(self.read("manifest.webmanifest"))
-  for token in (".calendar-weekdays,.calendar-grid{width:100%;min-width:0!important","overflow:visible!important","grid-template-columns:repeat(7,minmax(0,1fr))",".mobile-install-trigger","assets/pwa-install.js?v=11.4.61"):
+  for token in (".calendar-weekdays,.calendar-grid{width:100%;min-width:0!important","overflow:visible!important","grid-template-columns:repeat(7,minmax(0,1fr))",".mobile-install-trigger","assets/pwa-install.js?v=11.5.0"):
    self.assertIn(token,css+html)
   self.assertEqual(manifest.get("display"),"standalone")
   self.assertTrue(any(icon.get("sizes")=="192x192" for icon in manifest.get("icons",[])))
@@ -603,7 +607,7 @@ class StaticTests(unittest.TestCase):
 
  def test_v11431_edge_worker_is_current_and_uses_verified_time(self):
   worker=self.read("edge/market-live-worker.js")
-  self.assertIn('v11.4.61',worker);self.assertNotIn('v11.4.27',worker)
+  self.assertIn('v11.5.0',worker);self.assertNotIn('v11.4.27',worker)
   self.assertIn('missing verified quote time',worker)
   self.assertIn('marketDate(new Date(x.time*1000),market)',worker)
   self.assertIn('latestSession===session?previous?.close:latest?.close',worker)
@@ -684,7 +688,7 @@ class StaticTests(unittest.TestCase):
    self.assertIn(token,ignore)
   for token in ('NESTED_DIRS','REDUNDANT_WORKFLOWS','version_obsolete_paths','--check'):
    self.assertIn(token,cleanup)
-  self.assertIn('python scripts/cleanup_repo.py --check',verify);self.assertIn('verify-v11-4-61-${{ github.ref }}',verify)
+  self.assertIn('python scripts/cleanup_repo.py --check',verify);self.assertIn('verify-v11-5-0-${{ github.ref }}',verify)
 
  def test_v11438_home_portfolio_totals_fail_closed(self):
   home=self.read("assets/home.js")

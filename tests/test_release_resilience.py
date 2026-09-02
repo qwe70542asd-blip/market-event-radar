@@ -29,7 +29,7 @@ def test_news_loader_is_progressive_and_partial_success_safe():
     shared=read('assets/shared.js')
     news=read('assets/news.js')
     assert 'function startNewsChannels(options={})' in shared
-    assert 'Promise.allSettled(promises)' in shared
+    assert 'Promise.allSettled(workers)' in shared
     assert 'resolved_channel_count' in shared
     assert 'startNewsChannels({onUpdate' in news
     assert '已完成的新聞來源會先顯示' in news
@@ -54,9 +54,11 @@ def test_other_pages_no_longer_bind_optional_sources_at_boot():
     assert 'Promise.all([loadData("tw-market.json"' not in tw
     assert 'loadStockBasics().then' in tw
     assert 'Promise.all([' not in inst.split('\n',12)[0:12].__str__()
-    assert 'loadData("yahoo-details.json",yahooPayload).then' in inst
-    assert '事件資料同步中' in event and 'startNewsChannels({onUpdate' in event
-    assert 'loadData("assets.json",assets).then' in portfolio
+    assert 'loadData("yahoo-details.json",yahooPayload).then' not in inst
+    assert 'loadData("tw-chips-compact.json",payload).then' in inst
+    assert '事件資料同步中' in event and 'startNewsChannels({concurrency:2,onUpdate' in event
+    assert 'loadData("home-assets.json",assets).then' in portfolio
+    assert 'loadData("tw-market-compact.json",tw).then' in portfolio
     assert 'loadData("channel-health.json"' in status
     assert 'Promise.allSettled(jobs)' not in status
 

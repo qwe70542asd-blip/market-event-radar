@@ -25,8 +25,10 @@
     renderRelated();
   }
   if(event)renderEvent();else $("#eventDetail").innerHTML='<div class="empty">事件資料同步中…</div>';
-  const eventPromise=loadData("events.json",fallback).catch(()=>fallback),newsStream=MR.startNewsChannels({onUpdate:fresh=>{newsPayload=fresh;renderRelated()}});
+  const compactPromise=loadData("home-events.json",fallback).catch(()=>fallback),newsStream=MR.startNewsChannels({concurrency:2,onUpdate:fresh=>{newsPayload=fresh;renderRelated()}});
   newsPayload=newsStream.initial;renderRelated();
-  const live=await eventPromise,found=(live.events||[]).find(row=>row.id===id);if(found){event=found;renderEvent()}else if(!event)$("#eventDetail").innerHTML='<div class="empty">找不到事件，可能尚未由官方排程更新。</div>';
+  const compact=await compactPromise;let found=(compact.events||[]).find(row=>row.id===id);
+  if(!found&&id){const full=await loadData("events.json",fallback).catch(()=>fallback);found=(full.events||[]).find(row=>row.id===id)}
+  if(found){event=found;renderEvent()}else if(!event)$("#eventDetail").innerHTML='<div class="empty">找不到事件，可能尚未由官方排程更新。</div>';
   newsStream.done.then(fresh=>{newsPayload=fresh;renderRelated()}).catch(()=>{});
 })();

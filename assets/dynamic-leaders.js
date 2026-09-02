@@ -17,7 +17,7 @@
     return [...symbols].map(value=>value.toUpperCase().replace(/\.(?:TW|TWO)$/i,""));
   };
   const INDUSTRY_CODE_MAP={"01":"水泥","02":"食品","03":"塑膠","04":"紡織纖維","05":"電機機械","06":"電器電纜","08":"玻璃陶瓷","09":"造紙","10":"鋼鐵","11":"橡膠","12":"汽車","14":"建材營造","15":"航運","16":"觀光餐旅","17":"金融保險","18":"貿易百貨","20":"其他","21":"化學","22":"生技醫療","23":"油電燃氣","24":"半導體","25":"電腦及週邊設備","26":"光電","27":"通信網路","28":"電子零組件","29":"電子通路","30":"資訊服務","31":"其他電子","32":"數位雲端","33":"綠能環保","34":"電子商務","35":"居家生活","36":"運動休閒"};
-  function normalizeIndustry(value){const raw=clean(value);if(!raw)return"";const match=raw.match(/^0?(\d{1,2})$/);if(match)return INDUSTRY_CODE_MAP[String(match[1]).padStart(2,"0")]||"其他";return raw;}
+  function normalizeIndustry(value){const raw=clean(value);if(!raw)return"";const match=raw.match(/^0?(\d{1,3})$/);if(match)return INDUSTRY_CODE_MAP[String(match[1]).padStart(2,"0")]||"其他";if(/^\d+(?:[.\-]\d+)?$/.test(raw))return"其他";return raw;}
   function classifySector(row={},basic={}){
     const symbol=String(row.symbol||basic.symbol||"");
     const name=clean(row.name||basic.short_name||basic.company_name||"");

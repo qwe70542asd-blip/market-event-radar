@@ -1,0 +1,14 @@
+Market Event Radar v11.5.0 deletion manifest
+
+覆蓋前請保留 repository 根目錄的 .git。
+覆蓋後移除任何舊 release-only 檔案：
+- assets/v11.4.*-overrides.css
+- ONE-CLICK-REPLACE-v11.4.*.cmd
+- DELETION-MANIFEST-v11.4.*.txt
+- VALIDATION-v11.4.*.txt
+
+本版保留：
+- assets/v11.5.0-overrides.css
+- ONE-CLICK-REPLACE-v11.5.0.cmd
+- DELETION-MANIFEST-v11.5.0.txt
+- VALIDATION-v11.5.0.txt

@@ -1,18 +1,12 @@
-Market Event Radar v11.4.61 FULL REPLACEMENT
+Market Event Radar v11.5.0 FULL REPLACEMENT
 
 1. GitHub Desktop 選 market-event-radar。
 2. Show in Explorer。
-3. 將 market-event-radar-v11.4.61-full-replace.zip 解壓。
-4. ZIP 第一層所有內容直接覆蓋 repository root，不要多一層資料夾。
-5. 確認 assets/v11.4.55-overrides.css 被刪除，assets/v11.4.61-overrides.css 新增。
-6. GitHub Desktop 檢查 Changes。
-7. Commit 建議：market-event-radar-v11.4.61-full-replace
-8. Push origin。
-9. 等 Verify stable app release 全綠。
-
-v11.4.61 手機重點：
-- 事件月曆首頁第一主要區塊。
-- 進階篩選預設收合。
-- 01–04 單一左側固定浮動列。
-- 台股全市場落後但 ^TWII 已更新時顯示「部分即時」，不整卡空白。
-- 精選重大資訊加入近期事件／最近可用保底，避免空白卡片。
+3. 保留 .git。
+4. 解壓 market-event-radar-v11.5.0-full-replace.zip。
+5. 將 ZIP 第一層全部檔案與資料夾覆蓋 repository 根目錄。
+6. 不要把解壓後的外層資料夾整包放進 repository。
+7. 確認舊 v11.4 release-only 檔案與舊一碼 asset-detail-shard-0..9 已移除。
+8. GitHub Desktop Summary 建議：market-event-radar-v11.5.0-full-replace
+9. Commit to main → Push origin。
+10. 等 Verify stable app release 與 live-data-verification 更新完成。

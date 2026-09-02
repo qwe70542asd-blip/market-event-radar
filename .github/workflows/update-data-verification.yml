@@ -8,6 +8,8 @@ on:
       - "scripts/update_data_verification.py"
       - "scripts/update_channel_health.py"
       - "scripts/update_asset_detail_shards.py"
+      - "scripts/update_frontend_indexes.py"
+      - "scripts/validate_frontend_payloads.py"
       - "scripts/restore_data_branch.sh"
       - "scripts/wait_for_data_channels.py"
       - "scripts/publish_data_branch.sh"
@@ -45,17 +47,7 @@ jobs:
         run: |
           bash scripts/restore_data_branch.sh live-data-verification \
             "data-verification.json:data/data-verification.json" \
-            "channel-health.json:data/channel-health.json" \
-            "asset-detail-shard-0.json:data/asset-detail-shard-0.json" \
-            "asset-detail-shard-1.json:data/asset-detail-shard-1.json" \
-            "asset-detail-shard-2.json:data/asset-detail-shard-2.json" \
-            "asset-detail-shard-3.json:data/asset-detail-shard-3.json" \
-            "asset-detail-shard-4.json:data/asset-detail-shard-4.json" \
-            "asset-detail-shard-5.json:data/asset-detail-shard-5.json" \
-            "asset-detail-shard-6.json:data/asset-detail-shard-6.json" \
-            "asset-detail-shard-7.json:data/asset-detail-shard-7.json" \
-            "asset-detail-shard-8.json:data/asset-detail-shard-8.json" \
-            "asset-detail-shard-9.json:data/asset-detail-shard-9.json"
+            "channel-health.json:data/channel-health.json"
           bash scripts/restore_data_branch.sh live-assets "assets.json:data/assets.json" "asset-audit.json:data/asset-audit.json"
           bash scripts/restore_data_branch.sh live-tw-market \
             "tw-market.json:data/tw-market.json" \
@@ -85,7 +77,11 @@ jobs:
       - name: Refresh full cross-source verification
         if: github.event_name != 'schedule' || github.event.schedule == '58 * * * *'
         run: python scripts/update_data_verification.py
-      - name: Build bounded per-symbol detail shards
+      - name: Build compact frontend indexes
+        run: |
+          python scripts/update_frontend_indexes.py
+          python scripts/validate_frontend_payloads.py
+      - name: Build bounded two-digit per-symbol detail shards
         run: python scripts/update_asset_detail_shards.py
       - name: Build compact fail-closed channel health index
         run: python scripts/update_channel_health.py
@@ -104,4 +100,4 @@ jobs:
       - name: Publish verification and health channel
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: bash scripts/publish_data_branch.sh live-data-verification live-data-verification data/data-verification.json data/data-verification-seed.js data/channel-health.json data/channel-health-seed.js data/asset-detail-shard-0.json data/asset-detail-shard-1.json data/asset-detail-shard-2.json data/asset-detail-shard-3.json data/asset-detail-shard-4.json data/asset-detail-shard-5.json data/asset-detail-shard-6.json data/asset-detail-shard-7.json data/asset-detail-shard-8.json data/asset-detail-shard-9.json
+        run: bash scripts/publish_data_branch.sh live-data-verification live-data-verification data/data-verification.json data/data-verification-seed.js data/channel-health.json data/channel-health-seed.js data/home-assets.json data/home-events.json data/tw-market-compact.json data/tw-chips-compact.json data/asset-detail-shard-*.json

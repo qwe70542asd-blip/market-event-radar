@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build a compact, fail-closed health index for every public data channel.
 
-v11.4.61 sealing rules:
+v11.5.0 sealing rules:
 - computed staleness has priority over a missing/"pending" metadata.status;
 - non-empty, recently updated payloads without a status are inferred healthy instead
   of being reported as pending forever;
@@ -45,6 +45,10 @@ SPECS: list[tuple[str, str, int]] = [
     ("official-market-notices.json", "官方市場公告", 12 * 3600),
     ("company-disclosures.json", "個股重大訊息", 12 * 3600),
     ("data-verification.json", "資料交叉驗證", 3 * 3600),
+    ("home-assets.json", "前端標的輕量索引", 3600),
+    ("home-events.json", "前端事件輕量索引", 3600),
+    ("tw-market-compact.json", "前端台股輕量行情", 3600),
+    ("tw-chips-compact.json", "前端法人輕量籌碼", 3600),
 ]
 
 CRITICAL = {
@@ -54,6 +58,10 @@ CRITICAL = {
     "market-kline.json",
     "events.json",
     "data-verification.json",
+    "home-assets.json",
+    "home-events.json",
+    "tw-market-compact.json",
+    "tw-chips-compact.json",
 }
 BAD = {"failed", "error", "unavailable", "circuit-open"}
 PARTIAL = {"warning", "partial", "fallback", "degraded"}
@@ -233,6 +241,7 @@ def classify(file: str, payload: dict[str, Any], max_age_seconds: int) -> dict[s
         "effective_max_age_seconds": effective_max_age,
         "stale": status == "stale",
         "item_count": cardinality(payload),
+        "payload_bytes": (DATA / file).stat().st_size if (DATA / file).exists() else 0,
         "error_count": error_count,
         "nested_degraded_count": len(bad_children),
         "item_timestamp_checked": checked,

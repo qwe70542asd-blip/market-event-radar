@@ -1,4 +1,4 @@
-# v11.4.61 compatibility note only: legacy needs: deploy -> live-runtime publication was removed in v11.4.61.
+# v11.5.0 compatibility note only: legacy needs: deploy -> live-runtime publication was removed in v11.5.0.
 name: Deploy live market worker
 on:
   workflow_dispatch:
@@ -88,4 +88,4 @@ jobs:
           PY
 
       - name: Production readiness and endpoint contract
-        run: python scripts/production_readiness.py --endpoint "$LIVE_MARKET_ENDPOINT" --require-live --version v11.4.61
+        run: python scripts/production_readiness.py --endpoint "$LIVE_MARKET_ENDPOINT" --require-live --version v11.5.0

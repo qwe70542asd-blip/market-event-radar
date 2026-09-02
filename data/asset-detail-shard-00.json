@@ -1,0 +1,551 @@
+{
+  "metadata": {
+    "version": "v11.5.0",
+    "updated_at": "2026-09-02T12:25:42+08:00",
+    "status": "ok",
+    "item_count": 11,
+    "shard": "00",
+    "shard_basis": "first-two-symbol-characters",
+    "payload_mode": "single-asset-detail-bounded",
+    "sources": {
+      "assets": {
+        "version": "v11.4.46",
+        "updated_at": null,
+        "note": "Taiwan stocks and ETFs only; cryptocurrency assets are intentionally excluded."
+      },
+      "tw_chips": {
+        "version": "v11.4.46",
+        "updated_at": null,
+        "trading_date": null,
+        "source": "TWSE official structured data; Yahoo Taiwan reference fallback",
+        "note": "Bundled fallback sanitized for v11.4.46; live updater refreshes TWSE/TPEx official channels and removes invalid nested dates.",
+        "invalid_nested_dates_removed": 0,
+        "invalid_legacy_dates_removed": 0,
+        "schema": "symbol-keyed-v2"
+      },
+      "monthly_revenue": {
+        "version": "v11.4.46",
+        "updated_at": null,
+        "status": "waiting",
+        "symbol_count": 0,
+        "record_count": 0,
+        "note": "Waiting for the isolated monthly-revenue workflow."
+      },
+      "dividend_history": {
+        "version": "v11.4.46",
+        "updated_at": null,
+        "status": "waiting",
+        "symbol_count": 0,
+        "record_count": 0,
+        "note": "Waiting for the isolated dividend-history workflow."
+      },
+      "secondary_reference": {
+        "version": "v11.4.46",
+        "updated_at": null,
+        "status": "waiting",
+        "item_count": 0
+      },
+      "yahoo_details": {
+        "version": "v11.4.46",
+        "updated_at": null,
+        "status": "waiting",
+        "item_count": 0,
+        "note": "Yahoo detail reference channel has not run yet."
+      },
+      "etf_details": {
+        "version": "v11.4.46",
+        "updated_at": null,
+        "status": "waiting",
+        "item_count": 0,
+        "note": "ETF details will accumulate from TWSE ETF e添富, MoneyDJ and HiStock after deployment."
+      },
+      "stock_basics": {
+        "version": "v11.4.46",
+        "updated_at": "2026-08-05T15:23:00+08:00",
+        "status": "seeded",
+        "item_count": 10,
+        "note": "Company-master coverage and financial-data coverage are separate metrics. A high company-master score never implies complete financial statements.",
+        "average_basic_coverage_percent": 100.0,
+        "average_financial_coverage_percent": 13.6
+      },
+      "data_verification": {
+        "version": "v11.4.46",
+        "updated_at": "2026-08-10T09:53:46+08:00",
+        "status": "partial",
+        "counts": {
+          "conflict": 0,
+          "multi_source": 0,
+          "official": 7,
+          "calculated": 0,
+          "estimated": 0,
+          "reference": 0,
+          "missing": 10
+        },
+        "trust_counts": {
+          "conflict": 0,
+          "multi_source": 0,
+          "official": 7,
+          "calculated": 0,
+          "estimated": 0,
+          "reference": 0,
+          "missing": 10
+        },
+        "completeness_counts": {
+          "complete": 0,
+          "partial": 17,
+          "unresolved": 0
+        },
+        "average_field_coverage_percent": 30.7,
+        "stale_sources": [
+          "assets",
+          "asset_audit",
+          "tw_market",
+          "monthly_revenue",
+          "dividend_history",
+          "secondary_reference",
+          "yahoo_details",
+          "etf_details"
+        ],
+        "version_mismatch_sources": [],
+        "verification_basis": "isolated stock/ETF adapters; per-symbol source timestamps when available; channel snapshots retained separately",
+        "note": "Official values are primary. Optional channels are fail-closed and never leak state across asset classes."
+      }
+    },
+    "note": "Asset pages load only one symbol-prefix shard instead of all full historical datasets."
+  },
+  "items": {
+    "00403A": {
+      "asset": {
+        "id": "TW:00403A",
+        "asset_class": "etf",
+        "market": "TW",
+        "exchange": "TWSE",
+        "symbol": "00403A",
+        "name": "主動統一升級50",
+        "sub_industry": "台灣主動式 ETF",
+        "currency": "TWD",
+        "etf": {
+          "issuer": "統一證券投資信託股份有限公司",
+          "category": "主動式 ETF",
+          "benchmark": "臺灣證券交易所發行量加權股價報酬指數",
+          "strategy": "大型企業核心搭配增強選股；實際持股依投信最新揭露。"
+        }
+      },
+      "verification": {
+        "overall": "official",
+        "trust_overall": "official",
+        "completeness_status": "partial",
+        "coverage_percent": 46.15,
+        "missing_fields": [
+          "基金經理人",
+          "保管銀行",
+          "成立日期",
+          "上市／上櫃日期",
+          "配息資訊",
+          "成分股揭露狀態",
+          "產業配置"
+        ],
+        "fields": {
+          "quote": {
+            "status": "missing"
+          },
+          "monthly_revenue": {
+            "status": "not_applicable"
+          },
+          "dividends": {
+            "status": "missing"
+          },
+          "metrics": {
+            "status": "not_applicable",
+            "fields": {}
+          }
+        },
+        "reference_links": {
+          "yahoo": "https://tw.stock.yahoo.com/quote/00403A.TW",
+          "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=00403A",
+          "moneydj_etf": "https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=00403A.TW",
+          "histock_etf": "https://histock.tw/stock/active-etf.aspx"
+        },
+        "updated_at": "2026-08-10T09:53:46+08:00"
+      }
+    },
+    "0050": {
+      "asset": {
+        "id": "TW:0050",
+        "asset_class": "etf",
+        "market": "TW",
+        "exchange": "TWSE",
+        "symbol": "0050",
+        "name": "元大台灣50",
+        "sub_industry": "台灣市值型 ETF",
+        "currency": "TWD",
+        "etf": {
+          "issuer": "元大證券投資信託股份有限公司",
+          "category": "台股 ETF",
+          "benchmark": "臺灣50指數"
+        }
+      },
+      "verification": {
+        "overall": "official",
+        "trust_overall": "official",
+        "completeness_status": "partial",
+        "coverage_percent": 46.15,
+        "missing_fields": [
+          "基金經理人",
+          "保管銀行",
+          "成立日期",
+          "上市／上櫃日期",
+          "配息資訊",
+          "成分股揭露狀態",
+          "產業配置"
+        ],
+        "fields": {
+          "quote": {
+            "status": "missing"
+          },
+          "monthly_revenue": {
+            "status": "not_applicable"
+          },
+          "dividends": {
+            "status": "missing"
+          },
+          "metrics": {
+            "status": "not_applicable",
+            "fields": {}
+          }
+        },
+        "reference_links": {
+          "yahoo": "https://tw.stock.yahoo.com/quote/0050.TW",
+          "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=0050",
+          "moneydj_etf": "https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=0050.TW",
+          "histock_etf": "https://histock.tw/stock/active-etf.aspx"
+        },
+        "updated_at": "2026-08-10T09:53:46+08:00"
+      }
+    },
+    "006208": {
+      "asset": {
+        "id": "TW:006208",
+        "asset_class": "etf",
+        "market": "TW",
+        "exchange": "TWSE",
+        "symbol": "006208",
+        "name": "富邦台50",
+        "sub_industry": "台灣市值型 ETF",
+        "currency": "TWD",
+        "etf": {
+          "issuer": "富邦證券投資信託股份有限公司",
+          "category": "台股 ETF",
+          "benchmark": "臺灣50指數"
+        }
+      },
+      "verification": {
+        "overall": "official",
+        "trust_overall": "official",
+        "completeness_status": "partial",
+        "coverage_percent": 46.15,
+        "missing_fields": [
+          "基金經理人",
+          "保管銀行",
+          "成立日期",
+          "上市／上櫃日期",
+          "配息資訊",
+          "成分股揭露狀態",
+          "產業配置"
+        ],
+        "fields": {
+          "quote": {
+            "status": "missing"
+          },
+          "monthly_revenue": {
+            "status": "not_applicable"
+          },
+          "dividends": {
+            "status": "missing"
+          },
+          "metrics": {
+            "status": "not_applicable",
+            "fields": {}
+          }
+        },
+        "reference_links": {
+          "yahoo": "https://tw.stock.yahoo.com/quote/006208.TW",
+          "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=006208",
+          "moneydj_etf": "https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=006208.TW",
+          "histock_etf": "https://histock.tw/stock/active-etf.aspx"
+        },
+        "updated_at": "2026-08-10T09:53:46+08:00"
+      }
+    },
+    "00631L": {
+      "asset": {
+        "id": "TW:00631L",
+        "asset_class": "etf",
+        "market": "TW",
+        "exchange": "TWSE",
+        "symbol": "00631L",
+        "name": "元大台灣50正2",
+        "sub_industry": "台灣槓桿型 ETF",
+        "currency": "TWD",
+        "etf": {
+          "issuer": "元大證券投資信託股份有限公司",
+          "category": "股票槓反 ETF",
+          "benchmark": "臺灣50指數",
+          "strategy": "追求臺灣50指數單日報酬的兩倍。"
+        }
+      },
+      "verification": {
+        "overall": "official",
+        "trust_overall": "official",
+        "completeness_status": "partial",
+        "coverage_percent": 46.15,
+        "missing_fields": [
+          "基金經理人",
+          "保管銀行",
+          "成立日期",
+          "上市／上櫃日期",
+          "配息資訊",
+          "成分股揭露狀態",
+          "產業配置"
+        ],
+        "fields": {
+          "quote": {
+            "status": "missing"
+          },
+          "monthly_revenue": {
+            "status": "not_applicable"
+          },
+          "dividends": {
+            "status": "missing"
+          },
+          "metrics": {
+            "status": "not_applicable",
+            "fields": {}
+          }
+        },
+        "reference_links": {
+          "yahoo": "https://tw.stock.yahoo.com/quote/00631L.TW",
+          "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=00631L",
+          "moneydj_etf": "https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=00631L.TW",
+          "histock_etf": "https://histock.tw/stock/active-etf.aspx"
+        },
+        "updated_at": "2026-08-10T09:53:46+08:00"
+      }
+    },
+    "00663L": {
+      "asset": {
+        "id": "TW:00663L",
+        "asset_class": "etf",
+        "market": "TW",
+        "exchange": "TWSE",
+        "symbol": "00663L",
+        "name": "國泰臺灣加權正2",
+        "sub_industry": "台灣槓桿型 ETF",
+        "currency": "TWD",
+        "etf": {
+          "issuer": "國泰證券投資信託股份有限公司",
+          "category": "股票槓反 ETF",
+          "strategy": "追求臺灣加權指數單日報酬的兩倍。"
+        }
+      },
+      "verification": {
+        "overall": "official",
+        "trust_overall": "official",
+        "completeness_status": "partial",
+        "coverage_percent": 38.46,
+        "missing_fields": [
+          "基金經理人",
+          "保管銀行",
+          "成立日期",
+          "上市／上櫃日期",
+          "追蹤指數／主動式",
+          "配息資訊",
+          "成分股揭露狀態",
+          "產業配置"
+        ],
+        "fields": {
+          "quote": {
+            "status": "missing"
+          },
+          "monthly_revenue": {
+            "status": "not_applicable"
+          },
+          "dividends": {
+            "status": "missing"
+          },
+          "metrics": {
+            "status": "not_applicable",
+            "fields": {}
+          }
+        },
+        "reference_links": {
+          "yahoo": "https://tw.stock.yahoo.com/quote/00663L.TW",
+          "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=00663L",
+          "moneydj_etf": "https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=00663L.TW",
+          "histock_etf": "https://histock.tw/stock/active-etf.aspx"
+        },
+        "updated_at": "2026-08-10T09:53:46+08:00"
+      }
+    },
+    "009816": {
+      "asset": {
+        "id": "TW:009816",
+        "asset_class": "etf",
+        "market": "TW",
+        "exchange": "TWSE",
+        "symbol": "009816",
+        "name": "凱基台灣TOP50",
+        "sub_industry": "台灣市值型 ETF",
+        "currency": "TWD",
+        "etf": {
+          "issuer": "凱基證券投資信託股份有限公司",
+          "category": "台股 ETF"
+        }
+      },
+      "verification": {
+        "overall": "official",
+        "trust_overall": "official",
+        "completeness_status": "partial",
+        "coverage_percent": 38.46,
+        "missing_fields": [
+          "基金經理人",
+          "保管銀行",
+          "成立日期",
+          "上市／上櫃日期",
+          "追蹤指數／主動式",
+          "配息資訊",
+          "成分股揭露狀態",
+          "產業配置"
+        ],
+        "fields": {
+          "quote": {
+            "status": "missing"
+          },
+          "monthly_revenue": {
+            "status": "not_applicable"
+          },
+          "dividends": {
+            "status": "missing"
+          },
+          "metrics": {
+            "status": "not_applicable",
+            "fields": {}
+          }
+        },
+        "reference_links": {
+          "yahoo": "https://tw.stock.yahoo.com/quote/009816.TW",
+          "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=009816",
+          "moneydj_etf": "https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=009816.TW",
+          "histock_etf": "https://histock.tw/stock/active-etf.aspx"
+        },
+        "updated_at": "2026-08-10T09:53:46+08:00"
+      }
+    },
+    "00981A": {
+      "asset": {
+        "id": "TW:00981A",
+        "asset_class": "etf",
+        "market": "TW",
+        "exchange": "TWSE",
+        "symbol": "00981A",
+        "name": "主動統一台股增長",
+        "sub_industry": "台灣主動式 ETF",
+        "currency": "TWD",
+        "etf": {
+          "issuer": "統一證券投資信託股份有限公司",
+          "category": "主動式 ETF",
+          "strategy": "大型、創新與成長選股；成分股依最新官方揭露。"
+        }
+      },
+      "verification": {
+        "overall": "official",
+        "trust_overall": "official",
+        "completeness_status": "partial",
+        "coverage_percent": 46.15,
+        "missing_fields": [
+          "基金經理人",
+          "保管銀行",
+          "成立日期",
+          "上市／上櫃日期",
+          "配息資訊",
+          "成分股揭露狀態",
+          "產業配置"
+        ],
+        "fields": {
+          "quote": {
+            "status": "missing"
+          },
+          "monthly_revenue": {
+            "status": "not_applicable"
+          },
+          "dividends": {
+            "status": "missing"
+          },
+          "metrics": {
+            "status": "not_applicable",
+            "fields": {}
+          }
+        },
+        "reference_links": {
+          "yahoo": "https://tw.stock.yahoo.com/quote/00981A.TW",
+          "goodinfo": "https://goodinfo.tw/tw/StockDetail.asp?STOCK_ID=00981A",
+          "moneydj_etf": "https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=00981A.TW",
+          "histock_etf": "https://histock.tw/stock/active-etf.aspx"
+        },
+        "updated_at": "2026-08-10T09:53:46+08:00"
+      }
+    },
+    "AAPL": {
+      "asset": {
+        "id": "US:AAPL",
+        "asset_class": "stock",
+        "market": "US",
+        "exchange": "NASDAQ",
+        "symbol": "AAPL",
+        "name": "Apple",
+        "currency": "USD",
+        "metrics": {},
+        "financials": []
+      }
+    },
+    "META": {
+      "asset": {
+        "id": "US:META",
+        "asset_class": "stock",
+        "market": "US",
+        "exchange": "NASDAQ",
+        "symbol": "META",
+        "name": "Meta",
+        "currency": "USD",
+        "metrics": {},
+        "financials": []
+      }
+    },
+    "MSFT": {
+      "asset": {
+        "id": "US:MSFT",
+        "asset_class": "stock",
+        "market": "US",
+        "exchange": "NASDAQ",
+        "symbol": "MSFT",
+        "name": "Microsoft",
+        "currency": "USD",
+        "metrics": {},
+        "financials": []
+      }
+    },
+    "NVDA": {
+      "asset": {
+        "id": "US:NVDA",
+        "asset_class": "stock",
+        "market": "US",
+        "exchange": "NASDAQ",
+        "symbol": "NVDA",
+        "name": "NVIDIA",
+        "currency": "USD",
+        "metrics": {},
+        "financials": []
+      }
+    }
+  }
+}

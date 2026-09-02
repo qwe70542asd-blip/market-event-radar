@@ -3,7 +3,7 @@
  */
 (()=>{
   "use strict";
-  const APP_VERSION="v11.4.61";
+  const APP_VERSION="v11.5.0";
   const SCHEMA_VERSION="market-snapshot-v2";
   const EXPECTED_HOST="market-event-radar-live.qwe70542asd.workers.dev";
   const ENDPOINT=`https://${EXPECTED_HOST}`;

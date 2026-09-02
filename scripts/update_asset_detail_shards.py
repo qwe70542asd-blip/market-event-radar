@@ -5,7 +5,7 @@ from typing import Any
 
 from common import DATA, NOW, VERSION, read_json, write_payload
 
-SHARDS = "0123456789"
+SHARDS = tuple(f"{value:02d}" for value in range(100))
 
 
 def mapping(value: Any) -> dict[str, Any]:
@@ -56,7 +56,7 @@ def main() -> None:
     symbols = set(assets) | set(chips) | set(revenue) | set(dividends) | set(secondary) | set(yahoo) | set(etf) | set(basics) | set(verification)
     buckets: dict[str, dict[str, Any]] = {key: {} for key in SHARDS}
     for symbol in sorted(symbols):
-        key = symbol[:1] if symbol[:1] in buckets else "0"
+        key = symbol[:2] if len(symbol) >= 2 and symbol[:2].isdigit() and symbol[:2] in buckets else "00"
         row: dict[str, Any] = {}
         if symbol in assets: row["asset"] = assets[symbol]
         if symbol in chips: row["chip"] = chips[symbol]
@@ -84,7 +84,7 @@ def main() -> None:
                 "status": "ok" if buckets[key] else "waiting",
                 "item_count": len(buckets[key]),
                 "shard": key,
-                "shard_basis": "first-symbol-character",
+                "shard_basis": "first-two-symbol-characters",
                 "payload_mode": "single-asset-detail-bounded",
                 "sources": sources,
                 "note": "Asset pages load only one symbol-prefix shard instead of all full historical datasets.",

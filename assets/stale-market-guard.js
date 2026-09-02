@@ -1,4 +1,4 @@
-// v11.4.61: fail closed for stale breadth/chips, but keep a verified same-session TAIEX quote visible.
+// v11.5.0: fail closed for stale breadth/chips, but keep a verified same-session TAIEX quote visible.
 (()=>{
   "use strict";
   const fmtDay=value=>String(value||"").slice(0,10);
@@ -59,7 +59,7 @@
     const twFallback=window.__TW_MARKET_SEED__||{items:[],metadata:{}},chipsFallback=window.__TW_CHIPS_SEED__||{markets:{},metadata:{}},snapFallback=window.__MARKET_SNAPSHOT_SEED__||{items:[],metadata:{}};
     try{
       const [tw,chips,snapshot]=await Promise.all([
-        MR.loadData("tw-market.json",twFallback,{force:true}).catch(()=>twFallback),MR.loadData("tw-chips.json",chipsFallback,{force:true}).catch(()=>chipsFallback),MR.loadData("market-snapshot.json",snapFallback,{force:true}).catch(()=>snapFallback)
+        MR.loadData("tw-market-compact.json",twFallback,{force:true}).catch(()=>twFallback),MR.loadData("tw-chips-compact.json",chipsFallback,{force:true}).catch(()=>chipsFallback),MR.loadData("market-snapshot.json",snapFallback,{force:true}).catch(()=>snapFallback)
       ]);
       const marketDate=fmtDay(tw?.metadata?.trading_date),chipDate=fmtDay(chips?.metadata?.trading_date),twii=(snapshot?.items||[]).find(row=>String(row?.symbol||"").toUpperCase()==="^TWII"),referenceDate=fmtDay(twii?.session_date||twii?.price_date||twii?.ohlc_date);
       let referenceChange=finite(twii?.change_percent);const price=finite(twii?.price),prev=finite(twii?.previous_close);if(referenceChange==null&&price!=null&&prev!=null&&prev!==0)referenceChange=(price-prev)/prev*100;

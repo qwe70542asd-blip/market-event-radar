@@ -1,45 +1,22 @@
 {
-  "version": "v11.4.61",
-  "release_type": "full-replacement",
-  "pytest": {
+  "version": "v11.5.0",
+  "status": "pass-with-browser-environment-block",
+  "tests": {
+    "pytest_passed": 326,
+    "http_pages": 7,
+    "http_assets": 38,
+    "workflow_yaml": 16,
+    "live_branches": 24
+  },
+  "architecture": {
+    "compact_frontend": true,
+    "two_digit_asset_shards": true,
+    "legacy_mobile_quick_nav_removed": true,
+    "unknown_numeric_industry_blocked": true
+  },
+  "browser_smoke": "blocked_by_administrator_localhost",
+  "live_source_contract": {
     "status": "pass",
-    "passed": 312
-  },
-  "workflow_yaml": {
-    "status": "pass",
-    "count": 16
-  },
-  "http_smoke": {
-    "status": "pass",
-    "pages": 7,
-    "referenced_assets": 44
-  },
-  "security_audit": "pass",
-  "production_readiness": "pass",
-  "public_data_validation": "pass",
-  "duplicate_navigation_audit": "pass",
-  "partial_live_taiex_dom": "pass",
-  "official_live_source_contract": {
-    "status": "pass-with-environment-warnings",
-    "warnings": 5
-  },
-  "chromium_local": {
-    "status": "environment-blocked",
-    "reason": "ERR_BLOCKED_BY_ADMINISTRATOR for localhost navigation"
-  },
-  "hosted_chromium_required_after_push": true,
-  "final_package_recheck": {
-    "zip_root_structure": "pass",
-    "reextracted_pytest": "312 passed",
-    "http_smoke": "7 pages / 44 referenced assets",
-    "structural_regressions": "pass",
-    "sha256": "sidecar file"
-  },
-  "sealed_repairs": {
-    "stale_pending_classification": "pass",
-    "institutional_trading_date_gate": "pass",
-    "yahoo_item_freshness_96h": "pass",
-    "numeric_industry_code_filter": "pass",
-    "asset_detail_shards_bundled": 10
+    "external_warnings": 5
   }
 }

@@ -52,6 +52,6 @@
   // Never leave this panel on a permanent loading placeholder.  Seed data is
   // rendered immediately; verified live data replaces it when available.
   render(fallback);
-  const livePromise=window.__MR_EVENT_LIVE_PROMISE__||loadData("events.json",fallback);
+  const livePromise=window.__MR_EVENT_LIVE_PROMISE__||loadData("home-events.json",fallback);
   livePromise.then(render).catch(()=>render(fallback));
 })();

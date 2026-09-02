@@ -2,19 +2,19 @@
   "use strict";
   const {$,$$,escapeHtml,fmt,pct,cls,formatTime,loadData,loadStockBasics,loadStockNews,finite,stripHtml,normalizeText,renderNewsThumb,safeExternalHref,loadWatchlist,toggleWatchlist}=MR;
   const symbol=(new URLSearchParams(location.search).get("symbol")||"2330").toUpperCase();
-  // v11.4.61 sealed bounded asset bootstrap: load the official market quote plus
+  // v11.5.0 sealed bounded asset bootstrap: load the official market quote plus
   // one symbol-prefix detail shard.  Large history/detail channels are assembled
   // server-side, so opening one stock never downloads all stocks' histories.
-  const shard=/^[0-9]/.test(symbol)?symbol[0]:"0";
+  const shard=/^\d{2}/.test(symbol)?symbol.slice(0,2):"00";
   const [marketPayload,detailPayload]=await Promise.all([
-    loadData("tw-market.json",window.__TW_MARKET_SEED__||{items:[]}),
+    loadData("tw-market-compact.json",window.__TW_MARKET_SEED__||{items:[]}),
     loadData(`asset-detail-shard-${shard}.json`,{metadata:{status:"waiting",sources:{}},items:{}})
   ]);
   const detail=detailPayload.items?.[symbol]||{},sourceMeta=detailPayload.metadata?.sources||{};
   const one=(key,value)=>({metadata:sourceMeta[key]||{},items:{[symbol]:value}});
   const assetPayload={metadata:sourceMeta.assets||{},assets:detail.asset?[detail.asset]:[]};
   const chipPayload=one("tw_chips",detail.chip||{}),revenuePayload=one("monthly_revenue",detail.revenue||[]),dividendPayload=one("dividend_history",detail.dividends||[]),secondaryPayload=one("secondary_reference",detail.secondary||{}),verificationPayload=one("data_verification",detail.verification||{}),etfPayload=one("etf_details",detail.etf||{}),stockBasicsPayload=one("stock_basics",detail.stock_basic||{});
-  const eventPromise=loadData("events.json",window.__EVENT_SEED__||{events:[]});
+  const eventPromise=loadData("home-events.json",window.__EVENT_SEED__||{events:[]});
   const stockNewsPromise=loadStockNews();
   const officialQuote=(marketPayload.items||[]).find(row=>String(row.symbol||"").toUpperCase()===symbol)||{};
   const secondaryQuote=detail.secondary||{};
@@ -58,7 +58,13 @@
   const INDUSTRIES={
     "01":"水泥工業","02":"食品工業","03":"塑膠工業","04":"紡織纖維","05":"電機機械","06":"電器電纜","07":"化學生技醫療","08":"玻璃陶瓷","09":"造紙工業","10":"鋼鐵工業","11":"橡膠工業","12":"汽車工業","13":"電子工業","14":"建材營造","15":"航運業","16":"觀光餐旅","17":"金融保險業","18":"貿易百貨","20":"其他業","21":"化學工業","22":"生技醫療業","23":"油電燃氣業","24":"半導體業","25":"電腦及週邊設備業","26":"光電業","27":"通信網路業","28":"電子零組件業","29":"電子通路業","30":"資訊服務業","31":"其他電子業","32":"文化創意業","33":"農業科技業","34":"電子商務","35":"綠能環保","36":"數位雲端","37":"運動休閒","38":"居家生活"
   };
-  const industryName=value=>INDUSTRIES[String(value||"").padStart(2,"0")]||value||"";
+  const industryName=value=>{
+    const raw=String(value||"").trim();if(!raw)return"";
+    const numeric=raw.match(/^0?(\d{1,3})$/);
+    if(numeric)return INDUSTRIES[String(numeric[1]).padStart(2,"0")]||"其他／未分類";
+    if(/^\d+(?:[.\-]\d+)?$/.test(raw))return"其他／未分類";
+    return raw;
+  };
   const compactNumber=(value,unit="")=>finite(value)==null?"":`${fmt(value,0)}${unit}`;
   const trustLabel=status=>status==="multi_source"?"多來源一致":status==="official"?"官方確認":status==="calculated"?"計算值":status==="estimated"?"估算值":status==="reference"?"參考資料":status==="conflict"?"資料衝突":status==="expired"?"資料過期":"";
   const trustClass=status=>status==="multi_source"?"confirmed":status==="official"?"official":status==="calculated"?"calculated":status==="estimated"?"estimated":status==="reference"?"reference":status==="conflict"?"conflict":"";

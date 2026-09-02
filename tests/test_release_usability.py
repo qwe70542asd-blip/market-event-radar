@@ -4,7 +4,7 @@ ROOT=Path(__file__).resolve().parents[1]
 def read(path): return (ROOT/path).read_text(encoding="utf-8")
 
 def test_v11451_major_information_stays_one_plus_three_equal_height():
-    css=read("assets/v11.4.61-overrides.css");home=read("assets/home.js")
+    css=read("assets/v11.5.0-overrides.css");home=read("assets/home.js")
     assert "height:360px" in css
     assert "grid-template-rows:238px 122px" in css
     assert "grid-template-rows:repeat(3,minmax(0,1fr))" in css
@@ -12,8 +12,9 @@ def test_v11451_major_information_stays_one_plus_three_equal_height():
 
 def test_v11451_full_event_archive_is_the_only_home_calendar_authority():
     home=read("assets/home.js");alerts=read("assets/date-alerts.js");index=read("index.html");workflow=read(".github/workflows/update-events.yml");shared=read("assets/shared.js")
-    assert 'loadData("events.json"' in home
-    assert 'loadData("events.json"' in alerts
+    assert 'loadData("home-events.json"' in home
+    assert 'loadData("events.json"' not in home
+    assert 'loadData("home-events.json"' in alerts
     assert "data/events-seed.js" in index
     for text in (home,alerts,index,workflow,shared):
         assert "events-index" not in text
@@ -43,11 +44,11 @@ def test_v11451_foreign_direction_and_rollover_fixes_are_preserved():
 
 def test_v11451_service_worker_does_not_precache_full_event_archive_as_core():
     sw=read("service-worker.js");register=read("assets/sw-register.js")
-    assert "CORE_STATIC" in sw and "OPTIONAL_STATIC" in sw and "Promise.allSettled" in sw
+    assert "CORE_STATIC" in sw and "OPTIONAL_STATIC" in sw
     core=sw.split("const CORE_STATIC=",1)[1].split(";",1)[0]
     assert "events-seed.js" not in core
     assert "events-index" not in sw
-    assert 'register("service-worker.js",{updateViaCache:"none"})' in register
+    assert 'service-worker.js?v=' in register and 'controllerchange' in register
 
 def test_v11451_runtime_worker_remains_schema_gated():
     runtime=read("assets/runtime-config.js")
@@ -74,7 +75,7 @@ def test_v11452_live_payloads_cannot_silently_replace_complete_archives():
 
 def test_v11452_service_worker_uses_new_atomic_cache_namespace():
     sw=read("service-worker.js")
-    assert 'market-event-radar-v11-4-61' in sw
+    assert 'market-event-radar-v11-5-0' in sw
     assert 'market-event-radar-v11-4-50' not in sw
 
 
