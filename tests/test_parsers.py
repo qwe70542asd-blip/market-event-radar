@@ -210,12 +210,10 @@ class ParserTests(unittest.TestCase):
         self.assertEqual(market["volume"],12000)
         self.assertEqual(market["volume_ratio_percent"],18.5)
 
-    def test_news_archive_uses_hard_20_day_window(self):
+    def test_news_archive_drops_pre_2026_and_keeps_old_major(self):
         base={"title":"聯準會重大利率決策影響全球市場","summary":"聯準會政策聲明可能影響美債、美元與全球股票市場。","url":"https://example.com/a","impact":"high","is_major":True,"importance_score":80}
-        old_dt=(news.NOW-news.timedelta(days=21)).isoformat()
-        kept_dt=(news.NOW-news.timedelta(days=19)).isoformat()
-        old={**base,"published_at":old_dt}
-        kept={**base,"id":"b","url":"https://example.com/b","published_at":kept_dt}
+        old={**base,"published_at":"2025-12-31T12:00:00+08:00"}
+        kept={**base,"id":"b","url":"https://example.com/b","published_at":"2026-01-15T12:00:00+08:00"}
         rows=news.dedupe([old,kept])
         self.assertEqual([row["url"] for row in rows],["https://example.com/b"])
 

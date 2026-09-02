@@ -12,11 +12,10 @@ from dateutil import parser as date_parser
 
 from common import DATA, NOW, read_json, VERSION
 
-NEWS_RETENTION_DAYS=20
-ARCHIVE_START=NOW-timedelta(days=NEWS_RETENTION_DAYS)
-RECENT_FULL_DAYS=NEWS_RETENTION_DAYS
-MID_ARCHIVE_DAYS=NEWS_RETENTION_DAYS
-HEADERS={"User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.4.58; +https://github.com/qwe70542asd-blip/market-event-radar)"}
+ARCHIVE_START=datetime(2026,1,1,tzinfo=NOW.tzinfo)
+RECENT_FULL_DAYS=30
+MID_ARCHIVE_DAYS=90
+HEADERS={"User-Agent":"Mozilla/5.0 (compatible; MarketEventRadar/11.4.61; +https://github.com/qwe70542asd-blip/market-event-radar)"}
 COMPANY_EVENT_RE=re.compile(r"增資|減資|除權|除息|股利|法說|財報|財務報告|股東會|停牌|復牌|公開收購|併購|合併|處分資產|取得資產|重大合約|融資融券|注意股票|處置股票|庫藏股|董事會|重大訊息",re.I)
 MARKET_HIGH_RE=re.compile(r"FOMC|聯準會|Fed\b|央行|CPI|PCE|GDP|非農|JOLTS|PMI|利率決策|升息|降息|關稅|制裁|戰爭|金融危機|熔斷|重大法規|匯率干預|資本管制|銀行危機|債務危機|財政危機|信用危機",re.I)
 ASIA_RISK_RE=re.compile(r"日本銀行|日銀|BOJ|日圓|日債|日本國債|日本政府債務|日本企業倒閉|日本企業破產|匯市干預|韓國央行|韓元|KOSPI|KOSDAQ|中國房地產|中國房企|地方債|人民幣|亞洲貨幣|亞洲資金外流|貨幣競貶",re.I)
@@ -341,13 +340,13 @@ def archive_priority(item:dict[str,Any],dt:datetime)->int:
  return score
 
 def keep_in_archive(item:dict[str,Any],dt:datetime)->bool:
- # Hard 20-day window: old headlines must not keep growing payloads forever.
- # Important older facts belong in events/disclosures/financial datasets instead
- # of being duplicated indefinitely as news cards.
  if dt<ARCHIVE_START or dt>NOW+timedelta(days=1):return False
- return True
+ age=max(0,(NOW-dt).days);priority=archive_priority(item,dt)
+ if age<=RECENT_FULL_DAYS:return True
+ if age<=MID_ARCHIVE_DAYS:return priority>=24 or bool(item.get("symbols"))
+ return priority>=58 or bool(item.get("is_major")) or item.get("impact")=="high"
 
-def dedupe(items:list[dict[str,Any]],days:int=20,limit:int=240)->list[dict[str,Any]]:
+def dedupe(items:list[dict[str,Any]],days:int=14,limit:int=600)->list[dict[str,Any]]:
  prepared=[];seen_urls=set();seen_titles=set();month_counts={}
  for raw in sorted(items,key=lambda x:str(x.get("published_at") or x.get("date") or ""),reverse=True):
   title=clean_title(raw.get("title"));summary=clean_text(raw.get("ai_summary") or raw.get("summary"))
@@ -365,7 +364,7 @@ def dedupe(items:list[dict[str,Any]],days:int=20,limit:int=240)->list[dict[str,A
   if url_key and url_key in seen_urls:continue
   if not title_key or title_key in seen_titles:continue
   age=max(0,(NOW-dt).days);month=dt.strftime("%Y-%m")
-  quota=9999
+  quota=9999 if age<=RECENT_FULL_DAYS else 90 if age<=MID_ARCHIVE_DAYS else 24
   if month_counts.get(month,0)>=quota:continue
   month_counts[month]=month_counts.get(month,0)+1
   if url_key:seen_urls.add(url_key)
@@ -413,7 +412,7 @@ def save_channel(filename:str,varname:str,source_id:str,source_name:str,items:li
  health_status=str((health or {}).get("status") or "")
  if health_status in {"degraded","warning"} and status=="ok":
   status="partial"
- payload={"metadata":{"version":VERSION,"source_id":source_id,"source_name":source_name,"updated_at":NOW.isoformat(timespec="seconds"),"status":status,"fresh_count":recent_24h,"fetched_count":len(fetched),"recent_24h_count":recent_24h,"item_count":len(combined),"used_archive_fallback":used,"legacy_archive_removed":legacy_removed,"recent_full_retention_days":RECENT_FULL_DAYS,"archive_start":ARCHIVE_START.date().isoformat(),"archive_limit":240,"archive_policy":"hard 20-day rolling window; newest-first; older news is removed instead of accumulating in browser payloads","sort_order":"published_at_desc","language_policy":"zh-Hant-only","encoding_policy":"utf8-big5-cp950-auto"},"health":health,"items":combined}
+ payload={"metadata":{"version":VERSION,"source_id":source_id,"source_name":source_name,"updated_at":NOW.isoformat(timespec="seconds"),"status":status,"fresh_count":recent_24h,"fetched_count":len(fetched),"recent_24h_count":recent_24h,"item_count":len(combined),"used_archive_fallback":used,"legacy_archive_removed":legacy_removed,"recent_full_retention_days":RECENT_FULL_DAYS,"archive_start":ARCHIVE_START.date().isoformat(),"archive_limit":600,"archive_policy":"newest-first; older than 30 days requires higher importance; before 2026-01-01 is deleted","sort_order":"published_at_desc","language_policy":"zh-Hant-only","encoding_policy":"utf8-big5-cp950-auto"},"health":health,"items":combined}
  path.write_text(json.dumps(payload,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
  (DATA/(path.stem+"-seed.js")).write_text(f"window.{varname}="+json.dumps(payload,ensure_ascii=False,separators=(",",":"))+";\n",encoding="utf-8")
  return payload

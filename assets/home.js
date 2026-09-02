@@ -1,4 +1,4 @@
-// v11.4.58 calendar-first usability + resilient market/news layer
+// v11.4.61 calendar-first usability + resilient market/news layer
 (async()=>{
   "use strict";
   const {$,escapeHtml,fmt,pct,cls,formatTime,formatEventTime,loadData,loadMarketKline,startNewsChannels,loadStockNews,loadPortfolio,finite,renderNewsThumb,newsHasImage,safeExternalHref,getLiveMarketEndpoint}=MR;
@@ -72,7 +72,7 @@
   const impactLabel=impact=>impact==="high"?"高影響":impact==="low"?"低影響":"中影響";
 
   const LEADER_RE=/台積電|鴻海|聯發科|廣達|緯創|國巨|川湖|日月光|台達電|中華電|長榮|陽明|NVIDIA|輝達|Microsoft|微軟|Apple|蘋果|Amazon|亞馬遜|Meta|Google|Alphabet|AMD|Intel|Tesla|三星|SK\s*海力士|海力士|Sony|Toyota/i;
-  // v11.4.58: a bare regulator/exchange mention is not a market-structure event.
+  // v11.4.61: a bare regulator/exchange mention is not a market-structure event.
   // Direct trading-rule terms qualify on their own; institution names qualify only
   // when paired with an actual rule/change signal.
   const MARKET_STRUCTURE_RE=/零股|整股|盤中零股|盤後零股|撮合|集合競價|逐筆交易|交易時間|開盤時間|收盤時間|漲跌幅|升降單位|當沖|融資融券|融券|融資|交割|T\+?1|T\+?2|交易制度|市場制度/i;
@@ -166,8 +166,6 @@
 
   function renderPortfolioSummary(){
     const rows=loadPortfolio();
-    const summaryPanel=$("#portfolioSummary");
-    if(summaryPanel)summaryPanel.classList.toggle("portfolio-empty",rows.length===0);
     const usdTwd=finite(quotes.get("TWD=X")?.price);
     const fxToTwd=currency=>{
       const code=String(currency||"TWD").toUpperCase();
@@ -448,6 +446,14 @@
     const rows=(values||[]).filter(Number.isFinite).sort((a,b)=>a-b);if(!rows.length)return null;
     const mid=Math.floor(rows.length/2);return rows.length%2?rows[mid]:(rows[mid-1]+rows[mid])/2;
   };
+  const HOME_INDUSTRY_NAMES={"01":"水泥工業","02":"食品工業","03":"塑膠工業","04":"紡織纖維","05":"電機機械","06":"電器電纜","07":"化學生技醫療","08":"玻璃陶瓷","09":"造紙工業","10":"鋼鐵工業","11":"橡膠工業","12":"汽車工業","13":"電子工業","14":"建材營造","15":"航運業","16":"觀光餐旅","17":"金融保險業","18":"貿易百貨","20":"其他業","21":"化學工業","22":"生技醫療業","23":"油電燃氣業","24":"半導體業","25":"電腦及週邊設備業","26":"光電業","27":"通信網路業","28":"電子零組件業","29":"電子通路業","30":"資訊服務業","31":"其他電子業","32":"文化創意業","33":"農業科技業","34":"電子商務","35":"綠能環保","36":"數位雲端","37":"運動休閒","38":"居家生活"};
+  const normalizeHomeIndustry=value=>{
+    const raw=String(value||"").trim();if(!raw)return"";
+    const numeric=raw.match(/^0?(\d{1,2})$/);
+    if(numeric)return HOME_INDUSTRY_NAMES[String(numeric[1]).padStart(2,"0")]||"";
+    if(/^\d+$/.test(raw))return"";
+    return raw;
+  };
   function renderMarketInsights(){
     const breadth=tw.breadth||{},up=Math.max(0,finite(breadth.up)||0),down=Math.max(0,finite(breadth.down)||0),flat=Math.max(0,finite(breadth.flat)||0),total=up+down+flat;
     const heat=total?Math.round(up/total*100):null,heatLabel=heat==null?"等待資料":heat>=75?"全面偏強":heat>=60?"偏強":heat>=45?"均衡":heat>=30?"偏弱":"低迷";
@@ -470,7 +476,7 @@
     const groups=new Map();
     for(const row of tw.items||[]){
       if(String(row.asset_class||"").toLowerCase()!=="stock")continue;const change=finite(row.change_percent);if(change==null)continue;
-      const asset=assetMap.get(String(row.symbol||"").toUpperCase())||{},industry=String(asset.official_industry||row.official_industry||asset.sub_industry||"").trim();if(!industry||/ETF|基金/.test(industry))continue;
+      const asset=assetMap.get(String(row.symbol||"").toUpperCase())||{},industry=normalizeHomeIndustry(asset.official_industry||row.official_industry||asset.sub_industry||row.sub_industry||"");if(!industry||/ETF|基金/.test(industry))continue;
       if(!groups.has(industry))groups.set(industry,[]);groups.get(industry).push(change);
     }
     let sectors=[...groups].map(([name,values])=>({name,count:values.length,move:median(values)})).filter(row=>row.move!=null&&row.count>=3);
@@ -518,7 +524,7 @@
   }
   renderFeaturedInfo();renderTodayFocus();renderTaiwanStatus();renderTodayBrief();
 
-  const storedCalendarMode=localStorage.getItem("mr-calendar-mode-v1")||localStorage.getItem("mr-calendar-mode-v11.4.49")||localStorage.getItem("mr-calendar-mode-v11.4.58")||"market";
+  const storedCalendarMode=localStorage.getItem("mr-calendar-mode-v1")||localStorage.getItem("mr-calendar-mode-v11.4.49")||localStorage.getItem("mr-calendar-mode-v11.4.61")||"market";
   if(!localStorage.getItem("mr-calendar-mode-v1"))localStorage.setItem("mr-calendar-mode-v1",storedCalendarMode);
   let current=new Date(),calendarMode=storedCalendarMode==="dividend"?"dividend":"market",pendingJumpDate="";
   const calendar=$("#calendarGrid"),dialog=$("#dayDialog");
@@ -674,16 +680,7 @@
     if(render)renderCalendar();
   }
   $("#eventSearch").addEventListener("input",()=>{updateCalendarFilterLabel();renderCalendar()});
-  const calendarFilterIds=["eventRegion","eventType","eventImpact","dividendKind","dividendAsset","dividendAmount"];
-  calendarFilterIds.forEach(id=>$("#"+id).addEventListener("change",()=>{updateCalendarFilterLabel();renderCalendar()}));
-  const calendarFilterDetails=$("#calendarFilterDetails");
-  const resetCalendarFilters=()=>{
-    calendarFilterIds.forEach(id=>{const control=$("#"+id);if(control)control.value="all"});
-    const search=$("#eventSearch");if(search)search.value="";
-    updateCalendarFilterLabel();renderCalendar();
-  };
-  const clearFilters=$("#calendarClearFilters");if(clearFilters)clearFilters.onclick=resetCalendarFilters;
-  const applyFilters=$("#calendarApplyFilters");if(applyFilters)applyFilters.onclick=()=>{if(calendarFilterDetails)calendarFilterDetails.open=false};
+  ["eventRegion","eventType","eventImpact","dividendKind","dividendAsset","dividendAmount"].forEach(id=>$("#"+id).addEventListener("change",()=>{updateCalendarFilterLabel();renderCalendar()}));
   document.querySelectorAll("[data-calendar-mode]").forEach(button=>button.onclick=()=>setCalendarMode(button.dataset.calendarMode));
   $("#prevMonth").onclick=()=>{current.setMonth(current.getMonth()-1);pendingJumpDate="";renderCalendar()};
   $("#nextMonth").onclick=()=>{current.setMonth(current.getMonth()+1);pendingJumpDate="";renderCalendar()};

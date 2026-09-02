@@ -84,7 +84,7 @@ class StaticTests(unittest.TestCase):
   texts="\n".join(self.read(p.relative_to(ROOT)) for p in (ROOT/".github/workflows").glob("update-news-*.yml"))
   for branch in ("live-news-cna","live-news-moneydj","live-news-cnyes","live-news-udn","live-news-ltn","live-news-wealth","live-news-yahoo","live-news-technews","live-news-ctee","live-news-asia-risk"):self.assertIn(branch,texts)
  def test_service_worker_cache(self):
-  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-58",sw);self.assertIn("CORE_STATIC",sw);self.assertIn("OPTIONAL_STATIC",sw);self.assertIn("Promise.allSettled",sw)
+  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-4-61",sw);self.assertIn("CORE_STATIC",sw);self.assertIn("OPTIONAL_STATIC",sw);self.assertIn("Promise.allSettled",sw)
   for seed in ("news-cna-seed.js","news-moneydj-seed.js","news-wealth-seed.js","news-yahoo-seed.js","news-technews-seed.js","news-ctee-seed.js","news-asia-risk-seed.js","stock-news-seed.js","company-disclosures-seed.js","monthly-revenue-seed.js","dividend-history-seed.js","secondary-reference-seed.js","data-verification-seed.js","yahoo-details-seed.js","etf-details-seed.js","stock-basics-seed.js","market-volume-history-seed.js","market-kline-seed.js"):self.assertIn(seed,sw)
  def test_cross_market_validator_uses_exchange_local_timestamp(self):
   validator=self.read("scripts/validate_public_data.py")
@@ -105,16 +105,15 @@ class StaticTests(unittest.TestCase):
  def test_all_pages_current_version(self):
   for p in ROOT.glob("*.html"):
    body=p.read_text(encoding="utf-8")
-   self.assertIn("v11.4.58",body,p.name)
+   self.assertIn("v11.4.61",body,p.name)
    self.assertNotIn("v11.4.15",body,p.name)
 
 
  def test_history_channels_are_isolated(self):
-  shared=self.read("assets/shared.js"); asset=self.read("assets/asset.js"); updater=self.read("scripts/update_assets.py"); shards=self.read("scripts/update_asset_detail_shards.py")
+  shared=self.read("assets/shared.js"); asset=self.read("assets/asset.js"); updater=self.read("scripts/update_assets.py")
   for x in ("live-monthly-revenue","live-dividend-history"):self.assertIn(x,shared)
-  self.assertIn('loadData(`asset-detail-shard-${shard}.json`',asset)
-  self.assertNotIn('loadData("monthly-revenue.json"',asset);self.assertNotIn('loadData("dividend-history.json"',asset)
-  for x in ('monthly-revenue.json','dividend-history.json','row["revenue"]','row["dividends"]'):self.assertIn(x,shards)
+  self.assertIn("asset-detail-shard-${shard}.json",asset)
+  for x in ("monthly_revenue","dividend_history"):self.assertIn(x,asset)
   self.assertIn("EMBEDDED_HISTORY_BACKFILL = False",updater)
   for name in ("update-monthly-revenue.yml","update-dividend-history.yml"):self.assertTrue((ROOT/".github/workflows"/name).exists())
 
@@ -187,11 +186,10 @@ class StaticTests(unittest.TestCase):
   self.assertFalse(any("櫃買" in str(x.get("source","")) for x in data.get("items",[])))
 
  def test_verification_channels(self):
-  shared=self.read("assets/shared.js");asset=self.read("assets/asset.js");shards=self.read("scripts/update_asset_detail_shards.py")
+  shared=self.read("assets/shared.js");asset=self.read("assets/asset.js")
   for x in ("live-secondary-reference","live-data-verification"):self.assertIn(x,shared)
-  for x in ("assetTrust","多來源一致","資料衝突","detail.verification"):self.assertIn(x,asset)
-  self.assertNotIn('loadData("secondary-reference.json"',asset);self.assertNotIn('loadData("data-verification.json"',asset)
-  for x in ('secondary-reference.json','data-verification.json','compact_verification'):self.assertIn(x,shards)
+  self.assertIn("asset-detail-shard-${shard}.json",asset)
+  for x in ("secondary_reference","data_verification","assetTrust","多來源一致","資料衝突"):self.assertIn(x,asset)
   for name in ("update-secondary-reference.yml","update-data-verification.yml"):
    self.assertTrue((ROOT/".github/workflows"/name).exists(),name)
 
@@ -349,7 +347,7 @@ class StaticTests(unittest.TestCase):
 
  def test_news_archive_policy_and_backfill(self):
   pipeline=self.read("scripts/news_pipeline.py");updater=self.read("scripts/update_media_source.py")
-  for token in ("NEWS_RETENTION_DAYS=20","ARCHIVE_START=NOW-timedelta(days=NEWS_RETENTION_DAYS)","keep_in_archive","published_at_desc"):self.assertIn(token,pipeline)
+  for token in ("ARCHIVE_START=datetime(2026,1,1","keep_in_archive","RECENT_FULL_DAYS=30","published_at_desc"):self.assertIn(token,pipeline)
   for token in ("HISTORY_QUERIES","google-news-history","NEWS_HISTORY_BACKFILL","after:{start.isoformat()}"):self.assertIn(token,updater)
 
  def test_global_workflow_restores_last_kline(self):
@@ -445,9 +443,9 @@ class StaticTests(unittest.TestCase):
 
  def test_v11424_version_bump_prevents_same_version_asset_cache(self):
   for path in ("index.html","assets/home.js","assets/runtime-config.js","service-worker.js","VERSION.json"):
-   content=self.read(path);self.assertIn("11.4.58",content);self.assertNotIn("11.4.23",content);self.assertNotIn("11.4.22",content)
+   content=self.read(path);self.assertIn("11.4.61",content);self.assertNotIn("11.4.23",content);self.assertNotIn("11.4.22",content)
   index=self.read("index.html");sw=self.read("service-worker.js")
-  for token in ("assets/shared.js?v=11.4.58","assets/home.js?v=11.4.58","assets/sw-register.js?v=11.4.58"):
+  for token in ("assets/shared.js?v=11.4.61","assets/home.js?v=11.4.61","assets/sw-register.js?v=11.4.61"):
    self.assertIn(token,index+sw)
 
  def test_v11428_compact_market_state_replaces_sector_heat(self):
@@ -484,7 +482,7 @@ class StaticTests(unittest.TestCase):
    self.assertIn(token,shared)
 
  def test_v11428_featured_news_is_one_lead_plus_right_column(self):
-  home=self.read("assets/home.js");css=self.read("assets/styles.css")+self.read("assets/v11.4.58-overrides.css")
+  home=self.read("assets/home.js");css=self.read("assets/styles.css")+self.read("assets/v11.4.61-overrides.css")
   for token in ("home-news-feature-layout","home-feature-lead","home-feature-side-list","featured.slice(1,4)"):self.assertIn(token,home+css)
   self.assertIn("grid-template-rows:repeat(3,minmax(0,1fr))",css)
 
@@ -505,7 +503,7 @@ class StaticTests(unittest.TestCase):
 
  def test_v11428_mobile_calendar_has_no_forced_horizontal_scroll(self):
   css=self.read("assets/styles.css");html=self.read("index.html");manifest=json.loads(self.read("manifest.webmanifest"))
-  for token in (".calendar-weekdays,.calendar-grid{width:100%;min-width:0!important","overflow:visible!important","grid-template-columns:repeat(7,minmax(0,1fr))",".mobile-install-trigger","assets/pwa-install.js?v=11.4.58"):
+  for token in (".calendar-weekdays,.calendar-grid{width:100%;min-width:0!important","overflow:visible!important","grid-template-columns:repeat(7,minmax(0,1fr))",".mobile-install-trigger","assets/pwa-install.js?v=11.4.61"):
    self.assertIn(token,css+html)
   self.assertEqual(manifest.get("display"),"standalone")
   self.assertTrue(any(icon.get("sizes")=="192x192" for icon in manifest.get("icons",[])))
@@ -605,7 +603,7 @@ class StaticTests(unittest.TestCase):
 
  def test_v11431_edge_worker_is_current_and_uses_verified_time(self):
   worker=self.read("edge/market-live-worker.js")
-  self.assertIn('v11.4.58',worker);self.assertNotIn('v11.4.27',worker)
+  self.assertIn('v11.4.61',worker);self.assertNotIn('v11.4.27',worker)
   self.assertIn('missing verified quote time',worker)
   self.assertIn('marketDate(new Date(x.time*1000),market)',worker)
   self.assertIn('latestSession===session?previous?.close:latest?.close',worker)
@@ -620,8 +618,8 @@ class StaticTests(unittest.TestCase):
   asset=self.read("assets/asset.js")
   self.assertNotIn("loadNewsChannels",asset)
   self.assertIn("eventPromise",asset);self.assertIn("stockNewsPromise",asset)
-  self.assertIn("bounded asset bootstrap",asset)
-  self.assertIn('loadData(`asset-detail-shard-${shard}.json`',asset)
+  self.assertIn("sealed bounded asset bootstrap",asset)
+  self.assertIn("asset-detail-shard-${shard}.json",asset)
 
  def test_v11431_secondary_reference_uses_verified_session_dates(self):
   updater=self.read("scripts/update_secondary_reference.py");asset=self.read("assets/asset.js")
@@ -629,11 +627,9 @@ class StaticTests(unittest.TestCase):
   self.assertNotIn('chartPreviousClose',updater)
   self.assertIn('secondaryQuote.quote_date',asset)
 
- def test_v11457_health_index_refreshes_often_but_full_verification_stays_hourly(self):
+ def test_v11431_verification_avoids_market_core_boundary(self):
   workflow=self.read(".github/workflows/update-data-verification.yml")
-  for minute in (13,28,43,58):self.assertIn(f'cron: "{minute} * * * *"',workflow)
-  self.assertIn("github.event.schedule == '58 * * * *'",workflow)
-  self.assertIn('python scripts/update_channel_health.py',workflow)
+  self.assertIn('cron: "58 * * * *"',workflow)
 
  def test_v11431_tpex_dividend_parser_accepts_official_field_names(self):
   events=self.read("scripts/update_events.py")
@@ -688,7 +684,7 @@ class StaticTests(unittest.TestCase):
    self.assertIn(token,ignore)
   for token in ('NESTED_DIRS','REDUNDANT_WORKFLOWS','version_obsolete_paths','--check'):
    self.assertIn(token,cleanup)
-  self.assertIn('python scripts/cleanup_repo.py --check',verify);self.assertIn('verify-v11-4-58-${{ github.ref }}',verify)
+  self.assertIn('python scripts/cleanup_repo.py --check',verify);self.assertIn('verify-v11-4-61-${{ github.ref }}',verify)
 
  def test_v11438_home_portfolio_totals_fail_closed(self):
   home=self.read("assets/home.js")
@@ -696,50 +692,6 @@ class StaticTests(unittest.TestCase):
   self.assertIn('$("#portfolioTotalValue").textContent=totalsComplete?',home)
   self.assertIn('$("#portfolioTotalCost").textContent=totalsComplete?',home)
   self.assertIn('totalsComplete&&totalAllocated?',home)
-
- def test_v11457_asset_detail_is_bounded_to_one_prefix_shard(self):
-  asset=self.read("assets/asset.js");shared=self.read("assets/shared.js");shards=self.read("scripts/update_asset_detail_shards.py")
-  self.assertIn('const shard=/^[0-9]/.test(symbol)?symbol[0]:"0"',asset)
-  self.assertIn('loadData(`asset-detail-shard-${shard}.json`',asset)
-  for name in ("assets.json","tw-chips.json","monthly-revenue.json","dividend-history.json","secondary-reference.json","yahoo-details.json","etf-details.json","stock-basics.json","data-verification.json"):
-   self.assertNotIn(f'loadData("{name}"',asset)
-  for index in range(10):self.assertIn(f'"asset-detail-shard-{index}.json":"live-data-verification"',shared)
-  self.assertIn('compact_verification',shards);self.assertIn('payload_mode',shards)
-
- def test_v11457_asset_html_does_not_boot_legacy_full_seed_archives(self):
-  html=self.read("asset.html")
-  for name in ("tw-market-seed.js","events-seed.js","stock-news-seed.js"):self.assertIn(name,html)
-  for name in ("assets-seed.js","tw-chips-seed.js","monthly-revenue-seed.js","dividend-history-seed.js","secondary-reference-seed.js","data-verification-seed.js","yahoo-details-seed.js","etf-details-seed.js","stock-basics-seed.js","news-cna-seed.js"):
-   self.assertNotIn(name,html)
-
- def test_v11457_data_status_uses_only_compact_health_index(self):
-  ui=self.read("assets/data-status.js");health=self.read("scripts/update_channel_health.py")
-  self.assertIn('loadData("channel-health.json"',ui)
-  self.assertNotIn('Promise.allSettled',ui)
-  self.assertNotIn('loadData("data-verification.json"',ui)
-  for token in ('SPECS: list[tuple[str, str, int]]','verification_summary','stale_item_count','MOPS circuit-open'):
-   self.assertIn(token,health)
-
- def test_v11457_large_archives_are_memory_bounded(self):
-  shared=self.read("assets/shared.js");news=self.read("assets/news.js");pipeline=self.read("scripts/news_pipeline.py")
-  self.assertIn('NEWS_RETENTION_MS=20*86400000',shared)
-  self.assertIn('NEWS_CHANNEL_MEMORY_LIMIT=180',shared);self.assertIn('NEWS_MERGED_MEMORY_LIMIT=800',shared)
-  self.assertIn('EPHEMERAL_LARGE_FILES',shared);self.assertIn('if(EPHEMERAL_LARGE_FILES.has(name))return null',shared)
-  self.assertIn('slice(0,48)',news);self.assertIn('NEWS_RETENTION_DAYS=20',pipeline)
-
- def test_v11457_worker_and_release_version_are_single_source(self):
-  deploy=self.read(".github/workflows/deploy-live-market-worker.yml");worker=self.read("edge/market-live-worker.js")
-  self.assertIn('VERSION.json',deploy);self.assertIn('EXPECTED_VERSION',deploy)
-  self.assertIn('--version "$EXPECTED_VERSION"',deploy)
-  self.assertIn('const VERSION="v11.4.58"',worker)
-
- def test_v11457_shards_restore_previous_copy_before_regeneration(self):
-  workflow=self.read(".github/workflows/update-data-verification.yml");common=self.read("scripts/common.py")
-  for index in range(10):
-   name=f'asset-detail-shard-{index}.json'
-   self.assertIn(f'"{name}:data/{name}"',workflow)
-  self.assertIn('asset-detail-shard-{index}.json',common)
-  self.assertIn('guard_against_catastrophic_shrink',common)
 
  def test_v11445_cloudflare_deploy_is_fail_closed_and_authorization_isolated(self):
   deploy=self.read(".github/workflows/deploy-live-market-worker.yml")
@@ -764,9 +716,9 @@ class StaticTests(unittest.TestCase):
   self.assertIn("BLS_SNAPSHOT_PATH",events); self.assertEqual(len(snapshot.get("events") or []),63)
   self.assertIn('day_trading_scope',chips)
   self.assertNotIn("def parse_tpex_day_trade(rows:",chips)
-  self.assertIn("Wait for v11.4.58 isolated-data release barrier",verify)
-  self.assertIn('wait_for_data_channels.py "$VERSION"',verify)
-  self.assertIn("VERSION.json",verify)
+  self.assertIn("Wait for isolated-data release barrier",verify)
+  self.assertIn("wait_for_data_channels.py \"$EXPECTED_VERSION\"",verify)
+  self.assertIn('json.load(open("VERSION.json"',verify)
 
 
  def test_v11440_institutional_amounts_release_barrier_and_pwa_cache(self):

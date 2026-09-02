@@ -1,10 +1,9 @@
 {
-  "version": "v11.4.58",
+  "version": "v11.4.61",
   "release_type": "full-replacement",
-  "release_goal": "mobile density + calendar readability + data-health correctness + bounded browser memory + deployment version synchronization",
   "pytest": {
     "status": "pass",
-    "passed": 311
+    "passed": 312
   },
   "workflow_yaml": {
     "status": "pass",
@@ -13,35 +12,34 @@
   "http_smoke": {
     "status": "pass",
     "pages": 7,
-    "referenced_assets": 38
+    "referenced_assets": 44
   },
   "security_audit": "pass",
   "production_readiness": "pass",
   "public_data_validation": "pass",
-  "repository_cleanup": "pass",
-  "workflow_publisher_audit": {
-    "status": "pass",
-    "live_branches": 24
+  "duplicate_navigation_audit": "pass",
+  "partial_live_taiex_dom": "pass",
+  "official_live_source_contract": {
+    "status": "pass-with-environment-warnings",
+    "warnings": 5
   },
-  "bounded_memory": {
-    "data_status_compact_index": "pass",
-    "asset_prefix_shards": 10,
-    "news_retention_days": 20,
-    "news_per_channel_memory_limit": 180,
-    "news_merged_memory_limit": 800,
-    "large_archives_excluded_from_durable_last_good": "pass"
+  "chromium_local": {
+    "status": "environment-blocked",
+    "reason": "ERR_BLOCKED_BY_ADMINISTRATOR for localhost navigation"
   },
-  "post_push_required": [
-    "Hosted Chromium smoke",
-    "official live-source contract",
-    "Cloudflare /health version v11.4.58"
-  ],
-  "mobile_ui": {
-    "empty_portfolio_collapses": "pass",
-    "single_filter_bottom_sheet": "pass",
-    "calendar_badges_enlarged": "pass",
-    "yellow_badge_contrast": "pass",
-    "phone_floating_rail_disabled": "pass",
-    "bottom_nav_retained": "pass"
+  "hosted_chromium_required_after_push": true,
+  "final_package_recheck": {
+    "zip_root_structure": "pass",
+    "reextracted_pytest": "312 passed",
+    "http_smoke": "7 pages / 44 referenced assets",
+    "structural_regressions": "pass",
+    "sha256": "sidecar file"
+  },
+  "sealed_repairs": {
+    "stale_pending_classification": "pass",
+    "institutional_trading_date_gate": "pass",
+    "yahoo_item_freshness_96h": "pass",
+    "numeric_industry_code_filter": "pass",
+    "asset_detail_shards_bundled": 10
   }
 }

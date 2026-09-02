@@ -27,20 +27,25 @@
   let chipItems={},yahooItems={},marketItems=[],marketMap=new Map(),searchable=[];
   function rebuildDerived(){chipItems=payload.items||{};yahooItems=yahooPayload.items||{};marketItems=market.items||[];marketMap=new Map(marketItems.map(item=>[String(item.symbol),item]));const allSymbols=new Map();for(const item of marketItems)if(["stock","etf"].includes(item.asset_class))allSymbols.set(String(item.symbol),item);for(const item of Object.values(chipItems))allSymbols.set(String(item.symbol),{...allSymbols.get(String(item.symbol)),...item});searchable=[...allSymbols.values()].sort((a,b)=>String(a.symbol).localeCompare(String(b.symbol),"zh-Hant"));}
   rebuildDerived();
+  const freshYahooRow=row=>{const stamp=Date.parse(row?.updated_at||row?.source_updated_at||"");return Number.isFinite(stamp)&&Date.now()-stamp>=-5*60*1000&&Date.now()-stamp<=96*3600*1000};
+  const verifiedMarketDate=()=>String(market.metadata?.trading_date||"");
+  const sameCurrentSession=row=>{const expected=verifiedMarketDate(),day=String(row?.date||"");return !expected||!day||day===expected};
 
   function chipFor(symbol){
-    const official=chipItems[symbol]||{};
-    const yahoo=(yahooItems[symbol]||{}).chips||{};
-    const merged=mergeObject(official,yahoo);
-    merged.history=mergeHistory(official.history||official.recent,yahoo.history||yahoo.recent);
+    const rawOfficial=chipItems[symbol]||{},rawYahoo=yahooItems[symbol]||{},yahoo=freshYahooRow(rawYahoo)?(rawYahoo.chips||{}):{};
+    const official=sameCurrentSession(rawOfficial)?rawOfficial:{symbol:rawOfficial.symbol,name:rawOfficial.name,exchange:rawOfficial.exchange,asset_class:rawOfficial.asset_class,date:rawOfficial.date,sources:rawOfficial.sources||[]};
+    const currentYahoo=sameCurrentSession(yahoo)?yahoo:{history:yahoo.history||yahoo.recent||[]};
+    const merged=mergeObject(official,currentYahoo);
+    merged.history=mergeHistory(rawOfficial.history||rawOfficial.recent,yahoo.history||yahoo.recent);
+    if(!sameCurrentSession(rawOfficial)&&rawOfficial.date)merged.current_session_note=`法人／資券資料停在 ${rawOfficial.date}，等待 ${verifiedMarketDate()||"最新交易日"}`;
     return merged;
   }
   function marketCard(key,label){
-    const marketData=payload.markets?.[key]||{},institutional=marketData.institutional||{};
-    const lotsDate=String(marketData.institutional_date||marketData.trading_date||"");
-    const amountDate=String(marketData.institutional_amount_date||"");
-    const amountSessionMatches=!lotsDate||!amountDate||lotsDate===amountDate;
-    const amounts=amountSessionMatches?(marketData.institutional_amounts||{}):{};
+    const marketData=payload.markets?.[key]||{};
+    const expected=verifiedMarketDate(),lotsDate=String(marketData.institutional_date||marketData.trading_date||""),amountDate=String(marketData.institutional_amount_date||"");
+    const lotsCurrent=!expected||!lotsDate||lotsDate===expected,amountSessionMatches=lotsCurrent&&(!amountDate||!expected||amountDate===expected)&&(!lotsDate||!amountDate||lotsDate===amountDate);
+    const institutional=lotsCurrent?(marketData.institutional||{}):{},amounts=amountSessionMatches?(marketData.institutional_amounts||{}):{};
+    if(expected&&!lotsCurrent)return `<article class="stat market-flow-stat"><small>${label} 法人</small><strong class="flat">待更新</strong><span class="stat-detail">目前 ${escapeHtml(lotsDate||"無日期")} · 等待 ${escapeHtml(expected)}</span></article>`;
     const values=[institutional.foreign_net,institutional.trust_net,institutional.dealer_net,institutional.total_net];
     const amountValues=[amounts.foreign?.net,amounts.trust?.net,amounts.dealer?.net,amounts.total?.net];
     if(![...values,...amountValues].some(value=>finite(value)!=null))return "";
@@ -69,7 +74,7 @@
     if(institutionalAvailable)sections.push(`<section><h3>三大法人</h3><div class="chip-metric-grid"><div><small>外資買賣超</small><strong class="${cls(institutional.foreign_net)}">${displayLots(institutional.foreign_net)}</strong></div><div><small>投信買賣超</small><strong class="${cls(institutional.trust_net)}">${displayLots(institutional.trust_net)}</strong></div><div><small>自營商買賣超</small><strong class="${cls(institutional.dealer_net)}">${displayLots(institutional.dealer_net)}</strong></div><div><small>三大法人合計</small><strong class="${cls(institutional.total_net)}">${displayLots(institutional.total_net)}</strong></div></div></section>`);
     if(creditAvailable)sections.push(`<section><h3>信用交易與當沖</h3><div class="chip-metric-grid"><div><small>當沖量</small><strong>${display(dayTrade.volume)}</strong></div><div><small>當沖比</small><strong>${finite(dayTrade.ratio)==null?"—":pct(dayTrade.ratio)}</strong></div><div><small>融資餘額（張）</small><strong>${display(margin.balance)}</strong></div><div><small>融資增減（張）</small><strong class="${cls(margin.change)}">${display(margin.change)}</strong></div><div><small>融券餘額（張）</small><strong>${display(short.balance)}</strong></div><div><small>融券增減（張）</small><strong class="${cls(short.change)}">${display(short.change)}</strong></div></div></section>`);
     const noData=!institutionalAvailable&&!creditAvailable;
-    return `<article class="chip-detail-card"><div class="chip-detail-head"><div><span class="tag">${escapeHtml(quote.asset_class==="etf"?"ETF":"個股")}</span><strong>${escapeHtml(item.symbol)}</strong><span>${escapeHtml(item.name||quote.name||"")}</span></div><a class="btn" href="asset.html?symbol=${encodeURIComponent(item.symbol)}">查看標的 →</a></div><div class="chip-summary-line"><span>成交價 <b>${display(quote.price,2)}</b></span><span>漲跌幅 <b class="${cls(quote.change_percent)}">${pct(quote.change_percent)}</b></span><span>成交量 <b>${display(quote.volume)}</b></span><span>成交金額 <b>${display(quote.trade_value)}</b></span></div>${noData?'<div class="empty compact-empty chip-no-data">尚未取得此標的的法人、資券或當沖資料；行情資料仍可正常查看。資料通道會保留最後成功版本並分批補齊。</div>':`<div class="chip-section-grid">${sections.join("")}</div>`}${trendRows(item)}${sourceLine(item)}<p class="broker-note">${escapeHtml(item.broker_note||"公開分點與籌碼資料僅供觀察，不代表券商、外資或最終客戶的真實持倉。")}</p></article>`;
+    return `<article class="chip-detail-card"><div class="chip-detail-head"><div><span class="tag">${escapeHtml(quote.asset_class==="etf"?"ETF":"個股")}</span><strong>${escapeHtml(item.symbol)}</strong><span>${escapeHtml(item.name||quote.name||"")}</span></div><a class="btn" href="asset.html?symbol=${encodeURIComponent(item.symbol)}">查看標的 →</a></div>${item.current_session_note?`<p class="status-warning">${escapeHtml(item.current_session_note)}</p>`:""}<div class="chip-summary-line"><span>成交價 <b>${display(quote.price,2)}</b></span><span>漲跌幅 <b class="${cls(quote.change_percent)}">${pct(quote.change_percent)}</b></span><span>成交量 <b>${display(quote.volume)}</b></span><span>成交金額 <b>${display(quote.trade_value)}</b></span></div>${noData?'<div class="empty compact-empty chip-no-data">尚未取得此標的的法人、資券或當沖資料；行情資料仍可正常查看。資料通道會保留最後成功版本並分批補齊。</div>':`<div class="chip-section-grid">${sections.join("")}</div>`}${trendRows(item)}${sourceLine(item)}<p class="broker-note">${escapeHtml(item.broker_note||"公開分點與籌碼資料僅供觀察，不代表券商、外資或最終客戶的真實持倉。")}</p></article>`;
   };
 
   let selectedSymbol="";

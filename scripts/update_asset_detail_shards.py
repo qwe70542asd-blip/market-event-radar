@@ -37,8 +37,6 @@ def compact_verification(row: dict[str, Any]) -> dict[str, Any]:
 
 
 def source_status(payload: dict[str, Any]) -> dict[str, Any]:
-    # Metadata is small and is copied into each shard so the asset page can
-    # preserve update/progress labels without downloading the full source file.
     meta = mapping(payload.get("metadata"))
     return {key: value for key, value in meta.items() if key not in {"errors", "source_snapshots"}}
 
@@ -46,7 +44,7 @@ def source_status(payload: dict[str, Any]) -> dict[str, Any]:
 def main() -> None:
     assets_payload = mapping(read_json(DATA / "assets.json", {}))
     assets = {str(row.get("symbol") or "").upper(): row for row in assets_payload.get("assets") or [] if isinstance(row, dict) and row.get("symbol")}
-    chips = mapping(mapping(read_json(DATA / "tw-chips.json", {})).get("items"))
+    chip_payload = mapping(read_json(DATA / "tw-chips.json", {})); chips = mapping(chip_payload.get("items"))
     revenue_payload = mapping(read_json(DATA / "monthly-revenue.json", {})); revenue = mapping(revenue_payload.get("items"))
     dividend_payload = mapping(read_json(DATA / "dividend-history.json", {})); dividends = mapping(dividend_payload.get("items"))
     secondary_payload = mapping(read_json(DATA / "secondary-reference.json", {})); secondary = mapping(secondary_payload.get("items"))
@@ -54,7 +52,6 @@ def main() -> None:
     etf_payload = mapping(read_json(DATA / "etf-details.json", {})); etf = mapping(etf_payload.get("items"))
     basics_payload = mapping(read_json(DATA / "stock-basics.json", {})); basics = mapping(basics_payload.get("items"))
     verification_payload = mapping(read_json(DATA / "data-verification.json", {})); verification = mapping(verification_payload.get("items"))
-    chip_payload = mapping(read_json(DATA / "tw-chips.json", {}))
 
     symbols = set(assets) | set(chips) | set(revenue) | set(dividends) | set(secondary) | set(yahoo) | set(etf) | set(basics) | set(verification)
     buckets: dict[str, dict[str, Any]] = {key: {} for key in SHARDS}

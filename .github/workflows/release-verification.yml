@@ -8,7 +8,7 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: verify-v11-4-58-${{ github.ref }}
+  group: verify-v11-4-61-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   verify:
@@ -24,6 +24,11 @@ jobs:
           cache: pip
       - run: pip install -r requirements-dev.txt
 
+      - name: Resolve release version
+        run: |
+          VERSION=$(python -c 'import json; print(json.load(open("VERSION.json",encoding="utf-8"))["version"])')
+          echo "EXPECTED_VERSION=$VERSION" >> "$GITHUB_ENV"
+
       - name: Reject stale, conflicting or nested repository files
         run: |
           python scripts/cleanup_repo.py --check
@@ -36,7 +41,7 @@ jobs:
           for file in scripts/*.sh; do bash -n "$file"; done
 
       - name: Publisher and stale-date regressions
-        run: python -m pytest -q tests/test_publish_data_branch.py tests/test_stale_market_guard.py tests/test_retail_mobile.py tests/test_mobile_dashboard.py tests/test_home_regressions.py
+        run: python -m pytest -q tests/test_publish_data_branch.py tests/test_stale_market_guard.py tests/test_retail_mobile.py tests/test_mobile_dashboard.py tests/test_home_regressions.py tests/test_sealed_reliability.py
 
       - name: Release hygiene
         run: |
@@ -64,10 +69,13 @@ jobs:
         run: python scripts/security_audit.py
 
       - name: Static production readiness gate
-        run: python scripts/production_readiness.py --version v11.4.58
+        run: python scripts/production_readiness.py --version "$EXPECTED_VERSION"
 
       - name: Strict data validation
         run: python scripts/validate_public_data.py all
+
+      - name: Channel-health classifier self-test
+        run: python -m pytest -q tests/test_channel_health.py
 
       - name: Automated tests
         run: python -m pytest -q

@@ -37,7 +37,7 @@
     combined=[];const seen=new Set();for(const item of [...stockRows,...mediaRaw]){const enriched=stockByKey.get(normalize(item.title))||item,key=String(enriched.canonical_url||enriched.url||normalize(enriched.title)||"").toLowerCase();if(!key||seen.has(key))continue;seen.add(key);combined.push({...enriched,_majorScore:majorScore(enriched)})}
     combined.sort((a,b)=>Date.parse(b.published_at||0)-Date.parse(a.published_at||0));
   }
-  function renderLatest(){const query=$("#newsSearch").value.trim().toLowerCase(),result=combined.filter(item=>(!query||`${item.title} ${item.summary} ${item.ai_category} ${(item.symbols||[]).join(" ")}`.toLowerCase().includes(query))&&topicMatch(item,topic));$("#latestNewsRows").innerHTML=result.slice(0,48).map(card).join("")||'<div class="empty">資料同步中或沒有符合條件的繁體中文財經新聞</div>'}
+  function renderLatest(){const query=$("#newsSearch").value.trim().toLowerCase(),result=combined.filter(item=>(!query||`${item.title} ${item.summary} ${item.ai_category} ${(item.symbols||[]).join(" ")}`.toLowerCase().includes(query))&&topicMatch(item,topic));$("#latestNewsRows").innerHTML=result.slice(0,120).map(card).join("")||'<div class="empty">資料同步中或沒有符合條件的繁體中文財經新聞</div>'}
   function renderAll(){
     rebuild();
     const majorNow=Date.now(),majorCandidates=[...combined,...officialRows].map(item=>({...item,_majorScore:majorScore(item)})).filter(item=>{const published=Date.parse(item.published_at||item.date||0),age=majorNow-published;return item._majorScore>=45&&Number.isFinite(age)&&age>=0&&age<=86400000}).sort((a,b)=>b._majorScore-a._majorScore||Date.parse(b.published_at||0)-Date.parse(a.published_at||0)).slice(0,7);

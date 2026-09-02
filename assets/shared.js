@@ -1,5 +1,5 @@
 (()=>{"use strict";
-const OWNER="qwe70542asd-blip",REPO="market-event-radar",APP_VERSION="v11.4.58";
+const OWNER="qwe70542asd-blip",REPO="market-event-radar",APP_VERSION="v11.4.61";
 let LIVE_MARKET_ENDPOINT=String(window.MR_RUNTIME?.liveMarketEndpoint||"").replace(/\/$/,"");
 let runtimeReadyPromise=null;
 async function ensureRuntimeEndpoint(){
@@ -84,9 +84,9 @@ const DATA_MEMORY=new Map();
 // snapshots for every live channel use IndexedDB so a multi-megabyte events or
 // news archive never competes with localStorage's small quota.
 const WEB_STORAGE_CACHE_FILES=new Set(["market-snapshot.json","tw-market.json"]);
-// News and diagnostic archives are intentionally session-only.  Keeping old
-// full copies in IndexedDB caused storage growth without improving the live UI.
-const EPHEMERAL_LARGE_FILES=new Set(["stock-news.json","official-market-notices.json","company-disclosures.json","data-verification.json",...NEWS_FILES.map(row=>row.file)]);
+// Large news/diagnostic archives are session-only; persisting them as last-good
+// causes unbounded browser storage growth with little UX benefit.
+const EPHEMERAL_LARGE_FILES=new Set(["stock-news.json","official-market-notices.json","company-disclosures.json","data-verification.json","channel-health.json",...NEWS_FILES.map(row=>row.file)]);
 const dataCacheKey=name=>`mr-data-cache-v1:${name}`;
 const lastGoodKey=name=>`mr-data-last-good-v1:${name}`;
 const STORAGE_CLEANUP_KEY="mr-storage-cleanup-v2";
@@ -112,17 +112,6 @@ try{
  }
 }catch(e){}
 const dataCacheTtl=name=>["market-snapshot.json","market-kline.json","tw-market.json","events.json"].includes(name)?30000:300000;
-const DATA_MAX_AGE_MS={"assets.json":36*60*60*1000,"asset-audit.json":36*60*60*1000,"official-market-notices.json":12*60*60*1000,"company-disclosures.json":12*60*60*1000,"market-snapshot.json":20*60*1000,"market-kline.json":2*60*60*1000,"tw-market.json":3*60*60*1000,"tw-chips.json":72*60*60*1000,"events.json":12*60*60*1000,"stock-news.json":3*60*60*1000,"monthly-revenue.json":18*60*60*1000,"dividend-history.json":18*60*60*1000,"yahoo-details.json":96*60*60*1000,"etf-details.json":72*60*60*1000,"stock-basics.json":36*60*60*1000,"secondary-reference.json":36*60*60*1000,"data-verification.json":3*60*60*1000,"channel-health.json":45*60*1000,"asset-detail-shard-0.json":45*60*1000,"asset-detail-shard-1.json":45*60*1000,"asset-detail-shard-2.json":45*60*1000,"asset-detail-shard-3.json":45*60*1000,"asset-detail-shard-4.json":45*60*1000,"asset-detail-shard-5.json":45*60*1000,"asset-detail-shard-6.json":45*60*1000,"asset-detail-shard-7.json":45*60*1000,"asset-detail-shard-8.json":45*60*1000,"asset-detail-shard-9.json":45*60*1000};
-const NEWS_RETENTION_MS=20*86400000,NEWS_CHANNEL_MEMORY_LIMIT=180,NEWS_MERGED_MEMORY_LIMIT=800;
-const metadataAgeMs=payload=>{const at=Date.parse(payload?.metadata?.updated_at||0);return Number.isFinite(at)?Math.max(0,Date.now()-at):Infinity};
-function annotateFrontendFreshness(name,payload,source){
- if(!payload||typeof payload!=="object")return payload;
- const max=DATA_MAX_AGE_MS[name]||(/^news-/.test(name)?3*60*60*1000:null),age=metadataAgeMs(payload),raw=String(payload?.metadata?.status||"").toLowerCase();
- const explicitBad=["failed","error","unavailable","circuit-open","stale"].includes(raw),tooOld=Number.isFinite(max)&&age>max,lastGood=source==="browser-last-good";
- if(!payload.metadata)return payload;
- const frontendStatus=explicitBad?raw:tooOld?"stale":lastGood?"fallback":raw||"unknown";
- return {...payload,metadata:{...payload.metadata,frontend_status:frontendStatus,frontend_stale:tooOld,frontend_age_seconds:Number.isFinite(age)?Math.round(age/1000):null,frontend_max_age_seconds:Number.isFinite(max)?Math.round(max/1000):null,frontend_last_good:lastGood,frontend_load_source:source||payload.metadata.frontend_load_source}};
-}
 const snapshotCandleCount=row=>(Array.isArray(row?.candles)?row.candles:[]).filter(candle=>candle?.date&&[candle.open,candle.high,candle.low,candle.close].every(value=>finite(value)!=null)).length;
 const loadStored=(keys=[])=>{for(const key of keys){try{const value=JSON.parse(localStorage.getItem(key)||"null");if(value)return value}catch(e){}}return null};
 const isUsablePayload=(name,payload)=>{
@@ -146,7 +135,7 @@ const payloadCardinality=(name,payload)=>{
  if(Array.isArray(payload.assets))return payload.assets.length;
  return 0;
 };
-const ARCHIVE_REGRESSION_FILES=new Set(["events.json","assets.json","stock-basics.json","yahoo-details.json","etf-details.json","monthly-revenue.json","dividend-history.json","data-verification.json","market-kline.json","market-volume-history.json","tw-chips.json","secondary-reference.json",...Array.from({length:10},(_,index)=>`asset-detail-shard-${index}.json`)]);
+const ARCHIVE_REGRESSION_FILES=new Set(["events.json","assets.json","stock-basics.json","yahoo-details.json","etf-details.json","monthly-revenue.json","dividend-history.json","data-verification.json","market-kline.json","market-volume-history.json","tw-chips.json","secondary-reference.json"]);
 function isCatastrophicPayloadRegression(name,candidate,lastGood){
  if(!ARCHIVE_REGRESSION_FILES.has(name)||!lastGood)return false;
  const before=payloadCardinality(name,lastGood),after=payloadCardinality(name,candidate);
@@ -232,7 +221,7 @@ async function _loadData(name,fallback={},options={}){
  if(!payload){try{const candidate=await getJson(`data/${name}?t=${Date.now()}`,5000);if(isUsablePayload(name,candidate)){payload=candidate;source="same-origin-main"}}catch(e){}}
  if(!payload)payload=cloneValue(fallback);
  if(name==="market-snapshot.json")payload=mergeSnapshotCache(payload||cloneValue(fallback));
- if(payload?.metadata)payload=annotateFrontendFreshness(name,payload,source);
+ if(payload?.metadata&&source)payload={...payload,metadata:{...payload.metadata,frontend_load_source:source}};
  if(isUsablePayload(name,payload))void rememberLastGood(name,payload);
  const entry={at:Date.now(),payload};DATA_MEMORY.set(name,entry);if(WEB_STORAGE_CACHE_FILES.has(name)){try{sessionStorage.setItem(dataCacheKey(name),JSON.stringify(entry))}catch(e){}}
  return cloneValue(payload);
@@ -273,19 +262,16 @@ async function loadStockBasics(){
  return {...payload,metadata:{...(payload.metadata||{}),version:APP_VERSION,item_count:values.length,average_basic_coverage_percent:Math.round(average*10)/10,scope:"all-currently-listed-twse-and-tpex-stocks",browser_official_fallback_added:added},items};
 }
 function normalizeNewsChannel(cfg,payload){
- const floor=Date.now()-NEWS_RETENTION_MS,tomorrow=Date.now()+86400000;
- const rows=(payload?.items||[]).filter(item=>{const at=Date.parse(item.published_at||item.date||0);return Number.isFinite(at)&&at>=floor&&at<=tomorrow}).sort((a,b)=>Date.parse(b.published_at||b.date||0)-Date.parse(a.published_at||a.date||0)).slice(0,NEWS_CHANNEL_MEMORY_LIMIT).map(item=>({...item,source_id:item.source_id||cfg.id,source:item.source||cfg.label,channel_kind:cfg.kind}));
- return {...payload,channel:cfg,items:rows,metadata:{...(payload?.metadata||{}),frontend_retention_days:20,frontend_item_limit:NEWS_CHANNEL_MEMORY_LIMIT}};
+ const archiveStart=Date.parse("2026-01-01T00:00:00+08:00"),tomorrow=Date.now()+86400000;
+ return {...payload,channel:cfg,items:(payload?.items||[]).filter(item=>{const at=Date.parse(item.published_at||item.date||0);return Number.isFinite(at)&&at>=archiveStart&&at<=tomorrow}).map(item=>({...item,source_id:item.source_id||cfg.id,source:item.source||cfg.label,channel_kind:cfg.kind}))};
 }
 function mergeNewsChannels(channels){
  const seen=new Set(),items=[];
  for(const channel of channels||[]){for(const item of channel?.items||[]){const key=String(item.canonical_url||item.url||item.id||item.title||"").toLowerCase();if(!key||seen.has(key))continue;seen.add(key);items.push(item)}}
  items.sort((a,b)=>Date.parse(b.published_at||b.date||0)-Date.parse(a.published_at||a.date||0));
- const kept=items.slice(0,NEWS_MERGED_MEMORY_LIMIT),updated=(channels||[]).map(c=>c?.metadata?.updated_at).filter(Boolean).sort().pop()||null;
- const bad=new Set(["warning","partial","fallback","degraded","loading","waiting","pending","seeded","stale","failed","error","unavailable","circuit-open"]);
- const resolved=(channels||[]).filter(c=>{const status=String(c?.metadata?.frontend_status||c?.metadata?.status||"").toLowerCase();return !bad.has(status)&&(c?.metadata?.updated_at||Number(c?.items?.length||0)>0)}).length;
- const summaries=(channels||[]).map(c=>({channel:c.channel,metadata:c.metadata||{},health:c.health||{}}));
- return {metadata:{version:APP_VERSION,updated_at:updated,item_count:kept.length,total_candidate_count:items.length,channel_count:(channels||[]).length,resolved_channel_count:resolved,retention_days:20,memory_limit:NEWS_MERGED_MEMORY_LIMIT},channels:summaries,items:kept};
+ const updated=(channels||[]).map(c=>c?.metadata?.updated_at).filter(Boolean).sort().pop()||null;
+ const resolved=(channels||[]).filter(c=>c?.metadata?.updated_at||Number(c?.items?.length||0)>0).length;
+ return {metadata:{version:APP_VERSION,updated_at:updated,item_count:items.length,channel_count:(channels||[]).length,resolved_channel_count:resolved},channels,items};
 }
 function startNewsChannels(options={}){
  const channels=NEWS_FILES.map(cfg=>normalizeNewsChannel(cfg,window[cfg.seed]||{metadata:{source_id:cfg.id,source_name:cfg.label,status:"waiting",item_count:0},items:[]}));
@@ -392,7 +378,7 @@ function loadWatchlist(){try{const value=JSON.parse(localStorage.getItem(WATCHLI
 function saveWatchlist(rows){const clean=[],seen=new Set();for(const raw of rows||[]){const symbol=String(raw?.symbol||"").trim().toUpperCase();if(!symbol||seen.has(symbol))continue;seen.add(symbol);clean.push({symbol,name:String(raw?.name||symbol).trim(),asset_class:String(raw?.asset_class||"").trim(),exchange:String(raw?.exchange||"").trim(),added_at:raw?.added_at||new Date().toISOString()})}localStorage.setItem(WATCHLIST_KEY,JSON.stringify(clean.slice(0,100)));window.dispatchEvent(new CustomEvent("watchlistchange"));return clean}
 function toggleWatchlist(item={}){const symbol=String(item.symbol||"").trim().toUpperCase();if(!symbol)return{added:false,items:loadWatchlist()};const rows=loadWatchlist(),index=rows.findIndex(row=>String(row.symbol).toUpperCase()===symbol);let added=false;if(index>=0)rows.splice(index,1);else{rows.unshift({symbol,name:String(item.name||symbol).trim(),asset_class:String(item.asset_class||"").trim(),exchange:String(item.exchange||"").trim(),added_at:new Date().toISOString()});added=true}return{added,items:saveWatchlist(rows)}}
 function installGlobalMobileQuickNav(){
- // v11.4.58: never add a second persistent navigation row on phones.
+ // v11.4.61: never add a second persistent navigation row on phones.
  // The home page already owns its single left-side quick rail and every app page
  // already has the canonical bottom navigation. Keeping one navigation owner
  // prevents the old duplicated 01-04 bar from covering portfolio/calendar/K-line content.

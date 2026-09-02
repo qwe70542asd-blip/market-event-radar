@@ -1,10 +1,10 @@
 (async()=>{
   "use strict";
-  const {$,$$,escapeHtml,fmt,pct,cls,formatTime,loadData,loadStockNews,finite,stripHtml,normalizeText,renderNewsThumb,safeExternalHref,loadWatchlist,toggleWatchlist}=MR;
+  const {$,$$,escapeHtml,fmt,pct,cls,formatTime,loadData,loadStockBasics,loadStockNews,finite,stripHtml,normalizeText,renderNewsThumb,safeExternalHref,loadWatchlist,toggleWatchlist}=MR;
   const symbol=(new URLSearchParams(location.search).get("symbol")||"2330").toUpperCase();
-  // v11.4.58 bounded asset bootstrap: one prefix shard replaces eight full
-  // symbol-keyed history/detail files.  Only the current symbol is retained in
-  // memory; the market quote stays on its independent official channel.
+  // v11.4.61 sealed bounded asset bootstrap: load the official market quote plus
+  // one symbol-prefix detail shard.  Large history/detail channels are assembled
+  // server-side, so opening one stock never downloads all stocks' histories.
   const shard=/^[0-9]/.test(symbol)?symbol[0]:"0";
   const [marketPayload,detailPayload]=await Promise.all([
     loadData("tw-market.json",window.__TW_MARKET_SEED__||{items:[]}),
@@ -13,7 +13,7 @@
   const detail=detailPayload.items?.[symbol]||{},sourceMeta=detailPayload.metadata?.sources||{};
   const one=(key,value)=>({metadata:sourceMeta[key]||{},items:{[symbol]:value}});
   const assetPayload={metadata:sourceMeta.assets||{},assets:detail.asset?[detail.asset]:[]};
-  const chipPayload=one("tw_chips",detail.chip||{}),revenuePayload=one("monthly_revenue",detail.revenue||[]),dividendPayload=one("dividend_history",detail.dividends||[]),secondaryPayload=one("secondary_reference",detail.secondary||{}),yahooPayload=one("yahoo_details",detail.yahoo||{}),etfPayload=one("etf_details",detail.etf||{}),stockBasicsPayload=one("stock_basics",detail.stock_basic||{}),verificationPayload=one("data_verification",detail.verification||{});
+  const chipPayload=one("tw_chips",detail.chip||{}),revenuePayload=one("monthly_revenue",detail.revenue||[]),dividendPayload=one("dividend_history",detail.dividends||[]),secondaryPayload=one("secondary_reference",detail.secondary||{}),verificationPayload=one("data_verification",detail.verification||{}),etfPayload=one("etf_details",detail.etf||{}),stockBasicsPayload=one("stock_basics",detail.stock_basic||{});
   const eventPromise=loadData("events.json",window.__EVENT_SEED__||{events:[]});
   const stockNewsPromise=loadStockNews();
   const officialQuote=(marketPayload.items||[]).find(row=>String(row.symbol||"").toUpperCase()===symbol)||{};
@@ -21,14 +21,19 @@
   const secondaryTime=String(secondaryQuote.market_at||"").match(/T(\d{2}:\d{2})/)?.[1]||"";
   const quote=Object.keys(officialQuote).length?officialQuote:(secondaryQuote.price!=null?{symbol,name:symbol,price:secondaryQuote.price,previous_close:secondaryQuote.previous_close,status:"secondary-reference",quote_time:secondaryTime,quote_date:secondaryQuote.quote_date||""}:{});
   const found=detail.asset||null;
-  const yahoo=detail.yahoo||{};
+  const rawYahoo=detail.yahoo||{};
+  const yahooStamp=Date.parse(rawYahoo.updated_at||rawYahoo.source_updated_at||"");
+  const yahooIsFresh=Number.isFinite(yahooStamp)&&Date.now()-yahooStamp>=-5*60*1000&&Date.now()-yahooStamp<=96*3600*1000;
+  const yahooStale=Object.keys(rawYahoo).length>0&&!yahooIsFresh;
+  const yahoo=yahooIsFresh?rawYahoo:{};
+  const yahooPayload=one("yahoo_details",yahoo);
   const etfReference=detail.etf||{};
   const stockBasic=detail.stock_basic||{};
   const verification=detail.verification||{};
   const chip=detail.chip||{};
-  const asset={...(stockBasic||{}),...(found||{}),id:(found||{}).id||`TW:${symbol}`,symbol,name:(found||{}).name||stockBasic.short_name||stockBasic.company_name||(yahoo.profile||{}).company_name||quote.name||symbol,exchange:(found||{}).exchange||stockBasic.exchange||(yahoo.profile||{}).exchange||quote.exchange,asset_class:(found||{}).asset_class||stockBasic.asset_class||yahoo.asset_class||(yahoo.profile||{}).asset_class||quote.asset_class||"stock",market:"TW"};
-  const isEtf=asset.asset_class==="etf"||quote.asset_class==="etf";
   const yahooProfile={...stockBasic,...(yahoo.profile||{})},yahooMetrics={...(stockBasic.metrics||{}),...(yahoo.metrics||{})},yahooEtf=yahoo.etf||{},yahooMetricMeta=yahoo.metrics_meta||{};
+  const asset={...(stockBasic||{}),...(found||{}),id:(found||{}).id||`TW:${symbol}`,symbol,name:(found||{}).name||stockBasic.short_name||stockBasic.company_name||yahooProfile.company_name||quote.name||symbol,exchange:(found||{}).exchange||stockBasic.exchange||yahooProfile.exchange||quote.exchange,asset_class:(found||{}).asset_class||stockBasic.asset_class||yahoo.asset_class||yahooProfile.asset_class||quote.asset_class||"stock",market:"TW"};
+  const isEtf=asset.asset_class==="etf"||quote.asset_class==="etf";
   const officialEtf=asset.etf||{};
   const cleanObject=value=>Object.fromEntries(Object.entries(value||{}).filter(([,v])=>v!==null&&v!==undefined&&String(v).trim()!==""));
   const etf={...cleanObject(yahooEtf),...cleanObject(etfReference),...cleanObject(officialEtf)};
@@ -88,7 +93,7 @@
   const trustText=trustLabel(overallTrust)||"資料驗證中";
   const completeness=verification.completeness_status||"",coverage=finite(verification.coverage_percent);
   const completenessText=coverage!=null?`欄位完整度 ${fmt(coverage,1)}%${completeness==="complete"?" · 完整":completeness==="partial"?" · 部分完整":""}`:"";
-  $("#assetTrust").innerHTML=`<span class="verification-badge ${trustClass(overallTrust)}">${escapeHtml(trustText)}</span>${completenessText?`<span class="verification-badge ${completeness==="complete"?"confirmed":"reference"}">${escapeHtml(completenessText)}</span>`:""}<span>可信度與欄位完整度分開計算；官方資料優先，Yahoo、MoneyDJ、HiStock 僅補空白欄位，計算值會標示公式。</span>${stockBasic.basic_coverage_percent?`<span class="verification-badge official">公司主檔 ${escapeHtml(stockBasic.basic_coverage_percent)}%</span>`:""}${stockBasic.financial_coverage_percent!=null?`<span class="verification-badge reference">財務資料 ${escapeHtml(stockBasic.financial_coverage_percent)}%</span>`:""}${yahoo.updated_at?`<span class="verification-badge reference">Yahoo 已補充</span>`:""}${etfReference.updated_at?`<span class="verification-badge reference">ETF 多來源已補充</span>`:""}${(verification.reference_links?.yahoo||yahoo.source_url)?`<a href="${escapeHtml(safeExternalHref(verification.reference_links?.yahoo||yahoo.source_url)||"#")}" target="_blank" rel="noreferrer noopener">Yahoo 查閱 ↗</a>`:""}${verification.reference_links?.goodinfo?`<a href="${escapeHtml(safeExternalHref(verification.reference_links.goodinfo)||"#")}" target="_blank" rel="noreferrer noopener">Goodinfo 查閱 ↗</a>`:""}`;
+  $("#assetTrust").innerHTML=`<span class="verification-badge ${trustClass(overallTrust)}">${escapeHtml(trustText)}</span>${completenessText?`<span class="verification-badge ${completeness==="complete"?"confirmed":"reference"}">${escapeHtml(completenessText)}</span>`:""}<span>可信度與欄位完整度分開計算；官方資料優先，Yahoo、MoneyDJ、HiStock 僅補空白欄位，計算值會標示公式。</span>${stockBasic.basic_coverage_percent?`<span class="verification-badge official">公司主檔 ${escapeHtml(stockBasic.basic_coverage_percent)}%</span>`:""}${stockBasic.financial_coverage_percent!=null?`<span class="verification-badge reference">財務資料 ${escapeHtml(stockBasic.financial_coverage_percent)}%</span>`:""}${yahoo.updated_at?`<span class="verification-badge reference">Yahoo 已補充</span>`:yahooStale?`<span class="verification-badge conflict">Yahoo 過期補充已停用</span>`:""}${etfReference.updated_at?`<span class="verification-badge reference">ETF 多來源已補充</span>`:""}${(verification.reference_links?.yahoo||yahoo.source_url)?`<a href="${escapeHtml(safeExternalHref(verification.reference_links?.yahoo||yahoo.source_url)||"#")}" target="_blank" rel="noreferrer noopener">Yahoo 查閱 ↗</a>`:""}${verification.reference_links?.goodinfo?`<a href="${escapeHtml(safeExternalHref(verification.reference_links.goodinfo)||"#")}" target="_blank" rel="noreferrer noopener">Goodinfo 查閱 ↗</a>`:""}`;
 
   const retailState={yearHigh:null,yearLow:null,yearPosition:null,nextEvent:null};
   const standardBrokerFeeRate=.001425;

@@ -197,7 +197,7 @@ def enrich_article_images(session,items,limit=48):
    for found in page_candidates:
     if found not in candidates:candidates.append(found)
   if candidates:
-   item["image_url"]=candidates[0];item["image_candidates"]=candidates[:3];item["image_status"]="remote-candidates"
+   item["image_url"]=candidates[0];item["image_candidates"]=candidates[:6];item["image_status"]="remote-candidates"
   else:
    item.pop("image_url",None);item.pop("image_candidates",None);item["image_status"]="fallback-required"
   if not item.get("fallback_image_slug"):

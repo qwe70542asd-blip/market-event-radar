@@ -1,4 +1,15 @@
 #!/usr/bin/env python3
+"""Build a compact, fail-closed health index for every public data channel.
+
+v11.4.61 sealing rules:
+- computed staleness has priority over a missing/"pending" metadata.status;
+- non-empty, recently updated payloads without a status are inferred healthy instead
+  of being reported as pending forever;
+- global intraday channels use market-aware freshness windows so a closed market is
+  not falsely marked stale simply because no new ticks are expected;
+- critical-channel failures are surfaced separately from non-critical enrichment
+  degradation.
+"""
 from __future__ import annotations
 
 from datetime import datetime
@@ -6,8 +17,6 @@ from typing import Any
 
 from common import DATA, NOW, VERSION, read_json, write_payload
 
-# This file is intentionally a compact metadata index.  The browser health page
-# reads this single payload instead of downloading every multi-megabyte channel.
 SPECS: list[tuple[str, str, int]] = [
     ("assets.json", "標的與財報", 36 * 3600),
     ("asset-audit.json", "標的稽核", 36 * 3600),
@@ -38,9 +47,17 @@ SPECS: list[tuple[str, str, int]] = [
     ("data-verification.json", "資料交叉驗證", 3 * 3600),
 ]
 
+CRITICAL = {
+    "tw-market.json",
+    "tw-chips.json",
+    "market-snapshot.json",
+    "market-kline.json",
+    "events.json",
+    "data-verification.json",
+}
 BAD = {"failed", "error", "unavailable", "circuit-open"}
 PARTIAL = {"warning", "partial", "fallback", "degraded"}
-PENDING = {"loading", "waiting", "pending", "seed", "seeded", "unknown", ""}
+PENDING = {"loading", "waiting", "pending", "seed", "seeded", "unknown"}
 
 
 def parse_time(value: Any) -> datetime | None:
@@ -56,15 +73,10 @@ def parse_time(value: Any) -> datetime | None:
 
 
 def cardinality(payload: dict[str, Any]) -> int:
-    items = payload.get("items")
-    if isinstance(items, (list, dict)):
-        return len(items)
-    assets = payload.get("assets")
-    if isinstance(assets, list):
-        return len(assets)
-    events = payload.get("events")
-    if isinstance(events, list):
-        return len(events)
+    for key in ("items", "assets", "events"):
+        value = payload.get(key)
+        if isinstance(value, (list, dict)):
+            return len(value)
     return 0
 
 
@@ -78,6 +90,31 @@ def nested_statuses(payload: dict[str, Any]) -> list[str]:
     return result
 
 
+def market_aware_max_age(file: str, payload: dict[str, Any], configured: int) -> int:
+    """Relax intraday SLA only when the payload itself proves markets are closed.
+
+    We do not use the relaxed window for an open market.  Weekend/holiday closed
+    snapshots can legitimately remain unchanged for multiple days.
+    """
+    if file not in {"market-snapshot.json", "market-kline.json"}:
+        return configured
+    rows = payload.get("items")
+    if isinstance(rows, dict):
+        rows = list(rows.values())
+    if not isinstance(rows, list) or not rows:
+        return configured
+    states = [row.get("market_open") for row in rows if isinstance(row, dict) and "market_open" in row]
+    if any(state is True for state in states):
+        return configured
+    if states and all(state is False for state in states):
+        # On Saturday/Sunday and the Monday pre-open window, Friday's final
+        # snapshot is expected.  During ordinary closed sessions 12h is enough.
+        if NOW.weekday() >= 5 or (NOW.weekday() == 0 and NOW.hour < 9):
+            return max(configured, 72 * 3600)
+        return max(configured, 12 * 3600)
+    return configured
+
+
 def item_staleness(payload: dict[str, Any], max_age_seconds: int) -> tuple[int, int, list[str]]:
     items = payload.get("items")
     if not isinstance(items, dict) or len(items) > 5000:
@@ -88,7 +125,7 @@ def item_staleness(payload: dict[str, Any], max_age_seconds: int) -> tuple[int, 
     for key, row in items.items():
         if not isinstance(row, dict):
             continue
-        stamp = parse_time(row.get("updated_at") or row.get("source_updated_at"))
+        stamp = parse_time(row.get("updated_at") or row.get("source_updated_at") or row.get("market_at"))
         if stamp is None:
             continue
         checked += 1
@@ -108,7 +145,7 @@ def chip_date_mismatch(payload: dict[str, Any]) -> list[str]:
     for market_name, market in (payload.get("markets") or {}).items():
         if not isinstance(market, dict):
             continue
-        for field in ("institutional_date", "institutional_amount_date", "day_trading_date"):
+        for field in ("institutional_date", "institutional_amount_date", "margin_date", "day_trading_date"):
             value = str(market.get(field) or "")
             if value and value != trading:
                 mismatches.append(f"{market_name}.{field}={value}")
@@ -119,27 +156,36 @@ def classify(file: str, payload: dict[str, Any], max_age_seconds: int) -> dict[s
     metadata = payload.get("metadata") if isinstance(payload, dict) else {}
     metadata = metadata if isinstance(metadata, dict) else {}
     updated = parse_time(metadata.get("updated_at"))
+    effective_max_age = market_aware_max_age(file, payload, max_age_seconds)
     age_seconds = max(0, int((NOW - updated).total_seconds())) if updated else None
-    stale = updated is None or age_seconds > max_age_seconds
+    computed_stale = updated is not None and age_seconds is not None and age_seconds > effective_max_age
     raw = str(metadata.get("status") or "").strip().lower()
     reasons: list[str] = []
+
+    # Severity is deliberate: a stale payload must never become "pending" merely
+    # because the producer omitted metadata.status.
     if not payload:
         status = "unavailable"
         reasons.append("channel file missing")
     elif raw in BAD:
         status = "failed"
         reasons.append(raw)
+    elif raw == "stale" or computed_stale:
+        status = "stale"
+        reasons.append("updated_at exceeded effective max age" if computed_stale else "source marked stale")
     elif raw in PENDING:
         status = "pending"
-        reasons.append(raw or "missing status")
-    elif raw == "stale" or stale:
-        status = "stale"
-        reasons.append("updated_at exceeded max age" if stale else "source marked stale")
+        reasons.append(raw)
     elif raw in PARTIAL:
         status = "degraded" if raw == "degraded" else "partial"
         reasons.append(raw)
+    elif updated is None:
+        status = "pending"
+        reasons.append("missing updated_at")
     else:
         status = "fresh"
+        if not raw:
+            reasons.append("fresh inferred from non-empty payload and updated_at")
 
     child = nested_statuses(payload)
     bad_children = [value for value in child if value in BAD | PARTIAL | {"stale"}]
@@ -147,28 +193,26 @@ def classify(file: str, payload: dict[str, Any], max_age_seconds: int) -> dict[s
         status = "partial"
         reasons.append(f"nested sources: {', '.join(sorted(set(bad_children)))}")
 
-    if file == "dividend-history.json" and str(metadata.get("mops_status") or "") == "circuit-open":
+    if file == "dividend-history.json" and str(metadata.get("mops_status") or "").strip().lower() == "circuit-open":
         status = "degraded"
         reasons.append("MOPS circuit-open")
 
-    if file == "tw-chips.json":
-        mismatch = chip_date_mismatch(payload)
-        if mismatch:
-            if status == "fresh":
-                status = "partial"
-            reasons.append("mixed component dates")
-        else:
-            mismatch = []
-    else:
-        mismatch = []
+    mismatch = chip_date_mismatch(payload) if file == "tw-chips.json" else []
+    if mismatch:
+        if status == "fresh":
+            status = "partial"
+        reasons.append("mixed component dates")
 
-    checked, stale_items, samples = (0, 0, [])
+    checked = stale_items = 0
+    samples: list[str] = []
     if file in {"etf-details.json", "yahoo-details.json"}:
         checked, stale_items, samples = item_staleness(payload, max_age_seconds)
         if stale_items:
             ratio = stale_items / checked if checked else 0
             if status == "fresh":
-                status = "degraded" if ratio >= 0.2 else "partial"
+                status = "degraded" if ratio >= 0.20 else "partial"
+            elif status == "partial" and ratio >= 0.20:
+                status = "degraded"
             reasons.append(f"stale items {stale_items}/{checked}")
 
     errors = payload.get("errors") if isinstance(payload, dict) else None
@@ -180,12 +224,14 @@ def classify(file: str, payload: dict[str, Any], max_age_seconds: int) -> dict[s
     return {
         "file": file,
         "status": status,
+        "critical": file in CRITICAL,
         "source_status": raw or None,
         "version": metadata.get("version"),
         "updated_at": metadata.get("updated_at"),
         "age_seconds": age_seconds,
         "max_age_seconds": max_age_seconds,
-        "stale": stale,
+        "effective_max_age_seconds": effective_max_age,
+        "stale": status == "stale",
         "item_count": cardinality(payload),
         "error_count": error_count,
         "nested_degraded_count": len(bad_children),
@@ -197,7 +243,7 @@ def classify(file: str, payload: dict[str, Any], max_age_seconds: int) -> dict[s
     }
 
 
-def main() -> None:
+def build_health() -> dict[str, Any]:
     channels: list[dict[str, Any]] = []
     for file, label, max_age_seconds in SPECS:
         payload = read_json(DATA / file, {})
@@ -208,12 +254,23 @@ def main() -> None:
     counts = {key: 0 for key in ("fresh", "partial", "degraded", "stale", "pending", "failed", "unavailable")}
     for row in channels:
         counts[row["status"]] = counts.get(row["status"], 0) + 1
+
+    critical_bad = [row for row in channels if row["critical"] and row["status"] in {"stale", "failed", "unavailable"}]
+    critical_warning = [row for row in channels if row["critical"] and row["status"] in {"partial", "degraded", "pending"}]
     bad_count = sum(counts.get(key, 0) for key in ("partial", "degraded", "stale", "failed", "unavailable"))
-    overall = "fresh" if bad_count == 0 and counts.get("pending", 0) == 0 else "degraded" if counts.get("failed", 0) or counts.get("unavailable", 0) else "partial"
+    if critical_bad:
+        overall = "failed"
+    elif counts.get("failed", 0) or counts.get("unavailable", 0):
+        overall = "degraded"
+    elif bad_count or counts.get("pending", 0):
+        overall = "partial"
+    else:
+        overall = "fresh"
+
     verification = read_json(DATA / "data-verification.json", {})
     verification_meta = verification.get("metadata") if isinstance(verification, dict) else {}
     verification_meta = verification_meta if isinstance(verification_meta, dict) else {}
-    payload = {
+    return {
         "metadata": {
             "version": VERSION,
             "updated_at": NOW.isoformat(timespec="seconds"),
@@ -221,6 +278,10 @@ def main() -> None:
             "channel_count": len(channels),
             "counts": counts,
             "bad_count": bad_count,
+            "critical_bad_count": len(critical_bad),
+            "critical_warning_count": len(critical_warning),
+            "critical_bad_channels": [row["file"] for row in critical_bad],
+            "critical_warning_channels": [row["file"] for row in critical_warning],
             "payload_mode": "metadata-only",
             "retention_note": "Health page consumes this compact index and never downloads every full historical channel.",
             "verification_summary": {
@@ -235,6 +296,10 @@ def main() -> None:
         },
         "channels": channels,
     }
+
+
+def main() -> None:
+    payload = build_health()
     write_payload("channel-health.json", "__CHANNEL_HEALTH_SEED__", payload)
     print(payload["metadata"])
 
