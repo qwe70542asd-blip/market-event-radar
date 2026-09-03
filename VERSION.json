@@ -1,6 +1,6 @@
 {
-  "version": "v11.5.0",
+  "version": "v11.5.1",
   "baseline_version": "11.4.46",
-  "name": "compact-live-data-architecture-sealed-release",
+  "name": "runtime-stability-full-replace-release",
   "schema_version": "11.5"
 }

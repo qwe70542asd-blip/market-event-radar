@@ -1,18 +1,29 @@
 {
-  "version": "v11.5.0",
+  "version": "v11.5.1",
+  "release_type": "full-replacement-runtime-stability",
   "status": "pass-with-browser-environment-block",
   "tests": {
-    "pytest_passed": 326,
+    "pytest_passed": 333,
     "http_pages": 7,
     "http_assets": 38,
     "workflow_yaml": 16,
-    "live_branches": 24
+    "live_branches": 24,
+    "active_versioned_data_json": 139
   },
   "architecture": {
     "compact_frontend": true,
+    "homepage_seed_bundle": true,
+    "homepage_external_scripts_deferred": true,
+    "request_inflight_dedupe": true,
+    "bounded_homepage_boot": true,
+    "legacy_storage_cleanup_deferred": true,
+    "atomic_service_worker_cache": true,
+    "service_worker_reload_loop_removed": true,
+    "workflow_version_from_version_json": true,
     "two_digit_asset_shards": true,
     "legacy_mobile_quick_nav_removed": true,
-    "unknown_numeric_industry_blocked": true
+    "unknown_numeric_industry_blocked": true,
+    "patch_updater_overlay_required": false
   },
   "browser_smoke": "blocked_by_administrator_localhost",
   "live_source_contract": {

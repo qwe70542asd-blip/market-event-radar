@@ -1,4 +1,4 @@
-# v11.5.0 compatibility note only: legacy needs: deploy -> live-runtime publication was removed in v11.5.0.
+# v11.5.1 compatibility note only: legacy needs: deploy -> live-runtime publication was removed in v11.5.1.
 name: Deploy live market worker
 on:
   workflow_dispatch:
@@ -87,5 +87,10 @@ jobs:
               fh.write(f"LIVE_MARKET_ENDPOINT={endpoint}\n")
           PY
 
+      - name: Resolve release version
+        run: |
+          VERSION=$(python -c 'import json; print(json.load(open("VERSION.json",encoding="utf-8"))["version"])')
+          echo "EXPECTED_VERSION=$VERSION" >> "$GITHUB_ENV"
+
       - name: Production readiness and endpoint contract
-        run: python scripts/production_readiness.py --endpoint "$LIVE_MARKET_ENDPOINT" --require-live --version v11.5.0
+        run: python scripts/production_readiness.py --endpoint "$LIVE_MARKET_ENDPOINT" --require-live --version "$EXPECTED_VERSION"

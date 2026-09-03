@@ -36,7 +36,7 @@ def test_news_loader_is_progressive_and_partial_success_safe():
 
 def test_loader_uses_hedged_mirrors_and_indexeddb_last_good():
     shared=read('assets/shared.js')
-    assert 'index*850' in shared
+    assert 'index*(booting?900:850)' in shared
     assert 'indexedDB.open(LAST_GOOD_DB,1)' in shared
     assert 'await readLastGood(name)' in shared
     assert 'void rememberLastGood(name,payload)' in shared
@@ -45,9 +45,10 @@ def test_loader_uses_hedged_mirrors_and_indexeddb_last_good():
 
 def test_service_worker_normalizes_cache_busting_query():
     sw=read('service-worker.js')
-    assert 'u.searchParams.delete("t")' in sw
-    assert 'u.searchParams.delete("_")' in sw
-    assert 'cache.match(key,{ignoreSearch:true})' in sw
+    assert 'url.searchParams.delete("t")' in sw
+    assert 'url.searchParams.delete("_")' in sw
+    assert 'ignoreSearch:false' in sw
+    assert 'ignoreSearch:true' not in sw
 
 def test_other_pages_no_longer_bind_optional_sources_at_boot():
     tw=read('assets/tw-market.js'); inst=read('assets/institutional.js'); event=read('assets/event.js'); portfolio=read('assets/portfolio.js'); status=read('assets/data-status.js')

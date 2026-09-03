@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build a compact, fail-closed health index for every public data channel.
 
-v11.5.0 sealing rules:
+v11.5.1 sealing rules:
 - computed staleness has priority over a missing/"pending" metadata.status;
 - non-empty, recently updated payloads without a status are inferred healthy instead
   of being reported as pending forever;

@@ -1,15 +1,1 @@
-{
-  "metadata": {
-    "version": "v11.4.46",
-    "source_id": "ltn",
-    "source_name": "自由財經",
-    "updated_at": null,
-    "status": "waiting",
-    "item_count": 0,
-    "archive_start": "2026-01-01",
-    "sort_order": "published_at_desc",
-    "archive_policy": "recent complete; older requires higher importance; pre-2026 deleted"
-  },
-  "health": {},
-  "items": []
-}
+{"metadata":{"version":"v11.5.1","source_id":"ltn","source_name":"自由財經","updated_at":null,"status":"waiting","item_count":0,"archive_start":"2026-01-01","sort_order":"published_at_desc","archive_policy":"recent complete; older requires higher importance; pre-2026 deleted"},"health":{},"items":[]}

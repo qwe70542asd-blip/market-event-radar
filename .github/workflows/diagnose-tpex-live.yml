@@ -7,7 +7,6 @@ on:
     paths:
       - scripts/diagnose_tpex_live.py
       - .github/workflows/diagnose-tpex-live.yml
-      - docs/V11.5.0-tpex-live-diagnostic.md
 
 permissions:
   contents: read

@@ -1,12 +1,12 @@
-Market Event Radar v11.5.0 FULL REPLACEMENT
+Market Event Radar v11.5.1 FULL REPLACEMENT
 
 1. GitHub Desktop 選 market-event-radar。
 2. Show in Explorer。
-3. 保留 .git。
-4. 解壓 market-event-radar-v11.5.0-full-replace.zip。
-5. 將 ZIP 第一層全部檔案與資料夾覆蓋 repository 根目錄。
-6. 不要把解壓後的外層資料夾整包放進 repository。
-7. 確認舊 v11.4 release-only 檔案與舊一碼 asset-detail-shard-0..9 已移除。
-8. GitHub Desktop Summary 建議：market-event-radar-v11.5.0-full-replace
+3. 保留 repository 根目錄的 .git。
+4. 解壓 market-event-radar-v11.5.1-full-replace.zip。
+5. ZIP 第一層就是正式專案 root；將第一層內容直接放到 repository root，不要多包一層。
+6. 依 DELETION-MANIFEST-v11.5.1.txt 清除仍存在的舊 release-only 檔案。
+7. 不需要執行 patch、updater、overlay 或 generator。
+8. GitHub Desktop Summary 建議：market-event-radar-v11.5.1-full-replace
 9. Commit to main → Push origin。
-10. 等 Verify stable app release 與 live-data-verification 更新完成。
+10. 確認 Verify stable app release 與 live-data workflows 完成。

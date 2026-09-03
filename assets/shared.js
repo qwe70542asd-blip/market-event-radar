@@ -1,5 +1,5 @@
 (()=>{"use strict";
-const OWNER="qwe70542asd-blip",REPO="market-event-radar",APP_VERSION="v11.5.0";
+const OWNER="qwe70542asd-blip",REPO="market-event-radar",APP_VERSION="v11.5.1",BOOT_STARTED_AT=Date.now(),FAST_BOOT_WINDOW_MS=15000;
 let LIVE_MARKET_ENDPOINT=String(window.MR_RUNTIME?.liveMarketEndpoint||"").replace(/\/$/,"");
 let runtimeReadyPromise=null;
 async function ensureRuntimeEndpoint(){
@@ -66,7 +66,13 @@ function renderNewsThumb(item,kind="tile",options={}){
 }
 document.addEventListener("load",event=>{const img=event.target;if(img instanceof HTMLImageElement&&img.dataset.newsRemote==="1"){img.dataset.loaded="true";img.parentElement?.classList.add("remote-image-loaded")}},true);
 document.addEventListener("error",event=>{const img=event.target;if(img instanceof HTMLImageElement&&img.dataset.newsRemote==="1")advanceNewsImage(img)},true);
-async function getJson(url,timeout=9000){const ctl=new AbortController(),id=setTimeout(()=>ctl.abort(),timeout);try{const r=await fetch(url,{cache:"no-store",headers:{Accept:"application/json"},signal:ctl.signal});if(!r.ok)throw Error(r.status);return await r.json()}finally{clearTimeout(id)}}
+const HTTP_INFLIGHT=new Map();
+function canonicalJsonKey(url){try{const u=new URL(url,location.href);u.searchParams.delete("t");u.searchParams.delete("_");return u.toString()}catch(e){return String(url||"")}}
+async function getJson(url,timeout=9000){
+ const key=canonicalJsonKey(url),active=HTTP_INFLIGHT.get(key);if(active)return cloneValue(await active);
+ const promise=(async()=>{const ctl=new AbortController(),id=setTimeout(()=>ctl.abort(),timeout);try{const r=await fetch(url,{cache:"no-store",headers:{Accept:"application/json"},signal:ctl.signal});if(!r.ok)throw Error(r.status);return await r.json()}finally{clearTimeout(id)}})().finally(()=>HTTP_INFLIGHT.delete(key));
+ HTTP_INFLIGHT.set(key,promise);return cloneValue(await promise);
+}
 const FRESH_BRANCH_FILES=new Set(["market-snapshot.json","market-kline.json","tw-market.json","market-volume-history.json","events.json"]);
 const cloneValue=value=>typeof structuredClone==="function"?structuredClone(value):JSON.parse(JSON.stringify(value));
 function decodeGitHubContent(value){const binary=atob(String(value||"").replace(/\s+/g,"")),bytes=Uint8Array.from(binary,char=>char.charCodeAt(0));return JSON.parse(new TextDecoder("utf-8").decode(bytes))}
@@ -77,20 +83,17 @@ async function loadBranchApi(name,branch){
  if(meta?.download_url)return await getJson(`${meta.download_url}${meta.download_url.includes("?")?"&":"?"}sha=${encodeURIComponent(meta.sha||Date.now())}`,11000);
  throw Error("GitHub contents API returned no JSON content");
 }
-const snapshotCacheKeys=["mr-market-snapshot-last-good-v1","mr-market-snapshot-last-good-v11.4.46","mr-market-snapshot-last-good-v11.4.31","mr-market-snapshot-last-good-v11.4.28","mr-market-snapshot-last-good-v11.4.27"];
+const snapshotCacheKeys=["mr-market-snapshot-last-good-v11.5.1"];
 const snapshotCacheKey=snapshotCacheKeys[0];
 const DATA_MEMORY=new Map();
-// Small hot-path session cache stays in Web Storage.  Durable last-known-good
-// snapshots for every live channel use IndexedDB so a multi-megabyte events or
-// news archive never competes with localStorage's small quota.
+// Build-scoped browser caches prevent an old frontend schema from being promoted
+// into a new release. Portfolio/watchlist/user keys are intentionally unrelated.
 const WEB_STORAGE_CACHE_FILES=new Set(["market-snapshot.json","tw-market.json"]);
-// Large news/diagnostic archives are session-only; persisting them as last-good
-// causes unbounded browser storage growth with little UX benefit.
 const EPHEMERAL_LARGE_FILES=new Set(["stock-news.json","official-market-notices.json","company-disclosures.json","data-verification.json","channel-health.json",...NEWS_FILES.map(row=>row.file)]);
-const dataCacheKey=name=>`mr-data-cache-v1:${name}`;
-const lastGoodKey=name=>`mr-data-last-good-v1:${name}`;
-const STORAGE_CLEANUP_KEY="mr-storage-cleanup-v2";
-const LAST_GOOD_DB="market-radar-last-good-v1",LAST_GOOD_STORE="payloads";
+const dataCacheKey=name=>`mr-data-cache-v11.5.1:${name}`;
+const lastGoodKey=name=>`mr-data-last-good-v11.5.1:${name}`;
+const STORAGE_CLEANUP_KEY="mr-storage-cleanup-v11.5.1";
+const LAST_GOOD_DB="market-radar-last-good-v11.5.1",LAST_GOOD_STORE="payloads";
 let lastGoodDbPromise=null;
 function openLastGoodDb(){
  if(!("indexedDB" in window))return Promise.resolve(null);
@@ -101,16 +104,18 @@ function openLastGoodDb(){
 async function idbGet(name){const db=await openLastGoodDb();if(!db)return null;return await new Promise(resolve=>{try{const tx=db.transaction(LAST_GOOD_STORE,"readonly"),req=tx.objectStore(LAST_GOOD_STORE).get(name);req.onsuccess=()=>resolve(req.result||null);req.onerror=()=>resolve(null)}catch(e){resolve(null)}})}
 async function idbPut(name,value){const db=await openLastGoodDb();if(!db)return;await new Promise(resolve=>{try{const tx=db.transaction(LAST_GOOD_STORE,"readwrite");tx.objectStore(LAST_GOOD_STORE).put(value,name);tx.oncomplete=()=>resolve();tx.onerror=()=>resolve();tx.onabort=()=>resolve()}catch(e){resolve()}})}
 async function idbDelete(name){const db=await openLastGoodDb();if(!db)return;await new Promise(resolve=>{try{const tx=db.transaction(LAST_GOOD_STORE,"readwrite");tx.objectStore(LAST_GOOD_STORE).delete(name);tx.oncomplete=()=>resolve();tx.onerror=()=>resolve();tx.onabort=()=>resolve()}catch(e){resolve()}})}
-void Promise.all([...EPHEMERAL_LARGE_FILES].map(name=>idbDelete(name)));
-try{
- if(localStorage.getItem(STORAGE_CLEANUP_KEY)!=="1"){
-  for(const name of Object.keys(CHANNELS)){
-   if(!WEB_STORAGE_CACHE_FILES.has(name)){localStorage.removeItem(lastGoodKey(name));sessionStorage.removeItem(dataCacheKey(name))}
-   for(const version of ["v11.4.46","v11.4.31","v11.4.28","v11.4.27","v11.4.26"])sessionStorage.removeItem(`mr-data-cache-${version}:${name}`);
-  }
-  localStorage.setItem(STORAGE_CLEANUP_KEY,"1");
- }
-}catch(e){}
+function purgeLegacyStorage(storage){
+ if(!storage)return;
+ try{const remove=[];for(let i=0;i<storage.length;i++){const key=storage.key(i)||"";if(/^(?:mr-data-(?:cache|last-good)-(?:v1|v11\.4(?:\.|:)|v11\.5\.0:)|mr-market-snapshot-last-good-(?:v1|v11\.4)|mr-sw-controller-v11\.5\.0)/.test(key))remove.push(key)}remove.forEach(key=>storage.removeItem(key))}catch(e){}
+}
+function cleanupLegacyBrowserState(){
+ try{if(localStorage.getItem(STORAGE_CLEANUP_KEY)==="1")return}catch(e){}
+ purgeLegacyStorage(sessionStorage);purgeLegacyStorage(localStorage);
+ try{indexedDB?.deleteDatabase?.("market-radar-last-good-v1")}catch(e){}
+ try{localStorage.setItem(STORAGE_CLEANUP_KEY,"1")}catch(e){}
+}
+function scheduleLegacyBrowserCleanup(){const run=()=>cleanupLegacyBrowserState();if("requestIdleCallback" in window)requestIdleCallback(run,{timeout:4000});else setTimeout(run,1500)}
+if(document.readyState==="complete")scheduleLegacyBrowserCleanup();else window.addEventListener("load",scheduleLegacyBrowserCleanup,{once:true});
 const dataCacheTtl=name=>["market-snapshot.json","market-kline.json","tw-market.json","events.json"].includes(name)?30000:300000;
 const snapshotCandleCount=row=>(Array.isArray(row?.candles)?row.candles:[]).filter(candle=>candle?.date&&[candle.open,candle.high,candle.low,candle.close].every(value=>finite(value)!=null)).length;
 const loadStored=(keys=[])=>{for(const key of keys){try{const value=JSON.parse(localStorage.getItem(key)||"null");if(value)return value}catch(e){}}return null};
@@ -168,13 +173,13 @@ async function readLastGood(name){
  if(EPHEMERAL_LARGE_FILES.has(name))return null;
  const indexed=await idbGet(name);if(isUsablePayload(name,indexed?.payload))return indexed.payload;
  if(WEB_STORAGE_CACHE_FILES.has(name)){try{const value=JSON.parse(localStorage.getItem(lastGoodKey(name))||"null");if(isUsablePayload(name,value))return value}catch(e){}}
- for(const legacy of [`mr-data-cache-v11.4.46:${name}`,`mr-data-cache-v11.4.31:${name}`,`mr-data-cache-v11.4.28:${name}`,`mr-data-cache-v11.4.27:${name}`,`mr-data-cache-v11.4.26:${name}`]){try{const entry=JSON.parse(sessionStorage.getItem(legacy)||"null");if(isUsablePayload(name,entry?.payload)){await rememberLastGood(name,entry.payload);return entry.payload}}catch(e){}}
  if(name==="market-snapshot.json"){const value=loadStored(snapshotCacheKeys);if(isUsablePayload(name,value))return value}
  return null;
 }
-async function loadRawBranch(name,branch,timeout=6200){return await getJson(`https://raw.githubusercontent.com/${OWNER}/${REPO}/${branch}/${name}?t=${Date.now()}`,timeout)}
-async function loadJsDelivr(name,branch,timeout=6200){return await getJson(`https://cdn.jsdelivr.net/gh/${OWNER}/${REPO}@${branch}/${name}?t=${Date.now()}`,timeout)}
-async function loadStatically(name,branch,timeout=6200){return await getJson(`https://cdn.statically.io/gh/${OWNER}/${REPO}/${branch}/${name}?t=${Date.now()}`,timeout)}
+const branchTimeout=()=>Date.now()-BOOT_STARTED_AT<FAST_BOOT_WINDOW_MS?2800:6200;
+async function loadRawBranch(name,branch,timeout=branchTimeout()){return await getJson(`https://raw.githubusercontent.com/${OWNER}/${REPO}/${branch}/${name}?t=${Date.now()}`,timeout)}
+async function loadJsDelivr(name,branch,timeout=branchTimeout()){return await getJson(`https://cdn.jsdelivr.net/gh/${OWNER}/${REPO}@${branch}/${name}?t=${Date.now()}`,timeout)}
+async function loadStatically(name,branch,timeout=branchTimeout()){return await getJson(`https://cdn.statically.io/gh/${OWNER}/${REPO}/${branch}/${name}?t=${Date.now()}`,timeout)}
 // GitHub Contents API is rate-limited for anonymous clients and is a poor
 // fallback for large generated JSON.  Large channels use three direct/CDN
 // mirrors instead; smaller payloads keep the API as a final metadata-aware
@@ -184,15 +189,18 @@ async function loadLiveBranchFast(name,branch){
  // Hedged mirrors: Raw starts immediately, CDN mirrors are started only when
  // the first path is slow.  This avoids the old 15-20 second sequential worst
  // case without going back to firing every mirror at once on a healthy path.
+ const booting=Date.now()-BOOT_STARTED_AT<FAST_BOOT_WINDOW_MS;
  const candidates=[
   ["raw-live-branch",()=>loadRawBranch(name,branch)],
   ["jsdelivr-live-branch",()=>loadJsDelivr(name,branch)],
-  ["statically-live-branch",()=>loadStatically(name,branch)],
  ];
- if(!LARGE_BRANCH_FILES.has(name))candidates.push(["github-api-live-branch",()=>loadBranchApi(name,branch)]);
+ // During first paint, two independent mirrors are enough. The full fallback
+ // ladder becomes available on later refreshes without saturating weak links.
+ if(!booting)candidates.push(["statically-live-branch",()=>loadStatically(name,branch)]);
+ if(!booting&&!LARGE_BRANCH_FILES.has(name))candidates.push(["github-api-live-branch",()=>loadBranchApi(name,branch)]);
  return await new Promise((resolve,reject)=>{
   let settled=false,finished=0,lastError=Error("live branch unavailable");
-  const launch=(entry,index)=>setTimeout(async()=>{if(settled)return;const [source,loader]=entry;try{const payload=await loader();if(settled)return;if(isUsablePayload(name,payload)){settled=true;resolve({payload,source});return}lastError=Error(`${source} unusable`)}catch(error){lastError=error}finally{finished++;if(!settled&&finished===candidates.length)reject(lastError)}},index*850);
+  const launch=(entry,index)=>setTimeout(async()=>{if(settled)return;const [source,loader]=entry;try{const payload=await loader();if(settled)return;if(isUsablePayload(name,payload)){settled=true;resolve({payload,source});return}lastError=Error(`${source} unusable`)}catch(error){lastError=error}finally{finished++;if(!settled&&finished===candidates.length)reject(lastError)}},index*(booting?900:850));
   candidates.forEach(launch);
  });
 }
@@ -204,17 +212,17 @@ async function _loadData(name,fallback={},options={}){
   if(WEB_STORAGE_CACHE_FILES.has(name)){try{const cached=JSON.parse(sessionStorage.getItem(dataCacheKey(name))||"null");if(cached&&now-cached.at<ttl&&isUsablePayload(name,cached.payload)){DATA_MEMORY.set(name,cached);return cloneValue(cached.payload)}}catch(e){}}
  }
  const branch=CHANNELS[name];let payload=null,source="";
- // Read the durable snapshot before accepting a remote replacement.  A payload
- // can be syntactically valid yet catastrophically incomplete (the class of
- // regression that previously hid most calendar events).
- const lastGoodForGuard=(branch||name==="market-snapshot.json")?await readLastGood(name):null;
+ // Only archive-regression-protected channels need a durable read before the
+ // network. Compact homepage channels start immediately and consult last-good
+ // only if the live path fails, avoiding IndexedDB on the first-paint critical path.
+ const lastGoodForGuard=ARCHIVE_REGRESSION_FILES.has(name)?await readLastGood(name):null;
  const acceptRemote=(candidate,candidateSource)=>{
   if(!isUsablePayload(name,candidate))return false;
   if(isCatastrophicPayloadRegression(name,candidate,lastGoodForGuard)){console.warn(`Rejected catastrophic ${name} shrink from ${payloadCardinality(name,lastGoodForGuard)} to ${payloadCardinality(name,candidate)} (${candidateSource})`);return false}
   payload=candidate;source=candidateSource;return true;
  };
  const endpoint=name==="market-snapshot.json"?await ensureRuntimeEndpoint():"";
- if(name==="market-snapshot.json"&&endpoint){try{acceptRemote(await getJson(`${endpoint}/market-snapshot.json?_=${Date.now()}`,6000),"worker")}catch(e){}}
+ if(name==="market-snapshot.json"&&endpoint){try{acceptRemote(await getJson(`${endpoint}/market-snapshot.json?_=${Date.now()}`,Date.now()-BOOT_STARTED_AT<FAST_BOOT_WINDOW_MS?2600:6000),"worker")}catch(e){}}
  if(branch&&!payload){try{const live=await loadLiveBranchFast(name,branch);acceptRemote(live.payload,live.source)}catch(e){}}
  if(!payload&&lastGoodForGuard){payload=lastGoodForGuard;source="browser-last-good"}
  if(!payload&&!lastGoodForGuard){const cached=await readLastGood(name);if(cached){payload=cached;source="browser-last-good"}}
@@ -279,8 +287,9 @@ function startNewsChannels(options={}){
  // Bound live refresh concurrency so a phone opening the homepage does not start
  // dozens of Raw/CDN hedge requests at once. Bundled seeds render immediately.
  const concurrency=Math.max(1,Math.min(6,Number(options.concurrency)||3));
+ const startDelay=Math.max(0,Number(options.startDelay)||0),staggerMs=Math.max(0,Number(options.staggerMs)||0),sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
  let cursor=0;
- const worker=async()=>{while(true){const index=cursor++;if(index>=NEWS_FILES.length)return;const cfg=NEWS_FILES[index];try{const payload=await loadData(cfg.file,window[cfg.seed]||{metadata:{source_id:cfg.id,source_name:cfg.label,status:"waiting",item_count:0},items:[]},options.force?{force:true}:{});channels[index]=normalizeNewsChannel(cfg,payload);emit()}catch(e){}}};
+ const worker=async()=>{if(startDelay)await sleep(startDelay);while(true){const index=cursor++;if(index>=NEWS_FILES.length)return;const cfg=NEWS_FILES[index];try{const payload=await loadData(cfg.file,window[cfg.seed]||{metadata:{source_id:cfg.id,source_name:cfg.label,status:"waiting",item_count:0},items:[]},options.force?{force:true}:{});channels[index]=normalizeNewsChannel(cfg,payload);emit()}catch(e){}if(staggerMs)await sleep(staggerMs)}};
  const workers=Array.from({length:Math.min(concurrency,NEWS_FILES.length)},()=>worker());
  const initial=mergeNewsChannels(channels),done=Promise.allSettled(workers).then(()=>emit());
  return {initial,done};

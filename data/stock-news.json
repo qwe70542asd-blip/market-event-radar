@@ -1,13 +1,1 @@
-{
-  "metadata": {
-    "version": "v11.4.46",
-    "status": "waiting",
-    "item_count": 0,
-    "source_count": 9,
-    "archive_start": "2026-01-01",
-    "sort_order": "published_at_desc",
-    "archive_policy": "recent complete; older requires higher importance; pre-2026 deleted"
-  },
-  "sources": [],
-  "items": []
-}
+{"metadata":{"version":"v11.5.1","status":"waiting","item_count":0,"source_count":9,"archive_start":"2026-01-01","sort_order":"published_at_desc","archive_policy":"recent complete; older requires higher importance; pre-2026 deleted"},"sources":[],"items":[]}

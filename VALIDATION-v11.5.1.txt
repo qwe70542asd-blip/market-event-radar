@@ -1,29 +1,47 @@
-Market Event Radar v11.5.1 — INTEGRATED PERFORMANCE UPDATE
-Generated: 2026-09-02 (Asia/Taipei)
-Baseline: v11.5.0 / main f5cf1448de5abbb41365672513aafcf6b260e098
+Market Event Radar v11.5.1 validation
 
-GOAL
-Fix extremely slow first load / apparent freeze without removing market-data integrity guards.
+Release type: Full Replacement / Runtime Stability + Compact Live Data Architecture
+Version: v11.5.1
 
-INCLUDED FIXES
-[PASS] External startup scripts are converted to defer so downloads can proceed in parallel while execution order is preserved.
-[PASS] New v11.5.1 fast-boot layer deduplicates identical in-flight GETs for local/live-data routes.
-[PASS] During the first 15 seconds, slow GitHub/CDN live-data fetches fail fast (Raw 2.8s / CDN 2.2s) so the app can use its normal local/seed fallback instead of appearing frozen.
-[PASS] v11.4 and v11.5.0 generated data caches are not promoted into the clean v11.5.1 runtime; user portfolio/watchlist keys are preserved.
-[PASS] stale-market-guard no longer force-fetches the same compact market/chip/snapshot payload again at startup.
-[PASS] stale-market-guard first verification is idle-scheduled; the second verification is delayed to 15 seconds instead of 2 seconds.
-[PASS] Service Worker registration/update is delayed until load/idle.
-[PASS] Service Worker controller changes no longer force location.reload(), eliminating update/reload-loop behavior.
-[PASS] Service Worker install precache is reduced to the application shell; event/news/market seed storms are removed from install.
-[PASS] Cache namespace/version moved to v11.5.1.
-[PASS] Regression test test_v1151_performance_hotfix.py is included.
+PASS repository cleanup / stale release guard
+PASS 24 isolated live branches / single-writer audit
+PASS Python compileall
+PASS JavaScript syntax (node --check)
+PASS shell syntax (bash -n)
+PASS 16 GitHub workflow YAML files
+PASS security audit
+PASS production static readiness v11.5.1
+PASS strict public data validation
+PASS active bundled data metadata: 139 versioned JSON payloads all v11.5.1
+PASS frontend compact payload budgets
+  home-assets.json          3,473 /   800,000 bytes
+  home-events.json         31,090 / 2,000,000 bytes
+  tw-market-compact.json    5,034 / 2,000,000 bytes
+  tw-chips-compact.json       636 / 4,000,000 bytes
+PASS pytest: 333 passed
+PASS HTTP smoke: 7 pages / 38 referenced assets
+PASS live-source contract: external_warnings=5, exit 0
+  (sandbox DNS cannot resolve TWSE/TPEx endpoints; no fabricated data used)
 
-IMPORTANT
-This package is an integrated update overlay for the existing v11.5.0 repository. It is not falsely labeled as a full-replace archive because the original v11.5.0 full-replace ZIP binary is not available in the current ChatGPT runtime.
+Runtime-stability regression gates:
+- Homepage seed fallback is one bundled request instead of 19 individual seed scripts.
+- Homepage external scripts are deferred; no parser-blocking external script remains.
+- Identical in-flight GETs are deduplicated by canonical URL.
+- First-paint branch mirror fanout is bounded; later refresh may use the wider fallback ladder.
+- Homepage news boot is progressive and bounded to one worker with delay/stagger.
+- focus/visibility market refreshes are throttled.
+- stale-market guard does not force duplicate market/chips/snapshot fetches during first paint.
+- legacy local/session/IndexedDB cleanup is deferred to load/idle instead of synchronously scanning all channels.
+- Service Worker uses atomic v11.5.1 cache, cache-first versioned static assets, bounded network-first data/navigation, and no ignoreSearch:true fallback.
+- Service Worker registration does not reload the page on controllerchange; old market-event-radar caches are purged.
+- Actions release-version validation resolves VERSION.json rather than embedding the patch number.
+- No patch / updater / overlay / one-click release artifact is required or bundled.
 
-POST-APPLY REQUIRED
-- Extract this ZIP into the v11.5.0 repository root.
-- Run ONE-CLICK-APPLY-v11.5.1.cmd once.
-- Commit/push through GitHub Desktop.
-- GitHub Actions “Verify stable app release” must finish green.
-- Hard refresh once after deployment so the old v11.5.0 Service Worker/cache is replaced.
+Browser smoke:
+ENVIRONMENT BLOCKED. System Chromium launches, but localhost navigation is denied by the execution environment with ERR_BLOCKED_BY_ADMINISTRATOR. GitHub Hosted Runner remains the authoritative browser gate after push.
+
+Known live-source conditions are not hidden by this release:
+- source-date mismatches remain degraded until upstream data catches up;
+- stale Yahoo enrichment remains secondary and cannot override official current data;
+- MOPS circuit-open remains degraded with last-known-good behavior;
+- cross-source conflicts remain visible in data verification / health status.

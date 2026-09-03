@@ -10,14 +10,14 @@ def test_calendar_is_homepage_primary_surface_and_market_precedes_portfolio():
     assert html.index('id="latestNews"') > html.index('id="dateAlertPanel"')
 
 def test_calendar_advanced_filters_are_collapsed_by_default():
-    html=read("index.html");css=read("assets/v11.5.0-overrides.css")
+    html=read("index.html");css=read("assets/v11.5.1-overrides.css")
     assert '<details class="calendar-filter-details" id="calendarFilterDetails">' in html
     assert 'id="calendarActiveFilterText"' in html
     assert '<details class="calendar-filter-details" id="calendarFilterDetails" open' not in html
     assert '.calendar-filter-details>summary' in css
 
 def test_phone_quick_nav_is_single_fixed_left_rail_not_content_row():
-    html=read("index.html");shared=read("assets/shared.js");css=read("assets/v11.5.0-overrides.css")
+    html=read("index.html");shared=read("assets/shared.js");css=read("assets/v11.5.1-overrides.css")
     assert html.count('class="floating-quick-nav"') == 1
     assert 'position:fixed!important;left:3px!important' in css
     assert 'top:50%!important;transform:translateY(-50%)!important' in css

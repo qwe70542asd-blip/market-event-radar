@@ -2,7 +2,7 @@
   "use strict";
   const {$,$$,escapeHtml,fmt,pct,cls,formatTime,loadData,loadStockBasics,loadStockNews,finite,stripHtml,normalizeText,renderNewsThumb,safeExternalHref,loadWatchlist,toggleWatchlist}=MR;
   const symbol=(new URLSearchParams(location.search).get("symbol")||"2330").toUpperCase();
-  // v11.5.0 sealed bounded asset bootstrap: load the official market quote plus
+  // v11.5.1 sealed bounded asset bootstrap: load the official market quote plus
   // one symbol-prefix detail shard.  Large history/detail channels are assembled
   // server-side, so opening one stock never downloads all stocks' histories.
   const shard=/^\d{2}/.test(symbol)?symbol.slice(0,2):"00";

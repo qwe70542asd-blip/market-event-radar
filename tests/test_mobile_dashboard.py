@@ -15,7 +15,7 @@ def test_home_has_market_heat_risk_and_sector_momentum_cards():
 
 
 def test_calendar_uses_dot_count_markers_instead_of_mobile_bars():
-    html=read("index.html");js=read("assets/home.js");css=read("assets/v11.5.0-overrides.css")
+    html=read("index.html");js=read("assets/home.js");css=read("assets/v11.5.1-overrides.css")
     for token in ("calendar-legend","legend-dot major","legend-dot macro","legend-dot company","legend-dot dividend"):
         assert token in html
     for token in ('calendarMarker("major"','calendarMarker("macro"','calendarMarker("company"','calendarMarker("dividend"',"calendar-markers"):
@@ -25,7 +25,7 @@ def test_calendar_uses_dot_count_markers_instead_of_mobile_bars():
 
 
 def test_mobile_calendar_keeps_instruction_visible_and_opens_as_bottom_sheet():
-    css=read("assets/v11.5.0-overrides.css")
+    css=read("assets/v11.5.1-overrides.css")
     assert '.calendar-meta span:last-child{display:block!important' in css
     assert 'inset:auto 0 0 0!important' in css
     assert 'border-radius:20px 20px 0 0!important' in css
@@ -40,7 +40,7 @@ def test_new_dashboard_refreshes_when_market_or_asset_channels_upgrade():
 
 
 def test_old_mobile_duplicate_nav_injection_cannot_return():
-    shared=read("assets/shared.js");css=read("assets/v11.5.0-overrides.css")
+    shared=read("assets/shared.js");css=read("assets/v11.5.1-overrides.css")
     assert 'installGlobalMobileQuickNav' not in shared
     assert 'mobile-global-quick-nav' not in shared
     assert 'shell.appendChild(nav)' not in shared

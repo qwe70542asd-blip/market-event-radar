@@ -1,9 +1,1 @@
-{
-  "metadata": {
-    "version": "v11.4.46",
-    "monthly_revenue_last_full_backfill": null,
-    "dividend_cursor": 0,
-    "dividend_completed_cycle_at": null,
-    "note": "Historical official data backfill progress; restored from live-assets before each update."
-  }
-}
+{"metadata":{"version":"v11.5.1","monthly_revenue_last_full_backfill":null,"dividend_cursor":0,"dividend_completed_cycle_at":null,"note":"Historical official data backfill progress; restored from live-assets before each update."}}

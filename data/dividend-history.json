@@ -1,12 +1,1 @@
-{
-  "metadata": {
-    "version": "v11.4.46",
-    "updated_at": null,
-    "status": "waiting",
-    "symbol_count": 0,
-    "record_count": 0,
-    "note": "Waiting for the isolated dividend-history workflow."
-  },
-  "sources": [],
-  "items": {}
-}
+{"metadata":{"version":"v11.5.1","updated_at":null,"status":"waiting","symbol_count":0,"record_count":0,"note":"Waiting for the isolated dividend-history workflow."},"sources":[],"items":{}}

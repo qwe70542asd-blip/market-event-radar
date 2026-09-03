@@ -7,7 +7,7 @@
   const bytes=value=>{const n=Number(value);if(!Number.isFinite(n)||n<=0)return"—";if(n<1024)return`${n} B`;if(n<1024**2)return`${(n/1024).toFixed(1)} KB`;return`${(n/1024**2).toFixed(2)} MB`};
   const age=value=>{const n=Number(value);if(!Number.isFinite(n))return"—";if(n<60)return`${n} 秒`;if(n<3600)return`${Math.round(n/60)} 分`;if(n<86400)return`${(n/3600).toFixed(n<10800?1:0)} 小時`;return`${(n/86400).toFixed(1)} 天`};
   const reasons=row=>(row.reasons||[]).slice(0,3).join("；")||"—";
-  const empty={metadata:{version:"v11.5.0",status:"unavailable",counts:{}},channels:[]};
+  const empty={metadata:{version:"v11.5.1",status:"unavailable",counts:{}},channels:[]};
   let payload=empty;
   try{payload=await loadData("channel-health.json",empty,{force:true})}catch(error){payload={...empty,metadata:{...empty.metadata,error:String(error)}}}
   const meta=payload.metadata||{},counts=meta.counts||{},verification=meta.verification_summary||{},channels=Array.isArray(payload.channels)?payload.channels:[];

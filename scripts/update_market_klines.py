@@ -17,7 +17,7 @@ import requests
 from common import DATA, NOW, read_json, write_payload, VERSION
 
 HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.5.0)",
+    "User-Agent": "Mozilla/5.0 (compatible; MarketEventRadar/11.5.1)",
     "Accept-Language": "zh-TW,zh;q=0.9,en;q=0.6",
 }
 YAHOO_CHART = "https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"

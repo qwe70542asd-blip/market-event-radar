@@ -262,8 +262,9 @@ def test_asset_page_uses_per_metric_verification_status():
 
 def test_service_worker_non_ok_network_response_can_fall_back_to_cache():
     text=(ROOT/'service-worker.js').read_text(encoding='utf-8')
-    assert 'normalizedCacheRequest(req)' in text
-    assert 'cache.match(key,{ignoreSearch:true})' in text
+    assert 'canonicalRequest(request)' in text
+    assert 'cache.match(key)' in text
+    assert 'ignoreSearch:false' in text
 
 
 def test_media_health_distinguishes_direct_source_from_history_fallback():

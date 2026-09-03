@@ -84,7 +84,7 @@ class StaticTests(unittest.TestCase):
   texts="\n".join(self.read(p.relative_to(ROOT)) for p in (ROOT/".github/workflows").glob("update-news-*.yml"))
   for branch in ("live-news-cna","live-news-moneydj","live-news-cnyes","live-news-udn","live-news-ltn","live-news-wealth","live-news-yahoo","live-news-technews","live-news-ctee","live-news-asia-risk"):self.assertIn(branch,texts)
  def test_service_worker_cache(self):
-  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-5-0",sw);self.assertIn("CORE_STATIC",sw);self.assertIn("OPTIONAL_STATIC",sw)
+  sw=self.read("service-worker.js");self.assertIn("market-event-radar-v11-5-1",sw);self.assertIn("CORE_STATIC",sw);self.assertIn("OPTIONAL_STATIC",sw)
   install=sw.split('self.addEventListener("install"',1)[1].split('self.addEventListener("activate"',1)[0]
   self.assertNotIn("Promise.allSettled(OPTIONAL_STATIC",install)
   optional=sw.split("const OPTIONAL_STATIC=",1)[1].split(";",1)[0]
@@ -101,14 +101,14 @@ class StaticTests(unittest.TestCase):
 
  def test_market_snapshot_seed_schema(self):
   payload=json.loads(self.read("data/market-snapshot.json"))
-  self.assertEqual(payload.get("metadata",{}).get("version"),"v11.4.46")
+  self.assertEqual(payload.get("metadata",{}).get("version"),"v11.5.1")
   self.assertEqual(set(payload.get("metadata",{}).get("kline_symbols",[])),{"^TWII","^DJI","^IXIC","^SOX","^GSPC","^N225"})
   self.assertNotIn("^TWOII",{row.get("symbol") for row in payload.get("items",[])})
 
  def test_all_pages_current_version(self):
   for p in ROOT.glob("*.html"):
    body=p.read_text(encoding="utf-8")
-   self.assertIn("v11.5.0",body,p.name)
+   self.assertIn("v11.5.1",body,p.name)
    self.assertNotIn("v11.4.15",body,p.name)
 
 
@@ -447,9 +447,9 @@ class StaticTests(unittest.TestCase):
 
  def test_v11424_version_bump_prevents_same_version_asset_cache(self):
   for path in ("index.html","assets/home.js","assets/runtime-config.js","service-worker.js","VERSION.json"):
-   content=self.read(path);self.assertIn("11.5.0",content);self.assertNotIn("11.4.23",content);self.assertNotIn("11.4.22",content)
+   content=self.read(path);self.assertIn("11.5.1",content);self.assertNotIn("11.4.23",content);self.assertNotIn("11.4.22",content)
   index=self.read("index.html");sw=self.read("service-worker.js")
-  for token in ("assets/shared.js?v=11.5.0","assets/home.js?v=11.5.0","assets/sw-register.js?v=11.5.0"):
+  for token in ("assets/shared.js?v=11.5.1","assets/home.js?v=11.5.1","assets/sw-register.js?v=11.5.1"):
    self.assertIn(token,index+sw)
 
  def test_v11428_compact_market_state_replaces_sector_heat(self):
@@ -486,7 +486,7 @@ class StaticTests(unittest.TestCase):
    self.assertIn(token,shared)
 
  def test_v11428_featured_news_is_one_lead_plus_right_column(self):
-  home=self.read("assets/home.js");css=self.read("assets/styles.css")+self.read("assets/v11.5.0-overrides.css")
+  home=self.read("assets/home.js");css=self.read("assets/styles.css")+self.read("assets/v11.5.1-overrides.css")
   for token in ("home-news-feature-layout","home-feature-lead","home-feature-side-list","featured.slice(1,4)"):self.assertIn(token,home+css)
   self.assertIn("grid-template-rows:repeat(3,minmax(0,1fr))",css)
 
@@ -507,7 +507,7 @@ class StaticTests(unittest.TestCase):
 
  def test_v11428_mobile_calendar_has_no_forced_horizontal_scroll(self):
   css=self.read("assets/styles.css");html=self.read("index.html");manifest=json.loads(self.read("manifest.webmanifest"))
-  for token in (".calendar-weekdays,.calendar-grid{width:100%;min-width:0!important","overflow:visible!important","grid-template-columns:repeat(7,minmax(0,1fr))",".mobile-install-trigger","assets/pwa-install.js?v=11.5.0"):
+  for token in (".calendar-weekdays,.calendar-grid{width:100%;min-width:0!important","overflow:visible!important","grid-template-columns:repeat(7,minmax(0,1fr))",".mobile-install-trigger","assets/pwa-install.js?v=11.5.1"):
    self.assertIn(token,css+html)
   self.assertEqual(manifest.get("display"),"standalone")
   self.assertTrue(any(icon.get("sizes")=="192x192" for icon in manifest.get("icons",[])))
@@ -585,7 +585,8 @@ class StaticTests(unittest.TestCase):
   self.assertIn('"stock-basics.json"',shared)
   self.assertNotIn("Promise.any(requests)",shared)
   self.assertIn("Only warm the actual asset page after the user shows intent",shared)
-  self.assertNotIn("requestIdleCallback",shared)
+  self.assertIn("scheduleLegacyBrowserCleanup",shared);self.assertIn("requestIdleCallback",shared)
+  self.assertNotIn("for(const name of Object.keys(CHANNELS))",shared)
 
  def test_v11444_windows_cleanup_is_version_aware(self):
   batch=self.read("CLEAN-REPO.cmd");cleanup=self.read("scripts/cleanup_repo.py")
@@ -607,7 +608,7 @@ class StaticTests(unittest.TestCase):
 
  def test_v11431_edge_worker_is_current_and_uses_verified_time(self):
   worker=self.read("edge/market-live-worker.js")
-  self.assertIn('v11.5.0',worker);self.assertNotIn('v11.4.27',worker)
+  self.assertIn('v11.5.1',worker);self.assertNotIn('v11.4.27',worker)
   self.assertIn('missing verified quote time',worker)
   self.assertIn('marketDate(new Date(x.time*1000),market)',worker)
   self.assertIn('latestSession===session?previous?.close:latest?.close',worker)
@@ -655,7 +656,7 @@ class StaticTests(unittest.TestCase):
  def test_v11432_large_payloads_do_not_use_web_storage(self):
   shared=self.read("assets/shared.js")
   self.assertIn('WEB_STORAGE_CACHE_FILES=new Set(["market-snapshot.json","tw-market.json"])',shared)
-  self.assertIn('STORAGE_CLEANUP_KEY="mr-storage-cleanup-v2"',shared)
+  self.assertIn('STORAGE_CLEANUP_KEY="mr-storage-cleanup-v11.5.1"',shared)
   self.assertIn('indexedDB.open(LAST_GOOD_DB,1)',shared)
   self.assertIn('await idbPut(name,entry)',shared)
   self.assertNotIn('WEB_STORAGE_CACHE_FILES=new Set(["market-snapshot.json","events.json"',shared)
@@ -688,7 +689,7 @@ class StaticTests(unittest.TestCase):
    self.assertIn(token,ignore)
   for token in ('NESTED_DIRS','REDUNDANT_WORKFLOWS','version_obsolete_paths','--check'):
    self.assertIn(token,cleanup)
-  self.assertIn('python scripts/cleanup_repo.py --check',verify);self.assertIn('verify-v11-5-0-${{ github.ref }}',verify)
+  self.assertIn('python scripts/cleanup_repo.py --check',verify);self.assertIn('release-verification-${{ github.ref }}',verify)
 
  def test_v11438_home_portfolio_totals_fail_closed(self):
   home=self.read("assets/home.js")

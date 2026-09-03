@@ -37,7 +37,7 @@ def test_frontend_payload_budget_files_exist_and_are_json():
 
 def test_current_release_has_no_old_active_version_refs():
     version=json.loads(read('VERSION.json'))['version']
-    assert version=='v11.5.0'
+    assert version=='v11.5.1'
     for path in ['index.html','asset.html','institutional.html','news.html','tw-market.html','portfolio.html','data-status.html','404.html','service-worker.js','assets/shared.js']:
         text=read(path)
         assert 'v11.4.62' not in text
@@ -50,7 +50,7 @@ def test_compact_channels_are_registered_on_live_verification_branch():
 
 
 def test_legacy_duplicate_mobile_quick_nav_system_is_removed():
-    shared=read('assets/shared.js'); css=read('assets/v11.5.0-overrides.css')
+    shared=read('assets/shared.js'); css=read('assets/v11.5.1-overrides.css')
     assert 'installGlobalMobileQuickNav' not in shared
     assert 'mobile-global-quick-nav' not in shared
     assert 'mobile-global-quick-nav' not in css

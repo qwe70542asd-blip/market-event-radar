@@ -4,7 +4,7 @@ ROOT=Path(__file__).resolve().parents[1]
 def read(path): return (ROOT/path).read_text(encoding="utf-8")
 
 def test_v11451_major_information_stays_one_plus_three_equal_height():
-    css=read("assets/v11.5.0-overrides.css");home=read("assets/home.js")
+    css=read("assets/v11.5.1-overrides.css");home=read("assets/home.js")
     assert "height:360px" in css
     assert "grid-template-rows:238px 122px" in css
     assert "grid-template-rows:repeat(3,minmax(0,1fr))" in css
@@ -15,7 +15,8 @@ def test_v11451_full_event_archive_is_the_only_home_calendar_authority():
     assert 'loadData("home-events.json"' in home
     assert 'loadData("events.json"' not in home
     assert 'loadData("home-events.json"' in alerts
-    assert "data/events-seed.js" in index
+    assert "data/home-bootstrap-seed.js" in index
+    assert "__EVENT_SEED__" in read("data/home-bootstrap-seed.js")
     for text in (home,alerts,index,workflow,shared):
         assert "events-index" not in text
     assert not (ROOT/"data/events-index.json").exists()
@@ -75,7 +76,7 @@ def test_v11452_live_payloads_cannot_silently_replace_complete_archives():
 
 def test_v11452_service_worker_uses_new_atomic_cache_namespace():
     sw=read("service-worker.js")
-    assert 'market-event-radar-v11-5-0' in sw
+    assert 'market-event-radar-v11-5-1' in sw
     assert 'market-event-radar-v11-4-50' not in sw
 
 

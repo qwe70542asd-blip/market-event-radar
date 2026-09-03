@@ -3,7 +3,7 @@
  */
 (()=>{
   "use strict";
-  const APP_VERSION="v11.5.0";
+  const APP_VERSION="v11.5.1";
   const SCHEMA_VERSION="market-snapshot-v2";
   const EXPECTED_HOST="market-event-radar-live.qwe70542asd.workers.dev";
   const ENDPOINT=`https://${EXPECTED_HOST}`;
@@ -16,7 +16,7 @@
     }catch(e){return ""}
   };
   const verifyHealth=async endpoint=>{
-    const ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),6500);
+    const ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),2200);
     try{
       const response=await fetch(`${endpoint}/health`,{cache:"no-store",headers:{Accept:"application/json"},signal:ctl.signal});
       if(!response.ok)return null;

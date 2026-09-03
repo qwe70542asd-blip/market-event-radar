@@ -1,4 +1,4 @@
-// v11.5.0: fail closed for stale breadth/chips, but keep a verified same-session TAIEX quote visible.
+// v11.5.1: fail closed for stale breadth/chips, but keep a verified same-session TAIEX quote visible.
 (()=>{
   "use strict";
   const fmtDay=value=>String(value||"").slice(0,10);
@@ -54,12 +54,13 @@
   }
   function clearGuard(){const root=document.getElementById("marketStateSummary");root?.classList.remove("market-data-stale","market-data-partial","chip-data-stale")}
   function applyState(){if(state?.partialLive)applyPartialMarket();else if(state?.marketStale)applyMarketStale();else if(state?.chipsStale)applyChipStale();else clearGuard()}
-  async function assess(){
+  async function assess(force=false){
     if(!window.MR?.loadData)return;
     const twFallback=window.__TW_MARKET_SEED__||{items:[],metadata:{}},chipsFallback=window.__TW_CHIPS_SEED__||{markets:{},metadata:{}},snapFallback=window.__MARKET_SNAPSHOT_SEED__||{items:[],metadata:{}};
     try{
+      const options=force?{force:true}:{};
       const [tw,chips,snapshot]=await Promise.all([
-        MR.loadData("tw-market-compact.json",twFallback,{force:true}).catch(()=>twFallback),MR.loadData("tw-chips-compact.json",chipsFallback,{force:true}).catch(()=>chipsFallback),MR.loadData("market-snapshot.json",snapFallback,{force:true}).catch(()=>snapFallback)
+        MR.loadData("tw-market-compact.json",twFallback,options).catch(()=>twFallback),MR.loadData("tw-chips-compact.json",chipsFallback,options).catch(()=>chipsFallback),MR.loadData("market-snapshot.json",snapFallback,options).catch(()=>snapFallback)
       ]);
       const marketDate=fmtDay(tw?.metadata?.trading_date),chipDate=fmtDay(chips?.metadata?.trading_date),twii=(snapshot?.items||[]).find(row=>String(row?.symbol||"").toUpperCase()==="^TWII"),referenceDate=fmtDay(twii?.session_date||twii?.price_date||twii?.ohlc_date);
       let referenceChange=finite(twii?.change_percent);const price=finite(twii?.price),prev=finite(twii?.previous_close);if(referenceChange==null&&price!=null&&prev!=null&&prev!==0)referenceChange=(price-prev)/prev*100;
@@ -67,6 +68,6 @@
       applyState();
     }catch(error){console.warn("stale market guard assessment failed",error)}
   }
-  const boot=()=>{assess();setTimeout(assess,2000);setInterval(assess,60000);const root=document.getElementById("marketStateSummary");if(root)new MutationObserver(()=>{if(!applying)applyState()}).observe(root,{subtree:true,childList:true,characterData:true,attributes:true})};
+  const boot=()=>{const root=document.getElementById("marketStateSummary");if(root)new MutationObserver(()=>{if(!applying)applyState()}).observe(root,{subtree:true,childList:true,characterData:true,attributes:true});const start=()=>assess(false);if("requestIdleCallback" in window)requestIdleCallback(start,{timeout:1200});else setTimeout(start,350);setTimeout(()=>assess(true),15000);setInterval(()=>assess(true),60000)};
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
 })();

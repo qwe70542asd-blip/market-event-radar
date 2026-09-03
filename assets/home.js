@@ -1,4 +1,4 @@
-// v11.5.0 sealed performance + strict industry normalization
+// v11.5.1 sealed performance + strict industry normalization
 (async()=>{
   "use strict";
   const {$,escapeHtml,fmt,pct,cls,formatTime,formatEventTime,loadData,loadMarketKline,startNewsChannels,loadStockNews,loadPortfolio,finite,renderNewsThumb,newsHasImage,safeExternalHref,getLiveMarketEndpoint}=MR;
@@ -26,7 +26,7 @@
   const chipsLivePromise=loadData("tw-chips-compact.json",chipsFallback).catch(()=>chipsFallback);
   const snapshotLivePromise=loadData("market-snapshot.json",snapshotFallback).catch(()=>snapshotFallback);
   const stockNewsLivePromise=loadStockNews().catch(()=>stockNewsFallback);
-  const newsStream=startNewsChannels({concurrency:2,onUpdate:payload=>{news=payload;queueMicrotask(()=>{renderFeaturedInfo?.();renderCalendar?.();renderTodayFocus?.();renderTodayBrief?.()})}});
+  const newsStream=startNewsChannels({concurrency:1,startDelay:1200,staggerMs:120,onUpdate:payload=>{news=payload;queueMicrotask(()=>{renderFeaturedInfo?.();renderCalendar?.();renderTodayFocus?.();renderTodayBrief?.()})}});
   news=newsStream.initial;
   const strip=value=>String(value||"").replace(/<[^>]*>/g," ").replace(/&nbsp;/gi," ").replace(/\s+/g," ").trim();
   const truncate=(value,max=180)=>{const text=strip(value);return text.length>max?`${text.slice(0,max).trim()}…`:text};
@@ -70,7 +70,7 @@
   const impactLabel=impact=>impact==="high"?"高影響":impact==="low"?"低影響":"中影響";
 
   const LEADER_RE=/台積電|鴻海|聯發科|廣達|緯創|國巨|川湖|日月光|台達電|中華電|長榮|陽明|NVIDIA|輝達|Microsoft|微軟|Apple|蘋果|Amazon|亞馬遜|Meta|Google|Alphabet|AMD|Intel|Tesla|三星|SK\s*海力士|海力士|Sony|Toyota/i;
-  // v11.5.0: a bare regulator/exchange mention is not a market-structure event.
+  // v11.5.1: a bare regulator/exchange mention is not a market-structure event.
   // Direct trading-rule terms qualify on their own; institution names qualify only
   // when paired with an actual rule/change signal.
   const MARKET_STRUCTURE_RE=/零股|整股|盤中零股|盤後零股|撮合|集合競價|逐筆交易|交易時間|開盤時間|收盤時間|漲跌幅|升降單位|當沖|融資融券|融券|融資|交割|T\+?1|T\+?2|交易制度|市場制度/i;
@@ -297,10 +297,12 @@
     const within=(tz,start,end)=>{const p=parts(tz),week=!['Sat','Sun'].includes(p.weekday),minutes=Number(p.hour)*60+Number(p.minute);return week&&minutes>=start&&minutes<=end};
     return within("Asia/Taipei",535,815)||within("Asia/Tokyo",535,930)||within("America/New_York",565,965);
   };
-  let liveRefreshTimer=null,refreshInFlight=false;
-  async function refreshLiveMarketData(){
+  let liveRefreshTimer=null,refreshInFlight=false,lastLiveRefreshAt=Date.now();
+  const liveRefreshGap=()=>anyTrackedMarketOpen()?45000:300000;
+  async function refreshLiveMarketData({force=false}={}){
     if(refreshInFlight||document.hidden)return;
-    refreshInFlight=true;
+    if(!force&&Date.now()-lastLiveRefreshAt<liveRefreshGap())return;
+    refreshInFlight=true;lastLiveRefreshAt=Date.now();
     try{
       const [freshSnapshot,freshTw,freshChips]=await Promise.all([
         loadData("market-snapshot.json",snapshot||window.__MARKET_SNAPSHOT_SEED__||{items:[]},{force:true}),
@@ -313,12 +315,12 @@
     }catch(error){console.warn("live market refresh failed",error)}finally{
       refreshInFlight=false;
       clearTimeout(liveRefreshTimer);
-      liveRefreshTimer=setTimeout(refreshLiveMarketData,anyTrackedMarketOpen()?60000:900000);
+      liveRefreshTimer=setTimeout(()=>refreshLiveMarketData({force:true}),anyTrackedMarketOpen()?60000:900000);
     }
   }
-  liveRefreshTimer=setTimeout(refreshLiveMarketData,anyTrackedMarketOpen()?60000:900000);
+  liveRefreshTimer=setTimeout(()=>refreshLiveMarketData({force:true}),anyTrackedMarketOpen()?60000:900000);
   document.addEventListener("visibilitychange",()=>{if(!document.hidden)refreshLiveMarketData()});
-  window.addEventListener("focus",refreshLiveMarketData);
+  window.addEventListener("focus",()=>refreshLiveMarketData());
 
 
   let safeNews=[];
@@ -524,7 +526,7 @@
   }
   renderFeaturedInfo();renderTodayFocus();renderTaiwanStatus();renderTodayBrief();
 
-  const storedCalendarMode=localStorage.getItem("mr-calendar-mode-v1")||localStorage.getItem("mr-calendar-mode-v11.4.49")||localStorage.getItem("mr-calendar-mode-v11.5.0")||"market";
+  const storedCalendarMode=localStorage.getItem("mr-calendar-mode-v1")||localStorage.getItem("mr-calendar-mode-v11.4.49")||localStorage.getItem("mr-calendar-mode-v11.5.1")||"market";
   if(!localStorage.getItem("mr-calendar-mode-v1"))localStorage.setItem("mr-calendar-mode-v1",storedCalendarMode);
   let current=new Date(),calendarMode=storedCalendarMode==="dividend"?"dividend":"market",pendingJumpDate="";
   const calendar=$("#calendarGrid"),dialog=$("#dayDialog");

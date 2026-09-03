@@ -1,4 +1,4 @@
-/* Market Event Radar v11.5.0 homepage layout patch.
+/* Market Event Radar v11.5.1 homepage layout patch.
  * Calendar first, compact headline block, and one-by-four floating navigation.
  */
 .home-shell{position:relative}
@@ -140,7 +140,7 @@
 .mobile-install-trigger[hidden]{display:none!important}
 
 
-/* v11.5.0: calendar-first hierarchy, compact filters, and a single left-side phone rail. */
+/* v11.5.1: calendar-first hierarchy, compact filters, and a single left-side phone rail. */
 .calendar-filter-details{margin-top:7px;border:1px solid #29455b;border-radius:11px;background:#081a29;overflow:hidden}
 .calendar-filter-details>summary{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 11px;cursor:pointer;list-style:none;color:#b8cedc;font-size:11px;font-weight:700}
 .calendar-filter-details>summary::-webkit-details-marker{display:none}.calendar-filter-details>summary::after{content:"＋";color:#6e9bb7;font-size:15px}.calendar-filter-details[open]>summary::after{content:"－"}

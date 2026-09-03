@@ -3,9 +3,9 @@ ROOT=Path(__file__).resolve().parents[1]
 def read(path):return (ROOT/path).read_text(encoding='utf-8')
 def test_all_app_pages_load_shared_mobile_release_css():
     for name in ('index.html','asset.html','portfolio.html','tw-market.html','institutional.html','news.html','event.html','data-status.html'):
-        text=read(name);assert 'assets/v11.5.0-overrides.css?v=11.5.0' in text,name;assert 'assets/shared.js?v=11.5.0' in text,name
+        text=read(name);assert 'assets/v11.5.1-overrides.css?v=11.5.1' in text,name;assert 'assets/shared.js?v=11.5.1' in text,name
 def test_phone_quick_navigation_is_single_owner_and_does_not_cover_content():
-    css=read('assets/v11.5.0-overrides.css');html=read('index.html')
+    css=read('assets/v11.5.1-overrides.css');html=read('index.html')
     assert html.count('class="floating-quick-nav"')==1
     assert 'mobile-global-quick-nav' not in css
     assert 'bottom:calc(62px + env(safe-area-inset-bottom))!important' not in css

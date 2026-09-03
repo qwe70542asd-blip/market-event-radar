@@ -25,15 +25,15 @@ def test_service_worker_does_not_prefetch_optional_data_storm():
     assert 'data/news-cna-seed.js' not in optional
     assert 'data/yahoo-details-seed.js' not in optional
 
-def test_service_worker_upgrade_forces_one_clean_reload():
+def test_service_worker_upgrade_avoids_reload_loop_and_purges_legacy_caches():
     reg=read("assets/sw-register.js")
     assert 'controllerchange' in reg
-    assert 'sessionStorage.getItem(RELOAD_KEY)' in reg
-    assert 'location.reload()' in reg
+    assert 'purgeLegacyCaches' in reg
+    assert 'location.reload()' not in reg
     assert 'service-worker.js?v=' in reg
 
 def test_home_news_refresh_is_concurrency_bounded():
     shared=read("assets/shared.js"); home=read("assets/home.js")
     assert 'const concurrency=' in shared
     assert 'Array.from({length:Math.min(concurrency,NEWS_FILES.length)}' in shared
-    assert 'startNewsChannels({concurrency:2' in home
+    assert 'startNewsChannels({concurrency:1,startDelay:1200,staggerMs:120' in home

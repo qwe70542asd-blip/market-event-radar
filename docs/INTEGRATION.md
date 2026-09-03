@@ -1,22 +1,7 @@
-# v11.4.17 Integration
+# Full Replacement Integration
 
-This is a complete repository, not a patch package.
+This release is a complete repository, not a patch package.
 
-## Stage one retained
+Keep `.git`, place the archive's first-level project contents directly at repository root, remove obsolete release-only files listed in `DELETION-MANIFEST-v11.5.1.txt`, then commit and push. No patch, updater, overlay or generator is required.
 
-- Korea and risk indicators in the global market panel.
-- Official ETF classification and derivative exclusion.
-- Missing-value safeguards.
-- Direct-article filtering and meaningful company titles.
-- Taipei event dates and semantic deduplication.
-
-## Stage two
-
-- Three-tab day dialog with category statistics.
-- Compact event cards and a dedicated dividend table.
-- Separate market-wide major news, company disclosures and general articles.
-- Structured company-notice facts plus collapsible original text.
-- Three-column desktop news cards and one-column mobile cards.
-- Four top-15 Taiwan rankings with trade value.
-- Search suggestions and single-symbol institutional detail.
-- Institutional, margin/short, day-trade and five-day trend sections.
+The v11.5.1 release preserves the compact live-data architecture and adds bounded homepage boot, request deduplication, atomic Service Worker caches, idle legacy-cache cleanup, build-version consistency and dynamic GitHub Actions version validation.
