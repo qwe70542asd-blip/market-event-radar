@@ -1,0 +1,2189 @@
+﻿symbol,name,asset_class,exchange,status,coverage_percent,missing_fields,missing_reasons
+00400A,主動國泰動能高息,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00402A,主動安聯美國科技,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00403A,主動統一升級50,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00405A,主動富邦台灣龍耀,etf,TWSE,partial,92.31,配息資訊,etf_distribution_missing
+00407A,主動凱基台灣,etf,TWSE,partial,92.31,配息資訊,etf_distribution_missing
+00408A,主動第一金優股息,etf,TWSE,partial,92.31,配息資訊,etf_distribution_missing
+00409A,主動復華全球50,etf,TWSE,partial,92.31,配息資訊,etf_distribution_missing
+00410A,主動永豐科技趨勢,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+0054,元大台商50,etf,TWSE,partial,69.23,發行投信 | 配息資訊 | 成分股揭露狀態 | 產業配置,etf_prospectus_missing | etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+0058,富邦發達,etf,TWSE,partial,69.23,發行投信 | 配息資訊 | 成分股揭露狀態 | 產業配置,etf_prospectus_missing | etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+0059,富邦金融,etf,TWSE,partial,69.23,發行投信 | 配息資訊 | 成分股揭露狀態 | 產業配置,etf_prospectus_missing | etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+0060,新台灣,etf,TWSE,partial,69.23,發行投信 | 配息資訊 | 成分股揭露狀態 | 產業配置,etf_prospectus_missing | etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+0061,元大寶滬深,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+006205,富邦上証,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+006206,元大上證50,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+006207,復華滬深,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00625K,富邦上証+R,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00631L,元大台灣50正2,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00632R,元大台灣50反1,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00633L,富邦上証正2,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00634R,富邦上証反1,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00635U,期元大S&amp;P黃金(原名：元大S&amp;P黃金),etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00636,國泰中國A50,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00636K,國泰中國A50+U,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00637L,元大滬深300正2,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00638R,元大滬深300反1,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00639,富邦深100,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00640L,富邦日本正2,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00641R,富邦日本反1,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00642U,期元大S&amp;P石油(原名：元大S&amp;P石油),etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00643,群益深証中小,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00643K,群益深証中小+R,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00645,富邦日本,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00646,元大S&amp;P500,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00647L,元大S&amp;P500正2,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00648R,元大S&amp;P500反1,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00649,FH香港,etf,TWSE,partial,69.23,發行投信 | 配息資訊 | 成分股揭露狀態 | 產業配置,etf_prospectus_missing | etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00650L,復華香港正2,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00651R,復華香港反1,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00652,富邦印度,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00653L,富邦印度正2,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00654R,富邦印度反1,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00655L,國泰中國A50正2,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00656R,國泰中國A50反1,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00657,國泰日經225,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00657K,國泰日經225+U,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00658L,國泰日本正2,etf,TWSE,partial,69.23,發行投信 | 配息資訊 | 成分股揭露狀態 | 產業配置,etf_prospectus_missing | etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00659R,國泰日本反1,etf,TWSE,partial,69.23,發行投信 | 配息資訊 | 成分股揭露狀態 | 產業配置,etf_prospectus_missing | etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00660,元大歐洲50,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00661,元大日經225,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00662,富邦NASDAQ,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00663L,國泰臺灣加權正2,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00664R,國泰臺灣加權反1,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00665L,富邦恒生國企正2,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00666R,富邦恒生國企反1,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00667,元大韓國,etf,TWSE,partial,69.23,發行投信 | 配息資訊 | 成分股揭露狀態 | 產業配置,etf_prospectus_missing | etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00668,國泰美國道瓊,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00668K,國泰美國道瓊+U,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00669R,國泰美國道瓊反1,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00670L,富邦NASDAQ正2,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00671R,富邦NASDAQ 反1,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00672L,元大S&amp;P原油正2,etf,TWSE,partial,69.23,發行投信 | 配息資訊 | 成分股揭露狀態 | 產業配置,etf_prospectus_missing | etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00673R,期元大S&amp;P原油反1(原名：元大S&amp;P原油反1),etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00674R,期元大S&amp;P黃金反1(原名：元大S&amp;P黃金反1),etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00675L,FB臺灣加權正2,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00676R,富邦臺灣加權反1,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00677U,期富邦VIX,etf,TWSE,partial,69.23,發行投信 | 配息資訊 | 成分股揭露狀態 | 產業配置,etf_prospectus_missing | etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00678,群益那斯達克生技,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00680L,元大美債20正2,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00681R,元大美債20反1,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00682U,期元大美元指數(原名：元大美元指數),etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00683L,期元大美元指正2(原名：元大美元指數正2),etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00684R,期元大美元指反1(原名：元大美元指數反1),etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00685L,群益臺灣加權正2,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00686R,群益臺灣加權反1,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00688L,國泰20年美債正2,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00689R,國泰20年美債反1,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00691R,兆豐藍籌反一,etf,TWSE,partial,69.23,發行投信 | 配息資訊 | 成分股揭露狀態 | 產業配置,etf_prospectus_missing | etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00693U,期街口S&amp;P黃豆,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00698L,元大美債7-10正2,etf,TWSE,partial,69.23,發行投信 | 配息資訊 | 成分股揭露狀態 | 產業配置,etf_prospectus_missing | etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00699R,元大美債7-10反1,etf,TWSE,partial,69.23,發行投信 | 配息資訊 | 成分股揭露狀態 | 產業配置,etf_prospectus_missing | etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00700,富邦恒生國企,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00702,國泰標普低波高息,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00703,台新MSCI中國,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00704L,台新MSCI台灣正2,etf,TWSE,partial,69.23,發行投信 | 配息資訊 | 成分股揭露狀態 | 產業配置,etf_prospectus_missing | etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00705R,台新MSCI台灣反1,etf,TWSE,partial,69.23,發行投信 | 配息資訊 | 成分股揭露狀態 | 產業配置,etf_prospectus_missing | etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00706L,期元大S&amp;P日圓正2(原名：元大S&amp;P日圓正2),etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00707R,期元大S&amp;P日圓反1(原名：元大S&amp;P日圓反1),etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00708L,期元大S&amp;P黃金正2(原名：元大S&amp;P黃金正2),etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00709,富邦歐洲,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00710B,復華彭博非投等債,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00711B,復華彭博新興債,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00712,復華富時不動產,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00714,群益道瓊美國地產,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00715L,期街口布蘭特正2,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00716R,華頓S&amp;P布蘭特反1,etf,TWSE,partial,69.23,發行投信 | 配息資訊 | 成分股揭露狀態 | 產業配置,etf_prospectus_missing | etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00717,富邦美國特別股,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00729R,第一金工業30反一,etf,TWSE,partial,69.23,發行投信 | 配息資訊 | 成分股揭露狀態 | 產業配置,etf_prospectus_missing | etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00732,國泰RMB短期報酬,etf,TWSE,partial,69.23,發行投信 | 配息資訊 | 成分股揭露狀態 | 產業配置,etf_prospectus_missing | etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00733,臺灣中小A級動能50 ETF基金,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00737,國泰AI機器人,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00738U,期元大道瓊白銀(原名：元大道瓊白銀),etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00739,元大MSCI A股,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00742,新光內需收益,etf,TWSE,partial,69.23,發行投信 | 配息資訊 | 成分股揭露狀態 | 產業配置,etf_prospectus_missing | etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00743,國泰中國A150,etf,TWSE,partial,69.23,發行投信 | 配息資訊 | 成分股揭露狀態 | 產業配置,etf_prospectus_missing | etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00752,中信中國50,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00753L,中信中國50正2,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00757,統一FANG+,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00762,元大全球AI,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00763U,期街口道瓊銅,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00766L,台新MSCI中國正2,etf,TWSE,partial,69.23,發行投信 | 配息資訊 | 成分股揭露狀態 | 產業配置,etf_prospectus_missing | etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00767,FH美國金融股,etf,TWSE,partial,69.23,發行投信 | 配息資訊 | 成分股揭露狀態 | 產業配置,etf_prospectus_missing | etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00770,國泰標普北美科技ETF基金,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00771,元大US高息特別股,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00774B,新光中國政金綠債,etf,TWSE,partial,69.23,發行投信 | 配息資訊 | 成分股揭露狀態 | 產業配置,etf_prospectus_missing | etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00774C,00774C,etf,TWSE,partial,69.23,發行投信 | 配息資訊 | 成分股揭露狀態 | 產業配置,etf_prospectus_missing | etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00775B,台新投等債15+,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00776,新光ICE美國權值,etf,TWSE,partial,69.23,發行投信 | 配息資訊 | 成分股揭露狀態 | 產業配置,etf_prospectus_missing | etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00783,富邦中証500,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+0080,恒中國,etf,TWSE,partial,69.23,發行投信 | 配息資訊 | 成分股揭露狀態 | 產業配置,etf_prospectus_missing | etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+0081,恒香港,etf,TWSE,partial,69.23,發行投信 | 配息資訊 | 成分股揭露狀態 | 產業配置,etf_prospectus_missing | etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+008201,BP上證50,etf,TWSE,partial,69.23,發行投信 | 配息資訊 | 成分股揭露狀態 | 產業配置,etf_prospectus_missing | etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00830,國泰費城半導體,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00852L,國泰美國道瓊正2,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00861,元大全球未來通訊,etf,TWSE,partial,92.31,配息資訊,etf_distribution_missing
+00865B,國泰US短期公債,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00866,新光Shiller CAPE,etf,TWSE,partial,69.23,發行投信 | 配息資訊 | 成分股揭露狀態 | 產業配置,etf_prospectus_missing | etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00875,國泰網路資安ETF,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00876,元大全球5G(原名:元大未來關鍵科技),etf,TWSE,partial,92.31,配息資訊,etf_distribution_missing
+00882,中信中國高股息,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00885,富邦越南,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00893,國泰智能電動車,etf,TWSE,partial,92.31,配息資訊,etf_distribution_missing
+00895,富邦未來車,etf,TWSE,partial,92.31,配息資訊,etf_distribution_missing
+00897,富邦基因免疫生技,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00898,國泰全球基因免疫與醫療革命ETF基金,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00899,FT潔淨能源(原名:富蘭克林潔淨能源),etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00900,富邦特選高股息30,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00901,永豐智能車供應鏈,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00902,中信電池及儲能,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00903,富邦元宇宙,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00904,台新臺灣半導體30,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00906,大華元宇宙科技50,etf,TWSE,partial,69.23,發行投信 | 配息資訊 | 成分股揭露狀態 | 產業配置,etf_prospectus_missing | etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00908,富邦入息REITs+,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00909,國泰全球數位支付服務ETF基金,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00910,第一金太空衛星,etf,TWSE,partial,92.31,配息資訊,etf_distribution_missing
+00911,兆豐洲際半導體,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00916,國泰全球品牌50,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00917,中信特選金融,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00924,復華S&amp;P500成長,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00925,新光標普電動車,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00926,凱基全球菁英55,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00930,永豐ESG低碳高息,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00932,兆豐永續高息等權,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00936,台新永續高息中小型ETF,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00939,統一台灣高息動能ETF基金,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00941,中信上游半導體,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00945B,凱基美國非投等債,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00949,復華日本龍頭,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00951,台新日本半導體ETF,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00953B,群益優選非投等債,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00954,中信日本半導體,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00956,中信日經高股息,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00963,中信全球高股息,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00965,元大航太防衛科技,etf,TWSE,partial,92.31,配息資訊,etf_distribution_missing
+00971,野村美國研發龍頭,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00972,野村日本動能高息,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+009800,中信NASDAQ,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+009801,中信美國創新科技,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+009805,台新美國電力基建,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+009810,玉山全球藍籌100,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+009811,統一美國50ETF基金,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+009812,野村日本東證,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+009813,貝萊德標普卓越50,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+009816,凱基台灣TOP50,etf,TWSE,partial,92.31,配息資訊,etf_distribution_missing
+009817,國泰大和日本不動產收息ETF基金,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+009818,華南永昌NASDAQxT,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+009819,中信數據及電力,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+009820,元大納斯達克精選,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+009821,野村稀土關鍵資源,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+009824,群益美國科技巨頭ETF基金,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+009826,貝萊德世界股票,etf,TWSE,partial,92.31,配息資訊,etf_distribution_missing
+009827,玉山未來全球算力,etf,TWSE,partial,92.31,配息資訊,etf_distribution_missing
+009828,中信台日韓PCB,etf,TWSE,partial,92.31,配息資訊,etf_distribution_missing
+009829,大華韓國KOSPI 50,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00982D,主動富邦動態入息,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00982T,平衡兆豐台美動能,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00983A,主動中信ARK創新,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00983D,主動富邦複合收益,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00984D,主動聯博全球非投,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00985A,主動野村台灣50,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00985B,群益ESG投等債0-5,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00986A,主動台新龍頭成長,etf,TWSE,partial,92.31,配息資訊,etf_distribution_missing
+00987A,主動台新優勢成長,etf,TWSE,partial,92.31,配息資訊,etf_distribution_missing
+00988A,主動統一全球創新,etf,TWSE,partial,92.31,配息資訊,etf_distribution_missing
+00989A,主動摩根美國科技,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00990A,主動元大AI新經濟,etf,TWSE,partial,92.31,配息資訊,etf_distribution_missing
+00991B,貝萊德A級公司債,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00992A,主動群益科技創新,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+00993A,主動安聯台灣,etf,TWSE,partial,92.31,配息資訊,etf_distribution_missing
+00995A,主動中信台灣卓越,etf,TWSE,partial,92.31,配息資訊,etf_distribution_missing
+00996A,主動兆豐台灣豐收,etf,TWSE,partial,76.92,配息資訊 | 成分股揭露狀態 | 產業配置,etf_distribution_missing | etf_holdings_not_disclosed | etf_allocation_missing
+00999A,主動野村臺灣高息,etf,TWSE,partial,84.62,成分股揭露狀態 | 產業配置,etf_holdings_not_disclosed | etf_allocation_missing
+1101,台泥,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1102,亞泥,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1103,嘉泥,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1104,環泥,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1108,幸福,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1109,信大,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1110,東泥,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1201,味全,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1203,味王,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1210,大成,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1213,大飲,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+1215,卜蜂,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1216,統一,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1217,愛之味,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1218,泰山,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1219,福壽,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1220,台榮,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1225,福懋油,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1227,佳格,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1229,聯華,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1231,聯華食,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1232,大統益,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1233,天仁,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1234,黑松,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1235,興泰,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1236,宏亞,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1240,茂生農經,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+1256,鮮活果汁-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1259,安心,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+1264,德麥,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+1268,漢來美食,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+1294,漢田生技,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+1295,生合,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+1301,台塑,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1303,南亞,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1304,台聚,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1305,華夏,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1307,三芳,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1308,亞聚,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1309,台達化,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1310,台苯,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+1312,國喬,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+1313,聯成,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1314,中石化,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+1315,達新,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1316,上曜,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+1319,東陽,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1321,大洋,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1323,永裕,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1324,地球,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+1325,恆大,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+1326,台化,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1336,台翰,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+1337,再生-KY,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+1338,廣華-KY,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1339,昭輝,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1340,勝悅-KY,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+1341,富林-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1342,八貫,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1402,遠東新,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1409,新纖,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1410,南染,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1413,宏洲,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1414,東和,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1416,廣豐,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1417,嘉裕,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1418,東華,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+1419,新紡,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1423,利華,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1432,大魯閣,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1434,福懋,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1435,中福,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+1436,華友聯,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1437,勤益控,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1438,三地開發,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1439,雋揚,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1440,南紡,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1441,大東,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+1442,名軒,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1443,立益物流,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1444,力麗,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+1445,大宇,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1446,宏和,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1447,力鵬,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+1449,佳和,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+1451,年興,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1452,宏益,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1453,大將,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1454,台富,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1455,集盛,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1456,怡華,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1457,宜進,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1459,聯發,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1460,宏遠,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+1463,強盛新,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1464,得力,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1465,偉全,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1466,聚隆,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1467,南緯,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1468,昶和,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1470,大統新創,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1471,首利,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1472,三洋實業,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1473,台南,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1474,弘裕,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1475,業旺,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1476,儒鴻,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1477,聚陽,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1503,士電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1504,東元,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1506,正道,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1512,瑞利,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1513,中興電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1514,亞力,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1515,力山,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1516,川飛,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1517,利奇,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1519,華城,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1521,大億,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1522,堤維西,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1524,耿鼎,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1525,江申,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1526,日馳,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+1527,鑽全,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1528,恩德,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+1529,樂事綠能,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1530,亞崴,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1531,高林股,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1532,勤美,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1533,車王電,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1535,中宇,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1536,和大,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+1537,廣隆,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1538,正峰,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+1539,巨庭,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1540,喬福,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1541,錩泰,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1558,伸興,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1560,中砂,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1563,巧新,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1565,精華,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+1568,倉佑,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1569,濱川,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+1570,力肯,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+1580,新麥,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+1582,信錦,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1583,程泰,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1584,精剛,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+1586,和勤,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+1587,吉茂,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1589,永冠-KY,stock,TWSE,partial,78.57,本益比狀態 | 股價淨值比狀態 | 殖利率狀態,valuation_source_missing | valuation_source_missing | valuation_source_missing
+1590,亞德客-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1591,駿吉-KY,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+1593,祺驊,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+1595,川寶,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+1597,直得,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1598,岱宇,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1599,宏佳騰,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+1603,華電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1604,聲寶,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1605,華新,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1608,華榮,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1609,大亞,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1611,中電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1612,宏泰,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1614,三洋電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1615,大山,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1616,億泰,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1617,榮星,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1618,合機,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1623,大東電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1626,艾美特-KY,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+1702,南僑,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1707,葡萄王,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1708,東鹼,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1709,和益,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1710,東聯,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+1711,永光,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1712,興農,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1713,國化,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1714,和桐,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1717,長興,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1718,中纖,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1720,生達,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1721,三晃,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+1722,台肥,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1723,中碳,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1725,元禎,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1726,永記,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1727,中華化,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1730,花仙子,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1731,美吾華,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1732,毛寶,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1733,五鼎,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1734,杏輝,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1735,日勝化,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1736,喬山,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1737,臺鹽,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1742,台蠟,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+1752,南光,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1760,寶齡富錦,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1762,中化生,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+1773,勝一,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1776,展宇,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1777,生泰,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+1780,立弘,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+1781,合世,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+1783,和康生,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1784,訊聯,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+1785,光洋科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+1786,科妍,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1788,杏昌,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+1789,神隆,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1795,美時,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1796,金穎生技,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+1799,易威,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+1802,台玻,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1805,寶徠,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1806,冠軍,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1808,潤隆,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1809,中釉,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1810,和成,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1813,寶利徠,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+1815,富喬,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+1817,凱撒衛,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1903,士紙,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1904,正隆,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1905,華紙,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+1906,寶隆,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+1907,永豐餘,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+1909,榮成,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2002,中鋼,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2006,東和鋼鐵,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2007,燁興,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2008,高興昌,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2009,第一銅,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2010,春源,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2012,春雨,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2013,中鋼構,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2014,中鴻,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2015,豐興,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2017,官田鋼,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2020,美亞,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2022,聚亨,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2023,燁輝,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2024,志聯,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2025,千興,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2027,大成鋼,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2028,威致,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2029,盛餘,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2030,彰源,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2031,新光鋼,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2032,新鋼,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2033,佳大,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2034,允強,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2035,唐榮公司,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2038,海光,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2049,上銀,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2059,川湖,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2061,風青,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2062,橋椿,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2063,世鎧精密,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2064,晉椿,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2065,世豐,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2066,世德,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2067,嘉鋼,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2069,運錩,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2070,精湛,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2072,世紀風電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2073,雄順,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2101,南港,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2102,泰豐,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2103,台橡,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2104,國際中橡,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2105,正新,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2106,建大,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2107,厚生,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2108,南帝,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2109,華豐,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2114,鑫永銓,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2115,六暉-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2201,裕隆,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2204,中華,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2206,三陽工業,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2207,和泰車,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2208,台船,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2211,長榮鋼,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2221,大甲,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2227,裕日車,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2228,劍麟,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2230,泰茂,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2231,為升,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2233,宇隆,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2235,謚源,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2236,百達-KY,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2237,華德動能-創,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2239,英利-KY,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2241,艾姆勒,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2243,宏旭-KY,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2247,汎德永業,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2248,華勝-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2250,IKKA-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2254,巨鎧精密-創,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2258,鴻華先進-創,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2301,光寶科,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2302,麗正,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2303,聯電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2305,全友,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2308,台達電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2312,金寶,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2313,華通,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2314,台揚,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2316,楠梓電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2317,鴻海,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2321,東訊,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2323,中環,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2324,仁寶,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2327,國巨*,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2328,廣宇,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2329,華泰,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2330,台積電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2331,精英,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2332,友訊,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2337,旺宏,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2338,光罩,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2340,台亞,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2342,茂矽,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2344,華邦電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2345,智邦,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2347,聯強,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2348,海悅,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2349,錸德,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2351,順德,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2352,佳世達,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2353,宏碁,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2354,鴻準,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2355,敬鵬,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2356,英業達,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2357,華碩,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2359,所羅門,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2360,致茂,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2362,藍天,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2363,矽統,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2364,倫飛,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2365,昆盈,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2367,燿華,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2368,金像電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2369,菱生,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2371,大同,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2373,震旦行,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2374,佳能,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2375,凱美,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2376,技嘉,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2377,微星,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2379,瑞昱,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2380,虹光,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2382,廣達,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2383,台光電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2385,群光,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2387,精元,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2388,威盛,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2390,云辰,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2392,正崴,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2393,億光,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2395,研華,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2397,友通,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2399,映泰,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2401,凌陽,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2402,毅嘉,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2404,漢唐,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2405,輔信,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2406,國碩,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2408,南亞科,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2409,友達,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2412,中華電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2413,環科,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2414,精技,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2415,錩新,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2417,圓剛,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2419,仲琦,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2420,新巨,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2421,建準,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2423,固緯,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2424,隴華,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2425,承啟,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2426,鼎元,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2427,三商電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2428,興勤,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2429,銘旺科,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2430,燦坤,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2431,聯昌,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2432,倚天酷碁-創,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2433,互盛電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2434,統懋,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2436,偉詮電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2438,翔耀,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2439,美律,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2440,太空梭,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2441,超豐,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2442,新美齊,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2444,兆勁,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2449,京元電子,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2450,神腦,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2451,創見,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2453,凌群,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2454,聯發科,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2455,全新,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2457,飛宏,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2458,義隆,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2459,敦吉,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2460,建通,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2461,光群雷,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2462,良得電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2464,盟立,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2465,麗臺,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2466,冠西電,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2467,志聖,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2468,華經,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2471,資通,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2472,立隆電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2474,可成,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2476,鉅祥,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2477,美隆電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2478,大毅,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2480,敦陽科,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2481,強茂,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2482,連宇,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2483,百容,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2484,希華,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2485,兆赫,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2486,一詮,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2488,漢平,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2489,瑞軒,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2491,吉祥全,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2492,華新科,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2493,揚博,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2495,普安,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2496,卓越,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2497,怡利電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2498,宏達電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2501,國建,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2504,國產,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2505,國揚,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2506,太設,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2509,全坤建,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2511,太子,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2514,龍邦,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2515,中工,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2516,新建,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2520,冠德,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2524,京城,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2527,宏璟,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2528,皇普,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2530,華建,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2534,宏盛,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2535,達欣工,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2536,宏普,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2537,聯上發,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2538,基泰,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2539,櫻花建,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2540,愛山林,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2542,興富發,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2543,皇昌,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2545,皇翔,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2546,根基,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2547,日勝生,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2548,華固,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2596,綠意,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2597,潤弘,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2601,益航,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2603,長榮,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2605,新興,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2606,裕民,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2607,榮運,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2608,嘉里大榮,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2609,陽明,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2610,華航,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2611,志信,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2612,中航,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2613,中櫃,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2614,東森,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2615,萬海,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2616,山隆,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2617,台航,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2618,長榮航,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2630,亞航,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2633,台灣高鐵,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2634,漢翔,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2636,台驊控股,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2637,慧洋-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2640,大車隊,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2641,正德,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2642,宅配通,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2643,捷迅,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2645,長榮航太,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2646,星宇航空,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2701,萬企,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2702,華園,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2704,國賓,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2705,六福,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2706,第一店,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2707,晶華,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2712,遠雄來,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2718,全心投控,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2719,燦星旅,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2722,夏都,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2723,美食-KY,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2724,藝舍-KY,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2726,雅茗-KY,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2727,王品,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2729,瓦城,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2731,雄獅,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2732,六角,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2734,易飛網,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2736,富野,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2739,寒舍,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2740,華軒,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2743,山富,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2745,五福,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2748,雲品,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2751,王座,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2752,豆府,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2753,八方雲集,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2754,亞洲藏壽司,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2755,揚秦,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2756,聯發國際,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2762,世界健身-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2801,彰銀,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2812,台中銀,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2816,旺旺保,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2820,華票,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2832,台產,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2834,臺企銀,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2836,高雄銀,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2838,聯邦銀,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2845,遠東銀,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2849,安泰銀,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2850,新產,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2851,中再保,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2852,第一保,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2855,統一證,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2867,三商壽,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2880,華南金,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2881,富邦金,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2882,國泰金,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2883,凱基金,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2884,玉山金,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2885,元大金,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2886,兆豐金,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2887,台新新光金,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2889,國票金,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2890,永豐金,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2891,中信金,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2892,第一金,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2897,王道銀行,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2901,欣欣,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2903,遠百,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2904,匯僑,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2905,三商,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2906,高林,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2908,特力,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2910,統領,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2911,麗嬰房,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2912,統一超,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2913,農林,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2915,潤泰全,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2916,滿心,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2923,鼎固-KY,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+2924,宏太-KY,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2926,誠品生活,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2929,淘帝-KY,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2937,集雅社,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2939,永邑-KY,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+2941,米斯特,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2945,三商家購,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+2947,振宇五金,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2948,寶陞,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+2949,欣新網,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3002,歐格,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3003,健和興,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3004,豐達科,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3005,神基,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3006,晶豪科,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3008,大立光,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3010,華立,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3011,今皓,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+3013,晟銘電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3014,聯陽,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3015,全漢,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3016,嘉晶,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3017,奇鋐,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3018,隆銘綠能,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+3019,亞光,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3021,鴻名,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3022,威強電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3023,信邦,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3024,憶聲,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3025,星通,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3026,禾伸堂,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3027,盛達,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+3028,增你強,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3029,零壹,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3030,德律,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3031,佰鴻,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3032,偉訓,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+3033,威健,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3034,聯詠,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3035,智原,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3036,文曄,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3037,欣興,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3038,全台,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3040,遠見,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+3041,揚智,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+3042,晶技,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3043,科風,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+3044,健鼎,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3045,台灣大,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3046,建碁,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3047,訊舟,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+3048,益登,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3049,精金,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+3050,鈺德,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3051,力特,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3052,夆典,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3054,立萬利,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3055,蔚華科,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+3056,富華新,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+3057,喬鼎,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+3058,立德,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+3059,華晶科,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3060,銘異,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3062,建漢,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+3064,泰偉,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3066,李洲,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3067,全域,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3071,協禧,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3073,天方能源,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3078,僑威,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3081,聯亞,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3083,網龍,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3085,新零售,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3086,華義*,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3088,艾訊,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3090,日電貿,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3092,鴻碩,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+3093,港建*,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3094,聯傑,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3095,及成,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3105,穩懋,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3114,好德,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3115,富榮綱,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3118,進階,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3122,笙泉,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3128,昇銳,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3130,一零四,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3131,弘塑,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3135,凌航,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3138,耀登,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3141,晶宏,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3147,大綜,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3149,正達,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+3150,鈺寶-創,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+3152,璟德,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3158,嘉實,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3162,精確,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3163,波若威,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3164,景岳,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3167,大量,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3168,眾福科,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3169,亞信,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3171,炎洲流通,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3176,基亞,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3178,公準,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3188,鑫龍騰,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3189,景碩,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3191,雲嘉南,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3205,佰研,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3206,志豐,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3207,耀勝,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3209,全科,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3211,順達,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3213,茂訊,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3217,優群,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3218,大學光,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3219,倚強科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3221,台嘉碩,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3224,三顧,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3226,龍鋒,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3227,原相,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3228,金麗科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3229,晟鈦,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+3230,錦明,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3231,緯創,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3232,昱捷,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3234,光環,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3236,千如,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3252,海灣,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3257,虹冠電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3259,鑫創,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3260,威剛,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3264,欣銓,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3265,台星科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3266,昇陽,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3268,海德威,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3272,東碩,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3276,宇環,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3284,太普高,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3285,微端,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3287,廣寰科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3288,點晶,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3289,宜特,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3290,東浦,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3293,鈊象,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3294,英濟,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3296,勝德,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+3297,杭特,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3303,岱稜,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3305,昇貿,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3306,鼎天,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3308,聯德,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+3310,佳穎,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3311,閎暉,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3312,弘憶股,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3313,斐成,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3317,尼克森,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3321,同泰,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+3322,建舜電,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3323,加百裕,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3324,雙鴻,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3325,旭品,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3332,幸康,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3338,泰碩,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3339,泰谷,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3346,麗清,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+3349,寶德,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3354,律勝,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3356,奇偶,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3357,臺慶科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3360,尚立,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3362,先進光,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3363,上詮,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3372,典範,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3373,熱映,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3374,精材,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3376,新日興,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3379,彬台,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3380,明泰,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3388,崇越電,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3390,旭軟,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3402,漢科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3406,玉晶光,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3413,京鼎,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3416,融程電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3419,譁裕,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+3430,奇鈦科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3432,台端,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+3434,哲固,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3437,榮創,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+3438,類比科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3441,聯一光電,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3443,創意,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3444,利機,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3447,展達,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3450,聯鈞,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3455,由田,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3465,進泰電子,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3466,德晉,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3467,台灣精材,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3479,安勤,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3481,群創,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3483,力致,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3484,崧騰,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3485,敘豐,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3489,森寶,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3490,單井,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3491,昇達科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3492,長盛,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3494,誠研,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+3498,陽程,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3499,環天科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3501,維熹,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3504,揚明光,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+3508,位速,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3511,矽瑪,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3512,皇龍,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3515,華擎,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3516,亞帝歐,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3518,柏騰,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+3520,華盈,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3521,台鋼建設,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3522,御嵿,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3523,迎輝,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3526,凡甲,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3527,聚積,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3528,安馳,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3529,力旺,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3530,晶相光,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3531,先益,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3532,台勝科,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3533,嘉澤,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3535,晶彩科,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+3537,堡達,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3540,曜越,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3541,西柏,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3543,州巧,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+3545,敦泰,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+3546,宇峻,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3548,兆利,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3550,聯穎,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+3551,世禾,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3552,同致,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3555,博士旺,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3556,禾瑞亞,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3557,嘉威,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+3558,神準,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3563,牧德,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3564,其陽,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3567,逸昌,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3570,大塚,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3576,聯合再生,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+3577,泓格,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3580,友威科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3581,博磊,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3583,辛耘,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3587,閎康,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3588,通嘉,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3591,艾笛森,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+3592,瑞鼎,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3593,力銘,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+3594,磐儀,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3596,智易,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3597,映興,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3605,宏致,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3607,谷崧,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3609,三一東林,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3611,鼎翰,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3615,安可,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3617,碩天,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3622,洋華,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3623,富晶通,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3624,光頡,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3625,西勝,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3628,盈正,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3629,地心引力,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3630,新鉅科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3631,晟楠,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3632,研勤,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3645,達邁,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3646,艾恩特,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3652,精聯,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3653,健策,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3661,世芯-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3663,鑫科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3664,安瑞-KY,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3665,貿聯-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3666,光耀,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3669,圓展,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3672,康聯訊,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3673,TPK-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3675,德微,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3679,新至陞,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3680,家登,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3684,榮昌,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3685,元創精密,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3686,達能,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+3687,歐買尬,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3689,湧德,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3691,碩禾,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3693,營邦,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3694,海華,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3701,大眾控,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+3702,大聯大,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3703,欣陸,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3704,合勤控,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3705,永信,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3706,神達,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3707,漢磊,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3708,上緯投控,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3709,鑫聯大投控,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3710,連展投控,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3711,日月光投控,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3712,永崴投控,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+3713,新晶投控,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+3714,富采,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+3715,定穎投控,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+3716,中化控股,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3717,聯嘉投控,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+3718,中光電投控,stock,TPEx,partial,35.71,本益比狀態 | 股價淨值比狀態 | 殖利率狀態 | EPS | ROE | 負債比 | 淨利率 | 最近季度財報 | 歷季財報,valuation_source_missing | valuation_source_missing | valuation_source_missing | financial_statement_missing | financial_statement_missing | financial_statement_missing | financial_statement_missing | financial_statement_missing | quarter_history_incomplete
+4102,永日,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4104,佳醫,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4105,東洋,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4106,雃博,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4107,邦特,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4108,懷特,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+4109,加捷生醫,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4111,濟生,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4113,聯上,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4114,健喬,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4116,明基醫,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4119,旭富,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4120,友華,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4121,優盛,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4123,晟德,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4126,太醫,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4127,天良,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4128,中天,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4129,聯合,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4131,浩泰,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4133,亞諾法,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4137,麗豐-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4138,曜亞,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4139,馬光-KY,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4142,國光生,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+4147,中裕,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4148,全宇生技-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4153,鈺緯,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4154,樂威科-KY,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4155,訊映,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4157,太景*-KY,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4160,訊聯基因,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4161,聿新科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4162,智擎,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4163,鐿鈦,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4164,承業醫,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4166,友霖,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4167,松瑞藥,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4168,醣聯,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4169,泰宗,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+4171,瑞基,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4173,久裕,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4174,浩鼎,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4175,杏一,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4178,永笙-KY,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+4183,福永生技,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4188,安克,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4190,佐登-KY,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+4192,杏國,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4195,基米-創,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+4198,欣大健康,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4205,中華食,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4207,環泰,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4303,信立,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4304,勝昱,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4305,世坤,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4306,炎洲,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4401,東隆興,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4402,郡都開發,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4406,新昕纖,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4413,飛寶企業,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4414,如興,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4416,三圓,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4417,金洲,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4419,皇家美食,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4420,光明,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4426,利勤,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+4430,耀億,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4432,銘旺實,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4433,興采,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4438,廣越,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4439,冠星-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4440,宜新實業,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4441,振大環球,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4442,竣邦-KY,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4502,健信,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4503,金雨,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4506,崇友,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4510,高鋒,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4513,福裕,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4523,永彰,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4526,東台,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+4527,方方土霖,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4528,江興鍛,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4529,淳紳,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4530,天意能創,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4532,瑞智,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4533,協易機,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4534,慶騰,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4535,至興,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4536,拓凱,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4538,大詠城,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4540,全球傳動,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+4541,晟田,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4542,科嶠,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4543,萬在,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4545,銘鈺,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4549,桓達,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4550,長佳,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4551,智伸科,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4552,力達-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4554,橙的,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4555,氣立,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4556,旭然,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4557,永新-KY,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+4558,寶緯,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4560,強信-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4561,健椿,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4562,穎漢,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+4563,百德,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4564,元翎,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+4566,時碩工業,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4568,科際精密,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4569,六方科-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4571,鈞興-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4572,駐龍,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4576,大銀微系統,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4577,達航科技,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4580,捷流閥業,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4581,光隆精密-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4582,聚恆-創,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4583,台灣精銳,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4584,君帆,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4585,達明,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4588,玖鼎電力,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4590,富田-創,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4609,唐鋒,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4702,中美實,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4706,大恭,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4707,磐亞,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4711,永純,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4714,永捷,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4716,大立,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4720,德淵,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4721,美琪瑪,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4722,國精化,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4726,永昕,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4728,雙美,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4729,熒茂,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4735,豪展,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4736,泰博,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4737,華廣,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+4739,康普,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4741,泓瀚,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4743,合一,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4744,皇將,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4745,合富-KY,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4746,台耀,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4747,強生*,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4749,新應材,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4754,國碳科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4755,三福化,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4760,勤凱科技,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4763,材料*-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4764,雙鍵,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4766,南寶,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4767,誠泰科技,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4768,晶呈科技,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4770,上品,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4771,望隼,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4772,台特化,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4804,大略-KY,stock,TPEx,partial,71.43,本益比狀態 | 股價淨值比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+4806,桂田文創,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4807,日成-KY,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+4903,聯光通,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4904,遠傳,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4905,台聯電,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4906,正文,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4907,富宇,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4908,前鼎,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4909,新復興,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4911,德英,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4912,聯德控股-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4915,致伸,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4916,事欣科,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4919,新唐,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+4923,力士,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4924,欣厚-KY,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4927,泰鼎-KY,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+4930,燦星網,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+4931,新盛力,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4933,友輝,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4934,太極,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+4935,茂林-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4938,和碩,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4939,亞電,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4942,嘉彰,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4943,康控-KY,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+4946,辣椒,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4949,有成精密,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4950,金耘國際,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4951,精拓科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4952,凌通,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4953,緯致,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4956,光鋐,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+4958,臻鼎-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4960,誠美材,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+4961,天鈺,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4966,譜瑞-KY,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4967,十銓,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4968,立積,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4971,IET-KY,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4972,湯石照明,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4973,廣穎電通,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4974,亞泰,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4976,佳凌,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+4977,眾達-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4979,華星光,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4989,榮科,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+4991,環宇-KY,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4994,傳奇,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+4995,晶達,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+4999,鑫禾,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+5007,三星,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5009,榮剛,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5011,久陽,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5013,強新,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5014,建錩,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5015,華祺,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5016,松和,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5201,凱衛,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5202,力新,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5203,訊連,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5205,中茂,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5206,坤悅,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5209,新鼎,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5210,寶碩,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5211,蒙恬,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5212,凌網,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5213,亞昕,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5215,科嘉-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5220,萬達光電,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5222,全訊,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5223,安力-KY,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5225,東科-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5227,立凱-KY,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5228,鈺鎧,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5230,雷笛克光學,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5234,達興材料,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5236,凌陽創新,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5243,乙盛-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5244,弘凱,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+5245,智晶,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5251,天鉞電,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5258,虹堡,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5263,智崴,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5269,祥碩,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5272,笙科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5274,信驊,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5276,達輝-KY,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5278,尚凡*,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5283,禾聯碩,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5284,jpp-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5285,界霖,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5287,數字,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5288,豐祥-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5289,宜鼎,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5291,邑昇,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5292,華懋,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5299,杰力,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5301,寶得利,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5302,太欣,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5306,桂盟,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5309,系統電,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5310,天剛,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5312,寶島科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5314,世紀*,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5315,光聯,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5321,美而快,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5324,士開,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5328,華容,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5340,建榮,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5344,立衛,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5345,馥鴻,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5347,世界,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5348,正能量智能,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5351,鈺創,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5353,台林,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5355,佳總,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5356,協益,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5364,力麗店,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5371,中光電,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5381,光譜,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5386,青雲,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5388,中磊,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5392,能率,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5398,慕康生醫,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5403,中菲,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5410,國眾,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5425,台半,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5426,振發,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5432,新門,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5434,崇越,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5438,東友,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5439,高技,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5443,均豪,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5450,南良,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5452,佶優,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5455,昇益,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5457,宣德,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5460,同協,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5464,霖宏,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5465,富驊,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5468,凱鈺,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5469,瀚宇博,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5471,松翰,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5474,聰泰,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5475,德宏,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5478,智冠,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5481,新華,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5483,中美晶,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5484,慧友,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+5487,通泰,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5488,松普,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5489,彩富,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5490,同亨,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5493,三聯,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5498,凱崴,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5508,永信建,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5511,德昌,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5512,力麒,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5514,三豐,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5515,建國,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5516,雙喜,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5519,隆大,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5520,力泰,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5521,工信,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5522,遠雄,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5523,豐謙,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5525,順天,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5529,鉅陞,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5530,龍巖,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5531,鄉林,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+5533,皇鼎,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5534,長虹,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5536,聖暉*,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5538,東明-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5543,桓鼎-KY,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5546,永固-KY,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+5547,久舜,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5548,安倉,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5601,台聯櫃,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5603,陸海,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5604,中連,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5607,遠雄港,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5608,四維航,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+5609,中菲行,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5701,劍湖山,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5703,亞都麗緻,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5704,老爺知,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5706,鳳凰,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5864,致和證,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5871,中租-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5876,上海商銀,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5878,台名,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5880,合庫金,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5902,德記,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5903,全家,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5904,寶雅*,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5905,南仁湖,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+5906,台南-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+5907,大洋-KY,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6005,群益證,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6015,宏遠證,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6016,康和證,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6020,大展證,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6021,美好證,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6023,元大期貨,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6024,群益期,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6026,福邦證,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6028,公勝保經,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6101,寬魚國際,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6103,合邦,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6104,創惟,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6108,競國,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6109,亞元,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6111,光聚晶電,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6112,邁達特,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6113,亞矽,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6114,久威,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6115,鎰勝,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6116,彩晶,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6117,迎廣,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6118,建達,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6120,達運,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6121,新普,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6122,擎邦,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6123,上奇,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6124,業強,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6125,廣運,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6126,信音,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6127,九豪,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6128,上福,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+6129,普誠,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6130,上亞科技,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6133,金橋,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6134,萬旭,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6136,富爾特,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6138,茂達,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6139,亞翔,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6140,訊達電腦,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6141,柏承,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6142,友勁,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6143,振曜,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6144,得利影,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6146,耕興,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6147,頎邦,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6148,驊宏資,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6150,撼訊,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6151,晉倫,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6152,百一,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6153,嘉聯益,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6154,順發,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6155,鈞寶,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6156,松上,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6158,禾昌,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6160,欣技,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6161,捷波,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6163,華電網,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6164,華興,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+6165,浪凡,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6166,凌華,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6167,久正,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6168,宏齊,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+6169,昱泉,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6170,統振,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6171,大城地產,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6173,信昌電,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6174,安碁,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6175,立敦,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6176,瑞儀,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6177,達麗,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6179,亞通,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6180,橘子,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6182,合晶,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6183,關貿,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6184,大豐電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6185,幃翔,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6186,新潤,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6187,萬潤,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6188,廣明,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6189,豐藝,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6190,萬泰科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6191,精成科,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6192,巨路,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6194,育富,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6195,詩肯,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6196,帆宣,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6197,佳必琪,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6198,瑞築,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6199,天品,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6201,亞弘電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6202,盛群,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6203,海韻電,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6204,艾華,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6205,詮欣,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6206,飛捷,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6207,雷科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6208,日揚,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6209,今國光,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6210,慶生,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6212,理銘,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6213,聯茂,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6214,精誠,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6215,和椿,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6216,居易,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6217,中探針,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6218,豪勉,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6219,富旺,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6220,岳豐,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6221,晉泰,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6222,立軒,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6223,旺矽,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6224,聚鼎,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6225,天瀚,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6226,光鼎,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6227,茂綸,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6228,全譜,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6229,研通,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6230,尼得科超眾,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6231,系微,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6233,旺玖,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6234,高僑,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6235,華孚,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6236,中湛,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6237,驊訊,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6239,力成,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6240,松崗,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6241,鑫永洋,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6242,立康,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6243,迅杰,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6244,茂迪,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6245,立端,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6246,臺龍,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6248,沛波,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6257,矽格,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6259,百徽,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6261,久元,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6263,普萊德,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6264,富裔,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6265,方土昶,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6266,泰詠,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6269,台郡,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6270,倍微,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6271,同欣電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6272,驊陞,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6274,台燿,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6275,元山,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6276,安鈦克,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6277,宏正,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6278,台表科,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6279,胡連,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6281,全國電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6282,康舒,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6283,淳安,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6284,佳邦,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6285,啟碁,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6290,良維,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6291,沛亨,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6292,迅德,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6294,智基,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6405,悅城,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6409,旭隼,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6411,晶焱,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6412,群電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6414,樺漢,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6415,矽力*-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6416,瑞祺電通,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6417,韋僑,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6418,詠昇,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6419,京晨科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6423,億而得,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6425,易發,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6426,統新,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6431,光麗-KY,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6432,今展科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6435,大中,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6438,迅得,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6441,廣錠,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6442,光聖,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6443,元晶,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6446,藥華藥,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6449,鈺邦,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6451,訊芯-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6456,GIS-KY,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6461,益得,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6462,神盾,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6464,台數科,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6465,威潤,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6469,大樹,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6470,宇智,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6472,保瑞,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6474,華豫寧,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6477,安集,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6482,弘煜科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6485,點序,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6486,互動,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6488,環球晶,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6491,晶碩,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6492,生華科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6494,九齊,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6496,科懋,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6498,久禾光,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6499,益安,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6504,南六,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6505,台塑化,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6506,雙邦,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6508,惠光,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6509,聚和,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6510,精測,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6512,啟發電,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6515,穎崴,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6516,勤崴國際,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6517,保勝光學,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6523,達爾膚,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6525,捷敏-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6526,達發,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6527,明達醫,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6530,創威,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6531,愛普*,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6532,瑞耘,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6533,晶心科,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6534,正瀚-創,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6535,順藥,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6538,倉和,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6541,泰福-KY,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6542,隆中,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6546,正基,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6547,高端疫苗,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6548,長科*,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6550,北極星藥業-KY,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6552,易華電,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6556,勝品,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6558,興能高,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6560,欣普羅,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6561,是方,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6568,宏觀,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6569,醫揚,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6570,維田,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6573,虹揚-KY,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+6574,霈方,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6576,逸達,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6577,勁豐,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6578,達邦蛋白,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6579,研揚,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6581,鋼聯,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6582,申豐,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+6584,南俊國際,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6585,鼎基,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6588,東典光電,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6589,台康生技,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6590,普鴻,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6591,動力-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6592,和潤企業,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6593,台灣銘板,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6596,寬宏藝術,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6597,立誠,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6598,ABC-KY,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6603,富強鑫,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6605,帝寶,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6606,建德工業,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6609,瀧澤科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6612,奈米醫材,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6613,朋億*,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6614,資拓宏宇,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6615,慧智,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6616,特昇-KY,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6617,共信-KY,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6620,漢達,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6624,萬年清,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6625,必應,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6629,泰金-KY,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6637,醫影,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6640,均華,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6641,基士德-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6642,富致,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6643,M31,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6645,金萬林-創,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6649,台生材,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6651,全宇昕,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6654,天正國際,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6655,科定,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6657,華安,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6658,聯策,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6661,威健生技,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6662,樂斯科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6664,群翊,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6666,羅麗芬-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6667,信紘科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6668,中揚光,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6669,緯穎,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6670,復盛應用,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6671,三能-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6672,騰輝電子-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6674,鋐寶科技,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6679,鈺太,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6680,鑫創電子,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6683,雍智科技,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6684,安格,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6689,伊雲谷,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6690,安碁資訊,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6691,洋基工程,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6692,進能服,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6693,廣閎科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6695,芯鼎,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6697,東捷資訊,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6698,旭暉應材,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+6703,軒郁,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6706,惠特,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6708,天擎,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6712,長聖,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6715,嘉基,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6716,應廣,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6719,力智,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6720,久昌,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6721,信實,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6722,輝創,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6725,矽科宏晟,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6727,亞泰金屬,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6728,上洋,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6730,常廣,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6732,昇佳電子,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6733,博晟生醫,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6735,美達科技,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6739,竹陞科技,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6741,91APP*-KY,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6742,澤米,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6743,安普新,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6751,智聯服務,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6752,叡揚,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6753,龍德造船,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6754,匯僑設計,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6756,威鋒電子,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6757,台灣虎航,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6761,穩得,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6762,達亞,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6763,綠界科技*,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6767,台微醫,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6768,志強-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6770,力積電,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+6771,平和環保-創,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6776,展碁國際,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6781,AES-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6782,視陽,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6785,昱展新藥,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6788,華景電,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6789,采鈺,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6790,永豐實,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6791,虎門科技,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6792,詠業,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6794,向榮生技,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6796,晉弘,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6799,來頡,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6803,崑鼎,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6804,明係,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6805,富世達,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6807,峰源-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6811,宏碁資訊,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6821,聯寶,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6823,濾能,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6829,千附精密,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6830,汎銓,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6831,邁科,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6834,天二科技,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6835,圓裕,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6838,台新藥,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6840,東研信超,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6841,長佳智能,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6843,進典,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6844,諾貝兒,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6846,綠茵,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6854,錼創科技-KY創,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6855,數泓科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6856,鑫傳,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6859,伯特光,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6861,睿生光電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6862,三集瑞-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6863,永道-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6865,偉康科技,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6869,雲豹能源,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+6870,騰雲,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6872,浩宇生醫,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6873,泓德能源,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6874,倍力,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6875,國邑*,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6877,鏵友益,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6881,潤德,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6884,海柏特,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6885,全福生技,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6887,寶綠特-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6890,來億-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6894,衛司特,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6895,宏碩系統,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6899,創為精密,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6901,鑽石投資,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+6902,GOGOLOOK,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+6903,巨漢,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6904,伯鑫,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6906,現觀科,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6907,雅特力-KY,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6908,宏碁遊戲-創,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6909,創控,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6910,德鴻,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6913,鴻呈,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6914,阜爾運通,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6916,華凌,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6918,愛派司,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6919,康霈*,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6921,嘉雨思-創,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6922,宸曜,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6923,中台,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6924,榮惠-KY創,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6925,意藍,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6928,攸泰科技,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6929,佑全,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6931,青松健康,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6933,AMAX-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6934,心誠鎂,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6936,永鴻生技,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6937,天虹,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6944,兆聯實業,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6945,圓祥生技,stock,TPEx,partial,85.71,淨利率 | 歷季財報,financial_statement_missing | quarter_history_incomplete
+6947,台鎔科技,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6949,沛爾生醫-創,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6951,青新-創,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6952,大武山,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+6953,家碩,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6955,邦睿生技-創,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6957,裕慶-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6958,日盛台駿,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6961,旅天下,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6962,奕力-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6965,中傑-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6967,汎瑋材料,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6968,萬達寵物,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6969,成信實業*-創,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+6971,惠民實業,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6982,大井泵浦,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6983,華洋精機,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6986,和迅,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6988,威力暘-創,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+6994,富威電力,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+6996,力領科技,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+6997,博弘,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7402,邑錡,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7547,碩網,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7556,意德士科技,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7584,樂意,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7610,聯友金屬-創,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+7631,聚賢研發-創,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+7642,昶瑞機電,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7689,大鵬科CLMX,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+7703,銳澤,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7704,明遠精密,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7705,三商餐飲,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+7708,全家餐飲,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7709,榮田,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7711,永擎,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+7712,博盛半導體,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7713,威力德生醫,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7714,創泓科技,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7715,裕山,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7716,昱臺國際,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7717,萊德光電-KY,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7718,友鋮,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7721,微程式,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+7722,LINEPAY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+7723,築間,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7728,光焱科技,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7730,暉盛-創,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+7732,金興精密,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+7734,印能科技,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7736,虎山,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+7738,東聯互動,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7740,熙特爾-創,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+7743,金利食安,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7744,崴寶,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7747,昕奇雲端,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7749,意騰-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+7750,新代,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+7751,竑騰,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7753,星亞,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7757,金色三麥,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7760,享溫馨,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+7765,中華資安,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+7767,仁大資訊,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7768,頌勝科技,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+7769,鴻勁,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+7770,君曜,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7772,耀穎,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7777,能率亞洲,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7780,大研生醫*,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+7782,光速火箭,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7786,東方風能,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+7788,松川精密,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+7791,皇家可口,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+7792,安葆,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7794,宏碁智新,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7795,長廣,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+7799,禾榮科,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+7803,雲象科技-創,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+7805,威聯通,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7810,捷創科技,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7811,民盛,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7814,海昌生技,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7818,溢泰實業,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+7819,精誠金融,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7820,立盈,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7821,神數,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+7822,倍利科,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+7823,奧義賽博-KY創,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+7827,漢康-KY創,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+7828,創新服務,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7835,永悅健康-創,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+7839,達人網,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7842,天能綠電,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+7855,和運租車,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8011,台通,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8016,矽創,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8021,尖點,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8024,佑華,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8027,鈦昇,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8028,昇陽半導體,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8032,光菱,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8033,雷虎,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+8034,榮群,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8038,長園科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8039,台虹,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8040,九暘,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8042,金山電,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8043,蜜望實,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8044,網家,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8045,達運光電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8046,南電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8047,星雲,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8048,德勝,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8049,晶采,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8050,廣積,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8054,安國,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8059,凱碩,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8064,東捷,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8066,來思達,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8067,志旭,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8068,全達,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8069,元太,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8070,長華*,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8071,能率網通,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8072,陞泰,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8074,鉅橡,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8076,伍豐,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8077,洛碁,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8080,泰霖,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8081,致新,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8083,瑞穎,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8084,巨虹,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8085,福華,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8086,宏捷科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8087,麗升能源,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8088,品安,stock,TPEx,partial,85.71,發行股數 | 歷季財報,company_master_field_missing | quarter_history_incomplete
+8089,康全電訊,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8091,翔名,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8092,建暐,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8093,保銳,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8096,擎亞,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8097,常珵,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8099,大世科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8101,華冠,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+8102,傑霖科技,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8103,瀚荃,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8104,錸寶,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+8105,凌巨,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+8107,大億金茂,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8109,博大,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8110,華東,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8111,立碁,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8112,至上,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8114,振樺電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8121,越峰,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8131,福懋科,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8147,正淩,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8150,南茂,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8155,博智,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8162,微矽電子-創,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8163,達方,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8171,天宇,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8176,智捷,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8182,加高,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8183,精星,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8201,無敵,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+8210,勤誠,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8213,志超,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8215,明基材,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+8222,寶一,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8227,巨有科技,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8234,新漢,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8240,華宏,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8249,菱光,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8255,朋程,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8261,富鼎,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8271,宇瞻,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8272,全景軟體,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8277,商丞,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8279,生展,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8284,三竹,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8289,泰藝,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8291,尚茂,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8299,群聯,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8341,日友,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8342,益張,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8349,恒耀國際,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8354,冠好,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8358,金居,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8367,建新國際,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8374,羅昇,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+8383,千附,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8390,金益鼎,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8401,白紗科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8403,盛弘,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8404,百和興業-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8409,商之器,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8410,森田,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8411,福貞-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8415,大國鋼,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8416,實威,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8421,旭源,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8422,可寧衛*,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8423,保綠-KY,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8424,惠普,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8426,紅木-KY,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8429,金麗-KY,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+8431,匯鑽科,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8432,東生華,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8433,弘帆,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8435,鉅邁,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8436,大江,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8437,大地-KY,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8438,昶昕,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8440,綠電,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8442,威宏-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8443,阿瘦,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+8444,綠河-KY,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8446,華研,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8450,霹靂,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8454,富邦媒,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8455,大拓-KY,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8462,柏文,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8463,潤泰材,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8464,億豐,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8466,美吉吉-KY,stock,TWSE,partial,85.71,本益比狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+8467,波力-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8472,納維康,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8473,山林水,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8476,台境*,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8477,創業家,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8478,東哥遊艇,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8481,政伸,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8482,商億-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8487,愛爾達-創,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8488,吉源-KY,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+8489,三貝德,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8499,鼎炫-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8905,裕國,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8906,花王,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8908,欣雄,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8916,光隆,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8917,欣泰,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8921,沈氏,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8923,時報,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8924,大田,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8926,台汽電,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+8927,北基,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8928,鉅明,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8929,富堡,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8930,青鋼,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8931,大汽電,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8932,智通*,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8933,愛地雅,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8935,邦泰,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8936,國統,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8937,合騏*,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8938,明安,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8940,新天地,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+8941,關中,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8942,森鉅,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+8996,高力,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9103,美德醫療-DR,stock,TWSE,partial,50.0,本益比狀態 | 股價淨值比狀態 | 殖利率狀態 | EPS | ROE | 淨利率 | 歷季財報,valuation_source_missing | valuation_source_missing | valuation_source_missing | financial_statement_missing | financial_statement_missing | financial_statement_missing | quarter_history_incomplete
+910322,康師傅-DR,stock,TWSE,partial,50.0,本益比狀態 | 股價淨值比狀態 | 殖利率狀態 | EPS | ROE | 淨利率 | 歷季財報,valuation_source_missing | valuation_source_missing | valuation_source_missing | financial_statement_missing | financial_statement_missing | financial_statement_missing | quarter_history_incomplete
+9105,泰金寶-DR,stock,TWSE,partial,78.57,本益比狀態 | 股價淨值比狀態 | 殖利率狀態,valuation_source_missing | valuation_source_missing | valuation_source_missing
+910861,神州-DR,stock,TWSE,partial,50.0,本益比狀態 | 股價淨值比狀態 | 殖利率狀態 | EPS | ROE | 淨利率 | 歷季財報,valuation_source_missing | valuation_source_missing | valuation_source_missing | financial_statement_missing | financial_statement_missing | financial_statement_missing | quarter_history_incomplete
+9110,越南控-DR,stock,TWSE,partial,57.14,本益比狀態 | 股價淨值比狀態 | 殖利率狀態 | ROE | 負債比 | 淨利率,valuation_source_missing | valuation_source_missing | valuation_source_missing | financial_statement_missing | financial_statement_missing | financial_statement_missing
+911608,明輝-DR,stock,TWSE,partial,50.0,本益比狀態 | 股價淨值比狀態 | 殖利率狀態 | EPS | ROE | 淨利率 | 歷季財報,valuation_source_missing | valuation_source_missing | valuation_source_missing | financial_statement_missing | financial_statement_missing | financial_statement_missing | quarter_history_incomplete
+911622,泰聚亨-DR,stock,TWSE,partial,78.57,本益比狀態 | 股價淨值比狀態 | 殖利率狀態,valuation_source_missing | valuation_source_missing | valuation_source_missing
+911868,同方友友-DR,stock,TWSE,partial,50.0,本益比狀態 | 股價淨值比狀態 | 殖利率狀態 | EPS | ROE | 淨利率 | 歷季財報,valuation_source_missing | valuation_source_missing | valuation_source_missing | financial_statement_missing | financial_statement_missing | financial_statement_missing | quarter_history_incomplete
+912000,晨訊科-DR,stock,TWSE,partial,50.0,本益比狀態 | 股價淨值比狀態 | 殖利率狀態 | EPS | ROE | 淨利率 | 歷季財報,valuation_source_missing | valuation_source_missing | valuation_source_missing | financial_statement_missing | financial_statement_missing | financial_statement_missing | quarter_history_incomplete
+9136,巨騰-DR,stock,TWSE,partial,50.0,本益比狀態 | 股價淨值比狀態 | 殖利率狀態 | EPS | ROE | 淨利率 | 歷季財報,valuation_source_missing | valuation_source_missing | valuation_source_missing | financial_statement_missing | financial_statement_missing | financial_statement_missing | quarter_history_incomplete
+9802,鈺齊-KY,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9902,台火,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+9904,寶成,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9905,大華,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9906,欣巴巴,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9907,統一實,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9908,大台北,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9910,豐泰,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9911,櫻花,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9912,偉聯,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+9914,美利達,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9917,中保科,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9918,欣天然,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9919,康那香,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+9921,巨大,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9924,福興,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9925,新保,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9926,新海,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9927,泰銘,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9928,中視,stock,TWSE,partial,78.57,本益比狀態 | 殖利率狀態 | 歷季財報,valuation_source_missing | valuation_source_missing | quarter_history_incomplete
+9929,秋雨,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+9930,中聯資源,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9931,欣高,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9933,中鼎,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9934,成霖,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9935,慶豐富,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9937,全國,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9938,百和,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9939,宏全,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9940,信義,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9941,裕融,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9942,茂順,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9943,好樂迪,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9944,新麗,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9945,潤泰新,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9946,三發地產,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9949,琉園,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+9950,萬國通,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+9951,皇田,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+9955,佳龍,stock,TWSE,partial,85.71,殖利率狀態 | 歷季財報,valuation_source_missing | quarter_history_incomplete
+9958,世紀鋼,stock,TWSE,partial,92.86,歷季財報,quarter_history_incomplete
+9960,邁達康,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete
+9962,有益,stock,TPEx,partial,92.86,歷季財報,quarter_history_incomplete

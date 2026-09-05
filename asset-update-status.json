@@ -1,0 +1,299 @@
+{
+  "metadata": {
+    "version": "v11.5.1",
+    "updated_at": "2026-09-05T23:22:58+08:00",
+    "status": "ok",
+    "successful_sources": 17,
+    "warning_sources": 30,
+    "stock_count": 1986,
+    "etf_count": 271,
+    "stock_with_metrics": 1974,
+    "stock_with_financials": 1974,
+    "stock_with_monthly_revenue": 1977,
+    "message": "Official stock and ETF detail refresh completed; warning sources retained their last successful values."
+  },
+  "sources": [
+    {
+      "name": "TWSE fund master",
+      "status": "warning",
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap47_L"
+    },
+    {
+      "name": "TWSE company master",
+      "status": "warning",
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap03_L"
+    },
+    {
+      "name": "TPEx company master",
+      "status": "ok",
+      "rows": 890,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O"
+    },
+    {
+      "name": "TWSE valuation",
+      "status": "warning",
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "url": "https://openapi.twse.com.tw/v1/exchangeReport/BWIBBU_ALL"
+    },
+    {
+      "name": "TPEx valuation",
+      "status": "ok",
+      "rows": 886,
+      "url": "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_peratio_analysis"
+    },
+    {
+      "name": "TWSE EPS",
+      "status": "warning",
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap14_L"
+    },
+    {
+      "name": "TPEx EPS",
+      "status": "ok",
+      "rows": 889,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap14_O"
+    },
+    {
+      "name": "TWSE monthly revenue",
+      "status": "warning",
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap05_L"
+    },
+    {
+      "name": "TPEx monthly revenue",
+      "status": "ok",
+      "rows": 890,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap05_O"
+    },
+    {
+      "name": "TWSE dividend",
+      "status": "warning",
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap45_L"
+    },
+    {
+      "name": "TPEx dividend",
+      "status": "ok",
+      "rows": 2483,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap39_O"
+    },
+    {
+      "name": "TWSE public income ci",
+      "status": "warning",
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_X_ci"
+    },
+    {
+      "name": "TWSE income fh",
+      "status": "warning",
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_L_fh"
+    },
+    {
+      "name": "TWSE public income bd",
+      "status": "warning",
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_X_bd"
+    },
+    {
+      "name": "TWSE income bd",
+      "status": "warning",
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_L_bd"
+    },
+    {
+      "name": "TWSE public income fh",
+      "status": "warning",
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_X_fh"
+    },
+    {
+      "name": "TWSE income ci",
+      "status": "warning",
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_L_ci"
+    },
+    {
+      "name": "TWSE public income basi",
+      "status": "warning",
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_X_basi"
+    },
+    {
+      "name": "TWSE income basi",
+      "status": "warning",
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_L_basi"
+    },
+    {
+      "name": "TWSE public income ins",
+      "status": "warning",
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_X_ins"
+    },
+    {
+      "name": "TWSE income ins",
+      "status": "warning",
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_L_ins"
+    },
+    {
+      "name": "TWSE public income mim",
+      "status": "warning",
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_X_mim"
+    },
+    {
+      "name": "TWSE balance fh",
+      "status": "warning",
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_L_fh"
+    },
+    {
+      "name": "TWSE public balance ci",
+      "status": "warning",
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_X_ci"
+    },
+    {
+      "name": "TWSE public balance fh",
+      "status": "warning",
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_X_fh"
+    },
+    {
+      "name": "TWSE income mim",
+      "status": "warning",
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_L_mim"
+    },
+    {
+      "name": "TWSE balance ci",
+      "status": "warning",
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_L_ci"
+    },
+    {
+      "name": "TWSE public balance basi",
+      "status": "warning",
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_X_basi"
+    },
+    {
+      "name": "TWSE balance basi",
+      "status": "warning",
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_L_basi"
+    },
+    {
+      "name": "TWSE balance ins",
+      "status": "warning",
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_L_ins"
+    },
+    {
+      "name": "TWSE balance mim",
+      "status": "warning",
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_L_mim"
+    },
+    {
+      "name": "TWSE public balance ins",
+      "status": "warning",
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_X_ins"
+    },
+    {
+      "name": "TWSE public balance mim",
+      "status": "warning",
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_X_mim"
+    },
+    {
+      "name": "TWSE public balance bd",
+      "status": "warning",
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_X_bd"
+    },
+    {
+      "name": "TWSE balance bd",
+      "status": "warning",
+      "error": "Expecting value: line 1 column 1 (char 0)",
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_L_bd"
+    },
+    {
+      "name": "TPEx income basi",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap06_O_basi"
+    },
+    {
+      "name": "TPEx income bd",
+      "status": "ok",
+      "rows": 7,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap06_O_bd"
+    },
+    {
+      "name": "TPEx balance basi",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap07_O_basi"
+    },
+    {
+      "name": "TPEx balance bd",
+      "status": "ok",
+      "rows": 7,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap07_O_bd"
+    },
+    {
+      "name": "TPEx balance ins",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap07_O_ins"
+    },
+    {
+      "name": "TPEx balance mim",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap07_O_mim"
+    },
+    {
+      "name": "TPEx income ci",
+      "status": "ok",
+      "rows": 882,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap06_O_ci"
+    },
+    {
+      "name": "TPEx income ins",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap06_O_ins"
+    },
+    {
+      "name": "TPEx income mim",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap06_O_mim"
+    },
+    {
+      "name": "TPEx balance fh",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap07_O_fh"
+    },
+    {
+      "name": "TPEx income fh",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap06_O_fh"
+    },
+    {
+      "name": "TPEx balance ci",
+      "status": "ok",
+      "rows": 882,
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap07_O_ci"
+    }
+  ]
+}
