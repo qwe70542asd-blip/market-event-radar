@@ -1,0 +1,299 @@
+{
+  "metadata": {
+    "version": "v11.5.1",
+    "updated_at": "2026-09-12T23:39:46+08:00",
+    "status": "ok",
+    "successful_sources": 30,
+    "warning_sources": 17,
+    "stock_count": 1987,
+    "etf_count": 271,
+    "stock_with_metrics": 1975,
+    "stock_with_financials": 1975,
+    "stock_with_monthly_revenue": 1979,
+    "message": "Official stock and ETF detail refresh completed; warning sources retained their last successful values."
+  },
+  "sources": [
+    {
+      "name": "TWSE fund master",
+      "status": "ok",
+      "rows": 271,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap47_L"
+    },
+    {
+      "name": "TWSE company master",
+      "status": "ok",
+      "rows": 1094,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap03_L"
+    },
+    {
+      "name": "TPEx company master",
+      "status": "warning",
+      "error": "HTTPSConnectionPool(host='www.tpex.org.tw', port=443): Max retries exceeded with url: /openapi/v1/mopsfin_t187ap03_O (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O"
+    },
+    {
+      "name": "TWSE valuation",
+      "status": "ok",
+      "rows": 1080,
+      "url": "https://openapi.twse.com.tw/v1/exchangeReport/BWIBBU_ALL"
+    },
+    {
+      "name": "TPEx valuation",
+      "status": "warning",
+      "error": "HTTPSConnectionPool(host='www.tpex.org.tw', port=443): Max retries exceeded with url: /openapi/v1/tpex_mainboard_peratio_analysis (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
+      "url": "https://www.tpex.org.tw/openapi/v1/tpex_mainboard_peratio_analysis"
+    },
+    {
+      "name": "TWSE EPS",
+      "status": "ok",
+      "rows": 1083,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap14_L"
+    },
+    {
+      "name": "TPEx EPS",
+      "status": "warning",
+      "error": "HTTPSConnectionPool(host='www.tpex.org.tw', port=443): Max retries exceeded with url: /openapi/v1/mopsfin_t187ap14_O (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap14_O"
+    },
+    {
+      "name": "TWSE monthly revenue",
+      "status": "ok",
+      "rows": 1070,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap05_L"
+    },
+    {
+      "name": "TPEx monthly revenue",
+      "status": "warning",
+      "error": "HTTPSConnectionPool(host='www.tpex.org.tw', port=443): Max retries exceeded with url: /openapi/v1/mopsfin_t187ap05_O (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap05_O"
+    },
+    {
+      "name": "TWSE dividend",
+      "status": "ok",
+      "rows": 1226,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap45_L"
+    },
+    {
+      "name": "TPEx dividend",
+      "status": "warning",
+      "error": "HTTPSConnectionPool(host='www.tpex.org.tw', port=443): Max retries exceeded with url: /openapi/v1/mopsfin_t187ap39_O (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap39_O"
+    },
+    {
+      "name": "TWSE public income ci",
+      "status": "ok",
+      "rows": 214,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_X_ci"
+    },
+    {
+      "name": "TWSE income ins",
+      "status": "ok",
+      "rows": 5,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_L_ins"
+    },
+    {
+      "name": "TWSE public income ins",
+      "status": "ok",
+      "rows": 17,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_X_ins"
+    },
+    {
+      "name": "TWSE income mim",
+      "status": "ok",
+      "rows": 4,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_L_mim"
+    },
+    {
+      "name": "TWSE public income fh",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_X_fh"
+    },
+    {
+      "name": "TWSE public income basi",
+      "status": "ok",
+      "rows": 34,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_X_basi"
+    },
+    {
+      "name": "TWSE income bd",
+      "status": "ok",
+      "rows": 3,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_L_bd"
+    },
+    {
+      "name": "TWSE income fh",
+      "status": "ok",
+      "rows": 13,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_L_fh"
+    },
+    {
+      "name": "TWSE income basi",
+      "status": "ok",
+      "rows": 10,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_L_basi"
+    },
+    {
+      "name": "TWSE public income bd",
+      "status": "ok",
+      "rows": 27,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_X_bd"
+    },
+    {
+      "name": "TWSE public income mim",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_X_mim"
+    },
+    {
+      "name": "TWSE public balance fh",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_X_fh"
+    },
+    {
+      "name": "TWSE balance basi",
+      "status": "ok",
+      "rows": 10,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_L_basi"
+    },
+    {
+      "name": "TWSE balance fh",
+      "status": "ok",
+      "rows": 13,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_L_fh"
+    },
+    {
+      "name": "TWSE public balance basi",
+      "status": "ok",
+      "rows": 34,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_X_basi"
+    },
+    {
+      "name": "TWSE balance bd",
+      "status": "ok",
+      "rows": 3,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_L_bd"
+    },
+    {
+      "name": "TWSE public balance ci",
+      "status": "ok",
+      "rows": 214,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_X_ci"
+    },
+    {
+      "name": "TWSE balance ins",
+      "status": "ok",
+      "rows": 5,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_L_ins"
+    },
+    {
+      "name": "TWSE public balance bd",
+      "status": "ok",
+      "rows": 27,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_X_bd"
+    },
+    {
+      "name": "TWSE public balance ins",
+      "status": "ok",
+      "rows": 17,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_X_ins"
+    },
+    {
+      "name": "TWSE balance mim",
+      "status": "ok",
+      "rows": 4,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_L_mim"
+    },
+    {
+      "name": "TWSE income ci",
+      "status": "ok",
+      "rows": 1048,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap06_L_ci"
+    },
+    {
+      "name": "TPEx income bd",
+      "status": "warning",
+      "error": "HTTPSConnectionPool(host='www.tpex.org.tw', port=443): Max retries exceeded with url: /openapi/v1/mopsfin_t187ap06_O_bd (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap06_O_bd"
+    },
+    {
+      "name": "TPEx income basi",
+      "status": "warning",
+      "error": "HTTPSConnectionPool(host='www.tpex.org.tw', port=443): Max retries exceeded with url: /openapi/v1/mopsfin_t187ap06_O_basi (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap06_O_basi"
+    },
+    {
+      "name": "TPEx income ci",
+      "status": "warning",
+      "error": "HTTPSConnectionPool(host='www.tpex.org.tw', port=443): Max retries exceeded with url: /openapi/v1/mopsfin_t187ap06_O_ci (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap06_O_ci"
+    },
+    {
+      "name": "TWSE public balance mim",
+      "status": "ok",
+      "rows": 1,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_X_mim"
+    },
+    {
+      "name": "TPEx income fh",
+      "status": "warning",
+      "error": "HTTPSConnectionPool(host='www.tpex.org.tw', port=443): Max retries exceeded with url: /openapi/v1/mopsfin_t187ap06_O_fh (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap06_O_fh"
+    },
+    {
+      "name": "TPEx income ins",
+      "status": "warning",
+      "error": "HTTPSConnectionPool(host='www.tpex.org.tw', port=443): Max retries exceeded with url: /openapi/v1/mopsfin_t187ap06_O_ins (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap06_O_ins"
+    },
+    {
+      "name": "TPEx income mim",
+      "status": "warning",
+      "error": "HTTPSConnectionPool(host='www.tpex.org.tw', port=443): Max retries exceeded with url: /openapi/v1/mopsfin_t187ap06_O_mim (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap06_O_mim"
+    },
+    {
+      "name": "TPEx balance ci",
+      "status": "warning",
+      "error": "HTTPSConnectionPool(host='www.tpex.org.tw', port=443): Max retries exceeded with url: /openapi/v1/mopsfin_t187ap07_O_ci (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap07_O_ci"
+    },
+    {
+      "name": "TPEx balance basi",
+      "status": "warning",
+      "error": "HTTPSConnectionPool(host='www.tpex.org.tw', port=443): Max retries exceeded with url: /openapi/v1/mopsfin_t187ap07_O_basi (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap07_O_basi"
+    },
+    {
+      "name": "TPEx balance fh",
+      "status": "warning",
+      "error": "HTTPSConnectionPool(host='www.tpex.org.tw', port=443): Max retries exceeded with url: /openapi/v1/mopsfin_t187ap07_O_fh (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap07_O_fh"
+    },
+    {
+      "name": "TPEx balance mim",
+      "status": "warning",
+      "error": "HTTPSConnectionPool(host='www.tpex.org.tw', port=443): Max retries exceeded with url: /openapi/v1/mopsfin_t187ap07_O_mim (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap07_O_mim"
+    },
+    {
+      "name": "TPEx balance bd",
+      "status": "warning",
+      "error": "HTTPSConnectionPool(host='www.tpex.org.tw', port=443): Max retries exceeded with url: /openapi/v1/mopsfin_t187ap07_O_bd (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap07_O_bd"
+    },
+    {
+      "name": "TPEx balance ins",
+      "status": "warning",
+      "error": "HTTPSConnectionPool(host='www.tpex.org.tw', port=443): Max retries exceeded with url: /openapi/v1/mopsfin_t187ap07_O_ins (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1010)')))",
+      "url": "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap07_O_ins"
+    },
+    {
+      "name": "TWSE balance ci",
+      "status": "ok",
+      "rows": 1048,
+      "url": "https://openapi.twse.com.tw/v1/opendata/t187ap07_L_ci"
+    }
+  ]
+}
