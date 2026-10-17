@@ -1,0 +1,119 @@
+{
+  "metadata": {
+    "version": "v11.5.1",
+    "updated_at": "2026-10-17T23:47:29+08:00",
+    "note": "Audit uses the final merged view: official asset master first, then Yahoo, ETF detail and dividend channels. Existing reference data is no longer reported as missing."
+  },
+  "summary": {
+    "audited_assets": 2264,
+    "stock_count": 1992,
+    "etf_count": 272,
+    "complete": 75,
+    "partial": 2189,
+    "unresolved": 0,
+    "audit_coverage_percent": 100.0,
+    "average_field_coverage_percent": 90.27
+  },
+  "field_coverage": {
+    "基金名稱": {
+      "available": 272,
+      "missing": 0
+    },
+    "市場": {
+      "available": 2264,
+      "missing": 0
+    },
+    "發行投信": {
+      "available": 242,
+      "missing": 30
+    },
+    "基金經理人": {
+      "available": 272,
+      "missing": 0
+    },
+    "保管銀行": {
+      "available": 272,
+      "missing": 0
+    },
+    "基金類型": {
+      "available": 272,
+      "missing": 0
+    },
+    "成立日期": {
+      "available": 272,
+      "missing": 0
+    },
+    "上市／上櫃日期": {
+      "available": 2264,
+      "missing": 0
+    },
+    "追蹤指數／主動式": {
+      "available": 272,
+      "missing": 0
+    },
+    "投資策略": {
+      "available": 272,
+      "missing": 0
+    },
+    "配息資訊": {
+      "available": 118,
+      "missing": 154
+    },
+    "成分股揭露狀態": {
+      "available": 96,
+      "missing": 176
+    },
+    "產業配置": {
+      "available": 95,
+      "missing": 177
+    },
+    "公司名稱": {
+      "available": 1992,
+      "missing": 0
+    },
+    "產業": {
+      "available": 1992,
+      "missing": 0
+    },
+    "發行股數": {
+      "available": 1991,
+      "missing": 1
+    },
+    "本益比狀態": {
+      "available": 1766,
+      "missing": 226
+    },
+    "股價淨值比狀態": {
+      "available": 1979,
+      "missing": 13
+    },
+    "殖利率狀態": {
+      "available": 1742,
+      "missing": 250
+    },
+    "EPS": {
+      "available": 1984,
+      "missing": 8
+    },
+    "ROE": {
+      "available": 1983,
+      "missing": 9
+    },
+    "負債比": {
+      "available": 1991,
+      "missing": 1
+    },
+    "淨利率": {
+      "available": 1982,
+      "missing": 10
+    },
+    "最近季度財報": {
+      "available": 1991,
+      "missing": 1
+    },
+    "歷季財報": {
+      "available": 4,
+      "missing": 1988
+    }
+  }
+}
