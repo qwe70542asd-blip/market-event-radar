@@ -1,0 +1,25 @@
+{
+  "metadata": {
+    "version": "v11.5.1",
+    "month_cursor": 28,
+    "updated_at": "2026-11-01T06:24:45+08:00",
+    "last_batch_months": [
+      "2025-05",
+      "2025-04",
+      "2025-03",
+      "2025-02",
+      "2025-01",
+      "2024-12",
+      "2024-11",
+      "2024-10",
+      "2024-09",
+      "2024-08",
+      "2024-07",
+      "2024-06"
+    ],
+    "last_batch_requested": 24,
+    "last_batch_success": 24,
+    "last_batch_failures": [],
+    "retry_pairs": []
+  }
+}
